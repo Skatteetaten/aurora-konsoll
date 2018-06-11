@@ -8,20 +8,27 @@
   },
   "files": [
     "build",
+    "build-api",
     "metadata"
   ],
+  "bundledDependencies": [
+    "express"
+  ],
   "dependencies": {
-    "aurora-frontend-react-komponenter": "^1.0.2",
+    "aurora-frontend-react-komponenter": "^1.0.6",
+    "express": "^4.16.3",
     "react": "^16.4.0",
     "react-dom": "^16.4.0",
     "react-scripts-ts": "2.16.0"
   },
   "scripts": {
     "start": "react-scripts-ts start",
-    "build": "react-scripts-ts build",
+    "build": "npm-run-all --parallel build:web build:api",
+    "build:web": "react-scripts-ts build",
+    "build:api": "tsc --outDir build-api api/server-ts.ts",
     "test": "react-scripts-ts test --env=jsdom",
     "eject": "react-scripts-ts eject",
-    "clean": "rimraf build coverage pom *.tgz",
+    "clean": "rimraf build build-api coverage pom *.tgz",
     "test:once": "CI=true npm test",
     "test:coverage": "npm run test -- --coverage",
     "lint": "npm-run-all lint:prettier lint:tslint",
@@ -35,6 +42,7 @@
     "singleQuote": true
   },
   "devDependencies": {
+    "@types/express": "^4.16.0",
     "@types/jest": "^23.0.0",
     "@types/node": "^10.3.1",
     "@types/react": "^16.3.16",

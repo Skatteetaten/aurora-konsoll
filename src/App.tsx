@@ -1,7 +1,7 @@
 import FooterContent from 'aurora-frontend-react-komponenter/FooterContent';
 import Grid from 'aurora-frontend-react-komponenter/Grid';
-import Header from 'aurora-frontend-react-komponenter/Layout/Header';
 import SkeBasis from 'aurora-frontend-react-komponenter/SkeBasis';
+import TopBanner from 'aurora-frontend-react-komponenter/TopBanner';
 import * as React from 'react';
 import './App.css';
 
@@ -11,9 +11,13 @@ class App extends React.Component {
   public render() {
     return (
       <SkeBasis>
-
         <div className="App">
-          <Header />
+          <TopBanner
+            external={true}
+            compact={true}
+            homeText="Til skatteetaten.no"
+            title="Ekstern publikumsløsning"
+          />
           <header className="App-header">
             <img src={logo} className="App-logo" alt="logo" />
             <h1 className="App-title">Welcome to React</h1>

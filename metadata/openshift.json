@@ -9,6 +9,9 @@
   "web": {
     "webapp": {
       "content": "build"
+    },
+    "nodejs": {
+      "main": "build-api/server-ts.js"
     }
   }
 }
