@@ -33,10 +33,10 @@
     "test:coverage": "npm run test -- --coverage",
     "lint": "npm-run-all lint:prettier lint:tslint",
     "lint:fix": "npm-run-all lint:prettier-fix lint:tslint-fix",
-    "lint:tslint": "tslint '{api,src}/**/*{.js,.jsx}'",
-    "lint:prettier": "prettier -l '{api,src}/**/*{.js,.jsx,.css}'",
-    "lint:tslint-fix": "tslint --fix '{api,src}/**/*{.js,.jsx}'",
-    "lint:prettier-fix": "prettier --write '{api,src}/**/*{.js,.jsx,.css}'"
+    "lint:tslint": "tslint '{api,src}/**/*{.ts,.tsx}'",
+    "lint:prettier": "prettier -l '{api,src}/**/*{.ts,.tsx,.css}'",
+    "lint:tslint-fix": "tslint --fix '{api,src}/**/*{.ts,.tsx}'",
+    "lint:prettier-fix": "prettier --write '{api,src}/**/*{.ts,.tsx,.css}'"
   },
   "prettier": {
     "singleQuote": true
