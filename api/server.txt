@@ -1,0 +1,76 @@
+const express = require('express')
+const path = require('path')
+const bodyParser = require('body-parser')
+const isJSON = require('is-json')
+const request = require('request')
+const app = express()
+
+const ClientOAuth2 = require('client-oauth2')
+
+const port = 3001
+const basePath = '/test-client-react'
+const baseUrlRegexp = new RegExp('^https://beta.felleskomponent.no/')
+const jsonParser = bodyParser.json()
+
+app.use(basePath, express.static(path.join(__dirname, 'client/build')))
+app.set('port', port)
+
+app.post(`${basePath}/api/login`, jsonParser, (req, res) => {
+  const input = req.body
+  new ClientOAuth2({
+    clientId: input.clientId,
+    clientSecret: input.clientSecret,
+    accessTokenUri: 'https://namidp01.rogfk.no/nidp/oauth/nam/token',
+    scopes: [ 'fint-client' ]
+  }).owner.getToken(input.username, input.password).then((user) => {
+    var auth = {
+      accessToken: user.accessToken,
+      refreshToken: user.refreshToken,
+      expires: user.expires
+    }
+    res.send(auth)
+  }).catch((error) => {
+    if (error) {
+      console.error(error)
+    }
+
+    res.status(401).send('Error when getting OAuth token, wrong username or password?')
+  })
+})
+
+app.get(`${basePath}/api/request`, (req, res) => {
+  let protocol = req.query.protocol
+  if (!protocol) {
+    protocol = 'https'
+  }
+
+  const url = `${protocol}://${req.query.url}`
+  if (baseUrlRegexp.test(url)) {
+    request({
+      url,
+      headers: {
+        'Authorization': req.headers['authorization'],
+        'x-org-id': req.headers['x-org-id'],
+        'x-client': 'fint-test-client'
+      }
+    }, (error, response, body) => {
+      if (error) {
+        console.error(error)
+      }
+
+      if (body.length === 0) {
+        res.send({ message: 'Empty response' })
+      } else if (!isJSON(body)) {
+        res.send({ message: 'Response content is not JSON format', statusCode: response.statusCode, content: body })
+      } else {
+        res.send(body)
+      }
+    })
+  } else {
+    console.error('Invalid url', url)
+  }
+})
+
+app.listen(app.get('port'), () => {
+  console.log('Server started on port ', port)
+})

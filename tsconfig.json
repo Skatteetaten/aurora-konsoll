@@ -21,7 +21,9 @@
   "exclude": [
     "node_modules",
     "build",
+    "build-api",
     "scripts",
+    "coverage",
     "acceptance-tests",
     "webpack",
     "jest",
