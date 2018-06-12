@@ -14,8 +14,10 @@ const CLUSTER_URL =
 const AUTHORIZATION_URI =
   process.env.AUTHORIZATION_URI || `${CLUSTER_URL}/oauth/authorize`;
 
+const REDIRECT_HOST = process.env.ROUTE_URL || 'http://localhost:3000';
+
 const REDIRECT_URI =
-  process.env.ROUTE_URL || 'http://localhost:3000/accept-token';
+  process.env.REDIRECT_URI || `${REDIRECT_HOST}/accept-token`;
 
 app.get('/api/start-login', (req, res) => {
   const openshiftToken = new ClientOAuth2({

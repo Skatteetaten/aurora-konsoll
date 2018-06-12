@@ -11,7 +11,7 @@
       "content": "build"
     },
     "nodejs": {
-      "main": "build-api/server-ts.js"
+      "main": "build-api/server.js"
     }
   }
 }
