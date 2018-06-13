@@ -12,7 +12,7 @@ import './index.css';
 import registerServiceWorker from './registerServiceWorker';
 
 /*
-type Error = {
+interface IError {
   message: string
 }
 */
@@ -23,14 +23,13 @@ interface IConfiguration {
   GRAPHQL_URL: string;
 }
 
-async function fetchConfiguration(): Promise<IConfiguration/* | Error*/> {
+async function fetchConfiguration(): Promise<IConfiguration | Error> {
   try {
     const data = await fetch('/api/config1');
     return await data.json();
   } catch (error) {
-    console.log(error);
+    (window as any).e = error;
     return error;
-    // return Error(error);
   }
 }
 
@@ -94,7 +93,12 @@ class Application extends React.Component<{}, IApplicationState> {
 
 async function init() {
 
-  const config = await fetchConfiguration();
+  const configOrError = await fetchConfiguration();
+  if ((configOrError as Error).message) {
+    console.log((configOrError as Error).message);
+    return;
+  }
+  const config = configOrError as IConfiguration;
 
   const isLoggedIn = await verifyAuthenticated(config.AUTHORIZATION_URI, config.CLIENT_ID);
   if (!isLoggedIn) {
