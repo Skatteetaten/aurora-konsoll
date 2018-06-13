@@ -1,13 +1,14 @@
 /* tslint:disable:no-console */
 import * as express from 'express';
-import { AUTHORIZATION_URI, CLIENT_ID, PORT } from './config';
+import { AUTHORIZATION_URI, CLIENT_ID, GRAPHQL_URL, PORT } from './config';
 
 const app = express();
 
 app.get('/api/config', (req, res) => {
   return res.send({
     AUTHORIZATION_URI,
-    CLIENT_ID
+    CLIENT_ID,
+    GRAPHQL_URL
   });
 });
 

@@ -1,5 +1,8 @@
+import { default as ApolloClient } from 'apollo-boost';
+import { default as gql } from 'graphql-tag';
 import * as qs from 'qs';
 import * as React from 'react';
+import { ApolloProvider } from 'react-apollo';
 import * as ReactDOM from 'react-dom';
 import {
   BrowserRouter,
@@ -11,38 +14,44 @@ import App from './App';
 import './index.css';
 import registerServiceWorker from './registerServiceWorker';
 
-async function verifyAuthenticated(): Promise<boolean> {
+interface IConfiguration {
+  AUTHORIZATION_URI: string;
+  CLIENT_ID: string;
+  GRAPHQL_URL: string;
+}
+
+async function fetchConfiguration(): Promise<IConfiguration> {
+  try {
+    const data = await fetch('/api/config');
+    const configuration: IConfiguration = await data.json();
+    return configuration;
+  } catch (error) {
+    return error;
+  }
+}
+
+function verifyAuthenticated(
+  authorizationUri: string,
+  clientId: string
+): boolean {
   const token = window.localStorage.getItem('token');
   const expiresAt = window.localStorage.getItem('expiresAt');
   const tokenExpired = new Date().getTime() > Number(expiresAt);
   if (token || !tokenExpired || window.location.pathname === '/accept-token') {
     return true;
   }
-
-  let authorizationUrl: string;
-  try {
-    const data = await fetch('/api/config');
-    const { AUTHORIZATION_URI, CLIENT_ID } = await data.json();
-
-    authorizationUrl =
-      AUTHORIZATION_URI +
-      '?' +
-      qs.stringify(
-        Object.assign({
-          client_id: CLIENT_ID,
-          redirect_uri: window.location.origin + '/accept-token',
-          response_type: 'token',
-          scope: '',
-          state: ''
-        })
-      );
-  } catch (e) {
-    /* tslint:disable:no-console */
-    // TODO: Handle errors
-    console.log('ERROR: ', e);
-    return false;
-  }
-
+  const authorizationUrl =
+    authorizationUri +
+    '?' +
+    qs.stringify(
+      Object.assign({
+        client_id: clientId,
+        redirect_uri: window.location.origin + '/accept-token',
+        response_type: 'token',
+        scope: '',
+        state: ''
+      })
+    );
   window.location.replace(authorizationUrl);
   return false;
 }
@@ -80,10 +89,50 @@ class Application extends React.Component<{}, IApplicationState> {
 }
 
 verifyAuthenticated().then(isLoggedIn => {
-  if (isLoggedIn) {
-    ReactDOM.render(<Application />, document.getElementById(
-      'root'
-    ) as HTMLElement);
-    registerServiceWorker();
+  if (!isLoggedIn) {
+    return;
   }
+
+  const client = new ApolloClient({
+    uri: 'http://gobo-paas-mokey.utv.paas.skead.no/graphql'
+  });
+
+  interface IAffiliations {
+    affiliations: {
+      edges: Array<{
+        node: {
+          name: string;
+        };
+      }>;
+    };
+  }
+
+  client
+    .query<IAffiliations>({
+      query: gql`
+        {
+          affiliations {
+            edges {
+              node {
+                name
+              }
+            }
+          }
+        }
+      `
+    })
+    .then(result => {
+      const { affiliations } = result.data;
+      console.log(
+        affiliations.edges.reduce((acc, edge) => [...acc, edge.node.name], [])
+      );
+    });
+
+  ReactDOM.render(
+    <ApolloProvider client={client}>
+      <Application />
+    </ApolloProvider>,
+    document.getElementById('root') as HTMLElement
+  );
+  registerServiceWorker();
 });

@@ -12,4 +12,8 @@ const PORT = Number(env.HTTP_PORT || 9090);
 
 const CLIENT_ID = env.CLIENT_ID || 'aurora-openshift-console-dev';
 
-export { CLIENT_ID, AUTHORIZATION_URI, PORT };
+const GOBO_URL = env.GOBO_URL || 'http://gobo-paas-mokey.utv.paas.skead.no/';
+
+const GRAPHQL_URL = env.GRAPHQL_URL || `${GOBO_URL}/graphql`;
+
+export { CLIENT_ID, AUTHORIZATION_URI, PORT, GRAPHQL_URL };
