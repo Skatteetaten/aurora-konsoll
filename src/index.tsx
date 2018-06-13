@@ -11,11 +11,6 @@ import App from './App';
 import './index.css';
 import registerServiceWorker from './registerServiceWorker';
 
-/*
-interface IError {
-  message: string
-}
-*/
 
 interface IConfiguration {
   AUTHORIZATION_URI: string;
