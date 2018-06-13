@@ -1,18 +1,21 @@
-import { default as ApolloClient } from 'apollo-boost';
-import { default as gql } from 'graphql-tag';
+/* tslint:disable:no-console */
+
+import {default as ApolloClient} from 'apollo-boost';
+import {default as gql} from 'graphql-tag';
 import * as qs from 'qs';
 import * as React from 'react';
-import { ApolloProvider } from 'react-apollo';
+import {ApolloProvider} from 'react-apollo';
 import * as ReactDOM from 'react-dom';
-import {
-  BrowserRouter,
-  Redirect,
-  Route,
-  RouteComponentProps
-} from 'react-router-dom';
+import {BrowserRouter, Redirect, Route, RouteComponentProps} from 'react-router-dom';
 import App from './App';
 import './index.css';
 import registerServiceWorker from './registerServiceWorker';
+
+/*
+type Error = {
+  message: string
+}
+*/
 
 interface IConfiguration {
   AUTHORIZATION_URI: string;
@@ -20,13 +23,14 @@ interface IConfiguration {
   GRAPHQL_URL: string;
 }
 
-async function fetchConfiguration(): Promise<IConfiguration> {
+async function fetchConfiguration(): Promise<IConfiguration/* | Error*/> {
   try {
-    const data = await fetch('/api/config');
-    const configuration: IConfiguration = await data.json();
-    return configuration;
+    const data = await fetch('/api/config1');
+    return await data.json();
   } catch (error) {
+    console.log(error);
     return error;
+    // return Error(error);
   }
 }
 
@@ -56,7 +60,7 @@ function verifyAuthenticated(
   return false;
 }
 
-const AcceptToken = ({ location }: RouteComponentProps<{}>) => {
+const AcceptToken = ({location}: RouteComponentProps<{}>) => {
   const data = qs.parse(location.hash.substring(1));
   const time = new Date().getTime();
   const expiresIn = Number(data.expires_in) * 1000;
@@ -88,13 +92,17 @@ class Application extends React.Component<{}, IApplicationState> {
   }
 }
 
-verifyAuthenticated().then(isLoggedIn => {
+async function init() {
+
+  const config = await fetchConfiguration();
+
+  const isLoggedIn = await verifyAuthenticated(config.AUTHORIZATION_URI, config.CLIENT_ID);
   if (!isLoggedIn) {
     return;
   }
 
   const client = new ApolloClient({
-    uri: 'http://gobo-paas-mokey.utv.paas.skead.no/graphql'
+    uri: config.GRAPHQL_URL
   });
 
   interface IAffiliations {
@@ -122,7 +130,7 @@ verifyAuthenticated().then(isLoggedIn => {
       `
     })
     .then(result => {
-      const { affiliations } = result.data;
+      const {affiliations} = result.data;
       console.log(
         affiliations.edges.reduce((acc, edge) => [...acc, edge.node.name], [])
       );
@@ -135,4 +143,7 @@ verifyAuthenticated().then(isLoggedIn => {
     document.getElementById('root') as HTMLElement
   );
   registerServiceWorker();
-});
+
+}
+
+init();
