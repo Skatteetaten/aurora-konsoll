@@ -5,7 +5,7 @@ import * as qs from 'qs';
 import * as React from 'react';
 import {ApolloProvider} from 'react-apollo';
 import * as ReactDOM from 'react-dom';
-import {BrowserRouter, Redirect, Route, RouteComponentProps} from 'react-router-dom';
+import {BrowserRouter, Route, RouteComponentProps} from 'react-router-dom';
 import App from './App';
 import './index.css';
 import registerServiceWorker from './registerServiceWorker';
@@ -28,14 +28,7 @@ async function fetchConfiguration(): Promise<IConfiguration | Error> {
   }
 }
 
-
 const tokenStore = new TokenStore();
-
-function isAuthenticatedOrAcceptingToken(): boolean {
-
-  const isTokenValid = tokenStore.isTokenValid();
-  return isTokenValid || window.location.pathname === '/accept-token';
-}
 
 function redirectToLoginPage(authorizationUri: string, clientId: string) {
 
@@ -54,7 +47,7 @@ function redirectToLoginPage(authorizationUri: string, clientId: string) {
   window.location.replace(authorizationUrl);
 }
 
-const AcceptToken = ({location}: RouteComponentProps<{}>) => {
+const AcceptToken = ({location, onTokenUpdated}: RouteComponentProps<{}> & { onTokenUpdated: () => void }) => {
   interface IAuthQueryString {
     expires_in: string
     access_token: string
@@ -65,24 +58,32 @@ const AcceptToken = ({location}: RouteComponentProps<{}>) => {
   const expiresInSeconds = Number(authQueryString.expires_in);
   tokenStore.updateToken(token, expiresInSeconds);
 
-  return <Redirect push={true} to="/" />;
+  onTokenUpdated();
+  return <div />;
 };
 
 class Application extends React.Component<{
-  isLoggedIn: boolean
-}, {}> {
+  tokenStore: TokenStore
+}> {
 
   public render() {
 
+    const acceptToken = (props: RouteComponentProps<{}>) => (
+      <AcceptToken {...props} onTokenUpdated={this.onTokenUpdated} />);
+    const isAuthenticated = this.props.tokenStore.isTokenValid();
     return (
       <BrowserRouter>
         <div>
-          <Route exact={true} path="/" component={App} />
-          <Route exact={true} path="/accept-token" component={AcceptToken} />
+          <Route exact={true} path="/accept-token" render={acceptToken} />
+          {isAuthenticated && <Route exact={true} path="/" component={App} />}
         </div>
       </BrowserRouter>
     );
   }
+
+  public onTokenUpdated = () => {
+    window.location.replace("/");
+  };
 }
 
 async function init() {
@@ -94,8 +95,7 @@ async function init() {
   }
   const config = configOrError as IConfiguration;
 
-  const isLoggedIn = isAuthenticatedOrAcceptingToken();
-  if (!isLoggedIn) {
+  if (!tokenStore.isTokenValid()) {
     redirectToLoginPage(config.AUTHORIZATION_URI, config.CLIENT_ID);
   }
 
@@ -138,7 +138,7 @@ async function init() {
 
   ReactDOM.render(
     <ApolloProvider client={client}>
-      <Application isLoggedIn={isLoggedIn} />
+      <Application tokenStore={tokenStore} />
     </ApolloProvider>,
     document.getElementById('root') as HTMLElement
   );
