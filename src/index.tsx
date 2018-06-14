@@ -9,27 +9,11 @@ import * as ReactDOM from 'react-dom';
 import { BrowserRouter, Route, RouteComponentProps } from 'react-router-dom';
 import App from './App';
 import { Layout } from './components/Layout';
+import {fetchConfiguration, IConfiguration} from "./config";
 import './index.css';
 import registerServiceWorker from './registerServiceWorker';
-import TokenStore from './TokenStore';
+import {tokenStore, TokenStore} from "./TokenStore";
 
-interface IConfiguration {
-  AUTHORIZATION_URI: string;
-  CLIENT_ID: string;
-  GRAPHQL_URL: string;
-}
-
-async function fetchConfiguration(): Promise<IConfiguration | Error> {
-  try {
-    const data = await fetch('/api/config');
-    return await data.json();
-  } catch (error) {
-    (window as any).e = error;
-    return error;
-  }
-}
-
-const tokenStore = new TokenStore();
 
 function redirectToLoginPage(authorizationUri: string, clientId: string) {
   const authorizationUrl =
