@@ -1,0 +1,10 @@
+li.menu-divider {
+  background: #1b1b1b;
+}
+li.menu-divider p {
+  color: #777;
+  margin: 0;
+  margin-left: 25px;
+  padding: 0;
+  font-size: 12px;
+}

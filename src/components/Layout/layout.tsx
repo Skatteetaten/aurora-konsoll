@@ -1,20 +1,27 @@
 import FooterContent from 'aurora-frontend-react-komponenter/FooterContent';
 import Grid from 'aurora-frontend-react-komponenter/Grid';
 import SkeBasis from 'aurora-frontend-react-komponenter/SkeBasis';
-import TopBanner from 'aurora-frontend-react-komponenter/TopBanner';
 import * as React from 'react';
+import { Header } from '../Header';
+import { Menu, MenuNavLink } from '../Menu';
+import './layout.css';
 
 export class Layout extends React.Component {
   public render() {
     return (
       <SkeBasis>
-        <TopBanner
-          external={true}
-          compact={true}
-          homeText="Til skatteetaten.no"
-          title="Aurora Konsoll"
-        />
-        {this.props.children}
+        <Header title="Aurora Konsoll" />
+        <div className="layout-content">
+          <div className="layout-menu">
+            <Menu>
+              <MenuNavLink name="Applikasjoner" to="/" iconName="Person" />
+              <MenuNavLink name="Database" to="/db" iconName="Cloud" />
+              <MenuNavLink name="Konfigurasjon" to="/conf" iconName="Code" />
+              <MenuNavLink name="WebSEAL" to="/web" iconName="Bookmark" />
+            </Menu>
+          </div>
+          {this.props.children}
+        </div>
         <FooterContent>
           <Grid>
             <Grid.Row>
