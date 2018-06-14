@@ -1,7 +1,6 @@
 /* tslint:disable:no-console */
 
 import {default as ApolloClient} from 'apollo-boost';
-import {default as gql} from 'graphql-tag';
 import * as qs from 'qs';
 import * as React from 'react';
 import {ApolloProvider} from 'react-apollo';
@@ -10,6 +9,7 @@ import {BrowserRouter, Redirect, Route, RouteComponentProps} from 'react-router-
 import App from './App';
 import './index.css';
 import registerServiceWorker from './registerServiceWorker';
+import TokenStore from './TokenStore'
 
 
 interface IConfiguration {
@@ -20,7 +20,7 @@ interface IConfiguration {
 
 async function fetchConfiguration(): Promise<IConfiguration | Error> {
   try {
-    const data = await fetch('/api/config1');
+    const data = await fetch('/api/config');
     return await data.json();
   } catch (error) {
     (window as any).e = error;
@@ -28,16 +28,17 @@ async function fetchConfiguration(): Promise<IConfiguration | Error> {
   }
 }
 
-function verifyAuthenticated(
-  authorizationUri: string,
-  clientId: string
-): boolean {
-  const token = window.localStorage.getItem('token');
-  const expiresAt = window.localStorage.getItem('expiresAt');
-  const tokenExpired = new Date().getTime() > Number(expiresAt);
-  if (token || !tokenExpired || window.location.pathname === '/accept-token') {
-    return true;
-  }
+
+const tokenStore = new TokenStore();
+
+function isAuthenticatedOrAcceptingToken(): boolean {
+
+  const isTokenValid = tokenStore.isTokenValid();
+  return isTokenValid || window.location.pathname === '/accept-token';
+}
+
+function redirectToLoginPage(authorizationUri: string, clientId: string) {
+
   const authorizationUrl =
     authorizationUri +
     '?' +
@@ -51,30 +52,28 @@ function verifyAuthenticated(
       })
     );
   window.location.replace(authorizationUrl);
-  return false;
 }
 
 const AcceptToken = ({location}: RouteComponentProps<{}>) => {
-  const data = qs.parse(location.hash.substring(1));
-  const time = new Date().getTime();
-  const expiresIn = Number(data.expires_in) * 1000;
-  const expiresAt = new Date(time + expiresIn).getTime();
+  interface IAuthQueryString {
+    expires_in: string
+    access_token: string
+  }
 
-  window.localStorage.setItem('token', data.access_token);
-  window.localStorage.setItem('expiresAt', expiresAt.toString());
+  const authQueryString = qs.parse(location.hash.substring(1)) as IAuthQueryString;
+  const token = authQueryString.access_token;
+  const expiresInSeconds = Number(authQueryString.expires_in);
+  tokenStore.updateToken(token, expiresInSeconds);
+
   return <Redirect push={true} to="/" />;
 };
 
-interface IApplicationState {
-  loggedIn: boolean;
-}
-
-class Application extends React.Component<{}, IApplicationState> {
-  public state = {
-    loggedIn: false
-  };
+class Application extends React.Component<{
+  isLoggedIn: boolean
+}, {}> {
 
   public render() {
+
     return (
       <BrowserRouter>
         <div>
@@ -95,49 +94,51 @@ async function init() {
   }
   const config = configOrError as IConfiguration;
 
-  const isLoggedIn = await verifyAuthenticated(config.AUTHORIZATION_URI, config.CLIENT_ID);
+  const isLoggedIn = isAuthenticatedOrAcceptingToken();
   if (!isLoggedIn) {
-    return;
+    redirectToLoginPage(config.AUTHORIZATION_URI, config.CLIENT_ID);
   }
 
   const client = new ApolloClient({
     uri: config.GRAPHQL_URL
   });
+  /*
 
-  interface IAffiliations {
-    affiliations: {
-      edges: Array<{
-        node: {
-          name: string;
-        };
-      }>;
-    };
-  }
+    interface IAffiliations {
+      affiliations: {
+        edges: Array<{
+          node: {
+            name: string;
+          };
+        }>;
+      };
+    }
 
-  client
-    .query<IAffiliations>({
-      query: gql`
-        {
-          affiliations {
-            edges {
-              node {
-                name
+    client
+      .query<IAffiliations>({
+        query: gql`
+          {
+            affiliations {
+              edges {
+                node {
+                  name
+                }
               }
             }
           }
-        }
-      `
-    })
-    .then(result => {
-      const {affiliations} = result.data;
-      console.log(
-        affiliations.edges.reduce((acc, edge) => [...acc, edge.node.name], [])
-      );
-    });
+        `
+      })
+      .then(result => {
+        const {affiliations} = result.data;
+        console.log(
+          affiliations.edges.reduce((acc, edge) => [...acc, edge.node.name], [])
+        );
+      });
+  */
 
   ReactDOM.render(
     <ApolloProvider client={client}>
-      <Application />
+      <Application isLoggedIn={isLoggedIn} />
     </ApolloProvider>,
     document.getElementById('root') as HTMLElement
   );
