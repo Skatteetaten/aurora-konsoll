@@ -1,11 +1,10 @@
 class TokenStore {
-
   private TOKEN_KEY = 'token';
 
   private EXPIRES_AT_KEY = 'expiresAt';
 
   public isTokenValid(): boolean {
-    const token = window.localStorage.getItem(this.TOKEN_KEY);
+    const token = this.getToken();
     if (!token) {
       return false;
     }
@@ -17,6 +16,10 @@ class TokenStore {
 
     const tokenExpired = new Date().getTime() > Number(expiresAt);
     return !tokenExpired;
+  }
+
+  public getToken() {
+    return window.localStorage.getItem(this.TOKEN_KEY);
   }
 
   public updateToken(token: string, expiresInSeconds: number) {
