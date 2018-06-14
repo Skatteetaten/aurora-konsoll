@@ -14,4 +14,4 @@ async function fetchConfiguration(): Promise<IConfiguration | Error> {
   }
 }
 
-export {IConfiguration, fetchConfiguration};
+export { IConfiguration, fetchConfiguration };

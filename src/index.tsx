@@ -9,11 +9,10 @@ import * as ReactDOM from 'react-dom';
 import { BrowserRouter, Route, RouteComponentProps } from 'react-router-dom';
 import App from './App';
 import { Layout } from './components/Layout';
-import {fetchConfiguration, IConfiguration} from "./config";
+import { fetchConfiguration, IConfiguration } from './config';
 import './index.css';
 import registerServiceWorker from './registerServiceWorker';
-import {tokenStore, TokenStore} from "./TokenStore";
-
+import { tokenStore, TokenStore } from './TokenStore';
 
 function redirectToLoginPage(authorizationUri: string, clientId: string) {
   const authorizationUrl =
