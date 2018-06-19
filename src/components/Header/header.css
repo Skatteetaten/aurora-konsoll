@@ -25,11 +25,24 @@
   align-items: center;
 }
 
-.main-header-logo-wrapper .title {
+.main-header-title {
   margin: 0;
   margin-left: 15px;
 }
 
 .main-header-logo img {
   height: 50px;
+}
+
+.main-header-user-wrapper {
+  align-items: center;
+  display: flex;
+  justify-content: end;
+  margin-right: 15px;
+}
+
+.main-header-user-icon {
+  color: #1362ae;
+  font-size: 32px;
+  margin-left: 10px;
 }

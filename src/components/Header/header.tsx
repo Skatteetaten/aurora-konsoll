@@ -20,27 +20,13 @@ export const Header = ({ title, user }: IHeaderProps) => (
               <div>
                 <Image src={Logo} className="main-header-logo" />
               </div>
-              <h2 className="title">{title}</h2>
+              <h2 className="main-header-title">{title}</h2>
             </div>
           </Grid.Col>
           <Grid.Col lg={6} xl={4} xlPush={4} noSpacing={true}>
-            <div
-              style={{
-                alignItems: 'center',
-                display: 'flex',
-                justifyContent: 'end',
-                marginRight: '15px'
-              }}
-            >
+            <div className="main-header-user-wrapper">
               <p style={{ margin: 0, fontSize: '20px' }}>{user}</p>
-              <Icon
-                iconName="Person"
-                style={{
-                  color: '#1362ae',
-                  fontSize: '32px',
-                  marginLeft: '10px'
-                }}
-              />
+              <Icon iconName="Person" className="main-header-user-icon" />
             </div>
           </Grid.Col>
         </div>
