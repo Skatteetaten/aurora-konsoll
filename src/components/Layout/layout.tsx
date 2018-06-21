@@ -1,7 +1,7 @@
 import Grid from 'aurora-frontend-react-komponenter/Grid';
 import SkeBasis from 'aurora-frontend-react-komponenter/SkeBasis';
 import * as React from 'react';
-import { Header } from '../Header';
+import { Header, IDropdownOption } from '../Header';
 import { Menu, MenuNavLink } from '../Menu';
 import './layout.css';
 
@@ -21,14 +21,29 @@ const Col = ({
   </Grid.Col>
 );
 
-export class Layout extends React.Component {
+interface ILayoutProps {
+  user: string;
+  affiliations?: IDropdownOption[];
+  handleChangeAffiliation: (affiliation: string) => void;
+}
+
+export class Layout extends React.Component<ILayoutProps> {
+  public defaultProps = {
+    affiliations: []
+  };
+
   public render() {
     return (
       <SkeBasis>
         <Grid>
           <Row>
             <Col lg={12}>
-              <Header title="Aurora Konsoll" user="FirstName LastName" />
+              <Header
+                title="Aurora Konsoll"
+                user={this.props.user}
+                affiliations={this.props.affiliations}
+                handleChangeAffiliation={this.props.handleChangeAffiliation}
+              />
             </Col>
           </Row>
           <Row>

@@ -1,12 +1,14 @@
 /* tslint:disable:no-console */
 
 import { default as ApolloClient } from 'apollo-boost';
+import { default as gql } from 'graphql-tag';
 import * as qs from 'qs';
 import * as React from 'react';
-import { ApolloProvider } from 'react-apollo';
+import { ApolloProvider, Query, QueryResult } from 'react-apollo';
 import * as ReactDOM from 'react-dom';
 import { BrowserRouter, Route, RouteComponentProps } from 'react-router-dom';
 
+import { IDropdownOption } from 'components/Header';
 import { Layout } from 'components/Layout';
 import AcceptToken from 'modules/AcceptToken';
 import Applications from 'screens/Applications';
@@ -16,9 +18,28 @@ import { tokenStore, TokenStore } from 'services/TokenStore';
 import { fetchConfiguration, IConfiguration } from './config';
 import './index.css';
 
-class Application extends React.Component<{
-  tokenStore: TokenStore;
-}> {
+class Application extends React.Component<
+  {
+    tokenStore: TokenStore;
+  },
+  {
+    affiliation?: string;
+  }
+> {
+  public state = {
+    affiliation: undefined
+  };
+
+  public selectAffiliation = (affiliation: string) => {
+    this.setState(state => ({
+      affiliation
+    }));
+  };
+
+  public renderApplications = () => {
+    return <Applications affiliation={this.state.affiliation} />;
+  };
+
   public render() {
     const acceptToken = (props: RouteComponentProps<{}>) => (
       <AcceptToken {...props} onTokenUpdated={this.onTokenUpdated} />
@@ -26,18 +47,85 @@ class Application extends React.Component<{
     const isAuthenticated = this.props.tokenStore.isTokenValid();
     return (
       <BrowserRouter>
-        <Layout>
-          <Route exact={true} path="/accept-token" render={acceptToken} />
-          {isAuthenticated && (
-            <Route exact={true} path="/" component={Applications} />
-          )}
-        </Layout>
+        <Query query={USER_AFFILIATIONS_QUERY}>
+          {({ data }: QueryResult<IUserAffiliationsQuery>) => {
+            let user = '';
+            if (data && data.currentUser) {
+              user = data.currentUser.name;
+            }
+            return (
+              <Layout
+                user={user}
+                affiliations={toDropdownOptions(data)}
+                handleChangeAffiliation={this.selectAffiliation}
+              >
+                <Route exact={true} path="/accept-token" render={acceptToken} />
+                {isAuthenticated && (
+                  <Route
+                    exact={true}
+                    path="/"
+                    render={this.renderApplications}
+                  />
+                )}
+              </Layout>
+            );
+          }}
+        </Query>
       </BrowserRouter>
     );
   }
 
   public onTokenUpdated = () => {
     window.location.replace('/');
+  };
+}
+
+function toDropdownOptions(data?: IUserAffiliationsQuery): IDropdownOption[] {
+  if (!data || !data.affiliations) {
+    return [];
+  }
+
+  return data.affiliations.edges
+    .map(edge => edge.node.name.toLowerCase())
+    .filter((value, index, self) => self.indexOf(value) === index)
+    .sort()
+    .reduce(
+      (acc: IDropdownOption[], name) => [
+        ...acc,
+        {
+          key: name,
+          text: name
+        }
+      ],
+      []
+    );
+}
+
+const USER_AFFILIATIONS_QUERY = gql`
+  {
+    currentUser {
+      name
+    }
+    affiliations {
+      edges {
+        node {
+          name
+        }
+      }
+    }
+  }
+`;
+
+interface IUserAffiliationsQuery {
+  currentUser: {
+    name: string;
+  };
+  affiliations: {
+    edges: Array<{
+      node: {
+        name: string;
+      };
+    }>;
   };
 }
 
