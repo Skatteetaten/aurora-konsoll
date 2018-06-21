@@ -28,7 +28,7 @@ interface ILayoutProps {
 }
 
 export class Layout extends React.Component<ILayoutProps> {
-  public defaultProps = {
+  public static defaultProps = {
     affiliations: []
   };
 
