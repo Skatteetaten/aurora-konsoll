@@ -23,7 +23,8 @@
     "react-apollo": "^2.1.4",
     "react-dom": "^16.4.0",
     "react-router-dom": "^4.3.1",
-    "react-scripts-ts": "2.16.0"
+    "react-scripts-ts": "2.16.0",
+    "styled-components": "^3.3.3"
   },
   "scripts": {
     "start": "npm-run-all --parallel start:web start:api",

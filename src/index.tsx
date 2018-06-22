@@ -1,6 +1,7 @@
 /* tslint:disable:no-console */
 
 import { default as ApolloClient } from 'apollo-boost';
+import { IDropdownOption } from 'aurora-frontend-react-komponenter/Dropdown';
 import { default as gql } from 'graphql-tag';
 import * as qs from 'qs';
 import * as React from 'react';
@@ -8,8 +9,7 @@ import { ApolloProvider, Query, QueryResult } from 'react-apollo';
 import * as ReactDOM from 'react-dom';
 import { BrowserRouter, Route, RouteComponentProps } from 'react-router-dom';
 
-import { IDropdownOption } from 'components/Header';
-import { Layout } from 'components/Layout';
+import Layout from 'components/Layout';
 import AcceptToken from 'modules/AcceptToken';
 import Applications from 'screens/Applications';
 import registerServiceWorker from 'services/registerServiceWorker';

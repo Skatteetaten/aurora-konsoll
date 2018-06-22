@@ -1,12 +1,22 @@
-import Dropdown from 'aurora-frontend-react-komponenter/Dropdown';
+import Dropdown, {
+  IDropdownOption
+} from 'aurora-frontend-react-komponenter/Dropdown';
 import Grid from 'aurora-frontend-react-komponenter/Grid';
 import Icon from 'aurora-frontend-react-komponenter/Icon';
 import Image from 'aurora-frontend-react-komponenter/Image';
 import * as Logo from 'aurora-frontend-react-komponenter/TopBanner/assets/ske-logo.svg';
 import * as React from 'react';
-import './header.css';
 
-export const Header = ({
+import './Header.css';
+
+interface IHeaderProps {
+  title: string;
+  user: string;
+  affiliations?: IDropdownOption[];
+  handleChangeAffiliation: (affiliation: string) => void;
+}
+
+const Header = ({
   title,
   user,
   handleChangeAffiliation,
@@ -14,6 +24,7 @@ export const Header = ({
 }: IHeaderProps) => {
   const onChangedAffiliation = (item: { text: string }) =>
     handleChangeAffiliation(item.text);
+
   return (
     <div className="main-header">
       <Grid>
@@ -46,14 +57,4 @@ export const Header = ({
   );
 };
 
-export interface IDropdownOption {
-  key: string;
-  text: string;
-}
-
-interface IHeaderProps {
-  title: string;
-  user: string;
-  affiliations?: IDropdownOption[];
-  handleChangeAffiliation: (affiliation: string) => void;
-}
+export default Header;

@@ -1,118 +1,84 @@
 import Grid from 'aurora-frontend-react-komponenter/Grid';
-import { default as gql } from 'graphql-tag';
 import * as React from 'react';
 import { Query, QueryResult } from 'react-apollo';
+import { default as styled } from 'styled-components';
 
-import './applications/style.css';
+import ApplicationNode from './applications/ApplicationNode';
+import {
+  APPLICATIONS_QUERY,
+  IApplicationEdge,
+  IApplications
+} from './applications/Applications.graphql';
 
 interface IApplicationsProps {
   affiliation?: string;
 }
 
-export default class Applications extends React.Component<IApplicationsProps> {
-  public render() {
-    if (!this.props.affiliation) {
-      return <p>Please select affiliation</p>;
-    }
-    const variables = {
-      affiliations: [this.props.affiliation]
-    };
-    return (
-      <Grid className="Applications-main-grid">
-        <Grid.Row>
-          <Grid.Col lg={12}>
-            <div className="applications">
-              <Query query={APPLICATIONS_QUERY} variables={variables}>
-                {({ loading, data }: QueryResult<IApplications>) => {
-                  if (!data || !data.applications) {
-                    return false;
-                  }
-                  if (loading) {
-                    return <h2>Loading...</h2>;
-                  }
-
-                  const edges = [...data.applications.edges].sort(
-                    sortApplications
-                  );
-
-                  return edges.map(edge => (
-                    <ApplicationNode
-                      key={createUniqueAppId(edge)}
-                      edge={edge}
-                    />
-                  ));
-                }}
-              </Query>
-            </div>
-          </Grid.Col>
-        </Grid.Row>
-      </Grid>
-    );
+const Applications = ({ affiliation }: IApplicationsProps) => {
+  if (!affiliation) {
+    return <p>Please select affiliation</p>;
   }
-}
+  const variables = {
+    affiliations: [affiliation]
+  };
 
-const ApplicationNode = ({ edge: { node } }: { edge: IApplicationEdge }) => (
-  <div>
-    <p>{node.name}</p>
-    <p>{node.namespace.name}</p>
-    <p>{node.version.deployTag}</p>
-  </div>
-);
+  const createUniqueAppId = ({ node }: IApplicationEdge) =>
+    node.namespace.name + '::' + node.name;
 
-function createUniqueAppId({ node }: IApplicationEdge): string {
-  return node.namespace.name + '::' + node.name;
-}
+  const sortApplications = (e1: IApplicationEdge, e2: IApplicationEdge) =>
+    createUniqueAppId(e1).localeCompare(createUniqueAppId(e2));
 
-function sortApplications(e1: IApplicationEdge, e2: IApplicationEdge): number {
-  return createUniqueAppId(e1).localeCompare(createUniqueAppId(e2));
-}
+  return (
+    <FlexGrid>
+      <Grid.Row>
+        <Grid.Col lg={12}>
+          <ApplicationWrapper>
+            <Query query={APPLICATIONS_QUERY} variables={variables}>
+              {({ loading, data }: QueryResult<IApplications>) => {
+                if (!data || !data.applications) {
+                  return false;
+                }
+                if (loading) {
+                  return <h2>Loading...</h2>;
+                }
 
-const APPLICATIONS_QUERY = gql`
-  query applications($affiliations: [String!]) {
-    applications(affiliations: $affiliations) {
-      edges {
-        node {
-          affiliation {
-            name
-          }
-          name
-          namespace {
-            name
-          }
-          status {
-            code
-          }
-          version {
-            auroraVersion
-            deployTag
-          }
-        }
-      }
-    }
+                const edges = [...data.applications.edges].sort(
+                  sortApplications
+                );
+
+                return edges.map(edge => (
+                  <ApplicationNode key={createUniqueAppId(edge)} edge={edge} />
+                ));
+              }}
+            </Query>
+          </ApplicationWrapper>
+        </Grid.Col>
+      </Grid.Row>
+    </FlexGrid>
+  );
+};
+
+const FlexGrid = styled(Grid)`
+  flex: 1;
+`;
+
+const ApplicationWrapper = styled.div`
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+
+  div {
+    flex: 1;
+    min-width: 300px;
+    max-width: 300px;
+    margin: 5px;
+    padding: 3px;
+    border: 1px solid black;
+  }
+
+  div p {
+    margin: 0;
   }
 `;
 
-interface IApplications {
-  applications: {
-    edges: IApplicationEdge[];
-  };
-}
-
-interface IApplicationEdge {
-  node: {
-    affiliation: {
-      name: string;
-    };
-    name: string;
-    namespace: {
-      name: string;
-    };
-    status: {
-      code: string;
-    };
-    version: {
-      auroraVersion: string;
-      deployTag: string;
-    };
-  };
-}
+export default Applications;
