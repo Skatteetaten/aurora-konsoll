@@ -9,10 +9,10 @@ import {
   IAuroraApiClient,
   IUserAffiliationResult
 } from 'services/AuroraApiClient';
-import { TokenStore } from 'services/TokenStore';
+import { ITokenStore } from 'services/TokenStore';
 
 interface IRoutesProps {
-  tokenStore: TokenStore;
+  tokenStore: ITokenStore;
 }
 
 interface IRoutesState {
@@ -42,11 +42,13 @@ export default class Routes extends React.Component<
       <AcceptToken {...props} onTokenUpdated={this.onTokenUpdated} />
     );
     const isAuthenticated = this.props.tokenStore.isTokenValid();
-    const findAllAffiliations = (client: IAuroraApiClient) =>
+
+    const findUserAndAffiliations = (client: IAuroraApiClient) =>
       client.findUserAndAffiliations();
+
     return (
       <BrowserRouter>
-        <AuroraApi fetch={findAllAffiliations}>
+        <AuroraApi fetch={findUserAndAffiliations}>
           {({ user, affiliations }: IUserAffiliationResult) => (
             <Layout
               user={user}

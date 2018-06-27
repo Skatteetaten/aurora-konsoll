@@ -1,4 +1,10 @@
-class TokenStore {
+export interface ITokenStore {
+  isTokenValid: () => boolean;
+  getToken: () => string | null;
+  updateToken: (token: string, expiresInSeconds: number) => void;
+}
+
+class TokenStore implements ITokenStore {
   private TOKEN_KEY = 'token';
 
   private EXPIRES_AT_KEY = 'expiresAt';

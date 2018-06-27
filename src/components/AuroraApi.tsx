@@ -36,7 +36,7 @@ class AuroraApiCall<P> extends React.Component<
   IAuroraApiCallProps<P>,
   IAuroraApiCallState<P>
 > {
-  public state = {
+  public state: IAuroraApiCallState<P> = {
     response: undefined
   };
 
