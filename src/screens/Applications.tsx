@@ -1,62 +1,48 @@
 import Grid from 'aurora-frontend-react-komponenter/Grid';
 import * as React from 'react';
-import { Query, QueryResult } from 'react-apollo';
 import { default as styled } from 'styled-components';
 
-import ApplicationNode from './applications/ApplicationNode';
-import {
-  APPLICATIONS_QUERY,
-  IApplicationEdge,
-  IApplications
-} from './applications/Applications.graphql';
+import { IApplicationEdge } from './applications/Applications.graphql';
+import Card from './applications/Card';
 
 interface IApplicationsProps {
-  affiliation?: string;
+  edges?: IApplicationEdge[];
 }
 
-const Applications = ({ affiliation }: IApplicationsProps) => {
-  if (!affiliation) {
-    return <p>Please select affiliation</p>;
-  }
-  const variables = {
-    affiliations: [affiliation]
+export default class Applications extends React.Component<IApplicationsProps> {
+  public static defaultProps: IApplicationsProps = {
+    edges: []
   };
 
-  const createUniqueAppId = ({ node }: IApplicationEdge) =>
-    node.namespace.name + '::' + node.name;
+  public render() {
+    const { edges } = this.props;
+    if (!edges) {
+      return null;
+    }
 
-  const sortApplications = (e1: IApplicationEdge, e2: IApplicationEdge) =>
-    createUniqueAppId(e1).localeCompare(createUniqueAppId(e2));
+    const createUniqueAppId = ({ node }: IApplicationEdge) =>
+      node.namespace.name + '::' + node.name;
 
-  return (
-    <FlexGrid>
-      <Grid.Row>
-        <Grid.Col lg={12}>
-          <ApplicationWrapper>
-            <Query query={APPLICATIONS_QUERY} variables={variables}>
-              {({ loading, data }: QueryResult<IApplications>) => {
-                if (!data || !data.applications) {
-                  return false;
-                }
-                if (loading) {
-                  return <h2>Loading...</h2>;
-                }
+    const sortApplications = (e1: IApplicationEdge, e2: IApplicationEdge) =>
+      createUniqueAppId(e1).localeCompare(createUniqueAppId(e2));
 
-                const edges = [...data.applications.edges].sort(
-                  sortApplications
-                );
-
-                return edges.map(edge => (
-                  <ApplicationNode key={createUniqueAppId(edge)} edge={edge} />
-                ));
-              }}
-            </Query>
-          </ApplicationWrapper>
-        </Grid.Col>
-      </Grid.Row>
-    </FlexGrid>
-  );
-};
+    return (
+      <FlexGrid>
+        <Grid.Row>
+          <Grid.Col lg={12}>
+            <ApplicationWrapper>
+              {Array.from(edges)
+                .sort(sortApplications)
+                .map(edge => (
+                  <Card key={createUniqueAppId(edge)} edge={edge} />
+                ))}
+            </ApplicationWrapper>
+          </Grid.Col>
+        </Grid.Row>
+      </FlexGrid>
+    );
+  }
+}
 
 const FlexGrid = styled(Grid)`
   flex: 1;
@@ -80,5 +66,3 @@ const ApplicationWrapper = styled.div`
     margin: 0;
   }
 `;
-
-export default Applications;

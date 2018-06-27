@@ -57,4 +57,21 @@ const LayoutContent = styled.div`
   margin: 0 15px;
 `;
 
+export function toDropdownOptions(affiliations: string[]): IDropdownOption[] {
+  return affiliations
+    .map(name => name.toLowerCase())
+    .filter((value, index, self) => self.indexOf(value) === index)
+    .sort()
+    .reduce(
+      (acc: IDropdownOption[], name) => [
+        ...acc,
+        {
+          key: name,
+          text: name
+        }
+      ],
+      []
+    );
+}
+
 export default Layout;

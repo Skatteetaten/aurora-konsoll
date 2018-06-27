@@ -5,12 +5,12 @@ interface IApplicationNodeProps {
   edge: IApplicationEdge;
 }
 
-const ApplicationNode = ({ edge: { node } }: IApplicationNodeProps) => (
-  <div>
+const Card = ({ edge: { node } }: IApplicationNodeProps) => (
+  <div title={node.version.deployTag}>
     <p>{node.name}</p>
     <p>{node.namespace.name}</p>
     <p>{node.version.deployTag}</p>
   </div>
 );
 
-export default ApplicationNode;
+export default Card;
