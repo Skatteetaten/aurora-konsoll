@@ -1,6 +1,7 @@
 import * as React from 'react';
 
 import { IApplicationResult } from 'services/AuroraApiClient';
+import Status from './matrixRow/Status';
 
 export interface IApplicationMap {
   [name: string]: IApplicationResult[];
@@ -24,30 +25,21 @@ const MatrixRow = ({
 
   const cells = namespaces.map((namespace, index) => {
     if (index === 0) {
-      return (
-        <td key={index} className="table-data-btn">
-          {name}
-        </td>
-      );
+      return <td key={index}>{name}</td>;
     }
 
     const found = apps[name].find(app => app.namespace === namespace);
 
     if (found) {
-      const classes = `table-button status-${found.statusCode &&
-        found.statusCode.toLowerCase()}`;
       return (
-        <td
+        <Status
           key={index}
+          name={found.statusCode.toLowerCase()}
           onClick={handleSelectApplication(found)}
-          className={classes}
-          style={{
-            backgroundColor: 'green'
-          }}
           title={found.version.deployTag}
         >
           {found.version.deployTag || found.version.auroraVersion}
-        </td>
+        </Status>
       );
     } else {
       return <td key={index}>-</td>;
