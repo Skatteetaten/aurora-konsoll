@@ -1,14 +1,9 @@
 import * as React from 'react';
 import { BrowserRouter, Route, RouteComponentProps } from 'react-router-dom';
 
-import { AuroraApi } from 'components/AuroraApi';
-import Layout, { toDropdownOptions } from 'components/Layout';
+import Layout from 'components/Layout';
 import AcceptToken from 'modules/AcceptToken';
 import Applications from 'screens/Applications';
-import {
-  IAuroraApiClient,
-  IUserAffiliationResult
-} from 'services/AuroraApiClient';
 import { ITokenStore } from 'services/TokenStore';
 
 interface IRoutesProps {
@@ -34,7 +29,7 @@ export default class Routes extends React.Component<
   };
 
   public renderApplications = () => {
-    return <Applications />;
+    return <Applications affiliation={this.state.affiliation} />;
   };
 
   public render() {
@@ -43,36 +38,17 @@ export default class Routes extends React.Component<
     );
     const isAuthenticated = this.props.tokenStore.isTokenValid();
 
-    const findUserAndAffiliations = (client: IAuroraApiClient) =>
-      client.findUserAndAffiliations();
-
     return (
       <BrowserRouter>
-        <AuroraApi fetch={findUserAndAffiliations}>
-          {({ user, affiliations }: IUserAffiliationResult) => (
-            <Layout
-              user={user}
-              handleChangeAffiliation={this.selectAffiliation}
-              affiliations={toDropdownOptions(affiliations)}
-            >
-              <Route exact={true} path="/accept-token" render={acceptToken} />
-              {isAuthenticated && (
-                <div>
-                  <Route
-                    exact={true}
-                    path="/"
-                    render={this.renderApplications}
-                  />
-                  <Route
-                    exact={true}
-                    path="/db"
-                    render={this.renderApplications}
-                  />
-                </div>
-              )}
-            </Layout>
+        <Layout handleChangeAffiliation={this.selectAffiliation}>
+          <Route exact={true} path="/accept-token" render={acceptToken} />
+          {isAuthenticated && (
+            <div>
+              <Route exact={true} path="/" render={this.renderApplications} />
+              <Route exact={true} path="/db" render={this.renderApplications} />
+            </div>
           )}
-        </AuroraApi>
+        </Layout>
       </BrowserRouter>
     );
   }

@@ -7,32 +7,34 @@ import { default as styled } from 'styled-components';
 import Header from 'components/Header';
 import Menu, { MenuNavLink } from 'components/Menu';
 
+import { AuroraApi, IApiClients } from './AuroraApi';
 import Col from './layout/Col';
 import Row from './layout/Row';
 
 interface ILayoutProps {
-  user: string;
-  affiliations?: IDropdownOption[];
   children: React.ReactNode;
   handleChangeAffiliation: (affiliation: string) => void;
 }
 
-const Layout = ({
-  user,
-  children,
-  handleChangeAffiliation,
-  affiliations = []
-}: ILayoutProps) => (
+function fetchUserAffiliations({ apiClient }: IApiClients) {
+  return apiClient.findUserAndAffiliations();
+}
+
+const Layout = ({ children, handleChangeAffiliation }: ILayoutProps) => (
   <SkeBasis>
     <Grid>
       <Row>
         <Col lg={12}>
-          <Header
-            title="Aurora Konsoll"
-            user={user}
-            affiliations={affiliations}
-            handleChangeAffiliation={handleChangeAffiliation}
-          />
+          <AuroraApi fetch={fetchUserAffiliations}>
+            {({ affiliations, user }) => (
+              <Header
+                title="Aurora Konsoll"
+                user={user}
+                affiliations={toDropdownOptions(affiliations)}
+                handleChangeAffiliation={handleChangeAffiliation}
+              />
+            )}
+          </AuroraApi>
         </Col>
       </Row>
       <Row>
@@ -57,7 +59,7 @@ const LayoutContent = styled.div`
   margin: 0 15px;
 `;
 
-export function toDropdownOptions(affiliations: string[]): IDropdownOption[] {
+function toDropdownOptions(affiliations: string[]): IDropdownOption[] {
   return affiliations
     .map(name => name.toLowerCase())
     .filter((value, index, self) => self.indexOf(value) === index)

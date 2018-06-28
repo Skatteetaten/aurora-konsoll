@@ -1,15 +1,15 @@
 import * as React from 'react';
-import { IApplicationEdge } from './Applications.graphql';
+import { IApplicationResult } from 'services/AuroraApiClient';
 
 interface IApplicationNodeProps {
-  edge: IApplicationEdge;
+  app: IApplicationResult;
 }
 
-const Card = ({ edge: { node } }: IApplicationNodeProps) => (
-  <div title={node.version.deployTag}>
-    <p>{node.name}</p>
-    <p>{node.namespace.name}</p>
-    <p>{node.version.deployTag}</p>
+const Card = ({ app }: IApplicationNodeProps) => (
+  <div title={app.version.deployTag}>
+    <p>{app.name}</p>
+    <p>{app.namespace}</p>
+    <p>{app.version.deployTag}</p>
   </div>
 );
 

@@ -2,40 +2,44 @@ import Grid from 'aurora-frontend-react-komponenter/Grid';
 import * as React from 'react';
 import { default as styled } from 'styled-components';
 
-import { IApplicationEdge } from './applications/Applications.graphql';
+import { AuroraApi, IApiClients } from 'components/AuroraApi';
+import { IApplicationResult } from 'services/AuroraApiClient';
 import Card from './applications/Card';
 
-interface IApplicationsProps {
-  edges?: IApplicationEdge[];
-}
-
-export default class Applications extends React.Component<IApplicationsProps> {
-  public static defaultProps: IApplicationsProps = {
-    edges: []
-  };
-
+export default class Applications extends React.Component<{
+  affiliation?: string;
+}> {
   public render() {
-    const { edges } = this.props;
-    if (!edges) {
-      return null;
+    const { affiliation } = this.props;
+    if (!affiliation) {
+      return <p>Please select affiliation</p>;
     }
+    const createUniqueAppId = (app: IApplicationResult) =>
+      app.namespace + '::' + app.name;
 
-    const createUniqueAppId = ({ node }: IApplicationEdge) =>
-      node.namespace.name + '::' + node.name;
-
-    const sortApplications = (e1: IApplicationEdge, e2: IApplicationEdge) =>
+    const sortApplications = (e1: IApplicationResult, e2: IApplicationResult) =>
       createUniqueAppId(e1).localeCompare(createUniqueAppId(e2));
+
+    const fetchApplications = ({ apiClient }: IApiClients) =>
+      apiClient.findAllApplicationsForAffiliations([affiliation]);
 
     return (
       <FlexGrid>
         <Grid.Row>
           <Grid.Col lg={12}>
             <ApplicationWrapper>
-              {Array.from(edges)
-                .sort(sortApplications)
-                .map(edge => (
-                  <Card key={createUniqueAppId(edge)} edge={edge} />
-                ))}
+              <AuroraApi fetch={fetchApplications}>
+                {(applications, loading) => {
+                  if (loading) {
+                    return <p>Loading</p>;
+                  }
+                  return applications
+                    .sort(sortApplications)
+                    .map(app => (
+                      <Card key={createUniqueAppId(app)} app={app} />
+                    ));
+                }}
+              </AuroraApi>
             </ApplicationWrapper>
           </Grid.Col>
         </Grid.Row>

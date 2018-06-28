@@ -1,35 +1,68 @@
 import * as React from 'react';
 import { IAuroraApiClient } from 'services/AuroraApiClient';
 
+interface IApiClients {
+  apiClient: IAuroraApiClient;
+}
+
+// AuroraApiContext
+
+interface IAuroraApiContextValues {
+  clients?: IApiClients;
+}
+
 const AuroraApiContext = React.createContext<IAuroraApiContextValues>({
-  client: undefined
+  clients: undefined
 });
 
-const AuroraApiProvider = ({ client, children }: IAuroraApiProviderProps) => (
+// AuroraApiProvider
+
+interface IAuroraApiProviderProps {
+  clients: IApiClients;
+  children: React.ReactNode;
+}
+
+const AuroraApiProvider = ({ clients, children }: IAuroraApiProviderProps) => (
   <AuroraApiContext.Provider
     value={{
-      client
+      clients
     }}
   >
     {children}
   </AuroraApiContext.Provider>
 );
 
+// AuroraApi
+
+interface IAuroraApiProps<P> {
+  fetch: (clients: IApiClients) => Promise<P>;
+  children: (data: P, loading: boolean) => React.ReactNode;
+}
+
 function AuroraApi<P>({ children, fetch }: IAuroraApiProps<P>) {
   return (
     <AuroraApiContext.Consumer>
-      {({ client }) => {
-        if (!client) {
-          throw new Error(
-            'AuroraApiClient is missing. Please use AuroraApiProvider.'
-          );
+      {({ clients }) => {
+        if (!clients) {
+          return null;
         }
         return (
-          <AuroraApiCall fetch={fetch} client={client} children={children} />
+          <AuroraApiCall fetch={fetch} clients={clients} children={children} />
         );
       }}
     </AuroraApiContext.Consumer>
   );
+}
+
+// AuroraApiCall
+
+interface IAuroraApiCallState<P> {
+  loading: boolean;
+  response?: P;
+}
+
+interface IAuroraApiCallProps<P> extends IAuroraApiProps<P> {
+  clients: IApiClients;
 }
 
 class AuroraApiCall<P> extends React.Component<
@@ -37,45 +70,38 @@ class AuroraApiCall<P> extends React.Component<
   IAuroraApiCallState<P>
 > {
   public state: IAuroraApiCallState<P> = {
+    loading: false,
     response: undefined
   };
 
-  public async componentDidMount() {
-    const response = await this.props.fetch(this.props.client);
+  public async fetchData() {
+    this.setState(() => ({
+      loading: true
+    }));
+    const response = await this.props.fetch(this.props.clients);
     this.setState({
+      loading: false,
       response
     });
   }
 
+  public componentDidMount() {
+    this.fetchData();
+  }
+
+  public componentDidUpdate(prevProps: IAuroraApiCallProps<P>) {
+    if (this.props.fetch !== prevProps.fetch) {
+      this.fetchData();
+    }
+  }
+
   public render() {
-    const { response } = this.state;
+    const { response, loading } = this.state;
     if (!response) {
       return null;
     }
-    return this.props.children(response);
+    return this.props.children(response, loading);
   }
 }
 
-interface IAuroraApiCallState<P> {
-  response?: P;
-}
-
-interface IAuroraApiCallProps<P> extends IAuroraApiProps<P> {
-  client: IAuroraApiClient;
-}
-
-interface IAuroraApiProps<P> {
-  fetch: (client: IAuroraApiClient) => Promise<P>;
-  children: (data: P) => React.ReactNode;
-}
-
-interface IAuroraApiProviderProps {
-  client: IAuroraApiClient;
-  children: React.ReactNode;
-}
-
-interface IAuroraApiContextValues {
-  client?: IAuroraApiClient;
-}
-
-export { AuroraApiProvider, AuroraApi };
+export { AuroraApiProvider, AuroraApi, IApiClients };

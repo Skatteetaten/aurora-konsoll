@@ -22,10 +22,12 @@ async function init() {
     redirectToLoginPage(config.AUTHORIZATION_URI, config.CLIENT_ID);
   }
 
-  const client = new AuroraApiClient(config.GRAPHQL_URL);
+  const clients = {
+    apiClient: new AuroraApiClient(config.GRAPHQL_URL)
+  };
 
   ReactDOM.render(
-    <AuroraApiProvider client={client}>
+    <AuroraApiProvider clients={clients}>
       <Routes tokenStore={tokenStore} />
     </AuroraApiProvider>,
     document.getElementById('root') as HTMLElement

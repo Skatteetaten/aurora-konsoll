@@ -3,6 +3,7 @@ import * as React from 'react';
 import * as ReactDOM from 'react-dom';
 import Routes from 'screens/Routes';
 import {
+  IApplicationResult,
   IAuroraApiClient,
   IUserAffiliationResult
 } from 'services/AuroraApiClient';
@@ -12,7 +13,9 @@ function toResult<P>(data: P): Promise<P> {
   return new Promise((): P => data);
 }
 
-const client: IAuroraApiClient = {
+const apiClient: IAuroraApiClient = {
+  findAllApplicationsForAffiliations: (): Promise<IApplicationResult[]> =>
+    toResult([]),
   findUserAndAffiliations: (): Promise<IUserAffiliationResult> =>
     toResult({
       affiliations: ['test'],
@@ -28,10 +31,14 @@ const tokenStore: ITokenStore = {
   }
 };
 
+const clients = {
+  apiClient
+};
+
 it('renders without crashing', () => {
   const div = document.createElement('div');
   ReactDOM.render(
-    <AuroraApiProvider client={client}>
+    <AuroraApiProvider clients={clients}>
       <Routes tokenStore={tokenStore} />
     </AuroraApiProvider>,
     div

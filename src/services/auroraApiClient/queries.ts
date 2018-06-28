@@ -27,3 +27,57 @@ export interface IUserAffiliationsQuery {
     }>;
   };
 }
+
+export const APPLICATIONS_QUERY = gql`
+  query getApplications($affiliations: [String!]) {
+    applications(affiliations: $affiliations) {
+      edges {
+        node {
+          name
+          applicationInstances {
+            affiliation {
+              name
+            }
+            namespace {
+              name
+            }
+            status {
+              code
+            }
+            version {
+              auroraVersion
+              deployTag
+            }
+          }
+        }
+      }
+    }
+  }
+`;
+
+export interface IApplications {
+  applications: {
+    edges: IApplicationEdge[];
+  };
+}
+
+interface IApplicationEdge {
+  node: {
+    name: string;
+    applicationInstances: Array<{
+      affiliation: {
+        name: string;
+      };
+      namespace: {
+        name: string;
+      };
+      status: {
+        code: string;
+      };
+      version: {
+        auroraVersion: string;
+        deployTag: string;
+      };
+    }>;
+  };
+}
