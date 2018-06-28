@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { BrowserRouter, Route, RouteComponentProps } from 'react-router-dom';
 
+import { AuroraApi, IApiClients } from 'components/AuroraApi';
 import Layout from 'components/Layout';
 import AcceptToken from 'modules/AcceptToken';
 import Applications from 'screens/Applications';
@@ -38,17 +39,37 @@ export default class Routes extends React.Component<
     );
     const isAuthenticated = this.props.tokenStore.isTokenValid();
 
+    function fetchUserAffiliations({ apiClient }: IApiClients) {
+      return apiClient.findUserAndAffiliations();
+    }
+
     return (
       <BrowserRouter>
-        <Layout handleChangeAffiliation={this.selectAffiliation}>
-          <Route exact={true} path="/accept-token" render={acceptToken} />
-          {isAuthenticated && (
-            <div>
-              <Route exact={true} path="/" render={this.renderApplications} />
-              <Route exact={true} path="/db" render={this.renderApplications} />
-            </div>
+        <AuroraApi fetch={fetchUserAffiliations}>
+          {(data = { user: '', affiliations: [] }) => (
+            <Layout
+              user={data.user}
+              affiliations={data.affiliations}
+              handleChangeAffiliation={this.selectAffiliation}
+            >
+              <Route exact={true} path="/accept-token" render={acceptToken} />
+              {isAuthenticated && (
+                <div style={{ flex: '1' }}>
+                  <Route
+                    exact={true}
+                    path="/"
+                    render={this.renderApplications}
+                  />
+                  <Route
+                    exact={true}
+                    path="/db"
+                    render={this.renderApplications}
+                  />
+                </div>
+              )}
+            </Layout>
           )}
-        </Layout>
+        </AuroraApi>
       </BrowserRouter>
     );
   }

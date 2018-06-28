@@ -36,7 +36,7 @@ const AuroraApiProvider = ({ clients, children }: IAuroraApiProviderProps) => (
 
 interface IAuroraApiProps<P> {
   fetch: (clients: IApiClients) => Promise<P>;
-  children: (data: P, loading: boolean) => React.ReactNode;
+  children: (data: P | undefined, loading: boolean) => React.ReactNode;
 }
 
 function AuroraApi<P>({ children, fetch }: IAuroraApiProps<P>) {
@@ -97,9 +97,6 @@ class AuroraApiCall<P> extends React.Component<
 
   public render() {
     const { response, loading } = this.state;
-    if (!response) {
-      return null;
-    }
     return this.props.children(response, loading);
   }
 }

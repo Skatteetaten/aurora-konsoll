@@ -20,7 +20,7 @@ export default class AuroraApiClient implements IAuroraApiClient {
   private client: ApolloClient<{}>;
 
   constructor(graphQLUrl: string) {
-    this.client = new ApolloClient({
+    const client = new ApolloClient({
       request: async operations => {
         const token = tokenStore.getToken();
         operations.setContext({
@@ -31,6 +31,13 @@ export default class AuroraApiClient implements IAuroraApiClient {
       },
       uri: graphQLUrl
     });
+    client.defaultOptions = {
+      query: {
+        fetchPolicy: 'network-only'
+      }
+    };
+
+    this.client = client;
   }
 
   public async findUserAndAffiliations(): Promise<IUserAffiliationResult> {

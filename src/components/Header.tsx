@@ -40,6 +40,7 @@ const Header = ({
             </Grid.Col>
             <Grid.Col lg={3} xl={2} noSpacing={true}>
               <Dropdown
+                placeHolder="Velg tilhørighet"
                 options={affiliations}
                 onChanged={onChangedAffiliation}
               />

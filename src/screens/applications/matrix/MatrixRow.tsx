@@ -24,27 +24,28 @@ const MatrixRow = ({
     onSelectApplication(found);
 
   const cells = namespaces.map((namespace, index) => {
+    const key = `${namespace}::${name}`;
+
     if (index === 0) {
-      return <td key={index}>{name}</td>;
+      return <td key={key}>{name}</td>;
     }
 
     const found = apps[name].find(app => app.namespace === namespace);
 
-    if (found) {
-      return (
-        <Status
-          key={index}
-          name={found.statusCode.toLowerCase()}
-          onClick={handleSelectApplication(found)}
-          title={found.version.deployTag}
-        >
-          {found.version.deployTag || found.version.auroraVersion}
-        </Status>
-      );
-    } else {
-      return <td key={index}>-</td>;
-    }
+    return found ? (
+      <Status
+        key={key}
+        name={found.statusCode.toLowerCase()}
+        onClick={handleSelectApplication(found)}
+        title={found.version.deployTag}
+      >
+        {found.version.deployTag}
+      </Status>
+    ) : (
+      <td key={key}>-</td>
+    );
   });
+
   return <tr>{cells}</tr>;
 };
 
