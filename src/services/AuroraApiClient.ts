@@ -61,7 +61,10 @@ export default class AuroraApiClient implements IAuroraApiClient {
         name: node.name,
         namespace: app.namespace.name,
         statusCode: app.status.code,
-        version: app.version
+        version: {
+          auroraVersion: app.version.auroraVersion,
+          deployTag: app.version.deployTag
+        }
       }));
       return [...acc, ...apps];
     }, []);
