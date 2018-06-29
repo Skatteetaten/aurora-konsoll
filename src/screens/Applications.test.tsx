@@ -4,6 +4,9 @@ import Applications from 'screens/Applications';
 
 it('renders without crashing', () => {
   const div = document.createElement('div');
-  ReactDOM.render(<Applications />, div);
+  ReactDOM.render(
+    <Applications affiliation="test" applications={[]} loading={false} />,
+    div
+  );
   ReactDOM.unmountComponentAtNode(div);
 });

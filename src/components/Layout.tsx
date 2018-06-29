@@ -12,6 +12,7 @@ import Col from './layout/Col';
 import Row from './layout/Row';
 
 interface ILayoutProps {
+  affiliation: string;
   affiliations: string[];
   user: string;
   children: React.ReactNode;
@@ -19,6 +20,7 @@ interface ILayoutProps {
 }
 
 const Layout = ({
+  affiliation,
   affiliations,
   user,
   children,
@@ -26,11 +28,10 @@ const Layout = ({
   history,
   handleChangeAffiliation
 }: RouteComponentProps<{}> & ILayoutProps) => {
-  const setQuery = (affiliation: string) => {
-    handleChangeAffiliation(affiliation);
+  const updatePath = (a: string) => {
+    handleChangeAffiliation(a);
     history.push({
-      pathname: location.pathname,
-      search: '?affiliation=' + affiliation
+      pathname: `/app/${a}`
     });
   };
   return (
@@ -42,14 +43,18 @@ const Layout = ({
               title="Aurora Konsoll"
               user={user}
               affiliations={toDropdownOptions(affiliations)}
-              handleChangeAffiliation={setQuery}
+              handleChangeAffiliation={updatePath}
             />
           </Col>
         </Row>
         <Row>
           <Col lg={2}>
             <Menu>
-              <MenuNavLink name="Applikasjoner" to="/" iconName="Menu" />
+              <MenuNavLink
+                name="Applikasjoner"
+                to={`/app${affiliation !== '' ? '/' + affiliation : ''}`}
+                iconName="Menu"
+              />
               <MenuNavLink name="Database" to="/db" iconName="Cloud" />
               <MenuNavLink name="Konfigurasjon" to="/conf" iconName="Code" />
               <MenuNavLink name="WebSEAL" to="/web" iconName="Bookmark" />

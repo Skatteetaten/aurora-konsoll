@@ -19,7 +19,7 @@ export default class Routes extends React.Component<
   IRoutesProps,
   IRoutesState
 > {
-  public state = {
+  public state: IRoutesState = {
     affiliation: undefined
   };
 
@@ -29,8 +29,29 @@ export default class Routes extends React.Component<
     }));
   };
 
-  public renderApplications = () => {
-    return <Applications affiliation={this.state.affiliation} />;
+  public renderApplications = (props: RouteComponentProps<{}>) => {
+    const { affiliation } = this.state;
+
+    if (!affiliation) {
+      return <p>Please select affiliation</p>;
+    }
+
+    const fetchApplications = ({ apiClient }: IApiClients) =>
+      apiClient.findAllApplicationsForAffiliations([affiliation]);
+
+    return (
+      <AuroraApi fetch={fetchApplications}>
+        {(applications = [], loading) => {
+          return (
+            <Applications
+              affiliation={affiliation}
+              loading={loading}
+              applications={applications}
+            />
+          );
+        }}
+      </AuroraApi>
+    );
   };
 
   public render() {
@@ -48,6 +69,7 @@ export default class Routes extends React.Component<
         <AuroraApi fetch={fetchUserAffiliations}>
           {(data = { user: '', affiliations: [] }) => (
             <Layout
+              affiliation={this.state.affiliation || ''}
               user={data.user}
               affiliations={data.affiliations}
               handleChangeAffiliation={this.selectAffiliation}
@@ -55,16 +77,7 @@ export default class Routes extends React.Component<
               <Route exact={true} path="/accept-token" render={acceptToken} />
               {isAuthenticated && (
                 <div style={{ flex: '1' }}>
-                  <Route
-                    exact={true}
-                    path="/"
-                    render={this.renderApplications}
-                  />
-                  <Route
-                    exact={true}
-                    path="/db"
-                    render={this.renderApplications}
-                  />
+                  <Route path="/app" render={this.renderApplications} />
                 </div>
               )}
             </Layout>

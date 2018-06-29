@@ -5,8 +5,11 @@ import Grid from 'aurora-frontend-react-komponenter/Grid';
 import Icon from 'aurora-frontend-react-komponenter/Icon';
 import Image from 'aurora-frontend-react-komponenter/Image';
 import * as Logo from 'aurora-frontend-react-komponenter/TopBanner/assets/ske-logo.svg';
+import palette from 'aurora-frontend-react-komponenter/utils/palette';
 import * as React from 'react';
 
+import { Link } from 'react-router-dom';
+import styled from 'styled-components';
 import './Header.css';
 
 interface IHeaderProps {
@@ -31,12 +34,14 @@ const Header = ({
         <Grid.Row className="main-header-grid">
           <div className="main-header-row">
             <Grid.Col lg={3} xl={2} noSpacing={true}>
-              <div className="main-header-logo-wrapper">
-                <div>
-                  <Image src={Logo} className="main-header-logo" />
+              <HomeLink to="/">
+                <div className="main-header-logo-wrapper">
+                  <div>
+                    <Image src={Logo} className="main-header-logo" />
+                  </div>
+                  <h2 className="main-header-title">{title}</h2>
                 </div>
-                <h2 className="main-header-title">{title}</h2>
-              </div>
+              </HomeLink>
             </Grid.Col>
             <Grid.Col lg={3} xl={2} noSpacing={true}>
               <Dropdown
@@ -57,5 +62,10 @@ const Header = ({
     </div>
   );
 };
+
+const HomeLink = styled(Link)`
+  color: ${palette.skeColor.black};
+  text-decoration: none;
+`;
 
 export default Header;

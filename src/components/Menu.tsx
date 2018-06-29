@@ -25,7 +25,6 @@ export default styled(Menu)`
     border-right: 1px solid #bbb;
     border-bottom: 1px solid #bbb;
     border-radius: 0 0 5px 0;
-    height: 980px;
   }
 
   li {
