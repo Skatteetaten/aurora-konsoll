@@ -1,15 +1,12 @@
-import Grid from 'aurora-frontend-react-komponenter/Grid';
 import SkeBasis from 'aurora-frontend-react-komponenter/SkeBasis';
 import * as React from 'react';
 import { RouteComponentProps, withRouter } from 'react-router';
 import { default as styled } from 'styled-components';
 
-import Header from 'components/Header';
-import Menu, { MenuNavLink } from 'components/Menu';
 import { toDropdownOptions } from 'utils/aurora-frontend';
 
-import Col from './layout/Col';
-import Row from './layout/Row';
+import Header from './layout/Header';
+import Menu, { MenuNavLink } from './layout/Menu';
 
 interface ILayoutProps {
   affiliation: string;
@@ -24,7 +21,6 @@ const Layout = ({
   affiliations,
   user,
   children,
-  location,
   history,
   handleChangeAffiliation
 }: RouteComponentProps<{}> & ILayoutProps) => {
@@ -36,45 +32,55 @@ const Layout = ({
   };
   return (
     <SkeBasis>
-      <Grid>
-        <Row>
-          <Col lg={12}>
-            <Header
-              title="Aurora Konsoll"
-              user={user}
-              affiliations={toDropdownOptions(affiliations)}
-              handleChangeAffiliation={updatePath}
-            />
-          </Col>
-        </Row>
-        <Row>
-          <Col lg={2}>
-            <Menu>
-              <MenuNavLink
-                name="Applikasjoner"
-                to={`/app${affiliation !== '' ? '/' + affiliation : ''}`}
-                iconName="Menu"
-              />
-              <MenuNavLink name="Database" to="/db" iconName="Cloud" />
-              <MenuNavLink name="Konfigurasjon" to="/conf" iconName="Code" />
-              <MenuNavLink name="WebSEAL" to="/web" iconName="Bookmark" />
-            </Menu>
-          </Col>
-          <OverflowCol lg={10}>
-            <LayoutContent>{children}</LayoutContent>
-          </OverflowCol>
-        </Row>
-      </Grid>
+      <StyledHeader
+        title="Aurora Konsoll"
+        user={user}
+        selectedAffiliation={affiliation}
+        affiliations={toDropdownOptions(affiliations)}
+        handleChangeAffiliation={updatePath}
+      />
+      <StyledMenu>
+        <MenuNavLink
+          name="Applikasjoner"
+          to={`/app${affiliation !== '' ? '/' + affiliation : ''}`}
+          iconName="Menu"
+        />
+        <MenuNavLink name="Database" to="/db" iconName="Cloud" />
+        <MenuNavLink name="Konfigurasjon" to="/conf" iconName="Code" />
+        <MenuNavLink name="WebSEAL" to="/web" iconName="Bookmark" />
+      </StyledMenu>
+      <LayoutContent>{children}</LayoutContent>
     </SkeBasis>
   );
 };
 
-const OverflowCol = styled(Col)`
+const HEADER_HEIGHT = '92px';
+const MENU_WIDTH = '265px';
+
+const LayoutContent = styled.div`
+  position: absolute;
+  top: ${HEADER_HEIGHT};
+  left: ${MENU_WIDTH};
+  right: 0;
+  bottom: 0;
+  margin-left: 15px;
   overflow: auto;
 `;
 
-const LayoutContent = styled.div`
-  margin: 0 15px;
+const StyledMenu = styled(Menu)`
+  position: absolute;
+  top: ${HEADER_HEIGHT};
+  left: 0px;
+  bottom: 0;
+  width: ${MENU_WIDTH};
+`;
+
+const StyledHeader = styled(Header)`
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: ${HEADER_HEIGHT};
 `;
 
 export default withRouter(Layout);

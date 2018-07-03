@@ -10,10 +10,20 @@ const MatrixWrapper = styled.div`
     table-layout: fixed;
   }
 
+  thead tr:nth-child(1) th {
+    background: white;
+    position: sticky;
+    top: 0;
+    z-index: 10;
+  }
+
   tbody {
     td {
       &:first-child {
         max-width: 210px;
+        position: sticky;
+        left: 0;
+        background: white;
       }
       max-width: 130px;
       overflow: hidden;
@@ -26,9 +36,9 @@ const MatrixWrapper = styled.div`
     @extend table;
     padding: 15px 50px 15px 15px;
     text-align: left;
+    white-space: nowrap;
     border-bottom: 1px solid #ddd;
     border-top: 1px solid #ddd;
-    white-space: nowrap;
   }
 `;
 

@@ -23,8 +23,7 @@ export default styled(Menu)`
     margin: 0;
     line-height: 24px;
     border-right: 1px solid #bbb;
-    border-bottom: 1px solid #bbb;
-    border-radius: 0 0 5px 0;
+    height: 100%;
   }
 
   li {

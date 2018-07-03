@@ -15,6 +15,8 @@ import './Header.css';
 interface IHeaderProps {
   title: string;
   user: string;
+  selectedAffiliation: string;
+  className?: string;
   affiliations?: IDropdownOption[];
   handleChangeAffiliation: (affiliation: string) => void;
 }
@@ -23,13 +25,15 @@ const Header = ({
   title,
   user,
   handleChangeAffiliation,
+  className,
+  selectedAffiliation,
   affiliations = []
 }: IHeaderProps) => {
   const onChangedAffiliation = (item: { text: string }) =>
     handleChangeAffiliation(item.text);
 
   return (
-    <div className="main-header">
+    <div className={`main-header ${className || ''}`}>
       <Grid>
         <Grid.Row className="main-header-grid">
           <div className="main-header-row">
