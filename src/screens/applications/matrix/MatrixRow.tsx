@@ -9,28 +9,28 @@ export interface IApplicationMap {
 
 interface IMatrixRowProps {
   name: string;
-  namespaces: string[];
+  environments: string[];
   apps: IApplicationMap;
   onSelectApplication: (app: IApplicationResult) => void;
 }
 
 const MatrixRow = ({
   name,
-  namespaces,
+  environments,
   apps,
   onSelectApplication
 }: IMatrixRowProps) => {
   const handleSelectApplication = (found: IApplicationResult) => () =>
     onSelectApplication(found);
 
-  const cells = namespaces.map((namespace, index) => {
-    const key = `${namespace}::${name}`;
+  const cells = environments.map((environment, index) => {
+    const key = `${environment}::${name}`;
 
     if (index === 0) {
       return <td key={key}>{name}</td>;
     }
 
-    const found = apps[name].find(app => app.namespace === namespace);
+    const found = apps[name].find(app => app.environment === environment);
 
     return found ? (
       <Status

@@ -1,9 +1,7 @@
-import Dropdown, {
-  IDropdownOption
-} from 'aurora-frontend-react-komponenter/Dropdown';
 import Grid from 'aurora-frontend-react-komponenter/Grid';
 import * as React from 'react';
 import { IApplicationResult } from 'services/AuroraApiClient';
+import MulitDropdown, { MultiDropdownOptions } from './filter/MultiDropdown';
 
 interface IFilterProps {
   applications: IApplicationResult[];
@@ -15,27 +13,35 @@ interface IFilterState {
   selectedApplications: string[];
 }
 
-type MultiDropdownOptions = IDropdownOption & { selected: boolean };
-
 class Filter extends React.Component<IFilterProps, IFilterState> {
   public state: IFilterState = {
     selectedApplications: [],
     selectedNamespaces: []
   };
 
-  public componentDidMount() {
-    this.props.handleSelectedApplications(this.props.applications);
-  }
-
-  public filterApplications = (list: string[], field: string) => {
+  public filterApplications = (
+    list: string[],
+    field: string,
+    applications: IApplicationResult[]
+  ) => {
     if (list.length === 0) {
-      this.props.handleSelectedApplications(this.props.applications);
-      return;
+      return applications;
     }
-    const result = this.props.applications.filter(
-      app => list.indexOf(app[field]) !== -1
+    return applications.filter(app => list.indexOf(app[field]) !== -1);
+  };
+
+  public filterAll = () => {
+    const { selectedApplications, selectedNamespaces } = this.state;
+    const { applications, handleSelectedApplications } = this.props;
+
+    const apps = this.filterApplications(
+      selectedNamespaces,
+      'environment',
+      applications
     );
-    this.props.handleSelectedApplications(result);
+    const result = this.filterApplications(selectedApplications, 'name', apps);
+
+    handleSelectedApplications(result);
   };
 
   public updateSelectedList = (
@@ -48,57 +54,72 @@ class Filter extends React.Component<IFilterProps, IFilterState> {
     return current.filter(name => name !== data.text);
   };
 
-  public handleSelected = (field: string) => (data: MultiDropdownOptions) => {
-    switch (field) {
-      case 'namespace': {
-        this.setState(state => {
-          const selectedNamespaces = this.updateSelectedList(
-            state.selectedNamespaces,
-            data
-          );
-          this.filterApplications(selectedNamespaces, 'namespace');
-          return {
-            selectedNamespaces
-          };
-        });
-        break;
-      }
-      case 'name': {
-        this.setState(state => {
-          const selectedApplications = this.updateSelectedList(
-            state.selectedApplications,
-            data
-          );
-          this.filterApplications(selectedApplications, 'name');
-          return {
-            selectedApplications
-          };
-        });
-        break;
-      }
-    }
+  public handleSelectedNamespaces = (data: MultiDropdownOptions) => {
+    this.setState(state => {
+      const selected = this.updateSelectedList(state.selectedNamespaces, data);
+      return {
+        selectedNamespaces: selected
+      };
+    });
   };
+
+  public handleClearSelectedNamespaces = () => {
+    this.setState(() => ({
+      selectedNamespaces: []
+    }));
+  };
+
+  public handleSelectedApplications = (data: MultiDropdownOptions) => {
+    this.setState(state => {
+      const selected = this.updateSelectedList(
+        state.selectedApplications,
+        data
+      );
+      return {
+        selectedApplications: selected
+      };
+    });
+  };
+
+  public handleClearSelectedApplications = () => {
+    this.setState(() => ({
+      selectedApplications: []
+    }));
+  };
+
+  public componentDidMount() {
+    this.filterAll();
+  }
+
+  public componentDidUpdate(prevProps: IFilterProps, prevState: IFilterState) {
+    if (
+      prevState.selectedNamespaces !== this.state.selectedNamespaces ||
+      prevState.selectedApplications !== this.state.selectedApplications
+    ) {
+      this.filterAll();
+    }
+  }
 
   public render() {
     const { applications } = this.props;
     return (
       <Grid>
         <Grid.Row>
-          <Grid.Col lg={3}>
-            <Dropdown
+          <Grid.Col lg={4}>
+            <MulitDropdown
               placeHolder="Velg miljøer"
-              options={toDropdownOptions(applications, 'namespace')}
-              multiSelect={true}
-              onChanged={this.handleSelected('namespace')}
+              options={applications.map(app => app.environment.toLowerCase())}
+              handleClearSelectedKeys={this.handleClearSelectedNamespaces}
+              onChanged={this.handleSelectedNamespaces}
               selectedKeys={this.state.selectedNamespaces}
             />
           </Grid.Col>
-          <Grid.Col lg={3}>
-            <Dropdown
+          <Grid.Col lg={4}>
+            <MulitDropdown
               placeHolder="Velg applikasjoner"
-              options={toDropdownOptions(applications, 'name')}
-              multiSelect={true}
-              onChanged={this.handleSelected('name')}
+              options={applications.map(app => app.name.toLowerCase())}
+              handleClearSelectedKeys={this.handleClearSelectedApplications}
+              onChanged={this.handleSelectedApplications}
               selectedKeys={this.state.selectedApplications}
             />
           </Grid.Col>
@@ -108,23 +129,4 @@ class Filter extends React.Component<IFilterProps, IFilterState> {
   }
 }
 
-function toDropdownOptions(
-  applications: IApplicationResult[],
-  field: string
-): IDropdownOption[] {
-  return applications
-    .map(app => app[field].toLowerCase())
-    .filter((value, index, self) => self.indexOf(value) === index)
-    .sort()
-    .reduce(
-      (acc: IDropdownOption[], name) => [
-        ...acc,
-        {
-          key: name,
-          text: name
-        }
-      ],
-      []
-    );
-}
 export default Filter;

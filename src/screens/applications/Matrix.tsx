@@ -10,10 +10,10 @@ interface IMatrixProps {
 }
 
 const Matrix = ({ applications, onSelectApplication }: IMatrixProps) => {
-  const namespaces = applications.reduce(
+  const environments = applications.reduce(
     (acc, app) => {
-      if (acc.indexOf(app.namespace) === -1) {
-        return acc.concat(app.namespace);
+      if (acc.indexOf(app.environment) === -1) {
+        return acc.concat(app.environment);
       }
       return acc;
     },
@@ -26,7 +26,6 @@ const Matrix = ({ applications, onSelectApplication }: IMatrixProps) => {
     } else {
       acc[app.name] = [app];
     }
-
     return acc;
   }, {});
 
@@ -34,7 +33,7 @@ const Matrix = ({ applications, onSelectApplication }: IMatrixProps) => {
     <MatrixWrapper>
       <table>
         <thead>
-          <tr>{namespaces.sort().map(name => <th key={name}>{name}</th>)}</tr>
+          <tr>{environments.sort().map(name => <th key={name}>{name}</th>)}</tr>
         </thead>
         <tbody>
           {Object.keys(apps)
@@ -43,7 +42,7 @@ const Matrix = ({ applications, onSelectApplication }: IMatrixProps) => {
               <MatrixRow
                 key={name}
                 name={name}
-                namespaces={namespaces}
+                environments={environments}
                 apps={apps}
                 onSelectApplication={onSelectApplication}
               />

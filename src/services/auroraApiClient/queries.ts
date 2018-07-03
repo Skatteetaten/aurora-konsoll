@@ -38,6 +38,7 @@ export const APPLICATIONS_QUERY = gql`
             affiliation {
               name
             }
+            environment
             namespace {
               name
             }
@@ -68,6 +69,7 @@ interface IApplicationEdge {
       affiliation: {
         name: string;
       };
+      environment: string;
       namespace: {
         name: string;
       };

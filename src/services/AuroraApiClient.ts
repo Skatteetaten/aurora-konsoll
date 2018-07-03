@@ -65,8 +65,8 @@ export default class AuroraApiClient implements IAuroraApiClient {
       const { applicationInstances } = node;
       const apps = applicationInstances.map(app => ({
         affiliation: app.affiliation.name,
+        environment: app.environment,
         name: node.name,
-        namespace: app.namespace.name,
         statusCode: app.status.code,
         version: {
           auroraVersion: app.version.auroraVersion,
@@ -86,7 +86,7 @@ export interface IUserAffiliationResult {
 export interface IApplicationResult {
   affiliation: string;
   name: string;
-  namespace: string;
+  environment: string;
   statusCode: string;
   version: {
     auroraVersion: string;

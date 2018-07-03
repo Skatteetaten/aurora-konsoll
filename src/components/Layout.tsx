@@ -60,17 +60,20 @@ const Layout = ({
               <MenuNavLink name="WebSEAL" to="/web" iconName="Bookmark" />
             </Menu>
           </Col>
-          <Col lg={10}>
+          <OverflowCol lg={10}>
             <LayoutContent>{children}</LayoutContent>
-          </Col>
+          </OverflowCol>
         </Row>
       </Grid>
     </SkeBasis>
   );
 };
 
+const OverflowCol = styled(Col)`
+  overflow: auto;
+`;
+
 const LayoutContent = styled.div`
-  display: flex;
   margin: 0 15px;
 `;
 

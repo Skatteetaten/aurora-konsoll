@@ -76,9 +76,7 @@ export default class Routes extends React.Component<
             >
               <Route exact={true} path="/accept-token" render={acceptToken} />
               {isAuthenticated && (
-                <div style={{ flex: '1' }}>
-                  <Route path="/app" render={this.renderApplications} />
-                </div>
+                <Route path="/app" render={this.renderApplications} />
               )}
             </Layout>
           )}
