@@ -6,6 +6,7 @@ import Dropdown, {
 import Grid from 'aurora-frontend-react-komponenter/Grid';
 import IconButton from 'aurora-frontend-react-komponenter/IconButton';
 import styled from 'styled-components';
+import { toDropdownOptions } from 'utils/aurora-frontend';
 
 const DropdownWrapper = styled.div`
   > div {
@@ -56,22 +57,5 @@ const MulitDropdown = ({
     </Grid.Row>
   </Grid>
 );
-
-function toDropdownOptions(names: string[]): IDropdownOption[] {
-  return names
-    .map(name => name.toLowerCase())
-    .filter((name, index, self) => self.indexOf(name) === index)
-    .sort()
-    .reduce(
-      (acc: IDropdownOption[], name) => [
-        ...acc,
-        {
-          key: name,
-          text: name
-        }
-      ],
-      []
-    );
-}
 
 export default MulitDropdown;

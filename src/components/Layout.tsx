@@ -1,4 +1,3 @@
-import { IDropdownOption } from 'aurora-frontend-react-komponenter/Dropdown';
 import Grid from 'aurora-frontend-react-komponenter/Grid';
 import SkeBasis from 'aurora-frontend-react-komponenter/SkeBasis';
 import * as React from 'react';
@@ -7,6 +6,7 @@ import { default as styled } from 'styled-components';
 
 import Header from 'components/Header';
 import Menu, { MenuNavLink } from 'components/Menu';
+import { toDropdownOptions } from 'utils/aurora-frontend';
 
 import Col from './layout/Col';
 import Row from './layout/Row';
@@ -76,22 +76,5 @@ const OverflowCol = styled(Col)`
 const LayoutContent = styled.div`
   margin: 0 15px;
 `;
-
-function toDropdownOptions(affiliations: string[]): IDropdownOption[] {
-  return affiliations
-    .map(name => name.toLowerCase())
-    .filter((value, index, self) => self.indexOf(value) === index)
-    .sort()
-    .reduce(
-      (acc: IDropdownOption[], name) => [
-        ...acc,
-        {
-          key: name,
-          text: name
-        }
-      ],
-      []
-    );
-}
 
 export default withRouter(Layout);
