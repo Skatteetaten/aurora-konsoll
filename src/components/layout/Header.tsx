@@ -52,6 +52,7 @@ const Header = ({
                 placeHolder="Velg tilhørighet"
                 options={affiliations}
                 onChanged={onChangedAffiliation}
+                selectedKey={selectedAffiliation}
               />
             </Grid.Col>
             <Grid.Col lg={6} xl={4} xlPush={4} noSpacing={true}>

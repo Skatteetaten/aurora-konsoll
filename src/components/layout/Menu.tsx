@@ -1,7 +1,6 @@
 import * as React from 'react';
 import { default as styled } from 'styled-components';
 
-import MenuDivider from './menu/MenuDivider';
 import MenuNavLink from './menu/MenuNavLink';
 
 interface IMenuProps {
@@ -15,7 +14,7 @@ const Menu = ({ children, className }: IMenuProps) => (
   </nav>
 );
 
-export { MenuDivider, MenuNavLink };
+export { MenuNavLink };
 
 export default styled(Menu)`
   ul {

@@ -21,6 +21,7 @@ const Layout = ({
   affiliations,
   user,
   children,
+  location,
   history,
   handleChangeAffiliation
 }: RouteComponentProps<{}> & ILayoutProps) => {
@@ -30,6 +31,12 @@ const Layout = ({
       pathname: `/app/${a}`
     });
   };
+
+  const paths = location.pathname.split('/');
+  if (affiliation === '' && paths.length > 2) {
+    handleChangeAffiliation(paths[2]);
+  }
+
   return (
     <SkeBasis>
       <StyledHeader
