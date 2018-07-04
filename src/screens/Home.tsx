@@ -1,7 +1,7 @@
 import * as React from 'react';
 
 import { IAuroraApiContext } from 'components/AuroraApi';
-import withAuroraApi from 'components/auroraApi/withAuroraApiClients';
+import withAuroraApi from 'components/auroraApi/withAuroraApi';
 
 class Home extends React.Component<IAuroraApiContext> {
   public async componentDidMount() {
