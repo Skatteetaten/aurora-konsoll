@@ -6,7 +6,7 @@ import Layout from 'components/Layout';
 import AcceptToken from 'modules/AcceptToken';
 import Applications from 'screens/Applications';
 import { ITokenStore } from 'services/TokenStore';
-import Test from './Test';
+import Home from './Home';
 
 interface IRoutesProps {
   tokenStore: ITokenStore;
@@ -81,7 +81,7 @@ export default class Routes extends React.Component<
               <Route exact={true} path="/accept-token" render={acceptToken} />
               {isAuthenticated && (
                 <>
-                  <Route exact={true} path="/" component={Test} />
+                  <Route exact={true} path="/" component={Home} />
                   <Route path="/app" render={this.renderApplications} />
                 </>
               )}

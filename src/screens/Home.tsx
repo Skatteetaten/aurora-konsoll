@@ -3,7 +3,7 @@ import * as React from 'react';
 import { IAuroraApiContext } from 'components/AuroraApi';
 import withAuroraApi from 'components/auroraApi/withAuroraApiClients';
 
-class Test extends React.Component<IAuroraApiContext> {
+class Home extends React.Component<IAuroraApiContext> {
   public async componentDidMount() {
     const { clients } = this.props;
     if (!clients) {
@@ -19,4 +19,4 @@ class Test extends React.Component<IAuroraApiContext> {
   }
 }
 
-export default withAuroraApi(Test);
+export default withAuroraApi(Home);
