@@ -1,7 +1,7 @@
 import SkeBasis from 'aurora-frontend-react-komponenter/SkeBasis';
 import * as React from 'react';
 import { RouteComponentProps, withRouter } from 'react-router';
-import { default as styled } from 'styled-components';
+import styled from 'styled-components';
 
 import { toDropdownOptions } from 'utils/aurora-frontend';
 
@@ -52,9 +52,9 @@ const Layout = ({
           to={`/app${affiliation !== '' ? '/' + affiliation : ''}`}
           iconName="Menu"
         />
-        <MenuNavLink name="Database" to="/db" iconName="Cloud" />
+        {/* <MenuNavLink name="Database" to="/db" iconName="Cloud" />
         <MenuNavLink name="Konfigurasjon" to="/conf" iconName="Code" />
-        <MenuNavLink name="WebSEAL" to="/web" iconName="Bookmark" />
+        <MenuNavLink name="WebSEAL" to="/web" iconName="Bookmark" /> */}
       </StyledMenu>
       <LayoutContent>{children}</LayoutContent>
     </SkeBasis>

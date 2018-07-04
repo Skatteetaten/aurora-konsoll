@@ -6,6 +6,7 @@ import Layout from 'components/Layout';
 import AcceptToken from 'modules/AcceptToken';
 import Applications from 'screens/Applications';
 import { ITokenStore } from 'services/TokenStore';
+import Test from './Test';
 
 interface IRoutesProps {
   tokenStore: ITokenStore;
@@ -29,7 +30,9 @@ export default class Routes extends React.Component<
     }));
   };
 
-  public renderApplications = (props: RouteComponentProps<{}>) => {
+  public renderApplications = (
+    props: RouteComponentProps<{ affiliation: string }>
+  ) => {
     const { affiliation } = this.state;
 
     if (!affiliation) {
@@ -44,6 +47,7 @@ export default class Routes extends React.Component<
         {(applications = [], loading) => {
           return (
             <Applications
+              {...props}
               affiliation={affiliation}
               loading={loading}
               applications={applications}
@@ -76,7 +80,10 @@ export default class Routes extends React.Component<
             >
               <Route exact={true} path="/accept-token" render={acceptToken} />
               {isAuthenticated && (
-                <Route path="/app" render={this.renderApplications} />
+                <>
+                  <Route exact={true} path="/" component={Test} />
+                  <Route path="/app" render={this.renderApplications} />
+                </>
               )}
             </Layout>
           )}

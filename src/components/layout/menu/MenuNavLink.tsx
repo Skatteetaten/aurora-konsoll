@@ -1,7 +1,7 @@
 import Icon from 'aurora-frontend-react-komponenter/Icon';
 import * as React from 'react';
 import { NavLink } from 'react-router-dom';
-import { default as styled } from 'styled-components';
+import styled from 'styled-components';
 
 interface IMenuNavLinkProps {
   name: string;
@@ -22,7 +22,6 @@ const MenuNavLink = ({
 }: IMenuNavLinkProps) => (
   <li className={className} onClick={onClick}>
     <NavLink
-      exact={true}
       to={to}
       activeStyle={{
         background: '#f9ede2'

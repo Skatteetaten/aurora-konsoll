@@ -7,11 +7,11 @@ interface IApiClients {
 
 // AuroraApiContext
 
-interface IAuroraApiContextValues {
+interface IAuroraApiContext {
   clients?: IApiClients;
 }
 
-const AuroraApiContext = React.createContext<IAuroraApiContextValues>({
+const AuroraApiContext = React.createContext<IAuroraApiContext>({
   clients: undefined
 });
 
@@ -101,4 +101,10 @@ class AuroraApiCall<P> extends React.Component<
   }
 }
 
-export { AuroraApiProvider, AuroraApi, IApiClients };
+export {
+  AuroraApiContext,
+  AuroraApiProvider,
+  AuroraApi,
+  IApiClients,
+  IAuroraApiContext
+};
