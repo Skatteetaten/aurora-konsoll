@@ -1,11 +1,15 @@
 import * as React from 'react';
 
-import { AuroraApiContext, IAuroraApiContext } from 'components/AuroraApi';
+import {
+  AuroraApiContext,
+  IAuroraApiComponentProps
+} from 'components/AuroraApi';
+import { Omit } from 'react-router';
 
-function withAuroraApi<P>(
-  Component: React.ComponentType<P & IAuroraApiContext>
-) {
-  return class extends React.Component {
+function withAuroraApi<P extends IAuroraApiComponentProps>(
+  Component: React.ComponentType<P>
+): React.ComponentClass<Omit<P, keyof IAuroraApiComponentProps>> {
+  return class extends React.Component<P> {
     public render() {
       return (
         <AuroraApiContext.Consumer>
@@ -16,7 +20,7 @@ function withAuroraApi<P>(
               );
             }
             const props = { clients };
-            return <Component {...props} />;
+            return <Component {...this.props} {...props} />;
           }}
         </AuroraApiContext.Consumer>
       );

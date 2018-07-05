@@ -20,7 +20,7 @@ interface IApplicationsState {
   applications: IApplicationResult[];
 }
 
-export default class Applications extends React.PureComponent<
+export default class Applications extends React.Component<
   IApplicationsProps,
   IApplicationsState
 > {

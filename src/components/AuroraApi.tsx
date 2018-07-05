@@ -101,10 +101,14 @@ class AuroraApiCall<P> extends React.Component<
   }
 }
 
+interface IAuroraApiComponentProps {
+  clients: IApiClients;
+}
+
 export {
   AuroraApiContext,
   AuroraApiProvider,
   AuroraApi,
   IApiClients,
-  IAuroraApiContext
+  IAuroraApiComponentProps
 };

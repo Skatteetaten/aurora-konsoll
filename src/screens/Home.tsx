@@ -1,9 +1,9 @@
 import * as React from 'react';
 
-import { IAuroraApiContext } from 'components/AuroraApi';
+import { IAuroraApiComponentProps } from 'components/AuroraApi';
 import withAuroraApi from 'components/auroraApi/withAuroraApi';
 
-class Home extends React.Component<IAuroraApiContext> {
+class Home extends React.Component<IAuroraApiComponentProps> {
   public async componentDidMount() {
     const { clients } = this.props;
     if (!clients) {
