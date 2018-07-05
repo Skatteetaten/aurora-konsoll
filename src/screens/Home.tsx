@@ -6,10 +6,6 @@ import withAuroraApi from 'components/auroraApi/withAuroraApi';
 class Home extends React.Component<IAuroraApiComponentProps> {
   public async componentDidMount() {
     const { clients } = this.props;
-    if (!clients) {
-      return;
-    }
-
     const result = await clients.apiClient.findUserAndAffiliations();
     // tslint:disable-next-line:no-console
     console.log(result);
