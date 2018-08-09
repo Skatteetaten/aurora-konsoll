@@ -1,7 +1,5 @@
-import Grid from 'aurora-frontend-react-komponenter/Grid';
 import Spinner from 'aurora-frontend-react-komponenter/Spinner';
 import * as React from 'react';
-import { RouteComponentProps } from 'react-router-dom';
 import styled from 'styled-components';
 
 import { IApplicationResult } from 'services/AuroraApiClient';
@@ -10,9 +8,7 @@ import { IAuroraApiComponentProps } from 'components/AuroraApi';
 import { withAuroraApi } from 'components/AuroraApi';
 import MatrixRoute from './routes/MatrixRoute';
 
-interface IApplicationsProps
-  extends RouteComponentProps<{}>,
-    IAuroraApiComponentProps {
+interface IApplicationsProps extends IAuroraApiComponentProps {
   affiliation?: string;
 }
 
@@ -70,36 +66,55 @@ class Applications extends React.Component<
   public render() {
     const { applications, loading, selectedApplications } = this.state;
     const { affiliation } = this.props;
-
-    if (!affiliation) {
-      return <p>Velg en tilhørighet</p>;
-    }
-
-    if (loading) {
-      return (
-        <Loading>
-          <Spinner size={Spinner.Size.large} />
-          <p>Laster applikasjoner for {affiliation}</p>
-        </Loading>
-      );
-    }
-
     return (
-      <Grid>
-        <Grid.Row>
-          <Grid.Col lg={12}>
-            <MatrixRoute
-              affiliation={affiliation}
-              applications={applications}
-              selectedApplications={selectedApplications}
-              handleSelectedApplications={this.handleSelectedApplications}
-            />
-          </Grid.Col>
-        </Grid.Row>
-      </Grid>
+      <ApplicationsView
+        affiliation={affiliation}
+        applications={applications}
+        loading={loading}
+        selectedApplications={selectedApplications}
+        handleSelectedApplications={this.handleSelectedApplications}
+      />
     );
   }
 }
+
+interface IApplicationsViewProps {
+  affiliation?: string;
+  applications: IApplicationResult[];
+  loading: boolean;
+  selectedApplications: IApplicationResult[];
+  handleSelectedApplications: (apps: IApplicationResult[]) => void;
+}
+
+export const ApplicationsView = ({
+  affiliation,
+  applications,
+  loading,
+  selectedApplications,
+  handleSelectedApplications
+}: IApplicationsViewProps) => {
+  if (!affiliation) {
+    return <p>Velg en tilhørighet</p>;
+  }
+
+  if (loading) {
+    return (
+      <Loading>
+        <Spinner size={Spinner.Size.large} />
+        <p>Laster applikasjoner for {affiliation}</p>
+      </Loading>
+    );
+  }
+
+  return (
+    <MatrixRoute
+      affiliation={affiliation}
+      applications={applications}
+      selectedApplications={selectedApplications}
+      handleSelectedApplications={handleSelectedApplications}
+    />
+  );
+};
 
 const Loading = styled.div`
   display: flex;

@@ -1,18 +1,25 @@
 import * as React from 'react';
-import * as ReactDOM from 'react-dom';
-import { MemoryRouter, withRouter } from 'react-router-dom';
 
-import Applications from './Applications';
+import { mount } from 'enzyme';
 
-const ApplicationsWithRouter = withRouter(Applications);
+import { IApplicationResult } from 'services/AuroraApiClient';
+import { ApplicationsView } from './Applications';
 
 it('renders without crashing', () => {
-  const div = document.createElement('div');
-  ReactDOM.render(
-    <MemoryRouter>
-      <ApplicationsWithRouter affiliation="aurora" />
-    </MemoryRouter>,
-    div
+  const handleSelectedApplications = (apps: IApplicationResult[]) => {
+    return;
+  };
+
+  const wrapper = mount(
+    <ApplicationsView
+      applications={[]}
+      handleSelectedApplications={handleSelectedApplications}
+      loading={false}
+      selectedApplications={[]}
+    />
   );
-  ReactDOM.unmountComponentAtNode(div);
+
+  expect(wrapper.find('p').text()).toEqual('Velg en tilhørighet');
+  wrapper.setProps({ affiliation: 'aurora', loading: true });
+  expect(wrapper.find('p').text()).toEqual('Laster applikasjoner for aurora');
 });
