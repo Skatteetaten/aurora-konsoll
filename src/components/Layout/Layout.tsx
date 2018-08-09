@@ -5,8 +5,8 @@ import styled from 'styled-components';
 
 import { toDropdownOptions } from 'utils/aurora-frontend';
 
-import Header from './layout/Header';
-import Menu, { MenuNavLink } from './layout/Menu';
+import Header from './Header';
+import Menu, { MenuNavLink } from './Menu';
 
 interface ILayoutProps {
   affiliation: string;

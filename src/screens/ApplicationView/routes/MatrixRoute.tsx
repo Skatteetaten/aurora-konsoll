@@ -2,17 +2,17 @@ import * as React from 'react';
 import { Route, RouteComponentProps } from 'react-router-dom';
 
 import { IApplicationResult } from 'services/AuroraApiClient';
-import Filter from './matrixRoute/Filter';
-import Matrix from './matrixRoute/Matrix';
+import Filter from '../Filter/index';
+import Table from '../Matrix/Table';
 
-interface IMatrixRouteProps {
+interface IMatrixViewProps {
   affiliation: string;
   applications: IApplicationResult[];
   selectedApplications: IApplicationResult[];
   handleSelectedApplications: (apps: IApplicationResult[]) => void;
 }
 
-const MatrixView = (props: IMatrixRouteProps & RouteComponentProps<{}>) => {
+const MatrixView = (props: IMatrixViewProps & RouteComponentProps<{}>) => {
   const onSelectApplication = (app: IApplicationResult) => {
     props.history.push({
       pathname:
@@ -28,7 +28,7 @@ const MatrixView = (props: IMatrixRouteProps & RouteComponentProps<{}>) => {
         handleSelectedApplications={props.handleSelectedApplications}
       />
       <h2>Applikasjoner for {affiliation}</h2>
-      <Matrix
+      <Table
         applications={selectedApplications}
         onSelectApplication={onSelectApplication}
       />
@@ -36,15 +36,15 @@ const MatrixView = (props: IMatrixRouteProps & RouteComponentProps<{}>) => {
   );
 };
 
-const MatrixWithRouter = (props: IMatrixRouteProps) => (
+const MatrixRouteWrapper = (props: IMatrixViewProps) => (
   routerProps: RouteComponentProps<{}>
 ) => <MatrixView {...props} {...routerProps} />;
 
-const MatrixRoute = (props: IMatrixRouteProps) => (
+const MatrixRoute = (props: IMatrixViewProps) => (
   <Route
     exact={true}
     path="/app/:affiliation"
-    render={MatrixWithRouter(props)}
+    render={MatrixRouteWrapper(props)}
   />
 );
 

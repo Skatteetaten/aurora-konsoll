@@ -1,7 +1,7 @@
 import Grid from 'aurora-frontend-react-komponenter/Grid';
 import * as React from 'react';
 import { IApplicationResult } from 'services/AuroraApiClient';
-import MulitDropdown, { MultiDropdownOptions } from './filter/MultiDropdown';
+import MulitDropdown, { MultiDropdownOptions } from './MultiDropdown';
 
 interface IFilterProps {
   applications: IApplicationResult[];

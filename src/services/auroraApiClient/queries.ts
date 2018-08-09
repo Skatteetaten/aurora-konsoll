@@ -29,7 +29,7 @@ export interface IUserAffiliationsQuery {
 }
 
 export const APPLICATIONS_QUERY = gql`
-  query getApplications($affiliations: [String!]) {
+  query getApplications($affiliations: [String!]!) {
     applications(affiliations: $affiliations) {
       edges {
         node {
@@ -49,6 +49,15 @@ export const APPLICATIONS_QUERY = gql`
               auroraVersion
               deployTag
             }
+            details {
+              podResources {
+                name
+                status
+                restartCount
+                ready
+                startTime
+              }
+            }
           }
         }
       }
@@ -60,6 +69,14 @@ export interface IApplications {
   applications: {
     edges: IApplicationEdge[];
   };
+}
+
+export interface IPodResource {
+  name: string;
+  status: string;
+  restartCount: number;
+  ready: boolean;
+  startTime: string;
 }
 
 interface IApplicationEdge {
@@ -79,6 +96,9 @@ interface IApplicationEdge {
       version: {
         auroraVersion: string;
         deployTag: string;
+      };
+      details: {
+        podResources: IPodResource[];
       };
     }>;
   };

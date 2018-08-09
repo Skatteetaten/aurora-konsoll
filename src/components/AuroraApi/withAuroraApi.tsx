@@ -1,12 +1,9 @@
 import * as React from 'react';
 
-import {
-  AuroraApiContext,
-  IAuroraApiComponentProps
-} from 'components/AuroraApi';
 import { Omit } from 'react-router';
+import { AuroraApiContext, IAuroraApiComponentProps } from './AuroraApi';
 
-function withAuroraApi<P extends IAuroraApiComponentProps>(
+export function withAuroraApi<P extends IAuroraApiComponentProps>(
   Component: React.ComponentType<P>
 ): React.ComponentClass<Omit<P, keyof IAuroraApiComponentProps>> {
   return class extends React.Component<P> {
@@ -27,5 +24,3 @@ function withAuroraApi<P extends IAuroraApiComponentProps>(
     }
   };
 }
-
-export default withAuroraApi;

@@ -8,12 +8,6 @@ import IconButton from 'aurora-frontend-react-komponenter/IconButton';
 import styled from 'styled-components';
 import { toDropdownOptions } from 'utils/aurora-frontend';
 
-const DropdownWrapper = styled.div`
-  > div {
-    padding: 9px 0;
-  }
-`;
-
 export type MultiDropdownOptions = IDropdownOption & { selected: boolean };
 
 interface IMultiDropdownProps {
@@ -23,6 +17,12 @@ interface IMultiDropdownProps {
   options: string[];
   placeHolder: string;
 }
+
+const DropdownWrapper = styled.div`
+  > div {
+    padding: 9px 0;
+  }
+`;
 
 const MulitDropdown = ({
   onChanged,

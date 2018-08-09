@@ -1,10 +1,11 @@
 import { default as ApolloClient } from 'apollo-boost';
 
-import { tokenStore } from 'services/TokenStore';
+import { tokenStore } from './TokenStore';
 
 import {
   APPLICATIONS_QUERY,
   IApplications,
+  IPodResource,
   IUserAffiliationsQuery,
   USER_AFFILIATIONS_QUERY
 } from './auroraApiClient/queries';
@@ -67,6 +68,7 @@ export default class AuroraApiClient implements IAuroraApiClient {
         affiliation: app.affiliation.name,
         environment: app.environment,
         name: node.name,
+        pods: app.details.podResources,
         statusCode: app.status.code,
         version: {
           auroraVersion: app.version.auroraVersion,
@@ -92,4 +94,5 @@ export interface IApplicationResult {
     auroraVersion: string;
     deployTag: string;
   };
+  pods: IPodResource[];
 }

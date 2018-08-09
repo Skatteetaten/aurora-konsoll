@@ -1,15 +1,15 @@
 import * as React from 'react';
 
 import { IApplicationResult } from 'services/AuroraApiClient';
-import MatrixRow, { IApplicationMap } from './matrix/MatrixRow';
-import MatrixWrapper from './matrix/MatrixWrapper';
+import Row, { IApplicationMap } from './Row';
+import Wrapper from './Wrapper';
 
 interface IMatrixProps {
   applications: IApplicationResult[];
   onSelectApplication: (app: IApplicationResult) => void;
 }
 
-const Matrix = ({ applications, onSelectApplication }: IMatrixProps) => {
+const Table = ({ applications, onSelectApplication }: IMatrixProps) => {
   const environments = applications.reduce(
     (acc, app) => {
       if (acc.indexOf(app.environment) === -1) {
@@ -30,7 +30,7 @@ const Matrix = ({ applications, onSelectApplication }: IMatrixProps) => {
   }, {});
 
   return (
-    <MatrixWrapper>
+    <Wrapper>
       <table>
         <thead>
           <tr>{environments.sort().map(name => <th key={name}>{name}</th>)}</tr>
@@ -39,7 +39,7 @@ const Matrix = ({ applications, onSelectApplication }: IMatrixProps) => {
           {Object.keys(apps)
             .sort()
             .map(name => (
-              <MatrixRow
+              <Row
                 key={name}
                 name={name}
                 environments={environments}
@@ -49,8 +49,8 @@ const Matrix = ({ applications, onSelectApplication }: IMatrixProps) => {
             ))}
         </tbody>
       </table>
-    </MatrixWrapper>
+    </Wrapper>
   );
 };
 
-export default Matrix;
+export default Table;

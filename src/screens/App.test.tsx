@@ -1,13 +1,13 @@
 import { AuroraApiProvider } from 'components/AuroraApi';
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
-import Routes from 'screens/Routes';
 import {
   IApplicationResult,
   IAuroraApiClient,
   IUserAffiliationResult
 } from 'services/AuroraApiClient';
 import { ITokenStore } from 'services/TokenStore';
+import App from './App';
 
 function toResult<P>(data: P): Promise<P> {
   return new Promise((): P => data);
@@ -39,7 +39,7 @@ it('renders without crashing', () => {
   const div = document.createElement('div');
   ReactDOM.render(
     <AuroraApiProvider clients={clients}>
-      <Routes tokenStore={tokenStore} />
+      <App tokenStore={tokenStore} />
     </AuroraApiProvider>,
     div
   );

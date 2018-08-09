@@ -1,7 +1,7 @@
 import * as React from 'react';
 import styled from 'styled-components';
 
-import MenuNavLink from './menu/MenuNavLink';
+import MenuNavLink from './MenuNavLink';
 
 interface IMenuProps {
   className?: string;

@@ -3,7 +3,7 @@ import * as React from 'react';
 import * as ReactDOM from 'react-dom';
 
 import { AuroraApiProvider } from 'components/AuroraApi';
-import Routes from 'screens/Routes';
+import App from 'screens/App';
 import AuroraApiClient from 'services/AuroraApiClient';
 import { tokenStore } from 'services/TokenStore';
 import { fetchConfiguration, IConfiguration } from 'utils/config';
@@ -28,7 +28,7 @@ async function init() {
 
   ReactDOM.render(
     <AuroraApiProvider clients={clients}>
-      <Routes tokenStore={tokenStore} />
+      <App tokenStore={tokenStore} />
     </AuroraApiProvider>,
     document.getElementById('root') as HTMLElement
   );

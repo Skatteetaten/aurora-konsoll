@@ -1,15 +1,14 @@
-import ActionButton from 'aurora-frontend-react-komponenter/ActionButton';
 import Grid from 'aurora-frontend-react-komponenter/Grid';
 import Spinner from 'aurora-frontend-react-komponenter/Spinner';
 import * as React from 'react';
-import { Route, RouteComponentProps } from 'react-router-dom';
+import { RouteComponentProps } from 'react-router-dom';
 import styled from 'styled-components';
 
 import { IApplicationResult } from 'services/AuroraApiClient';
 
 import { IAuroraApiComponentProps } from 'components/AuroraApi';
-import withAuroraApi from 'components/auroraApi/withAuroraApi';
-import MatrixRoute from './applications/MatrixRoute';
+import { withAuroraApi } from 'components/AuroraApi';
+import MatrixRoute from './routes/MatrixRoute';
 
 interface IApplicationsProps
   extends RouteComponentProps<{}>,
@@ -37,44 +36,6 @@ class Applications extends React.Component<
     this.setState(() => ({
       selectedApplications: apps
     }));
-  };
-
-  public renderDetails = (
-    props: RouteComponentProps<{
-      affiliation: string;
-      environment: string;
-      application: string;
-    }>
-  ) => {
-    const { affiliation, application, environment } = props.match.params;
-    const found = this.state.applications.find(
-      app => app.environment === environment && app.name === application
-    );
-
-    if (!found) {
-      return (
-        <p>
-          Could not find application {environment}/{application}
-        </p>
-      );
-    }
-
-    const back = () =>
-      this.props.history.push({
-        pathname: `/app/${affiliation}`
-      });
-
-    return (
-      <div>
-        <ActionButton icon="Back" onClick={back}>
-          Applications
-        </ActionButton>
-        <h1>
-          {found.environment}/{found.name}
-        </h1>
-        <p>{found.version.auroraVersion}</p>
-      </div>
-    );
   };
 
   public fetchApplications = async (affiliation: string) => {
@@ -107,19 +68,20 @@ class Applications extends React.Component<
   }
 
   public render() {
-    if (this.state.loading) {
+    const { applications, loading, selectedApplications } = this.state;
+    const { affiliation } = this.props;
+
+    if (!affiliation) {
+      return <p>Velg en tilhørighet</p>;
+    }
+
+    if (loading) {
       return (
         <Loading>
           <Spinner size={Spinner.Size.large} />
-          <p>Laster applikasjoner</p>
+          <p>Laster applikasjoner for {affiliation}</p>
         </Loading>
       );
-    }
-
-    const { applications, selectedApplications } = this.state;
-
-    if (!this.props.affiliation) {
-      return <p>Velg en tilhørighet</p>;
     }
 
     return (
@@ -127,15 +89,10 @@ class Applications extends React.Component<
         <Grid.Row>
           <Grid.Col lg={12}>
             <MatrixRoute
-              affiliation={this.props.affiliation}
+              affiliation={affiliation}
               applications={applications}
               selectedApplications={selectedApplications}
               handleSelectedApplications={this.handleSelectedApplications}
-            />
-            <Route
-              exact={true}
-              path="/app/:affiliation/details/:environment/:application"
-              render={this.renderDetails}
             />
           </Grid.Col>
         </Grid.Row>

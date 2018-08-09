@@ -1,25 +1,20 @@
 import * as React from 'react';
 
 import { IApplicationResult } from 'services/AuroraApiClient';
-import Status from './matrixRow/Status';
+import Status from './Status';
 
 export interface IApplicationMap {
   [name: string]: IApplicationResult[];
 }
 
-interface IMatrixRowProps {
+interface IRowProps {
   name: string;
   environments: string[];
   apps: IApplicationMap;
   onSelectApplication: (app: IApplicationResult) => void;
 }
 
-const MatrixRow = ({
-  name,
-  environments,
-  apps,
-  onSelectApplication
-}: IMatrixRowProps) => {
+const Row = ({ name, environments, apps, onSelectApplication }: IRowProps) => {
   const handleSelectApplication = (found: IApplicationResult) => () =>
     onSelectApplication(found);
 
@@ -49,4 +44,4 @@ const MatrixRow = ({
   return <tr>{cells}</tr>;
 };
 
-export default MatrixRow;
+export default Row;

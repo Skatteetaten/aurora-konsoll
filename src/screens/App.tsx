@@ -3,12 +3,12 @@ import { BrowserRouter, Route, RouteComponentProps } from 'react-router-dom';
 
 import { IAuroraApiComponentProps } from 'components/AuroraApi';
 import Layout from 'components/Layout';
-import AcceptToken from 'screens/AcceptToken';
 import { ITokenStore } from 'services/TokenStore';
+import AcceptToken from './AcceptToken';
 
-import withAuroraApi from 'components/auroraApi/withAuroraApi';
+import { withAuroraApi } from 'components/AuroraApi';
+import ApplicationsRoute from './ApplicationView/ApplicationsRoute';
 import Home from './Home';
-import ApplicationsRoute from './routes/ApplicationsRoute';
 
 interface IRoutesProps extends IAuroraApiComponentProps {
   tokenStore: ITokenStore;
@@ -20,7 +20,7 @@ interface IRoutesState {
   user: string;
 }
 
-class Routes extends React.Component<IRoutesProps, IRoutesState> {
+class App extends React.Component<IRoutesProps, IRoutesState> {
   public state: IRoutesState = {
     affiliation: undefined,
     affiliations: [],
@@ -78,4 +78,4 @@ class Routes extends React.Component<IRoutesProps, IRoutesState> {
   };
 }
 
-export default withAuroraApi(Routes);
+export default withAuroraApi(App);

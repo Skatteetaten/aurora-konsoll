@@ -1,6 +1,6 @@
 import { default as styled } from 'styled-components';
 
-const MatrixWrapper = styled.div`
+const Wrapper = styled.div`
   position: relative;
   font-size: 14px;
 
@@ -41,4 +41,4 @@ const MatrixWrapper = styled.div`
   }
 `;
 
-export default MatrixWrapper;
+export default Wrapper;
