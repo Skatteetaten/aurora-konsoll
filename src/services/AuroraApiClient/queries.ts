@@ -65,6 +65,45 @@ export const APPLICATIONS_QUERY = gql`
   }
 `;
 
+export const TAGS_QUERY = gql`
+  query getTags($affiliations: [String!]!, $cursor: String) {
+    applications(affiliations: $affiliations) {
+      edges {
+        node {
+          name
+          tags(first: 10, after: $cursor) {
+            totalCount
+            edges {
+              node {
+                name
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+`;
+
+export interface ITags {
+  applications: {
+    __typename?: string;
+    edges: Array<{
+      node: {
+        name: string;
+        tags: {
+          totalCount: number;
+          edges: Array<{
+            node: {
+              name: string;
+            };
+          }>;
+        };
+      };
+    }>;
+  };
+}
+
 export interface IApplications {
   applications: {
     edges: IApplicationEdge[];

@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { IAuroraApiClient } from 'services/AuroraApiClient';
+import { IAuroraApiClient } from 'services/AuroraApiClient/types';
 
 interface IApiClients {
   apiClient: IAuroraApiClient;

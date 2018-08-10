@@ -1,12 +1,12 @@
 import * as React from 'react';
 
-import { IApplicationResult } from 'services/AuroraApiClient';
+import { IApplication } from 'services/AuroraApiClient/types';
 import Row, { IApplicationMap } from './Row';
 import Wrapper from './Wrapper';
 
 interface IMatrixProps {
-  applications: IApplicationResult[];
-  onSelectApplication: (app: IApplicationResult) => void;
+  applications: IApplication[];
+  onSelectApplication: (app: IApplication) => void;
 }
 
 const Table = ({ applications, onSelectApplication }: IMatrixProps) => {

@@ -1,21 +1,19 @@
-import Spinner from 'aurora-frontend-react-komponenter/Spinner';
 import * as React from 'react';
-import styled from 'styled-components';
 
-import { IApplicationResult } from 'services/AuroraApiClient';
+import { IApplication } from 'services/AuroraApiClient/types';
 
 import { IAuroraApiComponentProps } from 'components/AuroraApi';
 import { withAuroraApi } from 'components/AuroraApi';
-import MatrixRoute from './routes/MatrixRoute';
+import ApplicationsView from './ApplicationView';
 
 interface IApplicationsProps extends IAuroraApiComponentProps {
   affiliation?: string;
 }
 
 interface IApplicationsState {
-  applications: IApplicationResult[];
+  applications: IApplication[];
   loading: boolean;
-  selectedApplications: IApplicationResult[];
+  selectedApplications: IApplication[];
 }
 
 class Applications extends React.Component<
@@ -28,7 +26,7 @@ class Applications extends React.Component<
     selectedApplications: []
   };
 
-  public handleSelectedApplications = (apps: IApplicationResult[]) => {
+  public handleSelectedApplications = (apps: IApplication[]) => {
     this.setState(() => ({
       selectedApplications: apps
     }));
@@ -42,6 +40,11 @@ class Applications extends React.Component<
     const applications = await this.props.clients.apiClient.findAllApplicationsForAffiliations(
       [affiliation]
     );
+
+    const tags = await this.props.clients.apiClient.findTags();
+
+    // tslint:disable-next-line:no-console
+    console.log(tags.result);
 
     this.setState(() => ({
       applications,
@@ -77,53 +80,5 @@ class Applications extends React.Component<
     );
   }
 }
-
-interface IApplicationsViewProps {
-  affiliation?: string;
-  applications: IApplicationResult[];
-  loading: boolean;
-  selectedApplications: IApplicationResult[];
-  handleSelectedApplications: (apps: IApplicationResult[]) => void;
-}
-
-export const ApplicationsView = ({
-  affiliation,
-  applications,
-  loading,
-  selectedApplications,
-  handleSelectedApplications
-}: IApplicationsViewProps) => {
-  if (!affiliation) {
-    return <p>Velg en tilhørighet</p>;
-  }
-
-  if (loading) {
-    return (
-      <Loading>
-        <Spinner size={Spinner.Size.large} />
-        <p>Laster applikasjoner for {affiliation}</p>
-      </Loading>
-    );
-  }
-
-  return (
-    <MatrixRoute
-      affiliation={affiliation}
-      applications={applications}
-      selectedApplications={selectedApplications}
-      handleSelectedApplications={handleSelectedApplications}
-    />
-  );
-};
-
-const Loading = styled.div`
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  p {
-    text-align: center;
-  }
-`;
 
 export default withAuroraApi(Applications);

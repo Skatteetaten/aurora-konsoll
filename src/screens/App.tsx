@@ -2,9 +2,9 @@ import * as React from 'react';
 import { BrowserRouter, Route, RouteComponentProps } from 'react-router-dom';
 
 import { IAuroraApiComponentProps } from 'components/AuroraApi';
-import Layout from 'components/Layout';
 import { ITokenStore } from 'services/TokenStore';
 import AcceptToken from './AcceptToken';
+import Layout from './Layout';
 
 import { withAuroraApi } from 'components/AuroraApi';
 import ApplicationsRoute from './ApplicationView/ApplicationsRoute';

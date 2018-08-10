@@ -1,11 +1,12 @@
 import ActionButton from 'aurora-frontend-react-komponenter/ActionButton';
-import PodCard from 'components/PodCard';
 import * as React from 'react';
-import { RouteComponentProps } from 'react-router-dom';
-import { IApplicationResult } from 'services/AuroraApiClient';
+import { Route, RouteComponentProps } from 'react-router-dom';
 
-interface IDetailsProps {
-  applications: IApplicationResult[];
+import { IApplication } from 'services/AuroraApiClient/types';
+import PodCard from './PodCard';
+
+interface IDetailsViewProps {
+  applications: IApplication[];
 }
 
 type DetailsRouteProps = RouteComponentProps<{
@@ -14,11 +15,11 @@ type DetailsRouteProps = RouteComponentProps<{
   application: string;
 }>;
 
-const Details = ({
+const DetailsView = ({
   applications,
   match,
   history
-}: IDetailsProps & DetailsRouteProps) => {
+}: IDetailsViewProps & DetailsRouteProps) => {
   const { affiliation, application, environment } = match.params;
 
   const current = applications.find(
@@ -52,12 +53,16 @@ const Details = ({
   );
 };
 
-// const DetailsRoute = () => (
-//   <Route
-//     exact={true}
-//     path="/app/:affiliation/details/:environment/:application"
-//     render={Details}
-//   />
-// );
+const DetailsRouteWrapper = (props: IDetailsViewProps) => (
+  routerProps: DetailsRouteProps
+) => <DetailsView {...props} {...routerProps} />;
 
-export default Details;
+const DetailsRoute = (props: IDetailsViewProps) => (
+  <Route
+    exact={true}
+    path="/app/:affiliation/details/:environment/:application"
+    render={DetailsRouteWrapper(props)}
+  />
+);
+
+export default DetailsRoute;

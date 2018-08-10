@@ -2,11 +2,11 @@ import * as React from 'react';
 
 import { mount } from 'enzyme';
 
-import { IApplicationResult } from 'services/AuroraApiClient';
-import { ApplicationsView } from './Applications';
+import { IApplication } from 'services/AuroraApiClient/types';
+import ApplicationsView from './ApplicationView';
 
 it('renders without crashing', () => {
-  const handleSelectedApplications = (apps: IApplicationResult[]) => {
+  const handleSelectedApplications = (apps: IApplication[]) => {
     return;
   };
 
