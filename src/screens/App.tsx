@@ -1,14 +1,14 @@
 import * as React from 'react';
-import { BrowserRouter, Route, RouteComponentProps } from 'react-router-dom';
+import { BrowserRouter, Route } from 'react-router-dom';
 
 import { IAuroraApiComponentProps } from 'components/AuroraApi';
+import Layout from 'components/Layout';
 import { ITokenStore } from 'services/TokenStore';
-import AcceptToken from './AcceptToken';
-import Layout from './Layout';
+import AcceptTokenRoute from './AcceptTokenView/AcceptTokenRoute';
 
 import { withAuroraApi } from 'components/AuroraApi';
 import ApplicationsRoute from './ApplicationView/ApplicationsRoute';
-import Home from './Home';
+import Home from './HomeView/Home';
 
 interface IRoutesProps extends IAuroraApiComponentProps {
   tokenStore: ITokenStore;
@@ -46,9 +46,6 @@ class App extends React.Component<IRoutesProps, IRoutesState> {
   }
 
   public render() {
-    const acceptToken = (props: RouteComponentProps<{}>) => (
-      <AcceptToken {...props} onTokenUpdated={this.onTokenUpdated} />
-    );
     const isAuthenticated = this.props.tokenStore.isTokenValid();
 
     const { affiliation, affiliations, user } = this.state;
@@ -61,7 +58,7 @@ class App extends React.Component<IRoutesProps, IRoutesState> {
           affiliations={affiliations}
           handleChangeAffiliation={this.selectAffiliation}
         >
-          <Route exact={true} path="/accept-token" render={acceptToken} />
+          <AcceptTokenRoute onTokenUpdated={this.onTokenUpdated} />
           {isAuthenticated && (
             <>
               <Route exact={true} path="/" component={Home} />

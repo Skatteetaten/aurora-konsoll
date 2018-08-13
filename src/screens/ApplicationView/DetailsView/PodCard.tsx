@@ -1,6 +1,6 @@
 import Grid from 'aurora-frontend-react-komponenter/Grid';
 import * as React from 'react';
-import { IPodResource } from 'services/AuroraApiClient/queries';
+import { IPodResource } from 'services/AuroraApiClient/queries/applications-query';
 import styled from 'styled-components';
 
 interface IPodCardProps {

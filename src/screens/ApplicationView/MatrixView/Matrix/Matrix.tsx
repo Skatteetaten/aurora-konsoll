@@ -9,7 +9,7 @@ interface IMatrixProps {
   onSelectApplication: (app: IApplication) => void;
 }
 
-const Table = ({ applications, onSelectApplication }: IMatrixProps) => {
+const Matrix = ({ applications, onSelectApplication }: IMatrixProps) => {
   const environments = applications.reduce(
     (acc, app) => {
       if (acc.indexOf(app.environment) === -1) {
@@ -53,4 +53,4 @@ const Table = ({ applications, onSelectApplication }: IMatrixProps) => {
   );
 };
 
-export default Table;
+export default Matrix;

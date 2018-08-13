@@ -5,8 +5,13 @@ import { Route, RouteComponentProps } from 'react-router-dom';
 import { IApplication } from 'services/AuroraApiClient/types';
 import PodCard from './PodCard';
 
+interface IDetailsViewState {
+  application?: IApplication;
+}
+
 interface IDetailsViewProps {
   applications: IApplication[];
+  handleFetchTags: (respoitory: string) => void;
 }
 
 type DetailsRouteProps = RouteComponentProps<{
@@ -15,43 +20,63 @@ type DetailsRouteProps = RouteComponentProps<{
   application: string;
 }>;
 
-const DetailsView = ({
-  applications,
-  match,
-  history
-}: IDetailsViewProps & DetailsRouteProps) => {
-  const { affiliation, application, environment } = match.params;
+class DetailsView extends React.Component<
+  IDetailsViewProps & DetailsRouteProps,
+  IDetailsViewState
+> {
+  public state: IDetailsViewState = {
+    application: undefined
+  };
 
-  const current = applications.find(
-    app => app.environment === environment && app.name === application
-  );
+  public componentDidMount() {
+    const { application, environment } = this.props.match.params;
 
-  const back = () =>
-    history.push({
-      pathname: `/app/${affiliation}`
-    });
-
-  if (!current) {
-    return (
-      <p>
-        Could not find application {environment}/{application}
-      </p>
+    const current = this.props.applications.find(
+      app => app.environment === environment && app.name === application
     );
+
+    if (current) {
+      this.setState(() => ({
+        application: current
+      }));
+
+      this.props.handleFetchTags(current.repository);
+    }
   }
 
-  return (
-    <div>
-      <ActionButton icon="Back" onClick={back}>
-        Applications
-      </ActionButton>
-      <h1>
-        {current.environment}/{current.name}
-      </h1>
-      <p>{current.version.auroraVersion}</p>
-      {current.pods.map(pod => <PodCard pod={pod} key={pod.name} />)}
-    </div>
-  );
-};
+  public render() {
+    const { affiliation, application, environment } = this.props.match.params;
+
+    const back = () =>
+      this.props.history.push({
+        pathname: `/app/${affiliation}`
+      });
+
+    if (!this.state.application) {
+      return (
+        <p>
+          Could not find application {environment}/{application}
+        </p>
+      );
+    }
+
+    return (
+      <div>
+        <ActionButton icon="Back" onClick={back}>
+          Applications
+        </ActionButton>
+        <h1>
+          {this.state.application.environment}/{this.state.application.name}
+        </h1>
+        <p>{this.state.application.version.auroraVersion}</p>
+        <p>{this.state.application.repository}</p>
+        {this.state.application.pods.map(pod => (
+          <PodCard pod={pod} key={pod.name} />
+        ))}
+      </div>
+    );
+  }
+}
 
 const DetailsRouteWrapper = (props: IDetailsViewProps) => (
   routerProps: DetailsRouteProps

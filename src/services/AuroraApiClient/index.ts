@@ -1,23 +1,19 @@
-import ApolloClient, { ObservableQuery } from 'apollo-boost';
+import ApolloClient from 'apollo-boost';
 
 import { tokenStore } from '../TokenStore';
 
-import { QueryScheduler } from 'apollo-client/scheduler/scheduler';
 import {
-  APPLICATIONS_QUERY,
-  IApplications,
-  ITags,
   IUserAffiliationsQuery,
-  TAGS_QUERY,
   USER_AFFILIATIONS_QUERY
-} from './queries';
+} from './queries/user-affiliations-query';
 
 import {
-  IApplication,
-  IAuroraApiClient,
-  IFetchMoreOptions,
-  IUserAffiliationResult
-} from './types';
+  APPLICATIONS_QUERY,
+  IApplications
+} from './queries/applications-query';
+import { ITagsQuery, TAGS_QUERY } from './queries/tag-query';
+import { IApplication, ITagsPaged, IUserAffiliationResult } from './types';
+import { IAuroraApiClient } from './types';
 
 export default class AuroraApiClient implements IAuroraApiClient {
   private client: ApolloClient<{}>;
@@ -43,48 +39,34 @@ export default class AuroraApiClient implements IAuroraApiClient {
     this.client = client;
   }
 
-  public async findTags(): Promise<{
-    result: ITags;
-    fetchMore: (cursor: string) => Promise<ITags>;
-  }> {
-    const query = new ObservableQuery<ITags>({
-      options: {
-        query: TAGS_QUERY,
-        variables: {
-          affiliations: ['aurora']
-        }
-      },
-      scheduler: new QueryScheduler({
-        queryManager: this.client.queryManager
-      })
+  public async findTagsPaged(
+    repository: string,
+    cursor?: string
+  ): Promise<ITagsPaged> {
+    const result = await this.client.query<ITagsQuery>({
+      query: TAGS_QUERY,
+      variables: {
+        cursor,
+        repositories: [repository]
+      }
     });
 
-    query.subscribe(x => x);
-    const result = await query.result();
+    const { imageRepositories } = result.data;
 
-    const fetchMore = async (cursor: string) => {
-      const newResult = await query.fetchMore({
-        updateQuery: (
-          previous: ITags,
-          { fetchMoreResult }: IFetchMoreOptions
-        ): ITags => {
-          return {
-            applications: fetchMoreResult
-              ? fetchMoreResult.applications
-              : previous.applications
-          };
-        },
-        variables: {
-          cursor
-        }
-      });
+    if (!(imageRepositories && imageRepositories.length > 0)) {
+      throw new Error(`Could not find tags for repository ${repository}`);
+    }
 
-      return newResult.data;
-    };
+    const [mainRepo] = imageRepositories;
+    const { edges, pageInfo } = mainRepo.tags;
 
     return {
-      fetchMore,
-      result: result.data
+      endCursor: pageInfo.endCursor,
+      hasNextPage: pageInfo.hasNextPage,
+      tags: edges.map(edge => ({
+        lastModified: edge.node.lastModified,
+        name: edge.node.name
+      }))
     };
   }
 
@@ -110,12 +92,13 @@ export default class AuroraApiClient implements IAuroraApiClient {
     });
 
     return result.data.applications.edges.reduce((acc, { node }) => {
-      const { applicationInstances } = node;
+      const { applicationInstances, imageRepository } = node;
       const apps = applicationInstances.map(app => ({
         affiliation: app.affiliation.name,
         environment: app.environment,
         name: node.name,
         pods: app.details.podResources,
+        repository: imageRepository.repository,
         statusCode: app.status.code,
         version: {
           auroraVersion: app.version.auroraVersion,

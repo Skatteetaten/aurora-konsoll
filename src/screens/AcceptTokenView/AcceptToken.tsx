@@ -4,10 +4,14 @@ import { RouteComponentProps } from 'react-router-dom';
 
 import { tokenStore } from 'services/TokenStore';
 
+export interface IAcceptTokenProps {
+  onTokenUpdated: () => void;
+}
+
 const AcceptToken = ({
   location,
   onTokenUpdated
-}: RouteComponentProps<{}> & { onTokenUpdated: () => void }) => {
+}: IAcceptTokenProps & RouteComponentProps<{}>) => {
   interface IAuthQueryString {
     expires_in: string;
     access_token: string;

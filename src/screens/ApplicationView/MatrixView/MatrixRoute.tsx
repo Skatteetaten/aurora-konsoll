@@ -3,7 +3,7 @@ import { Route, RouteComponentProps } from 'react-router-dom';
 
 import { IApplication } from 'services/AuroraApiClient/types';
 import Filter from './Filter';
-import Table from './Matrix/Table';
+import Matrix from './Matrix/Matrix';
 
 interface IMatrixViewProps {
   affiliation: string;
@@ -28,7 +28,7 @@ const MatrixView = (props: IMatrixViewProps & RouteComponentProps<{}>) => {
         handleSelectedApplications={props.handleSelectedApplications}
       />
       <h2>Applikasjoner for {affiliation}</h2>
-      <Table
+      <Matrix
         applications={selectedApplications}
         onSelectApplication={onSelectApplication}
       />

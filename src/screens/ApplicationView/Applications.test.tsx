@@ -10,12 +10,17 @@ it('renders without crashing', () => {
     return;
   };
 
+  const handleFetchTags = (repository: string) => {
+    return;
+  };
+
   const wrapper = mount(
     <ApplicationsView
       applications={[]}
       handleSelectedApplications={handleSelectedApplications}
       loading={false}
       selectedApplications={[]}
+      handleFetchTags={handleFetchTags}
     />
   );
 

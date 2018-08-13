@@ -3,11 +3,10 @@ import * as React from 'react';
 import * as ReactDOM from 'react-dom';
 import {
   IApplication,
-  IAuroraApiClient,
+  ITagsPaged,
   IUserAffiliationResult
 } from 'services/AuroraApiClient/types';
-// import { ITokenStore } from 'services/TokenStore';
-// import App from './App';
+import { IAuroraApiClient } from 'services/AuroraApiClient/types';
 
 async function toResult<P>(data: P) {
   return data;
@@ -16,10 +15,11 @@ async function toResult<P>(data: P) {
 const apiClient: IAuroraApiClient = {
   findAllApplicationsForAffiliations: (): Promise<IApplication[]> =>
     toResult([]),
-  findTags: () =>
+  findTagsPaged: (repository: string, cursor?: string): Promise<ITagsPaged> =>
     toResult({
-      fetchMore: async () => undefined,
-      result: undefined
+      endCursor: '',
+      hasNextPage: false,
+      tags: []
     }),
   findUserAndAffiliations: (): Promise<IUserAffiliationResult> =>
     toResult({
@@ -27,14 +27,6 @@ const apiClient: IAuroraApiClient = {
       user: 'Batman'
     })
 };
-
-// const tokenStore: ITokenStore = {
-//   getToken: () => '',
-//   isTokenValid: () => true,
-//   updateToken: () => {
-//     return;
-//   }
-// };
 
 const clients = {
   apiClient

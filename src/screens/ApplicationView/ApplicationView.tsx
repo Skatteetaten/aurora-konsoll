@@ -13,6 +13,7 @@ interface IApplicationsViewProps {
   loading: boolean;
   selectedApplications: IApplication[];
   handleSelectedApplications: (apps: IApplication[]) => void;
+  handleFetchTags: (repository: string) => void;
 }
 
 export const ApplicationsView = ({
@@ -20,7 +21,8 @@ export const ApplicationsView = ({
   applications,
   loading,
   selectedApplications,
-  handleSelectedApplications
+  handleSelectedApplications,
+  handleFetchTags
 }: IApplicationsViewProps) => {
   if (!affiliation) {
     return <p>Velg en tilhørighet</p>;
@@ -43,7 +45,10 @@ export const ApplicationsView = ({
         selectedApplications={selectedApplications}
         handleSelectedApplications={handleSelectedApplications}
       />
-      <DetailsRoute applications={applications} />
+      <DetailsRoute
+        applications={applications}
+        handleFetchTags={handleFetchTags}
+      />
     </>
   );
 };

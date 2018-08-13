@@ -1,4 +1,12 @@
-import { IPodResource, ITags } from './queries';
+import { IPodResource } from './queries/applications-query';
+
+export interface IAuroraApiClient {
+  findUserAndAffiliations: () => Promise<IUserAffiliationResult>;
+  findAllApplicationsForAffiliations: (
+    affiliations: string[]
+  ) => Promise<IApplication[]>;
+  findTagsPaged: (repository: string, cursor?: string) => Promise<ITagsPaged>;
+}
 
 export interface IUserAffiliationResult {
   affiliations: string[];
@@ -14,23 +22,17 @@ export interface IApplication {
     auroraVersion: string;
     deployTag: string;
   };
+  repository: string;
   pods: IPodResource[];
 }
 
-export interface IAuroraApiClient {
-  findUserAndAffiliations: () => Promise<IUserAffiliationResult>;
-  findAllApplicationsForAffiliations: (
-    affiliations: string[]
-  ) => Promise<IApplication[]>;
-  findTags: () => Promise<{
-    result?: ITags;
-    fetchMore: (cursor: string) => Promise<ITags | undefined>;
-  }>;
+export interface ITag {
+  name: string;
+  lastModified: string;
 }
 
-export interface IFetchMoreOptions {
-  fetchMoreResult?: ITags;
-  variables: {
-    [key: string]: any;
-  };
+export interface ITagsPaged {
+  endCursor: string;
+  hasNextPage: boolean;
+  tags: ITag[];
 }

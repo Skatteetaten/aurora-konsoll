@@ -1,32 +1,4 @@
-import { default as gql } from 'graphql-tag';
-
-export const USER_AFFILIATIONS_QUERY = gql`
-  {
-    currentUser {
-      name
-    }
-    affiliations {
-      edges {
-        node {
-          name
-        }
-      }
-    }
-  }
-`;
-
-export interface IUserAffiliationsQuery {
-  currentUser: {
-    name: string;
-  };
-  affiliations: {
-    edges: Array<{
-      node: {
-        name: string;
-      };
-    }>;
-  };
-}
+import gql from 'graphql-tag';
 
 export const APPLICATIONS_QUERY = gql`
   query getApplications($affiliations: [String!]!) {
@@ -34,6 +6,9 @@ export const APPLICATIONS_QUERY = gql`
       edges {
         node {
           name
+          imageRepository {
+            repository
+          }
           applicationInstances {
             affiliation {
               name
@@ -65,45 +40,6 @@ export const APPLICATIONS_QUERY = gql`
   }
 `;
 
-export const TAGS_QUERY = gql`
-  query getTags($affiliations: [String!]!, $cursor: String) {
-    applications(affiliations: $affiliations) {
-      edges {
-        node {
-          name
-          tags(first: 10, after: $cursor) {
-            totalCount
-            edges {
-              node {
-                name
-              }
-            }
-          }
-        }
-      }
-    }
-  }
-`;
-
-export interface ITags {
-  applications: {
-    __typename?: string;
-    edges: Array<{
-      node: {
-        name: string;
-        tags: {
-          totalCount: number;
-          edges: Array<{
-            node: {
-              name: string;
-            };
-          }>;
-        };
-      };
-    }>;
-  };
-}
-
 export interface IApplications {
   applications: {
     edges: IApplicationEdge[];
@@ -118,9 +54,14 @@ export interface IPodResource {
   startTime: string;
 }
 
+export interface IImageRepository {
+  repository: string;
+}
+
 interface IApplicationEdge {
   node: {
     name: string;
+    imageRepository: IImageRepository;
     applicationInstances: Array<{
       affiliation: {
         name: string;

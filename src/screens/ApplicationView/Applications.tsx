@@ -13,6 +13,7 @@ interface IApplicationsProps extends IAuroraApiComponentProps {
 interface IApplicationsState {
   applications: IApplication[];
   loading: boolean;
+  tagsLoading: boolean;
   selectedApplications: IApplication[];
 }
 
@@ -23,12 +24,29 @@ class Applications extends React.Component<
   public state: IApplicationsState = {
     applications: [],
     loading: false,
-    selectedApplications: []
+    selectedApplications: [],
+    tagsLoading: false
   };
 
   public handleSelectedApplications = (apps: IApplication[]) => {
     this.setState(() => ({
       selectedApplications: apps
+    }));
+  };
+
+  public fetchTags = async (repository: string) => {
+    this.setState(() => ({
+      tagsLoading: true
+    }));
+    const tagsPaged = await this.props.clients.apiClient.findTagsPaged(
+      repository
+    );
+
+    // tslint:disable-next-line:no-console
+    console.log(tagsPaged);
+
+    this.setState(() => ({
+      tagsLoading: false
     }));
   };
 
@@ -40,11 +58,6 @@ class Applications extends React.Component<
     const applications = await this.props.clients.apiClient.findAllApplicationsForAffiliations(
       [affiliation]
     );
-
-    const tags = await this.props.clients.apiClient.findTags();
-
-    // tslint:disable-next-line:no-console
-    console.log(tags.result);
 
     this.setState(() => ({
       applications,
@@ -76,6 +89,7 @@ class Applications extends React.Component<
         loading={loading}
         selectedApplications={selectedApplications}
         handleSelectedApplications={this.handleSelectedApplications}
+        handleFetchTags={this.fetchTags}
       />
     );
   }
