@@ -15,10 +15,10 @@ import {
 import { ITagsQuery, TAGS_QUERY } from './queries/tag-query';
 
 import {
-  IApplication,
+  IApplicationInstance,
   IAuroraApiClient,
   ITagsPaged,
-  IUserAffiliationResult
+  IUserAndAffiliations
 } from './types';
 
 export default class AuroraApiClient implements IAuroraApiClient {
@@ -53,7 +53,8 @@ export default class AuroraApiClient implements IAuroraApiClient {
       query: TAGS_QUERY,
       variables: {
         cursor,
-        repositories: [repository]
+        repositories: [repository],
+        types: ['MAJOR', 'MINOR', 'BUGFIX', 'LATEST']
       }
     });
 
@@ -78,7 +79,7 @@ export default class AuroraApiClient implements IAuroraApiClient {
     };
   }
 
-  public async findUserAndAffiliations(): Promise<IUserAffiliationResult> {
+  public async findUserAndAffiliations(): Promise<IUserAndAffiliations> {
     const result = await this.client.query<IUserAffiliationsQuery>({
       query: USER_AFFILIATIONS_QUERY
     });
@@ -91,7 +92,7 @@ export default class AuroraApiClient implements IAuroraApiClient {
 
   public async findAllApplicationsForAffiliations(
     affiliations: string[]
-  ): Promise<IApplication[]> {
+  ): Promise<IApplicationInstance[]> {
     const result = await this.client.query<IApplications>({
       query: APPLICATIONS_QUERY,
       variables: {
@@ -106,7 +107,7 @@ export default class AuroraApiClient implements IAuroraApiClient {
         environment: app.environment,
         name: node.name,
         pods: app.details.podResources,
-        repository: imageRepository.repository,
+        repository: imageRepository ? imageRepository.repository : '',
         statusCode: app.status.code,
         version: {
           auroraVersion: app.version.auroraVersion,

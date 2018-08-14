@@ -61,7 +61,7 @@ export interface IImageRepository {
 interface IApplicationEdge {
   node: {
     name: string;
-    imageRepository: IImageRepository;
+    imageRepository?: IImageRepository;
     applicationInstances: Array<{
       affiliation: {
         name: string;

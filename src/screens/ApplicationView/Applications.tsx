@@ -1,6 +1,9 @@
 import * as React from 'react';
 
-import { IApplication, ITagsPaged } from 'services/AuroraApiClient/types';
+import {
+  IApplicationInstance,
+  ITagsPaged
+} from 'services/AuroraApiClient/types';
 
 import { IAuroraApiComponentProps } from 'components/AuroraApi';
 import { withAuroraApi } from 'components/AuroraApi';
@@ -11,11 +14,12 @@ interface IApplicationsProps extends IAuroraApiComponentProps {
 }
 
 interface IApplicationsState {
-  applications: IApplication[];
+  applications: IApplicationInstance[];
   loading: boolean;
   tagsLoading: boolean;
   tagsPaged?: ITagsPaged;
-  selectedApplications: IApplication[];
+  fetchError?: Error;
+  selectedApplications: IApplicationInstance[];
 }
 
 class Applications extends React.Component<
@@ -29,7 +33,7 @@ class Applications extends React.Component<
     tagsLoading: false
   };
 
-  public handleSelectedApplications = (apps: IApplication[]) => {
+  public handleSelectedApplications = (apps: IApplicationInstance[]) => {
     this.setState(() => ({
       selectedApplications: apps
     }));
@@ -40,14 +44,39 @@ class Applications extends React.Component<
       tagsLoading: true
     }));
 
-    const tagsPaged = await this.props.clients.apiClient.findTagsPaged(
-      repository,
-      cursor
-    );
+    try {
+      const newTagsPaged = await this.props.clients.apiClient.findTagsPaged(
+        repository,
+        cursor
+      );
 
+      const previousTagsPaged = this.state.tagsPaged || {
+        endCursor: '',
+        hasNextPage: false,
+        hasPreviousPage: false,
+        startCursor: '',
+        tags: []
+      };
+
+      const tagsPaged: ITagsPaged = {
+        ...newTagsPaged,
+        tags: [...previousTagsPaged.tags, ...newTagsPaged.tags]
+      };
+      this.setState(() => ({
+        tagsLoading: false,
+        tagsPaged
+      }));
+    } catch (error) {
+      this.setState(() => ({
+        fetchError: error,
+        tagsLoading: false
+      }));
+    }
+  };
+
+  public clearTags = () => {
     this.setState(() => ({
-      tagsLoading: false,
-      tagsPaged
+      tagsPaged: undefined
     }));
   };
 
@@ -86,9 +115,15 @@ class Applications extends React.Component<
       loading,
       selectedApplications,
       tagsPaged,
-      tagsLoading
+      tagsLoading,
+      fetchError
     } = this.state;
     const { affiliation } = this.props;
+
+    if (fetchError) {
+      return <p>{fetchError.message}</p>;
+    }
+
     return (
       <ApplicationsView
         affiliation={affiliation}
@@ -97,6 +132,7 @@ class Applications extends React.Component<
         selectedApplications={selectedApplications}
         handleSelectedApplications={this.handleSelectedApplications}
         handleFetchTags={this.fetchTags}
+        handleClearTags={this.clearTags}
         tagsPaged={tagsPaged}
         tagsLoading={tagsLoading}
       />

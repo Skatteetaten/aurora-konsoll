@@ -1,20 +1,20 @@
 import * as React from 'react';
-import { IApplication } from 'services/AuroraApiClient/types';
+import { IApplicationInstance } from 'services/AuroraApiClient/types';
 import Status from './Status';
 
 export interface IApplicationMap {
-  [name: string]: IApplication[];
+  [name: string]: IApplicationInstance[];
 }
 
 interface IRowProps {
   name: string;
   environments: string[];
   apps: IApplicationMap;
-  onSelectApplication: (app: IApplication) => void;
+  onSelectApplication: (app: IApplicationInstance) => void;
 }
 
 const Row = ({ name, environments, apps, onSelectApplication }: IRowProps) => {
-  const handleSelectApplication = (found: IApplication) => () =>
+  const handleSelectApplication = (found: IApplicationInstance) => () =>
     onSelectApplication(found);
 
   const cells = environments.map((environment, index) => {

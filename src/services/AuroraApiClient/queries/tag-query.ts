@@ -1,9 +1,13 @@
 import gql from 'graphql-tag';
 
 export const TAGS_QUERY = gql`
-  query getTags($repositories: [String!]!, $cursor: String) {
+  query getTags(
+    $repositories: [String!]!
+    $cursor: String
+    $types: [ImageTagType!]
+  ) {
     imageRepositories(repositories: $repositories) {
-      tags(types: [BUGFIX], first: 10, after: $cursor) {
+      tags(types: $types, first: 30, after: $cursor) {
         pageInfo {
           startCursor
           endCursor

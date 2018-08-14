@@ -2,20 +2,24 @@ import Spinner from 'aurora-frontend-react-komponenter/Spinner';
 import * as React from 'react';
 import styled from 'styled-components';
 
-import { IApplication, ITagsPaged } from 'services/AuroraApiClient/types';
+import {
+  IApplicationInstance,
+  ITagsPaged
+} from 'services/AuroraApiClient/types';
 
 import DetailsRoute from './DetailsView/DetailsRoute';
 import MatrixRoute from './MatrixView/MatrixRoute';
 
 interface IApplicationsViewProps {
   affiliation?: string;
-  applications: IApplication[];
+  applications: IApplicationInstance[];
   loading: boolean;
   tagsLoading: boolean;
   tagsPaged?: ITagsPaged;
-  selectedApplications: IApplication[];
-  handleSelectedApplications: (apps: IApplication[]) => void;
+  selectedApplications: IApplicationInstance[];
+  handleSelectedApplications: (apps: IApplicationInstance[]) => void;
   handleFetchTags: (repository: string) => void;
+  handleClearTags: () => void;
 }
 
 export const ApplicationsView = ({
@@ -26,7 +30,8 @@ export const ApplicationsView = ({
   tagsPaged,
   selectedApplications,
   handleSelectedApplications,
-  handleFetchTags
+  handleFetchTags,
+  handleClearTags
 }: IApplicationsViewProps) => {
   if (!affiliation) {
     return <p>Velg en tilhørighet</p>;
@@ -54,6 +59,7 @@ export const ApplicationsView = ({
         handleFetchTags={handleFetchTags}
         tagsPaged={tagsPaged}
         tagsLoading={tagsLoading}
+        handleClearTags={handleClearTags}
       />
     </>
   );

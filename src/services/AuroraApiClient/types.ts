@@ -2,19 +2,19 @@ import { IPodResource } from './queries/applications-query';
 import { IPageInfo } from './queries/tag-query';
 
 export interface IAuroraApiClient {
-  findUserAndAffiliations: () => Promise<IUserAffiliationResult>;
+  findUserAndAffiliations: () => Promise<IUserAndAffiliations>;
   findAllApplicationsForAffiliations: (
     affiliations: string[]
-  ) => Promise<IApplication[]>;
+  ) => Promise<IApplicationInstance[]>;
   findTagsPaged: (repository: string, cursor?: string) => Promise<ITagsPaged>;
 }
 
-export interface IUserAffiliationResult {
+export interface IUserAndAffiliations {
   affiliations: string[];
   user: string;
 }
 
-export interface IApplication {
+export interface IApplicationInstance {
   affiliation: string;
   name: string;
   environment: string;

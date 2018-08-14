@@ -2,15 +2,19 @@ import * as React from 'react';
 
 import { mount } from 'enzyme';
 
-import { IApplication } from 'services/AuroraApiClient/types';
+import { IApplicationInstance } from 'services/AuroraApiClient/types';
 import ApplicationsView from './ApplicationView';
 
 it('renders without crashing', () => {
-  const handleSelectedApplications = (apps: IApplication[]) => {
+  const handleSelectedApplications = (apps: IApplicationInstance[]) => {
     return;
   };
 
   const handleFetchTags = (repository: string) => {
+    return;
+  };
+
+  const handleClearTags = () => {
     return;
   };
 
@@ -22,6 +26,7 @@ it('renders without crashing', () => {
       tagsLoading={false}
       selectedApplications={[]}
       handleFetchTags={handleFetchTags}
+      handleClearTags={handleClearTags}
     />
   );
 
