@@ -19,6 +19,8 @@ const apiClient: IAuroraApiClient = {
     toResult({
       endCursor: '',
       hasNextPage: false,
+      hasPreviousPage: false,
+      startCursor: '',
       tags: []
     }),
   findUserAndAffiliations: (): Promise<IUserAffiliationResult> =>

@@ -2,16 +2,20 @@ import ActionButton from 'aurora-frontend-react-komponenter/ActionButton';
 import * as React from 'react';
 import { Route, RouteComponentProps } from 'react-router-dom';
 
-import { IApplication } from 'services/AuroraApiClient/types';
+import { IApplication, ITagsPaged } from 'services/AuroraApiClient/types';
 import PodCard from './PodCard';
+import Versions from './Versions';
 
 interface IDetailsViewState {
   application?: IApplication;
+  previousCursor: string;
 }
 
 interface IDetailsViewProps {
   applications: IApplication[];
-  handleFetchTags: (respoitory: string) => void;
+  tagsLoading: boolean;
+  tagsPaged?: ITagsPaged;
+  handleFetchTags: (respoitory: string, cursor?: string) => void;
 }
 
 type DetailsRouteProps = RouteComponentProps<{
@@ -25,7 +29,8 @@ class DetailsView extends React.Component<
   IDetailsViewState
 > {
   public state: IDetailsViewState = {
-    application: undefined
+    application: undefined,
+    previousCursor: ''
   };
 
   public componentDidMount() {
@@ -44,8 +49,24 @@ class DetailsView extends React.Component<
     }
   }
 
+  public fetchMoreTags = (cursor: string) => {
+    const { application } = this.state;
+    const { tagsPaged } = this.props;
+
+    if (tagsPaged) {
+      this.setState(() => ({
+        previousCursor: tagsPaged.startCursor
+      }));
+    }
+
+    if (application) {
+      this.props.handleFetchTags(application.repository, cursor);
+    }
+  };
+
   public render() {
     const { affiliation, application, environment } = this.props.match.params;
+    const { tagsLoading, tagsPaged } = this.props;
 
     const back = () =>
       this.props.history.push({
@@ -73,6 +94,12 @@ class DetailsView extends React.Component<
         {this.state.application.pods.map(pod => (
           <PodCard pod={pod} key={pod.name} />
         ))}
+        <Versions
+          tagsLoading={tagsLoading}
+          tagsPaged={tagsPaged}
+          previousCursor={this.state.previousCursor}
+          handleFetchTags={this.fetchMoreTags}
+        />
       </div>
     );
   }

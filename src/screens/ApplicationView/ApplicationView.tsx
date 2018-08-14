@@ -2,7 +2,7 @@ import Spinner from 'aurora-frontend-react-komponenter/Spinner';
 import * as React from 'react';
 import styled from 'styled-components';
 
-import { IApplication } from 'services/AuroraApiClient/types';
+import { IApplication, ITagsPaged } from 'services/AuroraApiClient/types';
 
 import DetailsRoute from './DetailsView/DetailsRoute';
 import MatrixRoute from './MatrixView/MatrixRoute';
@@ -11,6 +11,8 @@ interface IApplicationsViewProps {
   affiliation?: string;
   applications: IApplication[];
   loading: boolean;
+  tagsLoading: boolean;
+  tagsPaged?: ITagsPaged;
   selectedApplications: IApplication[];
   handleSelectedApplications: (apps: IApplication[]) => void;
   handleFetchTags: (repository: string) => void;
@@ -20,6 +22,8 @@ export const ApplicationsView = ({
   affiliation,
   applications,
   loading,
+  tagsLoading,
+  tagsPaged,
   selectedApplications,
   handleSelectedApplications,
   handleFetchTags
@@ -48,6 +52,8 @@ export const ApplicationsView = ({
       <DetailsRoute
         applications={applications}
         handleFetchTags={handleFetchTags}
+        tagsPaged={tagsPaged}
+        tagsLoading={tagsLoading}
       />
     </>
   );

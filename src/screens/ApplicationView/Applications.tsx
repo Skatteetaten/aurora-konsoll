@@ -1,6 +1,6 @@
 import * as React from 'react';
 
-import { IApplication } from 'services/AuroraApiClient/types';
+import { IApplication, ITagsPaged } from 'services/AuroraApiClient/types';
 
 import { IAuroraApiComponentProps } from 'components/AuroraApi';
 import { withAuroraApi } from 'components/AuroraApi';
@@ -14,6 +14,7 @@ interface IApplicationsState {
   applications: IApplication[];
   loading: boolean;
   tagsLoading: boolean;
+  tagsPaged?: ITagsPaged;
   selectedApplications: IApplication[];
 }
 
@@ -34,19 +35,19 @@ class Applications extends React.Component<
     }));
   };
 
-  public fetchTags = async (repository: string) => {
+  public fetchTags = async (repository: string, cursor?: string) => {
     this.setState(() => ({
       tagsLoading: true
     }));
+
     const tagsPaged = await this.props.clients.apiClient.findTagsPaged(
-      repository
+      repository,
+      cursor
     );
 
-    // tslint:disable-next-line:no-console
-    console.log(tagsPaged);
-
     this.setState(() => ({
-      tagsLoading: false
+      tagsLoading: false,
+      tagsPaged
     }));
   };
 
@@ -80,7 +81,13 @@ class Applications extends React.Component<
   }
 
   public render() {
-    const { applications, loading, selectedApplications } = this.state;
+    const {
+      applications,
+      loading,
+      selectedApplications,
+      tagsPaged,
+      tagsLoading
+    } = this.state;
     const { affiliation } = this.props;
     return (
       <ApplicationsView
@@ -90,6 +97,8 @@ class Applications extends React.Component<
         selectedApplications={selectedApplications}
         handleSelectedApplications={this.handleSelectedApplications}
         handleFetchTags={this.fetchTags}
+        tagsPaged={tagsPaged}
+        tagsLoading={tagsLoading}
       />
     );
   }

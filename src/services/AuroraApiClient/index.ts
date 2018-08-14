@@ -11,9 +11,15 @@ import {
   APPLICATIONS_QUERY,
   IApplications
 } from './queries/applications-query';
+
 import { ITagsQuery, TAGS_QUERY } from './queries/tag-query';
-import { IApplication, ITagsPaged, IUserAffiliationResult } from './types';
-import { IAuroraApiClient } from './types';
+
+import {
+  IApplication,
+  IAuroraApiClient,
+  ITagsPaged,
+  IUserAffiliationResult
+} from './types';
 
 export default class AuroraApiClient implements IAuroraApiClient {
   private client: ApolloClient<{}>;
@@ -63,6 +69,8 @@ export default class AuroraApiClient implements IAuroraApiClient {
     return {
       endCursor: pageInfo.endCursor,
       hasNextPage: pageInfo.hasNextPage,
+      hasPreviousPage: pageInfo.hasPreviousPage,
+      startCursor: pageInfo.startCursor,
       tags: edges.map(edge => ({
         lastModified: edge.node.lastModified,
         name: edge.node.name

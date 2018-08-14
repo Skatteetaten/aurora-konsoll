@@ -1,4 +1,5 @@
 import { IPodResource } from './queries/applications-query';
+import { IPageInfo } from './queries/tag-query';
 
 export interface IAuroraApiClient {
   findUserAndAffiliations: () => Promise<IUserAffiliationResult>;
@@ -31,8 +32,6 @@ export interface ITag {
   lastModified: string;
 }
 
-export interface ITagsPaged {
-  endCursor: string;
-  hasNextPage: boolean;
+export interface ITagsPaged extends IPageInfo {
   tags: ITag[];
 }

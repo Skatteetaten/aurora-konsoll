@@ -3,10 +3,12 @@ import gql from 'graphql-tag';
 export const TAGS_QUERY = gql`
   query getTags($repositories: [String!]!, $cursor: String) {
     imageRepositories(repositories: $repositories) {
-      tags(first: 20, after: $cursor) {
+      tags(types: [BUGFIX], first: 10, after: $cursor) {
         pageInfo {
+          startCursor
           endCursor
           hasNextPage
+          hasPreviousPage
         }
         edges {
           node {
@@ -20,8 +22,10 @@ export const TAGS_QUERY = gql`
 `;
 
 export interface IPageInfo {
+  startCursor: string;
   endCursor: string;
   hasNextPage: boolean;
+  hasPreviousPage: boolean;
 }
 
 export interface ITagsQuery {

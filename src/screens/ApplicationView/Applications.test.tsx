@@ -19,6 +19,7 @@ it('renders without crashing', () => {
       applications={[]}
       handleSelectedApplications={handleSelectedApplications}
       loading={false}
+      tagsLoading={false}
       selectedApplications={[]}
       handleFetchTags={handleFetchTags}
     />
