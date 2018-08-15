@@ -10,7 +10,7 @@ import {
 import DetailsRoute from './DetailsView/DetailsRoute';
 import MatrixRoute from './MatrixView/MatrixRoute';
 
-interface IApplicationsViewProps {
+export interface IApplicationViewProps {
   affiliation?: string;
   applications: IApplicationInstance[];
   loading: boolean;
@@ -22,7 +22,9 @@ interface IApplicationsViewProps {
   handleClearTags: () => void;
 }
 
-export const ApplicationsView = ({
+export const ApplicationView: React.StatelessComponent<
+  IApplicationViewProps
+> = ({
   affiliation,
   applications,
   loading,
@@ -32,7 +34,7 @@ export const ApplicationsView = ({
   handleSelectedApplications,
   handleFetchTags,
   handleClearTags
-}: IApplicationsViewProps) => {
+}) => {
   if (!affiliation) {
     return <p>Velg en tilhørighet</p>;
   }
@@ -75,4 +77,6 @@ const Loading = styled.div`
   }
 `;
 
-export default ApplicationsView;
+ApplicationView.displayName = 'ApplicationsView';
+
+export default ApplicationView;

@@ -9,7 +9,7 @@ import Header from './Header';
 import Menu, { MenuNavLink } from './Menu';
 
 interface ILayoutProps {
-  affiliation: string;
+  selectedAffiliation: string;
   affiliations: string[];
   user: string;
   children: React.ReactNode;
@@ -17,7 +17,7 @@ interface ILayoutProps {
 }
 
 const Layout = ({
-  affiliation,
+  selectedAffiliation,
   affiliations,
   user,
   children,
@@ -33,7 +33,7 @@ const Layout = ({
   };
 
   const paths = location.pathname.split('/');
-  if (affiliation === '' && paths.length > 2) {
+  if (selectedAffiliation === '' && paths.length > 2) {
     handleChangeAffiliation(paths[2]);
   }
 
@@ -42,14 +42,16 @@ const Layout = ({
       <StyledHeader
         title="Aurora Konsoll"
         user={user}
-        selectedAffiliation={affiliation}
+        selectedAffiliation={selectedAffiliation}
         affiliations={toDropdownOptions(affiliations)}
         handleChangeAffiliation={updatePath}
       />
       <StyledMenu>
         <MenuNavLink
           name="Applikasjoner"
-          to={`/app${affiliation !== '' ? '/' + affiliation : ''}`}
+          to={`/app${
+            selectedAffiliation !== '' ? '/' + selectedAffiliation : ''
+          }`}
           iconName="Menu"
         />
         {/* <MenuNavLink name="Database" to="/db" iconName="Cloud" />

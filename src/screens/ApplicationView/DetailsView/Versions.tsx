@@ -3,13 +3,19 @@ import DetailsList from 'aurora-frontend-react-komponenter/DetailsList';
 import Grid from 'aurora-frontend-react-komponenter/Grid';
 import Spinner from 'aurora-frontend-react-komponenter/Spinner';
 import * as React from 'react';
-import { ITagsPaged } from 'services/AuroraApiClient/types';
+import { ITag, ITagsPaged } from 'services/AuroraApiClient/types';
 
 interface IVersionsProps {
   tagsLoading: boolean;
   tagsPaged?: ITagsPaged;
   handleFetchTags: (cursor: string) => void;
 }
+
+const sortTagsByDate = (t1: ITag, t2: ITag) => {
+  const date1 = new Date(t1.lastModified).getTime();
+  const date2 = new Date(t2.lastModified).getTime();
+  return date2 - date1;
+};
 
 const detailListColumns = [
   {
@@ -44,24 +50,11 @@ const Versions = ({
   }
 
   const fetchMoreTags = (cursor: string) => () => handleFetchTags(cursor);
-  const tagsItem = tagsPaged.tags
-    .sort((t1, t2) => {
-      const date1 = new Date(t1.lastModified).getTime();
-      const date2 = new Date(t2.lastModified).getTime();
+  const tagItems = tagsPaged.tags.sort(sortTagsByDate).map(tag => ({
+    lastModified: new Date(tag.lastModified).toLocaleString('nb-NO'),
+    name: tag.name
+  }));
 
-      if (date2 > date1) {
-        return 1;
-      }
-      if (date1 < date2) {
-        return -1;
-      }
-
-      return 0;
-    })
-    .map(tag => ({
-      lastModified: new Date(tag.lastModified).toLocaleString('nb-NO'),
-      name: tag.name
-    }));
   return (
     <Grid>
       <Grid.Row>
@@ -73,7 +66,7 @@ const Versions = ({
           >
             {tagsLoading ? <Spinner /> : 'Load more'}
           </Button>
-          <DetailsList columns={detailListColumns} items={tagsItem} />
+          <DetailsList columns={detailListColumns} items={tagItems} />
         </Grid.Col>
       </Grid.Row>
     </Grid>

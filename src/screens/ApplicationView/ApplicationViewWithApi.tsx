@@ -7,7 +7,7 @@ import {
 
 import { IAuroraApiComponentProps } from 'components/AuroraApi';
 import { withAuroraApi } from 'components/AuroraApi';
-import ApplicationsView from './ApplicationView';
+import ApplicationView from './ApplicationView';
 
 interface IApplicationsProps extends IAuroraApiComponentProps {
   affiliation?: string;
@@ -125,7 +125,7 @@ class Applications extends React.Component<
     }
 
     return (
-      <ApplicationsView
+      <ApplicationView
         affiliation={affiliation}
         applications={applications}
         loading={loading}

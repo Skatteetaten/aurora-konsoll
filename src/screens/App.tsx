@@ -7,7 +7,7 @@ import { ITokenStore } from 'services/TokenStore';
 import AcceptTokenRoute from './AcceptTokenView/AcceptTokenRoute';
 
 import { withAuroraApi } from 'components/AuroraApi';
-import ApplicationsRoute from './ApplicationView/ApplicationsRoute';
+import ApplicationViewWithApiRoute from './ApplicationView/ApplicationViewWithApiRoute';
 import Home from './HomeView/Home';
 
 interface IRoutesProps extends IAuroraApiComponentProps {
@@ -53,7 +53,7 @@ class App extends React.Component<IRoutesProps, IRoutesState> {
     return (
       <BrowserRouter>
         <Layout
-          affiliation={affiliation || ''}
+          selectedAffiliation={affiliation || ''}
           user={user}
           affiliations={affiliations}
           handleChangeAffiliation={this.selectAffiliation}
@@ -62,7 +62,7 @@ class App extends React.Component<IRoutesProps, IRoutesState> {
           {isAuthenticated && (
             <>
               <Route exact={true} path="/" component={Home} />
-              <ApplicationsRoute affiliation={affiliation} />
+              <ApplicationViewWithApiRoute affiliation={affiliation} />
             </>
           )}
         </Layout>

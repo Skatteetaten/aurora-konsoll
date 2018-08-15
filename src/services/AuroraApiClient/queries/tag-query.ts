@@ -7,7 +7,7 @@ export const TAGS_QUERY = gql`
     $types: [ImageTagType!]
   ) {
     imageRepositories(repositories: $repositories) {
-      tags(types: $types, first: 30, after: $cursor) {
+      tags(types: $types, first: 20, after: $cursor) {
         pageInfo {
           startCursor
           endCursor

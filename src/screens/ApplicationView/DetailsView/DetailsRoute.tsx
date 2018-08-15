@@ -88,7 +88,7 @@ class DetailsView extends React.Component<
           Applications
         </ActionButton>
         <h1>
-          {this.state.application.environment}/{this.state.application.name}{' '}
+          {this.state.application.environment}/{this.state.application.name}
         </h1>
         <p>DeployTag: {version.deployTag}</p>
         <p>AuroraVersion: {version.auroraVersion}</p>
