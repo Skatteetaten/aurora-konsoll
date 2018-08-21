@@ -1,18 +1,39 @@
-/* tslint:disable:no-console */
-
-import { default as ApolloClient } from 'apollo-boost';
-import { default as gql } from 'graphql-tag';
 import * as qs from 'qs';
 import * as React from 'react';
-import { ApolloProvider } from 'react-apollo';
 import * as ReactDOM from 'react-dom';
-import { BrowserRouter, Route, RouteComponentProps } from 'react-router-dom';
-import App from './App';
-import { Layout } from './components/Layout';
-import { fetchConfiguration, IConfiguration } from './config';
+
+import { AuroraApiProvider } from 'components/AuroraApi';
+import App from 'screens/App';
+import AuroraApiClient from 'services/AuroraApiClient';
+import { tokenStore } from 'services/TokenStore';
+import { fetchConfiguration, IConfiguration } from 'utils/config';
+import registerServiceWorker from 'utils/registerServiceWorker';
+
 import './index.css';
-import registerServiceWorker from './registerServiceWorker';
-import { tokenStore, TokenStore } from './TokenStore';
+
+async function init() {
+  const configOrError = await fetchConfiguration();
+  if ((configOrError as Error).message) {
+    throw new Error((configOrError as Error).message);
+  }
+  const config = configOrError as IConfiguration;
+
+  if (!tokenStore.isTokenValid()) {
+    redirectToLoginPage(config.AUTHORIZATION_URI, config.CLIENT_ID);
+  }
+
+  const clients = {
+    apiClient: new AuroraApiClient(config.GRAPHQL_URL)
+  };
+
+  ReactDOM.render(
+    <AuroraApiProvider clients={clients}>
+      <App tokenStore={tokenStore} />
+    </AuroraApiProvider>,
+    document.getElementById('root') as HTMLElement
+  );
+  registerServiceWorker();
+}
 
 function redirectToLoginPage(authorizationUri: string, clientId: string) {
   const authorizationUrl =
@@ -28,114 +49,6 @@ function redirectToLoginPage(authorizationUri: string, clientId: string) {
       })
     );
   window.location.replace(authorizationUrl);
-}
-
-const AcceptToken = ({
-  location,
-  onTokenUpdated
-}: RouteComponentProps<{}> & { onTokenUpdated: () => void }) => {
-  interface IAuthQueryString {
-    expires_in: string;
-    access_token: string;
-  }
-
-  const authQueryString = qs.parse(
-    location.hash.substring(1)
-  ) as IAuthQueryString;
-
-  const token = authQueryString.access_token;
-  const expiresInSeconds = Number(authQueryString.expires_in);
-  tokenStore.updateToken(token, expiresInSeconds);
-
-  onTokenUpdated();
-  return <div />;
-};
-
-class Application extends React.Component<{
-  tokenStore: TokenStore;
-}> {
-  public render() {
-    const acceptToken = (props: RouteComponentProps<{}>) => (
-      <AcceptToken {...props} onTokenUpdated={this.onTokenUpdated} />
-    );
-    const isAuthenticated = this.props.tokenStore.isTokenValid();
-    return (
-      <BrowserRouter>
-        <Layout>
-          <Route exact={true} path="/accept-token" render={acceptToken} />
-          {isAuthenticated && <Route exact={true} path="/" component={App} />}
-        </Layout>
-      </BrowserRouter>
-    );
-  }
-
-  public onTokenUpdated = () => {
-    window.location.replace('/');
-  };
-}
-
-async function init() {
-  const configOrError = await fetchConfiguration();
-  if ((configOrError as Error).message) {
-    console.log((configOrError as Error).message);
-    return;
-  }
-  const config = configOrError as IConfiguration;
-
-  if (!tokenStore.isTokenValid()) {
-    redirectToLoginPage(config.AUTHORIZATION_URI, config.CLIENT_ID);
-  }
-
-  const client = new ApolloClient({
-    request: async operations => {
-      const token = tokenStore.getToken();
-      operations.setContext({
-        headers: {
-          Authorization: token ? `Bearer ${token}` : ''
-        }
-      });
-    },
-    uri: config.GRAPHQL_URL
-  });
-
-  interface IAffiliations {
-    affiliations: {
-      edges: Array<{
-        node: {
-          name: string;
-        };
-      }>;
-    };
-  }
-
-  client
-    .query<IAffiliations>({
-      query: gql`
-        {
-          affiliations {
-            edges {
-              node {
-                name
-              }
-            }
-          }
-        }
-      `
-    })
-    .then(result => {
-      const { affiliations } = result.data;
-      console.log(
-        affiliations.edges.reduce((acc, edge) => [...acc, edge.node.name], [])
-      );
-    });
-
-  ReactDOM.render(
-    <ApolloProvider client={client}>
-      <Application tokenStore={tokenStore} />
-    </ApolloProvider>,
-    document.getElementById('root') as HTMLElement
-  );
-  registerServiceWorker();
 }
 
 init();
