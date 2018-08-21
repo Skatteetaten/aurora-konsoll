@@ -3,7 +3,7 @@ import * as React from 'react';
 import { mount } from 'enzyme';
 
 import { MemoryRouter } from 'react-router';
-import ApplicationView, { IApplicationViewProps } from './ApplicationView';
+import ApplicationView from './ApplicationView';
 
 it('renders without crashing', () => {
   const handleSelectedApplications = jest.fn();
@@ -26,7 +26,7 @@ it('renders without crashing', () => {
     <MemoryRouter initialEntries={['/app/aurora/details/test/konsoll']}>
       <ApplicationView
         affiliation={'aurora'}
-        applications={[]}
+        applications={[testKonsoll]}
         handleSelectedApplications={handleSelectedApplications}
         loading={false}
         tagsLoading={false}

@@ -18,11 +18,10 @@ interface IApplicationsState {
   loading: boolean;
   tagsLoading: boolean;
   tagsPaged?: ITagsPaged;
-  fetchError?: Error;
   selectedApplications: IApplicationInstance[];
 }
 
-class Applications extends React.Component<
+class ApplicationViewWithApi extends React.Component<
   IApplicationsProps,
   IApplicationsState
 > {
@@ -44,34 +43,22 @@ class Applications extends React.Component<
       tagsLoading: true
     }));
 
-    try {
-      const newTagsPaged = await this.props.clients.apiClient.findTagsPaged(
-        repository,
-        cursor
-      );
+    const newTagsPaged = await this.props.clients.apiClient.findTagsPaged(
+      repository,
+      cursor
+    );
 
-      const previousTagsPaged = this.state.tagsPaged || {
-        endCursor: '',
-        hasNextPage: false,
-        hasPreviousPage: false,
-        startCursor: '',
-        tags: []
-      };
+    const { tagsPaged } = this.state;
 
-      const tagsPaged: ITagsPaged = {
-        ...newTagsPaged,
-        tags: [...previousTagsPaged.tags, ...newTagsPaged.tags]
-      };
-      this.setState(() => ({
-        tagsLoading: false,
-        tagsPaged
-      }));
-    } catch (error) {
-      this.setState(() => ({
-        fetchError: error,
-        tagsLoading: false
-      }));
-    }
+    this.setState(() => ({
+      tagsLoading: false,
+      tagsPaged: !tagsPaged
+        ? newTagsPaged
+        : {
+            ...newTagsPaged,
+            tags: [...tagsPaged.tags, ...newTagsPaged.tags]
+          }
+    }));
   };
 
   public clearTags = () => {
@@ -115,14 +102,9 @@ class Applications extends React.Component<
       loading,
       selectedApplications,
       tagsPaged,
-      tagsLoading,
-      fetchError
+      tagsLoading
     } = this.state;
     const { affiliation } = this.props;
-
-    if (fetchError) {
-      return <p>{fetchError.message}</p>;
-    }
 
     return (
       <ApplicationView
@@ -140,4 +122,4 @@ class Applications extends React.Component<
   }
 }
 
-export default withAuroraApi(Applications);
+export default withAuroraApi(ApplicationViewWithApi);
