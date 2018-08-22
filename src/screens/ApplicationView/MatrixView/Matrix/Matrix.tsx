@@ -33,7 +33,11 @@ const Matrix = ({ applications, onSelectApplication }: IMatrixProps) => {
     <Wrapper>
       <table>
         <thead>
-          <tr>{environments.sort().map(name => <th key={name}>{name}</th>)}</tr>
+          <tr>
+            {environments.sort().map(name => (
+              <th key={name}>{name}</th>
+            ))}
+          </tr>
         </thead>
         <tbody>
           {Object.keys(apps)
