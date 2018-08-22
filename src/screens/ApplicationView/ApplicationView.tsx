@@ -7,8 +7,8 @@ import {
   ITagsPaged
 } from 'services/AuroraApiClient/types';
 
-import DetailsRoute from './DetailsView/DetailsRoute';
-import MatrixRoute from './MatrixView/MatrixRoute';
+import DetailsViewRoute from './DetailsView/DetailsViewRoute';
+import MatrixViewRoute from './MatrixView/MatrixViewRoute';
 
 export interface IApplicationViewProps {
   affiliation?: string;
@@ -22,9 +22,7 @@ export interface IApplicationViewProps {
   handleClearTags: () => void;
 }
 
-export const ApplicationView: React.StatelessComponent<
-  IApplicationViewProps
-> = ({
+const ApplicationView: React.StatelessComponent<IApplicationViewProps> = ({
   affiliation,
   applications,
   loading,
@@ -50,13 +48,13 @@ export const ApplicationView: React.StatelessComponent<
 
   return (
     <>
-      <MatrixRoute
+      <MatrixViewRoute
         affiliation={affiliation}
         applications={applications}
         selectedApplications={selectedApplications}
         handleSelectedApplications={handleSelectedApplications}
       />
-      <DetailsRoute
+      <DetailsViewRoute
         applications={applications}
         handleFetchTags={handleFetchTags}
         tagsPaged={tagsPaged}

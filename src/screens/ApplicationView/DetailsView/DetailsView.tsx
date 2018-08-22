@@ -1,6 +1,6 @@
 import ActionButton from 'aurora-frontend-react-komponenter/ActionButton';
 import * as React from 'react';
-import { Route, RouteComponentProps } from 'react-router-dom';
+import { RouteComponentProps } from 'react-router-dom';
 
 import {
   IApplicationInstance,
@@ -13,7 +13,7 @@ interface IDetailsViewState {
   application?: IApplicationInstance;
 }
 
-interface IDetailsViewProps {
+export interface IDetailsViewProps {
   applications: IApplicationInstance[];
   tagsLoading: boolean;
   tagsPaged?: ITagsPaged;
@@ -21,7 +21,7 @@ interface IDetailsViewProps {
   handleClearTags: () => void;
 }
 
-type DetailsRouteProps = RouteComponentProps<{
+export type DetailsRouteProps = RouteComponentProps<{
   affiliation: string;
   environment: string;
   application: string;
@@ -106,16 +106,4 @@ class DetailsView extends React.Component<
   }
 }
 
-const DetailsRouteWrapper = (props: IDetailsViewProps) => (
-  routerProps: DetailsRouteProps
-) => <DetailsView {...props} {...routerProps} />;
-
-const DetailsRoute = (props: IDetailsViewProps) => (
-  <Route
-    exact={true}
-    path="/app/:affiliation/details/:environment/:application"
-    render={DetailsRouteWrapper(props)}
-  />
-);
-
-export default DetailsRoute;
+export default DetailsView;

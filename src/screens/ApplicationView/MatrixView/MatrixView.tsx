@@ -1,11 +1,11 @@
 import * as React from 'react';
-import { Route, RouteComponentProps } from 'react-router-dom';
+import { RouteComponentProps } from 'react-router-dom';
 
 import { IApplicationInstance } from 'services/AuroraApiClient/types';
-import Filter from './Filter';
+import Filter from './Filter/Filter';
 import Matrix from './Matrix/Matrix';
 
-interface IMatrixViewProps {
+export interface IMatrixViewProps {
   affiliation: string;
   applications: IApplicationInstance[];
   selectedApplications: IApplicationInstance[];
@@ -36,16 +36,4 @@ const MatrixView = (props: IMatrixViewProps & RouteComponentProps<{}>) => {
   );
 };
 
-const MatrixRouteWrapper = (props: IMatrixViewProps) => (
-  routerProps: RouteComponentProps<{}>
-) => <MatrixView {...props} {...routerProps} />;
-
-const MatrixRoute = (props: IMatrixViewProps) => (
-  <Route
-    exact={true}
-    path="/app/:affiliation"
-    render={MatrixRouteWrapper(props)}
-  />
-);
-
-export default MatrixRoute;
+export default MatrixView;

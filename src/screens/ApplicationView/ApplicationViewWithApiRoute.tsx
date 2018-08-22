@@ -2,16 +2,18 @@ import * as React from 'react';
 import { Route } from 'react-router-dom';
 import ApplicationViewWithApi from './ApplicationViewWithApi';
 
-interface IApplicationsRouteProps {
+interface IApplicationViewWithApiRouteProps {
   affiliation?: string;
 }
 
-const ApplicationRouteWrapper = (affiliation?: string) => () => (
+const renderComponent = (affiliation?: string) => () => (
   <ApplicationViewWithApi affiliation={affiliation} />
 );
 
-const ApplicationsRoute = ({ affiliation }: IApplicationsRouteProps) => (
-  <Route path="/app" render={ApplicationRouteWrapper(affiliation)} />
+const ApplicationsViewWithApiRoute = ({
+  affiliation
+}: IApplicationViewWithApiRouteProps) => (
+  <Route path="/app" render={renderComponent(affiliation)} />
 );
 
-export default ApplicationsRoute;
+export default ApplicationsViewWithApiRoute;
