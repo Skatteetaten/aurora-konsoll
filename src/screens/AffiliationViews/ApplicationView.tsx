@@ -49,7 +49,6 @@ const ApplicationView: React.StatelessComponent<IApplicationViewProps> = ({
   return (
     <>
       <MatrixViewRoute
-        affiliation={affiliation}
         applications={applications}
         selectedApplications={selectedApplications}
         handleSelectedApplications={handleSelectedApplications}

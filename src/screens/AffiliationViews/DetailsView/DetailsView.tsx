@@ -69,7 +69,7 @@ class DetailsView extends React.Component<
 
     const back = () =>
       this.props.history.push({
-        pathname: `/app/${affiliation}`
+        pathname: `/${affiliation}/deployments`
       });
 
     if (!this.state.application) {

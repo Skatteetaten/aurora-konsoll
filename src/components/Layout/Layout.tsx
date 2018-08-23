@@ -9,49 +9,39 @@ import Header from './Header';
 import Menu, { MenuNavLink } from './Menu';
 
 interface ILayoutProps {
-  selectedAffiliation: string;
   affiliations: string[];
   user: string;
   children: React.ReactNode;
-  handleChangeAffiliation: (affiliation: string) => void;
 }
 
 const Layout = ({
-  selectedAffiliation,
   affiliations,
   user,
   children,
-  location,
-  history,
-  handleChangeAffiliation
-}: RouteComponentProps<{}> & ILayoutProps) => {
+  match,
+  history
+}: RouteComponentProps<{ affiliation?: string }> & ILayoutProps) => {
   const updatePath = (a: string) => {
-    handleChangeAffiliation(a);
     history.push({
-      pathname: `/app/${a}`
+      pathname: `/${a}/deployments`
     });
   };
 
-  const paths = location.pathname.split('/');
-  if (selectedAffiliation === '' && paths.length > 2) {
-    handleChangeAffiliation(paths[2]);
-  }
+  const { affiliation } = match.params;
 
   return (
     <SkeBasis>
       <StyledHeader
         title="Aurora Konsoll"
         user={user}
-        selectedAffiliation={selectedAffiliation}
+        selectedAffiliation={affiliation}
         affiliations={toDropdownOptions(affiliations)}
         handleChangeAffiliation={updatePath}
       />
       <StyledMenu>
         <MenuNavLink
           name="Applikasjoner"
-          to={`/app${
-            selectedAffiliation !== '' ? '/' + selectedAffiliation : ''
-          }`}
+          to={`/${affiliation ? `/${affiliation}` : ''}/deployments`}
           iconName="Menu"
         />
         {/* <MenuNavLink name="Database" to="/db" iconName="Cloud" />

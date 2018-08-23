@@ -7,7 +7,7 @@ import { ITokenStore } from 'services/TokenStore';
 import AcceptTokenRoute from './AcceptTokenView/AcceptTokenRoute';
 
 import { withAuroraApi } from 'components/AuroraApi';
-import ApplicationViewWithApiRoute from './ApplicationView/ApplicationViewWithApiRoute';
+import ApplicationViewWithApi from './AffiliationViews/ApplicationViewWithApi';
 import Home from './HomeView/Home';
 
 interface IRoutesProps extends IAuroraApiComponentProps {
@@ -15,22 +15,14 @@ interface IRoutesProps extends IAuroraApiComponentProps {
 }
 
 interface IRoutesState {
-  affiliation?: string;
   affiliations: string[];
   user: string;
 }
 
 class App extends React.Component<IRoutesProps, IRoutesState> {
   public state: IRoutesState = {
-    affiliation: undefined,
     affiliations: [],
     user: ''
-  };
-
-  public selectAffiliation = (affiliation: string) => {
-    this.setState(state => ({
-      affiliation
-    }));
   };
 
   public async componentDidMount() {
@@ -48,21 +40,16 @@ class App extends React.Component<IRoutesProps, IRoutesState> {
   public render() {
     const isAuthenticated = this.props.tokenStore.isTokenValid();
 
-    const { affiliation, affiliations, user } = this.state;
+    const { affiliations, user } = this.state;
 
     return (
       <BrowserRouter>
-        <Layout
-          selectedAffiliation={affiliation || ''}
-          user={user}
-          affiliations={affiliations}
-          handleChangeAffiliation={this.selectAffiliation}
-        >
+        <Layout user={user} affiliations={affiliations}>
           <AcceptTokenRoute onTokenUpdated={this.onTokenUpdated} />
           {isAuthenticated && (
             <>
               <Route exact={true} path="/" component={Home} />
-              <ApplicationViewWithApiRoute affiliation={affiliation} />
+              <Route path="/:affiliation" component={ApplicationViewWithApi} />
             </>
           )}
         </Layout>

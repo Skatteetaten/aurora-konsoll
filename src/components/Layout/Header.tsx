@@ -15,7 +15,7 @@ import './Header.css';
 interface IHeaderProps {
   title: string;
   user: string;
-  selectedAffiliation: string;
+  selectedAffiliation?: string;
   className?: string;
   affiliations?: IDropdownOption[];
   handleChangeAffiliation: (affiliation: string) => void;

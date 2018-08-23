@@ -1,18 +1,17 @@
 import * as React from 'react';
-import { RouteComponentProps } from 'react-router-dom';
 
 import { IApplicationInstance } from 'services/AuroraApiClient/types';
+import { AffiliationRouteProps } from '../AffiliationRouteProps';
 import Filter from './Filter/Filter';
 import Matrix from './Matrix/Matrix';
 
 export interface IMatrixViewProps {
-  affiliation: string;
   applications: IApplicationInstance[];
   selectedApplications: IApplicationInstance[];
   handleSelectedApplications: (apps: IApplicationInstance[]) => void;
 }
 
-const MatrixView = (props: IMatrixViewProps & RouteComponentProps<{}>) => {
+const MatrixView = (props: IMatrixViewProps & AffiliationRouteProps) => {
   const onSelectApplication = (app: IApplicationInstance) => {
     props.history.push({
       pathname:
@@ -20,7 +19,8 @@ const MatrixView = (props: IMatrixViewProps & RouteComponentProps<{}>) => {
     });
   };
 
-  const { affiliation, applications, selectedApplications } = props;
+  const { applications, selectedApplications } = props;
+  const { affiliation } = props.match.params;
   return (
     <>
       <Filter

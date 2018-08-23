@@ -23,11 +23,7 @@ interface IAuroraApiProviderProps {
 }
 
 const AuroraApiProvider = ({ clients, children }: IAuroraApiProviderProps) => (
-  <AuroraApiContext.Provider
-    value={{
-      clients
-    }}
-  >
+  <AuroraApiContext.Provider value={{ clients }}>
     {children}
   </AuroraApiContext.Provider>
 );
@@ -89,6 +85,8 @@ class AuroraApiCall<P> extends React.Component<
     this.fetchData();
   }
 
+  // TODO: Find a better way to check for updated props
+  // ? Add fetch arguments as props to component?
   public componentDidUpdate(prevProps: IAuroraApiCallProps<P>) {
     if (this.props.fetch !== prevProps.fetch) {
       this.fetchData();

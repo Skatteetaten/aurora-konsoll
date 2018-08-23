@@ -7,11 +7,11 @@ import {
 
 import { IAuroraApiComponentProps } from 'components/AuroraApi';
 import { withAuroraApi } from 'components/AuroraApi';
+import { AffiliationRouteProps } from './AffiliationRouteProps';
 import ApplicationView from './ApplicationView';
 
-interface IApplicationsProps extends IAuroraApiComponentProps {
-  affiliation?: string;
-}
+type IApplicationViewWithApiProps = IAuroraApiComponentProps &
+  AffiliationRouteProps;
 
 interface IApplicationsState {
   applications: IApplicationInstance[];
@@ -22,7 +22,7 @@ interface IApplicationsState {
 }
 
 class ApplicationViewWithApi extends React.Component<
-  IApplicationsProps,
+  IApplicationViewWithApiProps,
   IApplicationsState
 > {
   public state: IApplicationsState = {
@@ -83,15 +83,15 @@ class ApplicationViewWithApi extends React.Component<
   };
 
   public componentDidMount() {
-    const { affiliation } = this.props;
+    const { affiliation } = this.props.match.params;
     if (affiliation) {
       this.fetchApplications(affiliation);
     }
   }
 
-  public componentDidUpdate(prevProps: IApplicationsProps) {
-    const { affiliation } = this.props;
-    if (affiliation && affiliation !== prevProps.affiliation) {
+  public componentDidUpdate(prevProps: IApplicationViewWithApiProps) {
+    const { affiliation } = this.props.match.params;
+    if (affiliation && affiliation !== prevProps.match.params.affiliation) {
       this.fetchApplications(affiliation);
     }
   }
@@ -104,7 +104,7 @@ class ApplicationViewWithApi extends React.Component<
       tagsPaged,
       tagsLoading
     } = this.state;
-    const { affiliation } = this.props;
+    const { affiliation } = this.props.match.params;
 
     return (
       <ApplicationView

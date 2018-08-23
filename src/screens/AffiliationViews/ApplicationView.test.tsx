@@ -2,7 +2,6 @@ import * as React from 'react';
 
 import { mount } from 'enzyme';
 
-import { MemoryRouter } from 'react-router';
 import ApplicationView from './ApplicationView';
 
 it('renders without crashing', () => {
@@ -10,38 +9,33 @@ it('renders without crashing', () => {
   const handleFetchTags = jest.fn();
   const handleClearTags = jest.fn();
 
-  const testKonsoll = {
-    affiliation: 'aurora',
-    environment: 'test',
-    name: 'konsoll',
-    pods: [],
-    repository: 'test',
-    statusCode: 'HEALTHY',
-    version: {
-      auroraVersion: '1',
-      deployTag: '1'
-    }
-  };
+  // const testKonsoll = {
+  //   affiliation: 'aurora',
+  //   environment: 'test',
+  //   name: 'konsoll',
+  //   pods: [],
+  //   repository: 'test',
+  //   statusCode: 'HEALTHY',
+  //   version: {
+  //     auroraVersion: '1',
+  //     deployTag: '1'
+  //   }
+  // };
   const wrapper = mount(
-    <MemoryRouter initialEntries={['/app/aurora/details/test/konsoll']}>
-      <ApplicationView
-        affiliation={'aurora'}
-        applications={[testKonsoll]}
-        handleSelectedApplications={handleSelectedApplications}
-        loading={false}
-        tagsLoading={false}
-        selectedApplications={[]}
-        handleFetchTags={handleFetchTags}
-        handleClearTags={handleClearTags}
-      />
-    </MemoryRouter>
+    <ApplicationView
+      applications={[]}
+      handleSelectedApplications={handleSelectedApplications}
+      loading={false}
+      tagsLoading={false}
+      selectedApplications={[]}
+      handleFetchTags={handleFetchTags}
+      handleClearTags={handleClearTags}
+    />
   );
 
   const appWrapper = wrapper.at(0);
 
-  expect(appWrapper.find('p').text()).toEqual(
-    'Could not find application test/konsoll'
-  );
+  expect(appWrapper.find('p').text()).toEqual('Velg en tilhørighet');
   // appWrapper.setProps({
   //   applications: [testKonsoll]
   // });

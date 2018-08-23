@@ -15,7 +15,7 @@ const renderComponent = (props: IDetailsViewProps) => (
 const DetailsViewRoute = (props: IDetailsViewProps) => (
   <Route
     exact={true}
-    path="/app/:affiliation/details/:environment/:application"
+    path="/:affiliation/deployments/details/:environment/:application"
     render={renderComponent(props)}
   />
 );
