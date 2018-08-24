@@ -1,16 +1,14 @@
 import * as React from 'react';
 
-import { IApplicationInstance } from 'services/AuroraApiClient/types';
+import {
+  IApplicationDeploymentContext,
+  withApplicationDeployments
+} from '../ApplicationDeploymentContext';
 import Row, { IApplicationMap } from './Row';
 import Wrapper from './Wrapper';
 
-interface IMatrixProps {
-  applications: IApplicationInstance[];
-  onSelectApplication: (app: IApplicationInstance) => void;
-}
-
-const Matrix = ({ applications, onSelectApplication }: IMatrixProps) => {
-  const environments = applications.reduce(
+const Matrix = ({ deployments }: IApplicationDeploymentContext) => {
+  const environments = deployments.reduce(
     (acc, app) => {
       if (acc.indexOf(app.environment) === -1) {
         return acc.concat(app.environment);
@@ -20,7 +18,7 @@ const Matrix = ({ applications, onSelectApplication }: IMatrixProps) => {
     [' ']
   );
 
-  const apps: IApplicationMap = applications.reduce((acc, app) => {
+  const apps: IApplicationMap = deployments.reduce((acc, app) => {
     if (acc[app.name]) {
       acc[app.name].push(app);
     } else {
@@ -48,7 +46,6 @@ const Matrix = ({ applications, onSelectApplication }: IMatrixProps) => {
                 name={name}
                 environments={environments}
                 apps={apps}
-                onSelectApplication={onSelectApplication}
               />
             ))}
         </tbody>
@@ -57,4 +54,4 @@ const Matrix = ({ applications, onSelectApplication }: IMatrixProps) => {
   );
 };
 
-export default Matrix;
+export default withApplicationDeployments(Matrix);

@@ -2,7 +2,7 @@ import { AuroraApiProvider } from 'components/AuroraApi';
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
 import {
-  IApplicationInstance,
+  IApplicationDeployment,
   ITagsPaged,
   IUserAndAffiliations
 } from 'services/AuroraApiClient/types';
@@ -13,7 +13,7 @@ async function toResult<P>(data: P) {
 }
 
 const apiClient: IAuroraApiClient = {
-  findAllApplicationsForAffiliations: (): Promise<IApplicationInstance[]> =>
+  findAllApplicationDeployments: (): Promise<IApplicationDeployment[]> =>
     toResult([]),
   findTagsPaged: (repository: string, cursor?: string): Promise<ITagsPaged> =>
     toResult({

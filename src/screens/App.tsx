@@ -7,7 +7,7 @@ import { ITokenStore } from 'services/TokenStore';
 import AcceptTokenRoute from './AcceptTokenView/AcceptTokenRoute';
 
 import { withAuroraApi } from 'components/AuroraApi';
-import ApplicationViewWithApi from './AffiliationViews/ApplicationViewWithApi';
+import { AffiliationViewControllerWithApi as AffiliationViewController } from './AffiliationViews/AffiliationView';
 import Home from './HomeView/Home';
 
 interface IRoutesProps extends IAuroraApiComponentProps {
@@ -49,7 +49,10 @@ class App extends React.Component<IRoutesProps, IRoutesState> {
           {isAuthenticated && (
             <>
               <Route exact={true} path="/" component={Home} />
-              <Route path="/:affiliation" component={ApplicationViewWithApi} />
+              <Route
+                path="/:affiliation"
+                component={AffiliationViewController}
+              />
             </>
           )}
         </Layout>

@@ -23,7 +23,7 @@ it('renders without crashing', () => {
   // };
   const wrapper = mount(
     <ApplicationView
-      applications={[]}
+      deployments={[]}
       handleSelectedApplications={handleSelectedApplications}
       loading={false}
       tagsLoading={false}

@@ -1,11 +1,11 @@
 import Grid from 'aurora-frontend-react-komponenter/Grid';
 import * as React from 'react';
-import { IApplicationInstance } from 'services/AuroraApiClient/types';
+import { IApplicationDeployment } from 'services/AuroraApiClient/types';
 import MulitDropdown, { MultiDropdownOptions } from './MultiDropdown';
 
 interface IFilterProps {
-  applications: IApplicationInstance[];
-  handleSelectedApplications: (apps: IApplicationInstance[]) => void;
+  applications: IApplicationDeployment[];
+  handleSelectedApplications: (apps: IApplicationDeployment[]) => void;
 }
 
 interface IFilterState {
@@ -118,7 +118,7 @@ class Filter extends React.Component<IFilterProps, IFilterState> {
   private filterApplications = (
     selectedKeys: string[],
     field: string,
-    applications: IApplicationInstance[]
+    applications: IApplicationDeployment[]
   ) => {
     if (selectedKeys.length === 0) {
       return applications;

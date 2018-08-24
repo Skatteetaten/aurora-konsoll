@@ -1,24 +1,24 @@
 import * as React from 'react';
 
 import {
-  IApplicationInstance,
+  IApplicationDeployment,
   ITagsPaged
 } from 'services/AuroraApiClient/types';
 
 import { IAuroraApiComponentProps } from 'components/AuroraApi';
 import { withAuroraApi } from 'components/AuroraApi';
-import { AffiliationRouteProps } from './AffiliationRouteProps';
+import { AffiliationRouteProps } from './AffiliationView';
 import ApplicationView from './ApplicationView';
 
 type IApplicationViewWithApiProps = IAuroraApiComponentProps &
   AffiliationRouteProps;
 
 interface IApplicationsState {
-  applications: IApplicationInstance[];
+  applications: IApplicationDeployment[];
   loading: boolean;
   tagsLoading: boolean;
   tagsPaged?: ITagsPaged;
-  selectedApplications: IApplicationInstance[];
+  selectedApplications: IApplicationDeployment[];
 }
 
 class ApplicationViewWithApi extends React.Component<
@@ -32,7 +32,7 @@ class ApplicationViewWithApi extends React.Component<
     tagsLoading: false
   };
 
-  public handleSelectedApplications = (apps: IApplicationInstance[]) => {
+  public handleSelectedApplications = (apps: IApplicationDeployment[]) => {
     this.setState(() => ({
       selectedApplications: apps
     }));
@@ -72,7 +72,7 @@ class ApplicationViewWithApi extends React.Component<
       loading: true
     }));
 
-    const applications = await this.props.clients.apiClient.findAllApplicationsForAffiliations(
+    const applications = await this.props.clients.apiClient.findAllApplicationDeployments(
       [affiliation]
     );
 
@@ -109,7 +109,7 @@ class ApplicationViewWithApi extends React.Component<
     return (
       <ApplicationView
         affiliation={affiliation}
-        applications={applications}
+        deployments={applications}
         loading={loading}
         selectedApplications={selectedApplications}
         handleSelectedApplications={this.handleSelectedApplications}

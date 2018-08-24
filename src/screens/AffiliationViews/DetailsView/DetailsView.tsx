@@ -3,18 +3,18 @@ import * as React from 'react';
 import { RouteComponentProps } from 'react-router-dom';
 
 import {
-  IApplicationInstance,
+  IApplicationDeployment,
   ITagsPaged
 } from 'services/AuroraApiClient/types';
 import PodCard from './PodCard';
 import Versions from './Versions';
 
 interface IDetailsViewState {
-  application?: IApplicationInstance;
+  application?: IApplicationDeployment;
 }
 
 export interface IDetailsViewProps {
-  applications: IApplicationInstance[];
+  applications: IApplicationDeployment[];
   tagsLoading: boolean;
   tagsPaged?: ITagsPaged;
   handleFetchTags: (respoitory: string, cursor?: string) => void;

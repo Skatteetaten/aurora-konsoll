@@ -1,22 +1,18 @@
 import * as React from 'react';
-import { IApplicationInstance } from 'services/AuroraApiClient/types';
+import { IApplicationDeployment } from 'services/AuroraApiClient/types';
 import Status from './Status';
 
 export interface IApplicationMap {
-  [name: string]: IApplicationInstance[];
+  [name: string]: IApplicationDeployment[];
 }
 
 interface IRowProps {
   name: string;
   environments: string[];
   apps: IApplicationMap;
-  onSelectApplication: (app: IApplicationInstance) => void;
 }
 
-const Row = ({ name, environments, apps, onSelectApplication }: IRowProps) => {
-  const handleSelectApplication = (found: IApplicationInstance) => () =>
-    onSelectApplication(found);
-
+const Row = ({ name, environments, apps }: IRowProps) => {
   const cells = environments.map((environment, index) => {
     const key = `${environment}::${name}`;
 
@@ -30,7 +26,6 @@ const Row = ({ name, environments, apps, onSelectApplication }: IRowProps) => {
       <Status
         key={key}
         name={found.statusCode.toLowerCase()}
-        onClick={handleSelectApplication(found)}
         title={found.version.deployTag}
       >
         {found.version.deployTag}

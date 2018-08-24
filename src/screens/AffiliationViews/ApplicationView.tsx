@@ -3,7 +3,7 @@ import * as React from 'react';
 import styled from 'styled-components';
 
 import {
-  IApplicationInstance,
+  IApplicationDeployment,
   ITagsPaged
 } from 'services/AuroraApiClient/types';
 
@@ -12,23 +12,22 @@ import MatrixViewRoute from './MatrixView/MatrixViewRoute';
 
 export interface IApplicationViewProps {
   affiliation?: string;
-  applications: IApplicationInstance[];
+  deployments: IApplicationDeployment[];
   loading: boolean;
   tagsLoading: boolean;
   tagsPaged?: ITagsPaged;
-  selectedApplications: IApplicationInstance[];
-  handleSelectedApplications: (apps: IApplicationInstance[]) => void;
+  selectedApplications: IApplicationDeployment[];
+  handleSelectedApplications: (apps: IApplicationDeployment[]) => void;
   handleFetchTags: (repository: string) => void;
   handleClearTags: () => void;
 }
 
 const ApplicationView: React.StatelessComponent<IApplicationViewProps> = ({
   affiliation,
-  applications,
+  deployments,
   loading,
   tagsLoading,
   tagsPaged,
-  selectedApplications,
   handleSelectedApplications,
   handleFetchTags,
   handleClearTags
@@ -49,12 +48,11 @@ const ApplicationView: React.StatelessComponent<IApplicationViewProps> = ({
   return (
     <>
       <MatrixViewRoute
-        applications={applications}
-        selectedApplications={selectedApplications}
+        deployments={deployments}
         handleSelectedApplications={handleSelectedApplications}
       />
       <DetailsViewRoute
-        applications={applications}
+        applications={deployments}
         handleFetchTags={handleFetchTags}
         tagsPaged={tagsPaged}
         tagsLoading={tagsLoading}
