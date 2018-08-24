@@ -39,7 +39,6 @@ class App extends React.Component<IRoutesProps, IRoutesState> {
 
   public render() {
     const isAuthenticated = this.props.tokenStore.isTokenValid();
-
     const { affiliations, user } = this.state;
 
     return (

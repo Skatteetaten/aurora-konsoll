@@ -1,13 +1,14 @@
 import * as React from 'react';
 
-import {
-  IApplicationDeploymentContext,
-  withApplicationDeployments
-} from '../ApplicationDeploymentContext';
+import styled from 'styled-components';
+import { IApplicationDeploymentContext } from '../ApplicationDeploymentContext';
 import Row, { IApplicationMap } from './Row';
-import Wrapper from './Wrapper';
 
-const Matrix = ({ deployments }: IApplicationDeploymentContext) => {
+const Matrix = ({
+  deployments,
+  buildDeploymentLink,
+  className
+}: IApplicationDeploymentContext & { className: string }) => {
   const environments = deployments.reduce(
     (acc, app) => {
       if (acc.indexOf(app.environment) === -1) {
@@ -28,7 +29,7 @@ const Matrix = ({ deployments }: IApplicationDeploymentContext) => {
   }, {});
 
   return (
-    <Wrapper>
+    <div className={className}>
       <table>
         <thead>
           <tr>
@@ -46,12 +47,52 @@ const Matrix = ({ deployments }: IApplicationDeploymentContext) => {
                 name={name}
                 environments={environments}
                 apps={apps}
+                linkBuilder={buildDeploymentLink}
               />
             ))}
         </tbody>
       </table>
-    </Wrapper>
+    </div>
   );
 };
 
-export default withApplicationDeployments(Matrix);
+export default styled(Matrix)`
+  position: relative;
+  font-size: 14px;
+
+  table {
+    border-spacing: 0;
+    table-layout: fixed;
+  }
+
+  thead tr:nth-child(1) th {
+    background: white;
+    position: sticky;
+    top: 0;
+    z-index: 10;
+  }
+
+  tbody {
+    td {
+      &:first-child {
+        max-width: 210px;
+        position: sticky;
+        left: 0;
+        background: white;
+        z-index: 9;
+      }
+      max-width: 130px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+  }
+
+  th,
+  td {
+    @extend table;
+    padding: 15px 50px 15px 15px;
+    text-align: left;
+    white-space: nowrap;
+    border-top: 1px solid #ddd;
+  }
+`;

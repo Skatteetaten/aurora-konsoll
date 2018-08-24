@@ -10,9 +10,10 @@ interface IRowProps {
   name: string;
   environments: string[];
   apps: IApplicationMap;
+  linkBuilder: (deployment: IApplicationDeployment) => React.StatelessComponent;
 }
 
-const Row = ({ name, environments, apps }: IRowProps) => {
+const Row = ({ name, environments, apps, linkBuilder }: IRowProps) => {
   const cells = environments.map((environment, index) => {
     const key = `${environment}::${name}`;
 
@@ -20,18 +21,24 @@ const Row = ({ name, environments, apps }: IRowProps) => {
       return <td key={key}>{name}</td>;
     }
 
-    const found = apps[name].find(app => app.environment === environment);
+    const deployment = apps[name].find(app => app.environment === environment);
 
-    return found ? (
-      <Status
-        key={key}
-        name={found.statusCode.toLowerCase()}
-        title={found.version.deployTag}
-      >
-        {found.version.deployTag}
-      </Status>
-    ) : (
-      <td key={key}>-</td>
+    if (!deployment) {
+      return <td key={key}>-</td>;
+    }
+
+    const Link = linkBuilder(deployment);
+    return (
+      <td key={key}>
+        <Link>
+          <Status
+            name={deployment.statusCode.toLowerCase()}
+            title={deployment.version.deployTag}
+          >
+            {deployment.version.deployTag}
+          </Status>
+        </Link>
+      </td>
     );
   });
 

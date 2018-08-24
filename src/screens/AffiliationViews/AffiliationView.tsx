@@ -1,11 +1,21 @@
 import { IAuroraApiComponentProps, withAuroraApi } from 'components/AuroraApi';
 import * as React from 'react';
+import { RouteComponentProps } from 'react-router';
 import { Route } from 'react-router';
 import { IApplicationDeployment } from 'services/AuroraApiClient/types';
-import { ApplicationDeploymentProvider } from './ApplicationDeploymentContext';
-import Matrix from './MatrixView/Matrix';
 
-import { RouteComponentProps } from 'react-router';
+import { Link } from 'react-router-dom';
+import {
+  ApplicationDeploymentProvider,
+  withApplicationDeployments
+} from './ApplicationDeploymentContext';
+import { default as ApplicationDeploymentSelectorBase } from './ApplicationDeploymentSelector';
+import { default as MatrixBase } from './MatrixView/Matrix';
+
+const Matrix = withApplicationDeployments(MatrixBase);
+const ApplicationDeploymentSelector = withApplicationDeployments(
+  ApplicationDeploymentSelectorBase
+);
 
 export type AffiliationRouteProps = RouteComponentProps<{
   affiliation: string;
@@ -26,6 +36,15 @@ class AffiliationViewController extends React.Component<
   public state: IAffiliationViewControllerState = {
     deployments: [],
     loading: false
+  };
+
+  public buildDeploymentLink = (
+    deployment: IApplicationDeployment
+  ): React.StatelessComponent => {
+    const { match } = this.props;
+    return ({ children }) => (
+      <Link to={`${match.url}/deployments/${deployment.id}`}>{children}</Link>
+    );
   };
 
   public fetchApplicationDeployments = async (affiliation: string) => {
@@ -50,10 +69,28 @@ class AffiliationViewController extends React.Component<
 
   public render() {
     const { match } = this.props;
-    const { deployments } = this.state;
+    const { deployments, loading } = this.state;
+
+    if (loading) {
+      return <p>Loading</p>;
+    }
+
     return (
-      <ApplicationDeploymentProvider value={{ deployments }}>
-        <Route path={`${match.path}/deployments`} component={Matrix} />
+      <ApplicationDeploymentProvider
+        value={{
+          buildDeploymentLink: this.buildDeploymentLink,
+          deployments
+        }}
+      >
+        <Route
+          exact={true}
+          path={`${match.path}/deployments`}
+          component={Matrix}
+        />
+        <Route
+          path={`${match.path}/deployments/:applicationDeploymentId`}
+          component={ApplicationDeploymentSelector}
+        />
       </ApplicationDeploymentProvider>
     );
   }

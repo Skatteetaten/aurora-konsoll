@@ -19,6 +19,7 @@ const Layout = ({
   user,
   children,
   match,
+  location,
   history
 }: RouteComponentProps<{ affiliation?: string }> & ILayoutProps) => {
   const updatePath = (a: string) => {
@@ -28,6 +29,8 @@ const Layout = ({
   };
 
   const { affiliation } = match.params;
+  // tslint:disable-next-line:no-console
+  console.log(location);
 
   return (
     <SkeBasis>

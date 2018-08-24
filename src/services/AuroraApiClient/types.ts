@@ -15,6 +15,7 @@ export interface IUserAndAffiliations {
 }
 
 export interface IApplicationDeployment {
+  id: string;
   affiliation: string;
   name: string;
   environment: string;

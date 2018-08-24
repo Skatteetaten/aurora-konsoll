@@ -4,11 +4,15 @@ import { IApplicationDeployment } from 'services/AuroraApiClient/types';
 
 export interface IApplicationDeploymentContext {
   deployments: IApplicationDeployment[];
+  buildDeploymentLink: (
+    deployment: IApplicationDeployment
+  ) => React.StatelessComponent;
 }
 
 const ApplicationDeploymentContext = React.createContext<
   IApplicationDeploymentContext
 >({
+  buildDeploymentLink: (_: IApplicationDeployment) => () => <div />,
   deployments: []
 });
 
@@ -24,8 +28,7 @@ export function withApplicationDeployments<
     public render() {
       return (
         <ApplicationDeploymentContext.Consumer>
-          {({ deployments }) => {
-            const props = { deployments };
+          {props => {
             return <Component {...this.props} {...props} />;
           }}
         </ApplicationDeploymentContext.Consumer>

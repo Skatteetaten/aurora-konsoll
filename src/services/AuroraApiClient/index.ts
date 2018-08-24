@@ -105,6 +105,7 @@ export default class AuroraApiClient implements IAuroraApiClient {
       const apps = applicationInstances.map(app => ({
         affiliation: app.affiliation.name,
         environment: app.environment,
+        id: app.environment + '-' + node.name,
         name: node.name,
         pods: app.details.podResources,
         repository: imageRepository ? imageRepository.repository : '',
