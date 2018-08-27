@@ -5,7 +5,6 @@ import DetailsView from './DetailsView/DetailsView';
 
 type ApplicationDeploymentSelectorProps = IApplicationDeploymentContext &
   RouteComponentProps<{
-    affiliation: string;
     applicationDeploymentId: string;
   }>;
 

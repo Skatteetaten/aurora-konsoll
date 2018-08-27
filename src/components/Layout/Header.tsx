@@ -18,19 +18,19 @@ interface IHeaderProps {
   selectedAffiliation?: string;
   className?: string;
   affiliations?: IDropdownOption[];
-  handleChangeAffiliation: (affiliation: string) => void;
+  onAffiliationChange: (affiliation: string) => void;
 }
 
 const Header = ({
   title,
   user,
-  handleChangeAffiliation,
+  onAffiliationChange,
   className,
   selectedAffiliation,
   affiliations = []
 }: IHeaderProps) => {
   const onChangedAffiliation = (item: { text: string }) =>
-    handleChangeAffiliation(item.text);
+    onAffiliationChange(item.text);
 
   return (
     <div className={`main-header ${className || ''}`}>

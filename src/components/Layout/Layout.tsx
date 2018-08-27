@@ -1,6 +1,5 @@
 import SkeBasis from 'aurora-frontend-react-komponenter/SkeBasis';
 import * as React from 'react';
-import { RouteComponentProps, withRouter } from 'react-router';
 import styled from 'styled-components';
 
 import { toDropdownOptions } from 'utils/aurora-frontend';
@@ -9,29 +8,20 @@ import Header from './Header';
 import Menu, { MenuNavLink } from './Menu';
 
 interface ILayoutProps {
+  affiliation?: string;
   affiliations: string[];
   user: string;
   children: React.ReactNode;
+  onAffiliationChange: (affiliation: string) => void;
 }
 
 const Layout = ({
+  affiliation,
   affiliations,
   user,
   children,
-  match,
-  location,
-  history
-}: RouteComponentProps<{ affiliation?: string }> & ILayoutProps) => {
-  const updatePath = (a: string) => {
-    history.push({
-      pathname: `/${a}/deployments`
-    });
-  };
-
-  const { affiliation } = match.params;
-  // tslint:disable-next-line:no-console
-  console.log(location);
-
+  onAffiliationChange
+}: ILayoutProps) => {
   return (
     <SkeBasis>
       <StyledHeader
@@ -39,14 +29,15 @@ const Layout = ({
         user={user}
         selectedAffiliation={affiliation}
         affiliations={toDropdownOptions(affiliations)}
-        handleChangeAffiliation={updatePath}
+        onAffiliationChange={onAffiliationChange}
       />
       <StyledMenu>
         <MenuNavLink
           name="Applikasjoner"
-          to={`/${affiliation ? `/${affiliation}` : ''}/deployments`}
+          to={`/a/${affiliation || '_'}/deployments`}
           iconName="Menu"
         />
+        <MenuNavLink name="Netdebug" to="/netdebug" iconName="Code" />
         {/* <MenuNavLink name="Database" to="/db" iconName="Cloud" />
         <MenuNavLink name="Konfigurasjon" to="/conf" iconName="Code" />
         <MenuNavLink name="WebSEAL" to="/web" iconName="Bookmark" /> */}
@@ -85,4 +76,4 @@ const StyledHeader = styled(Header)`
   height: ${HEADER_HEIGHT};
 `;
 
-export default withRouter(Layout);
+export default Layout;

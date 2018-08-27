@@ -1,6 +1,5 @@
 import { IAuroraApiComponentProps, withAuroraApi } from 'components/AuroraApi';
 import * as React from 'react';
-import { RouteComponentProps } from 'react-router';
 import { Route } from 'react-router';
 import { IApplicationDeployment } from 'services/AuroraApiClient/types';
 
@@ -17,12 +16,11 @@ const ApplicationDeploymentSelector = withApplicationDeployments(
   ApplicationDeploymentSelectorBase
 );
 
-export type AffiliationRouteProps = RouteComponentProps<{
+interface IAffiliationViewControllerProps extends IAuroraApiComponentProps {
   affiliation: string;
-}>;
-
-type AffiliationViewControllerProps = IAuroraApiComponentProps &
-  AffiliationRouteProps;
+  matchPath: string;
+  matchUrl: string;
+}
 
 interface IAffiliationViewControllerState {
   loading: boolean;
@@ -30,7 +28,7 @@ interface IAffiliationViewControllerState {
 }
 
 class AffiliationViewController extends React.Component<
-  AffiliationViewControllerProps,
+  IAffiliationViewControllerProps,
   IAffiliationViewControllerState
 > {
   public state: IAffiliationViewControllerState = {
@@ -41,9 +39,9 @@ class AffiliationViewController extends React.Component<
   public buildDeploymentLink = (
     deployment: IApplicationDeployment
   ): React.StatelessComponent => {
-    const { match } = this.props;
+    const { matchUrl } = this.props;
     return ({ children }) => (
-      <Link to={`${match.url}/deployments/${deployment.id}`}>{children}</Link>
+      <Link to={`${matchUrl}/deployments/${deployment.id}`}>{children}</Link>
     );
   };
 
@@ -62,13 +60,18 @@ class AffiliationViewController extends React.Component<
     }));
   };
 
+  public componentWillReceiveProps(nextProps: IAffiliationViewControllerProps) {
+    if (this.props.affiliation !== nextProps.affiliation) {
+      this.fetchApplicationDeployments(nextProps.affiliation);
+    }
+  }
+
   public componentDidMount() {
-    const { match } = this.props;
-    this.fetchApplicationDeployments(match.params.affiliation);
+    this.fetchApplicationDeployments(this.props.affiliation);
   }
 
   public render() {
-    const { match } = this.props;
+    const { matchPath } = this.props;
     const { deployments, loading } = this.state;
 
     if (loading) {
@@ -84,11 +87,11 @@ class AffiliationViewController extends React.Component<
       >
         <Route
           exact={true}
-          path={`${match.path}/deployments`}
+          path={`${matchPath}/deployments`}
           component={Matrix}
         />
         <Route
-          path={`${match.path}/deployments/:applicationDeploymentId`}
+          path={`${matchPath}/deployments/:applicationDeploymentId`}
           component={ApplicationDeploymentSelector}
         />
       </ApplicationDeploymentProvider>

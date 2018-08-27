@@ -8,7 +8,7 @@ const Matrix = ({
   deployments,
   buildDeploymentLink,
   className
-}: IApplicationDeploymentContext & { className: string }) => {
+}: IApplicationDeploymentContext & { className?: string }) => {
   const environments = deployments.reduce(
     (acc, app) => {
       if (acc.indexOf(app.environment) === -1) {
