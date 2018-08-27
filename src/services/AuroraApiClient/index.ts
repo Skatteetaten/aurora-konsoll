@@ -15,7 +15,7 @@ import {
 import { ITagsQuery, TAGS_QUERY } from './queries/tag-query';
 
 import {
-  IApplicationInstance,
+  IApplicationDeployment,
   IAuroraApiClient,
   ITagsPaged,
   IUserAndAffiliations
@@ -90,9 +90,9 @@ export default class AuroraApiClient implements IAuroraApiClient {
     };
   }
 
-  public async findAllApplicationsForAffiliations(
+  public async findAllApplicationDeployments(
     affiliations: string[]
-  ): Promise<IApplicationInstance[]> {
+  ): Promise<IApplicationDeployment[]> {
     const result = await this.client.query<IApplications>({
       query: APPLICATIONS_QUERY,
       variables: {
@@ -105,6 +105,7 @@ export default class AuroraApiClient implements IAuroraApiClient {
       const apps = applicationInstances.map(app => ({
         affiliation: app.affiliation.name,
         environment: app.environment,
+        id: app.environment + '-' + node.name,
         name: node.name,
         pods: app.details.podResources,
         repository: imageRepository ? imageRepository.repository : '',

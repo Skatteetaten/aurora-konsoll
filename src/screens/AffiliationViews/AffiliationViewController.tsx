@@ -1,0 +1,106 @@
+import { IAuroraApiComponentProps, withAuroraApi } from 'components/AuroraApi';
+import * as React from 'react';
+import { Route } from 'react-router';
+import { IApplicationDeployment } from 'services/AuroraApiClient/types';
+
+import { Link } from 'react-router-dom';
+import {
+  ApplicationDeploymentProvider,
+  withApplicationDeployments
+} from './ApplicationDeploymentContext';
+import { default as ApplicationDeploymentSelectorBase } from './ApplicationDeploymentSelector';
+import { default as MatrixBase } from './MatrixView/Matrix';
+
+const Matrix = withApplicationDeployments(MatrixBase);
+const ApplicationDeploymentSelector = withApplicationDeployments(
+  ApplicationDeploymentSelectorBase
+);
+
+interface IAffiliationViewControllerProps extends IAuroraApiComponentProps {
+  affiliation: string;
+  matchPath: string;
+  matchUrl: string;
+}
+
+interface IAffiliationViewControllerState {
+  loading: boolean;
+  deployments: IApplicationDeployment[];
+}
+
+class AffiliationViewController extends React.Component<
+  IAffiliationViewControllerProps,
+  IAffiliationViewControllerState
+> {
+  public state: IAffiliationViewControllerState = {
+    deployments: [],
+    loading: false
+  };
+
+  public buildDeploymentLink = (
+    deployment: IApplicationDeployment
+  ): React.StatelessComponent => {
+    const { matchUrl } = this.props;
+    return ({ children }) => (
+      <Link to={`${matchUrl}/deployments/${deployment.id}`}>{children}</Link>
+    );
+  };
+
+  public fetchApplicationDeployments = async (affiliation: string) => {
+    this.setState(() => ({
+      loading: true
+    }));
+
+    const deployments = await this.props.clients.apiClient.findAllApplicationDeployments(
+      [affiliation]
+    );
+
+    this.setState(() => ({
+      deployments,
+      loading: false
+    }));
+  };
+
+  public componentWillReceiveProps(nextProps: IAffiliationViewControllerProps) {
+    if (this.props.affiliation !== nextProps.affiliation) {
+      this.fetchApplicationDeployments(nextProps.affiliation);
+    }
+  }
+
+  public componentDidMount() {
+    this.fetchApplicationDeployments(this.props.affiliation);
+  }
+
+  public render() {
+    const { matchPath } = this.props;
+    const { deployments, loading } = this.state;
+
+    if (loading) {
+      return <p>Loading</p>;
+    }
+
+    return (
+      <ApplicationDeploymentProvider
+        value={{
+          buildDeploymentLink: this.buildDeploymentLink,
+          deployments
+        }}
+      >
+        <Route
+          exact={true}
+          path={`${matchPath}/deployments`}
+          component={Matrix}
+        />
+        <Route
+          path={`${matchPath}/deployments/:applicationDeploymentId`}
+          component={ApplicationDeploymentSelector}
+        />
+      </ApplicationDeploymentProvider>
+    );
+  }
+}
+
+export const AffiliationViewControllerWithApi = withAuroraApi(
+  AffiliationViewController
+);
+
+export default AffiliationViewController;

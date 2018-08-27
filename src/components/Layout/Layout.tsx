@@ -1,6 +1,5 @@
 import SkeBasis from 'aurora-frontend-react-komponenter/SkeBasis';
 import * as React from 'react';
-import { RouteComponentProps, withRouter } from 'react-router';
 import styled from 'styled-components';
 
 import { toDropdownOptions } from 'utils/aurora-frontend';
@@ -9,51 +8,36 @@ import Header from './Header';
 import Menu, { MenuNavLink } from './Menu';
 
 interface ILayoutProps {
-  selectedAffiliation: string;
+  affiliation?: string;
   affiliations: string[];
   user: string;
   children: React.ReactNode;
-  handleChangeAffiliation: (affiliation: string) => void;
+  onAffiliationChange: (affiliation: string) => void;
 }
 
 const Layout = ({
-  selectedAffiliation,
+  affiliation,
   affiliations,
   user,
   children,
-  location,
-  history,
-  handleChangeAffiliation
-}: RouteComponentProps<{}> & ILayoutProps) => {
-  const updatePath = (a: string) => {
-    handleChangeAffiliation(a);
-    history.push({
-      pathname: `/app/${a}`
-    });
-  };
-
-  const paths = location.pathname.split('/');
-  if (selectedAffiliation === '' && paths.length > 2) {
-    handleChangeAffiliation(paths[2]);
-  }
-
+  onAffiliationChange
+}: ILayoutProps) => {
   return (
     <SkeBasis>
       <StyledHeader
         title="Aurora Konsoll"
         user={user}
-        selectedAffiliation={selectedAffiliation}
+        selectedAffiliation={affiliation}
         affiliations={toDropdownOptions(affiliations)}
-        handleChangeAffiliation={updatePath}
+        onAffiliationChange={onAffiliationChange}
       />
       <StyledMenu>
         <MenuNavLink
           name="Applikasjoner"
-          to={`/app${
-            selectedAffiliation !== '' ? '/' + selectedAffiliation : ''
-          }`}
+          to={`/a/${affiliation || '_'}/deployments`}
           iconName="Menu"
         />
+        <MenuNavLink name="Netdebug" to="/netdebug" iconName="Code" />
         {/* <MenuNavLink name="Database" to="/db" iconName="Cloud" />
         <MenuNavLink name="Konfigurasjon" to="/conf" iconName="Code" />
         <MenuNavLink name="WebSEAL" to="/web" iconName="Bookmark" /> */}
@@ -92,4 +76,4 @@ const StyledHeader = styled(Header)`
   height: ${HEADER_HEIGHT};
 `;
 
-export default withRouter(Layout);
+export default Layout;

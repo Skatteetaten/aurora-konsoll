@@ -3,9 +3,9 @@ import { IPageInfo } from './queries/tag-query';
 
 export interface IAuroraApiClient {
   findUserAndAffiliations: () => Promise<IUserAndAffiliations>;
-  findAllApplicationsForAffiliations: (
+  findAllApplicationDeployments: (
     affiliations: string[]
-  ) => Promise<IApplicationInstance[]>;
+  ) => Promise<IApplicationDeployment[]>;
   findTagsPaged: (repository: string, cursor?: string) => Promise<ITagsPaged>;
 }
 
@@ -14,7 +14,8 @@ export interface IUserAndAffiliations {
   user: string;
 }
 
-export interface IApplicationInstance {
+export interface IApplicationDeployment {
+  id: string;
   affiliation: string;
   name: string;
   environment: string;

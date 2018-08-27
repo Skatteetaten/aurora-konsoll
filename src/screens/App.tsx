@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { BrowserRouter, Route } from 'react-router-dom';
+import { Route, RouteComponentProps, withRouter } from 'react-router-dom';
 
 import { IAuroraApiComponentProps } from 'components/AuroraApi';
 import Layout from 'components/Layout';
@@ -7,10 +7,14 @@ import { ITokenStore } from 'services/TokenStore';
 import AcceptTokenRoute from './AcceptTokenView/AcceptTokenRoute';
 
 import { withAuroraApi } from 'components/AuroraApi';
-import ApplicationViewWithApiRoute from './ApplicationView/ApplicationViewWithApiRoute';
+import AffiliationViewRouteHandler, {
+  AffiliationRouteProps
+} from './AffiliationViews/AffiliationViewRouteHandler';
 import Home from './HomeView/Home';
 
-interface IRoutesProps extends IAuroraApiComponentProps {
+interface IRoutesProps
+  extends IAuroraApiComponentProps,
+    RouteComponentProps<{}> {
   tokenStore: ITokenStore;
 }
 
@@ -27,10 +31,19 @@ class App extends React.Component<IRoutesProps, IRoutesState> {
     user: ''
   };
 
-  public selectAffiliation = (affiliation: string) => {
-    this.setState(state => ({
+  public onAffiliationChangeFromSelector = (affiliation: string) => {
+    const { location, history } = this.props;
+    const newPath = location.pathname.replace(
+      /\/a\/(\w*)\/(\w*)(\/.*)?/,
+      `/a/${affiliation}/$2`
+    );
+    history.push(newPath);
+  };
+
+  public onSelectedAffiliationValidated = (affiliation: string) => {
+    this.setState({
       affiliation
-    }));
+    });
   };
 
   public async componentDidMount() {
@@ -47,26 +60,38 @@ class App extends React.Component<IRoutesProps, IRoutesState> {
 
   public render() {
     const isAuthenticated = this.props.tokenStore.isTokenValid();
-
     const { affiliation, affiliations, user } = this.state;
 
+    const renderAffiliationViewRouteHandler = (
+      routeProps: AffiliationRouteProps
+    ) => (
+      <AffiliationViewRouteHandler
+        {...routeProps}
+        affiliation={affiliation}
+        affiliations={affiliations}
+        onAffiliationValidated={this.onSelectedAffiliationValidated}
+      />
+    );
+
     return (
-      <BrowserRouter>
-        <Layout
-          selectedAffiliation={affiliation || ''}
-          user={user}
-          affiliations={affiliations}
-          handleChangeAffiliation={this.selectAffiliation}
-        >
-          <AcceptTokenRoute onTokenUpdated={this.onTokenUpdated} />
-          {isAuthenticated && (
-            <>
-              <Route exact={true} path="/" component={Home} />
-              <ApplicationViewWithApiRoute affiliation={affiliation} />
-            </>
-          )}
-        </Layout>
-      </BrowserRouter>
+      <Layout
+        user={user}
+        affiliation={affiliation}
+        affiliations={affiliations}
+        onAffiliationChange={this.onAffiliationChangeFromSelector}
+      >
+        <AcceptTokenRoute onTokenUpdated={this.onTokenUpdated} />
+        {isAuthenticated && (
+          <>
+            <Route exact={true} path="/" component={Home} />
+            <Route
+              path="/a/:affiliation"
+              render={renderAffiliationViewRouteHandler}
+            />
+            <Route exact={true} path="/netdebug" component={Home} />
+          </>
+        )}
+      </Layout>
     );
   }
 
@@ -75,4 +100,4 @@ class App extends React.Component<IRoutesProps, IRoutesState> {
   };
 }
 
-export default withAuroraApi(App);
+export default withRouter(withAuroraApi(App));

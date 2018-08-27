@@ -13,7 +13,7 @@ const statusColors = {
   unknownHover: '#4086c6'
 };
 
-const Status = styled.td<{
+const Status = styled.div<{
   name: string;
 }>`
   cursor: pointer;

@@ -1,6 +1,7 @@
 import * as qs from 'qs';
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
+import { BrowserRouter } from 'react-router-dom';
 
 import { AuroraApiProvider } from 'components/AuroraApi';
 import App from 'screens/App';
@@ -28,7 +29,9 @@ async function init() {
 
   ReactDOM.render(
     <AuroraApiProvider clients={clients}>
-      <App tokenStore={tokenStore} />
+      <BrowserRouter>
+        <App tokenStore={tokenStore} />
+      </BrowserRouter>
     </AuroraApiProvider>,
     document.getElementById('root') as HTMLElement
   );
