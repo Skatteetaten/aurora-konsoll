@@ -11,6 +11,7 @@ def overrides = [
   deployToNexus: false,
   openShiftBuild: true,
   nodeVersion: 'node-8',
+  credentialsId: 'github',
   suggestVersionAndTagReleases: [
       [branch: 'master', versionHint: '0']
   ]
