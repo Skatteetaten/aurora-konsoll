@@ -61,9 +61,9 @@ class AffiliationViewController extends React.Component<
     }));
   };
 
-  public componentWillReceiveProps(nextProps: IAffiliationViewControllerProps) {
-    if (this.props.affiliation !== nextProps.affiliation) {
-      this.fetchApplicationDeployments(nextProps.affiliation);
+  public componentDidUpdate(prevProps: IAffiliationViewControllerProps) {
+    if (this.props.affiliation !== prevProps.affiliation) {
+      this.fetchApplicationDeployments(this.props.affiliation);
     }
   }
 
