@@ -3,6 +3,7 @@ import * as React from 'react';
 import { Route } from 'react-router';
 import { IApplicationDeployment } from 'services/AuroraApiClient/types';
 
+import Spinner from 'components/Spinner';
 import { Link } from 'react-router-dom';
 import {
   ApplicationDeploymentProvider,
@@ -75,7 +76,7 @@ class AffiliationViewController extends React.Component<
     const { deployments, loading } = this.state;
 
     if (loading) {
-      return <p>Loading</p>;
+      return <Spinner />;
     }
 
     return (
