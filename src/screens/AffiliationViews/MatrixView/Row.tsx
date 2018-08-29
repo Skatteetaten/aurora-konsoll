@@ -18,7 +18,11 @@ const Row = ({ name, environments, apps, linkBuilder }: IRowProps) => {
     const key = `${environment}::${name}`;
 
     if (index === 0) {
-      return <td key={key}>{name}</td>;
+      return (
+        <td key={key} title={name}>
+          {name}
+        </td>
+      );
     }
 
     const deployment = apps[name].find(app => app.environment === environment);
@@ -29,7 +33,11 @@ const Row = ({ name, environments, apps, linkBuilder }: IRowProps) => {
 
     const Link = linkBuilder(deployment);
     return (
-      <Status key={key} name={deployment.statusCode.toLowerCase()}>
+      <Status
+        key={key}
+        name={deployment.statusCode.toLowerCase()}
+        title={deployment.version.deployTag}
+      >
         <Link>{deployment.version.deployTag}</Link>
       </Status>
     );
