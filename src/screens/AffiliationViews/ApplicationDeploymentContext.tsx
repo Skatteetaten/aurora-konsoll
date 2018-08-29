@@ -6,7 +6,7 @@ export interface IApplicationDeploymentContext {
   deployments: IApplicationDeployment[];
   buildDeploymentLink: (
     deployment: IApplicationDeployment
-  ) => React.StatelessComponent;
+  ) => React.ComponentType;
 }
 
 const ApplicationDeploymentContext = React.createContext<
