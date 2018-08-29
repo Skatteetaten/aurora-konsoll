@@ -34,7 +34,7 @@ class App extends React.Component<IRoutesProps, IRoutesState> {
   public onAffiliationChangeFromSelector = (affiliation: string) => {
     const { location, history } = this.props;
     const newPath = location.pathname.replace(
-      /\/a\/(\w*)\/(\w*)(\/.*)?/,
+      /\/a\/(\b\w*[-]?\w*\b)\/(\w*)(\/.*)?/,
       `/a/${affiliation}/$2`
     );
     history.push(newPath);
@@ -61,6 +61,7 @@ class App extends React.Component<IRoutesProps, IRoutesState> {
   public render() {
     const isAuthenticated = this.props.tokenStore.isTokenValid();
     const { affiliation, affiliations, user } = this.state;
+    const { location } = this.props;
 
     const renderAffiliationViewRouteHandler = (
       routeProps: AffiliationRouteProps
@@ -78,6 +79,7 @@ class App extends React.Component<IRoutesProps, IRoutesState> {
         user={user}
         affiliation={affiliation}
         affiliations={affiliations}
+        showAffiliationSelector={location.pathname.startsWith('/a/')}
         onAffiliationChange={this.onAffiliationChangeFromSelector}
       >
         <AcceptTokenRoute onTokenUpdated={this.onTokenUpdated} />

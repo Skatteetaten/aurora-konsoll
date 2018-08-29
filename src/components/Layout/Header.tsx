@@ -1,6 +1,3 @@
-import Dropdown, {
-  IDropdownOption
-} from 'aurora-frontend-react-komponenter/Dropdown';
 import Grid from 'aurora-frontend-react-komponenter/Grid';
 import Icon from 'aurora-frontend-react-komponenter/Icon';
 import Image from 'aurora-frontend-react-komponenter/Image';
@@ -15,23 +12,11 @@ import './Header.css';
 interface IHeaderProps {
   title: string;
   user: string;
-  selectedAffiliation?: string;
   className?: string;
-  affiliations?: IDropdownOption[];
-  onAffiliationChange: (affiliation: string) => void;
+  children?: React.ReactNode;
 }
 
-const Header = ({
-  title,
-  user,
-  onAffiliationChange,
-  className,
-  selectedAffiliation,
-  affiliations = []
-}: IHeaderProps) => {
-  const onChangedAffiliation = (item: { text: string }) =>
-    onAffiliationChange(item.text);
-
+const Header = ({ title, user, className, children }: IHeaderProps) => {
   return (
     <div className={`main-header ${className || ''}`}>
       <Grid>
@@ -48,12 +33,7 @@ const Header = ({
               </HomeLink>
             </Grid.Col>
             <Grid.Col lg={3} xl={2} noSpacing={true}>
-              <Dropdown
-                placeHolder="Velg tilhørighet"
-                options={affiliations}
-                onChanged={onChangedAffiliation}
-                selectedKey={selectedAffiliation}
-              />
+              {children}
             </Grid.Col>
             <Grid.Col lg={6} xl={4} xlPush={4} noSpacing={true}>
               <div className="main-header-user-wrapper">
