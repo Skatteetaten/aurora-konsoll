@@ -1,39 +1,24 @@
-import Dropdown, {
-  IDropdownOption
-} from 'aurora-frontend-react-komponenter/Dropdown';
+import * as React from 'react';
+import { Link } from 'react-router-dom';
+import styled from 'styled-components';
+
 import Grid from 'aurora-frontend-react-komponenter/Grid';
 import Icon from 'aurora-frontend-react-komponenter/Icon';
 import Image from 'aurora-frontend-react-komponenter/Image';
-import * as Logo from 'aurora-frontend-react-komponenter/TopBanner/assets/ske-logo.svg';
+import Separator from 'aurora-frontend-react-komponenter/TopBanner/assets/separator.png';
+import Logo from 'aurora-frontend-react-komponenter/TopBanner/assets/ske-logo.svg';
 import palette from 'aurora-frontend-react-komponenter/utils/palette';
-import * as React from 'react';
-
-import { Link } from 'react-router-dom';
-import styled from 'styled-components';
-import './Header.css';
 
 interface IHeaderProps {
   title: string;
   user: string;
-  selectedAffiliation?: string;
   className?: string;
-  affiliations?: IDropdownOption[];
-  onAffiliationChange: (affiliation: string) => void;
+  children?: React.ReactNode;
 }
 
-const Header = ({
-  title,
-  user,
-  onAffiliationChange,
-  className,
-  selectedAffiliation,
-  affiliations = []
-}: IHeaderProps) => {
-  const onChangedAffiliation = (item: { text: string }) =>
-    onAffiliationChange(item.text);
-
+const Header = ({ title, user, className, children }: IHeaderProps) => {
   return (
-    <div className={`main-header ${className || ''}`}>
+    <div className={className}>
       <Grid>
         <Grid.Row className="main-header-grid">
           <div className="main-header-row">
@@ -48,12 +33,7 @@ const Header = ({
               </HomeLink>
             </Grid.Col>
             <Grid.Col lg={3} xl={2} noSpacing={true}>
-              <Dropdown
-                placeHolder="Velg tilhørighet"
-                options={affiliations}
-                onChanged={onChangedAffiliation}
-                selectedKey={selectedAffiliation}
-              />
+              {children}
             </Grid.Col>
             <Grid.Col lg={6} xl={4} xlPush={4} noSpacing={true}>
               <div className="main-header-user-wrapper">
@@ -73,4 +53,54 @@ const HomeLink = styled(Link)`
   text-decoration: none;
 `;
 
-export default Header;
+export default styled(Header)`
+  &::after {
+    display: block;
+    content: '';
+    width: 100%;
+    height: 12px;
+    background-color: rgb(255, 255, 255);
+    background-repeat: no-repeat;
+    background-position: center center;
+    background-size: cover;
+    background-image: url(${Separator});
+  }
+
+  .main-header-grid {
+    margin: 15px 0;
+  }
+
+  .main-header-row {
+    display: flex;
+    align-items: center;
+  }
+
+  .main-header-logo-wrapper {
+    margin-left: 15px;
+    display: flex;
+    align-items: center;
+  }
+
+  .main-header-title {
+    margin: 0;
+    margin-left: 15px;
+    font-size: 20px;
+  }
+
+  .main-header-logo img {
+    height: 50px;
+  }
+
+  .main-header-user-wrapper {
+    align-items: center;
+    display: flex;
+    margin-right: 15px;
+    float: right;
+  }
+
+  .main-header-user-icon {
+    color: #1362ae;
+    font-size: 32px;
+    margin-left: 10px;
+  }
+`;

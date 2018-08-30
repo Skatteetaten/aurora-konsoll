@@ -10,7 +10,7 @@ interface IRowProps {
   name: string;
   environments: string[];
   apps: IApplicationMap;
-  linkBuilder: (deployment: IApplicationDeployment) => React.StatelessComponent;
+  linkBuilder: (deployment: IApplicationDeployment) => React.ComponentType;
 }
 
 const Row = ({ name, environments, apps, linkBuilder }: IRowProps) => {
@@ -18,7 +18,11 @@ const Row = ({ name, environments, apps, linkBuilder }: IRowProps) => {
     const key = `${environment}::${name}`;
 
     if (index === 0) {
-      return <td key={key}>{name}</td>;
+      return (
+        <td key={key} title={name}>
+          {name}
+        </td>
+      );
     }
 
     const deployment = apps[name].find(app => app.environment === environment);
@@ -29,16 +33,13 @@ const Row = ({ name, environments, apps, linkBuilder }: IRowProps) => {
 
     const Link = linkBuilder(deployment);
     return (
-      <td key={key}>
-        <Link>
-          <Status
-            name={deployment.statusCode.toLowerCase()}
-            title={deployment.version.deployTag}
-          >
-            {deployment.version.deployTag}
-          </Status>
-        </Link>
-      </td>
+      <Status
+        key={key}
+        name={deployment.statusCode.toLowerCase()}
+        title={deployment.version.deployTag}
+      >
+        <Link>{deployment.version.deployTag}</Link>
+      </Status>
     );
   });
 

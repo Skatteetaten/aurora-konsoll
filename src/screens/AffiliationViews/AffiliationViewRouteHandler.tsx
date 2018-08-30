@@ -12,35 +12,56 @@ interface IAffiliationViewValidatorProps extends AffiliationRouteProps {
   onAffiliationValidated: (affiliation: string) => void;
 }
 
-const AffiliationViewRouteHandler = ({
-  affiliation,
-  affiliations,
-  onAffiliationValidated,
-  match
-}: IAffiliationViewValidatorProps) => {
-  const pathAffiliation = match.params.affiliation;
+class AffiliationViewRouteHandler extends React.Component<
+  IAffiliationViewValidatorProps
+> {
+  public validateAndSetAffiliation = () => {
+    const {
+      affiliation,
+      affiliations,
+      onAffiliationValidated,
+      match
+    } = this.props;
 
-  if (pathAffiliation === '_') {
-    return <p>Velg affiliation</p>;
+    const pathAffiliation = match.params.affiliation;
+    const isValidAffiliation = affiliations.find(a => a === pathAffiliation);
+
+    if (isValidAffiliation && affiliation !== pathAffiliation) {
+      onAffiliationValidated(pathAffiliation);
+    }
+  };
+
+  public componentDidUpdate() {
+    this.validateAndSetAffiliation();
   }
 
-  const currentAffiliation = affiliations.find(a => a === pathAffiliation);
-
-  if (!currentAffiliation) {
-    return <p>Not valid</p>;
+  public componentDidMount() {
+    this.validateAndSetAffiliation();
   }
 
-  if (affiliation !== currentAffiliation) {
-    onAffiliationValidated(currentAffiliation);
-  }
+  public render() {
+    const { affiliation, affiliations, match } = this.props;
 
-  return (
-    <AffiliationViewControllerWithApi
-      affiliation={currentAffiliation}
-      matchPath={match.path}
-      matchUrl={match.url}
-    />
-  );
-};
+    if (affiliations.length === 0) {
+      return false;
+    }
+
+    if (match.params.affiliation === '_') {
+      return <p>Velg affiliation</p>;
+    }
+
+    if (!affiliation) {
+      return <p>Not valid</p>;
+    }
+
+    return (
+      <AffiliationViewControllerWithApi
+        affiliation={affiliation}
+        matchPath={match.path}
+        matchUrl={match.url}
+      />
+    );
+  }
+}
 
 export default AffiliationViewRouteHandler;

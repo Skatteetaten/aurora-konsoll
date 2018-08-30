@@ -1,3 +1,6 @@
+import Dropdown, {
+  IDropdownOption
+} from 'aurora-frontend-react-komponenter/Dropdown';
 import SkeBasis from 'aurora-frontend-react-komponenter/SkeBasis';
 import * as React from 'react';
 import styled from 'styled-components';
@@ -11,6 +14,7 @@ interface ILayoutProps {
   affiliation?: string;
   affiliations: string[];
   user: string;
+  showAffiliationSelector: boolean;
   children: React.ReactNode;
   onAffiliationChange: (affiliation: string) => void;
 }
@@ -19,18 +23,25 @@ const Layout = ({
   affiliation,
   affiliations,
   user,
+  showAffiliationSelector,
   children,
   onAffiliationChange
 }: ILayoutProps) => {
+  const onAffiliationChanged = (item: IDropdownOption) =>
+    onAffiliationChange(item.text);
+
   return (
     <SkeBasis>
-      <StyledHeader
-        title="Aurora Konsoll"
-        user={user}
-        selectedAffiliation={affiliation}
-        affiliations={toDropdownOptions(affiliations)}
-        onAffiliationChange={onAffiliationChange}
-      />
+      <StyledHeader title="Aurora Konsoll" user={user}>
+        {showAffiliationSelector && (
+          <Dropdown
+            placeHolder="Velg tilhørighet"
+            options={toDropdownOptions(affiliations)}
+            onChanged={onAffiliationChanged}
+            selectedKey={affiliation}
+          />
+        )}
+      </StyledHeader>
       <StyledMenu>
         <MenuNavLink
           name="Applikasjoner"

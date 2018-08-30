@@ -80,8 +80,9 @@ export default styled(Matrix)`
         left: 0;
         background: white;
         z-index: 9;
+        padding: 15px 50px 15px 15px;
       }
-      max-width: 130px;
+      max-width: 150px;
       overflow: hidden;
       text-overflow: ellipsis;
     }
@@ -90,9 +91,12 @@ export default styled(Matrix)`
   th,
   td {
     @extend table;
-    padding: 15px 50px 15px 15px;
     text-align: left;
     white-space: nowrap;
     border-top: 1px solid #ddd;
+  }
+
+  th {
+    padding: 15px 50px 15px 15px;
   }
 `;

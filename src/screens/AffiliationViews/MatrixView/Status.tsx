@@ -1,4 +1,4 @@
-import { css, default as styled } from 'styled-components';
+import styled, { css } from 'styled-components';
 
 const statusColors = {
   down: '#bb4f4f',
@@ -13,10 +13,11 @@ const statusColors = {
   unknownHover: '#4086c6'
 };
 
-const Status = styled.div<{
+const Status = styled.td<{
   name: string;
 }>`
   cursor: pointer;
+  padding: 0;
 
   ${props => css`
     background: ${statusColors[props.name]};
@@ -24,6 +25,15 @@ const Status = styled.div<{
       background: ${statusColors[props.name + 'Hover']};
     }
   `};
+
+  a {
+    display: block;
+    color: black;
+    text-decoration: none;
+    padding: 15px 10px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
 `;
 
 export default Status;
