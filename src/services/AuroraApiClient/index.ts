@@ -12,14 +12,17 @@ import {
   IApplications
 } from './queries/applications-query';
 
-import { ITagsQuery, TAGS_QUERY } from './queries/tag-query';
-
 import {
   IApplicationDeployment,
   IAuroraApiClient,
-  ITagsPaged,
   IUserAndAffiliations
 } from './types';
+
+import {
+  findGroupedTagsPaged,
+  IGroupedTagsCursors,
+  ITagsGrouped
+} from './tags';
 
 export default class AuroraApiClient implements IAuroraApiClient {
   private client: ApolloClient<{}>;
@@ -45,38 +48,11 @@ export default class AuroraApiClient implements IAuroraApiClient {
     this.client = client;
   }
 
-  public async findTagsPaged(
+  public async findGroupedTagsPaged(
     repository: string,
-    cursor?: string
-  ): Promise<ITagsPaged> {
-    const result = await this.client.query<ITagsQuery>({
-      query: TAGS_QUERY,
-      variables: {
-        cursor,
-        repositories: [repository],
-        types: ['MAJOR', 'MINOR', 'BUGFIX', 'LATEST']
-      }
-    });
-
-    const { imageRepositories } = result.data;
-
-    if (!(imageRepositories && imageRepositories.length > 0)) {
-      throw new Error(`Could not find tags for repository ${repository}`);
-    }
-
-    const [mainRepo] = imageRepositories;
-    const { edges, pageInfo } = mainRepo.tags;
-
-    return {
-      endCursor: pageInfo.endCursor,
-      hasNextPage: pageInfo.hasNextPage,
-      hasPreviousPage: pageInfo.hasPreviousPage,
-      startCursor: pageInfo.startCursor,
-      tags: edges.map(edge => ({
-        lastModified: edge.node.lastModified,
-        name: edge.node.name
-      }))
-    };
+    cursors: IGroupedTagsCursors
+  ): Promise<ITagsGrouped> {
+    return findGroupedTagsPaged(this.client, repository, cursors);
   }
 
   public async findUserAndAffiliations(): Promise<IUserAndAffiliations> {

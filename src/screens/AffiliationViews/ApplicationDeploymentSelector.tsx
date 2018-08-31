@@ -1,12 +1,15 @@
 import * as React from 'react';
-import { RouteComponentProps } from 'react-router';
+import { Route, RouteComponentProps } from 'react-router-dom';
 import { IApplicationDeploymentContext } from './ApplicationDeploymentContext';
-import DetailsView from './DetailsView/DetailsView';
+import DetailsViewBase from './DetailsView/DetailsView';
+
+export type ApplicationDeploymentDetailsRoute = RouteComponentProps<{
+  affiliation: string;
+  applicationDeploymentId: string;
+}>;
 
 type ApplicationDeploymentSelectorProps = IApplicationDeploymentContext &
-  RouteComponentProps<{
-    applicationDeploymentId: string;
-  }>;
+  ApplicationDeploymentDetailsRoute;
 
 const ApplicationDeploymentSelector = ({
   deployments,
@@ -15,11 +18,16 @@ const ApplicationDeploymentSelector = ({
   const deployment = deployments.find(
     d => d.id === match.params.applicationDeploymentId
   );
-  return deployment ? (
-    <DetailsView deployment={deployment} />
-  ) : (
-    <p>Not found</p>
+
+  if (!deployment) {
+    return <p>Not found</p>;
+  }
+
+  const DetailsView = (props: ApplicationDeploymentDetailsRoute) => (
+    <DetailsViewBase {...props} deployment={deployment} />
   );
+
+  return <Route render={DetailsView} />;
 };
 
 export default ApplicationDeploymentSelector;

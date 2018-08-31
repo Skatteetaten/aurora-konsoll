@@ -83,8 +83,6 @@ export default styled(Matrix)`
         padding: 15px 50px 15px 15px;
       }
       max-width: 150px;
-      overflow: hidden;
-      text-overflow: ellipsis;
     }
   }
 

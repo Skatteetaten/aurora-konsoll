@@ -42,7 +42,9 @@ class AffiliationViewController extends React.Component<
   ): React.StatelessComponent => {
     const { matchUrl } = this.props;
     return ({ children }) => (
-      <Link to={`${matchUrl}/deployments/${deployment.id}`}>{children}</Link>
+      <Link to={`${matchUrl}/deployments/${deployment.id}/info`}>
+        {children}
+      </Link>
     );
   };
 

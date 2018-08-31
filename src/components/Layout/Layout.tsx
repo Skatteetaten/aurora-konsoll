@@ -67,7 +67,6 @@ const LayoutContent = styled.div`
   left: ${MENU_WIDTH};
   right: 0;
   bottom: 0;
-  margin-left: 15px;
   overflow: auto;
 `;
 

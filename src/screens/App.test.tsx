@@ -2,32 +2,30 @@ import { AuroraApiProvider } from 'components/AuroraApi';
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
 import {
+  IGroupedTagsCursors,
+  ITagsGrouped
+} from 'services/AuroraApiClient/tags';
+import {
   IApplicationDeployment,
-  ITagsPaged,
   IUserAndAffiliations
 } from 'services/AuroraApiClient/types';
 import { IAuroraApiClient } from 'services/AuroraApiClient/types';
 
-async function toResult<P>(data: P) {
-  return data;
-}
-
 const apiClient: IAuroraApiClient = {
-  findAllApplicationDeployments: (): Promise<IApplicationDeployment[]> =>
-    toResult([]),
-  findTagsPaged: (repository: string, cursor?: string): Promise<ITagsPaged> =>
-    toResult({
-      endCursor: '',
-      hasNextPage: false,
-      hasPreviousPage: false,
-      startCursor: '',
-      tags: []
+  findAllApplicationDeployments: async (): Promise<
+    IApplicationDeployment[]
+  > => [],
+  findGroupedTagsPaged: async (
+    repository: string,
+    cursors: IGroupedTagsCursors
+  ): Promise<ITagsGrouped> =>
+    new Promise<ITagsGrouped>(() => {
+      return;
     }),
-  findUserAndAffiliations: (): Promise<IUserAndAffiliations> =>
-    toResult({
-      affiliations: ['test'],
-      user: 'Batman'
-    })
+  findUserAndAffiliations: async (): Promise<IUserAndAffiliations> => ({
+    affiliations: ['test'],
+    user: 'Batman'
+  })
 };
 
 const clients = {

@@ -36,4 +36,6 @@ const Status = styled.td<{
   }
 `;
 
+export { statusColors };
+
 export default Status;
