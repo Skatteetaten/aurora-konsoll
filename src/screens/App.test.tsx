@@ -1,12 +1,10 @@
 import { AuroraApiProvider } from 'components/AuroraApi';
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
-import {
-  IGroupedTagsCursors,
-  ITagsGrouped
-} from 'services/AuroraApiClient/tags';
+import { ITagsGrouped } from 'services/AuroraApiClient/tags';
 import {
   IApplicationDeployment,
+  ITagsPaged,
   IUserAndAffiliations
 } from 'services/AuroraApiClient/types';
 import { IAuroraApiClient } from 'services/AuroraApiClient/types';
@@ -15,11 +13,12 @@ const apiClient: IAuroraApiClient = {
   findAllApplicationDeployments: async (): Promise<
     IApplicationDeployment[]
   > => [],
-  findGroupedTagsPaged: async (
-    repository: string,
-    cursors: IGroupedTagsCursors
-  ): Promise<ITagsGrouped> =>
+  findGroupedTagsPaged: async (repository: string): Promise<ITagsGrouped> =>
     new Promise<ITagsGrouped>(() => {
+      return;
+    }),
+  findTagsPaged: async (): Promise<ITagsPaged> =>
+    new Promise<ITagsPaged>(() => {
       return;
     }),
   findUserAndAffiliations: async (): Promise<IUserAndAffiliations> => ({

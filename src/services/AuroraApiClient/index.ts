@@ -18,11 +18,7 @@ import {
   IUserAndAffiliations
 } from './types';
 
-import {
-  findGroupedTagsPaged,
-  IGroupedTagsCursors,
-  ITagsGrouped
-} from './tags';
+import { findGroupedTagsPaged, findTagsPaged, ITagsGrouped } from './tags';
 
 export default class AuroraApiClient implements IAuroraApiClient {
   private client: ApolloClient<{}>;
@@ -48,11 +44,17 @@ export default class AuroraApiClient implements IAuroraApiClient {
     this.client = client;
   }
 
-  public async findGroupedTagsPaged(
+  public async findTagsPaged(
     repository: string,
-    cursors: IGroupedTagsCursors
-  ): Promise<ITagsGrouped> {
-    return findGroupedTagsPaged(this.client, repository, cursors);
+    first: number,
+    cursor?: string,
+    types?: string[]
+  ) {
+    return findTagsPaged(this.client, repository, first, cursor, types);
+  }
+
+  public async findGroupedTagsPaged(repository: string): Promise<ITagsGrouped> {
+    return findGroupedTagsPaged(this.client, repository);
   }
 
   public async findUserAndAffiliations(): Promise<IUserAndAffiliations> {

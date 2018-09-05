@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { Route, RouteComponentProps } from 'react-router-dom';
 import { IApplicationDeploymentContext } from './ApplicationDeploymentContext';
-import DetailsViewBase from './DetailsView/DetailsView';
+import { DetailsViewBaseWithApi } from './DetailsView/DetailsView';
 
 export type ApplicationDeploymentDetailsRoute = RouteComponentProps<{
   affiliation: string;
@@ -24,7 +24,7 @@ const ApplicationDeploymentSelector = ({
   }
 
   const DetailsView = (props: ApplicationDeploymentDetailsRoute) => (
-    <DetailsViewBase {...props} deployment={deployment} />
+    <DetailsViewBaseWithApi {...props} deployment={deployment} />
   );
 
   return <Route render={DetailsView} />;

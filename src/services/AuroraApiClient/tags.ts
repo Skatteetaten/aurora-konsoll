@@ -2,32 +2,76 @@ import ApolloClient from 'apollo-boost';
 import gql from 'graphql-tag';
 import { IPageInfo, ITagsPaged } from './types';
 
-export interface IGroupedTagsCursors {
-  majorCursor?: string;
-  minorCursor?: string;
-  patchCursor?: string;
-  snapshotCursor?: string;
-  auroraVersionCursor?: string;
-}
+const MAJOR = 'MAJOR';
+const MINOR = 'MINOR';
+const BUGFIX = 'BUGFIX';
+const LATEST = 'LATEST';
+const SNAPSHOT = 'SNAPSHOT';
+const AURORA_VERSION = 'AURORA_VERSION';
+
+export const versionStrategies = {
+  AURORA_VERSION,
+  BUGFIX,
+  LATEST,
+  MAJOR,
+  MINOR,
+  SNAPSHOT
+};
 
 export interface ITagsGrouped {
-  major: ITagsPaged;
-  minor: ITagsPaged;
-  patch: ITagsPaged;
-  snapshot: ITagsPaged;
-  auroraVersion: ITagsPaged;
+  MAJOR: ITagsPaged;
+  MINOR: ITagsPaged;
+  BUGFIX: ITagsPaged;
+  LATEST: ITagsPaged;
+  SNAPSHOT: ITagsPaged;
+  AURORA_VERSION: ITagsPaged;
+}
+
+export async function findTagsPaged(
+  client: ApolloClient<{}>,
+  repository: string,
+  first?: number,
+  cursor?: string,
+  types?: string[]
+): Promise<ITagsPaged> {
+  const result = await client.query<ITagsQuery>({
+    query: TAGS_QUERY,
+    variables: {
+      cursor,
+      first,
+      repositories: [repository],
+      types
+    }
+  });
+
+  const { imageRepositories } = result.data;
+
+  if (!(imageRepositories && imageRepositories.length > 0)) {
+    throw new Error(`Could not find tags for repository ${repository}`);
+  }
+
+  const [mainRepo] = imageRepositories;
+
+  const { pageInfo, edges } = mainRepo.tags;
+
+  return {
+    endCursor: pageInfo.endCursor,
+    hasNextPage: pageInfo.hasNextPage,
+    tags: edges.map(edge => ({
+      lastModified: edge.node.lastModified,
+      name: edge.node.name
+    }))
+  };
 }
 
 export async function findGroupedTagsPaged(
   client: ApolloClient<{}>,
-  repository: string,
-  cursors?: IGroupedTagsCursors
+  repository: string
 ): Promise<ITagsGrouped> {
   const result = await client.query<IGroupedTagsQuery>({
     query: TAGS_GROUPED_QUERY,
     variables: {
-      repositories: [repository],
-      ...cursors
+      repositories: [repository]
     }
   });
 
@@ -67,6 +111,36 @@ function normalizeImageRepositoryGrouped(
     );
 }
 
+interface ITagsQuery {
+  imageRepositories: Array<{
+    tags: IImageTagsConnection;
+  }>;
+}
+
+const TAGS_QUERY = gql`
+  query getTags(
+    $repositories: [String!]!
+    $cursor: String!
+    $types: [ImageTagType!]
+    $first: Int
+  ) {
+    imageRepositories(repositories: $repositories) {
+      tags(types: $types, first: $first, after: $cursor) {
+        pageInfo {
+          endCursor
+          hasNextPage
+        }
+        edges {
+          node {
+            name
+            lastModified
+          }
+        }
+      }
+    }
+  }
+`;
+
 interface IImageTagsConnection {
   pageInfo: IPageInfo;
   edges: Array<{
@@ -80,7 +154,8 @@ interface IImageTagsConnection {
 interface IImageRepositoryGrouped {
   major: IImageTagsConnection;
   minor: IImageTagsConnection;
-  patch: IImageTagsConnection;
+  bugfix: IImageTagsConnection;
+  latest: IImageTagsConnection;
   snapshot: IImageTagsConnection;
   auroraVersion: IImageTagsConnection;
 }
@@ -90,17 +165,9 @@ interface IGroupedTagsQuery {
 }
 
 const TAGS_GROUPED_QUERY = gql`
-  query getTagsGrouped(
-    $repositories: [String!]!
-    $majorCursor: String
-    $majorCursor: String
-    $minorCursor: String
-    $patchCursor: String
-    $snapshotCursor: String
-    $auroraVersionCursor: String
-  ) {
+  query getTagsGrouped($repositories: [String!]!) {
     imageRepositories(repositories: $repositories) {
-      major: tags(types: MAJOR, first: 15, after: $majorCursor) {
+      ${MAJOR}: tags(types: MAJOR, first: 15) {
         pageInfo {
           endCursor
           hasNextPage
@@ -112,7 +179,7 @@ const TAGS_GROUPED_QUERY = gql`
           }
         }
       }
-      minor: tags(types: MINOR, first: 15, after: $minorCursor) {
+      ${MINOR}: tags(types: MINOR, first: 15) {
         pageInfo {
           endCursor
           hasNextPage
@@ -124,7 +191,7 @@ const TAGS_GROUPED_QUERY = gql`
           }
         }
       }
-      patch: tags(types: BUGFIX, first: 15, after: $patchCursor) {
+      ${BUGFIX}: tags(types: BUGFIX, first: 15) {
         pageInfo {
           endCursor
           hasNextPage
@@ -136,7 +203,7 @@ const TAGS_GROUPED_QUERY = gql`
           }
         }
       }
-      snapshot: tags(types: SNAPSHOT, first: 15, after: $snapshotCursor) {
+      ${LATEST}: tags(types: LATEST, first: 1) {
         pageInfo {
           endCursor
           hasNextPage
@@ -148,11 +215,19 @@ const TAGS_GROUPED_QUERY = gql`
           }
         }
       }
-      auroraVersion: tags(
-        types: AURORA_VERSION
-        first: 15
-        after: $auroraVersionCursor
-      ) {
+      ${SNAPSHOT}: tags(types: SNAPSHOT, first: 15) {
+        pageInfo {
+          endCursor
+          hasNextPage
+        }
+        edges {
+          node {
+            name
+            lastModified
+          }
+        }
+      }
+      ${AURORA_VERSION}: tags(types: AURORA_VERSION, first: 15) {
         pageInfo {
           endCursor
           hasNextPage

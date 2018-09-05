@@ -1,15 +1,18 @@
 import { IPodResource } from './queries/applications-query';
-import { IGroupedTagsCursors, ITagsGrouped } from './tags';
+import { ITagsGrouped } from './tags';
 
 export interface IAuroraApiClient {
   findUserAndAffiliations: () => Promise<IUserAndAffiliations>;
   findAllApplicationDeployments: (
     affiliations: string[]
   ) => Promise<IApplicationDeployment[]>;
-  findGroupedTagsPaged: (
+  findGroupedTagsPaged: (repository: string) => Promise<ITagsGrouped>;
+  findTagsPaged: (
     repository: string,
-    cursors: IGroupedTagsCursors
-  ) => Promise<ITagsGrouped>;
+    first?: number,
+    cursor?: string,
+    types?: string[]
+  ) => Promise<ITagsPaged>;
 }
 
 export interface IPageInfo {
