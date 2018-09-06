@@ -1,4 +1,5 @@
-import { ITagsGrouped } from './imageRepository/resolver';
+import { ImageTagType } from './imageRepository/query';
+import { TagsPagedGroup } from './imageRepository/TagsPageGroup';
 import { IPodResource } from './queries/applications-query';
 
 export interface IAuroraApiClient {
@@ -6,12 +7,12 @@ export interface IAuroraApiClient {
   findAllApplicationDeployments: (
     affiliations: string[]
   ) => Promise<IApplicationDeployment[]>;
-  findGroupedTagsPaged: (repository: string) => Promise<ITagsGrouped>;
+  findGroupedTagsPaged: (repository: string) => Promise<TagsPagedGroup>;
   findTagsPaged: (
     repository: string,
     first?: number,
     cursor?: string,
-    types?: string[]
+    types?: ImageTagType[]
   ) => Promise<ITagsPaged>;
 }
 

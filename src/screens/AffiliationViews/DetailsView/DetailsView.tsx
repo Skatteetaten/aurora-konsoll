@@ -7,21 +7,21 @@ import Grid from 'aurora-frontend-react-komponenter/Grid';
 
 import { IAuroraApiComponentProps, withAuroraApi } from 'components/AuroraApi';
 import TabLink from 'components/TabLink';
-import { versionStrategies } from 'services/AuroraApiClient/imageRepository/query';
-import { ITagsGrouped } from 'services/AuroraApiClient/imageRepository/resolver';
 import {
   IApplicationDeployment,
   ITag,
   ITagsPaged
 } from 'services/AuroraApiClient/types';
 
+import { ImageTagType } from 'services/AuroraApiClient/imageRepository/query';
+import { TagsPagedGroup } from 'services/AuroraApiClient/imageRepository/TagsPageGroup';
 import { ApplicationDeploymentDetailsRoute } from '../ApplicationDeploymentSelector';
 import InformationViewBase from './InformationView';
 import VersionViewBase, { IVersionStrategyOption } from './VersionView';
 
 interface IDetailsViewState {
-  groupedTags?: ITagsGrouped;
-  selectedVersionStrategy: string;
+  groupedTags?: TagsPagedGroup;
+  imageTagType: ImageTagType;
   loading: boolean;
 }
 
@@ -36,13 +36,13 @@ class DetailsView extends React.Component<
   IDetailsViewState
 > {
   public state: IDetailsViewState = {
-    loading: false,
-    selectedVersionStrategy: versionStrategies.MAJOR
+    imageTagType: ImageTagType.MAJOR,
+    loading: false
   };
 
   public loadMore = async () => {
     const { clients, deployment } = this.props;
-    const { groupedTags, selectedVersionStrategy } = this.state;
+    const { groupedTags, imageTagType } = this.state;
 
     this.setState(() => ({
       loading: true
@@ -51,7 +51,7 @@ class DetailsView extends React.Component<
     let cursor;
 
     if (groupedTags) {
-      const current: ITagsPaged = groupedTags[selectedVersionStrategy];
+      const current: ITagsPaged = groupedTags.getTagsPaged(imageTagType);
       cursor = current.endCursor;
     }
 
@@ -59,24 +59,15 @@ class DetailsView extends React.Component<
       deployment.repository,
       15,
       cursor,
-      [selectedVersionStrategy.toUpperCase()]
+      [imageTagType]
     );
 
-    this.setState(() => {
-      let tags: ITag[] = [];
-      if (groupedTags) {
-        tags = groupedTags[selectedVersionStrategy].tags;
-      }
-
+    this.setState(state => {
+      const currentGroupedTags = state.groupedTags;
       return {
-        groupedTags: {
-          ...groupedTags,
-          [selectedVersionStrategy]: {
-            endCursor: result.endCursor,
-            hasNextPage: result.hasNextPage,
-            tags: [...tags, ...result.tags]
-          }
-        } as ITagsGrouped,
+        groupedTags:
+          currentGroupedTags &&
+          currentGroupedTags.updateTagsPaged(imageTagType, result),
         loading: false
       };
     });
@@ -88,7 +79,7 @@ class DetailsView extends React.Component<
   ) => {
     e.preventDefault();
     this.setState(() => ({
-      selectedVersionStrategy: option.key
+      imageTagType: option.key
     }));
   };
 
@@ -111,7 +102,7 @@ class DetailsView extends React.Component<
 
   public render() {
     const { deployment, match } = this.props;
-    const { groupedTags, loading, selectedVersionStrategy } = this.state;
+    const { groupedTags, loading, imageTagType } = this.state;
 
     let sortedTags: ITag[] = [];
     let currentTagsPaged: ITagsPaged = {
@@ -121,7 +112,7 @@ class DetailsView extends React.Component<
     };
 
     if (groupedTags) {
-      currentTagsPaged = groupedTags[selectedVersionStrategy];
+      currentTagsPaged = groupedTags.getTagsPaged(imageTagType);
       sortedTags = currentTagsPaged.tags.sort(sortTagsByDate).map(tag => ({
         lastModified: new Date(tag.lastModified).toLocaleString('nb-NO'),
         name: tag.name
@@ -137,7 +128,7 @@ class DetailsView extends React.Component<
         fetchTags={this.loadMore}
         handleSelectedStrategy={this.handleSelectedStrategy}
         loading={loading}
-        selectedStrategy={selectedVersionStrategy}
+        imageTagType={imageTagType}
         tags={sortedTags}
       />
     );

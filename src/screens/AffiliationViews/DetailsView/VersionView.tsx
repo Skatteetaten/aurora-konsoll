@@ -7,49 +7,37 @@ import Grid from 'aurora-frontend-react-komponenter/Grid';
 import RadioButtonGroup from 'aurora-frontend-react-komponenter/RadioButtonGroup';
 
 import Spinner from 'components/Spinner';
-import { versionStrategies } from 'services/AuroraApiClient/imageRepository/query';
+import { ImageTagType } from 'services/AuroraApiClient/imageRepository/query';
 import { ITag } from 'services/AuroraApiClient/types';
 
 export interface IVersionStrategyOption {
-  key: string;
+  key: ImageTagType;
   text: string;
 }
 
-const {
-  AURORA_VERSION,
-  BUGFIX,
-  LATEST,
-  MAJOR,
-  MINOR,
-  SNAPSHOT
-} = versionStrategies;
-
 const versionStategyOptions: IVersionStrategyOption[] = [
-  { key: MAJOR, text: 'Major' },
-  { key: MINOR, text: 'Minor' },
-  { key: BUGFIX, text: 'Bugfix' },
-  { key: LATEST, text: 'Latest' },
-  { key: SNAPSHOT, text: 'Snapshot' },
-  { key: AURORA_VERSION, text: 'Aurora version' }
+  { key: ImageTagType.MAJOR, text: 'Major' },
+  { key: ImageTagType.MINOR, text: 'Minor' },
+  { key: ImageTagType.BUGFIX, text: 'Bugfix' },
+  { key: ImageTagType.LATEST, text: 'Latest' },
+  { key: ImageTagType.SNAPSHOT, text: 'Snapshot' },
+  { key: ImageTagType.AURORA_VERSION, text: 'Aurora version' }
 ];
 
 interface IVersionViewProps {
   canLoadMore: boolean;
   loading: boolean;
-  selectedStrategy: string;
+  imageTagType: ImageTagType;
   tags: ITag[];
   fetchTags: () => void;
-  handleSelectedStrategy: (
-    e: Event,
-    option: { key: string; text: string }
-  ) => void;
+  handleSelectedStrategy: (e: Event, option: IVersionStrategyOption) => void;
 }
 
 const VersionView = ({
   tags,
   loading,
   canLoadMore,
-  selectedStrategy,
+  imageTagType,
   fetchTags,
   handleSelectedStrategy
 }: IVersionViewProps) => {
@@ -58,7 +46,7 @@ const VersionView = ({
       <Grid.Row>
         <Grid.Col lg={2}>
           <RadioButtonGroup
-            defaultSelectedKey={selectedStrategy}
+            defaultSelectedKey={imageTagType}
             options={versionStategyOptions}
             onChange={handleSelectedStrategy}
           />

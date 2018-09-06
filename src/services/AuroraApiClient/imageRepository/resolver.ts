@@ -3,22 +3,13 @@ import ApolloClient from 'apollo-boost';
 import { ITagsPaged } from '../types';
 
 import {
-  IImageRepositoryGrouped,
   IImageTagsConnection,
   ITagsGroupedQuery,
   ITagsQuery,
   TAGS_GROUPED_QUERY,
   TAGS_QUERY
 } from './query';
-
-export interface ITagsGrouped {
-  MAJOR: ITagsPaged;
-  MINOR: ITagsPaged;
-  BUGFIX: ITagsPaged;
-  LATEST: ITagsPaged;
-  SNAPSHOT: ITagsPaged;
-  AURORA_VERSION: ITagsPaged;
-}
+import { ITagsPagedGroup, TagsPagedGroup } from './TagsPageGroup';
 
 export async function findTagsPaged(
   client: ApolloClient<{}>,
@@ -45,22 +36,13 @@ export async function findTagsPaged(
 
   const [mainRepo] = imageRepositories;
 
-  const { pageInfo, edges } = mainRepo.tags;
-
-  return {
-    endCursor: pageInfo.endCursor,
-    hasNextPage: pageInfo.hasNextPage,
-    tags: edges.map(edge => ({
-      lastModified: edge.node.lastModified,
-      name: edge.node.name
-    }))
-  };
+  return toTagsPaged(mainRepo.tags);
 }
 
 export async function findGroupedTagsPaged(
   client: ApolloClient<{}>,
   repository: string
-): Promise<ITagsGrouped> {
+): Promise<TagsPagedGroup> {
   const result = await client.query<ITagsGroupedQuery>({
     query: TAGS_GROUPED_QUERY,
     variables: {
@@ -76,30 +58,26 @@ export async function findGroupedTagsPaged(
 
   const [mainRepo] = imageRepositories;
 
-  return normalizeImageRepositoryGrouped(mainRepo);
+  const normalizedTags: ITagsPagedGroup = {
+    auroraVersion: toTagsPaged(mainRepo.auroraVersion),
+    bugfix: toTagsPaged(mainRepo.bugfix),
+    latest: toTagsPaged(mainRepo.latest),
+    major: toTagsPaged(mainRepo.major),
+    minor: toTagsPaged(mainRepo.minor),
+    snapshot: toTagsPaged(mainRepo.snapshot)
+  };
+
+  return new TagsPagedGroup(normalizedTags);
 }
 
-function normalizeImageRepositoryGrouped(
-  imageRepository: IImageRepositoryGrouped
-): ITagsGrouped {
-  return Object.keys(imageRepository)
-    .filter(tagName => tagName !== '__typename')
-    .reduce(
-      (acc, tagName) => {
-        const tagInfo: IImageTagsConnection = imageRepository[tagName];
-        const { edges, pageInfo } = tagInfo;
-        return {
-          ...acc,
-          [tagName]: {
-            endCursor: pageInfo.endCursor,
-            hasNextPage: pageInfo.hasNextPage,
-            tags: edges.map(edge => ({
-              lastModified: edge.node.lastModified,
-              name: edge.node.name
-            }))
-          }
-        };
-      },
-      {} as ITagsGrouped
-    );
+function toTagsPaged(imageTagsConnection: IImageTagsConnection): ITagsPaged {
+  const { edges, pageInfo } = imageTagsConnection;
+  return {
+    endCursor: pageInfo.endCursor,
+    hasNextPage: pageInfo.hasNextPage,
+    tags: edges.map(edge => ({
+      lastModified: edge.node.lastModified,
+      name: edge.node.name
+    }))
+  };
 }

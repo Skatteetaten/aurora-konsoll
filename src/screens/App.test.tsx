@@ -1,7 +1,7 @@
 import { AuroraApiProvider } from 'components/AuroraApi';
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
-import { ITagsGrouped } from 'services/AuroraApiClient/imageRepository/resolver';
+import { TagsPagedGroup } from 'services/AuroraApiClient/imageRepository/TagsPageGroup';
 import {
   IApplicationDeployment,
   ITagsPaged,
@@ -13,8 +13,8 @@ const apiClient: IAuroraApiClient = {
   findAllApplicationDeployments: async (): Promise<
     IApplicationDeployment[]
   > => [],
-  findGroupedTagsPaged: async (repository: string): Promise<ITagsGrouped> =>
-    new Promise<ITagsGrouped>(() => {
+  findGroupedTagsPaged: async (): Promise<TagsPagedGroup> =>
+    new Promise<TagsPagedGroup>(() => {
       return;
     }),
   findTagsPaged: async (): Promise<ITagsPaged> =>

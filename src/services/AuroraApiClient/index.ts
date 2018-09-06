@@ -18,11 +18,12 @@ import {
   IUserAndAffiliations
 } from './types';
 
+import { ImageTagType } from './imageRepository/query';
 import {
   findGroupedTagsPaged,
-  findTagsPaged,
-  ITagsGrouped
+  findTagsPaged
 } from './imageRepository/resolver';
+import { TagsPagedGroup } from './imageRepository/TagsPageGroup';
 
 export default class AuroraApiClient implements IAuroraApiClient {
   private client: ApolloClient<{}>;
@@ -52,12 +53,14 @@ export default class AuroraApiClient implements IAuroraApiClient {
     repository: string,
     first: number,
     cursor?: string,
-    types?: string[]
+    types?: ImageTagType[]
   ) {
     return findTagsPaged(this.client, repository, first, cursor, types);
   }
 
-  public async findGroupedTagsPaged(repository: string): Promise<ITagsGrouped> {
+  public async findGroupedTagsPaged(
+    repository: string
+  ): Promise<TagsPagedGroup> {
     return findGroupedTagsPaged(this.client, repository);
   }
 

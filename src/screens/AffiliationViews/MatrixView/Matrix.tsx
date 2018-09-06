@@ -75,7 +75,6 @@ export default styled(Matrix)`
   tbody {
     td {
       &:first-child {
-        max-width: 210px;
         position: sticky;
         left: 0;
         background: white;

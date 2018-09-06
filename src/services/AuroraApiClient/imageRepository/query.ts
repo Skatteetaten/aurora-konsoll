@@ -1,21 +1,14 @@
 import gql from 'graphql-tag';
 import { IPageInfo } from '../types';
 
-const MAJOR = 'MAJOR';
-const MINOR = 'MINOR';
-const BUGFIX = 'BUGFIX';
-const LATEST = 'LATEST';
-const SNAPSHOT = 'SNAPSHOT';
-const AURORA_VERSION = 'AURORA_VERSION';
-
-export const versionStrategies = {
-  AURORA_VERSION,
-  BUGFIX,
-  LATEST,
-  MAJOR,
-  MINOR,
-  SNAPSHOT
-};
+export enum ImageTagType {
+  AURORA_VERSION = 'AURORA_VERSION',
+  BUGFIX = 'BUGFIX',
+  LATEST = 'LATEST',
+  MAJOR = 'MAJOR',
+  MINOR = 'MINOR',
+  SNAPSHOT = 'SNAPSHOT'
+}
 
 export interface ITagsQuery {
   imageRepositories: Array<{
@@ -27,7 +20,7 @@ export interface ITagsGroupedQuery {
   imageRepositories: IImageRepositoryGrouped[];
 }
 
-export interface IImageRepositoryGrouped {
+interface IImageRepositoryGrouped {
   major: IImageTagsConnection;
   minor: IImageTagsConnection;
   bugfix: IImageTagsConnection;
@@ -73,7 +66,7 @@ export const TAGS_QUERY = gql`
 export const TAGS_GROUPED_QUERY = gql`
   query getTagsGrouped($repositories: [String!]!) {
     imageRepositories(repositories: $repositories) {
-      ${MAJOR}: tags(types: MAJOR, first: 15) {
+      major: tags(types: MAJOR, first: 15) {
         pageInfo {
           endCursor
           hasNextPage
@@ -85,7 +78,7 @@ export const TAGS_GROUPED_QUERY = gql`
           }
         }
       }
-      ${MINOR}: tags(types: MINOR, first: 15) {
+      minor: tags(types: MINOR, first: 15) {
         pageInfo {
           endCursor
           hasNextPage
@@ -97,7 +90,7 @@ export const TAGS_GROUPED_QUERY = gql`
           }
         }
       }
-      ${BUGFIX}: tags(types: BUGFIX, first: 15) {
+      bugfix: tags(types: BUGFIX, first: 15) {
         pageInfo {
           endCursor
           hasNextPage
@@ -109,7 +102,7 @@ export const TAGS_GROUPED_QUERY = gql`
           }
         }
       }
-      ${LATEST}: tags(types: LATEST, first: 1) {
+      latest: tags(types: LATEST, first: 1) {
         pageInfo {
           endCursor
           hasNextPage
@@ -121,7 +114,7 @@ export const TAGS_GROUPED_QUERY = gql`
           }
         }
       }
-      ${SNAPSHOT}: tags(types: SNAPSHOT, first: 15) {
+      snapshot: tags(types: SNAPSHOT, first: 15) {
         pageInfo {
           endCursor
           hasNextPage
@@ -133,7 +126,7 @@ export const TAGS_GROUPED_QUERY = gql`
           }
         }
       }
-      ${AURORA_VERSION}: tags(types: AURORA_VERSION, first: 15) {
+      auroraVersion: tags(types: AURORA_VERSION, first: 15) {
         pageInfo {
           endCursor
           hasNextPage
