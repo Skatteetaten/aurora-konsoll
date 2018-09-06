@@ -1,3 +1,4 @@
+import MessageBar from 'aurora-frontend-react-komponenter/MessageBar';
 import * as React from 'react';
 
 import PodStatus from 'components/PodStatus';
@@ -9,9 +10,14 @@ interface IInformationViewProps {
 
 const InformationView = ({ deployment }: IInformationViewProps) => (
   <>
-    <p>DeployTag: {deployment.version.deployTag}</p>
-    <p>AuroraVersion: {deployment.version.auroraVersion}</p>
-    <p>{deployment.repository}</p>
+    <h3>Versjon</h3>
+    <MessageBar>
+      Følger: {deployment.version.deployTag}
+      <br />
+      Eksakt versjon: {deployment.version.auroraVersion}
+    </MessageBar>
+
+    <h3>Deployments</h3>
     {deployment.pods.map(pod => (
       <PodStatus key={pod.name} pod={pod} />
     ))}

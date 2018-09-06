@@ -9,6 +9,7 @@ const TabLink = styled(NavLink)`
   padding: 15px 0 5px;
   text-align: center;
   font-size: 18px;
+  background: ${skeColor.lightBlue};
   border-bottom: 3px solid ${skeColor.lightBlue};
   text-decoration: none;
   border-collapse: collapse;
