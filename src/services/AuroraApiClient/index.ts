@@ -23,7 +23,7 @@ import {
   findGroupedTagsPaged,
   findTagsPaged
 } from './imageRepository/resolver';
-import { TagsPagedGroup } from './imageRepository/TagsPageGroup';
+import { TagsPagedGroup } from './imageRepository/TagsPagedGroup';
 
 export default class AuroraApiClient implements IAuroraApiClient {
   private client: ApolloClient<{}>;

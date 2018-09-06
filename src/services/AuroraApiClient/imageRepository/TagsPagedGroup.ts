@@ -11,30 +11,27 @@ export interface ITagsPagedGroup {
 }
 
 export class TagsPagedGroup {
-  private tagsGrouped: ITagsPagedGroup;
+  private tagsPagedGroup: ITagsPagedGroup;
 
   constructor(tagsGrouped: ITagsPagedGroup) {
-    this.tagsGrouped = tagsGrouped;
+    this.tagsPagedGroup = tagsGrouped;
   }
 
-  public updateTagsPaged(
-    type: ImageTagType,
-    update: ITagsPaged
-  ): TagsPagedGroup {
+  public updateTagsPaged(type: ImageTagType, next: ITagsPaged): TagsPagedGroup {
     const name = this.findName(type);
-    const old = this.tagsGrouped[name];
+    const old = this.tagsPagedGroup[name];
 
-    const next = {
-      ...this.tagsGrouped,
-      [name]: this.updateTags(old, update)
+    const updatedTagsPagedGroup = {
+      ...this.tagsPagedGroup,
+      [name]: this.updateTags(old, next)
     };
 
-    return new TagsPagedGroup(next);
+    return new TagsPagedGroup(updatedTagsPagedGroup);
   }
 
   public getTagsPaged(type: ImageTagType): ITagsPaged {
     const name = this.findName(type);
-    return this.tagsGrouped[name];
+    return this.tagsPagedGroup[name];
   }
 
   private findName(type: ImageTagType): string {

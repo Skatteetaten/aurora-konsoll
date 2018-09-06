@@ -14,7 +14,7 @@ import {
 } from 'services/AuroraApiClient/types';
 
 import { ImageTagType } from 'services/AuroraApiClient/imageRepository/query';
-import { TagsPagedGroup } from 'services/AuroraApiClient/imageRepository/TagsPageGroup';
+import { TagsPagedGroup } from 'services/AuroraApiClient/imageRepository/TagsPagedGroup';
 import { ApplicationDeploymentDetailsRoute } from '../ApplicationDeploymentSelector';
 import InformationViewBase from './InformationView';
 import VersionViewBase, { IVersionStrategyOption } from './VersionView';
@@ -25,7 +25,7 @@ interface IDetailsViewState {
   loading: boolean;
 }
 
-export interface IDetailsViewProps
+interface IDetailsViewProps
   extends ApplicationDeploymentDetailsRoute,
     IAuroraApiComponentProps {
   deployment: IApplicationDeployment;
@@ -49,13 +49,12 @@ class DetailsView extends React.Component<
     }));
 
     let cursor;
-
     if (groupedTags) {
       const current: ITagsPaged = groupedTags.getTagsPaged(imageTagType);
       cursor = current.endCursor;
     }
 
-    const result = await clients.apiClient.findTagsPaged(
+    const tagsPaged = await clients.apiClient.findTagsPaged(
       deployment.repository,
       15,
       cursor,
@@ -67,7 +66,7 @@ class DetailsView extends React.Component<
       return {
         groupedTags:
           currentGroupedTags &&
-          currentGroupedTags.updateTagsPaged(imageTagType, result),
+          currentGroupedTags.updateTagsPaged(imageTagType, tagsPaged),
         loading: false
       };
     });
@@ -90,12 +89,12 @@ class DetailsView extends React.Component<
       loading: true
     }));
 
-    const result = await clients.apiClient.findGroupedTagsPaged(
+    const groupedTags = await clients.apiClient.findGroupedTagsPaged(
       deployment.repository
     );
 
     this.setState(() => ({
-      groupedTags: result,
+      groupedTags,
       loading: false
     }));
   }

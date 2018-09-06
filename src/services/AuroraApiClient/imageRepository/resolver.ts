@@ -9,7 +9,7 @@ import {
   TAGS_GROUPED_QUERY,
   TAGS_QUERY
 } from './query';
-import { ITagsPagedGroup, TagsPagedGroup } from './TagsPageGroup';
+import { ITagsPagedGroup, TagsPagedGroup } from './TagsPagedGroup';
 
 export async function findTagsPaged(
   client: ApolloClient<{}>,
@@ -34,9 +34,7 @@ export async function findTagsPaged(
     throw new Error(`Could not find tags for repository ${repository}`);
   }
 
-  const [mainRepo] = imageRepositories;
-
-  return toTagsPaged(mainRepo.tags);
+  return toTagsPaged(imageRepositories[0].tags);
 }
 
 export async function findGroupedTagsPaged(

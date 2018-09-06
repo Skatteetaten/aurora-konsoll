@@ -1,7 +1,7 @@
 import { AuroraApiProvider } from 'components/AuroraApi';
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
-import { TagsPagedGroup } from 'services/AuroraApiClient/imageRepository/TagsPageGroup';
+import { TagsPagedGroup } from 'services/AuroraApiClient/imageRepository/TagsPagedGroup';
 import {
   IApplicationDeployment,
   ITagsPaged,

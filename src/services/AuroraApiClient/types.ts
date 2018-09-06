@@ -1,5 +1,5 @@
 import { ImageTagType } from './imageRepository/query';
-import { TagsPagedGroup } from './imageRepository/TagsPageGroup';
+import { TagsPagedGroup } from './imageRepository/TagsPagedGroup';
 import { IPodResource } from './queries/applications-query';
 
 export interface IAuroraApiClient {
