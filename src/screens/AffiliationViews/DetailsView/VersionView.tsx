@@ -7,7 +7,7 @@ import Grid from 'aurora-frontend-react-komponenter/Grid';
 import RadioButtonGroup from 'aurora-frontend-react-komponenter/RadioButtonGroup';
 
 import Spinner from 'components/Spinner';
-import { versionStrategies } from 'services/AuroraApiClient/tags';
+import { versionStrategies } from 'services/AuroraApiClient/imageRepository/query';
 import { ITag } from 'services/AuroraApiClient/types';
 
 export interface IVersionStrategyOption {

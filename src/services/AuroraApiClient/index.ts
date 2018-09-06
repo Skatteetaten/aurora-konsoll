@@ -18,7 +18,11 @@ import {
   IUserAndAffiliations
 } from './types';
 
-import { findGroupedTagsPaged, findTagsPaged, ITagsGrouped } from './tags';
+import {
+  findGroupedTagsPaged,
+  findTagsPaged,
+  ITagsGrouped
+} from './imageRepository/resolver';
 
 export default class AuroraApiClient implements IAuroraApiClient {
   private client: ApolloClient<{}>;

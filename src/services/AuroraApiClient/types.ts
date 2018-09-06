@@ -1,5 +1,5 @@
+import { ITagsGrouped } from './imageRepository/resolver';
 import { IPodResource } from './queries/applications-query';
-import { ITagsGrouped } from './tags';
 
 export interface IAuroraApiClient {
   findUserAndAffiliations: () => Promise<IUserAndAffiliations>;

@@ -7,12 +7,14 @@ import Grid from 'aurora-frontend-react-komponenter/Grid';
 
 import { IAuroraApiComponentProps, withAuroraApi } from 'components/AuroraApi';
 import TabLink from 'components/TabLink';
-import { ITagsGrouped, versionStrategies } from 'services/AuroraApiClient/tags';
+import { versionStrategies } from 'services/AuroraApiClient/imageRepository/query';
+import { ITagsGrouped } from 'services/AuroraApiClient/imageRepository/resolver';
 import {
   IApplicationDeployment,
   ITag,
   ITagsPaged
 } from 'services/AuroraApiClient/types';
+
 import { ApplicationDeploymentDetailsRoute } from '../ApplicationDeploymentSelector';
 import InformationViewBase from './InformationView';
 import VersionViewBase, { IVersionStrategyOption } from './VersionView';
