@@ -1,10 +1,6 @@
 import ApolloClient from 'apollo-boost';
 
-import {
-  IPageInfo,
-  ITagsPagedGroup,
-  TagsPagedGroup
-} from 'services/auroraApiClients';
+import { ITagsPagedGroup, TagsPagedGroup } from 'services/auroraApiClients';
 
 import {
   IImageTagsConnection,
@@ -19,7 +15,9 @@ export interface ITag {
   lastModified: string;
 }
 
-export interface ITagsPaged extends IPageInfo {
+export interface ITagsPaged {
+  endCursor: string;
+  hasNextPage: boolean;
   tags: ITag[];
 }
 

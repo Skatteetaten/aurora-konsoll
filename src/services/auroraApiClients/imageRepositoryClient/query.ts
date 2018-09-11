@@ -1,5 +1,4 @@
 import gql from 'graphql-tag';
-import { IPageInfo } from 'services/auroraApiClients';
 
 export interface ITagsQuery {
   imageRepositories: Array<{
@@ -21,7 +20,10 @@ interface IImageRepositoryGrouped {
 }
 
 export interface IImageTagsConnection {
-  pageInfo: IPageInfo;
+  pageInfo: {
+    endCursor: string;
+    hasNextPage: boolean;
+  };
   edges: Array<{
     node: {
       name: string;
