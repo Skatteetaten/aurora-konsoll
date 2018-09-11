@@ -50,7 +50,7 @@ class App extends React.Component<IRoutesProps, IRoutesState> {
     const {
       affiliations,
       user
-    } = await this.props.clients.apiClient.findUserAndAffiliations();
+    } = await this.props.clients.applicationDeploymentClient.findUserAndAffiliations();
 
     this.setState(() => ({
       affiliations,

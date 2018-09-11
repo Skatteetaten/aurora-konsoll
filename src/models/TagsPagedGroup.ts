@@ -1,5 +1,13 @@
-import { ITagsPaged } from '../types';
-import { ImageTagType } from './query';
+import { ITagsPaged } from 'services/auroraApiClients';
+
+export enum ImageTagType {
+  AURORA_VERSION = 'AURORA_VERSION',
+  BUGFIX = 'BUGFIX',
+  LATEST = 'LATEST',
+  MAJOR = 'MAJOR',
+  MINOR = 'MINOR',
+  SNAPSHOT = 'SNAPSHOT'
+}
 
 export interface ITagsPagedGroup {
   major: ITagsPaged;

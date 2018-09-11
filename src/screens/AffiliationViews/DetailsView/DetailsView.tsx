@@ -9,12 +9,12 @@ import { IAuroraApiComponentProps, withAuroraApi } from 'components/AuroraApi';
 import TabLink from 'components/TabLink';
 import {
   IApplicationDeployment,
+  ImageTagType,
   ITag,
-  ITagsPaged
-} from 'services/AuroraApiClient/types';
+  ITagsPaged,
+  TagsPagedGroup
+} from 'services/auroraApiClients';
 
-import { ImageTagType } from 'services/AuroraApiClient/imageRepository/query';
-import { TagsPagedGroup } from 'services/AuroraApiClient/imageRepository/TagsPagedGroup';
 import { ApplicationDeploymentDetailsRoute } from '../ApplicationDeploymentSelector';
 import InformationViewBase from './InformationView';
 import VersionViewBase, { IVersionStrategyOption } from './VersionView';
@@ -54,7 +54,7 @@ class DetailsView extends React.Component<
       cursor = current.endCursor;
     }
 
-    const tagsPaged = await clients.apiClient.findTagsPaged(
+    const tagsPaged = await clients.imageRepositoryClient.findTagsPaged(
       deployment.repository,
       15,
       cursor,
@@ -89,7 +89,7 @@ class DetailsView extends React.Component<
       loading: true
     }));
 
-    const groupedTags = await clients.apiClient.findGroupedTagsPaged(
+    const groupedTags = await clients.imageRepositoryClient.findGroupedTagsPaged(
       deployment.repository
     );
 

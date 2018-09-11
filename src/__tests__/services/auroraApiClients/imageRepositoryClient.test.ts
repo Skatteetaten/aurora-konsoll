@@ -1,10 +1,11 @@
 import { graphqlClientMock, GraphQLSeverMock } from 'utils/GraphQLMock';
-import { findTagsPaged } from './resolver';
 
-import * as getTags from './responses/getTags.json';
+import { ImageRepositoryClient } from 'services/auroraApiClients/imageRepositoryClient/client';
+import * as getTags from './responses/imageRepositoryClient/getTags.json';
 
 const mockServer = new GraphQLSeverMock();
 const mockClient = graphqlClientMock(mockServer.graphQLUrl);
+const imageRepositoryClient = new ImageRepositoryClient(mockClient);
 
 afterAll(() => {
   mockServer.close();
@@ -14,7 +15,7 @@ describe('findTagsPaged', () => {
   it('should fetch tags from GraphQL server and normalize data', async () => {
     mockServer.putResponse('getTags', getTags);
 
-    const result = await findTagsPaged(mockClient, 'test');
+    const result = await imageRepositoryClient.findTagsPaged('test');
 
     expect(result).toEqual({
       endCursor: 'MQ==',
@@ -36,7 +37,7 @@ describe('findTagsPaged', () => {
     mockServer.putResponse('getTags', { data: { imageRepositories: [] } });
 
     try {
-      await findTagsPaged(mockClient, 'mock-repo');
+      await imageRepositoryClient.findTagsPaged('mock-repo');
     } catch (error) {
       expect((error as Error).message).toEqual(
         'Could not find tags for repository mock-repo'

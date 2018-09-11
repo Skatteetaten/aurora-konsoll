@@ -2,7 +2,7 @@ import * as React from 'react';
 
 import Icon from 'aurora-frontend-react-komponenter/Icon';
 import { statusColors } from 'screens/AffiliationViews/MatrixView/Status';
-import { IPodResource } from 'services/AuroraApiClient/queries/applications-query';
+import { IPodResource } from 'services/auroraApiClients/applicationDeploymentClient/query';
 import styled, { css } from 'styled-components';
 
 function getDate(date?: string) {

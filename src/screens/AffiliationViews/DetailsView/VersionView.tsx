@@ -7,8 +7,8 @@ import Grid from 'aurora-frontend-react-komponenter/Grid';
 import RadioButtonGroup from 'aurora-frontend-react-komponenter/RadioButtonGroup';
 
 import Spinner from 'components/Spinner';
-import { ImageTagType } from 'services/AuroraApiClient/imageRepository/query';
-import { ITag } from 'services/AuroraApiClient/types';
+import { ImageTagType } from 'models/TagsPagedGroup';
+import { ITag } from 'services/auroraApiClients';
 
 export interface IVersionStrategyOption {
   key: ImageTagType;
