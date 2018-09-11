@@ -1,34 +1,34 @@
 import { AuroraApiProvider } from 'components/AuroraApi';
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
-import { TagsPagedGroup } from 'services/AuroraApiClient/imageRepository/TagsPagedGroup';
 import {
   IApplicationDeployment,
+  IApplicationDeploymentClient,
+  IImageRepositoryClient,
   ITagsPaged,
-  IUserAndAffiliations
-} from 'services/AuroraApiClient/types';
-import { IAuroraApiClient } from 'services/AuroraApiClient/types';
+  IUserAndAffiliations,
+  TagsPagedGroup
+} from 'services/auroraApiClients';
 
-const apiClient: IAuroraApiClient = {
+const applicationDeploymentClient: IApplicationDeploymentClient = {
   findAllApplicationDeployments: async (): Promise<
     IApplicationDeployment[]
   > => [],
-  findGroupedTagsPaged: async (): Promise<TagsPagedGroup> =>
-    new Promise<TagsPagedGroup>(() => {
-      return;
-    }),
-  findTagsPaged: async (): Promise<ITagsPaged> =>
-    new Promise<ITagsPaged>(() => {
-      return;
-    }),
   findUserAndAffiliations: async (): Promise<IUserAndAffiliations> => ({
     affiliations: ['test'],
     user: 'Batman'
   })
 };
 
+const imageRepositoryClient: IImageRepositoryClient = {
+  findGroupedTagsPaged: async (): Promise<TagsPagedGroup> =>
+    ({} as TagsPagedGroup),
+  findTagsPaged: async (): Promise<ITagsPaged> => ({} as ITagsPaged)
+};
+
 const clients = {
-  apiClient
+  applicationDeploymentClient,
+  imageRepositoryClient
 };
 
 it('renders without crashing', () => {

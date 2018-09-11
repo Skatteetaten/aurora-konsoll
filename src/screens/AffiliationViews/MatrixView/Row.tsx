@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { IApplicationDeployment } from 'services/AuroraApiClient/types';
+import { IApplicationDeployment } from 'services/auroraApiClients';
 import Status from './Status';
 
 export interface IApplicationMap {

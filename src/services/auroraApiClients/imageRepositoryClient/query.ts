@@ -1,14 +1,5 @@
 import gql from 'graphql-tag';
-import { IPageInfo } from '../types';
-
-export enum ImageTagType {
-  AURORA_VERSION = 'AURORA_VERSION',
-  BUGFIX = 'BUGFIX',
-  LATEST = 'LATEST',
-  MAJOR = 'MAJOR',
-  MINOR = 'MINOR',
-  SNAPSHOT = 'SNAPSHOT'
-}
+import { IPageInfo } from 'services/auroraApiClients';
 
 export interface ITagsQuery {
   imageRepositories: Array<{

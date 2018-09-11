@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { Omit } from 'react-router';
-import { IApplicationDeployment } from 'services/AuroraApiClient/types';
+import { IApplicationDeployment } from 'services/auroraApiClients';
 
 export interface IApplicationDeploymentContext {
   deployments: IApplicationDeployment[];
