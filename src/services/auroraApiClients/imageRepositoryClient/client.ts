@@ -1,6 +1,6 @@
 import ApolloClient from 'apollo-boost';
 
-import { ITagsPagedGroup, TagsPagedGroup } from 'services/auroraApiClients';
+import { ITagsPagedGroup, TagsPagedGroup } from 'models/TagsPagedGroup';
 
 import {
   IImageTagsConnection,

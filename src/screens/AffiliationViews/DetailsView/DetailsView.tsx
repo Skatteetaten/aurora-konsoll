@@ -7,12 +7,11 @@ import Grid from 'aurora-frontend-react-komponenter/Grid';
 
 import { IAuroraApiComponentProps, withAuroraApi } from 'components/AuroraApi';
 import TabLink from 'components/TabLink';
+import { ImageTagType, TagsPagedGroup } from 'models/TagsPagedGroup';
 import {
   IApplicationDeployment,
-  ImageTagType,
   ITag,
-  ITagsPaged,
-  TagsPagedGroup
+  ITagsPaged
 } from 'services/auroraApiClients';
 
 import { ApplicationDeploymentDetailsRoute } from '../ApplicationDeploymentSelector';

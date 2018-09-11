@@ -1,13 +1,14 @@
-import { AuroraApiProvider } from 'components/AuroraApi';
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
+
+import { AuroraApiProvider } from 'components/AuroraApi';
+import { TagsPagedGroup } from 'models/TagsPagedGroup';
 import {
   IApplicationDeployment,
   IApplicationDeploymentClient,
   IImageRepositoryClient,
   ITagsPaged,
-  IUserAndAffiliations,
-  TagsPagedGroup
+  IUserAndAffiliations
 } from 'services/auroraApiClients';
 
 const applicationDeploymentClient: IApplicationDeploymentClient = {
