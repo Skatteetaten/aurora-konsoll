@@ -1,7 +1,7 @@
 import ApolloClient from 'apollo-boost';
 import {
   APPLICATIONS_QUERY,
-  IApplicationInstance,
+  IAppDeployment,
   IApplications,
   IImageRepository,
   IPodResource,
@@ -65,8 +65,8 @@ export class ApplicationDeploymentClient
     });
 
     return result.data.applications.edges.reduce((acc, { node }) => {
-      const { applicationInstances, imageRepository } = node;
-      const apps = applicationInstances.map(app =>
+      const { applicationDeployments, imageRepository } = node;
+      const apps = applicationDeployments.map(app =>
         this.toApplicationDeployment(node.name, app, imageRepository)
       );
       return [...acc, ...apps];
@@ -75,7 +75,7 @@ export class ApplicationDeploymentClient
 
   private toApplicationDeployment(
     name: string,
-    app: IApplicationInstance,
+    app: IAppDeployment,
     imageRepository?: IImageRepository
   ): IApplicationDeployment {
     return {
