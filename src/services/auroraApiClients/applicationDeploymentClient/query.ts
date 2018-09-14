@@ -47,7 +47,7 @@ export interface IPodResource {
 }
 
 export const APPLICATIONS_QUERY = gql`
-  query getApplications($affiliations: [String!]!) {
+  query getApplicationDeployments($affiliations: [String!]!) {
     applications(affiliations: $affiliations) {
       edges {
         node {
@@ -100,7 +100,7 @@ export interface IUserAffiliationsQuery {
 }
 
 export const USER_AFFILIATIONS_QUERY = gql`
-  {
+  query getUserAndAffiliations {
     currentUser {
       name
     }
