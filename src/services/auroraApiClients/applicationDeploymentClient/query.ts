@@ -6,27 +6,19 @@ export interface IApplications {
   };
 }
 
-export interface IPodResource {
-  name: string;
-  status: string;
-  restartCount: number;
-  ready: boolean;
-  startTime: string;
+export interface IApplicationEdge {
+  node: {
+    name: string;
+    imageRepository?: IImageRepository;
+    applicationDeployments: IAppDeployment[];
+  };
 }
 
 export interface IImageRepository {
   repository: string;
 }
 
-export interface IApplicationEdge {
-  node: {
-    name: string;
-    imageRepository?: IImageRepository;
-    applicationInstances: IApplicationInstance[];
-  };
-}
-
-export interface IApplicationInstance {
+export interface IAppDeployment {
   affiliation: {
     name: string;
   };
@@ -46,6 +38,14 @@ export interface IApplicationInstance {
   };
 }
 
+export interface IPodResource {
+  name: string;
+  status: string;
+  restartCount: number;
+  ready: boolean;
+  startTime: string;
+}
+
 export const APPLICATIONS_QUERY = gql`
   query getApplications($affiliations: [String!]!) {
     applications(affiliations: $affiliations) {
@@ -55,7 +55,7 @@ export const APPLICATIONS_QUERY = gql`
           imageRepository {
             repository
           }
-          applicationInstances {
+          applicationDeployments {
             affiliation {
               name
             }
