@@ -1,7 +1,7 @@
+import { ImageRepositoryClient } from 'services/auroraApiClients/imageRepositoryClient/client';
 import { graphqlClientMock, GraphQLSeverMock } from 'utils/GraphQLMock';
 
-import { ImageRepositoryClient } from 'services/auroraApiClients/imageRepositoryClient/client';
-import * as getTags from './responses/imageRepositoryClient/getTags.json';
+import * as getTags from './__responses__/imageRepositoryClient/getTags.json';
 
 const mockServer = new GraphQLSeverMock();
 const mockClient = graphqlClientMock(mockServer.graphQLUrl);
@@ -16,21 +16,7 @@ describe('findTagsPaged', () => {
     mockServer.putResponse('getTags', getTags);
 
     const result = await imageRepositoryClient.findTagsPaged('test');
-
-    expect(result).toEqual({
-      endCursor: 'MQ==',
-      hasNextPage: false,
-      tags: [
-        {
-          lastModified: '2018-09-07T07:12:30.345885623Z',
-          name: '2'
-        },
-        {
-          lastModified: '2018-01-25T09:39:51.280498289Z',
-          name: '1'
-        }
-      ]
-    });
+    expect(result).toMatchSnapshot();
   });
 
   it('should throw an error when no repositories are found', async () => {
