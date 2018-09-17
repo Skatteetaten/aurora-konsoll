@@ -1,8 +1,7 @@
 import response from './ResponseText';
 
-const parsedResponseData: IUncleMattResponseItems = JSON.parse(response);
-
-interface IUncleMattResponseItems {
+const parsedResponseData: IScanResponseItems = JSON.parse(response);
+interface IScanResponseItems {
   items: IResponseDataTypesRaw[];
 }
 
@@ -16,7 +15,7 @@ interface IResponseDataTypesRaw {
   };
 }
 
-interface INetdebugResult {
+export interface INetdebugResult {
   hostIp: number;
   podIp: number;
   status: string;
