@@ -1,12 +1,13 @@
+import * as React from 'react';
+
 import Dropdown, {
   IDropdownOption
 } from 'aurora-frontend-react-komponenter/Dropdown';
 import SkeBasis from 'aurora-frontend-react-komponenter/SkeBasis';
-import * as React from 'react';
-import styled from 'styled-components';
 
 import { toDropdownOptions } from 'utils/aurora-frontend';
 
+import styled from 'styled-components';
 import Header from './Header';
 import Menu, { MenuNavLink } from './Menu';
 
@@ -31,8 +32,8 @@ const Layout = ({
     onAffiliationChange(item.text);
 
   return (
-    <SkeBasis>
-      <StyledHeader title="Aurora Konsoll" user={user}>
+    <StyledSkeBasis>
+      <Header title="Aurora Konsoll" user={user} className="g-header">
         {showAffiliationSelector && (
           <Dropdown
             placeHolder="Velg tilhørighet"
@@ -41,8 +42,8 @@ const Layout = ({
             selectedKey={affiliation}
           />
         )}
-      </StyledHeader>
-      <StyledMenu>
+      </Header>
+      <Menu className="g-menu">
         <MenuNavLink
           name="Applikasjoner"
           to={`/a/${affiliation || '_'}/deployments`}
@@ -52,38 +53,36 @@ const Layout = ({
         {/* <MenuNavLink name="Database" to="/db" iconName="Cloud" />
         <MenuNavLink name="Konfigurasjon" to="/conf" iconName="Code" />
         <MenuNavLink name="WebSEAL" to="/web" iconName="Bookmark" /> */}
-      </StyledMenu>
-      <LayoutContent>{children}</LayoutContent>
-    </SkeBasis>
+      </Menu>
+      <div className="g-content">{children}</div>
+    </StyledSkeBasis>
   );
 };
 
-const HEADER_HEIGHT = '92px';
-const MENU_WIDTH = '265px';
+const StyledSkeBasis = styled(SkeBasis)`
+  min-height: 100%;
+  display: grid;
+  grid-template-columns: 250px 1fr;
+  grid-template-rows: auto 1fr;
+  grid-template-areas:
+    'header header'
+    'menu content';
 
-const LayoutContent = styled.div`
-  position: absolute;
-  top: ${HEADER_HEIGHT};
-  left: ${MENU_WIDTH};
-  right: 0;
-  bottom: 0;
-  overflow: auto;
-`;
+  .g-header {
+    grid-area: header;
+  }
+  .g-menu {
+    grid-area: menu;
+  }
+  .g-content {
+    grid-area: content;
+    max-height: 100%;
+    overflow: auto;
+  }
 
-const StyledMenu = styled(Menu)`
-  position: absolute;
-  top: ${HEADER_HEIGHT};
-  left: 0px;
-  bottom: 0;
-  width: ${MENU_WIDTH};
-`;
-
-const StyledHeader = styled(Header)`
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: ${HEADER_HEIGHT};
+  .ms-Dropdown-container {
+    max-width: 250px;
+  }
 `;
 
 export default Layout;
