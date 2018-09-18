@@ -2,8 +2,7 @@ import * as React from 'react';
 import { Route } from 'react-router-dom';
 import styled from 'styled-components';
 
-import Card from 'aurora-frontend-react-komponenter/Card';
-import Grid from 'aurora-frontend-react-komponenter/Grid';
+import palette from 'aurora-frontend-react-komponenter/utils/palette';
 
 import { IAuroraApiComponentProps, withAuroraApi } from 'components/AuroraApi';
 import TabLink from 'components/TabLink';
@@ -39,7 +38,7 @@ class DetailsView extends React.Component<
     loading: false
   };
 
-  public loadMore = async () => {
+  public loadMoreTags = async () => {
     const { clients, deployment } = this.props;
     const { groupedTags, imageTagType } = this.state;
 
@@ -81,6 +80,27 @@ class DetailsView extends React.Component<
     }));
   };
 
+  public getSortedImageTags = () => {
+    const { groupedTags, imageTagType } = this.state;
+
+    if (!groupedTags) {
+      return [];
+    }
+
+    return groupedTags
+      .getTagsPaged(imageTagType)
+      .tags.sort(sortTagsByDate)
+      .map(tag => ({
+        lastModified: new Date(tag.lastModified).toLocaleString('nb-NO'),
+        name: tag.name
+      }));
+  };
+
+  public canLoadMoreTags = () => {
+    const { groupedTags, imageTagType } = this.state;
+    return !!groupedTags && groupedTags.getTagsPaged(imageTagType).hasNextPage;
+  };
+
   public async componentDidMount() {
     const { clients, deployment } = this.props;
 
@@ -100,60 +120,35 @@ class DetailsView extends React.Component<
 
   public render() {
     const { deployment, match } = this.props;
-    const { groupedTags, loading, imageTagType } = this.state;
-
-    let sortedTags: ITag[] = [];
-    let currentTagsPaged: ITagsPaged = {
-      endCursor: '',
-      hasNextPage: false,
-      tags: []
-    };
-
-    if (groupedTags) {
-      currentTagsPaged = groupedTags.getTagsPaged(imageTagType);
-      sortedTags = currentTagsPaged.tags.sort(sortTagsByDate).map(tag => ({
-        lastModified: new Date(tag.lastModified).toLocaleString('nb-NO'),
-        name: tag.name
-      }));
-    }
+    const { loading, imageTagType } = this.state;
 
     const InformationView = () => (
       <InformationViewBase deployment={deployment} />
     );
     const VersionView = () => (
       <VersionViewBase
-        canLoadMore={currentTagsPaged.hasNextPage}
-        fetchTags={this.loadMore}
+        canLoadMore={this.canLoadMoreTags()}
+        fetchTags={this.loadMoreTags}
         handleSelectedStrategy={this.handleSelectedStrategy}
         loading={loading}
         imageTagType={imageTagType}
-        tags={sortedTags}
+        tags={this.getSortedImageTags()}
       />
     );
 
     const title = `${deployment.environment}/${deployment.name}`;
     return (
-      <Grid>
-        <Grid.Row rowSpacing={Grid.SPACE_NONE}>
-          <h1>{title}</h1>
-        </Grid.Row>
-        <Grid.Row rowSpacing={Grid.SPACE_NONE}>
-          <StyledColumn lg={6}>
-            <TabLink to={`${match.url}/info`}>Informasjon</TabLink>
-          </StyledColumn>
-          <StyledColumn lg={6}>
-            <TabLink to={`${match.url}/version`}>Versjoner</TabLink>
-          </StyledColumn>
-        </Grid.Row>
-        <Grid.Row rowSpacing={Grid.SPACE_NONE}>
-          <StyledColumn lg={12}>
-            <Card color={Card.GREEN}>
-              <Route path={`${match.path}/info`} render={InformationView} />
-              <Route path={`${match.path}/version`} render={VersionView} />
-            </Card>
-          </StyledColumn>
-        </Grid.Row>
-      </Grid>
+      <DetailsViewGrid>
+        <h1>{title}</h1>
+        <TabLinkWrapper>
+          <TabLink to={`${match.url}/info`}>Informasjon</TabLink>
+          <TabLink to={`${match.url}/version`}>Versjoner</TabLink>
+        </TabLinkWrapper>
+        <Card>
+          <Route path={`${match.path}/info`} render={InformationView} />
+          <Route path={`${match.path}/version`} render={VersionView} />
+        </Card>
+      </DetailsViewGrid>
     );
   }
 }
@@ -164,8 +159,28 @@ const sortTagsByDate = (t1: ITag, t2: ITag) => {
   return date2 - date1;
 };
 
-const StyledColumn = styled(Grid.Col)`
-  padding: 0;
+const { skeColor } = palette;
+
+const DetailsViewGrid = styled.div`
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  padding: 0 8px;
+`;
+
+const TabLinkWrapper = styled.div`
+  display: flex;
+
+  a {
+    flex: 1;
+  }
+`;
+
+const Card = styled.div`
+  flex: 1;
+  padding: 16px;
+  overflow: hidden;
+  background-color: ${skeColor.lightGreen};
 `;
 
 export const DetailsViewBaseWithApi = withAuroraApi(DetailsView);
