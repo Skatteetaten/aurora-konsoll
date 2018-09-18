@@ -80,6 +80,8 @@ export default styled(Matrix)`
         background: white;
         z-index: 9;
         padding: 15px 50px 15px 15px;
+        overflow: hidden;
+        text-overflow: ellipsis;
       }
       max-width: 150px;
     }

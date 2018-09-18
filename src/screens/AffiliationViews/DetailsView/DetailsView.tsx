@@ -80,27 +80,6 @@ class DetailsView extends React.Component<
     }));
   };
 
-  public getSortedImageTags = () => {
-    const { groupedTags, imageTagType } = this.state;
-
-    if (!groupedTags) {
-      return [];
-    }
-
-    return groupedTags
-      .getTagsPaged(imageTagType)
-      .tags.sort(sortTagsByDate)
-      .map(tag => ({
-        lastModified: new Date(tag.lastModified).toLocaleString('nb-NO'),
-        name: tag.name
-      }));
-  };
-
-  public canLoadMoreTags = () => {
-    const { groupedTags, imageTagType } = this.state;
-    return !!groupedTags && groupedTags.getTagsPaged(imageTagType).hasNextPage;
-  };
-
   public async componentDidMount() {
     const { clients, deployment } = this.props;
 
@@ -151,13 +130,33 @@ class DetailsView extends React.Component<
       </DetailsViewGrid>
     );
   }
-}
+  private getSortedImageTags = () => {
+    const { groupedTags, imageTagType } = this.state;
 
-const sortTagsByDate = (t1: ITag, t2: ITag) => {
-  const date1 = new Date(t1.lastModified).getTime();
-  const date2 = new Date(t2.lastModified).getTime();
-  return date2 - date1;
-};
+    const sortTagsByDate = (t1: ITag, t2: ITag) => {
+      const date1 = new Date(t1.lastModified).getTime();
+      const date2 = new Date(t2.lastModified).getTime();
+      return date2 - date1;
+    };
+
+    if (!groupedTags) {
+      return [];
+    }
+
+    return groupedTags
+      .getTagsPaged(imageTagType)
+      .tags.sort(sortTagsByDate)
+      .map(tag => ({
+        lastModified: new Date(tag.lastModified).toLocaleString('nb-NO'),
+        name: tag.name
+      }));
+  };
+
+  private canLoadMoreTags = () => {
+    const { groupedTags, imageTagType } = this.state;
+    return !!groupedTags && groupedTags.getTagsPaged(imageTagType).hasNextPage;
+  };
+}
 
 const { skeColor } = palette;
 
