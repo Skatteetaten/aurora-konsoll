@@ -1,7 +1,7 @@
 import ApolloClient from 'apollo-boost';
 import {
   APPLICATIONS_QUERY,
-  IAppDeployment,
+  IApplicationDeploymentQuery,
   IApplications,
   IImageRepository,
   IPodResource,
@@ -67,22 +67,21 @@ export class ApplicationDeploymentClient
     return result.data.applications.edges.reduce((acc, { node }) => {
       const { applicationDeployments, imageRepository } = node;
       const apps = applicationDeployments.map(app =>
-        this.toApplicationDeployment(node.name, app, imageRepository)
+        this.toApplicationDeployment(app, imageRepository)
       );
       return [...acc, ...apps];
     }, []);
   }
 
   private toApplicationDeployment(
-    name: string,
-    app: IAppDeployment,
+    app: IApplicationDeploymentQuery,
     imageRepository?: IImageRepository
   ): IApplicationDeployment {
     return {
       affiliation: app.affiliation.name,
       environment: app.environment,
-      id: app.environment + '-' + name,
-      name,
+      id: app.environment + '-' + app.name,
+      name: app.name,
       pods: app.details.podResources,
       repository: imageRepository ? imageRepository.repository : '',
       statusCode: app.status.code,

@@ -8,9 +8,8 @@ export interface IApplications {
 
 export interface IApplicationEdge {
   node: {
-    name: string;
     imageRepository?: IImageRepository;
-    applicationDeployments: IAppDeployment[];
+    applicationDeployments: IApplicationDeploymentQuery[];
   };
 }
 
@@ -18,7 +17,8 @@ export interface IImageRepository {
   repository: string;
 }
 
-export interface IAppDeployment {
+export interface IApplicationDeploymentQuery {
+  name: string;
   affiliation: {
     name: string;
   };
@@ -51,11 +51,11 @@ export const APPLICATIONS_QUERY = gql`
     applications(affiliations: $affiliations) {
       edges {
         node {
-          name
           imageRepository {
             repository
           }
           applicationDeployments {
+            name
             affiliation {
               name
             }
