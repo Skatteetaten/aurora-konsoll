@@ -2,7 +2,8 @@ import styled from 'styled-components';
 
 export enum IndicatorColor {
   RED = 'linear-gradient(120deg, #ff0000, #ff0000)',
-  GREEN = 'linear-gradient(120deg, #33cc33, #84e184)'
+  GREEN = 'linear-gradient(120deg, #33cc33, #84e184)',
+  GRAY = 'gray'
 }
 
 interface IIndicatorProps {

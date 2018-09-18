@@ -1,7 +1,6 @@
 import * as React from 'react';
 
 import DetailsList from 'aurora-frontend-react-komponenter/DetailsList';
-import Grid from 'aurora-frontend-react-komponenter/Grid';
 
 import { INetdebugResult } from './ResponseDataParsed';
 
@@ -49,21 +48,10 @@ const columns = [
 ];
 interface ITableProps {
   parsedData: INetdebugResult[];
-  showTable: boolean;
 }
 
-const Table = ({ parsedData, showTable }: ITableProps) => {
-  return (
-    <>
-      {showTable && (
-        <Grid.Row>
-          <Grid.Col lg={11}>
-            <DetailsList columns={columns} items={parsedData} />
-          </Grid.Col>
-        </Grid.Row>
-      )}
-    </>
-  );
-};
+const Table = ({ parsedData }: ITableProps) => (
+  <DetailsList columns={columns} items={parsedData} />
+);
 
 export default Table;

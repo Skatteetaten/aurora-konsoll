@@ -1,26 +1,22 @@
 import * as React from 'react';
 
 import Card from 'aurora-frontend-react-komponenter/Card';
-import Grid from 'aurora-frontend-react-komponenter/Grid';
 import styled from 'styled-components';
 
 import Indicator, { IndicatorColor } from './Indicator';
 
-const Centering = styled.div`
+const Center = styled.div`
   text-align: center;
   > h3 {
     color: grey;
   }
-  > h1 {
-    margin: 0;
-  }
-
-  > p {
+  h1,
+  p {
     margin: 0;
   }
 `;
 
-const ClickableTextToShowTable = styled.a`
+const DataLink = styled.a`
   color: blue;
   cursor: pointer;
   &:hover {
@@ -32,75 +28,38 @@ const ClickableTextToShowTable = styled.a`
 
 interface ICardProps {
   netdebugStatus: string;
-  showCard: boolean;
-  hostnameValue: string;
-  portValue: string;
+  lastScan: string;
   displayTableOnClicked: () => void;
 }
 
-interface ICardState {
-  indicatorColor: IndicatorColor;
-}
-
-class CardInfo extends React.Component<ICardProps, ICardState> {
-  public state = {
-    indicatorColor: IndicatorColor.RED,
-    showTable: false
-  };
-
-  public setCardInfo = (color: IndicatorColor) => {
-    this.setState(() => ({
-      indicatorColor: color
-    }));
-  };
-
-  public componentWillMount() {
-    if (this.props.netdebugStatus === 'OPEN') {
-      this.setCardInfo(IndicatorColor.GREEN);
-    } else if (this.props.netdebugStatus === ('DNS_FAILED' || 'UNKOWN')) {
-      this.setCardInfo(IndicatorColor.RED);
-    }
+const getIndicatorColor = (netdebugStatus: string) => {
+  if (netdebugStatus === 'OPEN') {
+    return IndicatorColor.GREEN;
+  } else if (netdebugStatus === ('DNS_FAILED' || 'UNKOWN')) {
+    return IndicatorColor.RED;
   }
+  return IndicatorColor.GRAY;
+};
 
-  public render() {
-    return (
-      <Grid.Row>
-        <Grid.Col lg={6}>
-          {this.props.showCard && (
-            <Card>
-              <Grid>
-                <Grid.Row>
-                  <Indicator color={this.state.indicatorColor} />
-                  <Centering>
-                    <h1>{this.props.netdebugStatus}</h1>
-                  </Centering>
-                </Grid.Row>
-                <Grid.Row>
-                  <Centering>
-                    <h3>
-                      {this.props.hostnameValue}:{this.props.portValue}
-                    </h3>
-                    <p>
-                      {this.props.netdebugStatus === 'OPEN' && (
-                        <>Kan nåes fra alle noder.</>
-                      )}{' '}
-                      Klikk{' '}
-                      <ClickableTextToShowTable
-                        onClick={this.props.displayTableOnClicked}
-                      >
-                        her
-                      </ClickableTextToShowTable>{' '}
-                      for mer informasjon.
-                    </p>
-                  </Centering>
-                </Grid.Row>
-              </Grid>
-            </Card>
-          )}
-        </Grid.Col>
-      </Grid.Row>
-    );
-  }
-}
+const CardInfo = ({
+  displayTableOnClicked,
+  lastScan,
+  netdebugStatus
+}: ICardProps) => (
+  <Card>
+    <Indicator color={getIndicatorColor(netdebugStatus)} />
+    <Center>
+      <h1>{netdebugStatus}</h1>
+    </Center>
+    <Center>
+      <h3>{lastScan}</h3>
+      <p>
+        {netdebugStatus === 'OPEN' && <>Kan nåes fra alle noder.</>}
+        Klikk <DataLink onClick={displayTableOnClicked}>her</DataLink> for mer
+        informasjon.
+      </p>
+    </Center>
+  </Card>
+);
 
 export default CardInfo;
