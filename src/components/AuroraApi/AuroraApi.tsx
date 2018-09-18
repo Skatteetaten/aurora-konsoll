@@ -1,8 +1,12 @@
 import * as React from 'react';
-import { IAuroraApiClient } from 'services/AuroraApiClient/types';
+import {
+  IApplicationDeploymentClient,
+  IImageRepositoryClient
+} from 'services/auroraApiClients';
 
 interface IApiClients {
-  apiClient: IAuroraApiClient;
+  applicationDeploymentClient: IApplicationDeploymentClient;
+  imageRepositoryClient: IImageRepositoryClient;
 }
 
 // AuroraApiContext

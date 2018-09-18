@@ -2,10 +2,9 @@ import * as React from 'react';
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 
-import Grid from 'aurora-frontend-react-komponenter/Grid';
 import Icon from 'aurora-frontend-react-komponenter/Icon';
 import Image from 'aurora-frontend-react-komponenter/Image';
-import Separator from 'aurora-frontend-react-komponenter/TopBanner/assets/separator.png';
+import separatorImg from 'aurora-frontend-react-komponenter/TopBanner/assets/separator.png';
 import Logo from 'aurora-frontend-react-komponenter/TopBanner/assets/ske-logo.svg';
 import palette from 'aurora-frontend-react-komponenter/utils/palette';
 
@@ -19,31 +18,22 @@ interface IHeaderProps {
 const Header = ({ title, user, className, children }: IHeaderProps) => {
   return (
     <div className={className}>
-      <Grid>
-        <Grid.Row className="main-header-grid">
-          <div className="main-header-row">
-            <Grid.Col lg={3} xl={2} noSpacing={true}>
-              <HomeLink to="/">
-                <div className="main-header-logo-wrapper">
-                  <div>
-                    <Image src={Logo} className="main-header-logo" />
-                  </div>
-                  <h2 className="main-header-title">{title}</h2>
-                </div>
-              </HomeLink>
-            </Grid.Col>
-            <Grid.Col lg={3} xl={2} noSpacing={true}>
-              {children}
-            </Grid.Col>
-            <Grid.Col lg={6} xl={4} xlPush={4} noSpacing={true}>
-              <div className="main-header-user-wrapper">
-                <p style={{ margin: 0, fontSize: '20px' }}>{user}</p>
-                <Icon iconName="Person" className="main-header-user-icon" />
-              </div>
-            </Grid.Col>
+      <div className="g-header-layout">
+        <HomeLink to="/" className="g-header-logo">
+          <div className="header-logo-wrapper">
+            <div>
+              <Image src={Logo} className="header-logo" />
+            </div>
+            <h2 className="header-title">{title}</h2>
           </div>
-        </Grid.Row>
-      </Grid>
+        </HomeLink>
+        <div className="g-header-content">{children}</div>
+        <div className="g-header-user">
+          <p>{user}</p>
+          <Icon iconName="Person" className="user-icon" />
+        </div>
+      </div>
+      <Separator />
     </div>
   );
 };
@@ -53,7 +43,7 @@ const HomeLink = styled(Link)`
   text-decoration: none;
 `;
 
-export default styled(Header)`
+const Separator = styled.div`
   &::after {
     display: block;
     content: '';
@@ -63,44 +53,62 @@ export default styled(Header)`
     background-repeat: no-repeat;
     background-position: center center;
     background-size: cover;
-    background-image: url(${Separator});
+    background-image: url(${separatorImg});
   }
+`;
 
-  .main-header-grid {
-    margin: 15px 0;
-  }
+export default styled(Header)`
+  display: flex;
+  flex-direction: column;
 
-  .main-header-row {
-    display: flex;
+  .g-header-layout {
+    display: grid;
     align-items: center;
+    grid-template-columns: 250px 1fr;
+    grid-template-rows: auto 1fr;
+    grid-template-areas: 'logo contents user';
+    padding: 10px 0;
   }
 
-  .main-header-logo-wrapper {
+  .g-header-logo {
+    grid-area: logo;
+  }
+
+  .header-logo-wrapper {
     margin-left: 15px;
     display: flex;
     align-items: center;
   }
 
-  .main-header-title {
+  .header-logo img {
+    height: 50px;
+  }
+
+  .header-title {
     margin: 0;
     margin-left: 15px;
     font-size: 20px;
   }
 
-  .main-header-logo img {
-    height: 50px;
+  .g-header-contents {
+    grid-area: contents;
   }
 
-  .main-header-user-wrapper {
-    align-items: center;
+  .g-header-user {
+    grid-area: user;
     display: flex;
+    align-items: center;
     margin-right: 15px;
-    float: right;
-  }
 
-  .main-header-user-icon {
-    color: #1362ae;
-    font-size: 32px;
-    margin-left: 10px;
+    p {
+      margin: 0;
+      font-size: 20px;
+    }
+
+    .user-icon {
+      color: #1362ae;
+      font-size: 32px;
+      margin-left: 10px;
+    }
   }
 `;
