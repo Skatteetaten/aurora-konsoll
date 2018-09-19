@@ -2,7 +2,6 @@ import * as React from 'react';
 import styled from 'styled-components';
 
 import Button from 'aurora-frontend-react-komponenter/Button';
-import Grid from 'aurora-frontend-react-komponenter/Grid';
 import Spinner from 'aurora-frontend-react-komponenter/Spinner';
 import TextField from 'aurora-frontend-react-komponenter/TextField';
 
@@ -10,8 +9,33 @@ import CardInfo from './CardInfo';
 import NetdebugDataFromScan, { INetdebugResult } from './ResponseDataParsed';
 import Table from './Table';
 
-const StyledButton = styled.div`
-  margin: 24px 0px 23px;
+const BodyWrapper = styled.div`
+  padding: 0 10px;
+`;
+const NetdebugGrid = styled.div`
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-template-areas:
+    'content .'
+    'card .';
+`;
+const ContainerWrapper = styled.div`
+  grid-area: content;
+  display: flex;
+  align-items: center;
+  min-width: 500px;
+`;
+const InputWrapper = styled.div`
+  flex: 1;
+  margin-right: 12px;
+  height: 82px;
+`;
+const CardWrapper = styled.div`
+  margin: 10px 0 0 0;
+  grid-area: card;
+`;
+const TableWrapper = styled.div`
+  margin: 20px 10px 0 0;
 `;
 
 const hostnameValidator = /(^|\s)((https?:\/\/)?[\w-]+(\.[\w-]+)+\.?(:\d+)?(\/\S*)?)/gi;
@@ -111,63 +135,51 @@ class Netdebug extends React.Component<{}, INetdebugState> {
     }
 
     return (
-      <Grid>
-        <Grid.Row>
-          <Grid.Col lg={12}>
-            <h1>Nettverksdebug</h1>
-            <p>Et verktøy for å sjekke om brannvegger er åpne på et cluster.</p>
-          </Grid.Col>
-        </Grid.Row>
-        <Grid.Row>
-          <Grid.Col lg={4} xl={3} xxl={2}>
-            <TextField
-              name="hostName"
-              label="Hostname"
-              onBlur={this.validateHostname}
-              onChanged={this.handleHostnameValue}
-              errorMessage={hostnameError}
-            />
-          </Grid.Col>
-          <Grid.Col lg={4} xl={3} xxl={2}>
-            <TextField
-              name="portName"
-              label="Port"
-              onChanged={this.handlePortValue}
-              errorMessage={portError}
-            />
-          </Grid.Col>
-          <Grid.Col lg={2} xl={1} xxl={1}>
-            <StyledButton>
-              <Button
-                buttonType="primary"
-                onClick={this.handleUserInput}
-                disabled={!canScan}
-              >
-                {this.state.isLoading ? <Spinner /> : 'Scan'}
-              </Button>
-            </StyledButton>
-          </Grid.Col>
-        </Grid.Row>
-
-        {this.state.showCard && (
-          <Grid.Row>
-            <Grid.Col lg={6}>
+      <BodyWrapper>
+        <h1>Nettverksdebug</h1>
+        <p>Et verktøy for å sjekke om brannvegger er åpne på et cluster.</p>
+        <NetdebugGrid>
+          <ContainerWrapper>
+            <InputWrapper>
+              <TextField
+                name="hostName"
+                label="Hostname"
+                onBlur={this.validateHostname}
+                onChanged={this.handleHostnameValue}
+                errorMessage={hostnameError}
+              />
+            </InputWrapper>
+            <InputWrapper>
+              <TextField
+                name="portName"
+                label="Port"
+                onChanged={this.handlePortValue}
+                errorMessage={portError}
+              />
+            </InputWrapper>
+            <Button
+              style={{ minWidth: '100px' }}
+              buttonType="primary"
+              onClick={this.handleUserInput}
+              disabled={!canScan}
+            >
+              {this.state.isLoading ? <Spinner /> : 'Scan'}
+            </Button>
+          </ContainerWrapper>
+          <CardWrapper>
+            {this.state.showCard && (
               <CardInfo
                 netdebugStatus={'OPEN'} // for testing forløpig, status vil komme fra backend når det er implemenetert
                 lastScan={this.state.lastScan}
                 displayTableOnClicked={this.displayTableOnClicked}
               />
-            </Grid.Col>
-          </Grid.Row>
-        )}
-        {this.state.showTable && (
-          <Grid.Row>
-            <Grid.Col lg={11}>
-              <Table parsedData={this.state.parsedData} />
-            </Grid.Col>
-          </Grid.Row>
-        )}
-      </Grid>
+            )}
+          </CardWrapper>
+        </NetdebugGrid>
+        <TableWrapper>
+          {this.state.showTable && <Table parsedData={this.state.parsedData} />}
+        </TableWrapper>
+      </BodyWrapper>
     );
   }
 }
