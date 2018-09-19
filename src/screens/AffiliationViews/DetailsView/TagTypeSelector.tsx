@@ -13,64 +13,25 @@ export interface IVersionStrategyOption {
   text: string;
   onRenderLabel?: (options: IVersionStrategyOption) => JSX.Element;
 }
-function getOptionLabel(imageTagType: ImageTagType): string {
-  switch (imageTagType) {
-    case MAJOR:
-      return 'Deploy ved os og java-patcher.';
-    case MINOR:
-      return 'Deploy ved applikasjonsspesifikke patcher.';
-    case BUGFIX:
-      return 'Deploy ved ny bakoverkompatibel funksjonalitet.';
-    case LATEST:
-      return 'Deploy ved nyeste versjon.';
-    case SNAPSHOT:
-      return 'Deploy ved nytt snapshot-bygg.';
-    case AURORA_VERSION:
-      return 'Velg spesifikk versjon som alltid skal kjøres.';
-  }
-}
 
-interface IOptionProps {
-  className?: string;
-}
-
-const Option = ({
-  tag,
-  text,
-  className
-}: IOptionProps & IVersionStrategyOption) => (
-  <span className={className}>
-    <h3>{text}</h3>
-    <label>{getOptionLabel(tag)}</label>
-  </span>
-);
-
-const StyledOption = styled(Option)`
-  position: relative;
-  left: 28px;
-  h3 {
-    margin: 0;
-  }
-`;
-
-function renderOptionText(option: IVersionStrategyOption): JSX.Element {
-  return <StyledOption {...option} />;
+function renderTagOption({ tag, text }: IVersionStrategyOption): JSX.Element {
+  return <StyledTagOption tag={tag} text={text} />;
 }
 
 const versionStategyOptions: IVersionStrategyOption[] = [
-  { key: MAJOR, onRenderLabel: renderOptionText, tag: MAJOR, text: 'Major' },
-  { key: MINOR, onRenderLabel: renderOptionText, tag: MINOR, text: 'Minor' },
-  { key: BUGFIX, onRenderLabel: renderOptionText, tag: BUGFIX, text: 'Bugfix' },
-  { key: LATEST, onRenderLabel: renderOptionText, tag: LATEST, text: 'Latest' },
+  { key: MAJOR, onRenderLabel: renderTagOption, tag: MAJOR, text: 'Major' },
+  { key: MINOR, onRenderLabel: renderTagOption, tag: MINOR, text: 'Minor' },
+  { key: BUGFIX, onRenderLabel: renderTagOption, tag: BUGFIX, text: 'Bugfix' },
+  { key: LATEST, onRenderLabel: renderTagOption, tag: LATEST, text: 'Latest' },
   {
     key: SNAPSHOT,
-    onRenderLabel: renderOptionText,
+    onRenderLabel: renderTagOption,
     tag: SNAPSHOT,
     text: 'Snapshot'
   },
   {
     key: AURORA_VERSION,
-    onRenderLabel: renderOptionText,
+    onRenderLabel: renderTagOption,
     tag: AURORA_VERSION,
     text: 'Aurora version'
   }
@@ -91,5 +52,45 @@ const TagTypeSelector = ({
     onChange={handleSelectedStrategy}
   />
 );
+
+interface IOptionProps {
+  tag: ImageTagType;
+  text: string;
+  className?: string;
+}
+
+const TagOption = ({ tag, text, className }: IOptionProps) => (
+  <span className={className}>
+    <h3>{text}</h3>
+    <label>{getOptionLabel(tag)}</label>
+  </span>
+);
+
+const StyledTagOption = styled(TagOption)`
+  position: relative;
+  left: 28px;
+  margin-bottom: 5px;
+  h3 {
+    margin: 0;
+    margin-bottom: 2px;
+  }
+`;
+
+function getOptionLabel(imageTagType: ImageTagType): string {
+  switch (imageTagType) {
+    case MAJOR:
+      return 'Deploy ved os og java-patcher.';
+    case MINOR:
+      return 'Deploy ved applikasjonsspesifikke patcher.';
+    case BUGFIX:
+      return 'Deploy ved ny bakoverkompatibel funksjonalitet.';
+    case LATEST:
+      return 'Deploy ved nyeste versjon.';
+    case SNAPSHOT:
+      return 'Deploy ved nytt snapshot-bygg.';
+    case AURORA_VERSION:
+      return 'Velg spesifikk versjon som alltid skal kjøres.';
+  }
+}
 
 export default TagTypeSelector;
