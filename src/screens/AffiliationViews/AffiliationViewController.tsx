@@ -1,10 +1,10 @@
 import { IAuroraApiComponentProps, withAuroraApi } from 'components/AuroraApi';
 import * as React from 'react';
 import { Route } from 'react-router';
-import { IApplicationDeployment } from 'services/AuroraApiClient/types';
 
 import Spinner from 'components/Spinner';
 import { Link } from 'react-router-dom';
+import { IApplicationDeployment } from 'services/auroraApiClients';
 import {
   ApplicationDeploymentProvider,
   withApplicationDeployments
@@ -42,7 +42,9 @@ class AffiliationViewController extends React.Component<
   ): React.StatelessComponent => {
     const { matchUrl } = this.props;
     return ({ children }) => (
-      <Link to={`${matchUrl}/deployments/${deployment.id}`}>{children}</Link>
+      <Link to={`${matchUrl}/deployments/${deployment.id}/info`}>
+        {children}
+      </Link>
     );
   };
 
@@ -51,7 +53,7 @@ class AffiliationViewController extends React.Component<
       loading: true
     }));
 
-    const deployments = await this.props.clients.apiClient.findAllApplicationDeployments(
+    const deployments = await this.props.clients.applicationDeploymentClient.findAllApplicationDeployments(
       [affiliation]
     );
 

@@ -1,0 +1,60 @@
+{
+  "data": {
+    "applications": {
+      "edges": [
+        {
+          "node": {
+            "name": "console-next",
+            "imageRepository": {
+              "repository": "docker-registry.aurora.sits.no:5000/ske_openshift_aurora_console/openshift-console-api"
+            },
+            "applicationDeployments": [
+              {
+                "affiliation": { "name": "aurora" },
+                "environment": "aurora",
+                "namespace": { "name": "aurora" },
+                "status": { "code": "HEALTHY" },
+                "version": {
+                  "auroraVersion": "SNAPSHOT-master-20180827.071054-2-b1.12.0-flange-8.152.18",
+                  "deployTag": "master-SNAPSHOT"
+                },
+                "details": {
+                  "podResources": [
+                    {
+                      "name": "console-next-10-lczfn",
+                      "status": "Running",
+                      "restartCount": 1,
+                      "ready": true,
+                      "startTime": "2018-09-12T07:35:07Z"
+                    }
+                  ]
+                }
+              },
+              {
+                "affiliation": { "name": "aurora" },
+                "environment": "aurora",
+                "namespace": { "name": "aurora" },
+                "status": { "code": "HEALTHY" },
+                "version": {
+                  "auroraVersion": "SNAPSHOT-develop-20180808.114329-3-b1.10.0-flange-8.152.18",
+                  "deployTag": "develop-SNAPSHOT"
+                },
+                "details": {
+                  "podResources": [
+                    {
+                      "name": "console-dev-15-cpl4k",
+                      "status": "Running",
+                      "restartCount": 1,
+                      "ready": true,
+                      "startTime": "2018-09-12T07:35:07Z"
+                    }
+                  ]
+                }
+              }
+            ]
+          }
+        }
+      ]
+    }
+  }
+}
