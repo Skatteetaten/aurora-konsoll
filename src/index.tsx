@@ -3,13 +3,17 @@ import * as React from 'react';
 import * as ReactDOM from 'react-dom';
 import { BrowserRouter } from 'react-router-dom';
 
-import { AuroraApiProvider } from 'components/AuroraApi';
+import { AuroraApiProvider, IApiClients } from 'components/AuroraApi';
 import App from 'screens/App';
-import AuroraApiClient from 'services/AuroraApiClient';
 import { tokenStore } from 'services/TokenStore';
 import { fetchConfiguration, IConfiguration } from 'utils/config';
 import registerServiceWorker from 'utils/registerServiceWorker';
 
+import ApolloClient from 'apollo-boost';
+import {
+  ApplicationDeploymentClient,
+  ImageRepositoryClient
+} from 'services/auroraApiClients';
 import './index.css';
 
 async function init() {
@@ -23,8 +27,26 @@ async function init() {
     redirectToLoginPage(config.AUTHORIZATION_URI, config.CLIENT_ID);
   }
 
-  const clients = {
-    apiClient: new AuroraApiClient(config.GRAPHQL_URL)
+  const apolloClient = new ApolloClient({
+    request: async operations => {
+      const token = tokenStore.getToken();
+      operations.setContext({
+        headers: {
+          Authorization: token ? `Bearer ${token}` : ''
+        }
+      });
+    },
+    uri: config.GRAPHQL_URL
+  });
+  apolloClient.defaultOptions = {
+    query: {
+      fetchPolicy: 'network-only'
+    }
+  };
+
+  const clients: IApiClients = {
+    applicationDeploymentClient: new ApplicationDeploymentClient(apolloClient),
+    imageRepositoryClient: new ImageRepositoryClient(apolloClient)
   };
 
   ReactDOM.render(
