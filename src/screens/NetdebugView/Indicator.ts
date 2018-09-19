@@ -11,7 +11,7 @@ interface IIndicatorProps {
 }
 
 const Indicator = styled.div<IIndicatorProps>`
-  margin: 0 0 -28px 30px;
+  margin: 0 0 -30px 30px;
   width: 25px;
   height: 25px;
   border-radius: 50%;

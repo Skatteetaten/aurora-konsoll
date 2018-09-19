@@ -27,7 +27,7 @@ const columns = [
     key: 'column5',
     maxWidth: 500,
     minWidth: 100,
-    name: 'Message'
+    name: 'Kommentar'
   },
   {
     fieldName: 'hostIp',

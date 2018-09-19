@@ -1,34 +1,14 @@
 import * as React from 'react';
-
-import Card from 'aurora-frontend-react-komponenter/Card';
 import styled from 'styled-components';
 
+import palette from 'aurora-frontend-react-komponenter/utils/palette';
+
 import Indicator, { IndicatorColor } from './Indicator';
-
-const Center = styled.div`
-  text-align: center;
-  > h3 {
-    color: grey;
-  }
-  h1,
-  p {
-    margin: 0;
-  }
-`;
-
-const DataLink = styled.a`
-  color: blue;
-  cursor: pointer;
-  &:hover {
-    color: red;
-    background-color: transparent;
-    text-decoration: underline;
-  }
-`;
 
 interface ICardProps {
   netdebugStatus: string;
   lastScan: string;
+  className?: string;
   displayTableOnClicked: () => void;
 }
 
@@ -44,22 +24,53 @@ const getIndicatorColor = (netdebugStatus: string) => {
 const CardInfo = ({
   displayTableOnClicked,
   lastScan,
+  className,
   netdebugStatus
 }: ICardProps) => (
-  <Card>
+  <div className={className}>
     <Indicator color={getIndicatorColor(netdebugStatus)} />
-    <Center>
+    <div className="card-info-center">
       <h1>{netdebugStatus}</h1>
-    </Center>
-    <Center>
+    </div>
+    <div className="card-info-center">
       <h3>{lastScan}</h3>
-      <p>
-        {netdebugStatus === 'OPEN' && <>Kan nåes fra alle noder.</>}
-        Klikk <DataLink onClick={displayTableOnClicked}>her</DataLink> for mer
-        informasjon.
-      </p>
-    </Center>
-  </Card>
+      <article>
+        {netdebugStatus === 'OPEN' && <>Kan nåes fra alle noder.</>} Klikk{' '}
+        <div className="datalink-styled">
+          {' '}
+          <a onClick={displayTableOnClicked}>her</a>
+        </div>{' '}
+        for mer informasjon.
+      </article>
+    </div>
+  </div>
 );
 
-export default CardInfo;
+const { skeColor } = palette;
+
+export default styled(CardInfo)`
+  background: ${skeColor.neutralGrey};
+  padding: 22px;
+
+  .card-info-center {
+    text-align: center;
+    > h3 {
+      color: grey;
+    }
+    h1,
+    p {
+      margin: 0;
+    }
+  }
+
+  .datalink-styled {
+    display: inline;
+    color: blue;
+    cursor: pointer;
+    &:hover {
+      color: red;
+      background-color: transparent;
+      text-decoration: underline;
+    }
+  }
+`;
