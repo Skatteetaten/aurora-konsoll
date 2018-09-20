@@ -6,22 +6,10 @@ import palette from 'aurora-frontend-react-komponenter/utils/palette';
 import { statusColors } from 'screens/AffiliationViews/MatrixView/Status';
 import { IPodResource } from 'services/auroraApiClients/applicationDeploymentClient/query';
 
+import { getLocalDatetime } from 'utils/date';
 import IconLink, { IIconLinkData } from '../IconLink';
+import HealthResponseDialog from './HealthResponseDialog';
 import InfoDialog from './InfoDialog';
-
-function getDate(date?: string) {
-  if (date) {
-    return new Date(date).toLocaleString('nb-NO', {
-      day: '2-digit',
-      hour: '2-digit',
-      minute: '2-digit',
-      month: '2-digit',
-      year: 'numeric'
-    });
-  } else {
-    return '-';
-  }
-}
 
 interface IPodStatusProps {
   pod: IPodResource;
@@ -68,25 +56,15 @@ const PodStatus = ({ pod, className }: IPodStatusProps) => (
         <a target="_blank" href={findLink(pod, 'openshift')}>
           {pod.name}
         </a>
-        <p>{getDate(pod.startTime)}</p>
+        <p>{getLocalDatetime(pod.startTime)}</p>
         <p>{pod.restartCount}</p>
       </div>
     </div>
     <div className="pod-actions">
-      <InfoDialog title="Helsestatus">
-        <>
-          <pre>
-            {parseAndStringify(pod.managementResponses.health.textResponse)}
-          </pre>
-        </>
-      </InfoDialog>
+      <HealthResponseDialog pod={pod} />
     </div>
   </div>
 );
-
-function parseAndStringify(text: string) {
-  return JSON.stringify(JSON.parse(text), undefined, '  ');
-}
 
 const { skeColor } = palette;
 

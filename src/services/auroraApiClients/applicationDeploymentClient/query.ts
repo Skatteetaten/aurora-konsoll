@@ -46,6 +46,7 @@ export interface IPodResource {
   startTime: string;
   managementResponses: {
     health: {
+      loadedTime: string;
       textResponse: string;
     };
   };
@@ -88,6 +89,7 @@ export const APPLICATIONS_QUERY = gql`
                 startTime
                 managementResponses {
                   health {
+                    loadedTime
                     textResponse
                   }
                 }

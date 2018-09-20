@@ -6,6 +6,7 @@ import Dialog from 'aurora-frontend-react-komponenter/Dialog';
 
 interface InfoDialogProps {
   title: string;
+  subText?: string;
   children: JSX.Element;
 }
 
@@ -26,7 +27,7 @@ class InfoDialog extends React.Component<InfoDialogProps, InfoDialogState> {
 
   public render() {
     const { isOpen } = this.state;
-    const { children, title } = this.props;
+    const { children, title, subText } = this.props;
     return (
       <>
         <Button buttonType="secondary" onClick={this.toggleDialog(true)}>
@@ -36,6 +37,7 @@ class InfoDialog extends React.Component<InfoDialogProps, InfoDialogState> {
           hidden={!isOpen}
           onDismiss={this.toggleDialog(false)}
           title={title}
+          helpText={subText}
           dialogMinWidth="600px"
         >
           {children}
