@@ -9,7 +9,6 @@ import { IPodResource } from 'services/auroraApiClients/applicationDeploymentCli
 import { getLocalDatetime } from 'utils/date';
 import IconLink, { IIconLinkData } from '../IconLink';
 import HealthResponseDialog from './HealthResponseDialog';
-import InfoDialog from './InfoDialog';
 
 interface IPodStatusProps {
   pod: IPodResource;
