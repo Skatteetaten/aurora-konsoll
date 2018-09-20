@@ -6,7 +6,7 @@ import palette from 'aurora-frontend-react-komponenter/utils/palette';
 import { statusColors } from 'screens/AffiliationViews/MatrixView/Status';
 import { IPodResource } from 'services/auroraApiClients/applicationDeploymentClient/query';
 
-import IconLink from './IconLink';
+import IconLink, { IIconLinkData } from '../IconLink';
 import InfoDialog from './InfoDialog';
 
 function getDate(date?: string) {
@@ -35,13 +35,27 @@ function findLink(pod: IPodResource, name: string): string {
   return podLink ? podLink.url : '#';
 }
 
+function handleIsActive(data: IIconLinkData) {
+  return data.href.startsWith('http');
+}
+
 const PodStatus = ({ pod, className }: IPodStatusProps) => (
   <div className={className}>
     <div className="pod-status">
       <span>{pod.status}</span>
       <div className="pod-icons">
-        <IconLink name="Info" href={findLink(pod, 'metrics')} title="Grafana" />
-        <IconLink name="Check" href={findLink(pod, 'splunk')} title="Splunk" />
+        <IconLink
+          name="Info"
+          isActiveHandler={handleIsActive}
+          href={findLink(pod, 'metrics')}
+          title="Grafana"
+        />
+        <IconLink
+          name="Check"
+          isActiveHandler={handleIsActive}
+          href={findLink(pod, 'splunk')}
+          title="Splunk"
+        />
       </div>
     </div>
     <div className="g-pod-content">
