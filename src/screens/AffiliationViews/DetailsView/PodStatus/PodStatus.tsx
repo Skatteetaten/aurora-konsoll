@@ -3,11 +3,11 @@ import styled from 'styled-components';
 
 import palette from 'aurora-frontend-react-komponenter/utils/palette';
 
+import IconLink, { IIconLinkData } from 'components/IconLink';
 import { statusColors } from 'screens/AffiliationViews/MatrixView/Status';
 import { IPodResource } from 'services/auroraApiClients/applicationDeploymentClient/query';
 
 import { getLocalDatetime } from 'utils/date';
-import IconLink, { IIconLinkData } from '../IconLink';
 import HealthResponseDialog from './HealthResponseDialog';
 
 interface IPodStatusProps {

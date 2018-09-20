@@ -1,9 +1,12 @@
 import MessageBar from 'aurora-frontend-react-komponenter/MessageBar';
 import * as React from 'react';
+import styled from 'styled-components';
 
 import PodStatus from 'components/PodStatus';
 import { IApplicationDeployment } from 'services/auroraApiClients';
 import styled from 'styled-components';
+
+import PodStatus from './PodStatus';
 
 interface IInformationViewProps {
   deployment: IApplicationDeployment;
