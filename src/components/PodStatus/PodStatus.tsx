@@ -74,14 +74,19 @@ const PodStatus = ({ pod, className }: IPodStatusProps) => (
     </div>
     <div className="pod-actions">
       <InfoDialog title="Helsestatus">
-        <pre>test</pre>
-      </InfoDialog>
-      <InfoDialog title="Miljøvariabler">
-        <pre>test</pre>
+        <>
+          <pre>
+            {parseAndStringify(pod.managementResponses.health.textResponse)}
+          </pre>
+        </>
       </InfoDialog>
     </div>
   </div>
 );
+
+function parseAndStringify(text: string) {
+  return JSON.stringify(JSON.parse(text), undefined, '  ');
+}
 
 const { skeColor } = palette;
 
