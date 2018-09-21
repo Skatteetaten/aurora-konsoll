@@ -80,7 +80,7 @@ export class ApplicationDeploymentClient
     return {
       affiliation: app.affiliation.name,
       environment: app.environment,
-      id: app.environment + '-' + app.name,
+      id: app.id,
       name: app.name,
       pods: app.details.podResources,
       repository: imageRepository ? imageRepository.repository : '',

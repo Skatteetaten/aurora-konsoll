@@ -59,9 +59,12 @@ const PodStatus = ({ pod, className }: IPodStatusProps) => (
         <p>{pod.restartCount}</p>
       </div>
     </div>
-    <div className="pod-actions">
-      <HealthResponseDialog pod={pod} />
-    </div>
+    {pod.managementResponses &&
+      pod.managementResponses.health && (
+        <div className="pod-actions">
+          <HealthResponseDialog health={pod.managementResponses.health} />
+        </div>
+      )}
   </div>
 );
 

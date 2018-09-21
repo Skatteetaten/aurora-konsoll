@@ -18,6 +18,7 @@ export interface IImageRepository {
 }
 
 export interface IApplicationDeploymentQuery {
+  id: string;
   name: string;
   affiliation: {
     name: string;
@@ -38,17 +39,19 @@ export interface IApplicationDeploymentQuery {
   };
 }
 
+export interface IHttpResponse {
+  loadedTime: string;
+  textResponse: string;
+}
+
 export interface IPodResource {
   name: string;
   status: string;
   restartCount: number;
   ready: boolean;
   startTime: string;
-  managementResponses: {
-    health: {
-      loadedTime: string;
-      textResponse: string;
-    };
+  managementResponses?: {
+    health?: IHttpResponse;
   };
   links: Array<{
     name: string;
@@ -65,6 +68,7 @@ export const APPLICATIONS_QUERY = gql`
             repository
           }
           applicationDeployments {
+            id
             name
             affiliation {
               name
