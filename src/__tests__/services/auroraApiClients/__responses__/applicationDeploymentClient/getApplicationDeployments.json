@@ -4,16 +4,22 @@
       "edges": [
         {
           "node": {
-            "name": "console-next",
             "imageRepository": {
               "repository": "docker-registry.aurora.sits.no:5000/ske_openshift_aurora_console/openshift-console-api"
             },
             "applicationDeployments": [
               {
-                "affiliation": { "name": "aurora" },
+                "name": "console-next",
+                "affiliation": {
+                  "name": "aurora"
+                },
                 "environment": "aurora",
-                "namespace": { "name": "aurora" },
-                "status": { "code": "HEALTHY" },
+                "namespace": {
+                  "name": "aurora"
+                },
+                "status": {
+                  "code": "HEALTHY"
+                },
                 "version": {
                   "auroraVersion": "SNAPSHOT-master-20180827.071054-2-b1.12.0-flange-8.152.18",
                   "deployTag": "master-SNAPSHOT"
@@ -25,28 +31,14 @@
                       "status": "Running",
                       "restartCount": 1,
                       "ready": true,
-                      "startTime": "2018-09-12T07:35:07Z"
-                    }
-                  ]
-                }
-              },
-              {
-                "affiliation": { "name": "aurora" },
-                "environment": "aurora",
-                "namespace": { "name": "aurora" },
-                "status": { "code": "HEALTHY" },
-                "version": {
-                  "auroraVersion": "SNAPSHOT-develop-20180808.114329-3-b1.10.0-flange-8.152.18",
-                  "deployTag": "develop-SNAPSHOT"
-                },
-                "details": {
-                  "podResources": [
-                    {
-                      "name": "console-dev-15-cpl4k",
-                      "status": "Running",
-                      "restartCount": 1,
-                      "ready": true,
-                      "startTime": "2018-09-12T07:35:07Z"
+                      "startTime": "2018-09-12T07:35:07Z",
+                      "managementResponses": {
+                        "health": {
+                          "loadedTime": "2018-09-21T05:37:08.028Z",
+                          "textResponse": "{\"status\":\"UP\",\"diskSpace\":{\"status\":\"UP\",\"total\":10726932480,\"free\":10528772096,\"threshold\":10485760}}"
+                        }
+                      },
+                      "links": []
                     }
                   ]
                 }
