@@ -5,8 +5,8 @@ import styled from 'styled-components';
 
 import { IApplicationDeployment } from 'services/auroraApiClients';
 
+import Label from 'components/Label';
 import { IDeploymentSpec } from 'services/auroraApiClients/applicationDeploymentClient/DeploymentSpec';
-import { Label } from '../../HomeView/Home';
 import PodStatus from './PodStatus';
 
 interface IInformationViewProps {
@@ -14,6 +14,13 @@ interface IInformationViewProps {
   deploymentSpec?: IDeploymentSpec;
   className?: string;
 }
+
+// function getManagement(d: IDeploymentSpec): string {
+//   const path = d.management.path;
+//   const port = d.management.port;
+
+//   return `:${port}/${path}`;
+// }
 
 const InformationView = ({
   deployment,
@@ -27,6 +34,12 @@ const InformationView = ({
         <div className="labels">
           <Label text="Database" exists={deploymentSpec.database} />
           <Label text="Sertifikat" exists={deploymentSpec.certificate} />
+          <Label
+            text="Management"
+            exists={!!deploymentSpec.management}
+            iconName="Warning"
+            color="#fffd67"
+          />
         </div>
         {/* <DeploymentSpecViewer>
           {JSON.stringify(deploymentSpec, undefined, '  ')}

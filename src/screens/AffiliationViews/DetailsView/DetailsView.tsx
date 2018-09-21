@@ -14,7 +14,7 @@ import {
 } from 'services/auroraApiClients';
 import { IDeploymentSpec } from 'services/auroraApiClients/applicationDeploymentClient/DeploymentSpec';
 
-import { Label } from 'screens/HomeView/Home';
+import Label from 'components/Label';
 import { ApplicationDeploymentDetailsRoute } from '../ApplicationDeploymentSelector';
 import InformationViewBase from './InformationView';
 import { IVersionStrategyOption } from './TagTypeSelector';
