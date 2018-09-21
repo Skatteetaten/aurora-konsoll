@@ -1,6 +1,10 @@
 import ApolloClient from 'apollo-boost';
 
-import { ITagsPagedGroup, TagsPagedGroup } from 'models/TagsPagedGroup';
+import {
+  ImageTagType,
+  ITagsPagedGroup,
+  TagsPagedGroup
+} from 'models/TagsPagedGroup';
 
 import {
   IImageTagsConnection,
@@ -12,6 +16,7 @@ import {
 
 export interface ITag {
   name: string;
+  type: ImageTagType;
   lastModified: string;
 }
 
@@ -99,7 +104,8 @@ export class ImageRepositoryClient implements IImageRepositoryClient {
       hasNextPage: pageInfo.hasNextPage,
       tags: edges.map(edge => ({
         lastModified: edge.node.lastModified,
-        name: edge.node.name
+        name: edge.node.name,
+        type: edge.node.type
       }))
     };
   }

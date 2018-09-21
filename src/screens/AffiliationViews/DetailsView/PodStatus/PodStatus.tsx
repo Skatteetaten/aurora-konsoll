@@ -52,7 +52,7 @@ const PodStatus = ({ pod, className }: IPodStatusProps) => (
         <p>Antall omstart</p>
       </div>
       <div className="g-pod-values">
-        <a target="_blank" href={findLink(pod, 'openshift')}>
+        <a target="_blank" href={findLink(pod, 'openshift')} title={pod.name}>
           {pod.name}
         </a>
         <p>{getLocalDatetime(pod.startTime)}</p>
@@ -111,6 +111,7 @@ export default styled(PodStatus)`
   }
 
   .g-pod-values {
+    overflow: hidden;
     white-space: nowrap;
     grid-area: values;
     p,

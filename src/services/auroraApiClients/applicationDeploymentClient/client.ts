@@ -9,6 +9,31 @@ import {
   USER_AFFILIATIONS_QUERY
 } from './query';
 
+import { Omit } from 'react-router';
+import { ITag } from '../imageRepositoryClient/client';
+import { IDeploymentSpec } from './DeploymentSpec';
+
+const normalizeSpec = (node: any) => (
+  acc: any,
+  key: string
+): IDeploymentSpec => {
+  const currentNode = node[key];
+
+  const children = Object.keys(currentNode).filter(
+    cKey => ['sources', 'source', 'value'].indexOf(cKey) === -1
+  );
+
+  const nextValue =
+    children.length > 0
+      ? children.reduce(normalizeSpec(currentNode), {})
+      : currentNode.value;
+
+  return {
+    ...acc,
+    [key]: nextValue
+  };
+};
+
 export interface IApplicationDeployment {
   id: string;
   affiliation: string;
@@ -17,7 +42,7 @@ export interface IApplicationDeployment {
   statusCode: string;
   version: {
     auroraVersion: string;
-    deployTag: string;
+    deployTag: Omit<ITag, 'lastModified'>;
   };
   repository: string;
   pods: IPodResource[];
@@ -33,6 +58,7 @@ export interface IApplicationDeploymentClient {
   findAllApplicationDeployments: (
     affiliations: string[]
   ) => Promise<IApplicationDeployment[]>;
+  findDeploymentSpec: (env: string, name: string) => Promise<IDeploymentSpec>;
 }
 
 export class ApplicationDeploymentClient
@@ -41,6 +67,20 @@ export class ApplicationDeploymentClient
 
   constructor(client: ApolloClient<{}>) {
     this.client = client;
+  }
+
+  public async findDeploymentSpec(
+    env: string,
+    name: string
+  ): Promise<IDeploymentSpec> {
+    const e = env === 'aurora' ? 'utv' : env;
+    const data = await fetch(`/api/spec?ref=${e + '/' + name}`, {
+      method: 'POST'
+    });
+
+    const [spec] = await data.json();
+
+    return Object.keys(spec).reduce(normalizeSpec(spec), {});
   }
 
   public async findUserAndAffiliations(): Promise<IUserAndAffiliations> {
@@ -87,7 +127,10 @@ export class ApplicationDeploymentClient
       statusCode: app.status.code,
       version: {
         auroraVersion: app.version.auroraVersion,
-        deployTag: app.version.deployTag
+        deployTag: {
+          name: app.version.deployTag.name,
+          type: app.version.deployTag.type
+        }
       }
     };
   }

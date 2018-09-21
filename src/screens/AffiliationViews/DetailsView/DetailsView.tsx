@@ -12,7 +12,9 @@ import {
   ITag,
   ITagsPaged
 } from 'services/auroraApiClients';
+import { IDeploymentSpec } from 'services/auroraApiClients/applicationDeploymentClient/DeploymentSpec';
 
+import { Label } from 'screens/HomeView/Home';
 import { ApplicationDeploymentDetailsRoute } from '../ApplicationDeploymentSelector';
 import InformationViewBase from './InformationView';
 import { IVersionStrategyOption } from './TagTypeSelector';
@@ -20,6 +22,7 @@ import VersionViewBase from './VersionView';
 
 interface IDetailsViewState {
   groupedTags?: TagsPagedGroup;
+  deploymentSpec?: IDeploymentSpec;
   imageTagType: ImageTagType;
   loading: boolean;
   versionSearchText: string;
@@ -40,6 +43,11 @@ class DetailsView extends React.Component<
     loading: false,
     versionSearchText: ''
   };
+
+  constructor(props: IDetailsViewProps) {
+    super(props);
+    this.state.imageTagType = props.deployment.version.deployTag.type;
+  }
 
   public loadMoreTags = async () => {
     const { clients, deployment } = this.props;
@@ -96,6 +104,14 @@ class DetailsView extends React.Component<
       loading: true
     }));
 
+    const spec = await clients.applicationDeploymentClient.findDeploymentSpec(
+      deployment.environment,
+      deployment.name
+    );
+    this.setState(() => ({
+      deploymentSpec: spec
+    }));
+
     const groupedTags = await clients.imageRepositoryClient.findGroupedTagsPaged(
       deployment.repository
     );
@@ -108,10 +124,13 @@ class DetailsView extends React.Component<
 
   public render() {
     const { deployment, match } = this.props;
-    const { loading, imageTagType } = this.state;
+    const { deploymentSpec, loading, imageTagType } = this.state;
 
     const InformationView = () => (
-      <InformationViewBase deployment={deployment} />
+      <InformationViewBase
+        deployment={deployment}
+        deploymentSpec={deploymentSpec}
+      />
     );
     const VersionView = () => (
       <VersionViewBase
@@ -128,10 +147,14 @@ class DetailsView extends React.Component<
     const title = `${deployment.environment}/${deployment.name}`;
     return (
       <DetailsViewGrid>
-        <h1>{title}</h1>
+        <div className="labels">
+          <Label text="deployment" subText={title} />
+          <Label text="Tag" subText={deployment.version.deployTag.name} />
+          <Label text="Versjon" subText={deployment.version.auroraVersion} />
+        </div>
         <TabLinkWrapper>
           <TabLink to={`${match.url}/info`}>Informasjon</TabLink>
-          <TabLink to={`${match.url}/version`}>Versjoner</TabLink>
+          <TabLink to={`${match.url}/version`}>Oppgradering</TabLink>
         </TabLinkWrapper>
         <Card>
           <Route path={`${match.path}/info`} render={InformationView} />
@@ -163,8 +186,8 @@ class DetailsView extends React.Component<
       })
       .sort(sortTagsByDate)
       .map(tag => ({
-        lastModified: new Date(tag.lastModified).toISOString(),
-        name: tag.name
+        ...tag,
+        lastModified: new Date(tag.lastModified).toISOString()
       }));
   };
 
@@ -180,7 +203,11 @@ const DetailsViewGrid = styled.div`
   height: 100%;
   display: flex;
   flex-direction: column;
-  padding: 0 8px;
+
+  .labels {
+    display: flex;
+    margin: 10px 0 20px 0;
+  }
 `;
 
 const TabLinkWrapper = styled.div`
@@ -194,7 +221,8 @@ const TabLinkWrapper = styled.div`
 const Card = styled.div`
   flex: 1;
   padding: 16px;
-  overflow: hidden;
+  overflow-x: hidden;
+  height: 100%;
   background-color: ${skeColor.lightGreen};
 `;
 

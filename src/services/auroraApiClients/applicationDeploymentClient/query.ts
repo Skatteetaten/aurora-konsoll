@@ -1,4 +1,5 @@
 import gql from 'graphql-tag';
+import { IImageTag } from '../imageRepositoryClient/query';
 
 export interface IApplications {
   applications: {
@@ -32,7 +33,7 @@ export interface IApplicationDeploymentQuery {
   };
   version: {
     auroraVersion: string;
-    deployTag: string;
+    deployTag: IImageTag;
   };
   details: {
     podResources: IPodResource[];
@@ -82,7 +83,10 @@ export const APPLICATIONS_QUERY = gql`
             }
             version {
               auroraVersion
-              deployTag
+              deployTag {
+                name
+                type
+              }
             }
             details {
               podResources {

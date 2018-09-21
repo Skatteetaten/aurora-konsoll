@@ -10,11 +10,14 @@ import {
   ITagsPaged,
   IUserAndAffiliations
 } from 'services/auroraApiClients';
+import { IDeploymentSpec } from 'services/auroraApiClients/applicationDeploymentClient/DeploymentSpec';
 
 const applicationDeploymentClient: IApplicationDeploymentClient = {
   findAllApplicationDeployments: async (): Promise<
     IApplicationDeployment[]
   > => [],
+  findDeploymentSpec: async (): Promise<IDeploymentSpec> =>
+    ({} as IDeploymentSpec),
   findUserAndAffiliations: async (): Promise<IUserAndAffiliations> => ({
     affiliations: ['test'],
     user: 'Batman'

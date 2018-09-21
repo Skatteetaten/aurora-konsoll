@@ -15,10 +15,30 @@ interface IVersionViewProps {
   loading: boolean;
   imageTagType: ImageTagType;
   tags: ITag[];
+  className?: string;
   fetchTags: () => void;
   handleSelectedStrategy: (e: Event, option: IVersionStrategyOption) => void;
   handleVersionSearch: (value: string) => void;
 }
+
+const detailListColumns = [
+  {
+    fieldName: 'name',
+    isResizable: true,
+    key: 'name',
+    maxWidth: 400,
+    minWidth: 100,
+    name: 'Navn'
+  },
+  {
+    fieldName: 'lastModified',
+    isResizable: true,
+    key: 'lastModified',
+    maxWidth: 200,
+    minWidth: 100,
+    name: 'Sist endret'
+  }
+];
 
 const VersionView = ({
   tags,
@@ -26,18 +46,19 @@ const VersionView = ({
   canLoadMore,
   imageTagType,
   fetchTags,
+  className,
   handleSelectedStrategy,
   handleVersionSearch
 }: IVersionViewProps) => {
   return (
-    <VersionViewGrid>
+    <div className={className}>
       <div className="g-control-group">
         <TagTypeSelector
           imageTagType={imageTagType}
           handleSelectedStrategy={handleSelectedStrategy}
         />
         <ButtonWrapper>
-          <Button buttonType="primary">Update</Button>
+          <Button buttonType="primary">Oppgrader</Button>
         </ButtonWrapper>
       </div>
       <div className="g-action-bar">
@@ -47,10 +68,10 @@ const VersionView = ({
           onClick={fetchTags}
           disabled={!canLoadMore}
           style={{
-            minWidth: '150px'
+            minWidth: '160px'
           }}
         >
-          {loading ? <Spinner /> : 'Load more'}
+          {loading ? <Spinner /> : 'Hent flere tags'}
         </Button>
       </div>
       <div className="g-details-list">
@@ -61,11 +82,11 @@ const VersionView = ({
           selectionMode={DetailsList.SelectionMode.single}
         />
       </div>
-    </VersionViewGrid>
+    </div>
   );
 };
 
-const VersionViewGrid = styled.div`
+export default styled(VersionView)`
   margin: 0 auto;
   display: grid;
   grid-template-areas:
@@ -105,24 +126,3 @@ const ButtonWrapper = styled.div`
     margin: 20px 0 10px 0;
   }
 `;
-
-const detailListColumns = [
-  {
-    fieldName: 'name',
-    isResizable: true,
-    key: 'name',
-    maxWidth: 400,
-    minWidth: 100,
-    name: 'Name'
-  },
-  {
-    fieldName: 'lastModified',
-    isResizable: true,
-    key: 'lastModified',
-    maxWidth: 200,
-    minWidth: 100,
-    name: 'Last modified'
-  }
-];
-
-export default VersionView;

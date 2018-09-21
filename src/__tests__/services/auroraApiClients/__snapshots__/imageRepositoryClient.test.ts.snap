@@ -8,10 +8,12 @@ Object {
     Object {
       "lastModified": "2018-09-07T07:12:30.345885623Z",
       "name": "2",
+      "type": undefined,
     },
     Object {
       "lastModified": "2018-01-25T09:39:51.280498289Z",
       "name": "1",
+      "type": undefined,
     },
   ],
 }

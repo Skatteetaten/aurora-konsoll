@@ -1,25 +1,38 @@
 import * as React from 'react';
 import styled from 'styled-components';
 
-import MessageBar from 'aurora-frontend-react-komponenter/MessageBar';
+// import MessageBar from 'aurora-frontend-react-komponenter/MessageBar';
 
 import { IApplicationDeployment } from 'services/auroraApiClients';
 
+import { IDeploymentSpec } from 'services/auroraApiClients/applicationDeploymentClient/DeploymentSpec';
+import { Label } from '../../HomeView/Home';
 import PodStatus from './PodStatus';
 
 interface IInformationViewProps {
   deployment: IApplicationDeployment;
+  deploymentSpec?: IDeploymentSpec;
   className?: string;
 }
 
-const InformationView = ({ deployment, className }: IInformationViewProps) => (
+const InformationView = ({
+  deployment,
+  deploymentSpec,
+  className
+}: IInformationViewProps) => (
   <div className={className}>
-    <h3>Versjon</h3>
-    <MessageBar>
-      Følger: {deployment.version.deployTag}
-      <br />
-      Eksakt versjon: {deployment.version.auroraVersion}
-    </MessageBar>
+    {deploymentSpec && (
+      <>
+        <h3>Tjenester</h3>
+        <div className="labels">
+          <Label text="Database" exists={deploymentSpec.database} />
+          <Label text="Sertifikat" exists={deploymentSpec.certificate} />
+        </div>
+        {/* <DeploymentSpecViewer>
+          {JSON.stringify(deploymentSpec, undefined, '  ')}
+        </DeploymentSpecViewer> */}
+      </>
+    )}
 
     <h3>Deployments</h3>
     <div className="info-deployments">
@@ -30,7 +43,15 @@ const InformationView = ({ deployment, className }: IInformationViewProps) => (
   </div>
 );
 
+// const DeploymentSpecViewer = styled.pre`
+//   background-color: white;
+//   overflow-x: hidden;
+// `;
+
 export default styled(InformationView)`
+  .labels {
+    display: flex;
+  }
   .info-deployments {
     display: flex;
   }
