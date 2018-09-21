@@ -43,7 +43,6 @@ class InfoDialog extends React.Component<InfoDialogProps, InfoDialogState> {
           {children}
           <Dialog.Footer>
             <ActionButton onClick={this.toggleDialog(false)}>Lukk</ActionButton>
-            <Button buttonType="primaryRounded">Oppdater</Button>
           </Dialog.Footer>
         </Dialog>
       </>

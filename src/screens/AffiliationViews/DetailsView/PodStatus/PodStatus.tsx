@@ -32,13 +32,13 @@ const PodStatus = ({ pod, className }: IPodStatusProps) => (
       <span>{pod.status}</span>
       <div className="pod-icons">
         <IconLink
-          name="Info"
+          name="Timeline"
           isActiveHandler={handleIsActive}
           href={findLink(pod, 'metrics')}
           title="Grafana"
         />
         <IconLink
-          name="Check"
+          name="FormatAlignLeft"
           isActiveHandler={handleIsActive}
           href={findLink(pod, 'splunk')}
           title="Splunk"
