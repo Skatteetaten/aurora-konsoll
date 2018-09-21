@@ -3,25 +3,12 @@ import styled from 'styled-components';
 
 import Button from 'aurora-frontend-react-komponenter/Button';
 import DetailsList from 'aurora-frontend-react-komponenter/DetailsList';
-import RadioButtonGroup from 'aurora-frontend-react-komponenter/RadioButtonGroup';
+import TextField from 'aurora-frontend-react-komponenter/TextField';
 
 import Spinner from 'components/Spinner';
 import { ImageTagType } from 'models/TagsPagedGroup';
 import { ITag } from 'services/auroraApiClients';
-
-export interface IVersionStrategyOption {
-  key: ImageTagType;
-  text: string;
-}
-
-const versionStategyOptions: IVersionStrategyOption[] = [
-  { key: ImageTagType.MAJOR, text: 'Major' },
-  { key: ImageTagType.MINOR, text: 'Minor' },
-  { key: ImageTagType.BUGFIX, text: 'Bugfix' },
-  { key: ImageTagType.LATEST, text: 'Latest' },
-  { key: ImageTagType.SNAPSHOT, text: 'Snapshot' },
-  { key: ImageTagType.AURORA_VERSION, text: 'Aurora version' }
-];
+import TagTypeSelector, { IVersionStrategyOption } from './TagTypeSelector';
 
 interface IVersionViewProps {
   canLoadMore: boolean;
@@ -30,6 +17,7 @@ interface IVersionViewProps {
   tags: ITag[];
   fetchTags: () => void;
   handleSelectedStrategy: (e: Event, option: IVersionStrategyOption) => void;
+  handleVersionSearch: (value: string) => void;
 }
 
 const VersionView = ({
@@ -38,26 +26,32 @@ const VersionView = ({
   canLoadMore,
   imageTagType,
   fetchTags,
-  handleSelectedStrategy
+  handleSelectedStrategy,
+  handleVersionSearch
 }: IVersionViewProps) => {
   return (
     <VersionViewGrid>
       <div className="g-control-group">
-        <RadioButtonGroup
-          defaultSelectedKey={imageTagType}
-          options={versionStategyOptions}
-          onChange={handleSelectedStrategy}
+        <TagTypeSelector
+          imageTagType={imageTagType}
+          handleSelectedStrategy={handleSelectedStrategy}
         />
         <ButtonWrapper>
-          <Button
-            buttonType="primaryRounded"
-            onClick={fetchTags}
-            disabled={!canLoadMore}
-          >
-            {loading ? <Spinner /> : 'Load more'}
-          </Button>
           <Button buttonType="primary">Update</Button>
         </ButtonWrapper>
+      </div>
+      <div className="g-action-bar">
+        <TextField label="Søk etter versjon" onChanged={handleVersionSearch} />
+        <Button
+          buttonType="primaryRounded"
+          onClick={fetchTags}
+          disabled={!canLoadMore}
+          style={{
+            minWidth: '150px'
+          }}
+        >
+          {loading ? <Spinner /> : 'Load more'}
+        </Button>
       </div>
       <div className="g-details-list">
         <DetailsList
@@ -72,17 +66,32 @@ const VersionView = ({
 };
 
 const VersionViewGrid = styled.div`
+  margin: 0 auto;
   display: grid;
-  grid-template-areas: 'control list list';
-  grid-template-columns: 400px 1fr;
+  grid-template-areas:
+    'control actionbar'
+    'control list';
+  grid-template-columns: 350px 1fr;
   grid-template-rows: auto 1fr;
   height: 100%;
+
+  .g-action-bar {
+    grid-area: actionbar;
+    margin-left: 30px;
+    margin-bottom: 10px;
+    max-width: 800px;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+  }
 
   .g-control-group {
     grid-area: control;
   }
   .g-details-list {
     grid-area: list;
+    max-width: 800px;
+    margin-left: 30px;
     overflow-x: hidden;
   }
 `;
