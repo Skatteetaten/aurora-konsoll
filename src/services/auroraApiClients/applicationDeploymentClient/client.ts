@@ -1,4 +1,10 @@
 import ApolloClient from 'apollo-boost';
+
+import { Omit } from 'types/utils';
+
+import { tokenStore } from '../../TokenStore';
+import { ITag } from '../imageRepositoryClient/client';
+import { IDeploymentSpec } from './DeploymentSpec';
 import {
   APPLICATIONS_QUERY,
   IApplicationDeploymentQuery,
@@ -8,11 +14,6 @@ import {
   IUserAffiliationsQuery,
   USER_AFFILIATIONS_QUERY
 } from './query';
-
-import { Omit } from 'react-router';
-import { tokenStore } from '../../TokenStore';
-import { ITag } from '../imageRepositoryClient/client';
-import { IDeploymentSpec } from './DeploymentSpec';
 
 const normalizeSpec = (node: any) => (
   acc: any,

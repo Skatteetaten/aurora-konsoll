@@ -1,6 +1,7 @@
 import * as React from 'react';
 
-import { Omit } from 'react-router';
+import { Omit } from 'types/utils';
+
 import { AuroraApiContext, IAuroraApiComponentProps } from './AuroraApi';
 
 export function withAuroraApi<P extends IAuroraApiComponentProps>(
