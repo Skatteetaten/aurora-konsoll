@@ -2,22 +2,22 @@ import * as React from 'react';
 
 import DetailsList from 'aurora-frontend-react-komponenter/DetailsList';
 
-import { INetdebugResult } from './ResponseDataParsed';
+import { INetdebugResult } from 'services/auroraApiClients';
 
 const columns = [
   {
     fieldName: 'status',
     isResizable: true,
     key: 'column1',
-    maxWidth: 100,
+    maxWidth: 115,
     minWidth: 50,
     name: 'Status'
   },
   {
-    fieldName: 'resolvedIP',
+    fieldName: 'resolvedIp',
     isResizable: true,
     key: 'column3',
-    maxWidth: 150,
+    maxWidth: 160,
     minWidth: 50,
     name: 'Resolved IP'
   },
@@ -25,33 +25,27 @@ const columns = [
     fieldName: 'message',
     isResizable: true,
     key: 'column5',
-    maxWidth: 500,
+    maxWidth: 450,
     minWidth: 100,
     name: 'Kommentar'
   },
   {
-    fieldName: 'hostIp',
-    isResizable: true,
-    key: 'column6',
-    maxWidth: 250,
-    minWidth: 100,
-    name: 'IP til noden som gjør sjekk'
-  },
-  {
-    fieldName: 'podIp',
+    fieldName: 'clusterNodeIp',
     isResizable: true,
     key: 'column7',
     maxWidth: 250,
     minWidth: 100,
-    name: 'IP til poden som gjør sjekk'
+    name: 'IP til noden som gjør sjekk'
   }
 ];
+
 interface ITableProps {
-  parsedData: INetdebugResult[];
+  parsedData: INetdebugResult;
 }
 
-const Table = ({ parsedData }: ITableProps) => (
-  <DetailsList columns={columns} items={parsedData} />
-);
+const Table = ({ parsedData }: ITableProps) => {
+  const items = [...parsedData.failed, ...parsedData.open];
+  return <DetailsList columns={columns} items={items} />;
+};
 
 export default Table;

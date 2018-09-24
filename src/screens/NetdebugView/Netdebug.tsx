@@ -6,27 +6,32 @@ import Spinner from 'aurora-frontend-react-komponenter/Spinner';
 import TextField from 'aurora-frontend-react-komponenter/TextField';
 
 import CardInfo from './CardInfo';
-import NetdebugDataFromScan, { INetdebugResult } from './ResponseDataParsed';
 import Table from './Table';
 
-const hostnameValidator = /(^|\s)((https?:\/\/)?[\w-]+(\.[\w-]+)+\.?(:\d+)?(\/\S*)?)/gi;
+import { INetdebugResult } from 'services/auroraApiClients';
+
+import { IAuroraApiComponentProps, withAuroraApi } from 'components/AuroraApi';
+
+const hostnameValidator = /(^|\s)([\w-]+(\.[\w-]+)+\.?(:\d+)?(\/\S*)?)/gi;
 const portValidator = /^(6553[0-5]|655[0-2]\d|65[0-4]\d\d|6[0-4]\d{3}|[1-5]\d{4}|[1-9]\d{0,3}|0)$/gi;
 
 interface INetdebugState {
   hostnameValue: string;
   isLoading: boolean;
-  portValue: string;
   lastScan: string;
+  netdebugStatus: string;
+  portValue: string;
+  resolvedIp: string;
   showCard: boolean;
   showTable: boolean;
-  parsedData: INetdebugResult[];
+  parsedData?: INetdebugResult;
   validateErrors: {
     hostname: boolean;
     port: boolean;
   };
 }
 
-interface INetdebugProps {
+interface INetdebugProps extends IAuroraApiComponentProps {
   className?: string;
 }
 
@@ -35,8 +40,9 @@ class Netdebug extends React.Component<INetdebugProps, INetdebugState> {
     hostnameValue: '',
     isLoading: false,
     lastScan: '',
-    parsedData: NetdebugDataFromScan,
+    netdebugStatus: '',
     portValue: '',
+    resolvedIp: '',
     showCard: false,
     showTable: false,
     validateErrors: {
@@ -45,19 +51,25 @@ class Netdebug extends React.Component<INetdebugProps, INetdebugState> {
     }
   };
 
-  public handleUserInput = () => {
+  public async scanCall() {
+    const scanResult = await this.props.clients.netdebugClient.findNetdebugStatus(
+      this.state.hostnameValue,
+      this.state.portValue
+    );
+    this.setState(state => ({
+      isLoading: false,
+      lastScan: `${state.hostnameValue}:${state.portValue}`,
+      netdebugStatus: scanResult.status,
+      parsedData: scanResult,
+      showCard: true
+    }));
+  }
+
+  public onScanClicked = () => {
     this.setState(() => ({
       isLoading: true
     }));
-    // Simuler nettverkskall
-    setTimeout(() => {
-      this.setState(state => ({
-        isLoading: false,
-        lastScan: `${state.hostnameValue}:${state.portValue}`,
-        showCard: true
-        // parsedData: (hentet data) netdebugScan(state.hostnameValue,state.portValue)
-      }));
-    }, 1000);
+    this.scanCall();
   };
 
   public displayTableOnClicked = () => {
@@ -136,26 +148,29 @@ class Netdebug extends React.Component<INetdebugProps, INetdebugState> {
               <Button
                 style={{ minWidth: '100px' }}
                 buttonType="primary"
-                onClick={this.handleUserInput}
+                onClick={this.onScanClicked}
                 disabled={!canScan}
               >
                 {this.state.isLoading ? <Spinner /> : 'Scan'}
               </Button>
             </div>
             <div className="card-wrapper">
-              {this.state.showCard && (
-                <CardInfo
-                  netdebugStatus="OPEN" // for testing forløpig, status vil komme fra backend når det er implemenetert
-                  lastScan={this.state.lastScan}
-                  displayTableOnClicked={this.displayTableOnClicked}
-                />
-              )}
+              {this.state.showCard &&
+                this.state.parsedData && (
+                  <CardInfo
+                    parsedData={this.state.parsedData}
+                    netdebugStatus={this.state.netdebugStatus}
+                    lastScan={this.state.lastScan}
+                    displayTableOnClicked={this.displayTableOnClicked}
+                  />
+                )}
             </div>
           </div>
           <div className="table-wrapper">
-            {this.state.showTable && (
-              <Table parsedData={this.state.parsedData} />
-            )}
+            {this.state.showTable &&
+              this.state.parsedData && (
+                <Table parsedData={this.state.parsedData} />
+              )}
           </div>
         </div>
       </div>
@@ -163,7 +178,7 @@ class Netdebug extends React.Component<INetdebugProps, INetdebugState> {
   }
 }
 
-export default styled(Netdebug)`
+const StyledNetdebug = styled(Netdebug)`
   .body-wrapper {
     padding: 0 10px;
   }
@@ -193,3 +208,7 @@ export default styled(Netdebug)`
     margin: 20px 10px 0 0;
   }
 `;
+
+export const NetdebugWithApi = withAuroraApi(StyledNetdebug);
+
+export default StyledNetdebug;

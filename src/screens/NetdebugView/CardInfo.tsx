@@ -3,29 +3,41 @@ import styled from 'styled-components';
 
 import palette from 'aurora-frontend-react-komponenter/utils/palette';
 
+import { INetdebugResult } from 'services/auroraApiClients';
+
 import Indicator, { IndicatorColor } from './Indicator';
 
 interface ICardProps {
   netdebugStatus: string;
+  parsedData: INetdebugResult;
   lastScan: string;
   className?: string;
   displayTableOnClicked: () => void;
 }
 
 const getIndicatorColor = (netdebugStatus: string) => {
-  if (netdebugStatus === 'OPEN') {
-    return IndicatorColor.GREEN;
-  } else if (netdebugStatus === ('DNS_FAILED' || 'UNKOWN')) {
-    return IndicatorColor.RED;
+  switch (netdebugStatus) {
+    case 'OPEN':
+      return IndicatorColor.GREEN;
+    case 'DNS_FAILED':
+      return IndicatorColor.RED;
+    case 'UNKNOWN':
+      return IndicatorColor.RED;
+    case 'FILTERED':
+      return IndicatorColor.RED;
+    case 'CLOSED':
+      return IndicatorColor.RED;
+    default:
+      return IndicatorColor.GRAY;
   }
-  return IndicatorColor.GRAY;
 };
 
 const CardInfo = ({
   displayTableOnClicked,
   lastScan,
   className,
-  netdebugStatus
+  netdebugStatus,
+  parsedData
 }: ICardProps) => (
   <div className={className}>
     <Indicator color={getIndicatorColor(netdebugStatus)} />
@@ -34,6 +46,9 @@ const CardInfo = ({
     </div>
     <div className="card-info-center">
       <h3>{lastScan}</h3>
+      <h4>
+        {parsedData.open.length} åpne: {parsedData.failed.length} stengte
+      </h4>
       <article>
         {netdebugStatus === 'OPEN' && <>Kan nåes fra alle noder.</>} Klikk{' '}
         <div className="datalink-styled">
@@ -54,7 +69,8 @@ export default styled(CardInfo)`
 
   .card-info-center {
     text-align: center;
-    > h3 {
+    > h3,
+    h4 {
       color: grey;
     }
     h1,
