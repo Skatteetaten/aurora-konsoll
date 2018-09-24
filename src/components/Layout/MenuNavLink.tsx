@@ -5,6 +5,7 @@ import styled from 'styled-components';
 
 interface IMenuNavLinkProps {
   name: string;
+  showName?: boolean;
   iconName?: string;
   onClick?: (event: React.MouseEvent<HTMLLIElement>) => void;
   to: string;
@@ -18,7 +19,8 @@ const MenuNavLink = ({
   to,
   onClick,
   className,
-  size = 24
+  size = 24,
+  showName = true
 }: IMenuNavLinkProps) => (
   <li className={className} onClick={onClick}>
     <NavLink
@@ -28,35 +30,32 @@ const MenuNavLink = ({
       }}
     >
       {iconName && (
-        <IconWrapper>
-          <Icon iconName={iconName} style={{ fontSize: `${size}px` }} />
-        </IconWrapper>
+        <Icon iconName={iconName} style={{ fontSize: `${size}px` }} />
       )}
-      {name}
+      {showName && name}
     </NavLink>
   </li>
 );
-
-const IconWrapper = styled.div`
-  float: left;
-  margin-right: 10px;
-
-  a.active & {
-    color: #1362ae;
-  }
-`;
 
 export default styled(MenuNavLink)`
   box-sizing: border-box;
 
   a {
-    display: block;
+    display: flex;
     color: #000000f2;
     text-decoration: none;
     padding: 15px 20px;
   }
 
-  a:hover > div {
+  i {
+    margin-right: 10px;
+  }
+
+  a:hover i {
+    color: #1362ae;
+  }
+
+  a.active i {
     color: #1362ae;
   }
 `;

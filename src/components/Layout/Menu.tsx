@@ -1,8 +1,6 @@
 import * as React from 'react';
 import styled from 'styled-components';
 
-import MenuNavLink from './MenuNavLink';
-
 interface IMenuProps {
   className?: string;
   children: React.ReactNode;
@@ -14,10 +12,11 @@ const Menu = ({ children, className }: IMenuProps) => (
   </nav>
 );
 
-export { MenuNavLink };
-
 export default styled(Menu)`
   ul {
+    position: relative;
+    display: flex;
+    flex-direction: column;
     padding: 0;
     margin: 0;
     line-height: 24px;
