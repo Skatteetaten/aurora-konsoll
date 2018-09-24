@@ -20,11 +20,8 @@ const getIndicatorColor = (netdebugStatus: string) => {
     case 'OPEN':
       return IndicatorColor.GREEN;
     case 'DNS_FAILED':
-      return IndicatorColor.RED;
     case 'UNKNOWN':
-      return IndicatorColor.RED;
     case 'FILTERED':
-      return IndicatorColor.RED;
     case 'CLOSED':
       return IndicatorColor.RED;
     default:
