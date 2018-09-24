@@ -25,4 +25,12 @@ TabLink.defaultProps = {
   }
 };
 
+export const TabLinkWrapper = styled.div`
+  display: flex;
+
+  a {
+    flex: 1;
+  }
+`;
+
 export default TabLink;

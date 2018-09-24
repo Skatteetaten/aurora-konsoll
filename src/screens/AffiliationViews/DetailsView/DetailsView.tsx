@@ -2,10 +2,8 @@ import * as React from 'react';
 import { Route } from 'react-router-dom';
 import styled from 'styled-components';
 
-import palette from 'aurora-frontend-react-komponenter/utils/palette';
-
 import { IAuroraApiComponentProps, withAuroraApi } from 'components/AuroraApi';
-import TabLink from 'components/TabLink';
+import TabLink, { TabLinkWrapper } from 'components/TabLink';
 import { ImageTagType, TagsPagedGroup } from 'models/TagsPagedGroup';
 import {
   IApplicationDeployment,
@@ -14,6 +12,7 @@ import {
 } from 'services/auroraApiClients';
 import { IDeploymentSpec } from 'services/auroraApiClients/applicationDeploymentClient/DeploymentSpec';
 
+import Card from 'components/Card';
 import Label from 'components/Label';
 import { ApplicationDeploymentDetailsRoute } from '../ApplicationDeploymentSelector';
 import InformationViewBase from './InformationView';
@@ -197,8 +196,6 @@ class DetailsView extends React.Component<
   };
 }
 
-const { skeColor } = palette;
-
 const DetailsViewGrid = styled.div`
   height: 100%;
   display: flex;
@@ -208,22 +205,6 @@ const DetailsViewGrid = styled.div`
     display: flex;
     margin: 10px 0 20px 0;
   }
-`;
-
-const TabLinkWrapper = styled.div`
-  display: flex;
-
-  a {
-    flex: 1;
-  }
-`;
-
-const Card = styled.div`
-  flex: 1;
-  padding: 16px;
-  overflow-x: hidden;
-  height: 100%;
-  background-color: ${skeColor.lightGreen};
 `;
 
 export const DetailsViewBaseWithApi = withAuroraApi(DetailsView);

@@ -1,8 +1,6 @@
 import * as React from 'react';
 import styled from 'styled-components';
 
-// import MessageBar from 'aurora-frontend-react-komponenter/MessageBar';
-
 import { IApplicationDeployment } from 'services/auroraApiClients';
 
 import Label from 'components/Label';
@@ -30,8 +28,8 @@ const InformationView = ({
           <Label text="Management" data={deploymentSpec.management}>
             {management => (
               <>
-                <p>{management.path}</p>
-                <p>{management.port}</p>
+                <p>Path: {management.path}</p>
+                <p>Port: {management.port}</p>
               </>
             )}
           </Label>
