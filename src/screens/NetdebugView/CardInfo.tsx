@@ -44,7 +44,8 @@ const CardInfo = ({
     <div className="card-info-center">
       <h3>{lastScan}</h3>
       <h4>
-        {parsedData.open.length} åpne: {parsedData.failed.length} stengte
+        {parsedData.open.length} åpne noder, {parsedData.failed.length} stengte
+        noder
       </h4>
       <article>
         {netdebugStatus === 'OPEN' && <>Kan nåes fra alle noder.</>} Klikk{' '}

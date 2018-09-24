@@ -14,18 +14,10 @@ const columns = [
     name: 'Status'
   },
   {
-    fieldName: 'resolvedIp',
-    isResizable: true,
-    key: 'column3',
-    maxWidth: 160,
-    minWidth: 50,
-    name: 'Resolved IP'
-  },
-  {
     fieldName: 'message',
     isResizable: true,
     key: 'column5',
-    maxWidth: 450,
+    maxWidth: 475,
     minWidth: 100,
     name: 'Kommentar'
   },

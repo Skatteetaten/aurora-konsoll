@@ -4,7 +4,6 @@ import { IScanQuery, IScanStatusQuery, NETDEBUG_QUERY } from './query';
 
 export interface INetdebugResult {
   status: string;
-  resolvedIp?: string;
   open: IScanStatus[];
   failed: IScanStatus[];
 }
@@ -43,7 +42,6 @@ export class NetdebugClient implements INetdebugClient {
     return {
       failed: this.normalizeScanStatus(item.scan.failed),
       open: this.normalizeScanStatus(item.scan.open),
-      resolvedIp: item.scan.resolvedIP,
       status: item.scan.status
     };
   }
