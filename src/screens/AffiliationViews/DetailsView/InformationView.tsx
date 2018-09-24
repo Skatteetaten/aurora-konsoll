@@ -34,9 +34,6 @@ const InformationView = ({
             )}
           </Label>
         </div>
-        {/* <DeploymentSpecViewer>
-          {JSON.stringify(deploymentSpec, undefined, '  ')}
-        </DeploymentSpecViewer> */}
       </>
     )}
 
@@ -48,11 +45,6 @@ const InformationView = ({
     </div>
   </div>
 );
-
-// const DeploymentSpecViewer = styled.pre`
-//   background-color: white;
-//   overflow-x: hidden;
-// `;
 
 export default styled(InformationView)`
   .labels {

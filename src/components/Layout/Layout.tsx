@@ -11,7 +11,7 @@ import { toDropdownOptions } from 'utils/aurora-frontend';
 import Header from './Header';
 import Menu from './Menu';
 import MenuCollapseButton from './MenuCollapseButton';
-import MenuNavLink from './MenuNavLink';
+import MenuNavLink, { IMenuNavLinkData } from './MenuNavLink';
 
 interface ILayoutProps {
   affiliation?: string;
@@ -37,6 +37,22 @@ const Layout = ({
   const onAffiliationChanged = (item: IDropdownOption) =>
     onAffiliationChange(item.text);
 
+  const menuLinks: IMenuNavLinkData[] = [
+    {
+      iconName: 'Menu',
+      name: 'Applikasjoner',
+      to: `/a/${affiliation || '_'}/deployments`
+    },
+    {
+      iconName: 'Code',
+      name: 'Netdebug',
+      to: '/netdebug'
+    }
+  ].map(item => ({
+    ...item,
+    showName: isExpanded
+  }));
+
   return (
     <StyledSkeBasis menuExpanded={isExpanded}>
       <Header title="Aurora Konsoll" user={user} className="g-header">
@@ -50,21 +66,9 @@ const Layout = ({
         )}
       </Header>
       <Menu className="g-menu">
-        <MenuNavLink
-          showName={isExpanded}
-          name="Applikasjoner"
-          to={`/a/${affiliation || '_'}/deployments`}
-          iconName="Menu"
-        />
-        <MenuNavLink
-          showName={isExpanded}
-          name="Netdebug"
-          to="/netdebug"
-          iconName="Code"
-        />
-        {/* <MenuNavLink name="Database" to="/db" iconName="Cloud" />
-        <MenuNavLink name="Konfigurasjon" to="/conf" iconName="Code" />
-        <MenuNavLink name="WebSEAL" to="/web" iconName="Bookmark" /> */}
+        {menuLinks.map(props => (
+          <MenuNavLink key={props.name} {...props} />
+        ))}
         <MenuCollapseButton
           isExpanded={isExpanded}
           onClick={handleMenuExpand}

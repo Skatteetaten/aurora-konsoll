@@ -103,13 +103,16 @@ class DetailsView extends React.Component<
       loading: true
     }));
 
-    // const spec = await clients.applicationDeploymentClient.findDeploymentSpec(
-    //   deployment.environment,
-    //   deployment.name
-    // );
-    // this.setState(() => ({
-    //   deploymentSpec: spec
-    // }));
+    /*
+    TODO: Apply this when Gobo has implemented find DeploymentSpec
+    const spec = await clients.applicationDeploymentClient.findDeploymentSpec(
+      deployment.environment,
+      deployment.name
+    );
+    this.setState(() => ({
+      deploymentSpec: spec
+    }));
+    */
 
     const groupedTags = await clients.imageRepositoryClient.findGroupedTagsPaged(
       deployment.repository
@@ -148,8 +151,8 @@ class DetailsView extends React.Component<
       <DetailsViewGrid>
         <div className="labels">
           <Label text="deployment" subText={title} />
-          <Label text="Tag" subText={deployment.version.deployTag.name} />
-          <Label text="Versjon" subText={deployment.version.auroraVersion} />
+          <Label text="tag" subText={deployment.version.deployTag.name} />
+          <Label text="versjon" subText={deployment.version.auroraVersion} />
         </div>
         <TabLinkWrapper>
           <TabLink to={`${match.url}/info`}>Informasjon</TabLink>

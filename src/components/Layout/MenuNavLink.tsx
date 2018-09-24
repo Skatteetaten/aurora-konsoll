@@ -3,14 +3,16 @@ import * as React from 'react';
 import { NavLink } from 'react-router-dom';
 import styled from 'styled-components';
 
-interface IMenuNavLinkProps {
+export interface IMenuNavLinkData {
   name: string;
   showName?: boolean;
   iconName?: string;
-  onClick?: (event: React.MouseEvent<HTMLLIElement>) => void;
   to: string;
+}
+
+interface IMenuNavLinkProps extends IMenuNavLinkData {
   className?: string;
-  size?: number;
+  onClick?: (event: React.MouseEvent<HTMLLIElement>) => void;
 }
 
 const MenuNavLink = ({
@@ -19,7 +21,6 @@ const MenuNavLink = ({
   to,
   onClick,
   className,
-  size = 24,
   showName = true
 }: IMenuNavLinkProps) => (
   <li className={className} onClick={onClick}>
@@ -29,9 +30,7 @@ const MenuNavLink = ({
         background: '#f9ede2'
       }}
     >
-      {iconName && (
-        <Icon iconName={iconName} style={{ fontSize: `${size}px` }} />
-      )}
+      {iconName && <Icon iconName={iconName} style={{ fontSize: `24px` }} />}
       {showName && name}
     </NavLink>
   </li>

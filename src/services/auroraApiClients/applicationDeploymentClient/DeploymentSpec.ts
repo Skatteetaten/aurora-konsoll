@@ -28,9 +28,9 @@ export interface IDeploymentSpec {
   readiness: IReadiness;
   replicas: number;
   resources: IResources;
-  // route: {
-  //   [key: string]: string;
-  // };
+  route: {
+    [key: string]: string;
+  };
   routeDefaults: IRouteDefaults;
   schemaVersion: string;
   secretVault: string;
