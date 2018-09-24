@@ -10,6 +10,7 @@ import {
 } from './query';
 
 import { Omit } from 'react-router';
+import { tokenStore } from '../../TokenStore';
 import { ITag } from '../imageRepositoryClient/client';
 import { IDeploymentSpec } from './DeploymentSpec';
 
@@ -75,10 +76,15 @@ export class ApplicationDeploymentClient
   ): Promise<IDeploymentSpec> {
     const e = env === 'aurora' ? 'utv' : env;
     const data = await fetch(`/api/spec?ref=${e + '/' + name}`, {
+      headers: [['Authorization', 'Bearer ' + tokenStore.getToken()]],
       method: 'POST'
     });
 
     const [spec] = await data.json();
+
+    if (!spec) {
+      return {} as IDeploymentSpec;
+    }
 
     return Object.keys(spec).reduce(normalizeSpec(spec), {});
   }
