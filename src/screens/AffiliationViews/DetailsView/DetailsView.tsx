@@ -103,13 +103,13 @@ class DetailsView extends React.Component<
       loading: true
     }));
 
-    const spec = await clients.applicationDeploymentClient.findDeploymentSpec(
-      deployment.environment,
-      deployment.name
-    );
-    this.setState(() => ({
-      deploymentSpec: spec
-    }));
+    // const spec = await clients.applicationDeploymentClient.findDeploymentSpec(
+    //   deployment.environment,
+    //   deployment.name
+    // );
+    // this.setState(() => ({
+    //   deploymentSpec: spec
+    // }));
 
     const groupedTags = await clients.imageRepositoryClient.findGroupedTagsPaged(
       deployment.repository
