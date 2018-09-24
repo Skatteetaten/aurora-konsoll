@@ -22,8 +22,12 @@ import VersionViewBase from './VersionView';
 interface IDetailsViewState {
   groupedTags?: TagsPagedGroup;
   deploymentSpec?: IDeploymentSpec;
+  selectedNextTag: string;
   imageTagType: ImageTagType;
-  loading: boolean;
+  loading: {
+    fetchTags: boolean;
+    redeploy: boolean;
+  };
   versionSearchText: string;
 }
 
@@ -31,6 +35,7 @@ interface IDetailsViewProps
   extends ApplicationDeploymentDetailsRoute,
     IAuroraApiComponentProps {
   deployment: IApplicationDeployment;
+  fetchApplicationDeployments: () => void;
 }
 
 class DetailsView extends React.Component<
@@ -39,7 +44,11 @@ class DetailsView extends React.Component<
 > {
   public state: IDetailsViewState = {
     imageTagType: ImageTagType.MAJOR,
-    loading: false,
+    loading: {
+      fetchTags: false,
+      redeploy: false
+    },
+    selectedNextTag: '',
     versionSearchText: ''
   };
 
@@ -48,12 +57,47 @@ class DetailsView extends React.Component<
     this.state.imageTagType = props.deployment.version.deployTag.type;
   }
 
+  public handleSelectNextTag = (tag: ITag) => {
+    this.setState({
+      selectedNextTag: tag.name
+    });
+  };
+
+  public redeployWithVersion = async () => {
+    this.setState(state => ({
+      loading: {
+        ...state.loading,
+        redeploy: true
+      }
+    }));
+
+    const { clients, deployment } = this.props;
+    const success = await clients.applicationDeploymentClient.redeployWithVersion(
+      deployment.id,
+      this.state.selectedNextTag
+    );
+
+    this.setState(state => ({
+      loading: {
+        ...state.loading,
+        redeploy: false
+      }
+    }));
+
+    if (success) {
+      this.props.fetchApplicationDeployments();
+    }
+  };
+
   public loadMoreTags = async () => {
     const { clients, deployment } = this.props;
     const { groupedTags, imageTagType } = this.state;
 
-    this.setState(() => ({
-      loading: true
+    this.setState(state => ({
+      loading: {
+        ...state.loading,
+        fetchTags: true
+      }
     }));
 
     let cursor;
@@ -75,7 +119,10 @@ class DetailsView extends React.Component<
         groupedTags:
           currentGroupedTags &&
           currentGroupedTags.updateTagsPaged(imageTagType, tagsPaged),
-        loading: false
+        loading: {
+          ...state.loading,
+          fetchTags: false
+        }
       };
     });
   };
@@ -99,8 +146,11 @@ class DetailsView extends React.Component<
   public async componentDidMount() {
     const { clients, deployment } = this.props;
 
-    this.setState(() => ({
-      loading: true
+    this.setState(state => ({
+      loading: {
+        ...state.loading,
+        fetchTags: true
+      }
     }));
 
     /*
@@ -118,15 +168,23 @@ class DetailsView extends React.Component<
       deployment.repository
     );
 
-    this.setState(() => ({
+    this.setState(state => ({
       groupedTags,
-      loading: false
+      loading: {
+        ...state.loading,
+        fetchTags: false
+      }
     }));
   }
 
   public render() {
     const { deployment, match } = this.props;
-    const { deploymentSpec, loading, imageTagType } = this.state;
+    const {
+      deploymentSpec,
+      loading,
+      imageTagType,
+      selectedNextTag
+    } = this.state;
 
     const InformationView = () => (
       <InformationViewBase
@@ -136,13 +194,22 @@ class DetailsView extends React.Component<
     );
     const VersionView = () => (
       <VersionViewBase
+        currentDeployedTag={deployment.version.deployTag.name}
+        handleSelectNextTag={this.handleSelectNextTag}
+        redeployWithVersion={this.redeployWithVersion}
         canLoadMore={this.canLoadMoreTags()}
-        fetchTags={this.loadMoreTags}
+        handlefetchTags={this.loadMoreTags}
         handleSelectedStrategy={this.handleSelectedStrategy}
         handleVersionSearch={this.handleVersionSearch}
-        loading={loading}
+        isFetchingTags={loading.fetchTags}
+        isRedeploying={loading.redeploy}
         imageTagType={imageTagType}
         tags={this.getTagsForType(imageTagType)}
+        canUpgrade={
+          selectedNextTag !== deployment.version.deployTag.name &&
+          selectedNextTag.length > 0 &&
+          !loading.redeploy
+        }
       />
     );
 

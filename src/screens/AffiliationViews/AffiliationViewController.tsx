@@ -74,7 +74,7 @@ class AffiliationViewController extends React.Component<
   }
 
   public render() {
-    const { matchPath } = this.props;
+    const { matchPath, affiliation } = this.props;
     const { deployments, loading } = this.state;
 
     if (loading) {
@@ -85,7 +85,9 @@ class AffiliationViewController extends React.Component<
       <ApplicationDeploymentProvider
         value={{
           buildDeploymentLink: this.buildDeploymentLink,
-          deployments
+          deployments,
+          fetchApplicationDeployments: () =>
+            this.fetchApplicationDeployments(affiliation)
         }}
       >
         <Route

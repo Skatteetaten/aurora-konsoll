@@ -23,7 +23,10 @@ const applicationDeploymentClient: IApplicationDeploymentClient = {
   findUserAndAffiliations: async (): Promise<IUserAndAffiliations> => ({
     affiliations: ['test'],
     user: 'Batman'
-  })
+  }),
+  redeployWithVersion: async () => {
+    return true;
+  }
 };
 
 const imageRepositoryClient: IImageRepositoryClient = {

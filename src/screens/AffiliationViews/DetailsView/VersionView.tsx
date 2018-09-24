@@ -2,53 +2,44 @@ import * as React from 'react';
 import styled from 'styled-components';
 
 import Button from 'aurora-frontend-react-komponenter/Button';
-import DetailsList from 'aurora-frontend-react-komponenter/DetailsList';
 import TextField from 'aurora-frontend-react-komponenter/TextField';
 
 import Spinner from 'components/Spinner';
 import { ImageTagType } from 'models/TagsPagedGroup';
 import { ITag } from 'services/auroraApiClients';
+import TagsList from './TagsList';
 import TagTypeSelector, { IVersionStrategyOption } from './TagTypeSelector';
 
 interface IVersionViewProps {
   canLoadMore: boolean;
-  loading: boolean;
+  isFetchingTags: boolean;
+  isRedeploying: boolean;
+  canUpgrade: boolean;
   imageTagType: ImageTagType;
   tags: ITag[];
+  currentDeployedTag: string;
   className?: string;
-  fetchTags: () => void;
+  handlefetchTags: () => void;
   handleSelectedStrategy: (e: Event, option: IVersionStrategyOption) => void;
   handleVersionSearch: (value: string) => void;
+  redeployWithVersion: () => void;
+  handleSelectNextTag: (item: ITag) => void;
 }
-
-const detailListColumns = [
-  {
-    fieldName: 'name',
-    isResizable: true,
-    key: 'name',
-    maxWidth: 400,
-    minWidth: 100,
-    name: 'Navn'
-  },
-  {
-    fieldName: 'lastModified',
-    isResizable: true,
-    key: 'lastModified',
-    maxWidth: 200,
-    minWidth: 100,
-    name: 'Sist endret'
-  }
-];
 
 const VersionView = ({
   tags,
-  loading,
+  isFetchingTags,
+  isRedeploying,
   canLoadMore,
+  canUpgrade,
   imageTagType,
-  fetchTags,
+  handlefetchTags,
+  currentDeployedTag,
   className,
   handleSelectedStrategy,
-  handleVersionSearch
+  handleVersionSearch,
+  redeployWithVersion,
+  handleSelectNextTag
 }: IVersionViewProps) => {
   return (
     <div className={className}>
@@ -58,28 +49,33 @@ const VersionView = ({
           handleSelectedStrategy={handleSelectedStrategy}
         />
         <ButtonWrapper>
-          <Button buttonType="primary">Oppgrader</Button>
+          <Button
+            buttonType="primary"
+            onClick={redeployWithVersion}
+            disabled={!canUpgrade}
+          >
+            {isRedeploying ? <Spinner /> : 'Oppgrader'}
+          </Button>
         </ButtonWrapper>
       </div>
       <div className="g-action-bar">
         <TextField label="Søk etter versjon" onChanged={handleVersionSearch} />
         <Button
           buttonType="primaryRounded"
-          onClick={fetchTags}
+          onClick={handlefetchTags}
           disabled={!canLoadMore}
           style={{
             minWidth: '160px'
           }}
         >
-          {loading ? <Spinner /> : 'Hent flere tags'}
+          {isFetchingTags ? <Spinner /> : 'Hent flere tags'}
         </Button>
       </div>
       <div className="g-details-list">
-        <DetailsList
-          columns={detailListColumns}
-          items={tags}
-          selectionPreservedOnEmptyClick={true}
-          selectionMode={DetailsList.SelectionMode.single}
+        <TagsList
+          tags={tags}
+          currentDeployedTag={currentDeployedTag}
+          handleSelectNextTag={handleSelectNextTag}
         />
       </div>
     </div>

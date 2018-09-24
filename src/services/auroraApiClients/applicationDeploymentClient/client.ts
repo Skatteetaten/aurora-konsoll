@@ -5,6 +5,7 @@ import { Omit } from 'types/utils';
 import { tokenStore } from '../../TokenStore';
 import { ITag } from '../imageRepositoryClient/client';
 import { IDeploymentSpec } from './DeploymentSpec';
+import { REDEPLOY_WITH_VERSION_MUTATION } from './mutation';
 import {
   APPLICATIONS_QUERY,
   IApplicationDeploymentQuery,
@@ -61,6 +62,10 @@ export interface IApplicationDeploymentClient {
     affiliations: string[]
   ) => Promise<IApplicationDeployment[]>;
   findDeploymentSpec: (env: string, name: string) => Promise<IDeploymentSpec>;
+  redeployWithVersion: (
+    applicationDeploymentId: string,
+    version: string
+  ) => Promise<boolean>;
 }
 
 export class ApplicationDeploymentClient
@@ -69,6 +74,27 @@ export class ApplicationDeploymentClient
 
   constructor(client: ApolloClient<{}>) {
     this.client = client;
+  }
+
+  public async redeployWithVersion(
+    applicationDeploymentId: string,
+    version: string
+  ): Promise<boolean> {
+    const result = await this.client.mutate<{ redeployWithVersion: boolean }>({
+      mutation: REDEPLOY_WITH_VERSION_MUTATION,
+      variables: {
+        input: {
+          applicationDeploymentId,
+          version
+        }
+      }
+    });
+
+    if (!result.data) {
+      return false;
+    }
+
+    return result.data.redeployWithVersion;
   }
 
   public async findDeploymentSpec(
