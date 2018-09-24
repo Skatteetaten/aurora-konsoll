@@ -38,7 +38,8 @@ class InfoDialog extends React.Component<InfoDialogProps, InfoDialogState> {
           onDismiss={this.toggleDialog(false)}
           title={title}
           helpText={subText}
-          dialogMinWidth="600px"
+          dialogMinWidth="500px"
+          dialogMaxWidth="90%"
         >
           {children}
           <Dialog.Footer>
