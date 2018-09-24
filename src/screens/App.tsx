@@ -15,7 +15,6 @@ import { withAuroraApi } from 'components/AuroraApi';
 import AffiliationViewRouteHandler, {
   AffiliationRouteProps
 } from './AffiliationViews/AffiliationViewRouteHandler';
-import Home from './HomeView/Home';
 import { NetdebugWithApi } from './NetdebugView/Netdebug';
 
 interface IAppProps extends IAuroraApiComponentProps, RouteComponentProps<{}> {
