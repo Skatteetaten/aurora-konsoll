@@ -13,7 +13,7 @@
   ],
   "dependencies": {
     "apollo-boost": "^0.1.16",
-    "aurora-frontend-react-komponenter": "^1.0.15",
+    "aurora-frontend-react-komponenter": "^1.0.17",
     "cors": "^2.8.4",
     "express": "^4.16.3",
     "graphql": "^0.13.2",
@@ -54,6 +54,7 @@
     "@types/express": "^4.16.0",
     "@types/jest": "^23.3.2",
     "@types/node": "^8.10.29",
+    "@types/graphql": "^14.0.0",
     "@types/qs": "^6.5.1",
     "@types/react": "^16.4.14",
     "@types/react-dom": "^16.0.7",

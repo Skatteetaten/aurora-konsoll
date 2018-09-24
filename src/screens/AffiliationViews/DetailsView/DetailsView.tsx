@@ -15,12 +15,14 @@ import {
 
 import { ApplicationDeploymentDetailsRoute } from '../ApplicationDeploymentSelector';
 import InformationViewBase from './InformationView';
-import VersionViewBase, { IVersionStrategyOption } from './VersionView';
+import { IVersionStrategyOption } from './TagTypeSelector';
+import VersionViewBase from './VersionView';
 
 interface IDetailsViewState {
   groupedTags?: TagsPagedGroup;
   imageTagType: ImageTagType;
   loading: boolean;
+  versionSearchText: string;
 }
 
 interface IDetailsViewProps
@@ -35,7 +37,8 @@ class DetailsView extends React.Component<
 > {
   public state: IDetailsViewState = {
     imageTagType: ImageTagType.MAJOR,
-    loading: false
+    loading: false,
+    versionSearchText: ''
   };
 
   public loadMoreTags = async () => {
@@ -80,6 +83,12 @@ class DetailsView extends React.Component<
     }));
   };
 
+  public handleVersionSearch = (value: string) => {
+    this.setState({
+      versionSearchText: value
+    });
+  };
+
   public async componentDidMount() {
     const { clients, deployment } = this.props;
 
@@ -109,9 +118,10 @@ class DetailsView extends React.Component<
         canLoadMore={this.canLoadMoreTags()}
         fetchTags={this.loadMoreTags}
         handleSelectedStrategy={this.handleSelectedStrategy}
+        handleVersionSearch={this.handleVersionSearch}
         loading={loading}
         imageTagType={imageTagType}
-        tags={this.getSortedImageTags()}
+        tags={this.getTagsForType(imageTagType)}
       />
     );
 
@@ -130,8 +140,8 @@ class DetailsView extends React.Component<
       </DetailsViewGrid>
     );
   }
-  private getSortedImageTags = () => {
-    const { groupedTags, imageTagType } = this.state;
+  private getTagsForType = (imageTagType: ImageTagType): ITag[] => {
+    const { groupedTags, versionSearchText } = this.state;
 
     const sortTagsByDate = (t1: ITag, t2: ITag) => {
       const date1 = new Date(t1.lastModified).getTime();
@@ -145,9 +155,15 @@ class DetailsView extends React.Component<
 
     return groupedTags
       .getTagsPaged(imageTagType)
-      .tags.sort(sortTagsByDate)
+      .tags.filter(v => {
+        return (
+          versionSearchText.length === 0 ||
+          v.name.search(versionSearchText) !== -1
+        );
+      })
+      .sort(sortTagsByDate)
       .map(tag => ({
-        lastModified: new Date(tag.lastModified).toLocaleString('nb-NO'),
+        lastModified: new Date(tag.lastModified).toISOString(),
         name: tag.name
       }));
   };

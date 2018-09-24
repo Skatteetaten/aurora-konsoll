@@ -44,6 +44,16 @@ export interface IPodResource {
   restartCount: number;
   ready: boolean;
   startTime: string;
+  managementResponses: {
+    health: {
+      loadedTime: string;
+      textResponse: string;
+    };
+  };
+  links: Array<{
+    name: string;
+    url: string;
+  }>;
 }
 
 export const APPLICATIONS_QUERY = gql`
@@ -77,6 +87,16 @@ export const APPLICATIONS_QUERY = gql`
                 restartCount
                 ready
                 startTime
+                managementResponses {
+                  health {
+                    loadedTime
+                    textResponse
+                  }
+                }
+                links {
+                  name
+                  url
+                }
               }
             }
           }
