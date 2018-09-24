@@ -12,7 +12,8 @@ import registerServiceWorker from 'utils/registerServiceWorker';
 import ApolloClient from 'apollo-boost';
 import {
   ApplicationDeploymentClient,
-  ImageRepositoryClient
+  ImageRepositoryClient,
+  NetdebugClient
 } from 'services/auroraApiClients';
 import './index.css';
 
@@ -46,7 +47,8 @@ async function init() {
 
   const clients: IApiClients = {
     applicationDeploymentClient: new ApplicationDeploymentClient(apolloClient),
-    imageRepositoryClient: new ImageRepositoryClient(apolloClient)
+    imageRepositoryClient: new ImageRepositoryClient(apolloClient),
+    netdebugClient: new NetdebugClient(apolloClient)
   };
 
   ReactDOM.render(

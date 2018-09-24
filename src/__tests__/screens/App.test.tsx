@@ -1,12 +1,14 @@
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
 
-import { AuroraApiProvider } from 'components/AuroraApi';
+import { AuroraApiProvider, IApiClients } from 'components/AuroraApi';
 import { TagsPagedGroup } from 'models/TagsPagedGroup';
 import {
   IApplicationDeployment,
   IApplicationDeploymentClient,
   IImageRepositoryClient,
+  INetdebugClient,
+  INetdebugResult,
   ITagsPaged,
   IUserAndAffiliations
 } from 'services/auroraApiClients';
@@ -27,9 +29,15 @@ const imageRepositoryClient: IImageRepositoryClient = {
   findTagsPaged: async (): Promise<ITagsPaged> => ({} as ITagsPaged)
 };
 
-const clients = {
+const netdebugClient: INetdebugClient = {
+  findNetdebugStatus: async (): Promise<INetdebugResult> =>
+    ({} as INetdebugResult)
+};
+
+const clients: IApiClients = {
   applicationDeploymentClient,
-  imageRepositoryClient
+  imageRepositoryClient,
+  netdebugClient
 };
 
 it('renders without crashing', () => {

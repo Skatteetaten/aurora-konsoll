@@ -11,6 +11,7 @@ import AffiliationViewRouteHandler, {
   AffiliationRouteProps
 } from './AffiliationViews/AffiliationViewRouteHandler';
 import Home from './HomeView/Home';
+import { NetdebugWithApi } from './NetdebugView/Netdebug';
 
 interface IRoutesProps
   extends IAuroraApiComponentProps,
@@ -90,7 +91,7 @@ class App extends React.Component<IRoutesProps, IRoutesState> {
               path="/a/:affiliation"
               render={renderAffiliationViewRouteHandler}
             />
-            <Route exact={true} path="/netdebug" component={Home} />
+            <Route exact={true} path="/netdebug" component={NetdebugWithApi} />
           </>
         )}
       </Layout>
