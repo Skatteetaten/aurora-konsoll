@@ -15,13 +15,6 @@ interface IInformationViewProps {
   className?: string;
 }
 
-// function getManagement(d: IDeploymentSpec): string {
-//   const path = d.management.path;
-//   const port = d.management.port;
-
-//   return `:${port}/${path}`;
-// }
-
 const InformationView = ({
   deployment,
   deploymentSpec,
@@ -34,12 +27,14 @@ const InformationView = ({
         <div className="labels">
           <Label text="Database" exists={deploymentSpec.database} />
           <Label text="Sertifikat" exists={deploymentSpec.certificate} />
-          <Label
-            text="Management"
-            exists={!!deploymentSpec.management}
-            iconName="Warning"
-            color="#fffd67"
-          />
+          <Label text="Management" data={deploymentSpec.management}>
+            {management => (
+              <>
+                <p>{management.path}</p>
+                <p>{management.port}</p>
+              </>
+            )}
+          </Label>
         </div>
         {/* <DeploymentSpecViewer>
           {JSON.stringify(deploymentSpec, undefined, '  ')}

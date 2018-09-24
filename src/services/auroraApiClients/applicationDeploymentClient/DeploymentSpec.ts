@@ -17,7 +17,7 @@ export interface IDeploymentSpec {
   envName: string;
   groupId: string;
   liveness: ILiveness;
-  management: IManagement;
+  management?: IManagement;
   mounts: {
     [key: string]: IMount;
   };
@@ -53,7 +53,7 @@ interface ILiveness {
   timeout: number;
 }
 
-interface IManagement {
+export interface IManagement {
   path: string;
   port: string;
 }
