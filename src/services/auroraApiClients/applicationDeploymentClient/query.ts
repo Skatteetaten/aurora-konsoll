@@ -1,4 +1,5 @@
 import gql from 'graphql-tag';
+import { IImageTag } from '../imageRepositoryClient/query';
 
 export interface IApplications {
   applications: {
@@ -18,6 +19,7 @@ export interface IImageRepository {
 }
 
 export interface IApplicationDeploymentQuery {
+  id: string;
   name: string;
   affiliation: {
     name: string;
@@ -31,11 +33,16 @@ export interface IApplicationDeploymentQuery {
   };
   version: {
     auroraVersion: string;
-    deployTag: string;
+    deployTag: IImageTag;
   };
   details: {
     podResources: IPodResource[];
   };
+}
+
+export interface IHttpResponse {
+  loadedTime: string;
+  textResponse: string;
 }
 
 export interface IPodResource {
@@ -44,11 +51,8 @@ export interface IPodResource {
   restartCount: number;
   ready: boolean;
   startTime: string;
-  managementResponses: {
-    health: {
-      loadedTime: string;
-      textResponse: string;
-    };
+  managementResponses?: {
+    health?: IHttpResponse;
   };
   links: Array<{
     name: string;
@@ -65,6 +69,7 @@ export const APPLICATIONS_QUERY = gql`
             repository
           }
           applicationDeployments {
+            id
             name
             affiliation {
               name
@@ -78,7 +83,10 @@ export const APPLICATIONS_QUERY = gql`
             }
             version {
               auroraVersion
-              deployTag
+              deployTag {
+                name
+                type
+              }
             }
             details {
               podResources {

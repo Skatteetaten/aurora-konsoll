@@ -3,13 +3,16 @@ import * as React from 'react';
 import { NavLink } from 'react-router-dom';
 import styled from 'styled-components';
 
-interface IMenuNavLinkProps {
+export interface IMenuNavLinkData {
   name: string;
+  showName?: boolean;
   iconName?: string;
-  onClick?: (event: React.MouseEvent<HTMLLIElement>) => void;
   to: string;
+}
+
+interface IMenuNavLinkProps extends IMenuNavLinkData {
   className?: string;
-  size?: number;
+  onClick?: (event: React.MouseEvent<HTMLLIElement>) => void;
 }
 
 const MenuNavLink = ({
@@ -18,7 +21,7 @@ const MenuNavLink = ({
   to,
   onClick,
   className,
-  size = 24
+  showName = true
 }: IMenuNavLinkProps) => (
   <li className={className} onClick={onClick}>
     <NavLink
@@ -27,36 +30,31 @@ const MenuNavLink = ({
         background: '#f9ede2'
       }}
     >
-      {iconName && (
-        <IconWrapper>
-          <Icon iconName={iconName} style={{ fontSize: `${size}px` }} />
-        </IconWrapper>
-      )}
-      {name}
+      {iconName && <Icon iconName={iconName} style={{ fontSize: `24px` }} />}
+      {showName && name}
     </NavLink>
   </li>
 );
-
-const IconWrapper = styled.div`
-  float: left;
-  margin-right: 10px;
-
-  a.active & {
-    color: #1362ae;
-  }
-`;
 
 export default styled(MenuNavLink)`
   box-sizing: border-box;
 
   a {
-    display: block;
+    display: flex;
     color: #000000f2;
     text-decoration: none;
     padding: 15px 20px;
   }
 
-  a:hover > div {
+  i {
+    margin-right: 10px;
+  }
+
+  a:hover i {
+    color: #1362ae;
+  }
+
+  a.active i {
     color: #1362ae;
   }
 `;

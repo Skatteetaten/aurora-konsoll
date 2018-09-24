@@ -1,4 +1,5 @@
 import gql from 'graphql-tag';
+import { ImageTagType } from 'models/TagsPagedGroup';
 
 export interface ITagsQuery {
   imageRepositories: Array<{
@@ -25,11 +26,14 @@ export interface IImageTagsConnection {
     hasNextPage: boolean;
   };
   edges: Array<{
-    node: {
-      name: string;
-      lastModified: string;
-    };
+    node: IImageTag;
   }>;
+}
+
+export interface IImageTag {
+  name: string;
+  type: ImageTagType;
+  lastModified: string;
 }
 
 export const TAGS_QUERY = gql`

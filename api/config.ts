@@ -14,6 +14,9 @@ const CLIENT_ID = env.CLIENT_ID || 'aurora-openshift-console-dev';
 
 const GOBO_URL = env.GOBO_URL || 'http://gobo-paas-mokey.utv.paas.skead.no';
 
+const BOOBER_URL =
+  env.BOOBER_URL || `http://boober-aurora.${OPENSHIFT_CLUSTER}.paas.skead.no`;
+
 const GRAPHQL_URL = env.GRAPHQL_URL || `${GOBO_URL}/graphql`;
 
-export { CLIENT_ID, AUTHORIZATION_URI, PORT, GRAPHQL_URL };
+export { CLIENT_ID, AUTHORIZATION_URI, PORT, GRAPHQL_URL, BOOBER_URL };

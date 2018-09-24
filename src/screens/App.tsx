@@ -1,5 +1,10 @@
 import * as React from 'react';
-import { Route, RouteComponentProps, withRouter } from 'react-router-dom';
+import {
+  Route,
+  RouteComponentProps,
+  Switch,
+  withRouter
+} from 'react-router-dom';
 
 import { IAuroraApiComponentProps } from 'components/AuroraApi';
 import Layout from 'components/Layout';
@@ -10,26 +15,31 @@ import { withAuroraApi } from 'components/AuroraApi';
 import AffiliationViewRouteHandler, {
   AffiliationRouteProps
 } from './AffiliationViews/AffiliationViewRouteHandler';
-import Home from './HomeView/Home';
 import { NetdebugWithApi } from './NetdebugView/Netdebug';
 
-interface IRoutesProps
-  extends IAuroraApiComponentProps,
-    RouteComponentProps<{}> {
+interface IAppProps extends IAuroraApiComponentProps, RouteComponentProps<{}> {
   tokenStore: ITokenStore;
 }
 
-interface IRoutesState {
+interface IAppState {
   affiliation?: string;
   affiliations: string[];
+  isMenuExpanded: boolean;
   user: string;
 }
 
-class App extends React.Component<IRoutesProps, IRoutesState> {
-  public state: IRoutesState = {
+class App extends React.Component<IAppProps, IAppState> {
+  public state: IAppState = {
     affiliation: undefined,
     affiliations: [],
+    isMenuExpanded: true,
     user: ''
+  };
+
+  public handleMenuExpand = () => {
+    this.setState(state => ({
+      isMenuExpanded: !state.isMenuExpanded
+    }));
   };
 
   public onAffiliationChangeFromSelector = (affiliation: string) => {
@@ -61,7 +71,7 @@ class App extends React.Component<IRoutesProps, IRoutesState> {
 
   public render() {
     const isAuthenticated = this.props.tokenStore.isTokenValid();
-    const { affiliation, affiliations, user } = this.state;
+    const { affiliation, affiliations, isMenuExpanded, user } = this.state;
     const { location } = this.props;
 
     const renderAffiliationViewRouteHandler = (
@@ -78,6 +88,8 @@ class App extends React.Component<IRoutesProps, IRoutesState> {
     return (
       <Layout
         user={user}
+        handleMenuExpand={this.handleMenuExpand}
+        isExpanded={isMenuExpanded}
         affiliation={affiliation}
         affiliations={affiliations}
         showAffiliationSelector={location.pathname.startsWith('/a/')}
@@ -85,14 +97,13 @@ class App extends React.Component<IRoutesProps, IRoutesState> {
       >
         <AcceptTokenRoute onTokenUpdated={this.onTokenUpdated} />
         {isAuthenticated && (
-          <>
-            <Route exact={true} path="/" component={Home} />
+          <Switch>
             <Route
               path="/a/:affiliation"
               render={renderAffiliationViewRouteHandler}
             />
             <Route exact={true} path="/netdebug" component={NetdebugWithApi} />
-          </>
+          </Switch>
         )}
       </Layout>
     );

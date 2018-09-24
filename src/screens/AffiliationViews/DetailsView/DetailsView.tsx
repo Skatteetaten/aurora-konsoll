@@ -2,17 +2,18 @@ import * as React from 'react';
 import { Route } from 'react-router-dom';
 import styled from 'styled-components';
 
-import palette from 'aurora-frontend-react-komponenter/utils/palette';
-
 import { IAuroraApiComponentProps, withAuroraApi } from 'components/AuroraApi';
-import TabLink from 'components/TabLink';
+import TabLink, { TabLinkWrapper } from 'components/TabLink';
 import { ImageTagType, TagsPagedGroup } from 'models/TagsPagedGroup';
 import {
   IApplicationDeployment,
   ITag,
   ITagsPaged
 } from 'services/auroraApiClients';
+import { IDeploymentSpec } from 'services/auroraApiClients/applicationDeploymentClient/DeploymentSpec';
 
+import Card from 'components/Card';
+import Label from 'components/Label';
 import { ApplicationDeploymentDetailsRoute } from '../ApplicationDeploymentSelector';
 import InformationViewBase from './InformationView';
 import { IVersionStrategyOption } from './TagTypeSelector';
@@ -20,6 +21,7 @@ import VersionViewBase from './VersionView';
 
 interface IDetailsViewState {
   groupedTags?: TagsPagedGroup;
+  deploymentSpec?: IDeploymentSpec;
   imageTagType: ImageTagType;
   loading: boolean;
   versionSearchText: string;
@@ -40,6 +42,11 @@ class DetailsView extends React.Component<
     loading: false,
     versionSearchText: ''
   };
+
+  constructor(props: IDetailsViewProps) {
+    super(props);
+    this.state.imageTagType = props.deployment.version.deployTag.type;
+  }
 
   public loadMoreTags = async () => {
     const { clients, deployment } = this.props;
@@ -96,6 +103,17 @@ class DetailsView extends React.Component<
       loading: true
     }));
 
+    /*
+    TODO: Apply this when Gobo has implemented find DeploymentSpec
+    const spec = await clients.applicationDeploymentClient.findDeploymentSpec(
+      deployment.environment,
+      deployment.name
+    );
+    this.setState(() => ({
+      deploymentSpec: spec
+    }));
+    */
+
     const groupedTags = await clients.imageRepositoryClient.findGroupedTagsPaged(
       deployment.repository
     );
@@ -108,10 +126,13 @@ class DetailsView extends React.Component<
 
   public render() {
     const { deployment, match } = this.props;
-    const { loading, imageTagType } = this.state;
+    const { deploymentSpec, loading, imageTagType } = this.state;
 
     const InformationView = () => (
-      <InformationViewBase deployment={deployment} />
+      <InformationViewBase
+        deployment={deployment}
+        deploymentSpec={deploymentSpec}
+      />
     );
     const VersionView = () => (
       <VersionViewBase
@@ -128,10 +149,14 @@ class DetailsView extends React.Component<
     const title = `${deployment.environment}/${deployment.name}`;
     return (
       <DetailsViewGrid>
-        <h1>{title}</h1>
+        <div className="labels">
+          <Label text="deployment" subText={title} />
+          <Label text="tag" subText={deployment.version.deployTag.name} />
+          <Label text="versjon" subText={deployment.version.auroraVersion} />
+        </div>
         <TabLinkWrapper>
           <TabLink to={`${match.url}/info`}>Informasjon</TabLink>
-          <TabLink to={`${match.url}/version`}>Versjoner</TabLink>
+          <TabLink to={`${match.url}/version`}>Oppgradering</TabLink>
         </TabLinkWrapper>
         <Card>
           <Route path={`${match.path}/info`} render={InformationView} />
@@ -163,8 +188,8 @@ class DetailsView extends React.Component<
       })
       .sort(sortTagsByDate)
       .map(tag => ({
-        lastModified: new Date(tag.lastModified).toISOString(),
-        name: tag.name
+        ...tag,
+        lastModified: new Date(tag.lastModified).toISOString()
       }));
   };
 
@@ -174,28 +199,15 @@ class DetailsView extends React.Component<
   };
 }
 
-const { skeColor } = palette;
-
 const DetailsViewGrid = styled.div`
   height: 100%;
   display: flex;
   flex-direction: column;
-  padding: 0 8px;
-`;
 
-const TabLinkWrapper = styled.div`
-  display: flex;
-
-  a {
-    flex: 1;
+  .labels {
+    display: flex;
+    margin: 10px 0 20px 0;
   }
-`;
-
-const Card = styled.div`
-  flex: 1;
-  padding: 16px;
-  overflow: hidden;
-  background-color: ${skeColor.lightGreen};
 `;
 
 export const DetailsViewBaseWithApi = withAuroraApi(DetailsView);

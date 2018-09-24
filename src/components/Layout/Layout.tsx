@@ -1,4 +1,5 @@
 import * as React from 'react';
+import styled from 'styled-components';
 
 import Dropdown, {
   IDropdownOption
@@ -7,13 +8,16 @@ import SkeBasis from 'aurora-frontend-react-komponenter/SkeBasis';
 
 import { toDropdownOptions } from 'utils/aurora-frontend';
 
-import styled from 'styled-components';
 import Header from './Header';
-import Menu, { MenuNavLink } from './Menu';
+import Menu from './Menu';
+import MenuCollapseButton from './MenuCollapseButton';
+import MenuNavLink, { IMenuNavLinkData } from './MenuNavLink';
 
 interface ILayoutProps {
   affiliation?: string;
   affiliations: string[];
+  handleMenuExpand: () => void;
+  isExpanded: boolean;
   user: string;
   showAffiliationSelector: boolean;
   children: React.ReactNode;
@@ -23,6 +27,8 @@ interface ILayoutProps {
 const Layout = ({
   affiliation,
   affiliations,
+  isExpanded,
+  handleMenuExpand,
   user,
   showAffiliationSelector,
   children,
@@ -31,8 +37,24 @@ const Layout = ({
   const onAffiliationChanged = (item: IDropdownOption) =>
     onAffiliationChange(item.text);
 
+  const menuLinks: IMenuNavLinkData[] = [
+    {
+      iconName: 'Menu',
+      name: 'Applikasjoner',
+      to: `/a/${affiliation || '_'}/deployments`
+    },
+    {
+      iconName: 'Code',
+      name: 'Netdebug',
+      to: '/netdebug'
+    }
+  ].map(item => ({
+    ...item,
+    showName: isExpanded
+  }));
+
   return (
-    <StyledSkeBasis>
+    <StyledSkeBasis menuExpanded={isExpanded}>
       <Header title="Aurora Konsoll" user={user} className="g-header">
         {showAffiliationSelector && (
           <Dropdown
@@ -44,25 +66,23 @@ const Layout = ({
         )}
       </Header>
       <Menu className="g-menu">
-        <MenuNavLink
-          name="Applikasjoner"
-          to={`/a/${affiliation || '_'}/deployments`}
-          iconName="Menu"
+        {menuLinks.map(props => (
+          <MenuNavLink key={props.name} {...props} />
+        ))}
+        <MenuCollapseButton
+          isExpanded={isExpanded}
+          onClick={handleMenuExpand}
         />
-        <MenuNavLink name="Netdebug" to="/netdebug" iconName="Code" />
-        {/* <MenuNavLink name="Database" to="/db" iconName="Cloud" />
-        <MenuNavLink name="Konfigurasjon" to="/conf" iconName="Code" />
-        <MenuNavLink name="WebSEAL" to="/web" iconName="Bookmark" /> */}
       </Menu>
       <div className="g-content">{children}</div>
     </StyledSkeBasis>
   );
 };
 
-const StyledSkeBasis = styled(SkeBasis)`
+const StyledSkeBasis = styled<{ menuExpanded: boolean }>(SkeBasis)`
   height: 100%;
   display: grid;
-  grid-template-columns: 250px 1fr;
+  grid-template-columns: ${props => (props.menuExpanded ? '250px' : '70px')} 1fr;
   grid-template-rows: auto 1fr;
   grid-template-areas:
     'header header'

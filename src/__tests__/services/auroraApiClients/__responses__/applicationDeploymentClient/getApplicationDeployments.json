@@ -9,6 +9,7 @@
             },
             "applicationDeployments": [
               {
+                "id": "q8u9fpw8f",
                 "name": "console-next",
                 "affiliation": {
                   "name": "aurora"
@@ -22,7 +23,10 @@
                 },
                 "version": {
                   "auroraVersion": "SNAPSHOT-master-20180827.071054-2-b1.12.0-flange-8.152.18",
-                  "deployTag": "master-SNAPSHOT"
+                  "deployTag": {
+                    "name": "master-SNAPSHOT",
+                    "type": "SNAPSHOT"
+                  }
                 },
                 "details": {
                   "podResources": [
