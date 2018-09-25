@@ -52,6 +52,7 @@ export const TAGS_QUERY = gql`
         edges {
           node {
             name
+            type
             lastModified
           }
         }

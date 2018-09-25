@@ -1,8 +1,7 @@
 import ApolloClient from 'apollo-boost';
 
-import { Omit } from 'types/utils';
+import { tokenStore } from 'services/TokenStore';
 
-import { tokenStore } from '../../TokenStore';
 import { ITag } from '../imageRepositoryClient/client';
 import { IDeploymentSpec } from './DeploymentSpec';
 import {
@@ -48,7 +47,7 @@ export interface IApplicationDeployment {
   statusCode: string;
   version: {
     auroraVersion: string;
-    deployTag: Omit<ITag, 'lastModified'>;
+    deployTag: ITag;
   };
   repository: string;
   pods: IPodResource[];
@@ -188,6 +187,7 @@ export class ApplicationDeploymentClient
       version: {
         auroraVersion: app.version.auroraVersion,
         deployTag: {
+          lastModified: '',
           name: app.version.deployTag.name,
           type: app.version.deployTag.type
         }

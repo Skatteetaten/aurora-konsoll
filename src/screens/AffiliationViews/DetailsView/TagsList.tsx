@@ -29,8 +29,8 @@ const detailListColumns = [
 interface ITagsListProps {
   tags: ITag[];
   imageTagType: ImageTagType;
-  deployedTag: string;
-  selectedTag: string;
+  deployedTag: ITag;
+  selectedTag?: ITag;
   handleSelectNextTag: (item?: ITag) => void;
 }
 
@@ -57,8 +57,10 @@ export default class TagsList extends React.Component<
   public updateSelection = () => {
     const { tags, deployedTag, selectedTag } = this.props;
 
-    const deployedTagIndex = tags.findIndex(t => t.name === deployedTag);
-    const selectedTagIndex = tags.findIndex(t => t.name === selectedTag);
+    const deployedTagIndex = tags.findIndex(t => t.name === deployedTag.name);
+    const selectedTagIndex = tags.findIndex(
+      t => !!selectedTag && t.name === selectedTag.name
+    );
 
     this.setState({
       deployedTagIndex,

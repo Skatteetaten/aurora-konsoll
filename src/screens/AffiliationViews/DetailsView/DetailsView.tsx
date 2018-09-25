@@ -25,7 +25,7 @@ import VersionViewBase from './VersionView';
 interface IDetailsViewState {
   tagsPagedGroup: TagsPagedGroup;
   deploymentSpec?: IDeploymentSpec;
-  selectedNextTag?: string;
+  selectedTag?: ITag;
   imageTagType: ImageTagType;
   loading: {
     fetchTags: boolean;
@@ -64,8 +64,8 @@ class DetailsView extends React.Component<
 
   public redeployWithVersion = async () => {
     const { clients, deployment } = this.props;
-    const { selectedNextTag } = this.state;
-    if (!selectedNextTag) {
+    const { selectedTag } = this.state;
+    if (!selectedTag) {
       return;
     }
 
@@ -75,7 +75,7 @@ class DetailsView extends React.Component<
 
     const success = await clients.applicationDeploymentClient.redeployWithVersion(
       deployment.id,
-      selectedNextTag
+      selectedTag.name
     );
 
     this.setLoading({
@@ -155,7 +155,7 @@ class DetailsView extends React.Component<
 
   public handleSelectNextTag = (tag?: ITag) => {
     this.setState({
-      selectedNextTag: tag && tag.name
+      selectedTag: tag
     });
   };
 
@@ -192,12 +192,7 @@ class DetailsView extends React.Component<
 
   public render() {
     const { deployment, match } = this.props;
-    const {
-      deploymentSpec,
-      loading,
-      imageTagType,
-      selectedNextTag
-    } = this.state;
+    const { deploymentSpec, loading, imageTagType, selectedTag } = this.state;
 
     const InformationView = () => (
       <InformationViewBase
@@ -207,8 +202,8 @@ class DetailsView extends React.Component<
     );
     const VersionView = () => (
       <VersionViewBase
-        currentDeployedTag={deployment.version.deployTag.name}
-        selectedTag={selectedNextTag || ''}
+        deployedTag={deployment.version.deployTag}
+        selectedTag={selectedTag}
         handleSelectNextTag={this.handleSelectNextTag}
         redeployWithVersion={this.redeployWithVersion}
         canLoadMore={this.canLoadMoreTags()}
@@ -221,10 +216,9 @@ class DetailsView extends React.Component<
         tags={this.getTagsForType(imageTagType)}
         canUpgrade={
           !!(
-            selectedNextTag !== deployment.version.deployTag.name &&
-            selectedNextTag &&
-            selectedNextTag.length > 0 &&
-            !loading.redeploy
+            selectedTag &&
+            !loading.redeploy &&
+            selectedTag.name !== deployment.version.deployTag.name
           )
         }
       />

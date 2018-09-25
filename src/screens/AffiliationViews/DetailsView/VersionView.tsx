@@ -17,8 +17,8 @@ interface IVersionViewProps {
   canUpgrade: boolean;
   imageTagType: ImageTagType;
   tags: ITag[];
-  currentDeployedTag: string;
-  selectedTag: string;
+  deployedTag: ITag;
+  selectedTag?: ITag;
   className?: string;
   handlefetchTags: () => void;
   handleSelectedStrategy: (e: Event, option: IVersionStrategyOption) => void;
@@ -36,7 +36,7 @@ const VersionView = ({
   imageTagType,
   handlefetchTags,
   selectedTag,
-  currentDeployedTag,
+  deployedTag,
   className,
   handleSelectedStrategy,
   handleVersionSearch,
@@ -78,7 +78,7 @@ const VersionView = ({
           tags={tags}
           imageTagType={imageTagType}
           selectedTag={selectedTag}
-          deployedTag={currentDeployedTag}
+          deployedTag={deployedTag}
           handleSelectNextTag={handleSelectNextTag}
         />
       </div>
