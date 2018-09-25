@@ -12,6 +12,8 @@ import {
 } from 'services/auroraApiClients';
 import { IDeploymentSpec } from 'services/auroraApiClients/applicationDeploymentClient/DeploymentSpec';
 
+import Button from 'aurora-frontend-react-komponenter/Button';
+
 import Card from 'components/Card';
 import Label from 'components/Label';
 import { ApplicationDeploymentDetailsRoute } from '../ApplicationDeploymentSelector';
@@ -119,6 +121,17 @@ class DetailsView extends React.Component<
       redeploy: false
     });
 
+    if (success) {
+      this.props.fetchApplicationDeployments();
+    }
+  };
+
+  public refreshApplicationDeployment = async () => {
+    const { clients, deployment } = this.props;
+
+    const success = await clients.applicationDeploymentClient.refreshApplicationDeployment(
+      deployment.id
+    );
     if (success) {
       this.props.fetchApplicationDeployments();
     }
@@ -236,10 +249,18 @@ class DetailsView extends React.Component<
     const title = `${deployment.environment}/${deployment.name}`;
     return (
       <DetailsViewGrid>
-        <div className="labels">
-          <Label text="deployment" subText={title} />
-          <Label text="tag" subText={deployment.version.deployTag.name} />
-          <Label text="versjon" subText={deployment.version.auroraVersion} />
+        <div className="labels-and-refresh-button">
+          <div className="labels">
+            <Label text="deployment" subText={title} />
+            <Label text="tag" subText={deployment.version.deployTag.name} />
+            <Label text="versjon" subText={deployment.version.auroraVersion} />
+          </div>
+          <Button
+            buttonType="primaryRoundedFilled"
+            onClick={this.refreshApplicationDeployment}
+          >
+            Oppdater
+          </Button>
         </div>
         <TabLinkWrapper>
           <TabLink to={`${match.url}/info`}>Informasjon</TabLink>
@@ -273,10 +294,17 @@ const DetailsViewGrid = styled.div`
   height: 100%;
   display: flex;
   flex-direction: column;
-
-  .labels {
+  .labels-and-refresh-button {
     display: flex;
-    margin: 10px 0 20px 0;
+    margin: 10px;
+    align-items: center;
+    .labels {
+      display: flex;
+      flex: 1;
+    }
+    button {
+      justify-self: flex-end;
+    }
   }
 `;
 

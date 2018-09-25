@@ -26,6 +26,9 @@ const applicationDeploymentClient: IApplicationDeploymentClient = {
   }),
   redeployWithVersion: async () => {
     return true;
+  },
+  refreshApplicationDeployment: async () => {
+    return true;
   }
 };
 

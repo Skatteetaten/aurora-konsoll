@@ -5,7 +5,10 @@ import { Omit } from 'types/utils';
 import { tokenStore } from '../../TokenStore';
 import { ITag } from '../imageRepositoryClient/client';
 import { IDeploymentSpec } from './DeploymentSpec';
-import { REDEPLOY_WITH_VERSION_MUTATION } from './mutation';
+import {
+  REDEPLOY_WITH_VERSION_MUTATION,
+  REFRESH_APPLICATION_DEPLOYMENT_MUTATION
+} from './mutation';
 import {
   APPLICATIONS_QUERY,
   IApplicationDeploymentQuery,
@@ -66,6 +69,9 @@ export interface IApplicationDeploymentClient {
     applicationDeploymentId: string,
     version: string
   ) => Promise<boolean>;
+  refreshApplicationDeployment: (
+    applicationDeploymentId: string
+  ) => Promise<boolean>;
 }
 
 export class ApplicationDeploymentClient
@@ -95,6 +101,27 @@ export class ApplicationDeploymentClient
     }
 
     return result.data.redeployWithVersion;
+  }
+
+  public async refreshApplicationDeployment(
+    applicationDeploymentId: string
+  ): Promise<boolean> {
+    const result = await this.client.mutate<{
+      refreshApplicationDeployment: string;
+    }>({
+      mutation: REFRESH_APPLICATION_DEPLOYMENT_MUTATION,
+      variables: {
+        input: {
+          applicationDeploymentId
+        }
+      }
+    });
+
+    if (result.data) {
+      return true;
+    } else {
+      return false;
+    }
   }
 
   public async findDeploymentSpec(
