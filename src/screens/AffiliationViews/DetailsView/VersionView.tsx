@@ -74,6 +74,7 @@ const VersionView = ({
       <div className="g-details-list">
         <TagsList
           tags={tags}
+          imageTagType={imageTagType}
           currentDeployedTag={currentDeployedTag}
           handleSelectNextTag={handleSelectNextTag}
         />

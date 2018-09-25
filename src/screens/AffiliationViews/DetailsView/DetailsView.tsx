@@ -20,9 +20,9 @@ import { IVersionStrategyOption } from './TagTypeSelector';
 import VersionViewBase from './VersionView';
 
 interface IDetailsViewState {
-  groupedTags?: TagsPagedGroup;
+  tagsPagedGroup: TagsPagedGroup;
   deploymentSpec?: IDeploymentSpec;
-  selectedNextTag: string;
+  selectedNextTag?: string;
   imageTagType: ImageTagType;
   loading: {
     fetchTags: boolean;
@@ -49,6 +49,7 @@ class DetailsView extends React.Component<
       redeploy: false
     },
     selectedNextTag: '',
+    tagsPagedGroup: new TagsPagedGroup(),
     versionSearchText: ''
   };
 
@@ -57,32 +58,66 @@ class DetailsView extends React.Component<
     this.state.imageTagType = props.deployment.version.deployTag.type;
   }
 
-  public handleSelectNextTag = (tag: ITag) => {
+  public handleSelectNextTag = (tag?: ITag) => {
     this.setState({
-      selectedNextTag: tag.name
+      selectedNextTag: tag && tag.name
     });
   };
 
-  public redeployWithVersion = async () => {
+  public setLoading = (
+    loading: {
+      fetchTags?: boolean;
+      redeploy?: boolean;
+    },
+    nextState?: any
+  ) => {
     this.setState(state => ({
       loading: {
-        ...state.loading,
-        redeploy: true
-      }
+        fetchTags: loading.fetchTags || state.loading.fetchTags,
+        redeploy: loading.redeploy || state.loading.redeploy
+      },
+      ...nextState
     }));
+  };
 
+  public setStatewithLoading = async (
+    type: string,
+    cb: () => Promise<any | undefined>
+  ) => {
+    this.setLoading({
+      [type]: true
+    });
+
+    const result = await cb();
+    const nextState = result || {};
+
+    this.setLoading(
+      {
+        [type]: false
+      },
+      nextState
+    );
+  };
+
+  public redeployWithVersion = async () => {
     const { clients, deployment } = this.props;
+    const { selectedNextTag } = this.state;
+    if (!selectedNextTag) {
+      return;
+    }
+
+    this.setLoading({
+      redeploy: true
+    });
+
     const success = await clients.applicationDeploymentClient.redeployWithVersion(
       deployment.id,
-      this.state.selectedNextTag
+      selectedNextTag
     );
 
-    this.setState(state => ({
-      loading: {
-        ...state.loading,
-        redeploy: false
-      }
-    }));
+    this.setLoading({
+      redeploy: false
+    });
 
     if (success) {
       this.props.fetchApplicationDeployments();
@@ -91,38 +126,23 @@ class DetailsView extends React.Component<
 
   public loadMoreTags = async () => {
     const { clients, deployment } = this.props;
-    const { groupedTags, imageTagType } = this.state;
+    const { tagsPagedGroup, imageTagType } = this.state;
 
-    this.setState(state => ({
-      loading: {
-        ...state.loading,
-        fetchTags: true
-      }
-    }));
-
-    let cursor;
-    if (groupedTags) {
-      const current: ITagsPaged = groupedTags.getTagsPaged(imageTagType);
+    let cursor: string;
+    if (tagsPagedGroup) {
+      const current: ITagsPaged = tagsPagedGroup.getTagsPaged(imageTagType);
       cursor = current.endCursor;
     }
 
-    const tagsPaged = await clients.imageRepositoryClient.findTagsPaged(
-      deployment.repository,
-      15,
-      cursor,
-      [imageTagType]
-    );
-
-    this.setState(state => {
-      const currentGroupedTags = state.groupedTags;
+    this.setStatewithLoading('fetchTags', async () => {
+      const tagsPaged = await clients.imageRepositoryClient.findTagsPaged(
+        deployment.repository,
+        15,
+        cursor,
+        [imageTagType]
+      );
       return {
-        groupedTags:
-          currentGroupedTags &&
-          currentGroupedTags.updateTagsPaged(imageTagType, tagsPaged),
-        loading: {
-          ...state.loading,
-          fetchTags: false
-        }
+        tagsPagedGroup: tagsPagedGroup.updateTagsPaged(imageTagType, tagsPaged)
       };
     });
   };
@@ -146,12 +166,9 @@ class DetailsView extends React.Component<
   public async componentDidMount() {
     const { clients, deployment } = this.props;
 
-    this.setState(state => ({
-      loading: {
-        ...state.loading,
-        fetchTags: true
-      }
-    }));
+    this.setLoading({
+      fetchTags: true
+    });
 
     /*
     TODO: Apply this when Gobo has implemented find DeploymentSpec
@@ -164,16 +181,16 @@ class DetailsView extends React.Component<
     }));
     */
 
-    const groupedTags = await clients.imageRepositoryClient.findGroupedTagsPaged(
+    const tagsPagedGroup = await clients.imageRepositoryClient.findGroupedTagsPaged(
       deployment.repository
     );
 
     this.setState(state => ({
-      groupedTags,
       loading: {
         ...state.loading,
         fetchTags: false
-      }
+      },
+      tagsPagedGroup
     }));
   }
 
@@ -206,9 +223,12 @@ class DetailsView extends React.Component<
         imageTagType={imageTagType}
         tags={this.getTagsForType(imageTagType)}
         canUpgrade={
-          selectedNextTag !== deployment.version.deployTag.name &&
-          selectedNextTag.length > 0 &&
-          !loading.redeploy
+          !!(
+            selectedNextTag !== deployment.version.deployTag.name &&
+            selectedNextTag &&
+            selectedNextTag.length > 0 &&
+            !loading.redeploy
+          )
         }
       />
     );
@@ -232,37 +252,20 @@ class DetailsView extends React.Component<
       </DetailsViewGrid>
     );
   }
-  private getTagsForType = (imageTagType: ImageTagType): ITag[] => {
-    const { groupedTags, versionSearchText } = this.state;
-
-    const sortTagsByDate = (t1: ITag, t2: ITag) => {
-      const date1 = new Date(t1.lastModified).getTime();
-      const date2 = new Date(t2.lastModified).getTime();
-      return date2 - date1;
-    };
-
-    if (!groupedTags) {
+  private getTagsForType = (type: ImageTagType): ITag[] => {
+    const { tagsPagedGroup, versionSearchText } = this.state;
+    if (!tagsPagedGroup) {
       return [];
     }
 
-    return groupedTags
-      .getTagsPaged(imageTagType)
-      .tags.filter(v => {
-        return (
-          versionSearchText.length === 0 ||
-          v.name.search(versionSearchText) !== -1
-        );
-      })
-      .sort(sortTagsByDate)
-      .map(tag => ({
-        ...tag,
-        lastModified: new Date(tag.lastModified).toISOString()
-      }));
+    return tagsPagedGroup.getTagsForType(type, versionSearchText);
   };
 
   private canLoadMoreTags = () => {
-    const { groupedTags, imageTagType } = this.state;
-    return !!groupedTags && groupedTags.getTagsPaged(imageTagType).hasNextPage;
+    const { tagsPagedGroup, imageTagType } = this.state;
+    return (
+      !!tagsPagedGroup && tagsPagedGroup.getTagsPaged(imageTagType).hasNextPage
+    );
   };
 }
 

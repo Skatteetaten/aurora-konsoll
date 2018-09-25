@@ -4,6 +4,7 @@ import DetailsList from 'aurora-frontend-react-komponenter/DetailsList';
 
 import { Selection } from 'office-ui-fabric-react/lib/DetailsList';
 
+import { ImageTagType } from 'models/TagsPagedGroup';
 import { ITag } from 'services/auroraApiClients';
 
 const detailListColumns = [
@@ -27,37 +28,47 @@ const detailListColumns = [
 
 interface ITagsListProps {
   tags: ITag[];
+  imageTagType: ImageTagType;
   currentDeployedTag: string;
-  handleSelectNextTag: (item: ITag) => void;
+  handleSelectNextTag: (item?: ITag) => void;
 }
 
 export default class TagsList extends React.Component<ITagsListProps> {
   private selection = new Selection();
 
-  public componentDidUpdate(prevProps: ITagsListProps) {
-    const { tags, currentDeployedTag } = this.props;
-
-    if (prevProps.tags.length > 0) {
-      // this.selection.getSelection().forEach(k => {
-      //   const tag = k as ITag;
-      //   // tslint:disable-next-line:no-console
-      //   console.log(this.selection.isKeySelected(tag.name));
-      //   this.selection.setKeySelected(tag.name, false, false);
-      // });
+  public updateSelection = (
+    tags: ITag[],
+    currentDeployedTag: string,
+    reset: boolean
+  ) => {
+    if (reset) {
       this.selection.setAllSelected(false);
+      this.props.handleSelectNextTag(undefined);
     }
+    const index = tags.findIndex(t => t.name === currentDeployedTag);
+    if (index !== -1) {
+      this.selection.setIndexSelected(index, true, true);
+    }
+  };
 
-    if (tags.length > 0) {
-      const index = tags.findIndex(t => t.name === currentDeployedTag);
-      if (index !== -1) {
-        this.selection.setIndexSelected(index, true, true);
-      }
+  public componentDidUpdate(prevProps: ITagsListProps) {
+    const { tags, imageTagType, currentDeployedTag } = this.props;
+
+    const differentTagType = prevProps.imageTagType !== imageTagType;
+    const newTags = tags.length !== prevProps.tags.length;
+
+    if (differentTagType || newTags) {
+      this.updateSelection(tags, currentDeployedTag, true);
     }
   }
 
   public componentDidMount() {
-    // tslint:disable-next-line:no-console
-    console.log(this.props.tags);
+    const { tags, currentDeployedTag } = this.props;
+    if (tags.length > 0) {
+      setTimeout(() => {
+        this.updateSelection(tags, currentDeployedTag, false);
+      }, 100);
+    }
   }
 
   public render() {
@@ -70,6 +81,7 @@ export default class TagsList extends React.Component<ITagsListProps> {
         setKey="name"
         selection={this.selection}
         onActiveItemChanged={handleSelectNextTag}
+        selectionPreservedOnEmptyClick={true}
         selectionMode={DetailsList.SelectionMode.none}
       />
     );
