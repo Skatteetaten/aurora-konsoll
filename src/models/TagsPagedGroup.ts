@@ -1,4 +1,4 @@
-import { ITagsPaged } from 'services/auroraApiClients';
+import { ITag, ITagsPaged } from 'services/auroraApiClients';
 
 export enum ImageTagType {
   AURORA_VERSION = 'AURORA_VERSION',
@@ -21,8 +21,8 @@ export interface ITagsPagedGroup {
 export class TagsPagedGroup {
   private tagsPagedGroup: ITagsPagedGroup;
 
-  constructor(tagsGrouped: ITagsPagedGroup) {
-    this.tagsPagedGroup = tagsGrouped;
+  constructor(tagsGrouped?: ITagsPagedGroup) {
+    this.tagsPagedGroup = tagsGrouped || this.defaultTagsPaged();
   }
 
   public updateTagsPaged(type: ImageTagType, next: ITagsPaged): TagsPagedGroup {
@@ -40,6 +40,24 @@ export class TagsPagedGroup {
   public getTagsPaged(type: ImageTagType): ITagsPaged {
     const name = this.findName(type);
     return this.tagsPagedGroup[name];
+  }
+
+  public getTagsForType(type: ImageTagType, searchText: string): ITag[] {
+    const sortTagsByDate = (t1: ITag, t2: ITag) => {
+      const date1 = new Date(t1.lastModified).getTime();
+      const date2 = new Date(t2.lastModified).getTime();
+      return date2 - date1;
+    };
+
+    return this.getTagsPaged(type)
+      .tags.filter(v => {
+        return searchText.length === 0 || v.name.search(searchText) !== -1;
+      })
+      .sort(sortTagsByDate)
+      .map(tag => ({
+        ...tag,
+        lastModified: new Date(tag.lastModified).toISOString()
+      }));
   }
 
   private findName(type: ImageTagType): string {
@@ -63,6 +81,23 @@ export class TagsPagedGroup {
     return {
       ...next,
       tags: [...old.tags, ...next.tags]
+    };
+  }
+
+  private defaultTagsPaged() {
+    const defaultTagsPaged: ITagsPaged = {
+      endCursor: '',
+      hasNextPage: false,
+      tags: []
+    };
+
+    return {
+      auroraVersion: defaultTagsPaged,
+      bugfix: defaultTagsPaged,
+      latest: defaultTagsPaged,
+      major: defaultTagsPaged,
+      minor: defaultTagsPaged,
+      snapshot: defaultTagsPaged
     };
   }
 }

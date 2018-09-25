@@ -13,6 +13,7 @@ type ApplicationDeploymentSelectorProps = IApplicationDeploymentContext &
 
 const ApplicationDeploymentSelector = ({
   deployments,
+  fetchApplicationDeployments,
   match
 }: ApplicationDeploymentSelectorProps) => {
   const deployment = deployments.find(
@@ -24,7 +25,11 @@ const ApplicationDeploymentSelector = ({
   }
 
   const DetailsView = (props: ApplicationDeploymentDetailsRoute) => (
-    <DetailsViewBaseWithApi {...props} deployment={deployment} />
+    <DetailsViewBaseWithApi
+      {...props}
+      deployment={deployment}
+      fetchApplicationDeployments={fetchApplicationDeployments}
+    />
   );
 
   return <Route render={DetailsView} />;
