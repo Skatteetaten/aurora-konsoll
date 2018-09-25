@@ -1,12 +1,11 @@
 import * as React from 'react';
+import styled from 'styled-components';
 
 import DetailsList from 'aurora-frontend-react-komponenter/DetailsList';
-
 import { Selection } from 'office-ui-fabric-react/lib/DetailsList';
 
 import { ImageTagType } from 'models/TagsPagedGroup';
 import { ITag } from 'services/auroraApiClients';
-import styled from 'styled-components';
 
 const detailListColumns = [
   {
@@ -30,12 +29,12 @@ const detailListColumns = [
 interface ITagsListProps {
   tags: ITag[];
   imageTagType: ImageTagType;
-  currentDeployedTag: string;
+  deployedTag: string;
+  selectedTag: string;
   handleSelectNextTag: (item?: ITag) => void;
 }
 
 interface ITagsListState {
-  selectedTag: string;
   deployedTagIndex: number;
   selectedTagIndex: number;
 }
@@ -46,19 +45,19 @@ export default class TagsList extends React.Component<
 > {
   public state: ITagsListState = {
     deployedTagIndex: -1,
-    selectedTag: '',
     selectedTagIndex: -1
   };
 
   private selection = new Selection();
 
-  public updateSelection = (
-    tags: ITag[],
-    currentDeployedTag: string,
-    reset: boolean
-  ) => {
-    const { selectedTag } = this.state;
-    const deployedTagIndex = tags.findIndex(t => t.name === currentDeployedTag);
+  public resetSelections = () => {
+    this.selection.setAllSelected(false);
+  };
+
+  public updateSelection = () => {
+    const { tags, deployedTag, selectedTag } = this.props;
+
+    const deployedTagIndex = tags.findIndex(t => t.name === deployedTag);
     const selectedTagIndex = tags.findIndex(t => t.name === selectedTag);
 
     this.setState({
@@ -66,13 +65,10 @@ export default class TagsList extends React.Component<
       selectedTagIndex
     });
 
-    if (reset) {
-      this.selection.setAllSelected(false);
-    }
-
     if (selectedTagIndex !== -1) {
       this.selection.setIndexSelected(selectedTagIndex, true, true);
-    } else if (deployedTagIndex !== -1) {
+    }
+    if (deployedTagIndex !== -1) {
       this.selection.setIndexSelected(deployedTagIndex, true, true);
     }
   };
@@ -82,29 +78,28 @@ export default class TagsList extends React.Component<
       t => t.name === tag.name
     );
     this.setState({
-      selectedTag: tag.name,
       selectedTagIndex
     });
     this.props.handleSelectNextTag(tag);
   };
 
   public componentDidUpdate(prevProps: ITagsListProps) {
-    const { tags, imageTagType, currentDeployedTag } = this.props;
+    const { tags, imageTagType } = this.props;
 
     const differentTagType = prevProps.imageTagType !== imageTagType;
     const newTags = tags.length !== prevProps.tags.length;
+    const differentSelectedTag =
+      prevProps.selectedTag !== this.props.selectedTag;
 
-    if (differentTagType || newTags) {
-      this.updateSelection(tags, currentDeployedTag, true);
+    if (differentTagType || newTags || differentSelectedTag) {
+      this.resetSelections();
+      this.updateSelection();
     }
   }
 
   public componentDidMount() {
-    const { tags, currentDeployedTag } = this.props;
-    if (tags.length > 0) {
-      setTimeout(() => {
-        this.updateSelection(tags, currentDeployedTag, false);
-      }, 100);
+    if (this.props.tags.length > 0) {
+      this.updateSelection();
     }
   }
 
@@ -137,12 +132,13 @@ const DetailsListWrapper = styled.div<{
 }>`
   [data-item-index] {
     &:hover, &:active, &:focus {
-    color: black;
+      color: black;
       background: #cde1f9;
     }
   }
 
   [data-item-index="${props => props.selectedIndex}"] {
+    color: black;
     background: #8accff;
 
     &:hover, &:active, &:focus {
@@ -151,6 +147,7 @@ const DetailsListWrapper = styled.div<{
   }
 
   [data-item-index="${props => props.deployedIndex}"] {
+    color: black;
     background: ${({ deployedIndex, selectedIndex }) =>
       deployedIndex === selectedIndex ? '#e7b78a' : '#f9ede2'};
 

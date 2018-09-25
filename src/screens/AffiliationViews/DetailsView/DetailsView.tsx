@@ -208,6 +208,7 @@ class DetailsView extends React.Component<
     const VersionView = () => (
       <VersionViewBase
         currentDeployedTag={deployment.version.deployTag.name}
+        selectedTag={selectedNextTag || ''}
         handleSelectNextTag={this.handleSelectNextTag}
         redeployWithVersion={this.redeployWithVersion}
         canLoadMore={this.canLoadMoreTags()}
