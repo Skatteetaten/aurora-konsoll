@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Route } from 'react-router-dom';
+import { Route, Switch } from 'react-router-dom';
 import styled from 'styled-components';
 
 import { IAuroraApiComponentProps, withAuroraApi } from 'components/AuroraApi';
@@ -18,9 +18,9 @@ import Spinner from 'components/Spinner';
 import Card from 'components/Card';
 import Label from 'components/Label';
 import { ApplicationDeploymentDetailsRoute } from '../ApplicationDeploymentSelector';
-import InformationViewBase from './InformationView';
+import InformationView from './InformationView';
 import { IVersionStrategyOption } from './TagTypeSelector';
-import VersionViewBase from './VersionView';
+import VersionView from './VersionView';
 
 interface IDetailsViewState {
   tagsPagedGroup: TagsPagedGroup;
@@ -194,36 +194,6 @@ class DetailsView extends React.Component<
     const { deployment, match } = this.props;
     const { deploymentSpec, loading, imageTagType, selectedTag } = this.state;
 
-    const InformationView = () => (
-      <InformationViewBase
-        deployment={deployment}
-        deploymentSpec={deploymentSpec}
-      />
-    );
-    const VersionView = () => (
-      <VersionViewBase
-        deployedTag={deployment.version.deployTag}
-        selectedTag={selectedTag}
-        handleSelectNextTag={this.handleSelectNextTag}
-        redeployWithVersion={this.redeployWithVersion}
-        canLoadMore={this.canLoadMoreTags()}
-        handlefetchTags={this.loadMoreTags}
-        handleSelectedStrategy={this.handleSelectedStrategy}
-        handleVersionSearch={this.handleVersionSearch}
-        isFetchingTags={loading.fetchTags}
-        isRedeploying={loading.redeploy}
-        imageTagType={imageTagType}
-        tags={this.getTagsForType(imageTagType)}
-        canUpgrade={
-          !!(
-            selectedTag &&
-            !loading.redeploy &&
-            selectedTag.name !== deployment.version.deployTag.name
-          )
-        }
-      />
-    );
-
     const title = `${deployment.environment}/${deployment.name}`;
     return (
       <DetailsViewGrid>
@@ -245,8 +215,37 @@ class DetailsView extends React.Component<
           <TabLink to={`${match.url}/version`}>Oppgradering</TabLink>
         </TabLinkWrapper>
         <Card>
-          <Route path={`${match.path}/info`} render={InformationView} />
-          <Route path={`${match.path}/version`} render={VersionView} />
+          <Switch>
+            <Route path={`${match.path}/info`}>
+              <InformationView
+                deployment={deployment}
+                deploymentSpec={deploymentSpec}
+              />
+            </Route>
+            <Route path={`${match.path}/version`}>
+              <VersionView
+                deployedTag={deployment.version.deployTag}
+                selectedTag={selectedTag}
+                handleSelectNextTag={this.handleSelectNextTag}
+                redeployWithVersion={this.redeployWithVersion}
+                canLoadMore={this.canLoadMoreTags()}
+                handlefetchTags={this.loadMoreTags}
+                handleSelectedStrategy={this.handleSelectedStrategy}
+                handleVersionSearch={this.handleVersionSearch}
+                isFetchingTags={loading.fetchTags}
+                isRedeploying={loading.redeploy}
+                imageTagType={imageTagType}
+                tags={this.getTagsForType(imageTagType)}
+                canUpgrade={
+                  !!(
+                    selectedTag &&
+                    !loading.redeploy &&
+                    selectedTag.name !== deployment.version.deployTag.name
+                  )
+                }
+              />
+            </Route>
+          </Switch>
         </Card>
       </DetailsViewGrid>
     );
