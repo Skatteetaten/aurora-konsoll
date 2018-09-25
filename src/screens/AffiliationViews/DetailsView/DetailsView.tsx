@@ -53,7 +53,6 @@ class DetailsView extends React.Component<
       redeploy: false,
       update: false
     },
-    selectedNextTag: '',
     tagsPagedGroup: new TagsPagedGroup(),
     versionSearchText: ''
   };
@@ -62,49 +61,6 @@ class DetailsView extends React.Component<
     super(props);
     this.state.imageTagType = props.deployment.version.deployTag.type;
   }
-
-  public handleSelectNextTag = (tag?: ITag) => {
-    this.setState({
-      selectedNextTag: tag && tag.name
-    });
-  };
-
-  public setLoading = (
-    loading: {
-      fetchTags?: boolean;
-      redeploy?: boolean;
-      update?: boolean;
-    },
-    nextState?: any
-  ) => {
-    this.setState(state => ({
-      loading: {
-        fetchTags: loading.fetchTags || state.loading.fetchTags,
-        redeploy: loading.redeploy || state.loading.redeploy,
-        update: loading.update || state.loading.update
-      },
-      ...nextState
-    }));
-  };
-
-  public setStatewithLoading = async (
-    type: string,
-    cb: () => Promise<any | undefined>
-  ) => {
-    this.setLoading({
-      [type]: true
-    });
-
-    const result = await cb();
-    const nextState = result || {};
-
-    this.setLoading(
-      {
-        [type]: false
-      },
-      nextState
-    );
-  };
 
   public redeployWithVersion = async () => {
     const { clients, deployment } = this.props;
@@ -155,23 +111,30 @@ class DetailsView extends React.Component<
     const { clients, deployment } = this.props;
     const { tagsPagedGroup, imageTagType } = this.state;
 
-    let cursor: string;
+    this.setLoading({
+      fetchTags: true
+    });
+
+    let cursor;
     if (tagsPagedGroup) {
       const current: ITagsPaged = tagsPagedGroup.getTagsPaged(imageTagType);
       cursor = current.endCursor;
     }
 
-    this.setStatewithLoading('fetchTags', async () => {
-      const tagsPaged = await clients.imageRepositoryClient.findTagsPaged(
-        deployment.repository,
-        15,
-        cursor,
-        [imageTagType]
-      );
-      return {
-        tagsPagedGroup: tagsPagedGroup.updateTagsPaged(imageTagType, tagsPaged)
-      };
-    });
+    const tagsPaged = await clients.imageRepositoryClient.findTagsPaged(
+      deployment.repository,
+      15,
+      cursor,
+      [imageTagType]
+    );
+
+    this.setState(state => ({
+      loading: {
+        ...state.loading,
+        fetchTags: false
+      },
+      tagsPagedGroup: tagsPagedGroup.updateTagsPaged(imageTagType, tagsPaged)
+    }));
   };
 
   public handleSelectedStrategy = (
@@ -187,6 +150,12 @@ class DetailsView extends React.Component<
   public handleVersionSearch = (value: string) => {
     this.setState({
       versionSearchText: value
+    });
+  };
+
+  public handleSelectNextTag = (tag?: ITag) => {
+    this.setState({
+      selectedNextTag: tag && tag.name
     });
   };
 
@@ -287,6 +256,21 @@ class DetailsView extends React.Component<
       </DetailsViewGrid>
     );
   }
+
+  private setLoading = (loading: {
+    fetchTags?: boolean;
+    redeploy?: boolean;
+    update?: boolean;
+  }) => {
+    this.setState({
+      loading: {
+        fetchTags: loading.fetchTags || this.state.loading.fetchTags,
+        redeploy: loading.redeploy || this.state.loading.redeploy,
+        update: loading.update || this.state.loading.update
+      }
+    });
+  };
+
   private getTagsForType = (type: ImageTagType): ITag[] => {
     const { tagsPagedGroup, versionSearchText } = this.state;
     if (!tagsPagedGroup) {

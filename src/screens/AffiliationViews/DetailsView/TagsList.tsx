@@ -6,6 +6,7 @@ import { Selection } from 'office-ui-fabric-react/lib/DetailsList';
 
 import { ImageTagType } from 'models/TagsPagedGroup';
 import { ITag } from 'services/auroraApiClients';
+import styled from 'styled-components';
 
 const detailListColumns = [
   {
@@ -33,7 +34,22 @@ interface ITagsListProps {
   handleSelectNextTag: (item?: ITag) => void;
 }
 
-export default class TagsList extends React.Component<ITagsListProps> {
+interface ITagsListState {
+  selectedTag: string;
+  deployedTagIndex: number;
+  selectedTagIndex: number;
+}
+
+export default class TagsList extends React.Component<
+  ITagsListProps,
+  ITagsListState
+> {
+  public state: ITagsListState = {
+    deployedTagIndex: -1,
+    selectedTag: '',
+    selectedTagIndex: -1
+  };
+
   private selection = new Selection();
 
   public updateSelection = (
@@ -41,14 +57,35 @@ export default class TagsList extends React.Component<ITagsListProps> {
     currentDeployedTag: string,
     reset: boolean
   ) => {
+    const { selectedTag } = this.state;
+    const deployedTagIndex = tags.findIndex(t => t.name === currentDeployedTag);
+    const selectedTagIndex = tags.findIndex(t => t.name === selectedTag);
+
+    this.setState({
+      deployedTagIndex,
+      selectedTagIndex
+    });
+
     if (reset) {
       this.selection.setAllSelected(false);
-      this.props.handleSelectNextTag(undefined);
     }
-    const index = tags.findIndex(t => t.name === currentDeployedTag);
-    if (index !== -1) {
-      this.selection.setIndexSelected(index, true, true);
+
+    if (selectedTagIndex !== -1) {
+      this.selection.setIndexSelected(selectedTagIndex, true, true);
+    } else if (deployedTagIndex !== -1) {
+      this.selection.setIndexSelected(deployedTagIndex, true, true);
     }
+  };
+
+  public handleSelectedTag = (tag: ITag) => {
+    const selectedTagIndex = this.props.tags.findIndex(
+      t => t.name === tag.name
+    );
+    this.setState({
+      selectedTag: tag.name,
+      selectedTagIndex
+    });
+    this.props.handleSelectNextTag(tag);
   };
 
   public componentDidUpdate(prevProps: ITagsListProps) {
@@ -72,18 +109,55 @@ export default class TagsList extends React.Component<ITagsListProps> {
   }
 
   public render() {
-    const { tags, handleSelectNextTag } = this.props;
+    const { deployedTagIndex, selectedTagIndex } = this.state;
+    const { tags } = this.props;
 
     return (
-      <DetailsList
-        columns={detailListColumns}
-        items={tags}
-        setKey="name"
-        selection={this.selection}
-        onActiveItemChanged={handleSelectNextTag}
-        selectionPreservedOnEmptyClick={true}
-        selectionMode={DetailsList.SelectionMode.none}
-      />
+      <DetailsListWrapper
+        deployedIndex={deployedTagIndex}
+        selectedIndex={selectedTagIndex}
+      >
+        <DetailsList
+          columns={detailListColumns}
+          items={tags}
+          setKey="name"
+          selection={this.selection}
+          onActiveItemChanged={this.handleSelectedTag}
+          selectionMode={DetailsList.SelectionMode.single}
+        />
+      </DetailsListWrapper>
     );
   }
 }
+
+const DetailsListWrapper = styled.div<{
+  deployedIndex: number;
+  selectedIndex: number;
+}>`
+  [data-item-index] {
+    &:hover, &:active, &:focus {
+      background: #cde1f9;
+    }
+  }
+
+  [data-item-index="${props => props.selectedIndex}"] {
+    background: #8accff;
+
+    &:hover, &:active, &:focus {
+      background: #8accff;
+    }
+  }
+
+  [data-item-index="${props => props.deployedIndex}"] {
+    background: ${({ deployedIndex, selectedIndex }) =>
+      deployedIndex === selectedIndex ? '#e7b78a' : '#f9ede2'};
+
+    &:hover, &:active, &:focus {
+      background: #e7b78a;
+    }
+  }
+
+  .ms-List-cell {
+    cursor: pointer
+  }
+`;
