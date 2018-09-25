@@ -123,6 +123,7 @@ export default class TagsList extends React.Component<
           setKey="name"
           selection={this.selection}
           onActiveItemChanged={this.handleSelectedTag}
+          selectionPreservedOnEmptyClick={true}
           selectionMode={DetailsList.SelectionMode.single}
         />
       </DetailsListWrapper>
@@ -136,6 +137,7 @@ const DetailsListWrapper = styled.div<{
 }>`
   [data-item-index] {
     &:hover, &:active, &:focus {
+    color: black;
       background: #cde1f9;
     }
   }
