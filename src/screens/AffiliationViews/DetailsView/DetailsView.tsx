@@ -13,6 +13,7 @@ import {
 import { IDeploymentSpec } from 'services/auroraApiClients/applicationDeploymentClient/DeploymentSpec';
 
 import Button from 'aurora-frontend-react-komponenter/Button';
+import Spinner from 'components/Spinner';
 
 import Card from 'components/Card';
 import Label from 'components/Label';
@@ -29,6 +30,7 @@ interface IDetailsViewState {
   loading: {
     fetchTags: boolean;
     redeploy: boolean;
+    update: boolean;
   };
   versionSearchText: string;
 }
@@ -48,7 +50,8 @@ class DetailsView extends React.Component<
     imageTagType: ImageTagType.MAJOR,
     loading: {
       fetchTags: false,
-      redeploy: false
+      redeploy: false,
+      update: false
     },
     selectedNextTag: '',
     tagsPagedGroup: new TagsPagedGroup(),
@@ -70,13 +73,15 @@ class DetailsView extends React.Component<
     loading: {
       fetchTags?: boolean;
       redeploy?: boolean;
+      update?: boolean;
     },
     nextState?: any
   ) => {
     this.setState(state => ({
       loading: {
         fetchTags: loading.fetchTags || state.loading.fetchTags,
-        redeploy: loading.redeploy || state.loading.redeploy
+        redeploy: loading.redeploy || state.loading.redeploy,
+        update: loading.update || state.loading.update
       },
       ...nextState
     }));
@@ -129,9 +134,18 @@ class DetailsView extends React.Component<
   public refreshApplicationDeployment = async () => {
     const { clients, deployment } = this.props;
 
+    this.setLoading({
+      update: true
+    });
+
     const success = await clients.applicationDeploymentClient.refreshApplicationDeployment(
       deployment.id
     );
+
+    this.setLoading({
+      update: false
+    });
+
     if (success) {
       this.props.fetchApplicationDeployments();
     }
@@ -259,7 +273,7 @@ class DetailsView extends React.Component<
             buttonType="primaryRoundedFilled"
             onClick={this.refreshApplicationDeployment}
           >
-            Oppdater
+            {loading.update ? <Spinner /> : 'Oppdater'}
           </Button>
         </div>
         <TabLinkWrapper>
@@ -304,6 +318,7 @@ const DetailsViewGrid = styled.div`
     }
     button {
       justify-self: flex-end;
+      min-width: 125px;
     }
   }
 `;
