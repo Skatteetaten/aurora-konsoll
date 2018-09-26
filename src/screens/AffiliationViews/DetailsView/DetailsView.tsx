@@ -2,44 +2,52 @@ import * as React from 'react';
 import { Route, Switch } from 'react-router-dom';
 import styled from 'styled-components';
 
+import Button from 'aurora-frontend-react-komponenter/Button';
+
 import { IAuroraApiComponentProps, withAuroraApi } from 'components/AuroraApi';
+import Spinner from 'components/Spinner';
 import TabLink, { TabLinkWrapper } from 'components/TabLink';
-import { ImageTagType, TagsPagedGroup } from 'models/TagsPagedGroup';
+
+import Card from 'components/Card';
+import Label from 'components/Label';
+import {
+  ImageTagType,
+  ITagsPagedGroup,
+  TagsPagedGroup
+} from 'models/TagsPagedGroup';
 import {
   IApplicationDeployment,
   ITag,
   ITagsPaged
 } from 'services/auroraApiClients';
 import { IDeploymentSpec } from 'services/auroraApiClients/applicationDeploymentClient/DeploymentSpec';
+import LoadingService from 'services/LoadingService';
 
-import Button from 'aurora-frontend-react-komponenter/Button';
-import Spinner from 'components/Spinner';
-
-import Card from 'components/Card';
-import Label from 'components/Label';
 import { ApplicationDeploymentDetailsRoute } from '../ApplicationDeploymentSelector';
 import InformationView from './InformationView';
 import { IVersionStrategyOption } from './TagTypeSelector';
 import VersionView from './VersionView';
-
-interface IDetailsViewState {
-  tagsPagedGroup: TagsPagedGroup;
-  deploymentSpec?: IDeploymentSpec;
-  selectedTag?: ITag;
-  imageTagType: ImageTagType;
-  loading: {
-    fetchTags: boolean;
-    redeploy: boolean;
-    update: boolean;
-  };
-  versionSearchText: string;
-}
 
 interface IDetailsViewProps
   extends ApplicationDeploymentDetailsRoute,
     IAuroraApiComponentProps {
   deployment: IApplicationDeployment;
   fetchApplicationDeployments: () => void;
+}
+
+interface IDetailsViewState {
+  tagsPagedGroup: ITagsPagedGroup;
+  deploymentSpec?: IDeploymentSpec;
+  selectedTag?: ITag;
+  imageTagType: ImageTagType;
+  loading: IDetailsViewLoading;
+  versionSearchText: string;
+}
+
+interface IDetailsViewLoading {
+  fetchTags: boolean;
+  redeploy: boolean;
+  update: boolean;
 }
 
 class DetailsView extends React.Component<
@@ -53,88 +61,73 @@ class DetailsView extends React.Component<
       redeploy: false,
       update: false
     },
-    tagsPagedGroup: new TagsPagedGroup(),
+    tagsPagedGroup: TagsPagedGroup.defaultTagsPagedGroup(),
     versionSearchText: ''
   };
+
+  private loadingService = new LoadingService<IDetailsViewLoading>(
+    this.state.loading,
+    loading => this.setState({ loading })
+  );
+
+  private tagService = new TagsPagedGroup(
+    this.state.tagsPagedGroup,
+    tagsPagedGroup => this.setState({ tagsPagedGroup })
+  );
 
   constructor(props: IDetailsViewProps) {
     super(props);
     this.state.imageTagType = props.deployment.version.deployTag.type;
   }
 
-  public redeployWithVersion = async () => {
+  public redeployWithVersion = () => {
     const { clients, deployment } = this.props;
     const { selectedTag } = this.state;
     if (!selectedTag) {
       return;
     }
 
-    this.setLoading({
-      redeploy: true
+    this.loadingService.withLoading('redeploy', async () => {
+      const success = await clients.applicationDeploymentClient.redeployWithVersion(
+        deployment.id,
+        selectedTag.name
+      );
+      if (success) {
+        this.props.fetchApplicationDeployments();
+      }
     });
-
-    const success = await clients.applicationDeploymentClient.redeployWithVersion(
-      deployment.id,
-      selectedTag.name
-    );
-
-    this.setLoading({
-      redeploy: false
-    });
-
-    if (success) {
-      this.props.fetchApplicationDeployments();
-    }
   };
 
-  public refreshApplicationDeployment = async () => {
+  public refreshApplicationDeployment = () => {
     const { clients, deployment } = this.props;
 
-    this.setLoading({
-      update: true
+    this.loadingService.withLoading('update', async () => {
+      const success = await clients.applicationDeploymentClient.refreshApplicationDeployment(
+        deployment.id
+      );
+      if (success) {
+        this.props.fetchApplicationDeployments();
+      }
     });
-
-    const success = await clients.applicationDeploymentClient.refreshApplicationDeployment(
-      deployment.id
-    );
-
-    this.setLoading({
-      update: false
-    });
-
-    if (success) {
-      this.props.fetchApplicationDeployments();
-    }
   };
 
-  public loadMoreTags = async () => {
+  public loadMoreTags = () => {
     const { clients, deployment } = this.props;
-    const { tagsPagedGroup, imageTagType } = this.state;
+    const { imageTagType } = this.state;
 
-    this.setLoading({
-      fetchTags: true
+    const current: ITagsPaged = this.tagService.getTagsPaged(imageTagType);
+    const cursor = current.endCursor;
+
+    this.loadingService.withLoading('fetchTags', async () => {
+      const tagsPaged = await clients.imageRepositoryClient.findTagsPaged(
+        deployment.repository,
+        15,
+        cursor,
+        [imageTagType]
+      );
+
+      this.tagService.updateTagsPaged(imageTagType, tagsPaged);
     });
-
-    let cursor;
-    if (tagsPagedGroup) {
-      const current: ITagsPaged = tagsPagedGroup.getTagsPaged(imageTagType);
-      cursor = current.endCursor;
-    }
-
-    const tagsPaged = await clients.imageRepositoryClient.findTagsPaged(
-      deployment.repository,
-      15,
-      cursor,
-      [imageTagType]
-    );
-
-    this.setState(state => ({
-      loading: {
-        ...state.loading,
-        fetchTags: false
-      },
-      tagsPagedGroup: tagsPagedGroup.updateTagsPaged(imageTagType, tagsPaged)
-    }));
   };
 
   public handleSelectedStrategy = (
@@ -162,10 +155,6 @@ class DetailsView extends React.Component<
   public async componentDidMount() {
     const { clients, deployment } = this.props;
 
-    this.setLoading({
-      fetchTags: true
-    });
-
     /*
     TODO: Apply this when Gobo has implemented find DeploymentSpec
     const spec = await clients.applicationDeploymentClient.findDeploymentSpec(
@@ -177,17 +166,12 @@ class DetailsView extends React.Component<
     }));
     */
 
-    const tagsPagedGroup = await clients.imageRepositoryClient.findGroupedTagsPaged(
-      deployment.repository
-    );
-
-    this.setState(state => ({
-      loading: {
-        ...state.loading,
-        fetchTags: false
-      },
-      tagsPagedGroup
-    }));
+    this.loadingService.withLoading('fetchTags', async () => {
+      const tagsPagedGroup = await clients.imageRepositoryClient.findGroupedTagsPaged(
+        deployment.repository
+      );
+      this.tagService.setTagsPagedGroup(tagsPagedGroup);
+    });
   }
 
   public render() {
@@ -236,13 +220,7 @@ class DetailsView extends React.Component<
                 isRedeploying={loading.redeploy}
                 imageTagType={imageTagType}
                 tags={this.getTagsForType(imageTagType)}
-                canUpgrade={
-                  !!(
-                    selectedTag &&
-                    !loading.redeploy &&
-                    selectedTag.name !== deployment.version.deployTag.name
-                  )
-                }
+                canUpgrade={this.canUpgrade()}
               />
             </Route>
           </Switch>
@@ -251,33 +229,25 @@ class DetailsView extends React.Component<
     );
   }
 
-  private setLoading = (loading: {
-    fetchTags?: boolean;
-    redeploy?: boolean;
-    update?: boolean;
-  }) => {
-    this.setState({
-      loading: {
-        fetchTags: loading.fetchTags || this.state.loading.fetchTags,
-        redeploy: loading.redeploy || this.state.loading.redeploy,
-        update: loading.update || this.state.loading.update
-      }
-    });
-  };
-
   private getTagsForType = (type: ImageTagType): ITag[] => {
-    const { tagsPagedGroup, versionSearchText } = this.state;
-    if (!tagsPagedGroup) {
-      return [];
-    }
-
-    return tagsPagedGroup.getTagsForType(type, versionSearchText);
+    const { versionSearchText } = this.state;
+    return this.tagService.getTagsForType(type, versionSearchText);
   };
 
   private canLoadMoreTags = () => {
-    const { tagsPagedGroup, imageTagType } = this.state;
+    const { imageTagType } = this.state;
+    return this.tagService.getTagsPaged(imageTagType).hasNextPage;
+  };
+
+  private canUpgrade = () => {
+    const { deployment } = this.props;
+    const { selectedTag, loading } = this.state;
+    if (!selectedTag) {
+      return false;
+    }
     return (
-      !!tagsPagedGroup && tagsPagedGroup.getTagsPaged(imageTagType).hasNextPage
+      !loading.redeploy &&
+      selectedTag.name !== deployment.version.deployTag.name
     );
   };
 }

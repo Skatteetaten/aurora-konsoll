@@ -19,13 +19,40 @@ export interface ITagsPagedGroup {
 }
 
 export class TagsPagedGroup {
-  private tagsPagedGroup: ITagsPagedGroup;
+  public static defaultTagsPagedGroup() {
+    const defaultTagsPaged: ITagsPaged = {
+      endCursor: '',
+      hasNextPage: false,
+      tags: []
+    };
 
-  constructor(tagsGrouped?: ITagsPagedGroup) {
-    this.tagsPagedGroup = tagsGrouped || this.defaultTagsPaged();
+    return {
+      auroraVersion: defaultTagsPaged,
+      bugfix: defaultTagsPaged,
+      latest: defaultTagsPaged,
+      major: defaultTagsPaged,
+      minor: defaultTagsPaged,
+      snapshot: defaultTagsPaged
+    };
   }
 
-  public updateTagsPaged(type: ImageTagType, next: ITagsPaged): TagsPagedGroup {
+  private tagsPagedGroup: ITagsPagedGroup;
+  private updateState: (tagsGroup: ITagsPagedGroup) => void;
+
+  constructor(
+    tagsGroup: ITagsPagedGroup,
+    updateState: (tagsGroup: ITagsPagedGroup) => void
+  ) {
+    this.tagsPagedGroup = tagsGroup;
+    this.updateState = updateState;
+  }
+
+  public setTagsPagedGroup(tagsPagedGroup: ITagsPagedGroup) {
+    this.tagsPagedGroup = tagsPagedGroup;
+    this.updateState(tagsPagedGroup);
+  }
+
+  public updateTagsPaged(type: ImageTagType, next: ITagsPaged) {
     const name = this.findName(type);
     const old = this.tagsPagedGroup[name];
 
@@ -34,7 +61,8 @@ export class TagsPagedGroup {
       [name]: this.updateTags(old, next)
     };
 
-    return new TagsPagedGroup(updatedTagsPagedGroup);
+    this.tagsPagedGroup = updatedTagsPagedGroup;
+    this.updateState(updatedTagsPagedGroup);
   }
 
   public getTagsPaged(type: ImageTagType): ITagsPaged {
@@ -81,23 +109,6 @@ export class TagsPagedGroup {
     return {
       ...next,
       tags: [...old.tags, ...next.tags]
-    };
-  }
-
-  private defaultTagsPaged() {
-    const defaultTagsPaged: ITagsPaged = {
-      endCursor: '',
-      hasNextPage: false,
-      tags: []
-    };
-
-    return {
-      auroraVersion: defaultTagsPaged,
-      bugfix: defaultTagsPaged,
-      latest: defaultTagsPaged,
-      major: defaultTagsPaged,
-      minor: defaultTagsPaged,
-      snapshot: defaultTagsPaged
     };
   }
 }
