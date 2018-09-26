@@ -8,7 +8,9 @@ import Spinner from 'components/Spinner';
 import { ITag } from 'services/auroraApiClients';
 import { ImageTagType } from 'services/TagStateManager';
 import TagsList from './TagsList';
-import TagTypeSelector, { IImageTagTypeOption } from './TagTypeSelector';
+import TagTypeSelector, {
+  IImageTagTypeOption
+} from './TagTypeSelector/TagTypeSelector';
 
 interface IVersionViewProps {
   canLoadMore: boolean;

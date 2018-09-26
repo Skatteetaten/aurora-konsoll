@@ -25,7 +25,7 @@ import {
 
 import { ApplicationDeploymentDetailsRoute } from '../ApplicationDeploymentSelector';
 import InformationView from './InformationView';
-import { IImageTagTypeOption } from './TagTypeSelector';
+import { IImageTagTypeOption } from './TagTypeSelector/TagTypeSelector';
 import VersionView from './VersionView';
 
 interface IDetailsViewProps
