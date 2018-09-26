@@ -1,8 +1,8 @@
-export class ComponentStateHandler<K> {
+export class ComponentStateHandler<S> {
   protected isActive = true;
-  private updateState: (state: K) => void;
+  private updateState: (state: S) => void;
 
-  constructor(updateState: (state: K) => void) {
+  constructor(updateState: (state: S) => void) {
     this.updateState = updateState;
   }
 
@@ -10,7 +10,7 @@ export class ComponentStateHandler<K> {
     this.isActive = false;
   }
 
-  protected handleState(state: K) {
+  protected handleState(state: S) {
     if (this.isActive) {
       this.updateState(state);
     }
