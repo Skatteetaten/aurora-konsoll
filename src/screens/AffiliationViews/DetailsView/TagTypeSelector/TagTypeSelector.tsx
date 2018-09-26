@@ -22,25 +22,23 @@ const TagTypeSelector = ({
   />
 );
 
-const { AURORA_VERSION, BUGFIX, LATEST, MAJOR, MINOR, SNAPSHOT } = ImageTagType;
+const createOption = (
+  type: ImageTagType,
+  text: string
+): IVersionStrategyOption => ({
+  key: type,
+  onRenderLabel: renderTagOption,
+  tag: type,
+  text
+});
 
 const versionStategyOptions: IVersionStrategyOption[] = [
-  { key: MAJOR, onRenderLabel: renderTagOption, tag: MAJOR, text: 'Major' },
-  { key: MINOR, onRenderLabel: renderTagOption, tag: MINOR, text: 'Minor' },
-  { key: BUGFIX, onRenderLabel: renderTagOption, tag: BUGFIX, text: 'Bugfix' },
-  { key: LATEST, onRenderLabel: renderTagOption, tag: LATEST, text: 'Latest' },
-  {
-    key: SNAPSHOT,
-    onRenderLabel: renderTagOption,
-    tag: SNAPSHOT,
-    text: 'Snapshot'
-  },
-  {
-    key: AURORA_VERSION,
-    onRenderLabel: renderTagOption,
-    tag: AURORA_VERSION,
-    text: 'Aurora version'
-  }
+  createOption(ImageTagType.MAJOR, 'Major'),
+  createOption(ImageTagType.MINOR, 'Minor'),
+  createOption(ImageTagType.BUGFIX, 'Bugfix'),
+  createOption(ImageTagType.LATEST, 'Latest'),
+  createOption(ImageTagType.SNAPSHOT, 'Snapshot'),
+  createOption(ImageTagType.AURORA_VERSION, 'Aurora version')
 ];
 
 export default TagTypeSelector;
