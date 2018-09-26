@@ -1,11 +1,11 @@
 import { ImageTagType } from 'services/TagStateManager';
 import TagTypeSelector from './TagTypeSelector';
 
-export interface IVersionStrategyOption {
+export interface IImageTagTypeOption {
   key: ImageTagType;
   tag: ImageTagType;
   text: string;
-  onRenderLabel?: (options: IVersionStrategyOption) => JSX.Element;
+  onRenderLabel?: (options: IImageTagTypeOption) => JSX.Element;
 }
 
 export default TagTypeSelector;

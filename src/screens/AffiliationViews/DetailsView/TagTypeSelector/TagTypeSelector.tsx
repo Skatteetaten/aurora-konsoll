@@ -3,12 +3,12 @@ import * as React from 'react';
 import RadioButtonGroup from 'aurora-frontend-react-komponenter/RadioButtonGroup';
 
 import { ImageTagType } from 'services/TagStateManager';
-import { IVersionStrategyOption } from '.';
-import TagOption from './renderTagOption';
+import { IImageTagTypeOption } from '.';
+import TagOption from './TagOption';
 
 interface ITagTypeSelector {
   imageTagType: ImageTagType;
-  handleSelectedStrategy: (e: Event, option: IVersionStrategyOption) => void;
+  handleSelectedStrategy: (e: Event, option: IImageTagTypeOption) => void;
 }
 
 const TagTypeSelector = ({
@@ -22,21 +22,20 @@ const TagTypeSelector = ({
   />
 );
 
-const createOption = (
-  type: ImageTagType,
-  text: string
-): IVersionStrategyOption => ({
-  key: type,
-  onRenderLabel: renderTagOption,
-  tag: type,
-  text
-});
+function createOption(type: ImageTagType, text: string): IImageTagTypeOption {
+  return {
+    key: type,
+    onRenderLabel: renderTagOption,
+    tag: type,
+    text
+  };
+}
 
-function renderTagOption({ tag, text }: IVersionStrategyOption): JSX.Element {
+function renderTagOption({ tag, text }: IImageTagTypeOption): JSX.Element {
   return <TagOption tag={tag} text={text} />;
 }
 
-const versionStategyOptions: IVersionStrategyOption[] = [
+const versionStategyOptions: IImageTagTypeOption[] = [
   createOption(ImageTagType.MAJOR, 'Major'),
   createOption(ImageTagType.MINOR, 'Minor'),
   createOption(ImageTagType.BUGFIX, 'Bugfix'),

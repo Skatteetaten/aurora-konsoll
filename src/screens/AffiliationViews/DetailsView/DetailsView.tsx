@@ -25,7 +25,7 @@ import {
 
 import { ApplicationDeploymentDetailsRoute } from '../ApplicationDeploymentSelector';
 import InformationView from './InformationView';
-import { IVersionStrategyOption } from './TagTypeSelector';
+import { IImageTagTypeOption } from './TagTypeSelector';
 import VersionView from './VersionView';
 
 interface IDetailsViewProps
@@ -131,10 +131,7 @@ class DetailsView extends React.Component<
     });
   };
 
-  public handleSelectedStrategy = (
-    e: Event,
-    option: IVersionStrategyOption
-  ) => {
+  public handleSelectedStrategy = (e: Event, option: IImageTagTypeOption) => {
     e.preventDefault();
     this.setState(() => ({
       imageTagType: option.key
