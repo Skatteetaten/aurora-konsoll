@@ -1,4 +1,4 @@
-import { ImageTagType } from 'services/TagService';
+import { ImageTagType } from 'services/TagStateManager';
 import TagTypeSelector from './TagTypeSelector';
 
 export interface IVersionStrategyOption {

@@ -6,7 +6,7 @@ import TextField from 'aurora-frontend-react-komponenter/TextField';
 
 import Spinner from 'components/Spinner';
 import { ITag } from 'services/auroraApiClients';
-import { ImageTagType } from 'services/TagService';
+import { ImageTagType } from 'services/TagStateManager';
 import TagsList from './TagsList';
 import TagTypeSelector, { IVersionStrategyOption } from './TagTypeSelector';
 

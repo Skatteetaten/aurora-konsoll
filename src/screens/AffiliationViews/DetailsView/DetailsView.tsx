@@ -16,12 +16,12 @@ import {
   ITagsPaged
 } from 'services/auroraApiClients';
 import { IDeploymentSpec } from 'services/auroraApiClients/applicationDeploymentClient/DeploymentSpec';
-import LoadingStateManager from 'services/LoadingService';
+import LoadingStateManager from 'services/LoadingStateManager';
 import {
   ImageTagType,
   ITagsPagedGroup,
   TagStateManager
-} from 'services/TagService';
+} from 'services/TagStateManager';
 
 import { ApplicationDeploymentDetailsRoute } from '../ApplicationDeploymentSelector';
 import InformationView from './InformationView';

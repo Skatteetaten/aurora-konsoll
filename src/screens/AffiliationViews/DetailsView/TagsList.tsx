@@ -5,7 +5,7 @@ import DetailsList from 'aurora-frontend-react-komponenter/DetailsList';
 import { Selection } from 'office-ui-fabric-react/lib/DetailsList';
 
 import { ITag } from 'services/auroraApiClients';
-import { ImageTagType } from 'services/TagService';
+import { ImageTagType } from 'services/TagStateManager';
 
 const detailListColumns = [
   {
