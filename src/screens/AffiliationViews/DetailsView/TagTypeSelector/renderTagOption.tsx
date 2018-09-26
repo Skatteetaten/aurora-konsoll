@@ -2,16 +2,8 @@ import * as React from 'react';
 import styled from 'styled-components';
 
 import { ImageTagType } from 'services/TagStateManager';
-import { IVersionStrategyOption } from '.';
 
 const { AURORA_VERSION, BUGFIX, LATEST, MAJOR, MINOR, SNAPSHOT } = ImageTagType;
-
-export default function renderTagOption({
-  tag,
-  text
-}: IVersionStrategyOption): JSX.Element {
-  return <StyledTagOption tag={tag} text={text} />;
-}
 
 interface IOptionProps {
   tag: ImageTagType;
@@ -25,16 +17,6 @@ const TagOption = ({ tag, text, className }: IOptionProps) => (
     <label>{getOptionLabel(tag)}</label>
   </span>
 );
-
-const StyledTagOption = styled(TagOption)`
-  position: relative;
-  left: 28px;
-  margin-bottom: 5px;
-  h3 {
-    margin: 0;
-    margin-bottom: 2px;
-  }
-`;
 
 function getOptionLabel(imageTagType: ImageTagType): string {
   switch (imageTagType) {
@@ -52,3 +34,13 @@ function getOptionLabel(imageTagType: ImageTagType): string {
       return 'Velg spesifikk versjon som alltid skal kjøres.';
   }
 }
+
+export default styled(TagOption)`
+  position: relative;
+  left: 28px;
+  margin-bottom: 5px;
+  h3 {
+    margin: 0;
+    margin-bottom: 2px;
+  }
+`;

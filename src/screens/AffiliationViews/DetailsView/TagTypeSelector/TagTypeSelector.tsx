@@ -4,7 +4,7 @@ import RadioButtonGroup from 'aurora-frontend-react-komponenter/RadioButtonGroup
 
 import { ImageTagType } from 'services/TagStateManager';
 import { IVersionStrategyOption } from '.';
-import renderTagOption from './renderTagOption';
+import TagOption from './renderTagOption';
 
 interface ITagTypeSelector {
   imageTagType: ImageTagType;
@@ -31,6 +31,10 @@ const createOption = (
   tag: type,
   text
 });
+
+function renderTagOption({ tag, text }: IVersionStrategyOption): JSX.Element {
+  return <TagOption tag={tag} text={text} />;
+}
 
 const versionStategyOptions: IVersionStrategyOption[] = [
   createOption(ImageTagType.MAJOR, 'Major'),
