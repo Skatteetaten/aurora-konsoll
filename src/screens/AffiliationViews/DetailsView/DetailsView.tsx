@@ -17,11 +17,7 @@ import {
 } from 'services/auroraApiClients';
 import { IDeploymentSpec } from 'services/auroraApiClients/applicationDeploymentClient/DeploymentSpec';
 import LoadingService from 'services/LoadingService';
-import {
-  ImageTagType,
-  ITagsPagedGroup,
-  TagsPagedGroup
-} from 'services/TagService';
+import { ImageTagType, ITagsPagedGroup, TagService } from 'services/TagService';
 
 import { ApplicationDeploymentDetailsRoute } from '../ApplicationDeploymentSelector';
 import InformationView from './InformationView';
@@ -61,7 +57,7 @@ class DetailsView extends React.Component<
       redeploy: false,
       update: false
     },
-    tagsPagedGroup: TagsPagedGroup.defaultTagsPagedGroup(),
+    tagsPagedGroup: TagService.defaultTagsPagedGroup(),
     versionSearchText: ''
   };
 
@@ -70,7 +66,7 @@ class DetailsView extends React.Component<
     loading => this.setState({ loading })
   );
 
-  private tagService = new TagsPagedGroup(
+  private tagService = new TagService(
     this.state.tagsPagedGroup,
     tagsPagedGroup => this.setState({ tagsPagedGroup })
   );

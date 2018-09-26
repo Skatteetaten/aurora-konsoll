@@ -1,5 +1,5 @@
 import { ITag, ITagsPaged } from 'services/auroraApiClients';
-import { ImageTagType, TagsPagedGroup } from 'services/TagService';
+import { ImageTagType, TagService } from 'services/TagService';
 
 export function createTagsPaged(
   endCursor: string = '',
@@ -13,7 +13,7 @@ export function createTagsPaged(
   };
 }
 
-const tagsPagedGroup = new TagsPagedGroup(
+const tagsPagedGroup = new TagService(
   {
     auroraVersion: createTagsPaged(),
     bugfix: createTagsPaged(),

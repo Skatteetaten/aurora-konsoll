@@ -18,7 +18,7 @@ export interface ITagsPagedGroup {
   auroraVersion: ITagsPaged;
 }
 
-export class TagsPagedGroup {
+export class TagService {
   public static defaultTagsPagedGroup() {
     const defaultTagsPaged: ITagsPaged = {
       endCursor: '',
