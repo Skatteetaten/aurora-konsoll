@@ -4,7 +4,7 @@ export interface ILoadingMap {
   [key: string]: boolean;
 }
 
-export default class LoadingService<S> extends ComponentStateHandler<S> {
+export default class LoadingStateManager<S> extends ComponentStateHandler<S> {
   private state: S;
 
   constructor(state: S, setState: (state: S) => void) {

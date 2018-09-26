@@ -16,8 +16,12 @@ import {
   ITagsPaged
 } from 'services/auroraApiClients';
 import { IDeploymentSpec } from 'services/auroraApiClients/applicationDeploymentClient/DeploymentSpec';
-import LoadingService from 'services/LoadingService';
-import { ImageTagType, ITagsPagedGroup, TagService } from 'services/TagService';
+import LoadingStateManager from 'services/LoadingService';
+import {
+  ImageTagType,
+  ITagsPagedGroup,
+  TagStateManager
+} from 'services/TagService';
 
 import { ApplicationDeploymentDetailsRoute } from '../ApplicationDeploymentSelector';
 import InformationView from './InformationView';
@@ -57,16 +61,16 @@ class DetailsView extends React.Component<
       redeploy: false,
       update: false
     },
-    tagsPagedGroup: TagService.defaultTagsPagedGroup(),
+    tagsPagedGroup: TagStateManager.defaultTagsPagedGroup(),
     versionSearchText: ''
   };
 
-  private loadingService = new LoadingService<IDetailsViewLoading>(
+  private loadingStateManager = new LoadingStateManager<IDetailsViewLoading>(
     this.state.loading,
     loading => this.setState({ loading })
   );
 
-  private tagService = new TagService(
+  private tagStateManager = new TagStateManager(
     this.state.tagsPagedGroup,
     tagsPagedGroup => this.setState({ tagsPagedGroup })
   );
@@ -84,7 +88,7 @@ class DetailsView extends React.Component<
       return;
     }
 
-    this.loadingService.withLoading('redeploy', async () => {
+    this.loadingStateManager.withLoading('redeploy', async () => {
       const success = await clients.applicationDeploymentClient.redeployWithVersion(
         deployment.id,
         selectedTag.name
@@ -98,7 +102,7 @@ class DetailsView extends React.Component<
   public refreshApplicationDeployment = () => {
     const { clients, deployment } = this.props;
 
-    this.loadingService.withLoading('update', async () => {
+    this.loadingStateManager.withLoading('update', async () => {
       const success = await clients.applicationDeploymentClient.refreshApplicationDeployment(
         deployment.id
       );
@@ -112,10 +116,10 @@ class DetailsView extends React.Component<
     const { clients, deployment } = this.props;
     const { imageTagType } = this.state;
 
-    const current: ITagsPaged = this.tagService.getTagsPaged(imageTagType);
+    const current: ITagsPaged = this.tagStateManager.getTagsPaged(imageTagType);
     const cursor = current.endCursor;
 
-    this.loadingService.withLoading('fetchTags', async () => {
+    this.loadingStateManager.withLoading('fetchTags', async () => {
       const tagsPaged = await clients.imageRepositoryClient.findTagsPaged(
         deployment.repository,
         15,
@@ -123,7 +127,7 @@ class DetailsView extends React.Component<
         [imageTagType]
       );
 
-      this.tagService.updateTagsPaged(imageTagType, tagsPaged);
+      this.tagStateManager.updateTagsPaged(imageTagType, tagsPaged);
     });
   };
 
@@ -163,17 +167,17 @@ class DetailsView extends React.Component<
     }));
     */
 
-    this.loadingService.withLoading('fetchTags', async () => {
+    this.loadingStateManager.withLoading('fetchTags', async () => {
       const tagsPagedGroup = await clients.imageRepositoryClient.findGroupedTagsPaged(
         deployment.repository
       );
-      this.tagService.setTagsPagedGroup(tagsPagedGroup);
+      this.tagStateManager.setTagsPagedGroup(tagsPagedGroup);
     });
   }
 
   public componentWillUnmount() {
-    this.loadingService.close();
-    this.tagService.close();
+    this.loadingStateManager.close();
+    this.tagStateManager.close();
   }
 
   public render() {
@@ -233,12 +237,12 @@ class DetailsView extends React.Component<
 
   private getTagsFiltered = (type: ImageTagType): ITag[] => {
     const { versionSearchText } = this.state;
-    return this.tagService.getTagsFiltered(type, versionSearchText);
+    return this.tagStateManager.getTagsFiltered(type, versionSearchText);
   };
 
   private canLoadMoreTags = () => {
     const { imageTagType } = this.state;
-    return this.tagService.getTagsPaged(imageTagType).hasNextPage;
+    return this.tagStateManager.getTagsPaged(imageTagType).hasNextPage;
   };
 
   private canUpgrade = () => {

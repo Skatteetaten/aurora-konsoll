@@ -21,7 +21,7 @@ export interface ITagsPagedGroup {
 
 type UpdateStateFunc = (tagsGroup: ITagsPagedGroup) => void;
 
-export class TagService extends ComponentStateHandler<ITagsPagedGroup> {
+export class TagStateManager extends ComponentStateHandler<ITagsPagedGroup> {
   public static defaultTagsPagedGroup(): ITagsPagedGroup {
     const defaultTagsPaged: ITagsPaged = {
       endCursor: '',
