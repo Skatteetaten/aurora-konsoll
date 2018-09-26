@@ -4,8 +4,8 @@ import styled from 'styled-components';
 import DetailsList from 'aurora-frontend-react-komponenter/DetailsList';
 import { Selection } from 'office-ui-fabric-react/lib/DetailsList';
 
-import { ImageTagType } from 'models/TagsPagedGroup';
 import { ITag } from 'services/auroraApiClients';
+import { ImageTagType } from 'services/TagsPagedGroup';
 
 const detailListColumns = [
   {

@@ -11,17 +11,17 @@ import TabLink, { TabLinkWrapper } from 'components/TabLink';
 import Card from 'components/Card';
 import Label from 'components/Label';
 import {
-  ImageTagType,
-  ITagsPagedGroup,
-  TagsPagedGroup
-} from 'models/TagsPagedGroup';
-import {
   IApplicationDeployment,
   ITag,
   ITagsPaged
 } from 'services/auroraApiClients';
 import { IDeploymentSpec } from 'services/auroraApiClients/applicationDeploymentClient/DeploymentSpec';
 import LoadingService from 'services/LoadingService';
+import {
+  ImageTagType,
+  ITagsPagedGroup,
+  TagsPagedGroup
+} from 'services/TagsPagedGroup';
 
 import { ApplicationDeploymentDetailsRoute } from '../ApplicationDeploymentSelector';
 import InformationView from './InformationView';

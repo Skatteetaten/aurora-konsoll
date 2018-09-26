@@ -2,7 +2,6 @@ import * as React from 'react';
 import * as ReactDOM from 'react-dom';
 
 import { AuroraApiProvider, IApiClients } from 'components/AuroraApi';
-import { ITagsPagedGroup } from 'models/TagsPagedGroup';
 import {
   IApplicationDeployment,
   IApplicationDeploymentClient,
@@ -13,6 +12,7 @@ import {
   IUserAndAffiliations
 } from 'services/auroraApiClients';
 import { IDeploymentSpec } from 'services/auroraApiClients/applicationDeploymentClient/DeploymentSpec';
+import { ITagsPagedGroup } from 'services/TagsPagedGroup';
 
 const applicationDeploymentClient: IApplicationDeploymentClient = {
   findAllApplicationDeployments: async (): Promise<

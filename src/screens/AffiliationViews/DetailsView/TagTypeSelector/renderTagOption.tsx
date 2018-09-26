@@ -1,7 +1,7 @@
 import * as React from 'react';
 import styled from 'styled-components';
 
-import { ImageTagType } from 'models/TagsPagedGroup';
+import { ImageTagType } from 'services/TagsPagedGroup';
 import { IVersionStrategyOption } from '.';
 
 const { AURORA_VERSION, BUGFIX, LATEST, MAJOR, MINOR, SNAPSHOT } = ImageTagType;

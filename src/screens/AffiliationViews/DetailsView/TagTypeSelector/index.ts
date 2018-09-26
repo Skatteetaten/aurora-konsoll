@@ -1,4 +1,4 @@
-import { ImageTagType } from 'models/TagsPagedGroup';
+import { ImageTagType } from 'services/TagsPagedGroup';
 import TagTypeSelector from './TagTypeSelector';
 
 export interface IVersionStrategyOption {

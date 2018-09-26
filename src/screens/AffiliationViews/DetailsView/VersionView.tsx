@@ -5,8 +5,8 @@ import Button from 'aurora-frontend-react-komponenter/Button';
 import TextField from 'aurora-frontend-react-komponenter/TextField';
 
 import Spinner from 'components/Spinner';
-import { ImageTagType } from 'models/TagsPagedGroup';
 import { ITag } from 'services/auroraApiClients';
+import { ImageTagType } from 'services/TagsPagedGroup';
 import TagsList from './TagsList';
 import TagTypeSelector, { IVersionStrategyOption } from './TagTypeSelector';
 
