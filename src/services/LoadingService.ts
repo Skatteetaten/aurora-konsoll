@@ -4,15 +4,15 @@ export interface ILoadingMap {
   [key: string]: boolean;
 }
 
-export default class LoadingService<K> extends ComponentStateHandler<K> {
-  private state: K;
+export default class LoadingService<S> extends ComponentStateHandler<S> {
+  private state: S;
 
-  constructor(state: K, setState: (state: K) => void) {
+  constructor(state: S, setState: (state: S) => void) {
     super(setState);
     this.state = state;
   }
 
-  public async withLoading(type: keyof K, cb: () => any) {
+  public async withLoading(type: keyof S, cb: () => any) {
     this.setLoading({
       [type]: true
     });
