@@ -1,5 +1,5 @@
-import { ImageTagType, TagsPagedGroup } from 'models/TagsPagedGroup';
 import { ITag, ITagsPaged } from 'services/auroraApiClients';
+import { ImageTagType, TagStateManager } from 'services/TagStateManager';
 
 export function createTagsPaged(
   endCursor: string = '',
@@ -13,20 +13,25 @@ export function createTagsPaged(
   };
 }
 
-const tagsPagedGroup = new TagsPagedGroup({
-  auroraVersion: createTagsPaged(),
-  bugfix: createTagsPaged(),
-  latest: createTagsPaged(),
-  major: createTagsPaged('test', false, [
-    {
-      lastModified: '20.03.2018',
-      name: '3',
-      type: ImageTagType.MAJOR
-    }
-  ]),
-  minor: createTagsPaged(),
-  snapshot: createTagsPaged()
-});
+const tagsPagedGroup = new TagStateManager(
+  {
+    auroraVersion: createTagsPaged(),
+    bugfix: createTagsPaged(),
+    latest: createTagsPaged(),
+    major: createTagsPaged('test', false, [
+      {
+        lastModified: '20.03.2018',
+        name: '3',
+        type: ImageTagType.MAJOR
+      }
+    ]),
+    minor: createTagsPaged(),
+    snapshot: createTagsPaged()
+  },
+  () => {
+    return;
+  }
+);
 
 it('should get tags for a given ImageTagType', () => {
   expect(tagsPagedGroup.getTagsPaged(ImageTagType.MAJOR)).toEqual({
@@ -60,7 +65,7 @@ it('should update tags for a given ImageTagType', () => {
     ]
   });
 
-  const nextTagsPagedGroup = tagsPagedGroup.updateTagsPaged(
+  tagsPagedGroup.updateTagsPaged(
     ImageTagType.MAJOR,
     createTagsPaged('test2', true, [
       {
@@ -71,7 +76,7 @@ it('should update tags for a given ImageTagType', () => {
     ])
   );
 
-  expect(nextTagsPagedGroup.getTagsPaged(ImageTagType.MAJOR)).toEqual({
+  expect(tagsPagedGroup.getTagsPaged(ImageTagType.MAJOR)).toEqual({
     endCursor: 'test2',
     hasNextPage: true,
     tags: [

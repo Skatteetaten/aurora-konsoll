@@ -5,10 +5,12 @@ import Button from 'aurora-frontend-react-komponenter/Button';
 import TextField from 'aurora-frontend-react-komponenter/TextField';
 
 import Spinner from 'components/Spinner';
-import { ImageTagType } from 'models/TagsPagedGroup';
 import { ITag } from 'services/auroraApiClients';
+import { ImageTagType } from 'services/TagStateManager';
 import TagsList from './TagsList';
-import TagTypeSelector, { IVersionStrategyOption } from './TagTypeSelector';
+import TagTypeSelector, {
+  IImageTagTypeOption
+} from './TagTypeSelector/TagTypeSelector';
 
 interface IVersionViewProps {
   canLoadMore: boolean;
@@ -21,7 +23,7 @@ interface IVersionViewProps {
   selectedTag?: ITag;
   className?: string;
   handlefetchTags: () => void;
-  handleSelectedStrategy: (e: Event, option: IVersionStrategyOption) => void;
+  handleSelectedStrategy: (e: Event, option: IImageTagTypeOption) => void;
   handleVersionSearch: (value: string) => void;
   redeployWithVersion: () => void;
   handleSelectNextTag: (item: ITag) => void;

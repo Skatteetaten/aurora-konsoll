@@ -1,10 +1,6 @@
 import ApolloClient from 'apollo-boost';
 
-import {
-  ImageTagType,
-  ITagsPagedGroup,
-  TagsPagedGroup
-} from 'models/TagsPagedGroup';
+import { ImageTagType, ITagsPagedGroup } from '../../TagStateManager';
 
 import {
   IImageTagsConnection,
@@ -33,7 +29,7 @@ export interface IImageRepositoryClient {
     cursor?: string,
     types?: string[]
   ) => Promise<ITagsPaged>;
-  findGroupedTagsPaged: (repository: string) => Promise<TagsPagedGroup>;
+  findGroupedTagsPaged: (repository: string) => Promise<ITagsPagedGroup>;
 }
 
 export class ImageRepositoryClient implements IImageRepositoryClient {
@@ -70,7 +66,7 @@ export class ImageRepositoryClient implements IImageRepositoryClient {
 
   public async findGroupedTagsPaged(
     repository: string
-  ): Promise<TagsPagedGroup> {
+  ): Promise<ITagsPagedGroup> {
     const result = await this.client.query<ITagsGroupedQuery>({
       query: TAGS_GROUPED_QUERY,
       variables: {
@@ -95,8 +91,9 @@ export class ImageRepositoryClient implements IImageRepositoryClient {
       snapshot: this.toTagsPaged(mainRepo.snapshot)
     };
 
-    return new TagsPagedGroup(normalizedTags);
+    return normalizedTags;
   }
+
   private toTagsPaged(imageTagsConnection: IImageTagsConnection): ITagsPaged {
     const { edges, pageInfo } = imageTagsConnection;
     return {

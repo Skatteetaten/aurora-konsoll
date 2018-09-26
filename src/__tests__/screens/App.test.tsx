@@ -2,7 +2,6 @@ import * as React from 'react';
 import * as ReactDOM from 'react-dom';
 
 import { AuroraApiProvider, IApiClients } from 'components/AuroraApi';
-import { TagsPagedGroup } from 'models/TagsPagedGroup';
 import {
   IApplicationDeployment,
   IApplicationDeploymentClient,
@@ -13,6 +12,7 @@ import {
   IUserAndAffiliations
 } from 'services/auroraApiClients';
 import { IDeploymentSpec } from 'services/auroraApiClients/applicationDeploymentClient/DeploymentSpec';
+import { ITagsPagedGroup } from 'services/TagStateManager';
 
 const applicationDeploymentClient: IApplicationDeploymentClient = {
   findAllApplicationDeployments: async (): Promise<
@@ -33,8 +33,8 @@ const applicationDeploymentClient: IApplicationDeploymentClient = {
 };
 
 const imageRepositoryClient: IImageRepositoryClient = {
-  findGroupedTagsPaged: async (): Promise<TagsPagedGroup> =>
-    ({} as TagsPagedGroup),
+  findGroupedTagsPaged: async (): Promise<ITagsPagedGroup> =>
+    ({} as ITagsPagedGroup),
   findTagsPaged: async (): Promise<ITagsPaged> => ({} as ITagsPaged)
 };
 

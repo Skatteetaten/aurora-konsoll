@@ -2,13 +2,19 @@ import * as React from 'react';
 
 import RadioButtonGroup from 'aurora-frontend-react-komponenter/RadioButtonGroup';
 
-import { ImageTagType } from 'models/TagsPagedGroup';
-import { IVersionStrategyOption } from '.';
-import renderTagOption from './renderTagOption';
+import { ImageTagType } from 'services/TagStateManager';
+import TagOption from './TagOption';
+
+export interface IImageTagTypeOption {
+  key: ImageTagType;
+  tag: ImageTagType;
+  text: string;
+  onRenderLabel?: (options: IImageTagTypeOption) => JSX.Element;
+}
 
 interface ITagTypeSelector {
   imageTagType: ImageTagType;
-  handleSelectedStrategy: (e: Event, option: IVersionStrategyOption) => void;
+  handleSelectedStrategy: (e: Event, option: IImageTagTypeOption) => void;
 }
 
 const TagTypeSelector = ({
@@ -22,25 +28,26 @@ const TagTypeSelector = ({
   />
 );
 
-const { AURORA_VERSION, BUGFIX, LATEST, MAJOR, MINOR, SNAPSHOT } = ImageTagType;
+function createOption(type: ImageTagType, text: string): IImageTagTypeOption {
+  return {
+    key: type,
+    onRenderLabel: renderTagOption,
+    tag: type,
+    text
+  };
+}
 
-const versionStategyOptions: IVersionStrategyOption[] = [
-  { key: MAJOR, onRenderLabel: renderTagOption, tag: MAJOR, text: 'Major' },
-  { key: MINOR, onRenderLabel: renderTagOption, tag: MINOR, text: 'Minor' },
-  { key: BUGFIX, onRenderLabel: renderTagOption, tag: BUGFIX, text: 'Bugfix' },
-  { key: LATEST, onRenderLabel: renderTagOption, tag: LATEST, text: 'Latest' },
-  {
-    key: SNAPSHOT,
-    onRenderLabel: renderTagOption,
-    tag: SNAPSHOT,
-    text: 'Snapshot'
-  },
-  {
-    key: AURORA_VERSION,
-    onRenderLabel: renderTagOption,
-    tag: AURORA_VERSION,
-    text: 'Aurora version'
-  }
+function renderTagOption({ tag, text }: IImageTagTypeOption): JSX.Element {
+  return <TagOption tag={tag} text={text} />;
+}
+
+const versionStategyOptions: IImageTagTypeOption[] = [
+  createOption(ImageTagType.MAJOR, 'Major'),
+  createOption(ImageTagType.MINOR, 'Minor'),
+  createOption(ImageTagType.BUGFIX, 'Bugfix'),
+  createOption(ImageTagType.LATEST, 'Latest'),
+  createOption(ImageTagType.SNAPSHOT, 'Snapshot'),
+  createOption(ImageTagType.AURORA_VERSION, 'Aurora version')
 ];
 
 export default TagTypeSelector;

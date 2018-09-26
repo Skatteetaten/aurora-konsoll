@@ -1,3 +1,4 @@
+import { ComponentStateHandler } from 'models/ComponentStateHandler';
 import { ITag, ITagsPaged } from 'services/auroraApiClients';
 
 export enum ImageTagType {
@@ -18,14 +19,39 @@ export interface ITagsPagedGroup {
   auroraVersion: ITagsPaged;
 }
 
-export class TagsPagedGroup {
-  private tagsPagedGroup: ITagsPagedGroup;
+type UpdateStateFunc = (tagsGroup: ITagsPagedGroup) => void;
 
-  constructor(tagsGrouped?: ITagsPagedGroup) {
-    this.tagsPagedGroup = tagsGrouped || this.defaultTagsPaged();
+export class TagStateManager extends ComponentStateHandler<ITagsPagedGroup> {
+  public static defaultTagsPagedGroup(): ITagsPagedGroup {
+    const defaultTagsPaged: ITagsPaged = {
+      endCursor: '',
+      hasNextPage: false,
+      tags: []
+    };
+
+    return {
+      auroraVersion: defaultTagsPaged,
+      bugfix: defaultTagsPaged,
+      latest: defaultTagsPaged,
+      major: defaultTagsPaged,
+      minor: defaultTagsPaged,
+      snapshot: defaultTagsPaged
+    };
   }
 
-  public updateTagsPaged(type: ImageTagType, next: ITagsPaged): TagsPagedGroup {
+  private tagsPagedGroup: ITagsPagedGroup;
+
+  constructor(tagsGroup: ITagsPagedGroup, updateState: UpdateStateFunc) {
+    super(updateState);
+    this.tagsPagedGroup = tagsGroup;
+  }
+
+  public setTagsPagedGroup(tagsPagedGroup: ITagsPagedGroup) {
+    this.tagsPagedGroup = tagsPagedGroup;
+    this.handleState(tagsPagedGroup);
+  }
+
+  public updateTagsPaged(type: ImageTagType, next: ITagsPaged) {
     const name = this.findName(type);
     const old = this.tagsPagedGroup[name];
 
@@ -34,7 +60,8 @@ export class TagsPagedGroup {
       [name]: this.updateTags(old, next)
     };
 
-    return new TagsPagedGroup(updatedTagsPagedGroup);
+    this.tagsPagedGroup = updatedTagsPagedGroup;
+    this.handleState(updatedTagsPagedGroup);
   }
 
   public getTagsPaged(type: ImageTagType): ITagsPaged {
@@ -42,7 +69,7 @@ export class TagsPagedGroup {
     return this.tagsPagedGroup[name];
   }
 
-  public getTagsForType(type: ImageTagType, searchText: string): ITag[] {
+  public getTagsFiltered(type: ImageTagType, searchText: string): ITag[] {
     const sortTagsByDate = (t1: ITag, t2: ITag) => {
       const date1 = new Date(t1.lastModified).getTime();
       const date2 = new Date(t2.lastModified).getTime();
@@ -81,23 +108,6 @@ export class TagsPagedGroup {
     return {
       ...next,
       tags: [...old.tags, ...next.tags]
-    };
-  }
-
-  private defaultTagsPaged() {
-    const defaultTagsPaged: ITagsPaged = {
-      endCursor: '',
-      hasNextPage: false,
-      tags: []
-    };
-
-    return {
-      auroraVersion: defaultTagsPaged,
-      bugfix: defaultTagsPaged,
-      latest: defaultTagsPaged,
-      major: defaultTagsPaged,
-      minor: defaultTagsPaged,
-      snapshot: defaultTagsPaged
     };
   }
 }
