@@ -80,6 +80,7 @@ class DetailsView extends React.Component<
     const { clients, deployment } = this.props;
     const { selectedTag } = this.state;
     if (!selectedTag) {
+      // TODO: Error message
       return;
     }
 
@@ -170,6 +171,11 @@ class DetailsView extends React.Component<
     });
   }
 
+  public componentWillUnmount() {
+    this.loadingService.close();
+    this.tagService.close();
+  }
+
   public render() {
     const { deployment, match } = this.props;
     const { deploymentSpec, loading, imageTagType, selectedTag } = this.state;
@@ -215,7 +221,7 @@ class DetailsView extends React.Component<
                 isFetchingTags={loading.fetchTags}
                 isRedeploying={loading.redeploy}
                 imageTagType={imageTagType}
-                tags={this.getTagsForType(imageTagType)}
+                tags={this.getTagsFiltered(imageTagType)}
                 canUpgrade={this.canUpgrade()}
               />
             </Route>
@@ -225,9 +231,9 @@ class DetailsView extends React.Component<
     );
   }
 
-  private getTagsForType = (type: ImageTagType): ITag[] => {
+  private getTagsFiltered = (type: ImageTagType): ITag[] => {
     const { versionSearchText } = this.state;
-    return this.tagService.getTagsForType(type, versionSearchText);
+    return this.tagService.getTagsFiltered(type, versionSearchText);
   };
 
   private canLoadMoreTags = () => {

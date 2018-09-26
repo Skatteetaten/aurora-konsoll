@@ -1,3 +1,4 @@
+import { ComponentStateHandler } from 'models/ComponentStateHandler';
 import { ITag, ITagsPaged } from 'services/auroraApiClients';
 
 export enum ImageTagType {
@@ -18,7 +19,9 @@ export interface ITagsPagedGroup {
   auroraVersion: ITagsPaged;
 }
 
-export class TagService {
+type UpdateStateFunc = (tagsGroup: ITagsPagedGroup) => void;
+
+export class TagService extends ComponentStateHandler<ITagsPagedGroup> {
   public static defaultTagsPagedGroup(): ITagsPagedGroup {
     const defaultTagsPaged: ITagsPaged = {
       endCursor: '',
@@ -37,19 +40,15 @@ export class TagService {
   }
 
   private tagsPagedGroup: ITagsPagedGroup;
-  private updateState: (tagsGroup: ITagsPagedGroup) => void;
 
-  constructor(
-    tagsGroup: ITagsPagedGroup,
-    updateState: (tagsGroup: ITagsPagedGroup) => void
-  ) {
+  constructor(tagsGroup: ITagsPagedGroup, updateState: UpdateStateFunc) {
+    super(updateState);
     this.tagsPagedGroup = tagsGroup;
-    this.updateState = updateState;
   }
 
   public setTagsPagedGroup(tagsPagedGroup: ITagsPagedGroup) {
     this.tagsPagedGroup = tagsPagedGroup;
-    this.updateState(tagsPagedGroup);
+    this.handleState(tagsPagedGroup);
   }
 
   public updateTagsPaged(type: ImageTagType, next: ITagsPaged) {
@@ -62,7 +61,7 @@ export class TagService {
     };
 
     this.tagsPagedGroup = updatedTagsPagedGroup;
-    this.updateState(updatedTagsPagedGroup);
+    this.handleState(updatedTagsPagedGroup);
   }
 
   public getTagsPaged(type: ImageTagType): ITagsPaged {
@@ -70,7 +69,7 @@ export class TagService {
     return this.tagsPagedGroup[name];
   }
 
-  public getTagsForType(type: ImageTagType, searchText: string): ITag[] {
+  public getTagsFiltered(type: ImageTagType, searchText: string): ITag[] {
     const sortTagsByDate = (t1: ITag, t2: ITag) => {
       const date1 = new Date(t1.lastModified).getTime();
       const date2 = new Date(t2.lastModified).getTime();

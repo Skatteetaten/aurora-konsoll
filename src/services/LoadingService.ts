@@ -1,14 +1,15 @@
+import { ComponentStateHandler } from 'models/ComponentStateHandler';
+
 export interface ILoadingMap {
   [key: string]: boolean;
 }
 
-export default class LoadingService<K> {
+export default class LoadingService<K> extends ComponentStateHandler<K> {
   private state: K;
-  private setState: (state: K) => void;
 
   constructor(state: K, setState: (state: K) => void) {
+    super(setState);
     this.state = state;
-    this.setState = setState;
   }
 
   public async withLoading(type: keyof K, cb: () => any) {
@@ -35,6 +36,6 @@ export default class LoadingService<K> {
       this.state[k] = getCurrentLoadingState(k);
     });
 
-    this.setState(this.state);
+    this.handleState(this.state);
   };
 }
