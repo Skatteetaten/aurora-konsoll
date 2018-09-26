@@ -19,7 +19,7 @@ export interface ITagsPagedGroup {
 }
 
 export class TagService {
-  public static defaultTagsPagedGroup() {
+  public static defaultTagsPagedGroup(): ITagsPagedGroup {
     const defaultTagsPaged: ITagsPaged = {
       endCursor: '',
       hasNextPage: false,
