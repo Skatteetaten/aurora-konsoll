@@ -1,5 +1,5 @@
 import gql from 'graphql-tag';
-import { ImageTagType } from 'services/TagsPagedGroup';
+import { ImageTagType } from 'services/TagService';
 
 export interface ITagsQuery {
   imageRepositories: Array<{

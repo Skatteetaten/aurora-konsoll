@@ -2,7 +2,7 @@ import * as React from 'react';
 
 import RadioButtonGroup from 'aurora-frontend-react-komponenter/RadioButtonGroup';
 
-import { ImageTagType } from 'services/TagsPagedGroup';
+import { ImageTagType } from 'services/TagService';
 import { IVersionStrategyOption } from '.';
 import renderTagOption from './renderTagOption';
 

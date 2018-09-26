@@ -1,6 +1,6 @@
 import ApolloClient from 'apollo-boost';
 
-import { ImageTagType, ITagsPagedGroup } from 'services/TagsPagedGroup';
+import { ImageTagType, ITagsPagedGroup } from 'services/TagService';
 
 import {
   IImageTagsConnection,

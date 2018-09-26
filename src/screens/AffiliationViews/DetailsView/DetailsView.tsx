@@ -21,7 +21,7 @@ import {
   ImageTagType,
   ITagsPagedGroup,
   TagsPagedGroup
-} from 'services/TagsPagedGroup';
+} from 'services/TagService';
 
 import { ApplicationDeploymentDetailsRoute } from '../ApplicationDeploymentSelector';
 import InformationView from './InformationView';

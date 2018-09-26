@@ -12,7 +12,7 @@ import {
   IUserAndAffiliations
 } from 'services/auroraApiClients';
 import { IDeploymentSpec } from 'services/auroraApiClients/applicationDeploymentClient/DeploymentSpec';
-import { ITagsPagedGroup } from 'services/TagsPagedGroup';
+import { ITagsPagedGroup } from 'services/TagService';
 
 const applicationDeploymentClient: IApplicationDeploymentClient = {
   findAllApplicationDeployments: async (): Promise<
