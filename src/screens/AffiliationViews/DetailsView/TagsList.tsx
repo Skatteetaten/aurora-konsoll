@@ -75,25 +75,15 @@ export default class TagsList extends React.Component<
     }
   };
 
-  public handleSelectedTag = (tag: ITag) => {
-    const selectedTagIndex = this.props.tags.findIndex(
-      t => t.name === tag.name
-    );
-    this.setState({
-      selectedTagIndex
-    });
-    this.props.handleSelectNextTag(tag);
-  };
-
   public componentDidUpdate(prevProps: ITagsListProps) {
-    const { tags, imageTagType } = this.props;
+    const { tags, imageTagType, deployedTag, selectedTag } = this.props;
 
-    const differentTagType = prevProps.imageTagType !== imageTagType;
+    const diffTagType = prevProps.imageTagType !== imageTagType;
     const newTags = tags.length !== prevProps.tags.length;
-    const differentSelectedTag =
-      prevProps.selectedTag !== this.props.selectedTag;
+    const diffSelectedTag = prevProps.selectedTag !== selectedTag;
+    const diffDeployTag = prevProps.deployedTag.name !== deployedTag.name;
 
-    if (differentTagType || newTags || differentSelectedTag) {
+    if (diffTagType || newTags || diffSelectedTag || diffDeployTag) {
       this.resetSelections();
       this.updateSelection();
     }
@@ -107,7 +97,7 @@ export default class TagsList extends React.Component<
 
   public render() {
     const { deployedTagIndex, selectedTagIndex } = this.state;
-    const { tags } = this.props;
+    const { tags, handleSelectNextTag } = this.props;
 
     return (
       <DetailsListWrapper
@@ -119,7 +109,7 @@ export default class TagsList extends React.Component<
           items={tags}
           setKey="name"
           selection={this.selection}
-          onActiveItemChanged={this.handleSelectedTag}
+          onActiveItemChanged={handleSelectNextTag}
           selectionPreservedOnEmptyClick={true}
           selectionMode={DetailsList.SelectionMode.single}
         />
