@@ -1,4 +1,4 @@
-export class ComponentStateHandler<S> {
+export class StateManager<S> {
   private state: S;
   private isActive = true;
   private onUpdateState: (state: S) => void;

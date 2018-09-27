@@ -1,10 +1,10 @@
-import { ComponentStateHandler } from 'models/ComponentStateHandler';
+import { StateManager } from 'models/ComponentStateHandler';
 
 export interface ILoadingMap {
   [key: string]: boolean;
 }
 
-export default class LoadingStateManager<S> extends ComponentStateHandler<S> {
+export default class LoadingStateManager<S> extends StateManager<S> {
   public async withLoading(types: Array<keyof S>, cb: () => any) {
     const setAll = (isLoading: boolean) =>
       types.reduce(

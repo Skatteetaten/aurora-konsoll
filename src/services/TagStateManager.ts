@@ -1,4 +1,4 @@
-import { ComponentStateHandler } from 'models/ComponentStateHandler';
+import { StateManager } from 'models/ComponentStateHandler';
 import { ITag, ITagsPaged } from 'services/auroraApiClients';
 
 export enum ImageTagType {
@@ -19,7 +19,7 @@ export interface ITagsPagedGroup {
   auroraVersion: ITagsPaged;
 }
 
-export class TagStateManager extends ComponentStateHandler<ITagsPagedGroup> {
+export class TagStateManager extends StateManager<ITagsPagedGroup> {
   public static defaultTagsPagedGroup(): ITagsPagedGroup {
     const defaultTagsPaged: ITagsPaged = {
       endCursor: '',
