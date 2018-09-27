@@ -5,13 +5,6 @@ export interface ILoadingMap {
 }
 
 export default class LoadingStateManager<S> extends ComponentStateHandler<S> {
-  private state: S;
-
-  constructor(state: S, setState: (state: S) => void) {
-    super(setState);
-    this.state = state;
-  }
-
   public async withLoading(types: Array<keyof S>, cb: () => any) {
     const setAll = (isLoading: boolean) =>
       types.reduce(
@@ -30,17 +23,18 @@ export default class LoadingStateManager<S> extends ComponentStateHandler<S> {
   }
 
   public setLoading = (loading: ILoadingMap) => {
+    const loadingState = this.getState();
     const getCurrentLoadingState = (name: string): boolean => {
       if (loading[name] !== undefined) {
         return loading[name];
       }
-      return this.state[name];
+      return loadingState[name];
     };
 
     Object.keys(loading).forEach(k => {
-      this.state[k] = getCurrentLoadingState(k);
+      loadingState[k] = getCurrentLoadingState(k);
     });
 
-    this.handleState(this.state);
+    this.updateState(loadingState);
   };
 }

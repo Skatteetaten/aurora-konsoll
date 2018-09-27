@@ -19,8 +19,6 @@ export interface ITagsPagedGroup {
   auroraVersion: ITagsPaged;
 }
 
-type UpdateStateFunc = (tagsGroup: ITagsPagedGroup) => void;
-
 export class TagStateManager extends ComponentStateHandler<ITagsPagedGroup> {
   public static defaultTagsPagedGroup(): ITagsPagedGroup {
     const defaultTagsPaged: ITagsPaged = {
@@ -39,34 +37,26 @@ export class TagStateManager extends ComponentStateHandler<ITagsPagedGroup> {
     };
   }
 
-  private tagsPagedGroup: ITagsPagedGroup;
-
-  constructor(tagsGroup: ITagsPagedGroup, updateState: UpdateStateFunc) {
-    super(updateState);
-    this.tagsPagedGroup = tagsGroup;
-  }
-
   public setTagsPagedGroup(tagsPagedGroup: ITagsPagedGroup) {
-    this.tagsPagedGroup = tagsPagedGroup;
-    this.handleState(tagsPagedGroup);
+    this.updateState(tagsPagedGroup);
   }
 
   public updateTagsPaged(type: ImageTagType, next: ITagsPaged) {
+    const state = this.getState();
     const name = this.findName(type);
-    const old = this.tagsPagedGroup[name];
+    const old = state[name];
 
     const updatedTagsPagedGroup = {
-      ...this.tagsPagedGroup,
+      ...state,
       [name]: this.updateTags(old, next)
     };
 
-    this.tagsPagedGroup = updatedTagsPagedGroup;
-    this.handleState(updatedTagsPagedGroup);
+    this.updateState(updatedTagsPagedGroup);
   }
 
   public getTagsPaged(type: ImageTagType): ITagsPaged {
     const name = this.findName(type);
-    return this.tagsPagedGroup[name];
+    return this.getState()[name];
   }
 
   public getTagsPageFiltered(

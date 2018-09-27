@@ -1,18 +1,25 @@
 export class ComponentStateHandler<S> {
-  protected isActive = true;
-  private updateState: (state: S) => void;
+  private state: S;
+  private isActive = true;
+  private onUpdateState: (state: S) => void;
 
-  constructor(updateState: (state: S) => void) {
-    this.updateState = updateState;
+  constructor(state: S, onUpdateState: (state: S) => void) {
+    this.state = state;
+    this.onUpdateState = onUpdateState;
   }
 
   public close() {
     this.isActive = false;
   }
 
-  protected handleState(state: S) {
+  public getState(): S {
+    return this.state;
+  }
+
+  protected updateState(state: S) {
+    this.state = state;
     if (this.isActive) {
-      this.updateState(state);
+      this.onUpdateState(state);
     }
   }
 }
