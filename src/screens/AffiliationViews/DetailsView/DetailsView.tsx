@@ -153,17 +153,18 @@ class DetailsView extends React.Component<
   };
 
   public async componentDidMount() {
-    const { clients } = this.props;
     const { id, repository } = this.props.deployment;
+    const {
+      applicationDeploymentClient,
+      imageRepositoryClient
+    } = this.props.clients;
 
     this.loadingStateManager.withLoading(
       ['fetchTags', 'fetchDetails'],
       async () => {
         const [deploymentDetails, tagsPagedGroup] = await Promise.all([
-          clients.applicationDeploymentClient.findApplicationDeploymentDetails(
-            id
-          ),
-          clients.imageRepositoryClient.findGroupedTagsPaged(repository)
+          applicationDeploymentClient.findApplicationDeploymentDetails(id),
+          imageRepositoryClient.findGroupedTagsPaged(repository)
         ]);
 
         this.setState({ deploymentDetails });
