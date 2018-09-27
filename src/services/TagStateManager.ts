@@ -1,4 +1,4 @@
-import { StateManager } from 'models/ComponentStateHandler';
+import { StateManager } from 'models/StateManager';
 import { ITag, ITagsPaged } from 'services/auroraApiClients';
 
 export enum ImageTagType {

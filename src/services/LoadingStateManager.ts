@@ -1,4 +1,4 @@
-import { StateManager } from 'models/ComponentStateHandler';
+import { StateManager } from 'models/StateManager';
 
 export interface ILoadingMap {
   [key: string]: boolean;
