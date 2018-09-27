@@ -7,7 +7,7 @@ import { AuroraApiContext, IAuroraApiComponentProps } from './AuroraApi';
 export function withAuroraApi<P extends IAuroraApiComponentProps>(
   Component: React.ComponentType<P>
 ): React.ComponentClass<Omit<P, keyof IAuroraApiComponentProps>> {
-  return class extends React.Component<P> {
+  return class AuroraApiHOC extends React.Component<P> {
     public render() {
       return (
         <AuroraApiContext.Consumer>
