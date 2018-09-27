@@ -35,29 +35,6 @@ export interface IApplicationDeploymentQuery {
     auroraVersion: string;
     deployTag: IImageTag;
   };
-  details: {
-    podResources: IPodResource[];
-  };
-}
-
-export interface IHttpResponse {
-  loadedTime: string;
-  textResponse: string;
-}
-
-export interface IPodResource {
-  name: string;
-  status: string;
-  restartCount: number;
-  ready: boolean;
-  startTime: string;
-  managementResponses?: {
-    health?: IHttpResponse;
-  };
-  links: Array<{
-    name: string;
-    url: string;
-  }>;
 }
 
 export const APPLICATIONS_QUERY = gql`
@@ -65,6 +42,7 @@ export const APPLICATIONS_QUERY = gql`
     applications(affiliations: $affiliations) {
       edges {
         node {
+          name
           imageRepository {
             repository
           }
@@ -88,25 +66,6 @@ export const APPLICATIONS_QUERY = gql`
                 type
               }
             }
-            details {
-              podResources {
-                name
-                status
-                restartCount
-                ready
-                startTime
-                managementResponses {
-                  health {
-                    loadedTime
-                    textResponse
-                  }
-                }
-                links {
-                  name
-                  url
-                }
-              }
-            }
           }
         }
       }
@@ -114,30 +73,60 @@ export const APPLICATIONS_QUERY = gql`
   }
 `;
 
-export interface ICurrentDeploymentSpecQuery {
-  applicationDeployment: {
-    id: string;
-    name: string;
-    details: {
-      deploymentSpecs: {
-        current: {
-          jsonRepresentation: string;
-        };
+export interface IApplicationDeploymentDetailsQuery {
+  applicationDeploymentDetails: {
+    podResources: IPodResource[];
+    deploymentSpecs: {
+      current: {
+        jsonRepresentation: string;
       };
     };
   };
 }
 
-export const CURRENT_DEPLOYMENT_SPEC_QUERY = gql`
-  query getApplicationDeployment($id: String!) {
-    applicationDeployment(id: $id) {
-      id
-      name
-      details {
-        deploymentSpecs {
-          current {
-            jsonRepresentation
+export interface IPodResource {
+  name: string;
+  status: string;
+  restartCount: number;
+  ready: boolean;
+  startTime: string;
+  managementResponses?: {
+    health?: IHttpResponse;
+  };
+  links: Array<{
+    name: string;
+    url: string;
+  }>;
+}
+
+export interface IHttpResponse {
+  loadedTime: string;
+  textResponse: string;
+}
+
+export const APPLICATION_DEPLOYMENT_DETAILS_QUERY = gql`
+  query getApplicationDeploymentDetails($id: String!) {
+    applicationDeploymentDetails(id: $id) {
+      podResources {
+        name
+        status
+        restartCount
+        ready
+        startTime
+        managementResponses {
+          health {
+            loadedTime
+            textResponse
           }
+        }
+        links {
+          name
+          url
+        }
+      }
+      deploymentSpecs {
+        current {
+          jsonRepresentation
         }
       }
     }

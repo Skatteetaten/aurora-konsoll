@@ -7,11 +7,11 @@ import {
   REFRESH_APPLICATION_DEPLOYMENT_MUTATION
 } from './mutation';
 import {
+  APPLICATION_DEPLOYMENT_DETAILS_QUERY,
   APPLICATIONS_QUERY,
-  CURRENT_DEPLOYMENT_SPEC_QUERY,
+  IApplicationDeploymentDetailsQuery,
   IApplicationDeploymentQuery,
   IApplications,
-  ICurrentDeploymentSpecQuery,
   IImageRepository,
   IPodResource,
   IUserAffiliationsQuery,
@@ -50,6 +50,10 @@ export interface IApplicationDeployment {
     deployTag: ITag;
   };
   repository: string;
+}
+
+export interface IApplicationDeploymentDetails {
+  deploymentSpec?: IDeploymentSpec;
   pods: IPodResource[];
 }
 
@@ -63,7 +67,9 @@ export interface IApplicationDeploymentClient {
   findAllApplicationDeployments: (
     affiliations: string[]
   ) => Promise<IApplicationDeployment[]>;
-  findDeploymentSpec: (id: string) => Promise<IDeploymentSpec>;
+  findApplicationDeploymentDetails: (
+    id: string
+  ) => Promise<IApplicationDeploymentDetails>;
   redeployWithVersion: (
     applicationDeploymentId: string,
     version: string
@@ -123,9 +129,11 @@ export class ApplicationDeploymentClient
     }
   }
 
-  public async findDeploymentSpec(id: string): Promise<IDeploymentSpec> {
-    const result = await this.client.query<ICurrentDeploymentSpecQuery>({
-      query: CURRENT_DEPLOYMENT_SPEC_QUERY,
+  public async findApplicationDeploymentDetails(
+    id: string
+  ): Promise<IApplicationDeploymentDetails> {
+    const result = await this.client.query<IApplicationDeploymentDetailsQuery>({
+      query: APPLICATION_DEPLOYMENT_DETAILS_QUERY,
       variables: {
         id
       }
@@ -133,11 +141,14 @@ export class ApplicationDeploymentClient
 
     const {
       jsonRepresentation
-    } = result.data.applicationDeployment.details.deploymentSpecs.current;
+    } = result.data.applicationDeploymentDetails.deploymentSpecs.current;
     const spec =
       jsonRepresentation.length === 0 ? {} : JSON.parse(jsonRepresentation);
 
-    return Object.keys(spec).reduce(normalizeSpec(spec), {});
+    return {
+      deploymentSpec: Object.keys(spec).reduce(normalizeSpec(spec), {}),
+      pods: result.data.applicationDeploymentDetails.podResources
+    };
   }
 
   public async findUserAndAffiliations(): Promise<IUserAndAffiliations> {
@@ -179,7 +190,6 @@ export class ApplicationDeploymentClient
       environment: app.environment,
       id: app.id,
       name: app.name,
-      pods: app.details.podResources,
       repository: imageRepository ? imageRepository.repository : '',
       statusCode: app.status.code,
       version: {

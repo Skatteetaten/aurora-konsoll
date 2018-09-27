@@ -12,10 +12,10 @@ import Card from 'components/Card';
 import Label from 'components/Label';
 import {
   IApplicationDeployment,
+  IApplicationDeploymentDetails,
   ITag,
   ITagsPaged
 } from 'services/auroraApiClients';
-import { IDeploymentSpec } from 'services/auroraApiClients/applicationDeploymentClient/DeploymentSpec';
 import LoadingStateManager from 'services/LoadingStateManager';
 import {
   ImageTagType,
@@ -37,7 +37,7 @@ interface IDetailsViewProps
 
 interface IDetailsViewState {
   tagsPagedGroup: ITagsPagedGroup;
-  deploymentSpec?: IDeploymentSpec;
+  deploymentDetails: IApplicationDeploymentDetails;
   selectedTag?: ITag;
   imageTagType: ImageTagType;
   loading: IDetailsViewLoading;
@@ -55,6 +55,9 @@ class DetailsView extends React.Component<
   IDetailsViewState
 > {
   public state: IDetailsViewState = {
+    deploymentDetails: {
+      pods: []
+    },
     imageTagType: ImageTagType.MAJOR,
     loading: {
       fetchTags: false,
@@ -154,15 +157,20 @@ class DetailsView extends React.Component<
     const { clients } = this.props;
     const { id, repository } = this.props.deployment;
 
-    this.loadingStateManager.withLoading(['fetchTags'], async () => {
-      const [deploymentSpec, tagsPagedGroup] = await Promise.all([
-        clients.applicationDeploymentClient.findDeploymentSpec(id),
-        clients.imageRepositoryClient.findGroupedTagsPaged(repository)
-      ]);
+    this.loadingStateManager.withLoading(
+      ['fetchTags', 'redeploy'],
+      async () => {
+        const [deploymentDetails, tagsPagedGroup] = await Promise.all([
+          clients.applicationDeploymentClient.findApplicationDeploymentDetails(
+            id
+          ),
+          clients.imageRepositoryClient.findGroupedTagsPaged(repository)
+        ]);
 
-      this.setState({ deploymentSpec });
-      this.tagStateManager.setTagsPagedGroup(tagsPagedGroup);
-    });
+        this.setState({ deploymentDetails });
+        this.tagStateManager.setTagsPagedGroup(tagsPagedGroup);
+      }
+    );
   }
 
   public componentWillUnmount() {
@@ -172,7 +180,12 @@ class DetailsView extends React.Component<
 
   public render() {
     const { deployment, match } = this.props;
-    const { deploymentSpec, loading, imageTagType, selectedTag } = this.state;
+    const {
+      deploymentDetails,
+      loading,
+      imageTagType,
+      selectedTag
+    } = this.state;
 
     const title = `${deployment.environment}/${deployment.name}`;
     return (
@@ -197,10 +210,7 @@ class DetailsView extends React.Component<
         <Card>
           <Switch>
             <Route path={`${match.path}/info`}>
-              <InformationView
-                deployment={deployment}
-                deploymentSpec={deploymentSpec}
-              />
+              <InformationView deploymentDetails={deploymentDetails} />
             </Route>
             <Route path={`${match.path}/version`}>
               <VersionView
