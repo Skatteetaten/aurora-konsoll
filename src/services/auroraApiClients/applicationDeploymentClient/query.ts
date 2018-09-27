@@ -30,6 +30,7 @@ export interface IApplicationDeploymentQuery {
   };
   status: {
     code: string;
+    comment?: string;
   };
   version: {
     auroraVersion: string;
@@ -58,6 +59,7 @@ export const APPLICATIONS_QUERY = gql`
             }
             status {
               code
+              comment
             }
             version {
               auroraVersion

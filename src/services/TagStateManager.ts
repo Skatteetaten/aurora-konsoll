@@ -69,15 +69,20 @@ export class TagStateManager extends ComponentStateHandler<ITagsPagedGroup> {
     return this.tagsPagedGroup[name];
   }
 
-  public getTagsFiltered(type: ImageTagType, searchText: string): ITag[] {
+  public getTagsPageFiltered(
+    type: ImageTagType,
+    searchText: string
+  ): ITagsPaged {
     const sortTagsByDate = (t1: ITag, t2: ITag) => {
       const date1 = new Date(t1.lastModified).getTime();
       const date2 = new Date(t2.lastModified).getTime();
       return date2 - date1;
     };
 
-    return this.getTagsPaged(type)
-      .tags.filter(v => {
+    const tagsPaged = this.getTagsPaged(type);
+
+    const tags = tagsPaged.tags
+      .filter(v => {
         return searchText.length === 0 || v.name.search(searchText) !== -1;
       })
       .sort(sortTagsByDate)
@@ -85,6 +90,11 @@ export class TagStateManager extends ComponentStateHandler<ITagsPagedGroup> {
         ...tag,
         lastModified: new Date(tag.lastModified).toISOString()
       }));
+
+    return {
+      ...tagsPaged,
+      tags
+    };
   }
 
   private findName(type: ImageTagType): string {

@@ -44,12 +44,17 @@ export interface IApplicationDeployment {
   affiliation: string;
   name: string;
   environment: string;
-  statusCode: string;
+  status: IApplicationDeploymentStatus;
   version: {
     auroraVersion: string;
     deployTag: ITag;
   };
   repository: string;
+}
+
+export interface IApplicationDeploymentStatus {
+  code: string;
+  comment?: string;
 }
 
 export interface IApplicationDeploymentDetails {
@@ -191,7 +196,10 @@ export class ApplicationDeploymentClient
       id: app.id,
       name: app.name,
       repository: imageRepository ? imageRepository.repository : '',
-      statusCode: app.status.code,
+      status: {
+        code: app.status.code,
+        comment: app.status.comment
+      },
       version: {
         auroraVersion: app.version.auroraVersion,
         deployTag: {

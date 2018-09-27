@@ -5,7 +5,7 @@ import Button from 'aurora-frontend-react-komponenter/Button';
 import TextField from 'aurora-frontend-react-komponenter/TextField';
 
 import Spinner from 'components/Spinner';
-import { ITag } from 'services/auroraApiClients';
+import { ITag, ITagsPaged } from 'services/auroraApiClients';
 import { ImageTagType } from 'services/TagStateManager';
 import TagsList from './TagsList';
 import TagTypeSelector, {
@@ -13,12 +13,11 @@ import TagTypeSelector, {
 } from './TagTypeSelector/TagTypeSelector';
 
 interface IVersionViewProps {
-  canLoadMore: boolean;
   isFetchingTags: boolean;
   isRedeploying: boolean;
   canUpgrade: boolean;
-  imageTagType: ImageTagType;
-  tags: ITag[];
+  selectedTagType: ImageTagType;
+  tagsPaged: ITagsPaged;
   deployedTag: ITag;
   selectedTag?: ITag;
   className?: string;
@@ -30,12 +29,11 @@ interface IVersionViewProps {
 }
 
 const VersionView = ({
-  tags,
+  tagsPaged,
   isFetchingTags,
   isRedeploying,
-  canLoadMore,
   canUpgrade,
-  imageTagType,
+  selectedTagType,
   handlefetchTags,
   selectedTag,
   deployedTag,
@@ -49,7 +47,7 @@ const VersionView = ({
     <div className={className}>
       <div className="g-control-group">
         <TagTypeSelector
-          imageTagType={imageTagType}
+          imageTagType={selectedTagType}
           handleSelectedStrategy={handleSelectedStrategy}
         />
         <ButtonWrapper>
@@ -67,7 +65,7 @@ const VersionView = ({
         <Button
           buttonType="primaryRounded"
           onClick={handlefetchTags}
-          disabled={!canLoadMore}
+          disabled={!tagsPaged.hasNextPage}
           style={{
             minWidth: '160px'
           }}
@@ -77,8 +75,8 @@ const VersionView = ({
       </div>
       <div className="g-details-list">
         <TagsList
-          tags={tags}
-          imageTagType={imageTagType}
+          tags={tagsPaged.tags}
+          imageTagType={selectedTagType}
           selectedTag={selectedTag}
           deployedTag={deployedTag}
           handleSelectNextTag={handleSelectNextTag}

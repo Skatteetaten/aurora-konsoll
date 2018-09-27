@@ -4,18 +4,24 @@ import styled from 'styled-components';
 import { IApplicationDeploymentDetails } from 'services/auroraApiClients';
 
 import Label from 'components/Label';
+import Spinner from 'components/Spinner';
 import PodStatus from './PodStatus';
 
 interface IInformationViewProps {
+  isFetchingDetails: boolean;
   deploymentDetails: IApplicationDeploymentDetails;
   className?: string;
 }
 
 const InformationView = ({
+  isFetchingDetails,
   deploymentDetails,
   className
 }: IInformationViewProps) => {
   const { deploymentSpec, pods } = deploymentDetails;
+  if (isFetchingDetails) {
+    return <Spinner />;
+  }
   return (
     <div className={className}>
       {deploymentSpec && (
