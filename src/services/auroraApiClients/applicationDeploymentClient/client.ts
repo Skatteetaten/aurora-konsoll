@@ -1,7 +1,5 @@
 import ApolloClient from 'apollo-boost';
 
-import { tokenStore } from 'services/TokenStore';
-
 import { ITag } from '../imageRepositoryClient/client';
 import { IDeploymentSpec } from './DeploymentSpec';
 import {
@@ -10,8 +8,10 @@ import {
 } from './mutation';
 import {
   APPLICATIONS_QUERY,
+  CURRENT_DEPLOYMENT_SPEC_QUERY,
   IApplicationDeploymentQuery,
   IApplications,
+  ICurrentDeploymentSpecQuery,
   IImageRepository,
   IPodResource,
   IUserAffiliationsQuery,
@@ -63,7 +63,7 @@ export interface IApplicationDeploymentClient {
   findAllApplicationDeployments: (
     affiliations: string[]
   ) => Promise<IApplicationDeployment[]>;
-  findDeploymentSpec: (env: string, name: string) => Promise<IDeploymentSpec>;
+  findDeploymentSpec: (id: string) => Promise<IDeploymentSpec>;
   redeployWithVersion: (
     applicationDeploymentId: string,
     version: string
@@ -123,21 +123,19 @@ export class ApplicationDeploymentClient
     }
   }
 
-  public async findDeploymentSpec(
-    env: string,
-    name: string
-  ): Promise<IDeploymentSpec> {
-    const e = env === 'aurora' ? 'utv' : env;
-    const data = await fetch(`/api/spec?ref=${e + '/' + name}`, {
-      headers: [['Authorization', 'Bearer ' + tokenStore.getToken()]],
-      method: 'POST'
+  public async findDeploymentSpec(id: string): Promise<IDeploymentSpec> {
+    const result = await this.client.query<ICurrentDeploymentSpecQuery>({
+      query: CURRENT_DEPLOYMENT_SPEC_QUERY,
+      variables: {
+        id
+      }
     });
 
-    const [spec] = await data.json();
-
-    if (!spec) {
-      return {} as IDeploymentSpec;
-    }
+    const {
+      jsonRepresentation
+    } = result.data.applicationDeployment.details.deploymentSpecs.current;
+    const spec =
+      jsonRepresentation.length === 0 ? {} : JSON.parse(jsonRepresentation);
 
     return Object.keys(spec).reduce(normalizeSpec(spec), {});
   }

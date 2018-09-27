@@ -114,6 +114,36 @@ export const APPLICATIONS_QUERY = gql`
   }
 `;
 
+export interface ICurrentDeploymentSpecQuery {
+  applicationDeployment: {
+    id: string;
+    name: string;
+    details: {
+      deploymentSpecs: {
+        current: {
+          jsonRepresentation: string;
+        };
+      };
+    };
+  };
+}
+
+export const CURRENT_DEPLOYMENT_SPEC_QUERY = gql`
+  query getApplicationDeployment($id: String!) {
+    applicationDeployment(id: $id) {
+      id
+      name
+      details {
+        deploymentSpecs {
+          current {
+            jsonRepresentation
+          }
+        }
+      }
+    }
+  }
+`;
+
 export interface IUserAffiliationsQuery {
   currentUser: {
     name: string;

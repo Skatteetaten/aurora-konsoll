@@ -12,16 +12,21 @@ export default class LoadingStateManager<S> extends ComponentStateHandler<S> {
     this.state = state;
   }
 
-  public async withLoading(type: keyof S, cb: () => any) {
-    this.setLoading({
-      [type]: true
-    });
+  public async withLoading(types: Array<keyof S>, cb: () => any) {
+    const setAll = (isLoading: boolean) =>
+      types.reduce(
+        (acc, t) => ({
+          ...acc,
+          [t]: isLoading
+        }),
+        {}
+      );
+
+    this.setLoading(setAll(true));
 
     await cb();
 
-    this.setLoading({
-      [type]: false
-    });
+    this.setLoading(setAll(false));
   }
 
   public setLoading = (loading: ILoadingMap) => {

@@ -88,7 +88,7 @@ class DetailsView extends React.Component<
       return;
     }
 
-    this.loadingStateManager.withLoading('redeploy', async () => {
+    this.loadingStateManager.withLoading(['redeploy'], async () => {
       const success = await clients.applicationDeploymentClient.redeployWithVersion(
         deployment.id,
         selectedTag.name
@@ -102,7 +102,7 @@ class DetailsView extends React.Component<
   public refreshApplicationDeployment = () => {
     const { clients, deployment } = this.props;
 
-    this.loadingStateManager.withLoading('update', async () => {
+    this.loadingStateManager.withLoading(['update'], async () => {
       const success = await clients.applicationDeploymentClient.refreshApplicationDeployment(
         deployment.id
       );
@@ -119,7 +119,7 @@ class DetailsView extends React.Component<
     const current: ITagsPaged = this.tagStateManager.getTagsPaged(imageTagType);
     const cursor = current.endCursor;
 
-    this.loadingStateManager.withLoading('fetchTags', async () => {
+    this.loadingStateManager.withLoading(['fetchTags'], async () => {
       const tagsPaged = await clients.imageRepositoryClient.findTagsPaged(
         deployment.repository,
         15,
@@ -151,23 +151,16 @@ class DetailsView extends React.Component<
   };
 
   public async componentDidMount() {
-    const { clients, deployment } = this.props;
+    const { clients } = this.props;
+    const { id, repository } = this.props.deployment;
 
-    /*
-    TODO: Apply this when Gobo has implemented find DeploymentSpec
-    const spec = await clients.applicationDeploymentClient.findDeploymentSpec(
-      deployment.environment,
-      deployment.name
-    );
-    this.setState(() => ({
-      deploymentSpec: spec
-    }));
-    */
+    this.loadingStateManager.withLoading(['fetchTags'], async () => {
+      const [deploymentSpec, tagsPagedGroup] = await Promise.all([
+        clients.applicationDeploymentClient.findDeploymentSpec(id),
+        clients.imageRepositoryClient.findGroupedTagsPaged(repository)
+      ]);
 
-    this.loadingStateManager.withLoading('fetchTags', async () => {
-      const tagsPagedGroup = await clients.imageRepositoryClient.findGroupedTagsPaged(
-        deployment.repository
-      );
+      this.setState({ deploymentSpec });
       this.tagStateManager.setTagsPagedGroup(tagsPagedGroup);
     });
   }
