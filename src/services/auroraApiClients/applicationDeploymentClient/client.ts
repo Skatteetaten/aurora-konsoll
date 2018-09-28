@@ -1,7 +1,5 @@
 import ApolloClient from 'apollo-boost';
 
-import { tokenStore } from 'services/TokenStore';
-
 import { ITag } from '../imageRepositoryClient/client';
 import { IDeploymentSpec } from './DeploymentSpec';
 import {
@@ -9,7 +7,9 @@ import {
   REFRESH_APPLICATION_DEPLOYMENT_MUTATION
 } from './mutation';
 import {
+  APPLICATION_DEPLOYMENT_DETAILS_QUERY,
   APPLICATIONS_QUERY,
+  IApplicationDeploymentDetailsQuery,
   IApplicationDeploymentQuery,
   IApplications,
   IImageRepository,
@@ -44,12 +44,21 @@ export interface IApplicationDeployment {
   affiliation: string;
   name: string;
   environment: string;
-  statusCode: string;
+  status: IApplicationDeploymentStatus;
   version: {
     auroraVersion: string;
     deployTag: ITag;
   };
   repository: string;
+}
+
+export interface IApplicationDeploymentStatus {
+  code: string;
+  comment?: string;
+}
+
+export interface IApplicationDeploymentDetails {
+  deploymentSpec?: IDeploymentSpec;
   pods: IPodResource[];
 }
 
@@ -63,7 +72,9 @@ export interface IApplicationDeploymentClient {
   findAllApplicationDeployments: (
     affiliations: string[]
   ) => Promise<IApplicationDeployment[]>;
-  findDeploymentSpec: (env: string, name: string) => Promise<IDeploymentSpec>;
+  findApplicationDeploymentDetails: (
+    id: string
+  ) => Promise<IApplicationDeploymentDetails>;
   redeployWithVersion: (
     applicationDeploymentId: string,
     version: string
@@ -123,23 +134,26 @@ export class ApplicationDeploymentClient
     }
   }
 
-  public async findDeploymentSpec(
-    env: string,
-    name: string
-  ): Promise<IDeploymentSpec> {
-    const e = env === 'aurora' ? 'utv' : env;
-    const data = await fetch(`/api/spec?ref=${e + '/' + name}`, {
-      headers: [['Authorization', 'Bearer ' + tokenStore.getToken()]],
-      method: 'POST'
+  public async findApplicationDeploymentDetails(
+    id: string
+  ): Promise<IApplicationDeploymentDetails> {
+    const result = await this.client.query<IApplicationDeploymentDetailsQuery>({
+      query: APPLICATION_DEPLOYMENT_DETAILS_QUERY,
+      variables: {
+        id
+      }
     });
 
-    const [spec] = await data.json();
+    const {
+      jsonRepresentation
+    } = result.data.applicationDeploymentDetails.deploymentSpecs.current;
+    const spec =
+      jsonRepresentation.length === 0 ? {} : JSON.parse(jsonRepresentation);
 
-    if (!spec) {
-      return {} as IDeploymentSpec;
-    }
-
-    return Object.keys(spec).reduce(normalizeSpec(spec), {});
+    return {
+      deploymentSpec: Object.keys(spec).reduce(normalizeSpec(spec), {}),
+      pods: result.data.applicationDeploymentDetails.podResources
+    };
   }
 
   public async findUserAndAffiliations(): Promise<IUserAndAffiliations> {
@@ -181,9 +195,11 @@ export class ApplicationDeploymentClient
       environment: app.environment,
       id: app.id,
       name: app.name,
-      pods: app.details.podResources,
       repository: imageRepository ? imageRepository.repository : '',
-      statusCode: app.status.code,
+      status: {
+        code: app.status.code,
+        comment: app.status.comment
+      },
       version: {
         auroraVersion: app.version.auroraVersion,
         deployTag: {

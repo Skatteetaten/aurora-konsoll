@@ -12,10 +12,10 @@ import Card from 'components/Card';
 import Label from 'components/Label';
 import {
   IApplicationDeployment,
+  IApplicationDeploymentDetails,
   ITag,
   ITagsPaged
 } from 'services/auroraApiClients';
-import { IDeploymentSpec } from 'services/auroraApiClients/applicationDeploymentClient/DeploymentSpec';
 import LoadingStateManager from 'services/LoadingStateManager';
 import {
   ImageTagType,
@@ -37,15 +37,16 @@ interface IDetailsViewProps
 
 interface IDetailsViewState {
   tagsPagedGroup: ITagsPagedGroup;
-  deploymentSpec?: IDeploymentSpec;
+  deploymentDetails: IApplicationDeploymentDetails;
   selectedTag?: ITag;
-  imageTagType: ImageTagType;
+  selectedTagType: ImageTagType;
   loading: IDetailsViewLoading;
   versionSearchText: string;
 }
 
 interface IDetailsViewLoading {
   fetchTags: boolean;
+  fetchDetails: boolean;
   redeploy: boolean;
   update: boolean;
 }
@@ -55,12 +56,16 @@ class DetailsView extends React.Component<
   IDetailsViewState
 > {
   public state: IDetailsViewState = {
-    imageTagType: ImageTagType.MAJOR,
+    deploymentDetails: {
+      pods: []
+    },
     loading: {
+      fetchDetails: false,
       fetchTags: false,
       redeploy: false,
       update: false
     },
+    selectedTagType: this.props.deployment.version.deployTag.type,
     tagsPagedGroup: TagStateManager.defaultTagsPagedGroup(),
     versionSearchText: ''
   };
@@ -75,11 +80,6 @@ class DetailsView extends React.Component<
     tagsPagedGroup => this.setState({ tagsPagedGroup })
   );
 
-  constructor(props: IDetailsViewProps) {
-    super(props);
-    this.state.imageTagType = props.deployment.version.deployTag.type;
-  }
-
   public redeployWithVersion = () => {
     const { clients, deployment } = this.props;
     const { selectedTag } = this.state;
@@ -88,7 +88,7 @@ class DetailsView extends React.Component<
       return;
     }
 
-    this.loadingStateManager.withLoading('redeploy', async () => {
+    this.loadingStateManager.withLoading(['redeploy'], async () => {
       const success = await clients.applicationDeploymentClient.redeployWithVersion(
         deployment.id,
         selectedTag.name
@@ -102,7 +102,7 @@ class DetailsView extends React.Component<
   public refreshApplicationDeployment = () => {
     const { clients, deployment } = this.props;
 
-    this.loadingStateManager.withLoading('update', async () => {
+    this.loadingStateManager.withLoading(['update'], async () => {
       const success = await clients.applicationDeploymentClient.refreshApplicationDeployment(
         deployment.id
       );
@@ -114,27 +114,29 @@ class DetailsView extends React.Component<
 
   public loadMoreTags = () => {
     const { clients, deployment } = this.props;
-    const { imageTagType } = this.state;
+    const { selectedTagType } = this.state;
 
-    const current: ITagsPaged = this.tagStateManager.getTagsPaged(imageTagType);
+    const current: ITagsPaged = this.tagStateManager.getTagsPaged(
+      selectedTagType
+    );
     const cursor = current.endCursor;
 
-    this.loadingStateManager.withLoading('fetchTags', async () => {
+    this.loadingStateManager.withLoading(['fetchTags'], async () => {
       const tagsPaged = await clients.imageRepositoryClient.findTagsPaged(
         deployment.repository,
         15,
         cursor,
-        [imageTagType]
+        [selectedTagType]
       );
 
-      this.tagStateManager.updateTagsPaged(imageTagType, tagsPaged);
+      this.tagStateManager.updateTagsPaged(selectedTagType, tagsPaged);
     });
   };
 
   public handleSelectedStrategy = (e: Event, option: IImageTagTypeOption) => {
     e.preventDefault();
     this.setState(() => ({
-      imageTagType: option.key
+      selectedTagType: option.key
     }));
   };
 
@@ -151,25 +153,24 @@ class DetailsView extends React.Component<
   };
 
   public async componentDidMount() {
-    const { clients, deployment } = this.props;
+    const { id, repository } = this.props.deployment;
+    const {
+      applicationDeploymentClient,
+      imageRepositoryClient
+    } = this.props.clients;
 
-    /*
-    TODO: Apply this when Gobo has implemented find DeploymentSpec
-    const spec = await clients.applicationDeploymentClient.findDeploymentSpec(
-      deployment.environment,
-      deployment.name
+    this.loadingStateManager.withLoading(
+      ['fetchTags', 'fetchDetails'],
+      async () => {
+        const [deploymentDetails, tagsPagedGroup] = await Promise.all([
+          applicationDeploymentClient.findApplicationDeploymentDetails(id),
+          imageRepositoryClient.findGroupedTagsPaged(repository)
+        ]);
+
+        this.setState({ deploymentDetails });
+        this.tagStateManager.setTagsPagedGroup(tagsPagedGroup);
+      }
     );
-    this.setState(() => ({
-      deploymentSpec: spec
-    }));
-    */
-
-    this.loadingStateManager.withLoading('fetchTags', async () => {
-      const tagsPagedGroup = await clients.imageRepositoryClient.findGroupedTagsPaged(
-        deployment.repository
-      );
-      this.tagStateManager.setTagsPagedGroup(tagsPagedGroup);
-    });
   }
 
   public componentWillUnmount() {
@@ -179,7 +180,13 @@ class DetailsView extends React.Component<
 
   public render() {
     const { deployment, match } = this.props;
-    const { deploymentSpec, loading, imageTagType, selectedTag } = this.state;
+    const {
+      deploymentDetails,
+      loading,
+      selectedTagType,
+      selectedTag,
+      versionSearchText
+    } = this.state;
 
     const title = `${deployment.environment}/${deployment.name}`;
     return (
@@ -205,25 +212,27 @@ class DetailsView extends React.Component<
           <Switch>
             <Route path={`${match.path}/info`}>
               <InformationView
-                deployment={deployment}
-                deploymentSpec={deploymentSpec}
+                isFetchingDetails={loading.fetchDetails}
+                deploymentDetails={deploymentDetails}
               />
             </Route>
             <Route path={`${match.path}/version`}>
               <VersionView
                 deployedTag={deployment.version.deployTag}
                 selectedTag={selectedTag}
+                selectedTagType={selectedTagType}
+                tagsPaged={this.tagStateManager.getTagsPageFiltered(
+                  selectedTagType,
+                  versionSearchText
+                )}
+                isFetchingTags={loading.fetchTags}
+                isRedeploying={loading.redeploy}
+                canUpgrade={this.canUpgrade()}
                 handleSelectNextTag={this.handleSelectNextTag}
-                redeployWithVersion={this.redeployWithVersion}
-                canLoadMore={this.canLoadMoreTags()}
                 handlefetchTags={this.loadMoreTags}
                 handleSelectedStrategy={this.handleSelectedStrategy}
                 handleVersionSearch={this.handleVersionSearch}
-                isFetchingTags={loading.fetchTags}
-                isRedeploying={loading.redeploy}
-                imageTagType={imageTagType}
-                tags={this.getTagsFiltered(imageTagType)}
-                canUpgrade={this.canUpgrade()}
+                redeployWithVersion={this.redeployWithVersion}
               />
             </Route>
           </Switch>
@@ -231,16 +240,6 @@ class DetailsView extends React.Component<
       </DetailsViewGrid>
     );
   }
-
-  private getTagsFiltered = (type: ImageTagType): ITag[] => {
-    const { versionSearchText } = this.state;
-    return this.tagStateManager.getTagsFiltered(type, versionSearchText);
-  };
-
-  private canLoadMoreTags = () => {
-    const { imageTagType } = this.state;
-    return this.tagStateManager.getTagsPaged(imageTagType).hasNextPage;
-  };
 
   private canUpgrade = () => {
     const { deployment } = this.props;

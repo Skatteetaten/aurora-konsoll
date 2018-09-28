@@ -30,19 +30,60 @@ export interface IApplicationDeploymentQuery {
   };
   status: {
     code: string;
+    comment?: string;
   };
   version: {
     auroraVersion: string;
     deployTag: IImageTag;
   };
-  details: {
-    podResources: IPodResource[];
-  };
 }
 
-export interface IHttpResponse {
-  loadedTime: string;
-  textResponse: string;
+export const APPLICATIONS_QUERY = gql`
+  query getApplicationDeployments($affiliations: [String!]!) {
+    applications(affiliations: $affiliations) {
+      edges {
+        node {
+          name
+          imageRepository {
+            repository
+          }
+          applicationDeployments {
+            id
+            name
+            affiliation {
+              name
+            }
+            environment
+            namespace {
+              name
+            }
+            status {
+              code
+              comment
+            }
+            version {
+              auroraVersion
+              deployTag {
+                name
+                type
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+`;
+
+export interface IApplicationDeploymentDetailsQuery {
+  applicationDeploymentDetails: {
+    podResources: IPodResource[];
+    deploymentSpecs: {
+      current: {
+        jsonRepresentation: string;
+      };
+    };
+  };
 }
 
 export interface IPodResource {
@@ -60,54 +101,34 @@ export interface IPodResource {
   }>;
 }
 
-export const APPLICATIONS_QUERY = gql`
-  query getApplicationDeployments($affiliations: [String!]!) {
-    applications(affiliations: $affiliations) {
-      edges {
-        node {
-          imageRepository {
-            repository
+export interface IHttpResponse {
+  loadedTime: string;
+  textResponse: string;
+}
+
+export const APPLICATION_DEPLOYMENT_DETAILS_QUERY = gql`
+  query getApplicationDeploymentDetails($id: String!) {
+    applicationDeploymentDetails(id: $id) {
+      podResources {
+        name
+        status
+        restartCount
+        ready
+        startTime
+        managementResponses {
+          health {
+            loadedTime
+            textResponse
           }
-          applicationDeployments {
-            id
-            name
-            affiliation {
-              name
-            }
-            environment
-            namespace {
-              name
-            }
-            status {
-              code
-            }
-            version {
-              auroraVersion
-              deployTag {
-                name
-                type
-              }
-            }
-            details {
-              podResources {
-                name
-                status
-                restartCount
-                ready
-                startTime
-                managementResponses {
-                  health {
-                    loadedTime
-                    textResponse
-                  }
-                }
-                links {
-                  name
-                  url
-                }
-              }
-            }
-          }
+        }
+        links {
+          name
+          url
+        }
+      }
+      deploymentSpecs {
+        current {
+          jsonRepresentation
         }
       }
     }
