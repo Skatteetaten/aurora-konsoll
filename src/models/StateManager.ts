@@ -16,10 +16,17 @@ export class StateManager<S> {
     return this.state;
   }
 
-  protected updateState(state: S) {
-    this.state = state;
+  protected updateState(state: S | ((state: S) => S)) {
+    let nextState: S;
+    if (state instanceof Function) {
+      nextState = state(this.state);
+    } else {
+      nextState = state;
+    }
+
+    this.state = nextState;
     if (this.isActive) {
-      this.onUpdateState(state);
+      this.onUpdateState(nextState);
     }
   }
 }

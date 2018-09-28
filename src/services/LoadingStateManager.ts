@@ -1,40 +1,24 @@
 import { StateManager } from 'models/StateManager';
 
-interface ILoadingMap {
-  [key: string]: boolean;
-}
+type Booleans<T> = { [P in keyof T]: boolean };
 
-export default class LoadingStateManager<S> extends StateManager<S> {
+class LoadingStateManager<S extends Booleans<S>> extends StateManager<S> {
   public async withLoading(types: Array<keyof S>, cb: () => Promise<any>) {
-    const setAll = (isLoading: boolean) =>
-      types.reduce(
-        (acc, t) => ({
-          ...acc,
-          [t]: isLoading
-        }),
-        {}
-      );
+    const state = this.getState();
 
-    this.setLoading(setAll(true));
+    const setAll = (isLoading: boolean) =>
+      types.forEach(t => {
+        state[t] = isLoading;
+      });
+
+    setAll(true);
+    this.updateState(state);
 
     await cb();
 
-    this.setLoading(setAll(false));
+    setAll(false);
+    this.updateState(state);
   }
-
-  public setLoading = (loading: ILoadingMap) => {
-    const loadingState = this.getState();
-    const getCurrentLoadingState = (name: string): boolean => {
-      if (loading[name] !== undefined) {
-        return loading[name];
-      }
-      return loadingState[name];
-    };
-
-    Object.keys(loading).forEach(k => {
-      loadingState[k] = getCurrentLoadingState(k);
-    });
-
-    this.updateState(loadingState);
-  };
 }
+
+export default LoadingStateManager;
