@@ -3,8 +3,8 @@ import * as React from 'react';
 import { Route } from 'react-router';
 
 import Spinner from 'components/Spinner';
+import { IApplicationDeployment } from 'models/ApplicationDeployment';
 import { Link } from 'react-router-dom';
-import { IApplicationDeployment } from 'services/auroraApiClients';
 import {
   ApplicationDeploymentProvider,
   withApplicationDeployments

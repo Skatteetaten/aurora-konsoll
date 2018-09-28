@@ -1,7 +1,12 @@
 import ApolloClient from 'apollo-boost';
 
-import { ITag } from '../imageRepositoryClient/client';
-import { IDeploymentSpec } from './DeploymentSpec';
+import {
+  IApplicationDeployment,
+  IApplicationDeploymentDetails,
+  IUserAndAffiliations
+} from 'models/ApplicationDeployment';
+import { normalizeRawDeploymentSpec } from 'models/DeploymentSpec';
+
 import {
   REDEPLOY_WITH_VERSION_MUTATION,
   REFRESH_APPLICATION_DEPLOYMENT_MUTATION
@@ -13,59 +18,9 @@ import {
   IApplicationDeploymentQuery,
   IApplications,
   IImageRepository,
-  IPodResource,
   IUserAffiliationsQuery,
   USER_AFFILIATIONS_QUERY
 } from './query';
-
-const normalizeSpec = (node: any) => (
-  acc: any,
-  key: string
-): IDeploymentSpec => {
-  const currentNode = node[key];
-
-  const children = Object.keys(currentNode).filter(
-    cKey => ['sources', 'source', 'value'].indexOf(cKey) === -1
-  );
-
-  const nextValue =
-    children.length > 0
-      ? children.reduce(normalizeSpec(currentNode), {})
-      : currentNode.value;
-
-  return {
-    ...acc,
-    [key]: nextValue
-  };
-};
-
-export interface IApplicationDeployment {
-  id: string;
-  affiliation: string;
-  name: string;
-  environment: string;
-  status: IApplicationDeploymentStatus;
-  version: {
-    auroraVersion: string;
-    deployTag: ITag;
-  };
-  repository: string;
-}
-
-export interface IApplicationDeploymentStatus {
-  code: string;
-  comment?: string;
-}
-
-export interface IApplicationDeploymentDetails {
-  deploymentSpec?: IDeploymentSpec;
-  pods: IPodResource[];
-}
-
-export interface IUserAndAffiliations {
-  affiliations: string[];
-  user: string;
-}
 
 export class ApplicationDeploymentClient {
   private client: ApolloClient<{}>;
@@ -132,8 +87,13 @@ export class ApplicationDeploymentClient {
     const spec =
       jsonRepresentation.length === 0 ? {} : JSON.parse(jsonRepresentation);
 
+    const deploymentSpec = Object.keys(spec).reduce(
+      normalizeRawDeploymentSpec(spec),
+      {}
+    );
+
     return {
-      deploymentSpec: Object.keys(spec).reduce(normalizeSpec(spec), {}),
+      deploymentSpec,
       pods: result.data.applicationDeploymentDetails.podResources
     };
   }

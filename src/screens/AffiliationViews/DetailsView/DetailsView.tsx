@@ -10,19 +10,15 @@ import TabLink, { TabLinkWrapper } from 'components/TabLink';
 
 import Card from 'components/Card';
 import Label from 'components/Label';
+import LoadingStateManager from 'services/LoadingStateManager';
+import { TagStateManager } from 'services/TagStateManager';
+
 import {
   IApplicationDeployment,
-  IApplicationDeploymentDetails,
-  ITag,
-  ITagsPaged
-} from 'services/auroraApiClients';
-import LoadingStateManager from 'services/LoadingStateManager';
-import {
-  ImageTagType,
-  ITagsPagedGroup,
-  TagStateManager
-} from 'services/TagStateManager';
-
+  IApplicationDeploymentDetails
+} from 'models/ApplicationDeployment';
+import { ImageTagType } from 'models/ImageTagType';
+import { ITag, ITagsPaged, ITagsPagedGroup } from 'models/Tag';
 import { ApplicationDeploymentDetailsRoute } from '../ApplicationDeploymentSelector';
 import InformationView from './InformationView';
 import { IImageTagTypeOption } from './TagTypeSelector/TagTypeSelector';

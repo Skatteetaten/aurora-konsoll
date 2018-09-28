@@ -2,10 +2,9 @@ import * as React from 'react';
 import styled from 'styled-components';
 
 import DetailsList from 'aurora-frontend-react-komponenter/DetailsList';
+import { ImageTagType } from 'models/ImageTagType';
+import { ITag } from 'models/Tag';
 import { Selection } from 'office-ui-fabric-react/lib/DetailsList';
-
-import { ITag } from 'services/auroraApiClients';
-import { ImageTagType } from 'services/TagStateManager';
 
 const detailListColumns = [
   {

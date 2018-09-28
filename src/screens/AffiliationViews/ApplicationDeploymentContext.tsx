@@ -1,6 +1,6 @@
 import * as React from 'react';
 
-import { IApplicationDeployment } from 'services/auroraApiClients';
+import { IApplicationDeployment } from 'models/ApplicationDeployment';
 import { Omit } from 'types/utils';
 
 export interface IApplicationDeploymentContext {

@@ -1,5 +1,6 @@
-import { ITag, ITagsPaged } from 'services/auroraApiClients';
-import { ImageTagType, TagStateManager } from 'services/TagStateManager';
+import { ImageTagType } from 'models/ImageTagType';
+import { ITag, ITagsPaged } from 'models/Tag';
+import { TagStateManager } from 'services/TagStateManager';
 
 export function createTagsPaged(
   endCursor: string = '',

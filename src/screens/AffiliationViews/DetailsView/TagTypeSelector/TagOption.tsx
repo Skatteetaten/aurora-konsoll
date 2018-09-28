@@ -1,7 +1,6 @@
+import { ImageTagType } from 'models/ImageTagType';
 import * as React from 'react';
 import styled from 'styled-components';
-
-import { ImageTagType } from 'services/TagStateManager';
 
 const { AURORA_VERSION, BUGFIX, LATEST, MAJOR, MINOR, SNAPSHOT } = ImageTagType;
 

@@ -2,7 +2,7 @@ import * as React from 'react';
 
 import RadioButtonGroup from 'aurora-frontend-react-komponenter/RadioButtonGroup';
 
-import { ImageTagType } from 'services/TagStateManager';
+import { ImageTagType } from 'models/ImageTagType';
 import TagOption from './TagOption';
 
 export interface IImageTagTypeOption {

@@ -1,7 +1,6 @@
 import ApolloClient from 'apollo-boost';
 
-import { ImageTagType, ITagsPagedGroup } from '../../TagStateManager';
-
+import { ITagsPaged, ITagsPagedGroup } from 'models/Tag';
 import {
   IImageTagsConnection,
   ITagsGroupedQuery,
@@ -9,18 +8,6 @@ import {
   TAGS_GROUPED_QUERY,
   TAGS_QUERY
 } from './query';
-
-export interface ITag {
-  name: string;
-  type: ImageTagType;
-  lastModified: string;
-}
-
-export interface ITagsPaged {
-  endCursor: string;
-  hasNextPage: boolean;
-  tags: ITag[];
-}
 
 export class ImageRepositoryClient {
   private client: ApolloClient<{}>;
