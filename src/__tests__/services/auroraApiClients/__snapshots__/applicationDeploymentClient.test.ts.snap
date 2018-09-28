@@ -7,27 +7,11 @@ Array [
     "environment": "aurora",
     "id": "q8u9fpw8f",
     "name": "console-next",
-    "pods": Array [
-      Object {
-        "links": Array [],
-        "managementResponses": Object {
-          "health": Object {
-            "loadedTime": "2018-09-21T05:37:08.028Z",
-            "textResponse": "{\\"status\\":\\"UP\\",\\"diskSpace\\":{\\"status\\":\\"UP\\",\\"total\\":10726932480,\\"free\\":10528772096,\\"threshold\\":10485760}}",
-            Symbol(id): "$ROOT_QUERY.applications({\\"affiliations\\":[\\"aurora\\"]}).edges.0.node.applicationDeployments.0.details.podResources.0.managementResponses.health",
-          },
-          Symbol(id): "$ROOT_QUERY.applications({\\"affiliations\\":[\\"aurora\\"]}).edges.0.node.applicationDeployments.0.details.podResources.0.managementResponses",
-        },
-        "name": "console-next-10-lczfn",
-        "ready": true,
-        "restartCount": 1,
-        "startTime": "2018-09-12T07:35:07Z",
-        "status": "Running",
-        Symbol(id): "$ROOT_QUERY.applications({\\"affiliations\\":[\\"aurora\\"]}).edges.0.node.applicationDeployments.0.details.podResources.0",
-      },
-    ],
     "repository": "docker-registry.aurora.sits.no:5000/ske_openshift_aurora_console/openshift-console-api",
-    "statusCode": "HEALTHY",
+    "status": Object {
+      "code": "HEALTHY",
+      "comment": "OK",
+    },
     "version": Object {
       "auroraVersion": "SNAPSHOT-master-20180827.071054-2-b1.12.0-flange-8.152.18",
       "deployTag": Object {

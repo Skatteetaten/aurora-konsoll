@@ -5,21 +5,22 @@ import { AuroraApiProvider, IApiClients } from 'components/AuroraApi';
 import {
   IApplicationDeployment,
   IApplicationDeploymentClient,
+  IApplicationDeploymentDetails,
   IImageRepositoryClient,
   INetdebugClient,
   INetdebugResult,
   ITagsPaged,
   IUserAndAffiliations
 } from 'services/auroraApiClients';
-import { IDeploymentSpec } from 'services/auroraApiClients/applicationDeploymentClient/DeploymentSpec';
 import { ITagsPagedGroup } from 'services/TagStateManager';
 
 const applicationDeploymentClient: IApplicationDeploymentClient = {
   findAllApplicationDeployments: async (): Promise<
     IApplicationDeployment[]
   > => [],
-  findDeploymentSpec: async (): Promise<IDeploymentSpec> =>
-    ({} as IDeploymentSpec),
+  findApplicationDeploymentDetails: async (): Promise<
+    IApplicationDeploymentDetails
+  > => ({} as IApplicationDeploymentDetails),
   findUserAndAffiliations: async (): Promise<IUserAndAffiliations> => ({
     affiliations: ['test'],
     user: 'Batman'

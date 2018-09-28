@@ -35,7 +35,7 @@ const Row = ({ name, environments, apps, linkBuilder }: IRowProps) => {
     return (
       <Status
         key={key}
-        name={deployment.statusCode.toLowerCase()}
+        name={deployment.status.code.toLowerCase()}
         title={deployment.version.deployTag.name}
       >
         <Link>{deployment.version.deployTag.name}</Link>
