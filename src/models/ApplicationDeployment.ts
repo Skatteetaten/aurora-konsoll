@@ -13,6 +13,7 @@ export interface IApplicationDeployment {
     deployTag: ITag;
   };
   repository: string;
+  time: string;
 }
 
 export interface IApplicationDeploymentStatus {
