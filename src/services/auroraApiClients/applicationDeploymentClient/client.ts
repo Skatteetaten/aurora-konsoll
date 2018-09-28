@@ -142,6 +142,7 @@ export class ApplicationDeploymentClient {
         code: app.status.code,
         comment: app.status.comment
       },
+      time: app.time,
       version: {
         auroraVersion: app.version.auroraVersion,
         deployTag: {
