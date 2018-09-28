@@ -1,6 +1,6 @@
 import { ImageTagType } from 'models/ImageTagType';
 import { ITag, ITagsPaged } from 'models/Tag';
-import { TagStateManager } from 'services/TagStateManager';
+import { TagStateManager } from 'screens/AffiliationViews/DetailsView/TagStateManager';
 
 export function createTagsPaged(
   endCursor: string = '',

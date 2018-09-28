@@ -1,5 +1,5 @@
 import { findImageTagTypeName, ImageTagType } from 'models/ImageTagType';
-import { StateManager } from 'models/StateManager';
+import StateManager from 'models/StateManager';
 import { ITag, ITagsPaged, ITagsPagedGroup } from 'models/Tag';
 
 export class TagStateManager extends StateManager<ITagsPagedGroup> {
