@@ -1,4 +1,4 @@
-import { ComponentStateHandler } from 'models/ComponentStateHandler';
+import { StateManager } from 'models/StateManager';
 import { ITag, ITagsPaged } from 'services/auroraApiClients';
 
 export enum ImageTagType {
@@ -19,9 +19,7 @@ export interface ITagsPagedGroup {
   auroraVersion: ITagsPaged;
 }
 
-type UpdateStateFunc = (tagsGroup: ITagsPagedGroup) => void;
-
-export class TagStateManager extends ComponentStateHandler<ITagsPagedGroup> {
+export class TagStateManager extends StateManager<ITagsPagedGroup> {
   public static defaultTagsPagedGroup(): ITagsPagedGroup {
     const defaultTagsPaged: ITagsPaged = {
       endCursor: '',
@@ -39,34 +37,22 @@ export class TagStateManager extends ComponentStateHandler<ITagsPagedGroup> {
     };
   }
 
-  private tagsPagedGroup: ITagsPagedGroup;
-
-  constructor(tagsGroup: ITagsPagedGroup, updateState: UpdateStateFunc) {
-    super(updateState);
-    this.tagsPagedGroup = tagsGroup;
-  }
-
   public setTagsPagedGroup(tagsPagedGroup: ITagsPagedGroup) {
-    this.tagsPagedGroup = tagsPagedGroup;
-    this.handleState(tagsPagedGroup);
+    this.updateState(tagsPagedGroup);
   }
 
   public updateTagsPaged(type: ImageTagType, next: ITagsPaged) {
-    const name = this.findName(type);
-    const old = this.tagsPagedGroup[name];
+    const name = this.findTypeName(type);
 
-    const updatedTagsPagedGroup = {
-      ...this.tagsPagedGroup,
-      [name]: this.updateTags(old, next)
-    };
-
-    this.tagsPagedGroup = updatedTagsPagedGroup;
-    this.handleState(updatedTagsPagedGroup);
+    this.updateState(state => ({
+      ...state,
+      [name]: this.updateTags(state[name], next)
+    }));
   }
 
   public getTagsPaged(type: ImageTagType): ITagsPaged {
-    const name = this.findName(type);
-    return this.tagsPagedGroup[name];
+    const name = this.findTypeName(type);
+    return this.getState()[name];
   }
 
   public getTagsPageFiltered(
@@ -97,7 +83,7 @@ export class TagStateManager extends ComponentStateHandler<ITagsPagedGroup> {
     };
   }
 
-  private findName(type: ImageTagType): string {
+  private findTypeName(type: ImageTagType): string {
     switch (type) {
       case ImageTagType.AURORA_VERSION:
         return 'auroraVersion';
