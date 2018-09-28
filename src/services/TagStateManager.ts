@@ -42,20 +42,16 @@ export class TagStateManager extends StateManager<ITagsPagedGroup> {
   }
 
   public updateTagsPaged(type: ImageTagType, next: ITagsPaged) {
-    const state = this.getState();
-    const name = this.findName(type);
-    const old = state[name];
+    const name = this.findTypeName(type);
 
-    const updatedTagsPagedGroup = {
+    this.updateState(state => ({
       ...state,
-      [name]: this.updateTags(old, next)
-    };
-
-    this.updateState(updatedTagsPagedGroup);
+      [name]: this.updateTags(state[name], next)
+    }));
   }
 
   public getTagsPaged(type: ImageTagType): ITagsPaged {
-    const name = this.findName(type);
+    const name = this.findTypeName(type);
     return this.getState()[name];
   }
 
@@ -87,7 +83,7 @@ export class TagStateManager extends StateManager<ITagsPagedGroup> {
     };
   }
 
-  private findName(type: ImageTagType): string {
+  private findTypeName(type: ImageTagType): string {
     switch (type) {
       case ImageTagType.AURORA_VERSION:
         return 'auroraVersion';
