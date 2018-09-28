@@ -49,6 +49,7 @@ export interface IApplicationDeployment {
     auroraVersion: string;
     deployTag: ITag;
   };
+  time: string;
   repository: string;
   pods: IPodResource[];
 }
@@ -184,6 +185,7 @@ export class ApplicationDeploymentClient
       pods: app.details.podResources,
       repository: imageRepository ? imageRepository.repository : '',
       statusCode: app.status.code,
+      time: app.time,
       version: {
         auroraVersion: app.version.auroraVersion,
         deployTag: {

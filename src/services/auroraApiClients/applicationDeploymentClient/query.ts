@@ -38,6 +38,7 @@ export interface IApplicationDeploymentQuery {
   details: {
     podResources: IPodResource[];
   };
+  time: string;
 }
 
 export interface IHttpResponse {
@@ -107,6 +108,7 @@ export const APPLICATIONS_QUERY = gql`
                 }
               }
             }
+            time
           }
         }
       }

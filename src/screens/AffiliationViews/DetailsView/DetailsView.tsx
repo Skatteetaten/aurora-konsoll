@@ -10,6 +10,7 @@ import TabLink, { TabLinkWrapper } from 'components/TabLink';
 
 import Card from 'components/Card';
 import Label from 'components/Label';
+import TimeSince from 'components/TimeSince';
 import {
   IApplicationDeployment,
   ITag,
@@ -180,7 +181,6 @@ class DetailsView extends React.Component<
   public render() {
     const { deployment, match } = this.props;
     const { deploymentSpec, loading, imageTagType, selectedTag } = this.state;
-
     const title = `${deployment.environment}/${deployment.name}`;
     return (
       <DetailsViewGrid>
@@ -190,6 +190,7 @@ class DetailsView extends React.Component<
             <Label text="tag" subText={deployment.version.deployTag.name} />
             <Label text="versjon" subText={deployment.version.auroraVersion} />
           </div>
+          <TimeSince timeSince={this.props.deployment.time} />
           <Button
             buttonType="primaryRoundedFilled"
             onClick={this.refreshApplicationDeployment}
