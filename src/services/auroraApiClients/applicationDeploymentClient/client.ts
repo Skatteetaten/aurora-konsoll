@@ -67,25 +67,7 @@ export interface IUserAndAffiliations {
   user: string;
 }
 
-export interface IApplicationDeploymentClient {
-  findUserAndAffiliations: () => Promise<IUserAndAffiliations>;
-  findAllApplicationDeployments: (
-    affiliations: string[]
-  ) => Promise<IApplicationDeployment[]>;
-  findApplicationDeploymentDetails: (
-    id: string
-  ) => Promise<IApplicationDeploymentDetails>;
-  redeployWithVersion: (
-    applicationDeploymentId: string,
-    version: string
-  ) => Promise<boolean>;
-  refreshApplicationDeployment: (
-    applicationDeploymentId: string
-  ) => Promise<boolean>;
-}
-
-export class ApplicationDeploymentClient
-  implements IApplicationDeploymentClient {
+export class ApplicationDeploymentClient {
   private client: ApolloClient<{}>;
 
   constructor(client: ApolloClient<{}>) {

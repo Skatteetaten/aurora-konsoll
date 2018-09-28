@@ -22,17 +22,7 @@ export interface ITagsPaged {
   tags: ITag[];
 }
 
-export interface IImageRepositoryClient {
-  findTagsPaged: (
-    repository: string,
-    first?: number,
-    cursor?: string,
-    types?: string[]
-  ) => Promise<ITagsPaged>;
-  findGroupedTagsPaged: (repository: string) => Promise<ITagsPagedGroup>;
-}
-
-export class ImageRepositoryClient implements IImageRepositoryClient {
+export class ImageRepositoryClient {
   private client: ApolloClient<{}>;
 
   constructor(client: ApolloClient<{}>) {
