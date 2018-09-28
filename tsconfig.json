@@ -19,6 +19,7 @@
     "noUnusedLocals": true
   },
   "exclude": [
+    "api",
     "node_modules",
     "build",
     "build-api",
@@ -27,6 +28,7 @@
     "acceptance-tests",
     "webpack",
     "jest",
+    "webpack.api.config.js",
     "src/setupTests.ts"
   ]
 }
