@@ -1,4 +1,4 @@
-import { StateManager } from 'models/StateManager';
+import StateManager from 'models/StateManager';
 
 type Booleans<T> = { [P in keyof T]: boolean };
 

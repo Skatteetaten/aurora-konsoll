@@ -1,10 +1,9 @@
 import * as React from 'react';
 import styled from 'styled-components';
 
-import { IApplicationDeploymentDetails } from 'services/auroraApiClients';
-
 import Label from 'components/Label';
 import Spinner from 'components/Spinner';
+import { IApplicationDeploymentDetails } from 'models/ApplicationDeployment';
 import PodStatus from './PodStatus';
 
 interface IInformationViewProps {

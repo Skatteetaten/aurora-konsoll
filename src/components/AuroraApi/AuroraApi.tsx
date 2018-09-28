@@ -1,14 +1,14 @@
 import * as React from 'react';
 import {
-  IApplicationDeploymentClient,
-  IImageRepositoryClient,
-  INetdebugClient
+  ApplicationDeploymentClient,
+  ImageRepositoryClient,
+  NetdebugClient
 } from 'services/auroraApiClients';
 
 interface IApiClients {
-  applicationDeploymentClient: IApplicationDeploymentClient;
-  imageRepositoryClient: IImageRepositoryClient;
-  netdebugClient: INetdebugClient;
+  applicationDeploymentClient: ApplicationDeploymentClient;
+  imageRepositoryClient: ImageRepositoryClient;
+  netdebugClient: NetdebugClient;
 }
 
 // AuroraApiContext

@@ -1,4 +1,5 @@
 import gql from 'graphql-tag';
+import { IPodResource } from 'models/Pod';
 import { IImageTag } from '../imageRepositoryClient/query';
 
 export interface IApplications {
@@ -86,26 +87,6 @@ export interface IApplicationDeploymentDetailsQuery {
       };
     };
   };
-}
-
-export interface IPodResource {
-  name: string;
-  status: string;
-  restartCount: number;
-  ready: boolean;
-  startTime: string;
-  managementResponses?: {
-    health?: IHttpResponse;
-  };
-  links: Array<{
-    name: string;
-    url: string;
-  }>;
-}
-
-export interface IHttpResponse {
-  loadedTime: string;
-  textResponse: string;
 }
 
 export const APPLICATION_DEPLOYMENT_DETAILS_QUERY = gql`

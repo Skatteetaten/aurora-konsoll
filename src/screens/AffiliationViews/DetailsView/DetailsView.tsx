@@ -5,27 +5,22 @@ import styled from 'styled-components';
 import Button from 'aurora-frontend-react-komponenter/Button';
 
 import { IAuroraApiComponentProps, withAuroraApi } from 'components/AuroraApi';
-import Spinner from 'components/Spinner';
-import TabLink, { TabLinkWrapper } from 'components/TabLink';
-
 import Card from 'components/Card';
 import Label from 'components/Label';
+import Spinner from 'components/Spinner';
+import TabLink, { TabLinkWrapper } from 'components/TabLink';
 import TimeSince from 'components/TimeSince';
 import {
   IApplicationDeployment,
-  IApplicationDeploymentDetails,
-  ITag,
-  ITagsPaged
-} from 'services/auroraApiClients';
-import LoadingStateManager from 'services/LoadingStateManager';
-import {
-  ImageTagType,
-  ITagsPagedGroup,
-  TagStateManager
-} from 'services/TagStateManager';
+  IApplicationDeploymentDetails
+} from 'models/ApplicationDeployment';
+import { ImageTagType } from 'models/ImageTagType';
+import LoadingStateManager from 'models/StateManager/LoadingStateManager';
+import { ITag, ITagsPaged, ITagsPagedGroup } from 'models/Tag';
 
 import { ApplicationDeploymentDetailsRoute } from '../ApplicationDeploymentSelector';
 import InformationView from './InformationView';
+import { TagStateManager } from './TagStateManager';
 import { IImageTagTypeOption } from './TagTypeSelector/TagTypeSelector';
 import VersionView from './VersionView';
 

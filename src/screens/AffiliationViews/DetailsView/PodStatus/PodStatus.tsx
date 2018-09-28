@@ -4,8 +4,8 @@ import styled from 'styled-components';
 import palette from 'aurora-frontend-react-komponenter/utils/palette';
 
 import IconLink, { IIconLinkData } from 'components/IconLink';
+import { IPodResource } from 'models/Pod';
 import { statusColors } from 'screens/AffiliationViews/MatrixView/Status';
-import { IPodResource } from 'services/auroraApiClients/applicationDeploymentClient/query';
 
 import { getLocalDatetime } from 'utils/date';
 import HealthResponseDialog from './HealthResponseDialog';

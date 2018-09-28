@@ -1,23 +1,6 @@
-import { StateManager } from 'models/StateManager';
-import { ITag, ITagsPaged } from 'services/auroraApiClients';
-
-export enum ImageTagType {
-  AURORA_VERSION = 'AURORA_VERSION',
-  BUGFIX = 'BUGFIX',
-  LATEST = 'LATEST',
-  MAJOR = 'MAJOR',
-  MINOR = 'MINOR',
-  SNAPSHOT = 'SNAPSHOT'
-}
-
-export interface ITagsPagedGroup {
-  major: ITagsPaged;
-  minor: ITagsPaged;
-  bugfix: ITagsPaged;
-  latest: ITagsPaged;
-  snapshot: ITagsPaged;
-  auroraVersion: ITagsPaged;
-}
+import { findImageTagTypeName, ImageTagType } from 'models/ImageTagType';
+import StateManager from 'models/StateManager';
+import { ITag, ITagsPaged, ITagsPagedGroup } from 'models/Tag';
 
 export class TagStateManager extends StateManager<ITagsPagedGroup> {
   public static defaultTagsPagedGroup(): ITagsPagedGroup {
@@ -42,7 +25,7 @@ export class TagStateManager extends StateManager<ITagsPagedGroup> {
   }
 
   public updateTagsPaged(type: ImageTagType, next: ITagsPaged) {
-    const name = this.findTypeName(type);
+    const name = findImageTagTypeName(type);
 
     this.updateState(state => ({
       ...state,
@@ -51,7 +34,7 @@ export class TagStateManager extends StateManager<ITagsPagedGroup> {
   }
 
   public getTagsPaged(type: ImageTagType): ITagsPaged {
-    const name = this.findTypeName(type);
+    const name = findImageTagTypeName(type);
     return this.getState()[name];
   }
 
@@ -81,23 +64,6 @@ export class TagStateManager extends StateManager<ITagsPagedGroup> {
       ...tagsPaged,
       tags
     };
-  }
-
-  private findTypeName(type: ImageTagType): string {
-    switch (type) {
-      case ImageTagType.AURORA_VERSION:
-        return 'auroraVersion';
-      case ImageTagType.BUGFIX:
-        return 'bugfix';
-      case ImageTagType.LATEST:
-        return 'latest';
-      case ImageTagType.MAJOR:
-        return 'major';
-      case ImageTagType.MINOR:
-        return 'minor';
-      case ImageTagType.SNAPSHOT:
-        return 'snapshot';
-    }
   }
 
   private updateTags(old: ITagsPaged, next: ITagsPaged): ITagsPaged {

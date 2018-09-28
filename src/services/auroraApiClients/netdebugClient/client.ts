@@ -13,11 +13,7 @@ export interface IScanStatus {
   clusterNodeIp?: number;
 }
 
-export interface INetdebugClient {
-  findNetdebugStatus: (host: string, port: string) => Promise<INetdebugResult>;
-}
-
-export class NetdebugClient implements INetdebugClient {
+export class NetdebugClient {
   private client: ApolloClient<{}>;
 
   constructor(client: ApolloClient<{}>) {

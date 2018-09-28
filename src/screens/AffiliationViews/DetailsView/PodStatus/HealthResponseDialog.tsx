@@ -1,5 +1,5 @@
+import { IHttpResponse } from 'models/Pod';
 import * as React from 'react';
-import { IHttpResponse } from 'services/auroraApiClients/applicationDeploymentClient/query';
 import { getLocalDatetime } from 'utils/date';
 import InfoDialog from './InfoDialog';
 

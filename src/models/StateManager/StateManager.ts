@@ -1,4 +1,4 @@
-export class StateManager<S> {
+export default class StateManager<S> {
   private state: S;
   private isActive = true;
   private onUpdateState: (state: S) => void;
