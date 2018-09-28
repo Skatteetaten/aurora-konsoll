@@ -49,6 +49,7 @@ export interface IApplicationDeployment {
     auroraVersion: string;
     deployTag: ITag;
   };
+  time: string;
   repository: string;
 }
 
@@ -200,6 +201,7 @@ export class ApplicationDeploymentClient
         code: app.status.code,
         comment: app.status.comment
       },
+      time: app.time,
       version: {
         auroraVersion: app.version.auroraVersion,
         deployTag: {

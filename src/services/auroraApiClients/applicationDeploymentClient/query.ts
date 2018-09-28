@@ -36,6 +36,7 @@ export interface IApplicationDeploymentQuery {
     auroraVersion: string;
     deployTag: IImageTag;
   };
+  time: string;
 }
 
 export const APPLICATIONS_QUERY = gql`
@@ -68,6 +69,7 @@ export const APPLICATIONS_QUERY = gql`
                 type
               }
             }
+            time
           }
         }
       }
