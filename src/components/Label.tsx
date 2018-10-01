@@ -61,7 +61,7 @@ const LabelWrapper = styled.div<{ exists: boolean }>`
     display: flex;
     align-items: center;
     background: black;
-    line-height: 22px;
+    line-height: 16px;
 
     h4 {
       padding: 5px 10px;
