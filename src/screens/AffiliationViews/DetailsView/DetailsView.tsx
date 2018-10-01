@@ -220,6 +220,7 @@ class DetailsView extends React.Component<
             </Route>
             <Route path={`${match.path}/version`}>
               <VersionView
+                showNoTagsMessage={this.showNoTagsMessage()}
                 deployedTag={deployment.version.deployTag}
                 selectedTag={selectedTag}
                 selectedTagType={selectedTagType}
@@ -240,6 +241,12 @@ class DetailsView extends React.Component<
           </Switch>
         </Card>
       </DetailsViewGrid>
+    );
+  }
+
+  private showNoTagsMessage() {
+    return (
+      !this.tagStateManager.containsTags() && !this.state.loading.fetchTags
     );
   }
 

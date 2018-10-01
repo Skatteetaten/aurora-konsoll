@@ -49,6 +49,15 @@ export class TagStateManager extends StateManager<ITagsPagedGroup> {
     };
   }
 
+  public containsTags() {
+    const state = this.getState();
+    const tagsCount = Object.keys(state).reduce((acc, k) => {
+      return acc + (state[k] as ITagsPaged).tags.length;
+    }, 0);
+
+    return tagsCount > 0;
+  }
+
   private updateTags(old: ITagsPaged, next: ITagsPaged): ITagsPaged {
     return {
       ...next,

@@ -2,6 +2,7 @@ import * as React from 'react';
 import styled from 'styled-components';
 
 import Button from 'aurora-frontend-react-komponenter/Button';
+import MessageBar from 'aurora-frontend-react-komponenter/MessageBar';
 import TextField from 'aurora-frontend-react-komponenter/TextField';
 
 import Spinner from 'components/Spinner';
@@ -17,6 +18,7 @@ interface IVersionViewProps {
   isFetchingTags: boolean;
   isRedeploying: boolean;
   canUpgrade: boolean;
+  showNoTagsMessage: boolean;
   selectedTagType: ImageTagType;
   tagsPaged: ITagsPaged;
   deployedTag: ITag;
@@ -33,6 +35,7 @@ const VersionView = ({
   tagsPaged,
   isFetchingTags,
   isRedeploying,
+  showNoTagsMessage,
   canUpgrade,
   selectedTagType,
   handlefetchTags,
@@ -44,6 +47,13 @@ const VersionView = ({
   redeployWithVersion,
   handleSelectNextTag
 }: IVersionViewProps) => {
+  if (showNoTagsMessage) {
+    return (
+      <MessageBar isMultiline={true}>
+        Denne applikasjonen har ikke noen tags tilgjengelig.
+      </MessageBar>
+    );
+  }
   return (
     <div className={className}>
       <div className="g-control-group">
