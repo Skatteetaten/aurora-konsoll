@@ -5,6 +5,9 @@ import {
   Switch,
   withRouter
 } from 'react-router-dom';
+import styled from 'styled-components';
+
+import SkeBasis from 'aurora-frontend-react-komponenter/SkeBasis';
 
 import { IAuroraApiComponentProps } from 'components/AuroraApi';
 import Layout from 'components/Layout';
@@ -12,6 +15,8 @@ import { ITokenStore } from 'services/TokenStore';
 import AcceptTokenRoute from './AcceptTokenView/AcceptTokenRoute';
 
 import { withAuroraApi } from 'components/AuroraApi';
+import ErrorBoundary from 'components/ErrorBoundary/ErrorBoundary';
+import { errorSM } from 'models/StateManager/ErrorStateManager';
 import AffiliationViewRouteHandler, {
   AffiliationRouteProps
 } from './AffiliationViews/AffiliationViewRouteHandler';
@@ -57,6 +62,10 @@ class App extends React.Component<IAppProps, IAppState> {
     });
   };
 
+  public addDummyError = () => {
+    errorSM.addError(new Error('Client failed '));
+  };
+
   public async componentDidMount() {
     const {
       affiliations,
@@ -86,26 +95,35 @@ class App extends React.Component<IAppProps, IAppState> {
     );
 
     return (
-      <Layout
-        user={user}
-        handleMenuExpand={this.handleMenuExpand}
-        isExpanded={isMenuExpanded}
-        affiliation={affiliation}
-        affiliations={affiliations}
-        showAffiliationSelector={location.pathname.startsWith('/a/')}
-        onAffiliationChange={this.onAffiliationChangeFromSelector}
-      >
-        <AcceptTokenRoute onTokenUpdated={this.onTokenUpdated} />
-        {isAuthenticated && (
-          <Switch>
-            <Route
-              path="/a/:affiliation"
-              render={renderAffiliationViewRouteHandler}
-            />
-            <Route exact={true} path="/netdebug" component={NetdebugWithApi} />
-          </Switch>
-        )}
-      </Layout>
+      <StyledSkeBasis menuExpanded={isMenuExpanded}>
+        <ErrorBoundary errorSM={errorSM}>
+          <Layout
+            user={user}
+            isExpanded={isMenuExpanded}
+            handleMenuExpand={this.handleMenuExpand}
+            affiliation={affiliation}
+            affiliations={affiliations}
+            showAffiliationSelector={location.pathname.startsWith('/a/')}
+            onAffiliationChange={this.onAffiliationChangeFromSelector}
+          >
+            <button onClick={this.addDummyError}>add error</button>
+            <AcceptTokenRoute onTokenUpdated={this.onTokenUpdated} />
+            {isAuthenticated && (
+              <Switch>
+                <Route
+                  path="/a/:affiliation"
+                  render={renderAffiliationViewRouteHandler}
+                />
+                <Route
+                  exact={true}
+                  path="/netdebug"
+                  component={NetdebugWithApi}
+                />
+              </Switch>
+            )}
+          </Layout>
+        </ErrorBoundary>
+      </StyledSkeBasis>
     );
   }
 
@@ -115,3 +133,29 @@ class App extends React.Component<IAppProps, IAppState> {
 }
 
 export default withRouter(withAuroraApi(App));
+
+const StyledSkeBasis = styled<{ menuExpanded: boolean }>(SkeBasis)`
+  height: 100%;
+  display: grid;
+  grid-template-columns: ${props => (props.menuExpanded ? '250px' : '70px')} 1fr;
+  grid-template-rows: auto 1fr;
+  grid-template-areas:
+    'header header'
+    'menu content';
+
+  .g-header {
+    grid-area: header;
+  }
+  .g-menu {
+    grid-area: menu;
+  }
+  .g-content {
+    grid-area: content;
+    max-height: 100%;
+    overflow: auto;
+  }
+
+  .ms-Dropdown-container {
+    max-width: 250px;
+  }
+`;
