@@ -41,7 +41,6 @@ const Header = ({ title, user, className, children }: IHeaderProps) => {
             </div>
             <div className="dropdown-menu-content">
               <a onClick={logOut}>Logg ut </a>
-              <a onClick={logOut}>Logg ut </a>
             </div>
           </div>
         </div>
