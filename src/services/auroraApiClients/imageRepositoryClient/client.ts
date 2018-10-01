@@ -1,6 +1,7 @@
 import ApolloClient from 'apollo-boost';
 
-import { ITagsPaged, ITagsPagedGroup } from 'models/Tag';
+import { errorSM } from 'models/StateManager/ErrorStateManager';
+import { defaultTagsPagedGroup, ITagsPaged, ITagsPagedGroup } from 'models/Tag';
 import {
   IImageTagsConnection,
   ITagsGroupedQuery,
@@ -35,7 +36,9 @@ export class ImageRepositoryClient {
     const { imageRepositories } = result.data;
 
     if (!(imageRepositories && imageRepositories.length > 0)) {
-      throw new Error(`Could not find tags for repository ${repository}`);
+      errorSM.addError(
+        new Error(`Could not find tags for repository ${repository}`)
+      );
     }
 
     return this.toTagsPaged(imageRepositories[0].tags);
@@ -54,7 +57,10 @@ export class ImageRepositoryClient {
     const { imageRepositories } = result.data;
 
     if (!(imageRepositories && imageRepositories.length > 0)) {
-      throw new Error(`Could not find tags for repository ${repository}`);
+      errorSM.addError(
+        new Error(`Could not find tags for repository ${repository}`)
+      );
+      return defaultTagsPagedGroup();
     }
 
     const [mainRepo] = imageRepositories;
