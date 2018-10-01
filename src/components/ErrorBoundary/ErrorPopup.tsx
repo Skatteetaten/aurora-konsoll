@@ -21,12 +21,12 @@ const ErrorPopup = ({ err, closeError, errorCount }: IErrorPopupProps) => {
         type={MessageBar.Type.error}
         actions={
           <div>
-            <MessageBar.Button onClick={close}>
-              {hasMoreErrors ? 'next' : 'close'}
-            </MessageBar.Button>
             <InfoDialog title="Stack" buttonStyle="primaryRounded">
               <p>{err.error.stack}</p>
             </InfoDialog>
+            <MessageBar.Button onClick={close}>
+              {hasMoreErrors ? 'Neste' : 'Lukk'}
+            </MessageBar.Button>
           </div>
         }
       >
@@ -38,7 +38,7 @@ const ErrorPopup = ({ err, closeError, errorCount }: IErrorPopupProps) => {
 };
 
 const ErrorModal = styled.div`
-  z-index: 100;
+  z-index: 9000;
   background: white;
   position: absolute;
   min-width: 400px;

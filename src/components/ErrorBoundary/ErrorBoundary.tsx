@@ -30,7 +30,7 @@ class ErrorBoundary extends React.Component<
     props.errorSM.registerStateUpdater(({ allErrors, errorQueue }) => {
       if (errorQueue.length > this.state.errors.errorQueue.length) {
         // tslint:disable-next-line:no-console
-        console.log('backend log reques');
+        console.log('backend log');
       }
       this.setState({
         errors: {
@@ -59,14 +59,13 @@ class ErrorBoundary extends React.Component<
     const { currentError, errors } = this.state;
     return (
       <>
-        {currentError &&
-          currentError.isActive && (
-            <ErrorPopup
-              err={currentError}
-              closeError={errorSM.closeError}
-              errorCount={errors.errorQueue.length}
-            />
-          )}
+        {currentError && (
+          <ErrorPopup
+            err={currentError}
+            closeError={errorSM.closeError}
+            errorCount={errors.errorQueue.length}
+          />
+        )}
         {this.props.children}
       </>
     );
