@@ -1,7 +1,8 @@
-import { IHttpResponse } from 'models/Pod';
 import * as React from 'react';
+
+import InfoDialog from 'components/InfoDialog';
+import { IHttpResponse } from 'models/Pod';
 import { getLocalDatetime } from 'utils/date';
-import InfoDialog from './InfoDialog';
 
 interface IHealthResponseDialog {
   health: IHttpResponse;
