@@ -41,6 +41,7 @@ const Header = ({ title, user, className, children }: IHeaderProps) => {
             </div>
             <div className="dropdown-menu-content">
               <a onClick={logOut}>Logg ut </a>
+              <a onClick={logOut}>Logg ut </a>
             </div>
           </div>
         </div>
@@ -128,8 +129,7 @@ export default styled(Header)`
       justify-content: center;
       align-items: center;
       cursor: default;
-      padding: 6px;
-      border-radius: 5px 5px 0 0;
+      padding: 5px;
     }
 
     .dropdown-menu {
@@ -144,7 +144,6 @@ export default styled(Header)`
       background-color: ${palette.skeColor.neutralGrey};
       box-shadow: 0px 3px 3px 0px ${palette.skeColor.lightGrey};
       z-index: 15;
-      border-radius: 0 0 5px 5px;
     }
 
     .dropdown-menu-content a {
@@ -156,7 +155,6 @@ export default styled(Header)`
 
     .dropdown-menu-content a:hover {
       background-color: ${palette.skeColor.whiteGrey};
-      border-radius: 0 0 5px 5px;
     }
 
     .dropdown-menu:hover .dropdown-menu-content {
