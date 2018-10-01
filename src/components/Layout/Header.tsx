@@ -2,6 +2,8 @@ import * as React from 'react';
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 
+import Dropdown from 'components/DropdownMenu';
+
 import Icon from 'aurora-frontend-react-komponenter/Icon';
 import Image from 'aurora-frontend-react-komponenter/Image';
 import separatorImg from 'aurora-frontend-react-komponenter/TopBanner/assets/separator.png';
@@ -34,15 +36,19 @@ const Header = ({ title, user, className, children }: IHeaderProps) => {
         </HomeLink>
         <div className="g-header-content">{children}</div>
         <div className="g-header-user">
-          <div className="dropdown-menu">
-            <div className="dropdown-element">
-              <p>{user}</p>
-              <Icon iconName="Person" className="user-icon" />
-            </div>
-            <div className="dropdown-menu-content">
-              <a onClick={logOut}>Logg ut </a>
-            </div>
-          </div>
+          <Dropdown
+            renderTitle={
+              <>
+                <p>{user}</p>
+                <Icon iconName="Person" className="user-icon" />
+              </>
+            }
+            renderContent={[
+              <a key="logout" onClick={logOut}>
+                Logg ut{' '}
+              </a>
+            ]}
+          />
         </div>
       </div>
       <Separator />
@@ -121,48 +127,6 @@ export default styled(Header)`
       color: #1362ae;
       font-size: 32px;
       margin-left: 10px;
-    }
-
-    .dropdown-element {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      cursor: default;
-      padding: 5px;
-    }
-
-    .dropdown-menu {
-      position: relative;
-    }
-
-    .dropdown-menu-content {
-      cursor: pointer;
-      display: none;
-      position: absolute;
-      width: 100%;
-      background-color: ${palette.skeColor.neutralGrey};
-      box-shadow: 0px 3px 3px 0px ${palette.skeColor.lightGrey};
-      z-index: 15;
-    }
-
-    .dropdown-menu-content a {
-      color: black;
-      padding: 12px 16px;
-      text-decoration: none;
-      display: block;
-    }
-
-    .dropdown-menu-content a:hover {
-      background-color: ${palette.skeColor.whiteGrey};
-    }
-
-    .dropdown-menu:hover .dropdown-menu-content {
-      display: block;
-    }
-
-    .dropdown-menu:hover .dropdown-element {
-      background-color: ${palette.skeColor.whiteGrey};
-      box-shadow: 0px 0px 3px 0px ${palette.skeColor.lightGrey};
     }
   }
 `;
