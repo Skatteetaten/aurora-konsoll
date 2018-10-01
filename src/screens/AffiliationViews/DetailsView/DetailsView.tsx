@@ -16,7 +16,12 @@ import {
 } from 'models/ApplicationDeployment';
 import { ImageTagType } from 'models/ImageTagType';
 import LoadingStateManager from 'models/StateManager/LoadingStateManager';
-import { ITag, ITagsPaged, ITagsPagedGroup } from 'models/Tag';
+import {
+  defaultTagsPagedGroup,
+  ITag,
+  ITagsPaged,
+  ITagsPagedGroup
+} from 'models/Tag';
 
 import { ApplicationDeploymentDetailsRoute } from '../ApplicationDeploymentSelector';
 import InformationView from './InformationView';
@@ -62,7 +67,7 @@ class DetailsView extends React.Component<
       update: false
     },
     selectedTagType: this.props.deployment.version.deployTag.type,
-    tagsPagedGroup: TagStateManager.defaultTagsPagedGroup(),
+    tagsPagedGroup: defaultTagsPagedGroup(),
     versionSearchText: ''
   };
 

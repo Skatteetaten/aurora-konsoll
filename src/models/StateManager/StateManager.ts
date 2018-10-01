@@ -1,10 +1,10 @@
 export default class StateManager<S> {
+  protected onUpdateState: (state: S) => void;
   private state: S;
   private isActive = true;
-  private onUpdateState: (state: S) => void;
 
-  constructor(state: S, onUpdateState: (state: S) => void) {
-    this.state = state;
+  constructor(initState: S, onUpdateState: (state: S) => void) {
+    this.state = initState;
     this.onUpdateState = onUpdateState;
   }
 
@@ -13,13 +13,13 @@ export default class StateManager<S> {
   }
 
   public getState(): S {
-    return this.state;
+    return this.copyState();
   }
 
   protected updateState(state: S | ((state: S) => S)) {
     let nextState: S;
     if (state instanceof Function) {
-      nextState = state(this.state);
+      nextState = state(this.copyState());
     } else {
       nextState = state;
     }
@@ -28,5 +28,9 @@ export default class StateManager<S> {
     if (this.isActive) {
       this.onUpdateState(nextState);
     }
+  }
+
+  private copyState(): S {
+    return { ...(this.state as any) };
   }
 }

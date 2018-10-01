@@ -3,23 +3,6 @@ import StateManager from 'models/StateManager';
 import { ITag, ITagsPaged, ITagsPagedGroup } from 'models/Tag';
 
 export class TagStateManager extends StateManager<ITagsPagedGroup> {
-  public static defaultTagsPagedGroup(): ITagsPagedGroup {
-    const defaultTagsPaged: ITagsPaged = {
-      endCursor: '',
-      hasNextPage: false,
-      tags: []
-    };
-
-    return {
-      auroraVersion: defaultTagsPaged,
-      bugfix: defaultTagsPaged,
-      latest: defaultTagsPaged,
-      major: defaultTagsPaged,
-      minor: defaultTagsPaged,
-      snapshot: defaultTagsPaged
-    };
-  }
-
   public setTagsPagedGroup(tagsPagedGroup: ITagsPagedGroup) {
     this.updateState(tagsPagedGroup);
   }

@@ -4,20 +4,26 @@ type Booleans<T> = { [P in keyof T]: boolean };
 
 class LoadingStateManager<S extends Booleans<S>> extends StateManager<S> {
   public async withLoading(types: Array<keyof S>, cb: () => Promise<any>) {
-    const state = this.getState();
-
-    const setAll = (isLoading: boolean) =>
-      types.forEach(t => {
-        state[t] = isLoading;
-      });
-
-    setAll(true);
-    this.updateState(state);
-
+    this.updateSelected(types, true);
     await cb();
+    this.updateSelected(types, false);
+  }
 
-    setAll(false);
-    this.updateState(state);
+  public updateSelected(selected: Array<keyof S>, isLoading: boolean) {
+    this.updateState(state => ({
+      ...(state as any),
+      ...this.setSelected(selected, isLoading)
+    }));
+  }
+
+  private setSelected(selected: Array<keyof S>, isLoading: boolean) {
+    return selected.reduce(
+      (acc, s) => ({
+        ...acc,
+        [s]: isLoading
+      }),
+      {}
+    );
   }
 }
 
