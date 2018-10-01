@@ -13,13 +13,13 @@ export default class StateManager<S> {
   }
 
   public getState(): S {
-    return this.copyState();
+    return this.copy(this.state);
   }
 
   protected updateState(state: S | ((state: S) => S)) {
     let nextState: S;
     if (state instanceof Function) {
-      nextState = state(this.copyState());
+      nextState = state(this.getState());
     } else {
       nextState = state;
     }
@@ -30,7 +30,7 @@ export default class StateManager<S> {
     }
   }
 
-  private copyState(): S {
-    return { ...(this.state as any) };
+  private copy(state: S): S {
+    return Object.assign({}, state);
   }
 }
