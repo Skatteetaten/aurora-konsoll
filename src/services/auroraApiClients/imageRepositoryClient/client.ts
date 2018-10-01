@@ -1,6 +1,6 @@
 import ApolloClient from 'apollo-boost';
 
-import { errorSM } from 'models/StateManager/ErrorStateManager';
+import { errorStateManager } from 'models/StateManager/ErrorStateManager';
 import { defaultTagsPagedGroup, ITagsPaged, ITagsPagedGroup } from 'models/Tag';
 import {
   IImageTagsConnection,
@@ -19,9 +19,9 @@ export class ImageRepositoryClient {
 
   public async findTagsPaged(
     repository: string,
+    type: string,
     first?: number,
-    cursor?: string,
-    types?: string[]
+    cursor?: string
   ): Promise<ITagsPaged> {
     const result = await this.client.query<ITagsQuery>({
       query: TAGS_QUERY,
@@ -29,16 +29,17 @@ export class ImageRepositoryClient {
         cursor,
         first,
         repositories: [repository],
-        types
+        types: [type]
       }
     });
 
     const { imageRepositories } = result.data;
 
     if (!(imageRepositories && imageRepositories.length > 0)) {
-      errorSM.addError(
-        new Error(`Could not find tags for repository ${repository}`)
+      errorStateManager.addError(
+        new Error(`Kunne ikke finne repository for denne applikasjonen`)
       );
+      return defaultTagsPagedGroup()[type];
     }
 
     return this.toTagsPaged(imageRepositories[0].tags);
@@ -57,8 +58,8 @@ export class ImageRepositoryClient {
     const { imageRepositories } = result.data;
 
     if (!(imageRepositories && imageRepositories.length > 0)) {
-      errorSM.addError(
-        new Error(`Could not find tags for repository ${repository}`)
+      errorStateManager.addError(
+        new Error(`Kunne ikke finne repository for denne applikasjonen`)
       );
       return defaultTagsPagedGroup();
     }

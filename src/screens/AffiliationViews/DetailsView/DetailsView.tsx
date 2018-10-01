@@ -125,9 +125,9 @@ class DetailsView extends React.Component<
     this.loadingStateManager.withLoading(['fetchTags'], async () => {
       const tagsPaged = await clients.imageRepositoryClient.findTagsPaged(
         deployment.repository,
+        selectedTagType,
         15,
-        cursor,
-        [selectedTagType]
+        cursor
       );
 
       this.tagStateManager.updateTagsPaged(selectedTagType, tagsPaged);

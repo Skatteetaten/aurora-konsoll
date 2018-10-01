@@ -54,12 +54,12 @@ class ErrorStateManager extends StateManager<IErrorState> {
   }
 }
 
-const errorSM = new ErrorStateManager(
+const errorStateManager = new ErrorStateManager(
   { errorQueue: [], allErrors: new Map() },
   () => {
     return;
   }
 );
 
-export { errorSM };
+export { errorStateManager };
 export default ErrorStateManager;

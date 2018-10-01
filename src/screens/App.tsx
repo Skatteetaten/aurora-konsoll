@@ -16,7 +16,7 @@ import AcceptTokenRoute from './AcceptTokenView/AcceptTokenRoute';
 
 import { withAuroraApi } from 'components/AuroraApi';
 import ErrorBoundary from 'components/ErrorBoundary/ErrorBoundary';
-import { errorSM } from 'models/StateManager/ErrorStateManager';
+import { errorStateManager } from 'models/StateManager/ErrorStateManager';
 import AffiliationViewRouteHandler, {
   AffiliationRouteProps
 } from './AffiliationViews/AffiliationViewRouteHandler';
@@ -62,10 +62,6 @@ class App extends React.Component<IAppProps, IAppState> {
     });
   };
 
-  public addDummyError = () => {
-    errorSM.addError(new Error('Client failed '));
-  };
-
   public async componentDidMount() {
     const {
       affiliations,
@@ -96,7 +92,7 @@ class App extends React.Component<IAppProps, IAppState> {
 
     return (
       <StyledSkeBasis menuExpanded={isMenuExpanded}>
-        <ErrorBoundary errorSM={errorSM}>
+        <ErrorBoundary errorSM={errorStateManager}>
           <Layout
             user={user}
             isExpanded={isMenuExpanded}
@@ -106,7 +102,6 @@ class App extends React.Component<IAppProps, IAppState> {
             showAffiliationSelector={location.pathname.startsWith('/a/')}
             onAffiliationChange={this.onAffiliationChangeFromSelector}
           >
-            <button onClick={this.addDummyError}>add error</button>
             <AcceptTokenRoute onTokenUpdated={this.onTokenUpdated} />
             {isAuthenticated && (
               <Switch>

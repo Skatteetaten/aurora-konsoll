@@ -3,7 +3,6 @@ import styled from 'styled-components';
 
 import MessageBar from 'aurora-frontend-react-komponenter/MessageBar';
 
-import InfoDialog from 'components/InfoDialog';
 import { IAppError } from 'models/StateManager/ErrorStateManager';
 
 interface IErrorPopupProps {
@@ -21,9 +20,6 @@ const ErrorPopup = ({ err, closeError, errorCount }: IErrorPopupProps) => {
         type={MessageBar.Type.error}
         actions={
           <div>
-            <InfoDialog title="Stack" buttonStyle="primaryRounded">
-              <p>{err.error.stack}</p>
-            </InfoDialog>
             <MessageBar.Button onClick={close}>
               {hasMoreErrors ? 'Neste' : 'Lukk'}
             </MessageBar.Button>
@@ -31,7 +27,7 @@ const ErrorPopup = ({ err, closeError, errorCount }: IErrorPopupProps) => {
         }
       >
         {err.error.message}
-        {hasMoreErrors && <p>New errors: {errorCount}</p>}
+        {hasMoreErrors && <p>Nye feil: {errorCount}</p>}
       </MessageBar>
     </ErrorModal>
   );
