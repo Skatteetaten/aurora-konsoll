@@ -82,7 +82,7 @@ export interface IApplicationDeploymentDetailsQuery {
   applicationDeploymentDetails: {
     podResources: IPodResource[];
     deploymentSpecs: {
-      current: {
+      current?: {
         jsonRepresentation: string;
       };
     };

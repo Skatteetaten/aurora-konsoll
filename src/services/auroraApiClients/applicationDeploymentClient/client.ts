@@ -82,15 +82,18 @@ export class ApplicationDeploymentClient {
     });
 
     const {
-      jsonRepresentation
-    } = result.data.applicationDeploymentDetails.deploymentSpecs.current;
-    const spec =
-      jsonRepresentation.length === 0 ? {} : JSON.parse(jsonRepresentation);
+      current
+    } = result.data.applicationDeploymentDetails.deploymentSpecs;
 
-    const deploymentSpec = Object.keys(spec).reduce(
+    let deploymentSpec;
+    if (current) {
+      const spec = JSON.parse(current.jsonRepresentation);
+
+      deploymentSpec = Object.keys(spec).reduce(
       normalizeRawDeploymentSpec(spec),
       {}
     );
+    }
 
     return {
       deploymentSpec,
