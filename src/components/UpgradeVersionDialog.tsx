@@ -1,5 +1,4 @@
 import * as React from 'react';
-import styled from 'styled-components';
 
 import ActionButton from 'aurora-frontend-react-komponenter/ActionButton';
 import Button from 'aurora-frontend-react-komponenter/Button';
@@ -51,8 +50,4 @@ const UpgradeVersionDialog = ({
   );
 };
 
-export default styled(UpgradeVersionDialog)`
-  p.bold {
-    font-weight: bold;
-  }
-`;
+export default UpgradeVersionDialog;
