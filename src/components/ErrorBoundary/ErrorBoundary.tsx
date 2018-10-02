@@ -29,8 +29,15 @@ class ErrorBoundary extends React.Component<
     super(props);
     props.errorSM.registerStateUpdater(({ allErrors, errorQueue }) => {
       if (errorQueue.length > this.state.errors.errorQueue.length) {
-        // tslint:disable-next-line:no-console
-        console.log('backend log');
+        fetch('/api/log', {
+          body: JSON.stringify({
+            message: errorQueue[0].error.message
+          }),
+          headers: {
+            'Content-Type': 'application/json; charset=utf-8'
+          },
+          method: 'POST'
+        });
       }
       this.setState({
         errors: {
