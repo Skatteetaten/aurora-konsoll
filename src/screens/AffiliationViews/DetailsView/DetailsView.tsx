@@ -194,14 +194,16 @@ class DetailsView extends React.Component<
     return (
       <DetailsViewGrid>
         <div className="labels-and-refresh-plus-back-button">
-          <ActionButton
-            buttonType="primary"
-            color="black"
-            icon="Back"
-            onClick={this.goToPreviousPage}
-          >
-            Tilbake
-          </ActionButton>
+          <div className="back-button">
+            <ActionButton
+              buttonType="primary"
+              color="black"
+              icon="Back"
+              onClick={this.goToPreviousPage}
+            >
+              Tilbake
+            </ActionButton>
+          </div>
           <div className="labels">
             <Label text="deployment" subText={title} />
             <Label text="tag" subText={deployment.version.deployTag.name} />
@@ -284,6 +286,9 @@ const DetailsViewGrid = styled.div`
         justify-self: flex-end;
         min-width: 125px;
       }
+    }
+    .back-button {
+      margin-left: -10px;
     }
   }
 `;
