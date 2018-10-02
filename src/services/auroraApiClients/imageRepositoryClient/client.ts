@@ -1,6 +1,6 @@
-import ApolloClient from 'apollo-boost';
-
-import { ITagsPaged, ITagsPagedGroup } from 'models/Tag';
+import { errorStateManager } from 'models/StateManager/ErrorStateManager';
+import { defaultTagsPagedGroup, ITagsPaged, ITagsPagedGroup } from 'models/Tag';
+import GoboClient from 'services/GoboClient';
 import {
   IImageTagsConnection,
   ITagsGroupedQuery,
@@ -10,17 +10,17 @@ import {
 } from './query';
 
 export class ImageRepositoryClient {
-  private client: ApolloClient<{}>;
+  private client: GoboClient;
 
-  constructor(client: ApolloClient<{}>) {
+  constructor(client: GoboClient) {
     this.client = client;
   }
 
   public async findTagsPaged(
     repository: string,
+    type: string,
     first?: number,
-    cursor?: string,
-    types?: string[]
+    cursor?: string
   ): Promise<ITagsPaged> {
     const result = await this.client.query<ITagsQuery>({
       query: TAGS_QUERY,
@@ -28,14 +28,21 @@ export class ImageRepositoryClient {
         cursor,
         first,
         repositories: [repository],
-        types
+        types: [type]
       }
     });
+
+    if (!result) {
+      return defaultTagsPagedGroup()[type];
+    }
 
     const { imageRepositories } = result.data;
 
     if (!(imageRepositories && imageRepositories.length > 0)) {
-      throw new Error(`Could not find tags for repository ${repository}`);
+      errorStateManager.addError(
+        new Error(`Kunne ikke finne repository for denne applikasjonen`)
+      );
+      return defaultTagsPagedGroup()[type];
     }
 
     return this.toTagsPaged(imageRepositories[0].tags);
@@ -51,10 +58,17 @@ export class ImageRepositoryClient {
       }
     });
 
+    if (!result) {
+      return defaultTagsPagedGroup();
+    }
+
     const { imageRepositories } = result.data;
 
     if (!(imageRepositories && imageRepositories.length > 0)) {
-      throw new Error(`Could not find tags for repository ${repository}`);
+      errorStateManager.addError(
+        new Error(`Kunne ikke finne repository for denne applikasjonen`)
+      );
+      return defaultTagsPagedGroup();
     }
 
     const [mainRepo] = imageRepositories;

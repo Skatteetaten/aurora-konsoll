@@ -3,23 +3,6 @@ import StateManager from 'models/StateManager';
 import { ITag, ITagsPaged, ITagsPagedGroup } from 'models/Tag';
 
 export class TagStateManager extends StateManager<ITagsPagedGroup> {
-  public static defaultTagsPagedGroup(): ITagsPagedGroup {
-    const defaultTagsPaged: ITagsPaged = {
-      endCursor: '',
-      hasNextPage: false,
-      tags: []
-    };
-
-    return {
-      auroraVersion: defaultTagsPaged,
-      bugfix: defaultTagsPaged,
-      latest: defaultTagsPaged,
-      major: defaultTagsPaged,
-      minor: defaultTagsPaged,
-      snapshot: defaultTagsPaged
-    };
-  }
-
   public setTagsPagedGroup(tagsPagedGroup: ITagsPagedGroup) {
     this.updateState(tagsPagedGroup);
   }
@@ -64,6 +47,15 @@ export class TagStateManager extends StateManager<ITagsPagedGroup> {
       ...tagsPaged,
       tags
     };
+  }
+
+  public containsTags() {
+    const state = this.getState();
+    const tagsCount = Object.keys(state).reduce((acc, k) => {
+      return acc + (state[k] as ITagsPaged).tags.length;
+    }, 0);
+
+    return tagsCount > 0;
   }
 
   private updateTags(old: ITagsPaged, next: ITagsPaged): ITagsPaged {

@@ -1,5 +1,3 @@
-import ApolloClient from 'apollo-boost';
-
 import {
   IApplicationDeployment,
   IApplicationDeploymentDetails,
@@ -7,6 +5,8 @@ import {
 } from 'models/ApplicationDeployment';
 import { normalizeRawDeploymentSpec } from 'models/DeploymentSpec';
 
+import { IPodResource } from 'models/Pod';
+import GoboClient from 'services/GoboClient';
 import {
   REDEPLOY_WITH_VERSION_MUTATION,
   REFRESH_APPLICATION_DEPLOYMENT_MUTATION
@@ -23,9 +23,9 @@ import {
 } from './query';
 
 export class ApplicationDeploymentClient {
-  private client: ApolloClient<{}>;
+  private client: GoboClient;
 
-  constructor(client: ApolloClient<{}>) {
+  constructor(client: GoboClient) {
     this.client = client;
   }
 
@@ -43,11 +43,11 @@ export class ApplicationDeploymentClient {
       }
     });
 
-    if (!result.data) {
-      return false;
+    if (result && result.data) {
+      return result.data.redeployWithVersion;
     }
 
-    return result.data.redeployWithVersion;
+    return false;
   }
 
   public async refreshApplicationDeployment(
@@ -64,7 +64,7 @@ export class ApplicationDeploymentClient {
       }
     });
 
-    if (result.data) {
+    if (result && result.data) {
       return true;
     } else {
       return false;
@@ -81,20 +81,27 @@ export class ApplicationDeploymentClient {
       }
     });
 
-    const {
-      jsonRepresentation
-    } = result.data.applicationDeploymentDetails.deploymentSpecs.current;
-    const spec =
-      jsonRepresentation.length === 0 ? {} : JSON.parse(jsonRepresentation);
+    let deploymentSpec;
+    let pods: IPodResource[] = [];
+    if (result) {
+      const {
+        deploymentSpecs,
+        podResources
+      } = result.data.applicationDeploymentDetails;
 
-    const deploymentSpec = Object.keys(spec).reduce(
-      normalizeRawDeploymentSpec(spec),
-      {}
-    );
+      if (deploymentSpecs.current) {
+        const spec = JSON.parse(deploymentSpecs.current.jsonRepresentation);
+        deploymentSpec = Object.keys(spec).reduce(
+          normalizeRawDeploymentSpec(spec),
+          {}
+        );
+      }
+      pods = podResources;
+    }
 
     return {
       deploymentSpec,
-      pods: result.data.applicationDeploymentDetails.podResources
+      pods
     };
   }
 
@@ -102,6 +109,13 @@ export class ApplicationDeploymentClient {
     const result = await this.client.query<IUserAffiliationsQuery>({
       query: USER_AFFILIATIONS_QUERY
     });
+
+    if (!result) {
+      return {
+        affiliations: [],
+        user: ''
+      };
+    }
 
     return {
       affiliations: result.data.affiliations.edges.map(edge => edge.node.name),
@@ -118,6 +132,10 @@ export class ApplicationDeploymentClient {
         affiliations
       }
     });
+
+    if (!result) {
+      return [];
+    }
 
     return result.data.applications.edges.reduce((acc, { node }) => {
       const { applicationDeployments, imageRepository } = node;

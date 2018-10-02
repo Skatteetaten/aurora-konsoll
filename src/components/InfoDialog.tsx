@@ -7,6 +7,12 @@ import Dialog from 'aurora-frontend-react-komponenter/Dialog';
 interface InfoDialogProps {
   title: string;
   subText?: string;
+  buttonStyle?:
+    | 'primary'
+    | 'primaryRounded'
+    | 'primaryRoundedFilled'
+    | 'warning'
+    | 'secondary';
   children: JSX.Element;
 }
 
@@ -27,10 +33,10 @@ class InfoDialog extends React.Component<InfoDialogProps, InfoDialogState> {
 
   public render() {
     const { isOpen } = this.state;
-    const { children, title, subText } = this.props;
+    const { children, title, subText, buttonStyle = 'secondary' } = this.props;
     return (
       <>
-        <Button buttonType="secondary" onClick={this.toggleDialog(true)}>
+        <Button buttonType={buttonStyle} onClick={this.toggleDialog(true)}>
           {title}
         </Button>
         <Dialog

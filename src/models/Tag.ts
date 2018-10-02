@@ -20,3 +20,20 @@ export interface ITagsPagedGroup {
   snapshot: ITagsPaged;
   auroraVersion: ITagsPaged;
 }
+
+export function defaultTagsPagedGroup(): ITagsPagedGroup {
+  const defaultTagsPaged: ITagsPaged = {
+    endCursor: '',
+    hasNextPage: false,
+    tags: []
+  };
+
+  return {
+    auroraVersion: defaultTagsPaged,
+    bugfix: defaultTagsPaged,
+    latest: defaultTagsPaged,
+    major: defaultTagsPaged,
+    minor: defaultTagsPaged,
+    snapshot: defaultTagsPaged
+  };
+}

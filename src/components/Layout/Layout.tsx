@@ -1,10 +1,8 @@
 import * as React from 'react';
-import styled from 'styled-components';
 
 import Dropdown, {
   IDropdownOption
 } from 'aurora-frontend-react-komponenter/Dropdown';
-import SkeBasis from 'aurora-frontend-react-komponenter/SkeBasis';
 
 import { toDropdownOptions } from 'utils/aurora-frontend';
 
@@ -54,7 +52,7 @@ const Layout = ({
   }));
 
   return (
-    <StyledSkeBasis menuExpanded={isExpanded}>
+    <>
       <Header title="Aurora Konsoll" user={user} className="g-header">
         {showAffiliationSelector && (
           <Dropdown
@@ -75,34 +73,8 @@ const Layout = ({
         />
       </Menu>
       <div className="g-content">{children}</div>
-    </StyledSkeBasis>
+    </>
   );
 };
-
-const StyledSkeBasis = styled<{ menuExpanded: boolean }>(SkeBasis)`
-  height: 100%;
-  display: grid;
-  grid-template-columns: ${props => (props.menuExpanded ? '250px' : '70px')} 1fr;
-  grid-template-rows: auto 1fr;
-  grid-template-areas:
-    'header header'
-    'menu content';
-
-  .g-header {
-    grid-area: header;
-  }
-  .g-menu {
-    grid-area: menu;
-  }
-  .g-content {
-    grid-area: content;
-    max-height: 100%;
-    overflow: auto;
-  }
-
-  .ms-Dropdown-container {
-    max-width: 250px;
-  }
-`;
 
 export default Layout;
