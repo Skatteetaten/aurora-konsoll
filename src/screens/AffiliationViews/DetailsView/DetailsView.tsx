@@ -193,7 +193,7 @@ class DetailsView extends React.Component<
     const title = `${deployment.environment}/${deployment.name}`;
     return (
       <DetailsViewGrid>
-        <div className="labels-and-refresh-plus-back-button">
+        <div className="labels-and-buttons">
           <div className="back-button">
             <ActionButton
               buttonType="primary"
@@ -273,23 +273,23 @@ const DetailsViewGrid = styled.div`
   height: 100%;
   display: flex;
   flex-direction: column;
-  .labels-and-refresh-plus-back-button {
+  .labels-and-buttons {
     display: flex;
     margin: 10px;
     align-items: center;
-    .labels {
-      display: flex;
-      flex: 1;
+  }
+  .labels {
+    display: flex;
+    flex: 1;
+  }
+  .refresh-button {
+    button {
+      justify-self: flex-end;
+      min-width: 125px;
     }
-    .refresh-button {
-      button {
-        justify-self: flex-end;
-        min-width: 125px;
-      }
-    }
-    .back-button {
-      margin-left: -10px;
-    }
+  }
+  .back-button {
+    margin-left: -10px;
   }
 `;
 
