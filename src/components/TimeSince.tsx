@@ -1,6 +1,8 @@
 import * as React from 'react';
 import styled from 'styled-components';
 
+import palette from 'aurora-frontend-react-komponenter/utils/palette';
+
 interface ITimeSinceProps {
   timeSince: Date | string;
   className?: string;
@@ -65,7 +67,7 @@ class TimeSince extends React.PureComponent<ITimeSinceProps, ITimeSinceState> {
           {isSecond
             ? `Sist oppdatert for:  ${secondsAgo} sek siden`
             : `Sist oppdatert for:  ${minutesAgo} min siden`}
-          <span className="tooltiptext">
+          <span className="tooltip-text">
             {time && time.toLocaleTimeString('nb-NO')}
           </span>
         </div>
@@ -78,15 +80,17 @@ export default styled(TimeSince)`
   .tooltip {
     position: relative;
     display: inline-block;
-    border-bottom: 1px dotted black;
+    border-bottom: 1px dotted ${palette.skeColor.black};
     margin-right: 10px;
+    cursor: default;
   }
 
-  .tooltip .tooltiptext {
+  .tooltip .tooltip-text {
     visibility: hidden;
+    opacity: 0;
     width: 120px;
-    background-color: black;
-    color: #fff;
+    background-color: ${palette.skeColor.blackAlt};
+    color: ${palette.skeColor.white};
     text-align: center;
     border-radius: 6px;
     padding: 5px 0;
@@ -97,18 +101,21 @@ export default styled(TimeSince)`
     margin-left: -60px;
   }
 
-  .tooltip .tooltiptext::after {
+  .tooltip .tooltip-text::after {
     content: '';
     position: absolute;
     bottom: 100%;
     left: 50%;
-    margin-left: -5px;
-    border-width: 5px;
+    margin-left: -6px;
+    border-width: 6px;
     border-style: solid;
-    border-color: transparent transparent black transparent;
+    border-color: transparent transparent ${palette.skeColor.blackAlt}
+      transparent;
   }
 
-  .tooltip:hover .tooltiptext {
+  .tooltip:hover .tooltip-text {
     visibility: visible;
+    opacity: 1;
+    transition: all 0.3s;
   }
 `;

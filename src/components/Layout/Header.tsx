@@ -2,6 +2,8 @@ import * as React from 'react';
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 
+import Dropdown from 'components/DropdownMenu';
+
 import Icon from 'aurora-frontend-react-komponenter/Icon';
 import Image from 'aurora-frontend-react-komponenter/Image';
 import separatorImg from 'aurora-frontend-react-komponenter/TopBanner/assets/separator.png';
@@ -14,6 +16,11 @@ interface IHeaderProps {
   className?: string;
   children?: React.ReactNode;
 }
+
+const logOut = () => {
+  window.localStorage.clear();
+  window.location.reload();
+};
 
 const Header = ({ title, user, className, children }: IHeaderProps) => {
   return (
@@ -29,8 +36,19 @@ const Header = ({ title, user, className, children }: IHeaderProps) => {
         </HomeLink>
         <div className="g-header-content">{children}</div>
         <div className="g-header-user">
-          <p>{user}</p>
-          <Icon iconName="Person" className="user-icon" />
+          <Dropdown
+            renderTitle={
+              <>
+                <p>{user}</p>
+                <Icon iconName="Person" className="user-icon" />
+              </>
+            }
+            renderContent={[
+              <a key="logout" onClick={logOut}>
+                Logg ut{' '}
+              </a>
+            ]}
+          />
         </div>
       </div>
       <Separator />
