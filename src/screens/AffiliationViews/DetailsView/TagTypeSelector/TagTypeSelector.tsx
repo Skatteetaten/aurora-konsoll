@@ -3,6 +3,7 @@ import * as React from 'react';
 import RadioButtonGroup from 'aurora-frontend-react-komponenter/RadioButtonGroup';
 
 import { ImageTagType } from 'models/ImageTagType';
+import styled from 'styled-components';
 import TagOption from './TagOption';
 
 export interface IImageTagTypeOption {
@@ -21,11 +22,13 @@ const TagTypeSelector = ({
   imageTagType,
   handleSelectedStrategy
 }: ITagTypeSelector) => (
-  <RadioButtonGroup
-    defaultSelectedKey={imageTagType}
-    options={versionStategyOptions}
-    onChange={handleSelectedStrategy}
-  />
+  <RadioButtonWrapper>
+    <RadioButtonGroup
+      defaultSelectedKey={imageTagType}
+      options={versionStategyOptions}
+      onChange={handleSelectedStrategy}
+    />
+  </RadioButtonWrapper>
 );
 
 function createOption(type: ImageTagType, text: string): IImageTagTypeOption {
@@ -49,5 +52,14 @@ const versionStategyOptions: IImageTagTypeOption[] = [
   createOption(ImageTagType.SNAPSHOT, 'Snapshot'),
   createOption(ImageTagType.AURORA_VERSION, 'Aurora version')
 ];
+
+const RadioButtonWrapper = styled.div`
+  .ms-ChoiceField-wrapper {
+    width: 100%;
+  }
+  .ms-ChoiceField-field {
+    width: 100%;
+  }
+`;
 
 export default TagTypeSelector;
