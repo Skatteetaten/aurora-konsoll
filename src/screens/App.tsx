@@ -1,5 +1,6 @@
 import * as React from 'react';
 import {
+  Redirect,
   Route,
   RouteComponentProps,
   Switch,
@@ -84,6 +85,7 @@ class App extends React.Component<IAppProps, IAppState> {
     ) => (
       <AffiliationViewRouteHandler
         {...routeProps}
+        user={user}
         affiliation={affiliation}
         affiliations={affiliations}
         onAffiliationValidated={this.onSelectedAffiliationValidated}
@@ -105,6 +107,11 @@ class App extends React.Component<IAppProps, IAppState> {
             <AcceptTokenRoute onTokenUpdated={this.onTokenUpdated} />
             {isAuthenticated && (
               <Switch>
+                <Redirect
+                  exact={true}
+                  from="/"
+                  to={`/a/${affiliation || '_'}/deployments`}
+                />
                 <Route
                   path="/a/:affiliation"
                   render={renderAffiliationViewRouteHandler}

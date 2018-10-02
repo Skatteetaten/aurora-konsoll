@@ -22,6 +22,14 @@ import {
   USER_AFFILIATIONS_QUERY
 } from './query';
 
+function formatName(user: string) {
+  const names = user.split(', ');
+  if (names.length !== 2) {
+    return user;
+  }
+  return names[1] + ' ' + names[0];
+}
+
 export class ApplicationDeploymentClient {
   private client: GoboClient;
 
@@ -119,7 +127,7 @@ export class ApplicationDeploymentClient {
 
     return {
       affiliations: result.data.affiliations.edges.map(edge => edge.node.name),
-      user: result.data.currentUser.name
+      user: formatName(result.data.currentUser.name)
     };
   }
 

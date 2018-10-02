@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { RouteComponentProps } from 'react-router-dom';
+import AffiliationSelector from './AffiliationSelector';
 import { AffiliationViewControllerWithApi } from './AffiliationViewController';
 
 export type AffiliationRouteProps = RouteComponentProps<{
@@ -7,6 +8,7 @@ export type AffiliationRouteProps = RouteComponentProps<{
 }>;
 
 interface IAffiliationViewValidatorProps extends AffiliationRouteProps {
+  user: string;
   affiliation?: string;
   affiliations: string[];
   onAffiliationValidated: (affiliation: string) => void;
@@ -40,18 +42,18 @@ class AffiliationViewRouteHandler extends React.Component<
   }
 
   public render() {
-    const { affiliation, affiliations, match } = this.props;
+    const { affiliation, affiliations, match, user } = this.props;
 
     if (affiliations.length === 0) {
       return false;
     }
 
     if (match.params.affiliation === '_') {
-      return <p>Velg affiliation</p>;
+      return <AffiliationSelector user={user} affiliations={affiliations} />;
     }
 
     if (!affiliation) {
-      return <p>Not valid</p>;
+      return <p>{affiliation} er ikke en gyldig affiliation.</p>;
     }
 
     return (
