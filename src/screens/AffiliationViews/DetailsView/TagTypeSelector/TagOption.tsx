@@ -13,7 +13,7 @@ interface IOptionProps {
 const TagOption = ({ tag, text, className }: IOptionProps) => (
   <span className={className}>
     <h3>{text}</h3>
-    <label>{getOptionLabel(tag)}</label>
+    <p>{getOptionLabel(tag)}</p>
   </span>
 );
 
@@ -41,5 +41,9 @@ export default styled(TagOption)`
   h3 {
     margin: 0;
     margin-bottom: 2px;
+  }
+
+  p {
+    margin: 0;
   }
 `;

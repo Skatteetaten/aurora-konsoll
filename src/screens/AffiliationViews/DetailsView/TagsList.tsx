@@ -66,21 +66,28 @@ export default class TagsList extends React.Component<
       selectedTagIndex
     });
 
-    if (selectedTagIndex !== -1) {
-      this.selection.setIndexSelected(selectedTagIndex, true, true);
-    }
     if (deployedTagIndex !== -1) {
       this.selection.setIndexSelected(deployedTagIndex, true, true);
     }
   };
 
   public componentDidUpdate(prevProps: ITagsListProps) {
-    const { tags, imageTagType, deployedTag, selectedTag } = this.props;
+    const {
+      tags,
+      imageTagType,
+      deployedTag,
+      selectedTag,
+      handleSelectNextTag
+    } = this.props;
 
     const diffTagType = prevProps.imageTagType !== imageTagType;
     const newTags = tags.length !== prevProps.tags.length;
     const diffSelectedTag = prevProps.selectedTag !== selectedTag;
     const diffDeployTag = prevProps.deployedTag.name !== deployedTag.name;
+
+    if (diffTagType) {
+      handleSelectNextTag(undefined);
+    }
 
     if (diffTagType || newTags || diffSelectedTag || diffDeployTag) {
       this.resetSelections();
