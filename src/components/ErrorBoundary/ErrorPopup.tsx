@@ -18,6 +18,7 @@ const ErrorPopup = ({ err, closeError, errorCount }: IErrorPopupProps) => {
     <ErrorModal>
       <MessageBar
         type={MessageBar.Type.error}
+        isMultiline={true}
         actions={
           <div>
             <MessageBar.Button onClick={close}>

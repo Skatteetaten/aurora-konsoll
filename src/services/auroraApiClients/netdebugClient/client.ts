@@ -1,5 +1,4 @@
-import ApolloClient from 'apollo-boost';
-
+import GoboClient from 'services/GoboClient';
 import { IScanQuery, IScanStatusQuery, NETDEBUG_QUERY } from './query';
 
 export interface INetdebugResult {
@@ -14,9 +13,9 @@ export interface IScanStatus {
 }
 
 export class NetdebugClient {
-  private client: ApolloClient<{}>;
+  private client: GoboClient;
 
-  constructor(client: ApolloClient<{}>) {
+  constructor(client: GoboClient) {
     this.client = client;
   }
 
@@ -31,6 +30,15 @@ export class NetdebugClient {
         port
       }
     });
+
+    if (!result) {
+      return {
+        failed: [],
+        open: [],
+        status: 'Noe gikk galt'
+      };
+    }
+
     return this.showNetdebugStatus(result.data);
   }
 

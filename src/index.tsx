@@ -10,11 +10,13 @@ import { fetchConfiguration, IConfiguration } from 'utils/config';
 import registerServiceWorker from 'utils/registerServiceWorker';
 
 import ApolloClient from 'apollo-boost';
+import { errorStateManager } from 'models/StateManager/ErrorStateManager';
 import {
   ApplicationDeploymentClient,
   ImageRepositoryClient,
   NetdebugClient
 } from 'services/auroraApiClients';
+import GoboClient from 'services/GoboClient';
 import './index.css';
 
 async function init() {
@@ -45,10 +47,12 @@ async function init() {
     }
   };
 
+  const goboClient = new GoboClient(apolloClient, errorStateManager);
+
   const clients: IApiClients = {
-    applicationDeploymentClient: new ApplicationDeploymentClient(apolloClient),
-    imageRepositoryClient: new ImageRepositoryClient(apolloClient),
-    netdebugClient: new NetdebugClient(apolloClient)
+    applicationDeploymentClient: new ApplicationDeploymentClient(goboClient),
+    imageRepositoryClient: new ImageRepositoryClient(goboClient),
+    netdebugClient: new NetdebugClient(goboClient)
   };
 
   ReactDOM.render(

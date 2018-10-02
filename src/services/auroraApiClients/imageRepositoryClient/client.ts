@@ -1,7 +1,6 @@
-import ApolloClient from 'apollo-boost';
-
 import { errorStateManager } from 'models/StateManager/ErrorStateManager';
 import { defaultTagsPagedGroup, ITagsPaged, ITagsPagedGroup } from 'models/Tag';
+import GoboClient from 'services/GoboClient';
 import {
   IImageTagsConnection,
   ITagsGroupedQuery,
@@ -11,9 +10,9 @@ import {
 } from './query';
 
 export class ImageRepositoryClient {
-  private client: ApolloClient<{}>;
+  private client: GoboClient;
 
-  constructor(client: ApolloClient<{}>) {
+  constructor(client: GoboClient) {
     this.client = client;
   }
 
@@ -32,6 +31,10 @@ export class ImageRepositoryClient {
         types: [type]
       }
     });
+
+    if (!result) {
+      return defaultTagsPagedGroup()[type];
+    }
 
     const { imageRepositories } = result.data;
 
@@ -54,6 +57,10 @@ export class ImageRepositoryClient {
         repositories: [repository]
       }
     });
+
+    if (!result) {
+      return defaultTagsPagedGroup();
+    }
 
     const { imageRepositories } = result.data;
 

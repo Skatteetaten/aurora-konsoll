@@ -1,11 +1,24 @@
 import { ImageRepositoryClient } from 'services/auroraApiClients/imageRepositoryClient/client';
 import { graphqlClientMock, GraphQLSeverMock } from 'utils/GraphQLMock';
 
+import ErrorStateManager from 'models/StateManager/ErrorStateManager.js';
+import GoboClient from 'services/GoboClient.js';
 import * as getTags from './__responses__/imageRepositoryClient/getTags.json';
+
+const errorSM = new ErrorStateManager(
+  {
+    allErrors: new Map(),
+    errorQueue: []
+  },
+  () => {
+    return;
+  }
+);
 
 const mockServer = new GraphQLSeverMock();
 const mockClient = graphqlClientMock(mockServer.graphQLUrl);
-const imageRepositoryClient = new ImageRepositoryClient(mockClient);
+const goboClient = new GoboClient(mockClient, errorSM);
+const imageRepositoryClient = new ImageRepositoryClient(goboClient);
 
 afterAll(() => {
   mockServer.close();
