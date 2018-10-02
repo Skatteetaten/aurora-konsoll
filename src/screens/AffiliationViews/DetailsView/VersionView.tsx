@@ -6,6 +6,7 @@ import MessageBar from 'aurora-frontend-react-komponenter/MessageBar';
 import TextField from 'aurora-frontend-react-komponenter/TextField';
 
 import Spinner from 'components/Spinner';
+import UpgradeVersionDialog from 'components/UpgradeVersionDialog';
 import { ImageTagType } from 'models/ImageTagType';
 import { ITag, ITagsPaged } from 'models/Tag';
 
@@ -62,13 +63,13 @@ const VersionView = ({
           handleSelectedStrategy={handleSelectedStrategy}
         />
         <ButtonWrapper>
-          <Button
-            buttonType="primary"
-            onClick={redeployWithVersion}
-            disabled={!canUpgrade}
-          >
-            {isRedeploying ? <Spinner /> : 'Oppgrader'}
-          </Button>
+          <UpgradeVersionDialog
+            previousVersion={deployedTag.name}
+            newVersion={selectedTag && selectedTag.name}
+            isRedeploying={isRedeploying}
+            redeployWithVersion={redeployWithVersion}
+            canUpgrade={canUpgrade}
+          />
         </ButtonWrapper>
       </div>
       <div className="g-action-bar">

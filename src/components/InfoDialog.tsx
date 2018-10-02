@@ -14,10 +14,24 @@ interface InfoDialogProps {
     | 'warning'
     | 'secondary';
   children: JSX.Element;
+  renderOpenDialogButton?: (openDialog: () => void) => JSX.Element;
+  renderFooterButtons?: (closeDialog: () => void) => JSX.Element;
 }
 
 interface InfoDialogState {
   isOpen: boolean;
+}
+
+function renderDefaultOpenDialogButton(
+  title: string,
+  buttonStyle: string,
+  openDialog: () => void
+) {
+  return (
+    <Button buttonType={buttonStyle} onClick={openDialog}>
+      {title}
+    </Button>
+  );
 }
 
 class InfoDialog extends React.Component<InfoDialogProps, InfoDialogState> {
@@ -33,15 +47,24 @@ class InfoDialog extends React.Component<InfoDialogProps, InfoDialogState> {
 
   public render() {
     const { isOpen } = this.state;
-    const { children, title, subText, buttonStyle = 'secondary' } = this.props;
+    const {
+      renderOpenDialogButton,
+      renderFooterButtons,
+      children,
+      title,
+      subText,
+      buttonStyle = 'secondary'
+    } = this.props;
+    const close = this.toggleDialog(false);
+    const open = this.toggleDialog(true);
     return (
       <>
-        <Button buttonType={buttonStyle} onClick={this.toggleDialog(true)}>
-          {title}
-        </Button>
+        {renderOpenDialogButton
+          ? renderOpenDialogButton(open)
+          : renderDefaultOpenDialogButton(title, buttonStyle, open)}
         <Dialog
           hidden={!isOpen}
-          onDismiss={this.toggleDialog(false)}
+          onDismiss={close}
           title={title}
           helpText={subText}
           dialogMinWidth="500px"
@@ -49,7 +72,8 @@ class InfoDialog extends React.Component<InfoDialogProps, InfoDialogState> {
         >
           {children}
           <Dialog.Footer>
-            <ActionButton onClick={this.toggleDialog(false)}>Lukk</ActionButton>
+            {renderFooterButtons && renderFooterButtons(close)}
+            <ActionButton onClick={close}>Lukk</ActionButton>
           </Dialog.Footer>
         </Dialog>
       </>
