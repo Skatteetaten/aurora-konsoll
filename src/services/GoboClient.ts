@@ -23,12 +23,7 @@ export default class GoboClient {
     try {
       return await this.apolloClient.query<T>(options);
     } catch (e) {
-      // tslint:disable-next-line:no-console
-      console.log(e);
-      const def = options.query.definitions[0] as OperationDefinitionNode;
-      const queryName = def.name ? def.name.value : '';
-      const err = new Error((e as Error).message + ' query: ' + queryName);
-      this.errorSM.addError(err);
+      this.addError(e, options.query.definitions[0] as OperationDefinitionNode);
       return;
     }
   }
@@ -39,8 +34,15 @@ export default class GoboClient {
     try {
       return await this.apolloClient.mutate<T>(options);
     } catch (e) {
-      this.errorSM.addError(e);
+      this.addError(e, options.mutation
+        .definitions[0] as OperationDefinitionNode);
       return;
     }
+  }
+
+  private addError(e: Error, definition: OperationDefinitionNode) {
+    const queryName = definition.name ? definition.name.value : '';
+    const err = new Error(e.message + ' query: ' + queryName);
+    this.errorSM.addError(err);
   }
 }
