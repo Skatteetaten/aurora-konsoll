@@ -147,17 +147,25 @@ export class ApplicationDeploymentClient {
 
     return result.data.applications.edges.reduce((acc, { node }) => {
       const { applicationDeployments, imageRepository } = node;
-      const apps = applicationDeployments.map(app =>
-        this.toApplicationDeployment(app, imageRepository)
+      const deployments = applicationDeployments.map(deployment =>
+        this.toApplicationDeployment(node.name, deployment, imageRepository)
       );
-      return [...acc, ...apps];
+      return [...acc, ...deployments];
     }, []);
   }
 
   private toApplicationDeployment(
+    applicationName: string,
     app: IApplicationDeploymentQuery,
     imageRepository?: IImageRepository
   ): IApplicationDeployment {
+    // ! Temp fix for activemq deployments with template default version
+    const getActiveMqVersion = (deployTag: string) => {
+      if (applicationName === 'aurora-activemq-1.0.0' && deployTag === '') {
+        return '2';
+      }
+      return deployTag;
+    };
     return {
       affiliation: app.affiliation.name,
       environment: app.environment,
@@ -173,7 +181,7 @@ export class ApplicationDeploymentClient {
         auroraVersion: app.version.auroraVersion,
         deployTag: {
           lastModified: '',
-          name: app.version.deployTag.name,
+          name: getActiveMqVersion(app.version.deployTag.name),
           type: app.version.deployTag.type
         }
       }
