@@ -22,6 +22,14 @@ import {
   USER_AFFILIATIONS_QUERY
 } from './query';
 
+function formatName(user: string) {
+  const names = user.split(', ');
+  if (names.length !== 2) {
+    return user;
+  }
+  return names[1] + ' ' + names[0];
+}
+
 export class ApplicationDeploymentClient {
   private client: GoboClient;
 
@@ -119,7 +127,7 @@ export class ApplicationDeploymentClient {
 
     return {
       affiliations: result.data.affiliations.edges.map(edge => edge.node.name),
-      user: result.data.currentUser.name
+      user: formatName(result.data.currentUser.name)
     };
   }
 
@@ -139,17 +147,26 @@ export class ApplicationDeploymentClient {
 
     return result.data.applications.edges.reduce((acc, { node }) => {
       const { applicationDeployments, imageRepository } = node;
-      const apps = applicationDeployments.map(app =>
-        this.toApplicationDeployment(app, imageRepository)
+      const deployments = applicationDeployments.map(deployment =>
+        this.toApplicationDeployment(node.name, deployment, imageRepository)
       );
-      return [...acc, ...apps];
+      return [...acc, ...deployments];
     }, []);
   }
 
   private toApplicationDeployment(
+    applicationName: string,
     app: IApplicationDeploymentQuery,
     imageRepository?: IImageRepository
   ): IApplicationDeployment {
+    // ! Temp fix for activemq deployments with template default version
+    // TODO: FIX
+    const getActiveMqVersion = (deployTag: string) => {
+      if (applicationName === 'aurora-activemq-1.0.0' && deployTag === '') {
+        return '2';
+      }
+      return deployTag;
+    };
     return {
       affiliation: app.affiliation.name,
       environment: app.environment,
@@ -165,7 +182,7 @@ export class ApplicationDeploymentClient {
         auroraVersion: app.version.auroraVersion,
         deployTag: {
           lastModified: '',
-          name: app.version.deployTag.name,
+          name: getActiveMqVersion(app.version.deployTag.name),
           type: app.version.deployTag.type
         }
       }

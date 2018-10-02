@@ -1,8 +1,8 @@
 import { ApplicationDeploymentClient } from 'services/auroraApiClients/applicationDeploymentClient/client';
 import { graphqlClientMock, GraphQLSeverMock } from 'utils/GraphQLMock';
 
-import ErrorStateManager from 'models/StateManager/ErrorStateManager.js';
-import GoboClient from 'services/GoboClient.js';
+import ErrorStateManager from 'models/StateManager/ErrorStateManager';
+import GoboClient from 'services/GoboClient';
 import * as getApplicationDeployments from './__responses__/applicationDeploymentClient/getApplicationDeployments.json';
 import * as getUserAndAffiliations from './__responses__/applicationDeploymentClient/getUserAndAffiliations.json';
 

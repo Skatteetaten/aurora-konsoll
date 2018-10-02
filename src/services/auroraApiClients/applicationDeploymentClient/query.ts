@@ -10,6 +10,7 @@ export interface IApplications {
 
 export interface IApplicationEdge {
   node: {
+    name: string;
     imageRepository?: IImageRepository;
     applicationDeployments: IApplicationDeploymentQuery[];
   };
