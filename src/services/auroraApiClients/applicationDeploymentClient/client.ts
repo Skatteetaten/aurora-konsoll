@@ -159,14 +159,6 @@ export class ApplicationDeploymentClient {
     app: IApplicationDeploymentQuery,
     imageRepository?: IImageRepository
   ): IApplicationDeployment {
-    // ! Temp fix for activemq deployments with template default version
-    // TODO: FIX
-    const getActiveMqVersion = (deployTag: string) => {
-      if (applicationName === 'aurora-activemq-1.0.0' && deployTag === '') {
-        return '2';
-      }
-      return deployTag;
-    };
     return {
       affiliation: app.affiliation.name,
       environment: app.environment,
@@ -182,10 +174,31 @@ export class ApplicationDeploymentClient {
         auroraVersion: app.version.auroraVersion,
         deployTag: {
           lastModified: '',
-          name: getActiveMqVersion(app.version.deployTag.name),
+          name: findDeployTagForTemplate(
+            applicationName,
+            app.version.deployTag.name
+          ),
           type: app.version.deployTag.type
         }
       }
     };
   }
+}
+
+// ! Temp fix for template deployments with default version
+// TODO: FIX
+function findDeployTagForTemplate(applicationName: string, deployTag: string) {
+  const templates = {
+    'aurora-activemq-1.0.0': '2',
+    'aurora-redis-1.0.0': '3.2.3',
+    'aurora-wiremock-1.0.0': '1.3.0',
+    redis: '3.2.3',
+    wiremock: '1.3.0'
+  };
+
+  if (deployTag) {
+    return deployTag;
+  }
+
+  return templates[applicationName] || deployTag;
 }

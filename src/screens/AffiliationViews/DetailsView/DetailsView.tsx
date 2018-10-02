@@ -7,7 +7,6 @@ import Button from 'aurora-frontend-react-komponenter/Button';
 
 import { IAuroraApiComponentProps, withAuroraApi } from 'components/AuroraApi';
 import Card from 'components/Card';
-import Label from 'components/Label';
 import Spinner from 'components/Spinner';
 import TabLink, { TabLinkWrapper } from 'components/TabLink';
 import TimeSince from 'components/TimeSince';
@@ -210,9 +209,7 @@ class DetailsView extends React.Component<
             </ActionButton>
           </div>
           <div className="labels">
-            <Label text="deployment" subText={title} />
-            <Label text="tag" subText={deployment.version.deployTag.name} />
-            <Label text="versjon" subText={deployment.version.auroraVersion} />
+            <h1>{title}</h1>
           </div>
           <TimeSince timeSince={this.props.deployment.time} />
           <div className="refresh-button">
@@ -225,13 +222,14 @@ class DetailsView extends React.Component<
           </div>
         </div>
         <TabLinkWrapper>
-          <TabLink to={`${match.url}/info`}>Informasjon</TabLink>
+          <TabLink to={`${match.url}/info`}>Sammendrag</TabLink>
           <TabLink to={`${match.url}/version`}>Oppgradering</TabLink>
         </TabLinkWrapper>
         <Card>
           <Switch>
             <Route path={`${match.path}/info`}>
               <InformationView
+                deployment={deployment}
                 isFetchingDetails={loading.fetchDetails}
                 deploymentDetails={deploymentDetails}
               />
@@ -292,7 +290,12 @@ const DetailsViewGrid = styled.div`
   }
   .labels {
     display: flex;
+    justify-content: center
     flex: 1;
+    h1 {
+      margin: 0;
+      font-size: 24px
+    }
   }
   .refresh-button {
     button {

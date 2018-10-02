@@ -2,7 +2,16 @@ import { ImageTagType } from 'models/ImageTagType';
 import * as React from 'react';
 import styled from 'styled-components';
 
-const { AURORA_VERSION, BUGFIX, LATEST, MAJOR, MINOR, SNAPSHOT } = ImageTagType;
+const {
+  AURORA_VERSION,
+  AURORA_SNAPSHOT_VERSION,
+  COMMIT_HASH,
+  BUGFIX,
+  LATEST,
+  MAJOR,
+  MINOR,
+  SNAPSHOT
+} = ImageTagType;
 
 interface IOptionProps {
   tag: ImageTagType;
@@ -30,7 +39,11 @@ function getOptionLabel(imageTagType: ImageTagType): string {
     case SNAPSHOT:
       return 'Deploy ved nytt snapshot-bygg.';
     case AURORA_VERSION:
-      return 'Velg spesifikk versjon som alltid skal kjøres.';
+      return 'Deploy spesifikk versjon som alltid skal kjøres.';
+    case AURORA_SNAPSHOT_VERSION:
+      return 'Deploy spesifikk snapshot versjon som alltid skal kjøres.';
+    case COMMIT_HASH:
+      return 'Deploy commit hash.';
   }
 }
 

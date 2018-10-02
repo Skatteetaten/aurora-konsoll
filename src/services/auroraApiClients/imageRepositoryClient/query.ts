@@ -18,6 +18,8 @@ interface IImageRepositoryGrouped {
   latest: IImageTagsConnection;
   snapshot: IImageTagsConnection;
   auroraVersion: IImageTagsConnection;
+  auroraSnapshotVersion: IImageTagsConnection;
+  commitHash: IImageTagsConnection;
 }
 
 export interface IImageTagsConnection {
@@ -125,6 +127,30 @@ export const TAGS_GROUPED_QUERY = gql`
         }
       }
       auroraVersion: tags(types: AURORA_VERSION, first: 15) {
+        pageInfo {
+          endCursor
+          hasNextPage
+        }
+        edges {
+          node {
+            name
+            lastModified
+          }
+        }
+      }
+      auroraSnapshotVersion: tags(types: AURORA_SNAPSHOT_VERSION, first: 15) {
+        pageInfo {
+          endCursor
+          hasNextPage
+        }
+        edges {
+          node {
+            name
+            lastModified
+          }
+        }
+      }
+      commitHash: tags(types: COMMIT_HASH, first: 15) {
         pageInfo {
           endCursor
           hasNextPage

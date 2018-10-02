@@ -104,7 +104,7 @@ export default styled(VersionView)`
   grid-template-areas:
     'control actionbar'
     'control list';
-  grid-template-columns: 350px 1fr;
+  grid-template-columns: 400px 1fr;
   grid-template-rows: auto 1fr;
   height: 100%;
 

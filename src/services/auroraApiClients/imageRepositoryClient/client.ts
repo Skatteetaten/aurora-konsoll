@@ -74,8 +74,10 @@ export class ImageRepositoryClient {
     const [mainRepo] = imageRepositories;
 
     const normalizedTags: ITagsPagedGroup = {
+      auroraSnapshotVersion: this.toTagsPaged(mainRepo.auroraSnapshotVersion),
       auroraVersion: this.toTagsPaged(mainRepo.auroraVersion),
       bugfix: this.toTagsPaged(mainRepo.bugfix),
+      commitHash: this.toTagsPaged(mainRepo.commitHash),
       latest: this.toTagsPaged(mainRepo.latest),
       major: this.toTagsPaged(mainRepo.major),
       minor: this.toTagsPaged(mainRepo.minor),

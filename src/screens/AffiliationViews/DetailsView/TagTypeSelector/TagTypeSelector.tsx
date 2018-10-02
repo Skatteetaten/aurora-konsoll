@@ -50,7 +50,9 @@ const versionStategyOptions: IImageTagTypeOption[] = [
   createOption(ImageTagType.BUGFIX, 'Bugfix'),
   createOption(ImageTagType.LATEST, 'Latest'),
   createOption(ImageTagType.SNAPSHOT, 'Snapshot'),
-  createOption(ImageTagType.AURORA_VERSION, 'Aurora version')
+  createOption(ImageTagType.AURORA_VERSION, 'Aurora version'),
+  createOption(ImageTagType.AURORA_SNAPSHOT_VERSION, 'Aurora snapshot version'),
+  createOption(ImageTagType.COMMIT_HASH, 'Commit hash')
 ];
 
 const RadioButtonWrapper = styled.div`
