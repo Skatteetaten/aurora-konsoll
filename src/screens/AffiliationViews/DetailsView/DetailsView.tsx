@@ -2,6 +2,7 @@ import * as React from 'react';
 import { Route, Switch } from 'react-router-dom';
 import styled from 'styled-components';
 
+import ActionButton from 'aurora-frontend-react-komponenter/ActionButton';
 import Button from 'aurora-frontend-react-komponenter/Button';
 
 import { IAuroraApiComponentProps, withAuroraApi } from 'components/AuroraApi';
@@ -153,6 +154,11 @@ class DetailsView extends React.Component<
     });
   };
 
+  public goToDeploymentsPage = () => {
+    const { match, history } = this.props;
+    history.push(`/a/${match.params.affiliation}/deployments`);
+  };
+
   public async componentDidMount() {
     const { id, repository } = this.props.deployment;
     const {
@@ -192,19 +198,31 @@ class DetailsView extends React.Component<
     const title = `${deployment.environment}/${deployment.name}`;
     return (
       <DetailsViewGrid>
-        <div className="labels-and-refresh-button">
+        <div className="labels-and-buttons">
+          <div className="back-button">
+            <ActionButton
+              buttonType="primary"
+              color="black"
+              icon="Back"
+              onClick={this.goToDeploymentsPage}
+            >
+              Tilbake
+            </ActionButton>
+          </div>
           <div className="labels">
             <Label text="deployment" subText={title} />
             <Label text="tag" subText={deployment.version.deployTag.name} />
             <Label text="versjon" subText={deployment.version.auroraVersion} />
           </div>
           <TimeSince timeSince={this.props.deployment.time} />
-          <Button
-            buttonType="primaryRoundedFilled"
-            onClick={this.refreshApplicationDeployment}
-          >
-            {loading.update ? <Spinner /> : 'Oppdater'}
-          </Button>
+          <div className="refresh-button">
+            <Button
+              buttonType="primaryRoundedFilled"
+              onClick={this.refreshApplicationDeployment}
+            >
+              {loading.update ? <Spinner /> : 'Oppdater'}
+            </Button>
+          </div>
         </div>
         <TabLinkWrapper>
           <TabLink to={`${match.url}/info`}>Informasjon</TabLink>
@@ -267,18 +285,23 @@ const DetailsViewGrid = styled.div`
   height: 100%;
   display: flex;
   flex-direction: column;
-  .labels-and-refresh-button {
+  .labels-and-buttons {
     display: flex;
     margin: 10px;
     align-items: center;
-    .labels {
-      display: flex;
-      flex: 1;
-    }
+  }
+  .labels {
+    display: flex;
+    flex: 1;
+  }
+  .refresh-button {
     button {
       justify-self: flex-end;
       min-width: 125px;
     }
+  }
+  .back-button {
+    margin-left: -10px;
   }
 `;
 
