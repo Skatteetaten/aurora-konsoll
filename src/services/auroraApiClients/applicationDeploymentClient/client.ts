@@ -160,6 +160,7 @@ export class ApplicationDeploymentClient {
     imageRepository?: IImageRepository
   ): IApplicationDeployment {
     // ! Temp fix for activemq deployments with template default version
+    // TODO: FIX
     const getActiveMqVersion = (deployTag: string) => {
       if (applicationName === 'aurora-activemq-1.0.0' && deployTag === '') {
         return '2';
