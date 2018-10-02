@@ -149,7 +149,7 @@ class DetailsView extends React.Component<
     });
   };
 
-  public goToPreviousPage = () => {
+  public goToDeploymentsPage = () => {
     const { match, history } = this.props;
     history.push(`/a/${match.params.affiliation}/deployments`);
   };
@@ -199,7 +199,7 @@ class DetailsView extends React.Component<
               buttonType="primary"
               color="black"
               icon="Back"
-              onClick={this.goToPreviousPage}
+              onClick={this.goToDeploymentsPage}
             >
               Tilbake
             </ActionButton>
