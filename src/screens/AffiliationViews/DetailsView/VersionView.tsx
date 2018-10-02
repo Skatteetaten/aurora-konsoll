@@ -1,10 +1,12 @@
 import * as React from 'react';
 import styled from 'styled-components';
 
+import ActionButton from 'aurora-frontend-react-komponenter/ActionButton';
 import Button from 'aurora-frontend-react-komponenter/Button';
 import MessageBar from 'aurora-frontend-react-komponenter/MessageBar';
 import TextField from 'aurora-frontend-react-komponenter/TextField';
 
+import InfoDialog from 'components/InfoDialog';
 import Spinner from 'components/Spinner';
 import { ImageTagType } from 'models/ImageTagType';
 import { ITag, ITagsPaged } from 'models/Tag';
@@ -54,6 +56,23 @@ const VersionView = ({
       </MessageBar>
     );
   }
+
+  const renderFooterButtons = (close: () => void) => {
+    const onClose = () => {
+      redeployWithVersion();
+      close();
+    };
+    return <ActionButton onClick={onClose}>Ja</ActionButton>;
+  };
+
+  const renderOpenDialogButton = (open: () => void) => {
+    return (
+      <Button buttonType="primary" onClick={open} disabled={!canUpgrade}>
+        {isRedeploying ? <Spinner /> : 'Oppgrader'}
+      </Button>
+    );
+  };
+
   return (
     <div className={className}>
       <div className="g-control-group">
@@ -62,13 +81,14 @@ const VersionView = ({
           handleSelectedStrategy={handleSelectedStrategy}
         />
         <ButtonWrapper>
-          <Button
-            buttonType="primary"
-            onClick={redeployWithVersion}
-            disabled={!canUpgrade}
+          <InfoDialog
+            title="Vil du oppgradere?"
+            renderOpenDialogButton={renderOpenDialogButton}
+            renderFooterButtons={renderFooterButtons}
           >
-            {isRedeploying ? <Spinner /> : 'Oppgrader'}
-          </Button>
+            <pre>{`Fra ${deployedTag.name} til ${selectedTag &&
+              selectedTag.name}?`}</pre>
+          </InfoDialog>
         </ButtonWrapper>
       </div>
       <div className="g-action-bar">
