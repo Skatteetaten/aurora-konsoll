@@ -68,7 +68,7 @@ class ErrorBoundary extends React.Component<
       <>
         {currentError && (
           <ErrorPopup
-            err={currentError}
+            currentError={currentError}
             closeError={errorSM.closeError}
             errorCount={errors.errorQueue.length}
           />

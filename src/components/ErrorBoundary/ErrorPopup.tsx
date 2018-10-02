@@ -6,13 +6,17 @@ import MessageBar from 'aurora-frontend-react-komponenter/MessageBar';
 import { IAppError } from 'models/StateManager/ErrorStateManager';
 
 interface IErrorPopupProps {
-  err: IAppError;
+  currentError: IAppError;
   closeError: (id: number) => void;
   errorCount: number;
 }
 
-const ErrorPopup = ({ err, closeError, errorCount }: IErrorPopupProps) => {
-  const close = () => closeError(err.id);
+const ErrorPopup = ({
+  currentError,
+  closeError,
+  errorCount
+}: IErrorPopupProps) => {
+  const close = () => closeError(currentError.id);
   const hasMoreErrors = errorCount > 0;
   return (
     <ErrorModal>
@@ -27,7 +31,7 @@ const ErrorPopup = ({ err, closeError, errorCount }: IErrorPopupProps) => {
           </div>
         }
       >
-        {err.error.message}
+        {currentError.error.message}
         {hasMoreErrors && <p>Nye feil: {errorCount}</p>}
       </MessageBar>
     </ErrorModal>
@@ -35,7 +39,7 @@ const ErrorPopup = ({ err, closeError, errorCount }: IErrorPopupProps) => {
 };
 
 const ErrorModal = styled.div`
-  z-index: 9000;
+  z-index: 200;
   background: white;
   position: absolute;
   min-width: 400px;
