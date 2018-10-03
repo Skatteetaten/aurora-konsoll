@@ -10,20 +10,12 @@ interface IInfoContentProps {
 
 const InfoContent = ({ values, className }: IInfoContentProps) => (
   <div className={className}>
-    <div className="g-content">
-      <div className="g-keys">
-        {Object.keys(values).map(k => (
-          <p key={k}>{k}</p>
-        ))}
-      </div>
-      <div className="g-values">
-        {Object.keys(values).map(k => (
-          <p key={k} title={values[k]}>
-            {values[k]}
-          </p>
-        ))}
-      </div>
-    </div>
+    {Object.keys(values).map(k => (
+      <dl key={k}>
+        <dt>{k}</dt>
+        <dd title={values[k]}>{values[k]}</dd>
+      </dl>
+    ))}
   </div>
 );
 
@@ -31,34 +23,23 @@ export default styled(InfoContent)`
   max-width: 650px;
   box-shadow: 0px 3px 8px 0px rgba(0, 0, 0, 0.2);
   background: white;
+  padding: 5px 10px;
 
-  .g-content {
-    display: grid;
-    padding: 5px 10px;
-    grid-template-areas: 'keys values';
-    grid-template-columns: 1fr 2fr;
+  dl {
+    display: flex;
+    margin: 15px 0;
   }
 
-  .g-keys {
-    white-space: nowrap;
-    padding-right: 10px;
-    grid-area: keys;
-    p {
-      margin: 10px 0;
-      font-weight: bold;
-    }
+  dl dt {
+    flex: 1;
+    font-weight: 600;
+    margin-right: 30px;
+    min-width: 130px;
   }
 
-  .g-values {
-    overflow: hidden;
-    white-space: nowrap;
-    grid-area: values;
-    p,
-    a {
-      display: block;
-      margin: 10px 0;
-      overflow: hidden;
-      text-overflow: ellipsis;
-    }
+  dl dd {
+    flex: 4;
+    margin: 0;
+    word-break: break-all;
   }
 `;
