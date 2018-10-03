@@ -126,7 +126,7 @@ export const TAGS_GROUPED_QUERY = gql`
           }
         }
       }
-      auroraVersion: tags(types: AURORA_VERSION, first: 15) {
+      auroraVersion: tags(types: AURORA_VERSION, first: 10) {
         pageInfo {
           endCursor
           hasNextPage
@@ -138,7 +138,7 @@ export const TAGS_GROUPED_QUERY = gql`
           }
         }
       }
-      auroraSnapshotVersion: tags(types: AURORA_SNAPSHOT_VERSION, first: 15) {
+      auroraSnapshotVersion: tags(types: AURORA_SNAPSHOT_VERSION, first: 6) {
         pageInfo {
           endCursor
           hasNextPage
@@ -150,7 +150,7 @@ export const TAGS_GROUPED_QUERY = gql`
           }
         }
       }
-      commitHash: tags(types: COMMIT_HASH, first: 15) {
+      commitHash: tags(types: COMMIT_HASH, first: 6) {
         pageInfo {
           endCursor
           hasNextPage
