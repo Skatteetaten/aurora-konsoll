@@ -58,12 +58,16 @@ const InformationView = ({
 function getDeploymentSpecValues(deploymentSpec?: IDeploymentSpec) {
   let values: { [key: string]: any } = {};
   if (deploymentSpec) {
-    const { database, management, certificate } = deploymentSpec;
+    const { database, management, certificate, type } = deploymentSpec;
     values = {
-      GroupId: deploymentSpec.groupId,
-      ArtifactId: deploymentSpec.artifactId,
-      Version: deploymentSpec.version
+      Type: type
     };
+    if (['development', 'deploy'].indexOf(type) !== -1) {
+      values.GroupId = deploymentSpec.groupId;
+      values.ArtifactId = deploymentSpec.artifactId;
+    }
+    values.Version = deploymentSpec.version;
+
     if (database) {
       values.Database = 'Ja';
     }
