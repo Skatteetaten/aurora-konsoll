@@ -7,7 +7,6 @@ import { AuroraApiProvider, IApiClients } from 'components/AuroraApi';
 import App from 'screens/App';
 import { tokenStore } from 'services/TokenStore';
 import { fetchConfiguration, IConfiguration } from 'utils/config';
-import registerServiceWorker from 'utils/registerServiceWorker';
 
 import ApolloClient from 'apollo-boost';
 import { errorStateManager } from 'models/StateManager/ErrorStateManager';
@@ -63,7 +62,6 @@ async function init() {
     </AuroraApiProvider>,
     document.getElementById('root') as HTMLElement
   );
-  registerServiceWorker();
 }
 
 function redirectToLoginPage(authorizationUri: string, clientId: string) {

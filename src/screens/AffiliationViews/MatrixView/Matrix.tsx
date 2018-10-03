@@ -82,6 +82,7 @@ export default styled(Matrix)`
         padding: 15px 50px 15px 15px;
         overflow: hidden;
         text-overflow: ellipsis;
+        cursor: default;
       }
       max-width: 150px;
     }
@@ -93,6 +94,7 @@ export default styled(Matrix)`
     text-align: left;
     white-space: nowrap;
     border-top: 1px solid #ddd;
+    border-right: 2px solid white;
   }
 
   th {

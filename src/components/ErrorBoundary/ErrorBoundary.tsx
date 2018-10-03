@@ -31,6 +31,7 @@ class ErrorBoundary extends React.Component<
       if (errorQueue.length > this.state.errors.errorQueue.length) {
         fetch('/api/log', {
           body: JSON.stringify({
+            location: window.location.pathname,
             message: errorQueue[0].error.message
           }),
           headers: {

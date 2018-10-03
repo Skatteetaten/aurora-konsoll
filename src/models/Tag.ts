@@ -19,6 +19,8 @@ export interface ITagsPagedGroup {
   latest: ITagsPaged;
   snapshot: ITagsPaged;
   auroraVersion: ITagsPaged;
+  auroraSnapshotVersion: ITagsPaged;
+  commitHash: ITagsPaged;
 }
 
 export function defaultTagsPagedGroup(): ITagsPagedGroup {
@@ -29,8 +31,10 @@ export function defaultTagsPagedGroup(): ITagsPagedGroup {
   };
 
   return {
+    auroraSnapshotVersion: defaultTagsPaged,
     auroraVersion: defaultTagsPaged,
     bugfix: defaultTagsPaged,
+    commitHash: defaultTagsPaged,
     latest: defaultTagsPaged,
     major: defaultTagsPaged,
     minor: defaultTagsPaged,

@@ -16,8 +16,10 @@ export function createTagsPaged(
 
 const tagsPagedGroup = new TagStateManager(
   {
+    auroraSnapshotVersion: createTagsPaged(),
     auroraVersion: createTagsPaged(),
     bugfix: createTagsPaged(),
+    commitHash: createTagsPaged(),
     latest: createTagsPaged(),
     major: createTagsPaged('test', false, [
       {
