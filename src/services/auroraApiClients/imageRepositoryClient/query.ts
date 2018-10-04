@@ -67,100 +67,41 @@ export const TAGS_GROUPED_QUERY = gql`
   query getTagsGrouped($repositories: [String!]!) {
     imageRepositories(repositories: $repositories) {
       major: tags(types: MAJOR, first: 15) {
-        pageInfo {
-          endCursor
-          hasNextPage
-        }
-        edges {
-          node {
-            name
-            lastModified
-          }
-        }
+        ...imageTagFields
       }
       minor: tags(types: MINOR, first: 15) {
-        pageInfo {
-          endCursor
-          hasNextPage
-        }
-        edges {
-          node {
-            name
-            lastModified
-          }
-        }
+        ...imageTagFields
       }
       bugfix: tags(types: BUGFIX, first: 15) {
-        pageInfo {
-          endCursor
-          hasNextPage
-        }
-        edges {
-          node {
-            name
-            lastModified
-          }
-        }
+        ...imageTagFields
       }
       latest: tags(types: LATEST, first: 1) {
-        pageInfo {
-          endCursor
-          hasNextPage
-        }
-        edges {
-          node {
-            name
-            lastModified
-          }
-        }
+        ...imageTagFields
       }
       snapshot: tags(types: SNAPSHOT, first: 15) {
-        pageInfo {
-          endCursor
-          hasNextPage
-        }
-        edges {
-          node {
-            name
-            lastModified
-          }
-        }
+        ...imageTagFields
       }
       auroraVersion: tags(types: AURORA_VERSION, first: 10) {
-        pageInfo {
-          endCursor
-          hasNextPage
-        }
-        edges {
-          node {
-            name
-            lastModified
-          }
-        }
+        ...imageTagFields
       }
       auroraSnapshotVersion: tags(types: AURORA_SNAPSHOT_VERSION, first: 6) {
-        pageInfo {
-          endCursor
-          hasNextPage
-        }
-        edges {
-          node {
-            name
-            lastModified
-          }
-        }
+        ...imageTagFields
       }
       commitHash: tags(types: COMMIT_HASH, first: 6) {
-        pageInfo {
-          endCursor
-          hasNextPage
-        }
-        edges {
-          node {
-            name
-            lastModified
-          }
-        }
+        ...imageTagFields
+      }
+    }
+  }
+
+  fragment imageTagFields on ImageTagsConnection {
+    pageInfo {
+      endCursor
+      hasNextPage
+    }
+    edges {
+      node {
+        name
+        lastModified
       }
     }
   }

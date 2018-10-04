@@ -1,25 +1,23 @@
-import { ApplicationDeploymentClient } from 'services/auroraApiClients/applicationDeploymentClient/client';
-import { graphqlClientMock, GraphQLSeverMock } from 'utils/GraphQLMock';
-
 import ErrorStateManager from 'models/StateManager/ErrorStateManager';
-import GoboClient from 'services/GoboClient';
+import { ApplicationDeploymentClient } from 'services/auroraApiClients/applicationDeploymentClient/client';
+import { goboClientMock, GraphQLSeverMock } from 'utils/GraphQLMock';
+
 import * as getApplicationDeployments from './__responses__/applicationDeploymentClient/getApplicationDeployments.json';
 import * as getUserAndAffiliations from './__responses__/applicationDeploymentClient/getUserAndAffiliations.json';
 
-const errorSM = new ErrorStateManager(
+const errorStateManager = new ErrorStateManager(
   {
     allErrors: new Map(),
     errorQueue: []
   },
   () => {
+    // Validate errors
     return;
   }
 );
-
 const serverMock = new GraphQLSeverMock();
-const clientMock = graphqlClientMock(serverMock.graphQLUrl);
-const goboClient = new GoboClient(clientMock, errorSM);
-const applicationDeploymentClient = new ApplicationDeploymentClient(goboClient);
+const clientMock = goboClientMock(serverMock.graphQLUrl, errorStateManager);
+const applicationDeploymentClient = new ApplicationDeploymentClient(clientMock);
 
 afterAll(() => {
   serverMock.close();

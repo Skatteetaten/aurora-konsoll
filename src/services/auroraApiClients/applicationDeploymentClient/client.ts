@@ -15,9 +15,7 @@ import {
   APPLICATION_DEPLOYMENT_DETAILS_QUERY,
   APPLICATIONS_QUERY,
   IApplicationDeploymentDetailsQuery,
-  IApplicationDeploymentQuery,
-  IApplications,
-  IImageRepository,
+  IApplicationsConnectionQuery,
   IUserAffiliationsQuery,
   USER_AFFILIATIONS_QUERY
 } from './query';
@@ -91,7 +89,7 @@ export class ApplicationDeploymentClient {
 
     let deploymentSpec;
     let pods: IPodResource[] = [];
-    if (result) {
+    if (result && result.data.applicationDeploymentDetails) {
       const {
         deploymentSpecs,
         podResources
@@ -134,7 +132,7 @@ export class ApplicationDeploymentClient {
   public async findAllApplicationDeployments(
     affiliations: string[]
   ): Promise<IApplicationDeployment[]> {
-    const result = await this.client.query<IApplications>({
+    const result = await this.client.query<IApplicationsConnectionQuery>({
       query: APPLICATIONS_QUERY,
       variables: {
         affiliations
@@ -147,41 +145,31 @@ export class ApplicationDeploymentClient {
 
     return result.data.applications.edges.reduce((acc, { node }) => {
       const { applicationDeployments, imageRepository } = node;
-      const deployments = applicationDeployments.map(deployment =>
-        this.toApplicationDeployment(node.name, deployment, imageRepository)
-      );
+      const deployments = applicationDeployments.map(app => ({
+        affiliation: app.affiliation.name,
+        environment: app.environment,
+        id: app.id,
+        name: app.name,
+        repository: imageRepository ? imageRepository.repository : '',
+        status: {
+          code: app.status.code,
+          comment: app.status.comment
+        },
+        time: app.time,
+        version: {
+          auroraVersion: app.version.auroraVersion,
+          deployTag: {
+            lastModified: '',
+            name: findDeployTagForTemplate(
+              node.name,
+              app.version.deployTag.name
+            ),
+            type: app.version.deployTag.type
+          }
+        }
+      }));
       return [...acc, ...deployments];
     }, []);
-  }
-
-  private toApplicationDeployment(
-    applicationName: string,
-    app: IApplicationDeploymentQuery,
-    imageRepository?: IImageRepository
-  ): IApplicationDeployment {
-    return {
-      affiliation: app.affiliation.name,
-      environment: app.environment,
-      id: app.id,
-      name: app.name,
-      repository: imageRepository ? imageRepository.repository : '',
-      status: {
-        code: app.status.code,
-        comment: app.status.comment
-      },
-      time: app.time,
-      version: {
-        auroraVersion: app.version.auroraVersion,
-        deployTag: {
-          lastModified: '',
-          name: findDeployTagForTemplate(
-            applicationName,
-            app.version.deployTag.name
-          ),
-          type: app.version.deployTag.type
-        }
-      }
-    };
   }
 }
 
