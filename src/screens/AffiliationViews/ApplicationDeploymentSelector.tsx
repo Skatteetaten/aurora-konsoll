@@ -21,7 +21,7 @@ const ApplicationDeploymentSelector = ({
   );
 
   if (!deployment) {
-    return <p>Not found</p>;
+    return <p>Fant ikke deployment</p>;
   }
 
   const DetailsView = (props: ApplicationDeploymentDetailsRoute) => (

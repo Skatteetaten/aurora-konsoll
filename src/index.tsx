@@ -8,7 +8,6 @@ import App from 'screens/App';
 import { tokenStore } from 'services/TokenStore';
 import { fetchConfiguration, IConfiguration } from 'utils/config';
 
-import ApolloClient from 'apollo-boost';
 import { errorStateManager } from 'models/StateManager/ErrorStateManager';
 import {
   ApplicationDeploymentClient,
@@ -29,24 +28,14 @@ async function init() {
     redirectToLoginPage(config.AUTHORIZATION_URI, config.CLIENT_ID);
   }
 
-  const apolloClient = new ApolloClient({
-    request: async operations => {
-      const token = tokenStore.getToken();
-      operations.setContext({
-        headers: {
-          Authorization: token ? `Bearer ${token}` : ''
-        }
-      });
-    },
-    uri: config.GRAPHQL_URL
-  });
-  apolloClient.defaultOptions = {
-    query: {
-      fetchPolicy: 'network-only'
+  const token = tokenStore.getToken();
+  const goboClient = new GoboClient({
+    errorHandler: errorStateManager,
+    url: config.GRAPHQL_URL,
+    headers: {
+      Authorization: token ? `Bearer ${token}` : ''
     }
-  };
-
-  const goboClient = new GoboClient(apolloClient, errorStateManager);
+  });
 
   const clients: IApiClients = {
     applicationDeploymentClient: new ApplicationDeploymentClient(goboClient),

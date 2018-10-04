@@ -1,7 +1,8 @@
-import ApolloClient, { InMemoryCache } from 'apollo-boost';
 import * as cors from 'cors';
 import * as express from 'express';
 import { Server } from 'http';
+import ErrorStateManager from 'models/StateManager/ErrorStateManager';
+import GoboClient from 'services/GoboClient';
 
 type ResponseMock = any;
 
@@ -9,20 +10,14 @@ interface IGraphQLResponseMock {
   [queryName: string]: ResponseMock;
 }
 
-export function graphqlClientMock(uri: string): ApolloClient<{}> {
-  const client = new ApolloClient({
-    cache: new InMemoryCache({
-      addTypename: false
-    }),
-
-    uri
+export function goboClientMock(
+  url: string,
+  errorHandler: ErrorStateManager
+): GoboClient {
+  return new GoboClient({
+    errorHandler,
+    url
   });
-  client.defaultOptions = {
-    query: {
-      fetchPolicy: 'network-only'
-    }
-  };
-  return client;
 }
 
 export class GraphQLSeverMock {

@@ -14,7 +14,7 @@ interface IAffiliationViewValidatorProps extends AffiliationRouteProps {
   onAffiliationValidated: (affiliation: string) => void;
 }
 
-class AffiliationViewRouteHandler extends React.Component<
+class AffiliationViewValidator extends React.Component<
   IAffiliationViewValidatorProps
 > {
   public validateAndSetAffiliation = () => {
@@ -66,4 +66,4 @@ class AffiliationViewRouteHandler extends React.Component<
   }
 }
 
-export default AffiliationViewRouteHandler;
+export default AffiliationViewValidator;

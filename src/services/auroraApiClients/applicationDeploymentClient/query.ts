@@ -2,25 +2,27 @@ import gql from 'graphql-tag';
 import { IPodResource } from 'models/Pod';
 import { IImageTag } from '../imageRepositoryClient/query';
 
-export interface IApplications {
+export interface IApplicationsConnectionQuery {
   applications: {
     edges: IApplicationEdge[];
   };
 }
 
-export interface IApplicationEdge {
-  node: {
-    name: string;
-    imageRepository?: IImageRepository;
-    applicationDeployments: IApplicationDeploymentQuery[];
-  };
+interface IApplicationEdge {
+  node: IApplication;
 }
 
-export interface IImageRepository {
+interface IApplication {
+  name: string;
+  imageRepository?: IImageRepository;
+  applicationDeployments: IApplicationDeployment[];
+}
+
+interface IImageRepository {
   repository: string;
 }
 
-export interface IApplicationDeploymentQuery {
+interface IApplicationDeployment {
   id: string;
   name: string;
   affiliation: {
@@ -80,7 +82,7 @@ export const APPLICATIONS_QUERY = gql`
 `;
 
 export interface IApplicationDeploymentDetailsQuery {
-  applicationDeploymentDetails: {
+  applicationDeploymentDetails?: {
     podResources: IPodResource[];
     deploymentSpecs: {
       current?: {

@@ -15,18 +15,18 @@ export interface IImageTagTypeOption {
 
 interface ITagTypeSelector {
   imageTagType: ImageTagType;
-  handleSelectedStrategy: (e: Event, option: IImageTagTypeOption) => void;
+  handleSelectStrategy: (e: Event, option: IImageTagTypeOption) => void;
 }
 
 const TagTypeSelector = ({
   imageTagType,
-  handleSelectedStrategy
+  handleSelectStrategy
 }: ITagTypeSelector) => (
   <RadioButtonWrapper>
     <RadioButtonGroup
       defaultSelectedKey={imageTagType}
       options={versionStategyOptions}
-      onChange={handleSelectedStrategy}
+      onChange={handleSelectStrategy}
     />
   </RadioButtonWrapper>
 );

@@ -6,7 +6,6 @@ import MessageBar from 'aurora-frontend-react-komponenter/MessageBar';
 import TextField from 'aurora-frontend-react-komponenter/TextField';
 
 import Spinner from 'components/Spinner';
-import UpgradeVersionDialog from 'components/UpgradeVersionDialog';
 import { ImageTagType } from 'models/ImageTagType';
 import { ITag, ITagsPaged } from 'models/Tag';
 
@@ -14,6 +13,7 @@ import TagsList from './TagsList';
 import TagTypeSelector, {
   IImageTagTypeOption
 } from './TagTypeSelector/TagTypeSelector';
+import UpgradeVersionDialog from './UpgradeVersionDialog';
 
 interface IVersionViewProps {
   isFetchingTags: boolean;
@@ -26,7 +26,7 @@ interface IVersionViewProps {
   selectedTag?: ITag;
   className?: string;
   handlefetchTags: () => void;
-  handleSelectedStrategy: (e: Event, option: IImageTagTypeOption) => void;
+  handleSelectStrategy: (e: Event, option: IImageTagTypeOption) => void;
   handleVersionSearch: (value: string) => void;
   redeployWithVersion: () => void;
   handleSelectNextTag: (item: ITag) => void;
@@ -43,7 +43,7 @@ const VersionView = ({
   selectedTag,
   deployedTag,
   className,
-  handleSelectedStrategy,
+  handleSelectStrategy,
   handleVersionSearch,
   redeployWithVersion,
   handleSelectNextTag
@@ -60,7 +60,7 @@ const VersionView = ({
       <div className="g-control-group">
         <TagTypeSelector
           imageTagType={selectedTagType}
-          handleSelectedStrategy={handleSelectedStrategy}
+          handleSelectStrategy={handleSelectStrategy}
         />
         <ButtonWrapper>
           <UpgradeVersionDialog

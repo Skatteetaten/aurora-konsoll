@@ -1,39 +1,38 @@
-import { ImageRepositoryClient } from 'services/auroraApiClients/imageRepositoryClient/client';
-import { graphqlClientMock, GraphQLSeverMock } from 'utils/GraphQLMock';
-
 import ErrorStateManager from 'models/StateManager/ErrorStateManager';
-import GoboClient from 'services/GoboClient';
+import { ImageRepositoryClient } from 'services/auroraApiClients/imageRepositoryClient/client';
+import { goboClientMock, GraphQLSeverMock } from 'utils/GraphQLMock';
+
 import * as getTags from './__responses__/imageRepositoryClient/getTags.json';
 
-const errorSM = new ErrorStateManager(
+const errorStateManager = new ErrorStateManager(
   {
     allErrors: new Map(),
     errorQueue: []
   },
   () => {
+    // Validate errors
     return;
   }
 );
 
-const mockServer = new GraphQLSeverMock();
-const mockClient = graphqlClientMock(mockServer.graphQLUrl);
-const goboClient = new GoboClient(mockClient, errorSM);
-const imageRepositoryClient = new ImageRepositoryClient(goboClient);
+const serverMock = new GraphQLSeverMock();
+const clientMock = goboClientMock(serverMock.graphQLUrl, errorStateManager);
+const imageRepositoryClient = new ImageRepositoryClient(clientMock);
 
 afterAll(() => {
-  mockServer.close();
+  serverMock.close();
 });
 
 describe('findTagsPaged', () => {
   it('should fetch tags from GraphQL server and normalize data', async () => {
-    mockServer.putResponse('getTags', getTags);
+    serverMock.putResponse('getTags', getTags);
 
     const result = await imageRepositoryClient.findTagsPaged('test', 'MAJOR');
     expect(result).toMatchSnapshot();
   });
 
   it('should throw an error when no repositories are found', async () => {
-    mockServer.putResponse('getTags', { data: { imageRepositories: [] } });
+    serverMock.putResponse('getTags', { data: { imageRepositories: [] } });
 
     try {
       await imageRepositoryClient.findTagsPaged('mock-repo', 'MAJOR');

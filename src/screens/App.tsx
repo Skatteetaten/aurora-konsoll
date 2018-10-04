@@ -18,9 +18,9 @@ import AcceptTokenRoute from './AcceptTokenView/AcceptTokenRoute';
 import { withAuroraApi } from 'components/AuroraApi';
 import ErrorBoundary from 'components/ErrorBoundary/ErrorBoundary';
 import { errorStateManager } from 'models/StateManager/ErrorStateManager';
-import AffiliationViewRouteHandler, {
+import AffiliationViewValidator, {
   AffiliationRouteProps
-} from './AffiliationViews/AffiliationViewRouteHandler';
+} from './AffiliationViews/AffiliationViewValidator';
 import { NetdebugWithApi } from './NetdebugView/Netdebug';
 
 interface IAppProps extends IAuroraApiComponentProps, RouteComponentProps<{}> {
@@ -80,10 +80,10 @@ class App extends React.Component<IAppProps, IAppState> {
     const { affiliation, affiliations, isMenuExpanded, user } = this.state;
     const { location } = this.props;
 
-    const renderAffiliationViewRouteHandler = (
+    const renderAffiliationViewValidator = (
       routeProps: AffiliationRouteProps
     ) => (
-      <AffiliationViewRouteHandler
+      <AffiliationViewValidator
         {...routeProps}
         user={user}
         affiliation={affiliation}
@@ -114,7 +114,7 @@ class App extends React.Component<IAppProps, IAppState> {
                 />
                 <Route
                   path="/a/:affiliation"
-                  render={renderAffiliationViewRouteHandler}
+                  render={renderAffiliationViewValidator}
                 />
                 <Route
                   exact={true}
