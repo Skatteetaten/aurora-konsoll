@@ -26,7 +26,7 @@ interface IVersionViewProps {
   selectedTag?: ITag;
   className?: string;
   handlefetchTags: () => void;
-  handleSelectedStrategy: (e: Event, option: IImageTagTypeOption) => void;
+  handleSelectStrategy: (e: Event, option: IImageTagTypeOption) => void;
   handleVersionSearch: (value: string) => void;
   redeployWithVersion: () => void;
   handleSelectNextTag: (item: ITag) => void;
@@ -43,7 +43,7 @@ const VersionView = ({
   selectedTag,
   deployedTag,
   className,
-  handleSelectedStrategy,
+  handleSelectStrategy,
   handleVersionSearch,
   redeployWithVersion,
   handleSelectNextTag
@@ -60,7 +60,7 @@ const VersionView = ({
       <div className="g-control-group">
         <TagTypeSelector
           imageTagType={selectedTagType}
-          handleSelectedStrategy={handleSelectedStrategy}
+          handleSelectStrategy={handleSelectStrategy}
         />
         <ButtonWrapper>
           <UpgradeVersionDialog
