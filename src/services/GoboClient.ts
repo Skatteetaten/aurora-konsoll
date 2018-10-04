@@ -61,6 +61,7 @@ export default class GoboClient {
         ...this.options.headers
       },
       body: JSON.stringify({
+        operationName: this.getDocumentName(document.definitions),
         query: print(document),
         variables
       })
@@ -95,7 +96,7 @@ export default class GoboClient {
   }
 
   private addError(e: Error, documentName: string) {
-    const err = new Error(e.message + '\ndocument: ' + documentName);
+    const err = new Error(e.message + ' document: ' + documentName);
     this.options.errorHandler.addError(err);
   }
 }
