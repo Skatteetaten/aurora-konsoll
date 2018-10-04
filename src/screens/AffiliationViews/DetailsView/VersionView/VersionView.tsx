@@ -6,7 +6,6 @@ import MessageBar from 'aurora-frontend-react-komponenter/MessageBar';
 import TextField from 'aurora-frontend-react-komponenter/TextField';
 
 import Spinner from 'components/Spinner';
-import UpgradeVersionDialog from 'components/UpgradeVersionDialog';
 import { ImageTagType } from 'models/ImageTagType';
 import { ITag, ITagsPaged } from 'models/Tag';
 
@@ -14,6 +13,7 @@ import TagsList from './TagsList';
 import TagTypeSelector, {
   IImageTagTypeOption
 } from './TagTypeSelector/TagTypeSelector';
+import UpgradeVersionDialog from './UpgradeVersionDialog';
 
 interface IVersionViewProps {
   isFetchingTags: boolean;

@@ -24,10 +24,10 @@ import {
 } from 'models/Tag';
 
 import { ApplicationDeploymentDetailsRoute } from '../ApplicationDeploymentSelector';
-import InformationView from './InformationView';
+import InformationView from './InformationView/InformationView';
 import { TagStateManager } from './TagStateManager';
-import { IImageTagTypeOption } from './TagTypeSelector/TagTypeSelector';
-import VersionView from './VersionView';
+import { IImageTagTypeOption } from './VersionView/TagTypeSelector/TagTypeSelector';
+import VersionView from './VersionView/VersionView';
 
 interface IDetailsViewProps
   extends ApplicationDeploymentDetailsRoute,
