@@ -36,8 +36,8 @@ function parseAndStringify(text: string) {
 }
 
 const StyledPre = styled.pre`
-  max-width: 500px;
-  max-height: 500px;
+  max-width: 1500px;
+  max-height: 700px;
   overflow: auto;
 `;
 
