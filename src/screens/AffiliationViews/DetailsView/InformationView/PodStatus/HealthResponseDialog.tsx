@@ -1,22 +1,42 @@
 import * as React from 'react';
 import styled from 'styled-components';
 
+import ActionButton from 'aurora-frontend-react-komponenter/ActionButton';
+
 import InfoDialog from 'components/InfoDialog';
 import { IHttpResponse } from 'models/Pod';
 import { getLocalDatetime } from 'utils/date';
 
-interface IHealthResponseDialog {
+interface IHealthResponseDialogProps {
   health: IHttpResponse;
+  refreshApplicationDeployment: () => void;
 }
 
-const HealthResponseDialog = ({ health }: IHealthResponseDialog) => (
-  <InfoDialog
-    title="Helsestatus"
-    subText={`Oppdatert: ${getCachedTime(health)}`}
-  >
-    <StyledPre>{getTextResponsePrettyfied(health)}</StyledPre>
-  </InfoDialog>
-);
+export default class HealthResponseDialog extends React.Component<
+  IHealthResponseDialogProps,
+  {}
+> {
+  public renderFooterButtons = () => {
+    const { refreshApplicationDeployment } = this.props;
+    const refreshOnClicked = () => {
+      refreshApplicationDeployment();
+    };
+    return <ActionButton onClick={refreshOnClicked}>Oppdater</ActionButton>;
+  };
+
+  public render() {
+    const { health } = this.props;
+    return (
+      <InfoDialog
+        renderFooterButtons={this.renderFooterButtons}
+        title="Helsestatus"
+        subText={`Oppdatert: ${getCachedTime(health)}`}
+      >
+        <StyledPre>{getTextResponsePrettyfied(health)}</StyledPre>
+      </InfoDialog>
+    );
+  }
+}
 
 function getCachedTime(response: IHttpResponse) {
   return getLocalDatetime(response.loadedTime, {

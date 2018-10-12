@@ -38,9 +38,15 @@ class TimeSince extends React.PureComponent<ITimeSinceProps, ITimeSinceState> {
       time: prevTime
     });
   }
-
-  public componentDidMount() {
+  public componentDidUpdate(prevProps: ITimeSinceProps) {
     const { timeSince } = this.props;
+    if (prevProps.timeSince !== timeSince) {
+      clearInterval(this.timer);
+      this.handleSetTime(timeSince);
+    }
+  }
+
+  public handleSetTime(timeSince: Date | string) {
     let time: Date;
     if (timeSince instanceof Date) {
       time = timeSince;
@@ -52,6 +58,11 @@ class TimeSince extends React.PureComponent<ITimeSinceProps, ITimeSinceState> {
       () => this.calculateTimeSinceDeployment(time),
       1000
     );
+  }
+
+  public componentDidMount() {
+    const { timeSince } = this.props;
+    this.handleSetTime(timeSince);
   }
 
   public componentWillUnmount() {

@@ -77,7 +77,7 @@ class AffiliationViewController extends React.Component<
     const { matchPath, affiliation } = this.props;
     const { deployments, loading } = this.state;
 
-    if (loading) {
+    if (loading && deployments.length === 0) {
       return <Spinner />;
     }
 
