@@ -2,13 +2,14 @@ import * as React from 'react';
 import styled from 'styled-components';
 
 import Button from 'aurora-frontend-react-komponenter/Button';
-import MessageBar from 'aurora-frontend-react-komponenter/MessageBar';
 import TextField from 'aurora-frontend-react-komponenter/TextField';
 
 import Spinner from 'components/Spinner';
 import { ImageTagType } from 'models/ImageTagType';
 import { ITag, ITagsPaged } from 'models/Tag';
 
+import UnavailableServiceMessage from 'components/UnavailableServiceMessage';
+import { IUnavailableServiceMessage } from 'models/UnavailableServiceMessage';
 import TagsList from './TagsList';
 import TagTypeSelector, {
   IImageTagTypeOption
@@ -19,7 +20,7 @@ interface IVersionViewProps {
   isFetchingTags: boolean;
   isRedeploying: boolean;
   canUpgrade: boolean;
-  showNoTagsMessage: boolean;
+  unavailableMessage?: IUnavailableServiceMessage;
   selectedTagType: ImageTagType;
   tagsPaged: ITagsPaged;
   deployedTag: ITag;
@@ -36,7 +37,7 @@ const VersionView = ({
   tagsPaged,
   isFetchingTags,
   isRedeploying,
-  showNoTagsMessage,
+  unavailableMessage,
   canUpgrade,
   selectedTagType,
   handlefetchTags,
@@ -48,12 +49,8 @@ const VersionView = ({
   redeployWithVersion,
   handleSelectNextTag
 }: IVersionViewProps) => {
-  if (showNoTagsMessage) {
-    return (
-      <MessageBar isMultiline={true}>
-        Denne applikasjonen har ikke noen tags tilgjengelig.
-      </MessageBar>
-    );
+  if (unavailableMessage) {
+    return <UnavailableServiceMessage message={unavailableMessage} />;
   }
   return (
     <div className={className}>
