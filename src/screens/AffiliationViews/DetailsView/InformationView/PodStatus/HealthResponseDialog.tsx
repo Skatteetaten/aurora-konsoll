@@ -16,24 +16,22 @@ export default class HealthResponseDialog extends React.Component<
   {}
 > {
   public renderFooterButtons = () => {
-    const refreshApplicationDeployment = () => {
-      this.props.refreshApplicationDeployment();
+    const { refreshApplicationDeployment } = this.props;
+    const refreshOnClicked = () => {
+      refreshApplicationDeployment();
     };
-    return (
-      <ActionButton onClick={refreshApplicationDeployment}>
-        Oppdater
-      </ActionButton>
-    );
+    return <ActionButton onClick={refreshOnClicked}>Oppdater</ActionButton>;
   };
 
   public render() {
+    const { health } = this.props;
     return (
       <InfoDialog
         renderFooterButtons={this.renderFooterButtons}
         title="Helsestatus"
-        subText={`Oppdatert: ${getCachedTime(this.props.health)}`}
+        subText={`Oppdatert: ${getCachedTime(health)}`}
       >
-        <pre>{getTextResponsePrettyfied(this.props.health)}</pre>
+        <pre>{getTextResponsePrettyfied(health)}</pre>
       </InfoDialog>
     );
   }
