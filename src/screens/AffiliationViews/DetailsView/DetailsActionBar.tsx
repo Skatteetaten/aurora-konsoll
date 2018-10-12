@@ -36,6 +36,7 @@ const DetailsActionBar = ({
     <h1>{title}</h1>
     <TimeSince timeSince={updatedTime} />
     <Button
+      style={{ minWidth: '120px' }}
       className="refresh-button"
       buttonType="primaryRoundedFilled"
       onClick={refreshApplicationDeployment}
