@@ -97,8 +97,15 @@ export default class DetailsViewController {
       const success = await clients.applicationDeploymentClient.refreshApplicationDeployment(
         deployment.id
       );
+
       if (success) {
         fetchApplicationDeployments();
+        const deploymentDetails = await clients.applicationDeploymentClient.findApplicationDeploymentDetails(
+          deployment.id
+        );
+        this.component.setState({
+          deploymentDetails
+        });
       }
     });
   };

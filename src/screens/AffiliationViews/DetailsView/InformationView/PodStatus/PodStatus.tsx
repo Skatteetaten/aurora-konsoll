@@ -15,6 +15,7 @@ interface IPodStatusProps {
   environmentVariables?: string;
   healthInfo?: string;
   className?: string;
+  refreshApplicationDeployment: () => void;
 }
 
 function findLink(pod: IPodResource, name: string): string {
@@ -26,7 +27,11 @@ function handleIsActive(data: IIconLinkData) {
   return data.href.startsWith('http');
 }
 
-const PodStatus = ({ pod, className }: IPodStatusProps) => (
+const PodStatus = ({
+  pod,
+  className,
+  refreshApplicationDeployment
+}: IPodStatusProps) => (
   <div className={className}>
     <div className="pod-status">
       <span>{pod.status}</span>
@@ -66,7 +71,10 @@ const PodStatus = ({ pod, className }: IPodStatusProps) => (
     {pod.managementResponses &&
       pod.managementResponses.health && (
         <div className="pod-actions">
-          <HealthResponseDialog health={pod.managementResponses.health} />
+          <HealthResponseDialog
+            health={pod.managementResponses.health}
+            refreshApplicationDeployment={refreshApplicationDeployment}
+          />
         </div>
       )}
   </div>

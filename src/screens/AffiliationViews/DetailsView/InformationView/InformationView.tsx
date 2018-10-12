@@ -15,13 +15,15 @@ interface IInformationViewProps {
   deploymentDetails: IApplicationDeploymentDetails;
   deployment: IApplicationDeployment;
   className?: string;
+  refreshApplicationDeployment: () => void;
 }
 
 const InformationView = ({
   isFetchingDetails,
   deploymentDetails,
   deployment,
-  className
+  className,
+  refreshApplicationDeployment
 }: IInformationViewProps) => {
   const { deploymentSpec, pods } = deploymentDetails;
   if (isFetchingDetails) {
@@ -48,7 +50,12 @@ const InformationView = ({
       <h3>Pods fra OpenShift</h3>
       <div className="info-deployments">
         {pods.map(pod => (
-          <PodStatus key={pod.name} pod={pod} className="info-pod" />
+          <PodStatus
+            key={pod.name}
+            pod={pod}
+            className="info-pod"
+            refreshApplicationDeployment={refreshApplicationDeployment}
+          />
         ))}
       </div>
     </div>

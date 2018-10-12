@@ -49,7 +49,6 @@ class DetailsView extends React.Component<
       selectedTag,
       versionSearchText
     } = this.state;
-
     return (
       <DetailsViewGrid>
         <DetailsActionBar
@@ -72,6 +71,9 @@ class DetailsView extends React.Component<
                 deployment={deployment}
                 isFetchingDetails={loading.fetchDetails}
                 deploymentDetails={deploymentDetails}
+                refreshApplicationDeployment={
+                  this.controller.refreshApplicationDeployment
+                }
               />
             </Route>
             <Route path={`${match.path}/version`}>
