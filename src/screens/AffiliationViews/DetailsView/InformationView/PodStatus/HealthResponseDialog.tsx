@@ -1,4 +1,5 @@
 import * as React from 'react';
+import styled from 'styled-components';
 
 import InfoDialog from 'components/InfoDialog';
 import { IHttpResponse } from 'models/Pod';
@@ -13,11 +14,9 @@ const HealthResponseDialog = ({ health }: IHealthResponseDialog) => (
     title="Helsestatus"
     subText={`Oppdatert: ${getCachedTime(health)}`}
   >
-    <pre>{getTextResponsePrettyfied(health)}</pre>
+    <StyledPre>{getTextResponsePrettyfied(health)}</StyledPre>
   </InfoDialog>
 );
-
-export default HealthResponseDialog;
 
 function getCachedTime(response: IHttpResponse) {
   return getLocalDatetime(response.loadedTime, {
@@ -35,3 +34,11 @@ function getTextResponsePrettyfied(response: IHttpResponse) {
 function parseAndStringify(text: string) {
   return JSON.stringify(JSON.parse(text), undefined, '  ');
 }
+
+const StyledPre = styled.pre`
+  max-width: 1500px;
+  max-height: 700px;
+  overflow: auto;
+`;
+
+export default HealthResponseDialog;
