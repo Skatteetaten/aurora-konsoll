@@ -60,5 +60,3 @@ const StyledPre = styled.pre`
   max-height: 700px;
   overflow: auto;
 `;
-
-export default HealthResponseDialog;
