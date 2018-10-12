@@ -13,10 +13,13 @@ const UnavailableServiceMessage = ({
   message,
   type = 'info'
 }: IUnavailableServiceMessageProps) => (
-  <MessageBar type={MessageBar.Type[type]}>
-    {message.message}
-    <p>Årsak: {message.reason}</p>
-  </MessageBar>
+  <div style={{ background: 'white', border: '1px solid black' }}>
+    <MessageBar isMultiline={true} type={MessageBar.Type[type]}>
+      {message.message}
+      <div style={{ marginBottom: '10px' }} />
+      Årsak: {message.reason}
+    </MessageBar>
+  </div>
 );
 
 export default UnavailableServiceMessage;
