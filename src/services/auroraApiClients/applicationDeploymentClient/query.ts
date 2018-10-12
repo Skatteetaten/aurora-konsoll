@@ -139,7 +139,7 @@ export const USER_AFFILIATIONS_QUERY = gql`
     currentUser {
       name
     }
-    affiliations {
+    affiliations(checkForVisibility:true) {
       edges {
         node {
           name
