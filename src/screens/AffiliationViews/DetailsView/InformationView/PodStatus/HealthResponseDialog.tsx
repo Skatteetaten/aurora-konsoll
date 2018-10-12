@@ -1,4 +1,5 @@
 import * as React from 'react';
+import styled from 'styled-components';
 
 import ActionButton from 'aurora-frontend-react-komponenter/ActionButton';
 
@@ -31,7 +32,7 @@ export default class HealthResponseDialog extends React.Component<
         title="Helsestatus"
         subText={`Oppdatert: ${getCachedTime(health)}`}
       >
-        <pre>{getTextResponsePrettyfied(health)}</pre>
+        <StyledPre>{getTextResponsePrettyfied(health)}</StyledPre>
       </InfoDialog>
     );
   }
@@ -53,3 +54,11 @@ function getTextResponsePrettyfied(response: IHttpResponse) {
 function parseAndStringify(text: string) {
   return JSON.stringify(JSON.parse(text), undefined, '  ');
 }
+
+const StyledPre = styled.pre`
+  max-width: 1500px;
+  max-height: 700px;
+  overflow: auto;
+`;
+
+export default HealthResponseDialog;
