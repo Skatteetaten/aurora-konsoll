@@ -74,6 +74,7 @@
     } else {
       var browser = browsers[0];
       if (!browser.isSupported) {
+        console.log("Validation info", browser);
         alert("Denne versjonen av nettleseren er ikke optimal eller støttet." +
           " Oppgrader til en nyere versjon av nettleseren. Minimum støttet versjon: " + browser.minSupportedVersion);
       }
