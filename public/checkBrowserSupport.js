@@ -1,24 +1,24 @@
 // https://developer.mozilla.org/en-US/docs/Web/HTTP/Browser_detection_using_the_user_agent#Which_part_of_the_user_agent_contains_the_information_you_are_looking_for
 var supported = {
-  Firefox: {
-    minVersion: 58
-  },
   Chrome: {
     minVersion: 54
+  },
+  Firefox: {
+    minVersion: 58
   }
 };
 
-function getBrowserVersion(browser, userAgent) {
+function getBrowserVersion(browserName, userAgent) {
   var userAgentSplit = userAgent.split(' ');
 
   var browserVersion = userAgentSplit
     .filter(function(v) {
-      return v.search(browser) >= 0;
+      return v.search(browserName) >= 0;
     })
     .map(function(b) {
       var browserAndVersion = b.split('/');
       if (browserAndVersion.length === 2) {
-        return parseInt(browserAndVersion[1]);
+        return parseInt(browserAndVersion[1], undefined);
       }
       return null;
     })
@@ -31,17 +31,20 @@ function getBrowserVersion(browser, userAgent) {
 }
 
 var browsers = Object.keys(supported)
-  .filter(function(browser) {
-    return window.navigator.userAgent.search(browser) >= 0;
+  .filter(function(browserName) {
+    return window.navigator.userAgent.search(browserName) >= 0;
   })
-  .map(function(browser) {
-    var currentVersion = getBrowserVersion(browser, window.navigator.userAgent);
-    var minSupportedVersion = supported[browser].minVersion;
+  .map(function(browserName) {
+    var currentVersion = getBrowserVersion(
+      browserName,
+      window.navigator.userAgent
+    );
+    var minSupportedVersion = supported[browserName].minVersion;
     return {
-      name: browser,
       currentVersion: currentVersion,
+      isSupported: currentVersion > minSupportedVersion,
       minSupportedVersion: minSupportedVersion,
-      isSupported: currentVersion > minSupportedVersion
+      name: browserName
     };
   });
 
