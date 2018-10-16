@@ -171,20 +171,22 @@ export default class DetailsViewController {
   public getVersionViewUnavailableMessage():
     | IUnavailableServiceMessage
     | undefined {
-    const versionViewUnavailable = unavailableServiceMessageCreator(
+    const { deploymentSpec } = this.component.state.deploymentDetails;
+    const serviceUnavailableBecause = unavailableServiceMessageCreator(
       'Det er ikke mulig å endre versjonen på denne applikasjonen'
     );
-    const { deploymentSpec } = this.component.state.deploymentDetails;
+
     if (deploymentSpec && deploymentSpec.type === 'development') {
-      return versionViewUnavailable(
-        'Applikasjonen er av type development, og kan kun brukes med binary builds'
+      return serviceUnavailableBecause(
+        'Applikasjonen er av type development, og kan kun oppgraderes med binary builds'
       );
     }
+
     if (
       !this.sm.tag.containsTags() &&
       !this.component.state.loading.fetchTags
     ) {
-      return versionViewUnavailable('Det finnes ingen tilgjengelig tags');
+      return serviceUnavailableBecause('Det finnes ingen tilgjengelig tags');
     }
 
     return undefined;
