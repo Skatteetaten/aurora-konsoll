@@ -1,11 +1,11 @@
 export interface IUnavailableServiceMessage {
-  message: string;
+  description: string;
   reason: string;
 }
 
-export function unavailableServiceMessageCreator(message: string) {
+export function unavailableServiceMessageCreator(description: string) {
   return (reason: string): IUnavailableServiceMessage => ({
-    message,
+    description,
     reason
   });
 }
