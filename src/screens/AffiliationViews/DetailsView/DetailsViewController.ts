@@ -9,6 +9,10 @@ import { ImageTagType } from 'models/ImageTagType';
 import { ITag, ITagsPaged, ITagsPagedGroup } from 'models/Tag';
 
 import LoadingStateManager from 'models/StateManager/LoadingStateManager';
+import {
+  IUnavailableServiceMessage,
+  unavailableServiceMessageCreator
+} from 'models/UnavailableServiceMessage';
 import { ApplicationDeploymentDetailsRoute } from '../ApplicationDeploymentSelector';
 import { TagStateManager } from './TagStateManager';
 import { IImageTagTypeOption } from './VersionView/TagTypeSelector/TagTypeSelector';
@@ -171,10 +175,28 @@ export default class DetailsViewController {
     });
   };
 
-  public shouldShowMissingTagsMessage() {
-    return (
-      !this.sm.tag.containsTags() && !this.component.state.loading.fetchTags
+  public getVersionViewUnavailableMessage():
+    | IUnavailableServiceMessage
+    | undefined {
+    const { deploymentSpec } = this.component.state.deploymentDetails;
+    const serviceUnavailableBecause = unavailableServiceMessageCreator(
+      'Det er ikke mulig å endre versjonen på denne applikasjonen'
     );
+
+    if (deploymentSpec && deploymentSpec.type === 'development') {
+      return serviceUnavailableBecause(
+        'Applikasjonen er av type development, og kan kun oppgraderes med binary builds'
+      );
+    }
+
+    if (
+      !this.sm.tag.containsTags() &&
+      !this.component.state.loading.fetchTags
+    ) {
+      return serviceUnavailableBecause('Det finnes ingen tilgjengelig tags');
+    }
+
+    return undefined;
   }
 
   public canUpgrade = () => {

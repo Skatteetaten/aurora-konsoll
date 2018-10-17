@@ -78,7 +78,7 @@ class DetailsView extends React.Component<
             </Route>
             <Route path={`${match.path}/version`}>
               <VersionView
-                showNoTagsMessage={this.controller.shouldShowMissingTagsMessage()}
+                unavailableMessage={this.controller.getVersionViewUnavailableMessage()}
                 deployedTag={deployment.version.deployTag}
                 selectedTag={selectedTag}
                 selectedTagType={selectedTagType}

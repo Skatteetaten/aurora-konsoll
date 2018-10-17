@@ -29,6 +29,7 @@
     "webpack",
     "jest",
     "webpack.api.config.js",
-    "src/setupTests.ts"
+    "src/setupTests.ts",
+    "public/checkBrowserSupport.js"
   ]
 }

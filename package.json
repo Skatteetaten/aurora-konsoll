@@ -28,10 +28,10 @@
     "styled-components": "^3.4.8"
   },
   "scripts": {
-    "start": "npm-run-all --parallel start:web start:api",
+    "start": "npm-run-all -pl start:web start:api",
     "start:web": "react-scripts-ts start",
     "start:api": "npm run build:api -- --watch & nodemon --watch ./build-api --exec \"node ./build-api/server.js\"",
-    "build": "npm-run-all --parallel build:web build:api",
+    "build": "npm-run-all -pl build:web build:api",
     "build:web": "react-scripts-ts build",
     "build:api": "webpack --config webpack.api.config.js",
     "test": "react-scripts-ts test --env=jsdom",
