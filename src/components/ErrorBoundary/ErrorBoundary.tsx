@@ -62,6 +62,10 @@ class ErrorBoundary extends React.Component<
     }
   }
 
+  public componentWillUnmount() {
+    this.props.errorSM.close();
+  }
+
   public render() {
     const { errorSM } = this.props;
     const { currentError, errors } = this.state;
