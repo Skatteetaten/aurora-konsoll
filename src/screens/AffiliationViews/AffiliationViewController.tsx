@@ -2,9 +2,12 @@ import { IAuroraApiComponentProps, withAuroraApi } from 'components/AuroraApi';
 import * as React from 'react';
 import { Route } from 'react-router';
 
+import LoadingButton from 'components/LoadingButton';
 import Spinner from 'components/Spinner';
+import TimeSince from 'components/TimeSince';
 import { IApplicationDeployment } from 'models/ApplicationDeployment';
 import { Link } from 'react-router-dom';
+import styled from 'styled-components';
 import {
   ApplicationDeploymentProvider,
   withApplicationDeployments
@@ -13,6 +16,7 @@ import { default as ApplicationDeploymentSelectorBase } from './ApplicationDeplo
 import { default as MatrixBase } from './MatrixView/Matrix';
 
 const Matrix = withApplicationDeployments(MatrixBase);
+
 const ApplicationDeploymentSelector = withApplicationDeployments(
   ApplicationDeploymentSelectorBase
 );
@@ -25,6 +29,7 @@ interface IAffiliationViewControllerProps extends IAuroraApiComponentProps {
 
 interface IAffiliationViewControllerState {
   loading: boolean;
+  isRefreshing: boolean;
   deployments: IApplicationDeployment[];
 }
 
@@ -34,6 +39,7 @@ class AffiliationViewController extends React.Component<
 > {
   public state: IAffiliationViewControllerState = {
     deployments: [],
+    isRefreshing: false,
     loading: false
   };
 
@@ -63,6 +69,20 @@ class AffiliationViewController extends React.Component<
     }));
   };
 
+  public refreshApplicationDeployments = async () => {
+    const { affiliation, clients } = this.props;
+    this.setState({
+      isRefreshing: true
+    });
+    await clients.applicationDeploymentClient.refreshAffiliations([
+      affiliation
+    ]);
+    await this.fetchApplicationDeployments(affiliation);
+    this.setState({
+      isRefreshing: false
+    });
+  };
+
   public componentDidUpdate(prevProps: IAffiliationViewControllerProps) {
     if (this.props.affiliation !== prevProps.affiliation) {
       this.fetchApplicationDeployments(this.props.affiliation);
@@ -81,20 +101,37 @@ class AffiliationViewController extends React.Component<
       return <Spinner />;
     }
 
+    const time = deployments.length > 0 ? deployments[0].time : '';
+
     return (
       <ApplicationDeploymentProvider
         value={{
           buildDeploymentLink: this.buildDeploymentLink,
           deployments,
+          refreshDeployents: this.refreshApplicationDeployments,
           fetchApplicationDeployments: () =>
             this.fetchApplicationDeployments(affiliation)
         }}
       >
-        <Route
-          exact={true}
-          path={`${matchPath}/deployments`}
-          component={Matrix}
-        />
+        <Route exact={true} path={`${matchPath}/deployments`}>
+          {({ match }) =>
+            match && (
+              <>
+                <ActionBar>
+                  <TimeSince timeSince={time} />
+                  <LoadingButton
+                    style={{ minWidth: '120px' }}
+                    loading={this.state.isRefreshing}
+                    onClick={this.refreshApplicationDeployments}
+                  >
+                    Oppdater
+                  </LoadingButton>
+                </ActionBar>
+                <Matrix />
+              </>
+            )
+          }
+        </Route>
         <Route
           path={`${matchPath}/deployments/:applicationDeploymentId`}
           component={ApplicationDeploymentSelector}
@@ -103,6 +140,17 @@ class AffiliationViewController extends React.Component<
     );
   }
 }
+
+const ActionBar = styled.div`
+  display: flex;
+  padding: 15px 10px;
+  align-items: center;
+  justify-content: flex-end;
+
+  button {
+    min-width: 120px;
+  }
+`;
 
 export const AffiliationViewControllerWithApi = withAuroraApi(
   AffiliationViewController

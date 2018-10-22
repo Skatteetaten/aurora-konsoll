@@ -1,8 +1,7 @@
 import * as React from 'react';
 
 import ActionButton from 'aurora-frontend-react-komponenter/ActionButton';
-import Button from 'aurora-frontend-react-komponenter/Button';
-import Spinner from 'components/Spinner';
+import LoadingButton from 'components/LoadingButton';
 import TimeSince from 'components/TimeSince';
 import styled from 'styled-components';
 
@@ -35,14 +34,13 @@ const DetailsActionBar = ({
     </ActionButton>
     <h1>{title}</h1>
     <TimeSince timeSince={updatedTime} />
-    <Button
+    <LoadingButton
       style={{ minWidth: '120px' }}
-      className="refresh-button"
-      buttonType="primaryRoundedFilled"
+      loading={isRefreshing}
       onClick={refreshApplicationDeployment}
     >
-      {isRefreshing ? <Spinner /> : 'Oppdater'}
-    </Button>
+      Oppdater
+    </LoadingButton>
   </div>
 );
 
@@ -58,9 +56,5 @@ export default styled(DetailsActionBar)`
   }
   .back-button {
     margin-left: -10px;
-  }
-  .refresh-button {
-    justify-self: flex-end;
-    min-width: 125px;
   }
 `;
