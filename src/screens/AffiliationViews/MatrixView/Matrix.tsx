@@ -56,7 +56,9 @@ const Matrix = ({
 };
 
 export default styled(Matrix)`
+  flex: 1;
   position: relative;
+  overflow: auto;
 
   table {
     font-size: 14px;

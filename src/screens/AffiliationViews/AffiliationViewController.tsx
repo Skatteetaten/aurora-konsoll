@@ -2,20 +2,15 @@ import { IAuroraApiComponentProps, withAuroraApi } from 'components/AuroraApi';
 import * as React from 'react';
 import { Route } from 'react-router';
 
-import LoadingButton from 'components/LoadingButton';
 import Spinner from 'components/Spinner';
-import TimeSince from 'components/TimeSince';
 import { IApplicationDeployment } from 'models/ApplicationDeployment';
 import { Link } from 'react-router-dom';
-import styled from 'styled-components';
 import {
   ApplicationDeploymentProvider,
   withApplicationDeployments
 } from './ApplicationDeploymentContext';
 import { default as ApplicationDeploymentSelectorBase } from './ApplicationDeploymentSelector';
-import { default as MatrixBase } from './MatrixView/Matrix';
-
-const Matrix = withApplicationDeployments(MatrixBase);
+import MatrixView from './MatrixView/MatrixView';
 
 const ApplicationDeploymentSelector = withApplicationDeployments(
   ApplicationDeploymentSelectorBase
@@ -116,19 +111,13 @@ class AffiliationViewController extends React.Component<
         <Route exact={true} path={`${matchPath}/deployments`}>
           {({ match }) =>
             match && (
-              <>
-                <ActionBar>
-                  <TimeSince timeSince={time} />
-                  <LoadingButton
-                    style={{ minWidth: '120px' }}
-                    loading={this.state.isRefreshing}
-                    onClick={this.refreshApplicationDeployments}
-                  >
-                    Oppdater
-                  </LoadingButton>
-                </ActionBar>
-                <Matrix />
-              </>
+              <MatrixView
+                time={time}
+                isRefreshing={this.state.isRefreshing}
+                refreshApplicationDeployments={
+                  this.refreshApplicationDeployments
+                }
+              />
             )
           }
         </Route>
@@ -140,17 +129,6 @@ class AffiliationViewController extends React.Component<
     );
   }
 }
-
-const ActionBar = styled.div`
-  display: flex;
-  padding: 15px 10px;
-  align-items: center;
-  justify-content: flex-end;
-
-  button {
-    min-width: 120px;
-  }
-`;
 
 export const AffiliationViewControllerWithApi = withAuroraApi(
   AffiliationViewController
