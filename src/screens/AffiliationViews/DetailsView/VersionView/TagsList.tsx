@@ -4,7 +4,7 @@ import styled from 'styled-components';
 import DetailsList from 'aurora-frontend-react-komponenter/DetailsList';
 import { ImageTagType } from 'models/ImageTagType';
 import { ITag } from 'models/Tag';
-import { Selection } from 'office-ui-fabric-react/lib/DetailsList';
+import { IColumn, Selection } from 'office-ui-fabric-react/lib/DetailsList';
 
 const detailListColumns = [
   {
@@ -71,6 +71,17 @@ export default class TagsList extends React.Component<
     }
   };
 
+  public renderItemColoumn = (item?: any, index?: number, column?: IColumn) => {
+    if (column && column.fieldName) {
+      return (
+        <ColumnItem title={item[column.fieldName]}>
+          {item[column.fieldName]}
+        </ColumnItem>
+      );
+    }
+    return null;
+  };
+
   public componentDidUpdate(prevProps: ITagsListProps) {
     const {
       tags,
@@ -118,11 +129,19 @@ export default class TagsList extends React.Component<
           onActiveItemChanged={handleSelectNextTag}
           selectionPreservedOnEmptyClick={true}
           selectionMode={DetailsList.SelectionMode.single}
+          onRenderItemColumn={this.renderItemColoumn}
         />
       </DetailsListWrapper>
     );
   }
 }
+
+// Removed padding from .ms-DetailsRow-cell and applied it to this component
+// to make the whole cell show title
+const ColumnItem = styled.p`
+  margin: 0;
+  padding: 11px 8px;
+`;
 
 const DetailsListWrapper = styled.div<{
   deployedIndex: number;
@@ -156,5 +175,9 @@ const DetailsListWrapper = styled.div<{
 
   .ms-List-cell {
     cursor: pointer
+  }
+
+  .ms-DetailsRow-cell {
+    padding: 0;
   }
 `;
