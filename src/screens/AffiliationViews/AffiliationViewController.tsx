@@ -103,7 +103,7 @@ class AffiliationViewController extends React.Component<
         value={{
           buildDeploymentLink: this.buildDeploymentLink,
           deployments,
-          refreshDeployents: this.refreshApplicationDeployments,
+          refreshDeployments: this.refreshApplicationDeployments,
           fetchApplicationDeployments: () =>
             this.fetchApplicationDeployments(affiliation)
         }}
