@@ -9,7 +9,8 @@ import { IPodResource } from 'models/Pod';
 import GoboClient from 'services/GoboClient';
 import {
   REDEPLOY_WITH_VERSION_MUTATION,
-  REFRESH_APPLICATION_DEPLOYMENT_MUTATION
+  REFRESH_APPLICATION_DEPLOYMENT_MUTATION,
+  REFRESH_APPLICATION_DEPLOYMENTS_MUTATION
 } from './mutation';
 import {
   APPLICATION_DEPLOYMENT_DETAILS_QUERY,
@@ -66,6 +67,25 @@ export class ApplicationDeploymentClient {
       variables: {
         input: {
           applicationDeploymentId
+        }
+      }
+    });
+
+    if (result && result.data) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  public async refreshAffiliations(affiliations: string[]): Promise<boolean> {
+    const result = await this.client.mutate<{
+      affiliations: string[];
+    }>({
+      mutation: REFRESH_APPLICATION_DEPLOYMENTS_MUTATION,
+      variables: {
+        input: {
+          affiliations
         }
       }
     });

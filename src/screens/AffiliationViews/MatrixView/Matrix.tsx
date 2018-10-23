@@ -1,5 +1,4 @@
 import * as React from 'react';
-
 import styled from 'styled-components';
 import { IApplicationDeploymentContext } from '../ApplicationDeploymentContext';
 import Row, { IApplicationMap } from './Row';
@@ -57,10 +56,12 @@ const Matrix = ({
 };
 
 export default styled(Matrix)`
+  flex: 1;
   position: relative;
-  font-size: 14px;
+  overflow: auto;
 
   table {
+    font-size: 14px;
     border-spacing: 0;
     table-layout: fixed;
   }

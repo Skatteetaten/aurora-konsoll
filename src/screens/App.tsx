@@ -154,7 +154,7 @@ const StyledSkeBasis = styled<{ menuExpanded: boolean }>(SkeBasis)`
   .g-content {
     grid-area: content;
     max-height: 100%;
-    overflow: auto;
+    overflow: hidden;
   }
 
   .ms-Dropdown-container {

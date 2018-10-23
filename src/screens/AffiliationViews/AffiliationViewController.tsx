@@ -10,9 +10,8 @@ import {
   withApplicationDeployments
 } from './ApplicationDeploymentContext';
 import { default as ApplicationDeploymentSelectorBase } from './ApplicationDeploymentSelector';
-import { default as MatrixBase } from './MatrixView/Matrix';
+import MatrixView from './MatrixView/MatrixView';
 
-const Matrix = withApplicationDeployments(MatrixBase);
 const ApplicationDeploymentSelector = withApplicationDeployments(
   ApplicationDeploymentSelectorBase
 );
@@ -25,6 +24,7 @@ interface IAffiliationViewControllerProps extends IAuroraApiComponentProps {
 
 interface IAffiliationViewControllerState {
   loading: boolean;
+  isRefreshing: boolean;
   deployments: IApplicationDeployment[];
 }
 
@@ -34,6 +34,7 @@ class AffiliationViewController extends React.Component<
 > {
   public state: IAffiliationViewControllerState = {
     deployments: [],
+    isRefreshing: false,
     loading: false
   };
 
@@ -63,6 +64,20 @@ class AffiliationViewController extends React.Component<
     }));
   };
 
+  public refreshApplicationDeployments = async () => {
+    const { affiliation, clients } = this.props;
+    this.setState({
+      isRefreshing: true
+    });
+    await clients.applicationDeploymentClient.refreshAffiliations([
+      affiliation
+    ]);
+    await this.fetchApplicationDeployments(affiliation);
+    this.setState({
+      isRefreshing: false
+    });
+  };
+
   public componentDidUpdate(prevProps: IAffiliationViewControllerProps) {
     if (this.props.affiliation !== prevProps.affiliation) {
       this.fetchApplicationDeployments(this.props.affiliation);
@@ -81,20 +96,31 @@ class AffiliationViewController extends React.Component<
       return <Spinner />;
     }
 
+    const time = deployments.length > 0 ? deployments[0].time : '';
+
     return (
       <ApplicationDeploymentProvider
         value={{
           buildDeploymentLink: this.buildDeploymentLink,
           deployments,
+          refreshDeployments: this.refreshApplicationDeployments,
           fetchApplicationDeployments: () =>
             this.fetchApplicationDeployments(affiliation)
         }}
       >
-        <Route
-          exact={true}
-          path={`${matchPath}/deployments`}
-          component={Matrix}
-        />
+        <Route exact={true} path={`${matchPath}/deployments`}>
+          {({ match }) =>
+            match && (
+              <MatrixView
+                time={time}
+                isRefreshing={this.state.isRefreshing}
+                refreshApplicationDeployments={
+                  this.refreshApplicationDeployments
+                }
+              />
+            )
+          }
+        </Route>
         <Route
           path={`${matchPath}/deployments/:applicationDeploymentId`}
           component={ApplicationDeploymentSelector}

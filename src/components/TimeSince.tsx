@@ -94,6 +94,7 @@ export default styled(TimeSince)`
     border-bottom: 1px dotted ${palette.skeColor.black};
     margin-right: 10px;
     cursor: default;
+    z-index: 100;
   }
 
   .tooltip .tooltip-text {
