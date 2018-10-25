@@ -68,17 +68,33 @@ const PodStatus = ({
         <p>{pod.restartCount}</p>
       </div>
     </div>
-    {pod.managementResponses &&
-      pod.managementResponses.health && (
-        <div className="pod-actions">
-          <HealthResponseDialog
-            health={pod.managementResponses.health}
-            refreshApplicationDeployment={refreshApplicationDeployment}
-          />
-        </div>
-      )}
+    <PodAction
+      pod={pod}
+      refreshApplicationDeployment={refreshApplicationDeployment}
+    />
   </div>
 );
+
+interface IPodAction {
+  pod: IPodResource;
+  refreshApplicationDeployment: () => void;
+}
+
+const PodAction = ({ pod, refreshApplicationDeployment }: IPodAction) => {
+  const { managementResponses } = pod;
+
+  if (!managementResponses || !managementResponses.health) {
+    return null;
+  }
+  return (
+    <div className="pod-actions">
+      <HealthResponseDialog
+        health={managementResponses.health}
+        refreshApplicationDeployment={refreshApplicationDeployment}
+      />
+    </div>
+  );
+};
 
 const { skeColor } = palette;
 

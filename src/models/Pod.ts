@@ -14,6 +14,8 @@ export interface IPodResource {
 }
 
 export interface IHttpResponse {
+  hasResponse: boolean;
+  error: string;
   loadedTime: string;
   textResponse: string;
 }
