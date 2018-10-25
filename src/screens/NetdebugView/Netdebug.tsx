@@ -179,9 +179,13 @@ class Netdebug extends React.Component<INetdebugProps, INetdebugState> {
 }
 
 const StyledNetdebug = styled(Netdebug)`
+  max-height: 100%;
+  overflow-x: auto;
+
   .body-wrapper {
     padding: 0 10px;
   }
+
   .netdebug-grid {
     display: grid;
     grid-template-columns: 1fr 1fr;
