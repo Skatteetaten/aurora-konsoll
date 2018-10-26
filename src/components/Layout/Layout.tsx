@@ -57,9 +57,6 @@ const Layout = ({
   const layoutClassNames =
     className + (isMenuExpanded ? ' menu-expanded ' : ' menu-collapsed');
 
-  // tslint:disable-next-line:no-console
-  console.log(className);
-
   return (
     <div className={layoutClassNames}>
       <Header title="Aurora Konsoll" user={user} className="g-header">
