@@ -15,6 +15,7 @@ interface IPodStatusProps {
   environmentVariables?: string;
   healthInfo?: string;
   className?: string;
+  isUpdating: boolean;
   refreshApplicationDeployment: () => void;
 }
 
@@ -30,6 +31,7 @@ function handleIsActive(data: IIconLinkData) {
 const PodStatus = ({
   pod,
   className,
+  isUpdating,
   refreshApplicationDeployment
 }: IPodStatusProps) => (
   <div className={className}>
@@ -70,6 +72,7 @@ const PodStatus = ({
     </div>
     <PodAction
       pod={pod}
+      isUpdating={isUpdating}
       refreshApplicationDeployment={refreshApplicationDeployment}
     />
   </div>
@@ -77,10 +80,15 @@ const PodStatus = ({
 
 interface IPodAction {
   pod: IPodResource;
+  isUpdating: boolean;
   refreshApplicationDeployment: () => void;
 }
 
-const PodAction = ({ pod, refreshApplicationDeployment }: IPodAction) => {
+const PodAction = ({
+  pod,
+  refreshApplicationDeployment,
+  isUpdating
+}: IPodAction) => {
   const { managementResponses } = pod;
 
   if (!managementResponses || !managementResponses.health) {
@@ -90,6 +98,7 @@ const PodAction = ({ pod, refreshApplicationDeployment }: IPodAction) => {
     <div className="pod-actions">
       <HealthResponseDialog
         health={managementResponses.health}
+        isUpdating={isUpdating}
         refreshApplicationDeployment={refreshApplicationDeployment}
       />
     </div>

@@ -9,16 +9,21 @@ import { getLocalDatetime } from 'utils/date';
 
 interface IHealthResponseDialogProps {
   health: IHttpResponse;
+  isUpdating: boolean;
   refreshApplicationDeployment: () => void;
 }
 
 const HealthResponseDialog = ({
   health,
-  refreshApplicationDeployment
+  refreshApplicationDeployment,
+  isUpdating
 }: IHealthResponseDialogProps) => {
   const renderRefreshButton = () => {
     return (
-      <ActionButton onClick={refreshApplicationDeployment}>
+      <ActionButton
+        disabled={isUpdating}
+        onClick={refreshApplicationDeployment}
+      >
         Oppdater
       </ActionButton>
     );
@@ -49,6 +54,7 @@ const HealthResponseDialog = ({
     </InfoDialog>
   ) : (
     <InfoDialog
+      renderFooterButtons={renderRefreshButton}
       renderOpenDialogButton={renderOpenErrorButton}
       title="Feil fra helsesjekk"
       subText={loadedTimeText}

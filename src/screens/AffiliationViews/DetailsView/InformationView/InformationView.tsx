@@ -15,6 +15,7 @@ interface IInformationViewProps {
   deploymentDetails: IApplicationDeploymentDetails;
   deployment: IApplicationDeployment;
   className?: string;
+  isUpdating: boolean;
   refreshApplicationDeployment: () => void;
 }
 
@@ -23,6 +24,7 @@ const InformationView = ({
   deploymentDetails,
   deployment,
   className,
+  isUpdating,
   refreshApplicationDeployment
 }: IInformationViewProps) => {
   const { deploymentSpec, pods } = deploymentDetails;
@@ -54,6 +56,7 @@ const InformationView = ({
             key={pod.name}
             pod={pod}
             className="info-pod"
+            isUpdating={isUpdating}
             refreshApplicationDeployment={refreshApplicationDeployment}
           />
         ))}
