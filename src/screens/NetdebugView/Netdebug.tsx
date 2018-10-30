@@ -165,12 +165,12 @@ class Netdebug extends React.Component<INetdebugProps, INetdebugState> {
                   />
                 )}
             </div>
-          </div>
-          <div className="table-wrapper">
-            {this.state.showTable &&
-              this.state.parsedData && (
-                <Table parsedData={this.state.parsedData} />
-              )}
+            <div className="table-wrapper">
+              {this.state.showTable &&
+                this.state.parsedData && (
+                  <Table parsedData={this.state.parsedData} />
+                )}
+            </div>
           </div>
         </div>
       </div>
@@ -188,10 +188,11 @@ const StyledNetdebug = styled(Netdebug)`
 
   .netdebug-grid {
     display: grid;
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: 1.2fr 1fr;
     grid-template-areas:
       'content .'
-      'card .';
+      'card .'
+      'table .';
   }
   .container-wrapper {
     grid-area: content;
@@ -209,7 +210,8 @@ const StyledNetdebug = styled(Netdebug)`
     grid-area: card;
   }
   .table-wrapper {
-    margin: 20px 10px 0 0;
+    grid-area: table;
+    margin: 20px 0 0 0;
   }
 `;
 

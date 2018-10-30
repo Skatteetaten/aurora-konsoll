@@ -97,7 +97,7 @@ class App extends React.Component<IAppProps, IAppState> {
         <ErrorBoundary errorSM={errorStateManager}>
           <Layout
             user={user}
-            isExpanded={isMenuExpanded}
+            isMenuExpanded={isMenuExpanded}
             handleMenuExpand={this.handleMenuExpand}
             affiliation={affiliation}
             affiliations={affiliations}
@@ -136,28 +136,6 @@ class App extends React.Component<IAppProps, IAppState> {
 
 export default withRouter(withAuroraApi(App));
 
-const StyledSkeBasis = styled<{ menuExpanded: boolean }>(SkeBasis)`
+const StyledSkeBasis = styled(SkeBasis)`
   height: 100%;
-  display: grid;
-  grid-template-columns: ${props => (props.menuExpanded ? '250px' : '70px')} 1fr;
-  grid-template-rows: auto 1fr;
-  grid-template-areas:
-    'header header'
-    'menu content';
-
-  .g-header {
-    grid-area: header;
-  }
-  .g-menu {
-    grid-area: menu;
-  }
-  .g-content {
-    grid-area: content;
-    max-height: 100%;
-    overflow: hidden;
-  }
-
-  .ms-Dropdown-container {
-    max-width: 250px;
-  }
 `;
