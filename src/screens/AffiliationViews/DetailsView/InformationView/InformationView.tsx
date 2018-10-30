@@ -92,6 +92,9 @@ function getApplicationDeploymentValues(deployment: IApplicationDeployment) {
   return {
     Tag: deployment.version.deployTag.name,
     'Aurora version': deployment.version.auroraVersion,
+    ...(deployment.version.releaseTo && {
+      'Release to': deployment.version.releaseTo
+    }),
     'Image repository': deployment.repository
       .split('/')
       .slice(1)
