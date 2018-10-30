@@ -177,6 +177,7 @@ export class ApplicationDeploymentClient {
         },
         time: app.time,
         version: {
+          releaseTo: app.version.releaseTo,
           auroraVersion: app.version.auroraVersion,
           deployTag: {
             lastModified: '',

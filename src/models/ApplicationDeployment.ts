@@ -11,6 +11,7 @@ export interface IApplicationDeployment {
   version: {
     auroraVersion: string;
     deployTag: ITag;
+    releaseTo: string;
   };
   repository: string;
   time: string;

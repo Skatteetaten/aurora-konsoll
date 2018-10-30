@@ -39,6 +39,7 @@ interface IApplicationDeployment {
   version: {
     auroraVersion: string;
     deployTag: IImageTag;
+    releaseTo: string;
   };
   time: string;
 }
@@ -72,6 +73,7 @@ export const APPLICATIONS_QUERY = gql`
                 name
                 type
               }
+              releaseTo
             }
             time
           }
@@ -139,7 +141,7 @@ export const USER_AFFILIATIONS_QUERY = gql`
     currentUser {
       name
     }
-    affiliations(checkForVisibility:true) {
+    affiliations(checkForVisibility: true) {
       edges {
         node {
           name
