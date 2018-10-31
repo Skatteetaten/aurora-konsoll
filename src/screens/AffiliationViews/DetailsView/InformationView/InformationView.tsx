@@ -74,7 +74,9 @@ function getDeploymentSpecValues(deploymentSpec?: IDeploymentSpec) {
       values.ArtifactId = deploymentSpec.artifactId;
     }
     values.Version = deploymentSpec.version;
-
+    if (deploymentSpec.releaseTo) {
+      values.ReleaseTo = deploymentSpec.releaseTo;
+    }
     if (database) {
       values.Database = 'Ja';
     }
@@ -92,9 +94,6 @@ function getApplicationDeploymentValues(deployment: IApplicationDeployment) {
   return {
     Tag: deployment.version.deployTag.name,
     'Aurora version': deployment.version.auroraVersion,
-    ...(deployment.version.releaseTo && {
-      'Release to': deployment.version.releaseTo
-    }),
     'Image repository': deployment.repository
       .split('/')
       .slice(1)

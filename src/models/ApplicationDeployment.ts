@@ -9,9 +9,9 @@ export interface IApplicationDeployment {
   environment: string;
   status: IApplicationDeploymentStatus;
   version: {
-    auroraVersion: string;
+    auroraVersion?: string;
     deployTag: ITag;
-    releaseTo: string;
+    releaseTo?: string;
   };
   repository: string;
   time: string;
