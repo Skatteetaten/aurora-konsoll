@@ -9,6 +9,7 @@ export interface INetdebugResult {
 export interface IScanStatus {
   status: string;
   message?: string;
+  resolvedIp?: string;
   clusterNodeIp?: number;
 }
 
@@ -56,10 +57,11 @@ export class NetdebugClient {
     }
 
     return scanStatus.edges.map(edge => {
-      const { clusterNode, message, status } = edge.node;
+      const { clusterNode, message, status, resolvedIp } = edge.node;
       return {
         clusterNodeIp: clusterNode && clusterNode.ip,
         message,
+        resolvedIp,
         status
       };
     });
