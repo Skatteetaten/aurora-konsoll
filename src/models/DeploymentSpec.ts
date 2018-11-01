@@ -60,6 +60,7 @@ export interface IDeploymentSpec {
   toxiproxy: IToxiproxy;
   type: string;
   version: string;
+  releaseTo?: string;
   webseal: boolean;
 }
 

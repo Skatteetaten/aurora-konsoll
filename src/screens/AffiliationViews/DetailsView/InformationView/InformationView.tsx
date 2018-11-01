@@ -74,7 +74,9 @@ function getDeploymentSpecValues(deploymentSpec?: IDeploymentSpec) {
       values.ArtifactId = deploymentSpec.artifactId;
     }
     values.Version = deploymentSpec.version;
-
+    if (deploymentSpec.releaseTo) {
+      values.ReleaseTo = deploymentSpec.releaseTo;
+    }
     if (database) {
       values.Database = 'Ja';
     }

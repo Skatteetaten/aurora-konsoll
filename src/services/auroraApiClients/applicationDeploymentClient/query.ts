@@ -37,9 +37,9 @@ interface IApplicationDeployment {
     comment?: string;
   };
   version: {
-    auroraVersion: string;
+    auroraVersion?: string;
     deployTag: IImageTag;
-    releaseTo: string;
+    releaseTo?: string;
   };
   time: string;
 }

@@ -26,19 +26,24 @@ const Row = ({ name, environments, apps, linkBuilder }: IRowProps) => {
     }
 
     const deployment = apps[name].find(app => app.environment === environment);
-
     if (!deployment) {
       return <td key={key}>-</td>;
     }
+
+    const tooltip = deployment.version.releaseTo
+      ? `ReleaseTo: ${deployment.version.releaseTo}`
+      : deployment.version.deployTag.name;
+
+    const releaseToHint = deployment.version.releaseTo ? '*' : '';
 
     const Link = linkBuilder(deployment);
     return (
       <Status
         key={key}
         name={deployment.status.code.toLowerCase()}
-        title={deployment.version.deployTag.name}
+        title={tooltip}
       >
-        <Link>{deployment.version.deployTag.name}</Link>
+        <Link>{`${releaseToHint}${deployment.version.deployTag.name}`}</Link>
       </Status>
     );
   });
