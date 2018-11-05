@@ -20,6 +20,7 @@ Array [
         "name": "master-SNAPSHOT",
         "type": "SNAPSHOT",
       },
+      "releaseTo": undefined,
     },
   },
 ]
