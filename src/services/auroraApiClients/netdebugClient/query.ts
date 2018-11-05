@@ -3,7 +3,6 @@ import gql from 'graphql-tag';
 export interface IScanQuery {
   scan: {
     status: string;
-    resolvedIP?: string;
     open?: IScanStatusQuery;
     failed?: IScanStatusQuery;
   };
@@ -18,6 +17,7 @@ export interface IScanStatusEdge {
   node: {
     status: string;
     message?: string;
+    resolvedIp?: string;
     clusterNode?: {
       ip?: number;
     };
@@ -28,14 +28,13 @@ export const NETDEBUG_QUERY = gql`
   query getNetdebugStatus($host: String!, $port: Int) {
     scan(host: $host, port: $port) {
       status
-      resolvedIp
-
       open {
         totalCount
         edges {
           node {
             status
             message
+            resolvedIp
             clusterNode {
               ip
             }
@@ -49,6 +48,7 @@ export const NETDEBUG_QUERY = gql`
           node {
             status
             message
+            resolvedIp
             clusterNode {
               ip
             }

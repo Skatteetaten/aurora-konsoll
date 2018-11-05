@@ -22,6 +22,14 @@ const columns = [
     name: 'Kommentar'
   },
   {
+    fieldName: 'resolvedIp',
+    isResizable: true,
+    key: 'column7',
+    maxWidth: 250,
+    minWidth: 100,
+    name: 'Resolved Ip'
+  },
+  {
     fieldName: 'clusterNodeIp',
     isResizable: true,
     key: 'column7',
