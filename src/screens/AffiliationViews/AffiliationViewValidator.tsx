@@ -61,6 +61,7 @@ class AffiliationViewValidator extends React.Component<
         affiliation={affiliation}
         matchPath={match.path}
         matchUrl={match.url}
+        history={this.props.history}
       />
     );
   }

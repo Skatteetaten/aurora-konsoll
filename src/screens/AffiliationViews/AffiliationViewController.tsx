@@ -1,6 +1,9 @@
 import { IAuroraApiComponentProps, withAuroraApi } from 'components/AuroraApi';
+import { History } from 'history';
 import * as React from 'react';
 import { Route } from 'react-router';
+
+import Button from 'aurora-frontend-react-komponenter/Button';
 
 import Spinner from 'components/Spinner';
 import { IApplicationDeployment } from 'models/ApplicationDeployment';
@@ -16,16 +19,25 @@ const ApplicationDeploymentSelector = withApplicationDeployments(
   ApplicationDeploymentSelectorBase
 );
 
+interface IFilterOptions {
+  deploymentNames: string[];
+  environmentNames: string[];
+}
+
+// type FilterFunc = (filterOptions: IFilterOptions) => void;
+
 interface IAffiliationViewControllerProps extends IAuroraApiComponentProps {
   affiliation: string;
   matchPath: string;
   matchUrl: string;
+  history: History;
 }
 
 interface IAffiliationViewControllerState {
   loading: boolean;
   isRefreshing: boolean;
   deployments: IApplicationDeployment[];
+  filterOptions: IFilterOptions;
 }
 
 class AffiliationViewController extends React.Component<
@@ -35,7 +47,11 @@ class AffiliationViewController extends React.Component<
   public state: IAffiliationViewControllerState = {
     deployments: [],
     isRefreshing: false,
-    loading: false
+    loading: false,
+    filterOptions: {
+      deploymentNames: [],
+      environmentNames: []
+    }
   };
 
   public buildDeploymentLink = (
@@ -62,6 +78,29 @@ class AffiliationViewController extends React.Component<
       deployments,
       loading: false
     }));
+
+    this.setState(() => ({
+      filterOptions: {
+        deploymentNames: [
+          'whoami-sub',
+          'whoami',
+          'skattemelding-core-mock',
+          'redis',
+          'redisdb',
+          'ao',
+          'atomhopper',
+          'driftsdashboard'
+        ],
+        environmentNames: ['aotest', 'espen-utv']
+      }
+    }));
+  };
+
+  public handleFilterChange = (filterOptions: IFilterOptions) => {
+    const queries = `filter/app:${
+      this.state.filterOptions.deploymentNames
+    }/env:${this.state.filterOptions.environmentNames}`;
+    this.props.history.push(queries.replace(/,/g, '+'));
   };
 
   public refreshApplicationDeployments = async () => {
@@ -90,11 +129,18 @@ class AffiliationViewController extends React.Component<
 
   public render() {
     const { matchPath, affiliation } = this.props;
-    const { deployments, loading } = this.state;
+    const { deployments, loading, filterOptions } = this.state;
 
     if (loading && deployments.length === 0) {
       return <Spinner />;
     }
+
+    // Apply filter på deployments => filterte deployments => komponenter
+    const filteredDeployments = deployments
+      .filter(
+        dep => filterOptions.environmentNames.indexOf(dep.environment) > -1
+      )
+      .filter(dep => filterOptions.deploymentNames.indexOf(dep.name) > -1);
 
     const time = deployments.length > 0 ? deployments[0].time : '';
 
@@ -102,7 +148,7 @@ class AffiliationViewController extends React.Component<
       <ApplicationDeploymentProvider
         value={{
           buildDeploymentLink: this.buildDeploymentLink,
-          deployments,
+          deployments: filteredDeployments,
           refreshDeployments: this.refreshApplicationDeployments,
           fetchApplicationDeployments: () =>
             this.fetchApplicationDeployments(affiliation)
@@ -111,13 +157,16 @@ class AffiliationViewController extends React.Component<
         <Route exact={true} path={`${matchPath}/deployments`}>
           {({ match }) =>
             match && (
-              <MatrixView
-                time={time}
-                isRefreshing={this.state.isRefreshing}
-                refreshApplicationDeployments={
-                  this.refreshApplicationDeployments
-                }
-              />
+              <>
+                <Button onClick={this.handleFilterChange}>filterTest</Button>
+                <MatrixView
+                  time={time}
+                  isRefreshing={this.state.isRefreshing}
+                  refreshApplicationDeployments={
+                    this.refreshApplicationDeployments
+                  }
+                />
+              </>
             )
           }
         </Route>
