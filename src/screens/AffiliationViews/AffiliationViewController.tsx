@@ -142,24 +142,6 @@ class AffiliationViewController extends React.Component<
     }
   }
 
-  public testData = () => {
-    this.setState(() => ({
-      filterOptions: {
-        deploymentNames: [
-          'whoami-sub',
-          'whoami',
-          'skattemelding-core-mock',
-          'redis',
-          'redisdb',
-          'ao',
-          'atomhopper',
-          'driftsdashboard'
-        ],
-        environmentNames: ['aotest', 'espen-utv']
-      }
-    }));
-  };
-
   public changeFilter = (apps?: string[], envs?: string[]) => {
     this.setState(({ filterOptions }) => ({
       filterOptions: {
@@ -240,7 +222,6 @@ class AffiliationViewController extends React.Component<
                 refreshApplicationDeployments={
                   this.refreshApplicationDeployments
                 }
-                changeFilter={this.testData}
               />
             )
           }

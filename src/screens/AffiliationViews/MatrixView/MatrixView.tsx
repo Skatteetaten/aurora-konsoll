@@ -1,8 +1,6 @@
 import * as React from 'react';
 import styled from 'styled-components';
 
-import Button from 'aurora-frontend-react-komponenter/Button';
-
 import LoadingButton from 'components/LoadingButton';
 import TimeSince from 'components/TimeSince';
 
@@ -16,19 +14,16 @@ interface IMatrixViewProps {
   isRefreshing: boolean;
   refreshApplicationDeployments: () => void;
   className?: string;
-  changeFilter: () => void;
 }
 
 const MatrixView = ({
   className,
   isRefreshing,
   refreshApplicationDeployments,
-  time,
-  changeFilter
+  time
 }: IMatrixViewProps) => (
   <div className={className}>
     <ActionBar>
-      <Button onClick={changeFilter}>Sett filter</Button>
       <TimeSince timeSince={time} />
       <LoadingButton
         style={{ minWidth: '120px' }}
