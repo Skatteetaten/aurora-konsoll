@@ -103,8 +103,15 @@ export const APPLICATION_DEPLOYMENT_DETAILS_QUERY = gql`
         startTime
         managementResponses {
           health {
-            loadedTime
+            hasResponse
             textResponse
+            createdAt
+            httpCode
+            url
+            error {
+              code
+              message
+            }
           }
         }
         links {
@@ -139,7 +146,7 @@ export const USER_AFFILIATIONS_QUERY = gql`
     currentUser {
       name
     }
-    affiliations(checkForVisibility:true) {
+    affiliations(checkForVisibility: true) {
       edges {
         node {
           name

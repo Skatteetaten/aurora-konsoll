@@ -3,12 +3,13 @@ import styled from 'styled-components';
 
 import ActionButton from 'aurora-frontend-react-komponenter/ActionButton';
 
-import InfoDialog from 'components/InfoDialog';
-import { IHttpResponse } from 'models/Pod';
-import { getLocalDatetime } from 'utils/date';
+import { IManagementEndpointResponse } from 'models/Pod';
+import { getTimestap } from 'utils/date';
+import ErrorResponseDialog from './ErrorResponseDialog';
+import SuccessResponseDialog from './SuccessResponseDialog';
 
 interface IHealthResponseDialogProps {
-  health: IHttpResponse;
+  health: IManagementEndpointResponse;
   isUpdating: boolean;
   refreshApplicationDeployment: () => void;
 }
@@ -42,25 +43,21 @@ const HealthResponseDialog = ({
     </StyledActionButton>
   );
 
-  const loadedTimeText = `Oppdatert: ${getCachedTime(health.loadedTime)}`;
+  const createdAtTime = `Oppdatert: ${getTimestap(health.createdAt)}`;
 
   return health.hasResponse ? (
-    <InfoDialog
-      renderFooterButtons={renderRefreshButton}
-      title="Helsestatus"
-      subText={loadedTimeText}
-    >
-      <StyledPre>{getTextResponsePrettyfied(health.textResponse)}</StyledPre>
-    </InfoDialog>
+    <SuccessResponseDialog
+      createdAtTime={createdAtTime}
+      health={health}
+      renderRefreshButton={renderRefreshButton}
+    />
   ) : (
-    <InfoDialog
-      renderFooterButtons={renderRefreshButton}
-      renderOpenDialogButton={renderOpenErrorButton}
-      title="Feil fra helsesjekk"
-      subText={loadedTimeText}
-    >
-      <StyledPre>{getTextResponsePrettyfied(health.error)}</StyledPre>
-    </InfoDialog>
+    <ErrorResponseDialog
+      createdAtTime={createdAtTime}
+      health={health}
+      renderOpenErrorButton={renderOpenErrorButton}
+      renderRefreshButton={renderRefreshButton}
+    />
   );
 };
 
@@ -73,28 +70,5 @@ const StyledActionButton = styled.div`
     justify-content: center;
   }
 `;
-
-const StyledPre = styled.pre`
-  max-width: 1500px;
-  max-height: 700px;
-  overflow: auto;
-`;
-
-function getCachedTime(time: string) {
-  return getLocalDatetime(time, {
-    day: undefined,
-    month: undefined,
-    second: '2-digit',
-    year: undefined
-  });
-}
-
-function getTextResponsePrettyfied(text: string) {
-  return parseAndStringify(text);
-}
-
-function parseAndStringify(text: string) {
-  return JSON.stringify(JSON.parse(text), undefined, '  ');
-}
 
 export default HealthResponseDialog;
