@@ -42,7 +42,7 @@ class AffiliationViewValidator extends React.Component<
   }
 
   public render() {
-    const { affiliation, affiliations, match, user } = this.props;
+    const { affiliation, affiliations, match, user, history } = this.props;
 
     if (affiliations.length === 0) {
       return false;
@@ -61,7 +61,7 @@ class AffiliationViewValidator extends React.Component<
         affiliation={affiliation}
         matchPath={match.path}
         matchUrl={match.url}
-        history={this.props.history}
+        history={history}
       />
     );
   }

@@ -68,11 +68,12 @@ class AffiliationViewController extends React.Component<
     affiliation: string,
     prevAffiliation?: string
   ) => {
+    const { clients } = this.props;
     this.setState(() => ({
       loading: true
     }));
 
-    const deployments = await this.props.clients.applicationDeploymentClient.findAllApplicationDeployments(
+    const deployments = await clients.applicationDeploymentClient.findAllApplicationDeployments(
       [affiliation]
     );
 
@@ -123,17 +124,15 @@ class AffiliationViewController extends React.Component<
     prevProps: IAffiliationViewControllerProps,
     prevState: IAffiliationViewControllerState
   ) {
-    if (this.props.affiliation !== prevProps.affiliation) {
-      this.fetchApplicationDeployments(
-        this.props.affiliation,
-        prevProps.affiliation
-      );
+    const { affiliation, history } = this.props;
+    if (affiliation !== prevProps.affiliation) {
+      this.fetchApplicationDeployments(affiliation, prevProps.affiliation);
     }
     const prevQuery = this.handleFilterChange(prevState);
     const query = this.handleFilterChange();
 
     if (prevQuery !== query) {
-      this.props.history.push(query);
+      history.push(query);
       this.setState(() => ({
         filterPathUrl: query
       }));
@@ -175,6 +174,7 @@ class AffiliationViewController extends React.Component<
 
   public filterDeployments(): IApplicationDeployment[] {
     const { deploymentNames, environmentNames } = this.state.filterOptions;
+    const { deployments } = this.state;
 
     const filterBy = (list: string[], toInclude: string) => {
       if (list.length === 0) {
@@ -183,14 +183,14 @@ class AffiliationViewController extends React.Component<
       return list.some(value => value === toInclude);
     };
 
-    return this.state.deployments
+    return deployments
       .filter(dep => filterBy(deploymentNames, dep.name))
       .filter(dep => filterBy(environmentNames, dep.environment));
   }
 
   public render() {
     const { matchPath, affiliation } = this.props;
-    const { deployments, loading } = this.state;
+    const { deployments, loading, isRefreshing, filterPathUrl } = this.state;
 
     if (loading && deployments.length === 0) {
       return <Spinner />;
@@ -208,7 +208,7 @@ class AffiliationViewController extends React.Component<
           refreshDeployments: this.refreshApplicationDeployments,
           fetchApplicationDeployments: () =>
             this.fetchApplicationDeployments(affiliation),
-          filterPathUrl: this.state.filterPathUrl
+          filterPathUrl
         }}
       >
         <Route exact={true} path={`${matchPath}/deployments`}>
@@ -216,7 +216,7 @@ class AffiliationViewController extends React.Component<
             match && (
               <MatrixView
                 time={time}
-                isRefreshing={this.state.isRefreshing}
+                isRefreshing={isRefreshing}
                 refreshApplicationDeployments={
                   this.refreshApplicationDeployments
                 }
