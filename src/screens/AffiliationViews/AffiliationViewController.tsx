@@ -23,8 +23,6 @@ interface IFilterOptions {
   environmentNames: string[];
 }
 
-// type FilterFunc = (filterOptions: IFilterOptions) => void;
-
 interface IAffiliationViewControllerProps extends IAuroraApiComponentProps {
   affiliation: string;
   matchPath: string;
@@ -68,7 +66,7 @@ class AffiliationViewController extends React.Component<
 
   public fetchApplicationDeployments = async (
     affiliation: string,
-    prevaffiliation?: string
+    prevAffiliation?: string
   ) => {
     this.setState(() => ({
       loading: true
@@ -83,7 +81,7 @@ class AffiliationViewController extends React.Component<
       loading: false
     }));
 
-    if (prevaffiliation !== affiliation && prevaffiliation !== undefined) {
+    if (prevAffiliation !== affiliation && prevAffiliation !== undefined) {
       this.setState(() => ({
         filterOptions: {
           deploymentNames: [],
