@@ -10,6 +10,7 @@ export interface IApplicationDeploymentContext {
   buildDeploymentLink: (
     deployment: IApplicationDeployment
   ) => React.ComponentType;
+  filterPathUrl: string;
 }
 
 const ApplicationDeploymentContext = React.createContext<
@@ -22,7 +23,8 @@ const ApplicationDeploymentContext = React.createContext<
   },
   fetchApplicationDeployments: () => {
     return;
-  }
+  },
+  filterPathUrl: ''
 });
 
 export const ApplicationDeploymentProvider =
