@@ -3,7 +3,7 @@
  * @param time Time string that can be converted to Date instance
  * @returns Formatted time HH:MM:SS
  */
-export function getTimestap(time: string | number | Date): string {
+export function getTimestamp(time: string | number | Date): string {
   return getLocalDatetime(time, {
     day: undefined,
     month: undefined,

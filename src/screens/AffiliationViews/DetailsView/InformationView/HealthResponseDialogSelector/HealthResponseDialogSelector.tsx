@@ -4,7 +4,7 @@ import styled from 'styled-components';
 import ActionButton from 'aurora-frontend-react-komponenter/ActionButton';
 
 import { IManagementEndpointResponse } from 'models/Pod';
-import { getTimestap } from 'utils/date';
+import { getTimestamp } from 'utils/date';
 import ErrorResponseDialog from './ErrorResponseDialog';
 import SuccessResponseDialog from './SuccessResponseDialog';
 
@@ -43,7 +43,7 @@ const HealthResponseDialogSelector = ({
     </StyledActionButton>
   );
 
-  const createdAtTime = `Oppdatert: ${getTimestap(health.createdAt)}`;
+  const createdAtTime = `Oppdatert: ${getTimestamp(health.createdAt)}`;
 
   return health.hasResponse ? (
     <SuccessResponseDialog
