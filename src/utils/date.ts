@@ -3,7 +3,7 @@
  * @param time Time string that can be converted to Date instance
  * @returns Formatted time HH:MM:SS
  */
-export function getTimestap(time: string): string {
+export function getTimestap(time: string | number | Date): string {
   return getLocalDatetime(time, {
     day: undefined,
     month: undefined,
@@ -12,7 +12,10 @@ export function getTimestap(time: string): string {
   });
 }
 
-export function getLocalDatetime(date?: string, override: any = {}): string {
+export function getLocalDatetime(
+  date?: string | number | Date,
+  override: any = {}
+): string {
   if (date) {
     return new Date(date).toLocaleString('nb-NO', {
       day: '2-digit',

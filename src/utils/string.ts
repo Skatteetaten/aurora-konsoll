@@ -16,5 +16,5 @@ function parseAndStringify(value: string | object): string {
 }
 
 function stringify(value: any): string {
-  return JSON.stringify(value, undefined, ' ');
+  return JSON.stringify(value, undefined, '  ');
 }
