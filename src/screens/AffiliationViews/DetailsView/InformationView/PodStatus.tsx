@@ -8,7 +8,7 @@ import { IPodResource } from 'models/Pod';
 import { statusColors } from 'screens/AffiliationViews/MatrixView/Status';
 
 import { getLocalDatetime } from 'utils/date';
-import HealthResponseDialog from './HealthResponseDialog';
+import HealthResponseDialogSelector from './HealthResponseDialogSelector/HealthResponseDialogSelector';
 
 interface IPodStatusProps {
   pod: IPodResource;
@@ -96,7 +96,7 @@ const PodAction = ({
   }
   return (
     <div className="pod-actions">
-      <HealthResponseDialog
+      <HealthResponseDialogSelector
         health={managementResponses.health}
         isUpdating={isUpdating}
         refreshApplicationDeployment={refreshApplicationDeployment}

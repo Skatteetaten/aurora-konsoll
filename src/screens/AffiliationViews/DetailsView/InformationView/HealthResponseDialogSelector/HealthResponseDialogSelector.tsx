@@ -8,17 +8,17 @@ import { getTimestap } from 'utils/date';
 import ErrorResponseDialog from './ErrorResponseDialog';
 import SuccessResponseDialog from './SuccessResponseDialog';
 
-interface IHealthResponseDialogProps {
+interface IHealthResponseDialogSelectorProps {
   health: IManagementEndpointResponse;
   isUpdating: boolean;
   refreshApplicationDeployment: () => void;
 }
 
-const HealthResponseDialog = ({
+const HealthResponseDialogSelector = ({
   health,
   refreshApplicationDeployment,
   isUpdating
-}: IHealthResponseDialogProps) => {
+}: IHealthResponseDialogSelectorProps) => {
   const renderRefreshButton = () => {
     return (
       <ActionButton
@@ -71,4 +71,4 @@ const StyledActionButton = styled.div`
   }
 `;
 
-export default HealthResponseDialog;
+export default HealthResponseDialogSelector;
