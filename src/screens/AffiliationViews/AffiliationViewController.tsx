@@ -1,12 +1,13 @@
 import { IAuroraApiComponentProps, withAuroraApi } from 'components/AuroraApi';
-import { History } from 'history';
 import * as React from 'react';
 import { Route } from 'react-router';
 
 import Spinner from 'components/Spinner';
 import { IApplicationDeployment } from 'models/ApplicationDeployment';
-import * as qs from 'qs';
 import { Link } from 'react-router-dom';
+import DeploymentFilterService, {
+  IFilters
+} from 'services/DeploymentFilterService';
 import {
   ApplicationDeploymentProvider,
   withApplicationDeployments
@@ -18,23 +19,18 @@ const ApplicationDeploymentSelector = withApplicationDeployments(
   ApplicationDeploymentSelectorBase
 );
 
-interface IFilterOptions {
-  deploymentNames: string[];
-  environmentNames: string[];
-}
-
 interface IAffiliationViewControllerProps extends IAuroraApiComponentProps {
   affiliation: string;
   matchPath: string;
   matchUrl: string;
-  history: History;
+  updateUrlWithQuery: (query: string) => void;
 }
 
 interface IAffiliationViewControllerState {
   loading: boolean;
   isRefreshing: boolean;
   deployments: IApplicationDeployment[];
-  filterOptions: IFilterOptions;
+  filters: IFilters;
   filterPathUrl: string;
 }
 
@@ -42,11 +38,12 @@ class AffiliationViewController extends React.Component<
   IAffiliationViewControllerProps,
   IAffiliationViewControllerState
 > {
+  public deploymentFilterService = new DeploymentFilterService();
   public state: IAffiliationViewControllerState = {
     deployments: [],
     isRefreshing: false,
     loading: false,
-    filterOptions: {
+    filters: {
       deploymentNames: [],
       environmentNames: []
     },
@@ -64,10 +61,7 @@ class AffiliationViewController extends React.Component<
     );
   };
 
-  public fetchApplicationDeployments = async (
-    affiliation: string,
-    prevAffiliation?: string
-  ) => {
+  public fetchApplicationDeployments = async (affiliation: string) => {
     const { clients } = this.props;
     this.setState(() => ({
       loading: true
@@ -81,15 +75,6 @@ class AffiliationViewController extends React.Component<
       deployments,
       loading: false
     }));
-
-    if (prevAffiliation !== affiliation && prevAffiliation !== undefined) {
-      this.setState(() => ({
-        filterOptions: {
-          deploymentNames: [],
-          environmentNames: []
-        }
-      }));
-    }
   };
 
   public refreshApplicationDeployments = async () => {
@@ -106,97 +91,67 @@ class AffiliationViewController extends React.Component<
     });
   };
 
-  public handleFilterChange = (state = this.state) => {
-    const { deploymentNames, environmentNames } = state.filterOptions;
-    return qs.stringify(
-      {
-        apps: deploymentNames,
-        envs: environmentNames
-      },
-      {
-        addQueryPrefix: true,
-        arrayFormat: 'repeat'
-      }
-    );
-  };
-
   public componentDidUpdate(
     prevProps: IAffiliationViewControllerProps,
     prevState: IAffiliationViewControllerState
   ) {
-    const { affiliation, history } = this.props;
+    const { affiliation, updateUrlWithQuery } = this.props;
     if (affiliation !== prevProps.affiliation) {
-      this.fetchApplicationDeployments(affiliation, prevProps.affiliation);
+      this.setState(() => ({
+        filters: {
+          deploymentNames: [],
+          environmentNames: []
+        }
+      }));
+      this.fetchApplicationDeployments(affiliation);
     }
-    const prevQuery = this.handleFilterChange(prevState);
-    const query = this.handleFilterChange();
 
-    if (prevQuery !== query) {
-      history.push(query);
+    const prevQuery = this.deploymentFilterService.toQuery(prevState.filters);
+    const query = this.deploymentFilterService.toQuery(this.state.filters);
+
+    if (prevQuery !== query && query !== '') {
+      updateUrlWithQuery(query);
       this.setState(() => ({
         filterPathUrl: query
       }));
     }
   }
 
-  public changeFilter = (apps?: string[], envs?: string[]) => {
-    this.setState(({ filterOptions }) => ({
-      filterOptions: {
-        deploymentNames: apps || filterOptions.deploymentNames,
-        environmentNames: envs || filterOptions.environmentNames
-      }
-    }));
-  };
-
   public componentDidMount() {
     this.fetchApplicationDeployments(this.props.affiliation);
 
-    const { search } = location;
-    const queries = qs.parse(search, {
-      ignoreQueryPrefix: true
-    });
+    const newFilters = this.deploymentFilterService.toFilter(
+      window.location.search
+    );
 
-    let apps = [];
-    let envs = [];
-    if (typeof queries.apps === 'string') {
-      apps.push(queries.apps);
-    } else {
-      apps = queries.apps;
-    }
-    if (typeof queries.envs === 'string') {
-      envs.push(queries.envs);
-    } else {
-      envs = queries.envs;
-    }
-
-    this.changeFilter(apps, envs);
-  }
-
-  public filterDeployments(): IApplicationDeployment[] {
-    const { deploymentNames, environmentNames } = this.state.filterOptions;
-    const { deployments } = this.state;
-
-    const filterBy = (list: string[], toInclude: string) => {
-      if (list.length === 0) {
-        return true;
+    this.setState(({ filters }) => ({
+      filters: {
+        deploymentNames: newFilters.deploymentNames || filters.deploymentNames,
+        environmentNames:
+          newFilters.environmentNames || filters.environmentNames
       }
-      return list.some(value => value === toInclude);
-    };
-
-    return deployments
-      .filter(dep => filterBy(deploymentNames, dep.name))
-      .filter(dep => filterBy(environmentNames, dep.environment));
+    }));
   }
 
   public render() {
     const { matchPath, affiliation } = this.props;
-    const { deployments, loading, isRefreshing, filterPathUrl } = this.state;
+    const {
+      deployments,
+      loading,
+      isRefreshing,
+      filterPathUrl,
+      filters
+    } = this.state;
 
     if (loading && deployments.length === 0) {
       return <Spinner />;
     }
-
-    const filteredDeployments = this.filterDeployments();
+    // tslint:disable-next-line:no-console
+    console.log(deployments);
+    const filteredDeployments = this.deploymentFilterService.filterDeployments(
+      filters,
+      deployments
+    );
 
     const time = deployments.length > 0 ? deployments[0].time : '';
 

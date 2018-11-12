@@ -33,6 +33,10 @@ class AffiliationViewValidator extends React.Component<
     }
   };
 
+  public updateUrlWithQuery = (query: string) => {
+    this.props.history.push(query);
+  };
+
   public componentDidUpdate() {
     this.validateAndSetAffiliation();
   }
@@ -42,7 +46,7 @@ class AffiliationViewValidator extends React.Component<
   }
 
   public render() {
-    const { affiliation, affiliations, match, user, history } = this.props;
+    const { affiliation, affiliations, match, user } = this.props;
 
     if (affiliations.length === 0) {
       return false;
@@ -55,13 +59,12 @@ class AffiliationViewValidator extends React.Component<
     if (!affiliation) {
       return <p>{affiliation} er ikke en gyldig affiliation.</p>;
     }
-
     return (
       <AffiliationViewControllerWithApi
         affiliation={affiliation}
         matchPath={match.path}
         matchUrl={match.url}
-        history={history}
+        updateUrlWithQuery={this.updateUrlWithQuery}
       />
     );
   }
