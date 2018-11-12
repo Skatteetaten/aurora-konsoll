@@ -52,39 +52,40 @@ describe('DeploymentFilterService', () => {
     }
   ];
 
-  const setTestFilter: IFilters = {
+  const setTestFilters: IFilters = {
     deploymentNames: ['whoami-sub'],
     environmentNames: ['martin-dev']
   };
 
-  const emptyTestFilter: IFilters = {
+  const emptyTestFilters: IFilters = {
     deploymentNames: [],
     environmentNames: []
   };
 
   it('Given set filters do apply filters', () => {
     expect(
-      deploymentFilterService.filterDeployments(setTestFilter, deployments)
+      deploymentFilterService.filterDeployments(setTestFilters, deployments)
     ).toEqual([deployments[0]]);
   });
 
   it('Given empty filters do not apply filters', () => {
     expect(
-      deploymentFilterService.filterDeployments(emptyTestFilter, deployments)
+      deploymentFilterService.filterDeployments(emptyTestFilters, deployments)
     ).toEqual(deployments);
   });
 
   it('Given set filters expect return type to be string', () => {
-    expect(typeof deploymentFilterService.toQuery(setTestFilter)).toBe(
+    expect(typeof deploymentFilterService.toQuery(setTestFilters)).toBe(
       'string'
     );
   });
 
-  it('Given query expect return type to be object', () => {
+  it('Given query expect to return two arrays', () => {
     expect(
-      typeof deploymentFilterService.toFilter(
-        '?apps=whoami-sub&envs=martin-dev'
-      )
-    ).toBe('object');
+      deploymentFilterService.toFilter('?apps=whoami-sub&envs=martin-dev')
+    ).toMatchObject({
+      deploymentNames: expect.any(Array),
+      environmentNames: expect.any(Array)
+    });
   });
 });
