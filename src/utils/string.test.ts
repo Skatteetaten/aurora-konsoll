@@ -25,4 +25,9 @@ describe('prettifyJSON', () => {
   }
 }`);
   });
+
+  it('should return undefined when string contains non JSON', () => {
+    const test = `<body>fail</body>`;
+    expect(prettifyJSON(test)).toBeUndefined();
+  });
 });
