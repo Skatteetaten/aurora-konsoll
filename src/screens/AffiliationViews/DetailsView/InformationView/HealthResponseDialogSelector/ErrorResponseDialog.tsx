@@ -1,30 +1,37 @@
 import * as React from 'react';
 
+import ActionButton from 'aurora-frontend-react-komponenter/ActionButton';
 import InfoDialog from 'components/InfoDialog';
 import { IManagementEndpointResponse } from 'models/Pod';
 import { prettifyJSON } from 'utils/string';
-import StyledPre from './StyledPre';
+import { StyledActionButton, StyledPre } from './utilComponents';
 
 interface IErrorResponseDialogProps {
   health: IManagementEndpointResponse;
   createdAtTime: string;
   renderRefreshButton: () => JSX.Element;
-  renderOpenErrorButton: (open: () => void) => JSX.Element;
 }
 
 const ErrorResponseDialog = ({
   health,
   createdAtTime,
-  renderRefreshButton,
-  renderOpenErrorButton
+  renderRefreshButton
 }: IErrorResponseDialogProps) => {
-  const { httpCode, error } = health;
+  const renderOpenErrorButton = (open: () => void) => (
+    <StyledActionButton>
+      <ActionButton
+        onClick={open}
+        iconSize={ActionButton.LARGE}
+        color="red"
+        icon="Warning"
+      >
+        Helsestatus
+      </ActionButton>
+    </StyledActionButton>
+  );
 
-  if (!error) {
-    return null;
-  }
-
-  const text = error.message ? prettifyJSON(error.message) : '';
+  const { httpCode, textResponse, error } = health;
+  const text = (textResponse && prettifyJSON(textResponse)) || textResponse;
 
   return (
     <InfoDialog
@@ -36,6 +43,8 @@ const ErrorResponseDialog = ({
       <>
         {httpCode && <p>HTTP Code: {httpCode}</p>}
         <StyledPre>{text}</StyledPre>
+        {error && <StyledPre>{error.code}</StyledPre>}
+        {error && error.message && <StyledPre>{error.message}</StyledPre>}
       </>
     </InfoDialog>
   );

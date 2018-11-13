@@ -3,7 +3,7 @@ import * as React from 'react';
 import InfoDialog from 'components/InfoDialog';
 import { IManagementEndpointResponse } from 'models/Pod';
 import { prettifyJSON } from 'utils/string';
-import StyledPre from './StyledPre';
+import { StyledPre } from './utilComponents';
 
 interface ISuccessResponseDialogProps {
   health: IManagementEndpointResponse;

@@ -1,5 +1,4 @@
 import * as React from 'react';
-import styled from 'styled-components';
 
 import ActionButton from 'aurora-frontend-react-komponenter/ActionButton';
 
@@ -30,22 +29,9 @@ const HealthResponseDialogSelector = ({
     );
   };
 
-  const renderOpenErrorButton = (open: () => void) => (
-    <StyledActionButton>
-      <ActionButton
-        onClick={open}
-        iconSize={ActionButton.LARGE}
-        color="red"
-        icon="Warning"
-      >
-        Helsestatus
-      </ActionButton>
-    </StyledActionButton>
-  );
-
   const createdAtTime = `Oppdatert: ${getTimestamp(health.createdAt)}`;
 
-  return health.hasResponse ? (
+  return !health.error ? (
     <SuccessResponseDialog
       createdAtTime={createdAtTime}
       health={health}
@@ -55,20 +41,9 @@ const HealthResponseDialogSelector = ({
     <ErrorResponseDialog
       createdAtTime={createdAtTime}
       health={health}
-      renderOpenErrorButton={renderOpenErrorButton}
       renderRefreshButton={renderRefreshButton}
     />
   );
 };
-
-const StyledActionButton = styled.div`
-  display: flex;
-  flex: 1;
-
-  button {
-    display: flex;
-    justify-content: center;
-  }
-`;
 
 export default HealthResponseDialogSelector;
