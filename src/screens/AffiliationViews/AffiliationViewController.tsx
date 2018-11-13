@@ -146,8 +146,7 @@ class AffiliationViewController extends React.Component<
     if (loading && deployments.length === 0) {
       return <Spinner />;
     }
-    // tslint:disable-next-line:no-console
-    console.log(deployments);
+
     const filteredDeployments = this.deploymentFilterService.filterDeployments(
       filters,
       deployments
