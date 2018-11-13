@@ -50,7 +50,7 @@ describe('DeploymentFilterService', () => {
     }
   ];
 
-  const setTestFilters: IFilters = {
+  const testFilters: IFilters = {
     deploymentNames: ['whoami-sub'],
     environmentNames: ['martin-dev']
   };
@@ -60,44 +60,49 @@ describe('DeploymentFilterService', () => {
     environmentNames: []
   };
 
-  it('Given set filters do apply filters', () => {
-    const result = deploymentFilterService.filterDeployments(
-      setTestFilters,
-      deployments
-    );
-    expect(result).toEqual([deployments[0]]);
-    expect(result).toHaveLength(1);
-  });
-
-  it('Given empty filters do not apply filters', () => {
-    expect(
-      deploymentFilterService.filterDeployments(emptyTestFilters, deployments)
-    ).toEqual(deployments);
-  });
-
-  it('Given single inputs return two arrays', () => {
-    expect(
-      deploymentFilterService.toFilter('?apps=whoami-sub&envs=martin-dev')
-    ).toMatchObject({
-      deploymentNames: expect.any(Array),
-      environmentNames: expect.any(Array)
+  describe('filterDeployments', () => {
+    it('Given set filters do apply filters', () => {
+      const result = deploymentFilterService.filterDeployments(
+        testFilters,
+        deployments
+      );
+      expect(result).toEqual([deployments[0]]);
+      expect(result).toHaveLength(1);
+    });
+    it('Given empty filters do not apply filters', () => {
+      expect(
+        deploymentFilterService.filterDeployments(emptyTestFilters, deployments)
+      ).toEqual(deployments);
     });
   });
 
-  it('Given query expect to split envs and apps into seperate lists', () => {
-    expect(
-      deploymentFilterService.toFilter(
-        '?apps=whoami-sub&apps=whoami&apps=skattemelding-core-mock&envs=martin-dev'
-      )
-    ).toEqual({
-      deploymentNames: ['whoami-sub', 'whoami', 'skattemelding-core-mock'],
-      environmentNames: ['martin-dev']
+  describe('toFilter', () => {
+    it('Given single inputs return two arrays', () => {
+      expect(
+        deploymentFilterService.toFilter('?apps=whoami-sub&envs=martin-dev')
+      ).toEqual({
+        deploymentNames: ['whoami-sub'],
+        environmentNames: ['martin-dev']
+      });
+    });
+
+    it('Given query expect to split envs and apps into separate lists', () => {
+      expect(
+        deploymentFilterService.toFilter(
+          '?apps=whoami-sub&apps=whoami&apps=skattemelding-core-mock&envs=martin-dev'
+        )
+      ).toEqual({
+        deploymentNames: ['whoami-sub', 'whoami', 'skattemelding-core-mock'],
+        environmentNames: ['martin-dev']
+      });
     });
   });
 
-  it('Given set filters expect query to equal', () => {
-    expect(deploymentFilterService.toQuery(setTestFilters)).toEqual(
-      '?apps=whoami-sub&envs=martin-dev'
-    );
+  describe('toQuery', () => {
+    it('Given set filters expect query to equal', () => {
+      expect(deploymentFilterService.toQuery(testFilters)).toEqual(
+        '?apps=whoami-sub&envs=martin-dev'
+      );
+    });
   });
 });

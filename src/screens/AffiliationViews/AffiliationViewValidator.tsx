@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { RouteComponentProps } from 'react-router-dom';
+import DeploymentFilterService from 'services/DeploymentFilterService';
 import AffiliationSelector from './AffiliationSelector';
 import { AffiliationViewControllerWithApi } from './AffiliationViewController';
 
@@ -65,6 +66,7 @@ class AffiliationViewValidator extends React.Component<
         matchPath={match.path}
         matchUrl={match.url}
         updateUrlWithQuery={this.updateUrlWithQuery}
+        deploymentFilterService={new DeploymentFilterService()}
       />
     );
   }

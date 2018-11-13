@@ -24,6 +24,7 @@ interface IAffiliationViewControllerProps extends IAuroraApiComponentProps {
   matchPath: string;
   matchUrl: string;
   updateUrlWithQuery: (query: string) => void;
+  deploymentFilterService: DeploymentFilterService;
 }
 
 interface IAffiliationViewControllerState {
@@ -38,7 +39,6 @@ class AffiliationViewController extends React.Component<
   IAffiliationViewControllerProps,
   IAffiliationViewControllerState
 > {
-  public deploymentFilterService = new DeploymentFilterService();
   public state: IAffiliationViewControllerState = {
     deployments: [],
     isRefreshing: false,
@@ -95,7 +95,11 @@ class AffiliationViewController extends React.Component<
     prevProps: IAffiliationViewControllerProps,
     prevState: IAffiliationViewControllerState
   ) {
-    const { affiliation, updateUrlWithQuery } = this.props;
+    const {
+      affiliation,
+      updateUrlWithQuery,
+      deploymentFilterService
+    } = this.props;
     if (affiliation !== prevProps.affiliation) {
       this.setState(() => ({
         filters: {
@@ -106,8 +110,8 @@ class AffiliationViewController extends React.Component<
       this.fetchApplicationDeployments(affiliation);
     }
 
-    const prevQuery = this.deploymentFilterService.toQuery(prevState.filters);
-    const query = this.deploymentFilterService.toQuery(this.state.filters);
+    const prevQuery = deploymentFilterService.toQuery(prevState.filters);
+    const query = deploymentFilterService.toQuery(this.state.filters);
 
     if (prevQuery !== query && query !== '') {
       updateUrlWithQuery(query);
@@ -118,11 +122,10 @@ class AffiliationViewController extends React.Component<
   }
 
   public componentDidMount() {
-    this.fetchApplicationDeployments(this.props.affiliation);
+    const { affiliation, deploymentFilterService } = this.props;
+    this.fetchApplicationDeployments(affiliation);
 
-    const newFilters = this.deploymentFilterService.toFilter(
-      window.location.search
-    );
+    const newFilters = deploymentFilterService.toFilter(window.location.search);
 
     this.setState(({ filters }) => ({
       filters: {
@@ -134,7 +137,7 @@ class AffiliationViewController extends React.Component<
   }
 
   public render() {
-    const { matchPath, affiliation } = this.props;
+    const { matchPath, affiliation, deploymentFilterService } = this.props;
     const {
       deployments,
       loading,
@@ -147,7 +150,7 @@ class AffiliationViewController extends React.Component<
       return <Spinner />;
     }
 
-    const filteredDeployments = this.deploymentFilterService.filterDeployments(
+    const filteredDeployments = deploymentFilterService.filterDeployments(
       filters,
       deployments
     );
