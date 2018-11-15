@@ -34,12 +34,13 @@ const ErrorResponseDialog = ({
 
   const { httpCode, textResponse, error } = health;
   const text = (textResponse && prettifyJSON(textResponse)) || textResponse;
+  const status = httpCode ? ` (${httpCode})` : '';
 
   return (
     <InfoDialog
       renderFooterButtons={renderRefreshButton}
       renderOpenDialogButton={renderOpenErrorButton}
-      title={`Feil fra helsesjekk${httpCode && ` (${httpCode})`}`}
+      title={'Feil fra helsesjekk' + status}
       subText={createdAtTime}
     >
       <>
