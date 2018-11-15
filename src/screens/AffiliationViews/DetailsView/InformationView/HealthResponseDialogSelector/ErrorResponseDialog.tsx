@@ -39,27 +39,32 @@ const ErrorResponseDialog = ({
     <InfoDialog
       renderFooterButtons={renderRefreshButton}
       renderOpenDialogButton={renderOpenErrorButton}
-      title="Feil fra helsesjekk"
+      title={`Feil fra helsesjekk${httpCode && ` (${httpCode})`}`}
       subText={createdAtTime}
     >
       <>
-        {error && (
-          <ErrorContent
-            httpCode={httpCode}
-            code={error.code}
-            message={error.message}
-          />
-        )}
-        <StyledPre>{text}</StyledPre>
+        {error && <ErrorContent code={error.code} message={error.message} />}
+        {text ? <StyledPre>{text}</StyledPre> : <p>Ingen body</p>}
       </>
     </InfoDialog>
   );
 };
 
 const Content = styled.div`
+  margin-bottom: 10px;
+
   .error-code-bar {
     display: flex;
     justify-content: space-between;
+  }
+
+  .error-message {
+    margin-top: 10px;
+    max-width: 400px;
+  }
+
+  span {
+    width: 100%;
   }
 
   p {
@@ -68,31 +73,26 @@ const Content = styled.div`
 `;
 
 interface IErrorContentProps {
-  httpCode?: number;
   code: string;
   message?: string;
   className?: string;
 }
 
-const ErrorContent = ({
-  code,
-  httpCode,
-  message,
-  className
-}: IErrorContentProps) => (
-  <MessageBar
-    type={MessageBar.Type.error}
-    isMultiline={true}
-    className={className}
-  >
-    <Content>
-      <div className="error-code-bar">
-        <p>{code}</p>
-        {httpCode && <p className="error-http-status">HTTP: {httpCode}</p>}
-      </div>
-      {message && <p>{message}</p>}
-    </Content>
-  </MessageBar>
+const ErrorContent = ({ code, message, className }: IErrorContentProps) => (
+  <Content>
+    <MessageBar
+      type={MessageBar.Type.error}
+      isMultiline={true}
+      className={className}
+    >
+      <>
+        <div className="error-code-bar">
+          <p>{code}</p>
+        </div>
+        {message && <p className="error-message">{message}</p>}
+      </>
+    </MessageBar>
+  </Content>
 );
 
 export default ErrorResponseDialog;

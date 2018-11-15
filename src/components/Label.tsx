@@ -22,6 +22,7 @@ export default function Label<T>({
   data,
   text,
   exists = false,
+  color,
   subText,
   iconName,
   children
@@ -29,7 +30,9 @@ export default function Label<T>({
   return (
     <LabelWrapper exists={exists || !!data}>
       <span className="label-bar">
-        <h4 className="main-text">{text}</h4>
+        <h4 className="main-text" style={{ background: color }}>
+          {text}
+        </h4>
         {subText ? (
           <h4 className="sub-text">{subText}</h4>
         ) : (
@@ -43,8 +46,6 @@ export default function Label<T>({
 }
 
 const LabelWrapper = styled.div<{ exists: boolean }>`
-  margin: 5px;
-
   .label-content {
     border: 1px solid black;
     border-top: none;

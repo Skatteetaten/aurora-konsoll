@@ -16,18 +16,17 @@ const SuccessResponseDialog = ({
   createdAtTime,
   renderRefreshButton
 }: ISuccessResponseDialogProps) => {
-  const { textResponse } = health;
+  const { httpCode, textResponse } = health;
   const text = textResponse ? prettifyJSON(textResponse) : '';
 
   return (
     <InfoDialog
       renderFooterButtons={renderRefreshButton}
-      title="Helsestatus"
+      title={`Helsestatus${httpCode && ` (${httpCode})`}`}
+      buttonText="Helsestatus"
       subText={createdAtTime}
     >
-      <>
-        <StyledPre>{text}</StyledPre>
-      </>
+      <StyledPre>{text}</StyledPre>
     </InfoDialog>
   );
 };

@@ -7,6 +7,7 @@ import Dialog from 'aurora-frontend-react-komponenter/Dialog';
 interface InfoDialogProps {
   title: string;
   subText?: string;
+  buttonText?: string;
   buttonStyle?:
     | 'primary'
     | 'primaryRounded'
@@ -53,6 +54,7 @@ class InfoDialog extends React.Component<InfoDialogProps, InfoDialogState> {
       children,
       title,
       subText,
+      buttonText,
       buttonStyle = 'secondary'
     } = this.props;
     const close = this.toggleDialog(false);
@@ -61,7 +63,11 @@ class InfoDialog extends React.Component<InfoDialogProps, InfoDialogState> {
       <>
         {renderOpenDialogButton
           ? renderOpenDialogButton(open)
-          : renderDefaultOpenDialogButton(title, buttonStyle, open)}
+          : renderDefaultOpenDialogButton(
+              buttonText || title,
+              buttonStyle,
+              open
+            )}
         <Dialog
           hidden={!isOpen}
           onDismiss={close}
