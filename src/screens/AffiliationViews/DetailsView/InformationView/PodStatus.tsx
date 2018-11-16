@@ -8,13 +8,14 @@ import { IPodResource } from 'models/Pod';
 import { statusColors } from 'screens/AffiliationViews/MatrixView/Status';
 
 import { getLocalDatetime } from 'utils/date';
-import HealthResponseDialog from './HealthResponseDialog';
+import HealthResponseDialogSelector from './HealthResponseDialogSelector/HealthResponseDialogSelector';
 
 interface IPodStatusProps {
   pod: IPodResource;
   environmentVariables?: string;
   healthInfo?: string;
   className?: string;
+  isUpdating: boolean;
   refreshApplicationDeployment: () => void;
 }
 
@@ -30,6 +31,7 @@ function handleIsActive(data: IIconLinkData) {
 const PodStatus = ({
   pod,
   className,
+  isUpdating,
   refreshApplicationDeployment
 }: IPodStatusProps) => (
   <div className={className}>
@@ -68,17 +70,40 @@ const PodStatus = ({
         <p>{pod.restartCount}</p>
       </div>
     </div>
-    {pod.managementResponses &&
-      pod.managementResponses.health && (
-        <div className="pod-actions">
-          <HealthResponseDialog
-            health={pod.managementResponses.health}
-            refreshApplicationDeployment={refreshApplicationDeployment}
-          />
-        </div>
-      )}
+    <PodAction
+      pod={pod}
+      isUpdating={isUpdating}
+      refreshApplicationDeployment={refreshApplicationDeployment}
+    />
   </div>
 );
+
+interface IPodAction {
+  pod: IPodResource;
+  isUpdating: boolean;
+  refreshApplicationDeployment: () => void;
+}
+
+const PodAction = ({
+  pod,
+  refreshApplicationDeployment,
+  isUpdating
+}: IPodAction) => {
+  const { managementResponses } = pod;
+
+  if (!managementResponses || !managementResponses.health) {
+    return null;
+  }
+  return (
+    <div className="pod-actions">
+      <HealthResponseDialogSelector
+        health={managementResponses.health}
+        isUpdating={isUpdating}
+        refreshApplicationDeployment={refreshApplicationDeployment}
+      />
+    </div>
+  );
+};
 
 const { skeColor } = palette;
 

@@ -68,6 +68,7 @@ class DetailsView extends React.Component<
           <Switch>
             <Route path={`${match.path}/info`}>
               <InformationView
+                isUpdating={loading.update}
                 deployment={deployment}
                 isFetchingDetails={loading.fetchDetails}
                 deploymentDetails={deploymentDetails}
