@@ -1,6 +1,6 @@
 import { IApplicationDeployment } from '../models/ApplicationDeployment';
 import { ImageTagType } from '../models/ImageTagType';
-import DeploymentFilterService, { IFilters } from './DeploymentFilterService';
+import DeploymentFilterService, { IFilter } from './DeploymentFilterService';
 
 describe('DeploymentFilterService', () => {
   const deploymentFilterService = new DeploymentFilterService();
@@ -50,14 +50,14 @@ describe('DeploymentFilterService', () => {
     }
   ];
 
-  const testFilters: IFilters = {
-    deploymentNames: ['whoami-sub'],
-    environmentNames: ['martin-dev']
+  const testFilters: IFilter = {
+    applications: ['whoami-sub'],
+    environments: ['martin-dev']
   };
 
-  const emptyTestFilters: IFilters = {
-    deploymentNames: [],
-    environmentNames: []
+  const emptyTestFilters: IFilter = {
+    applications: [],
+    environments: []
   };
 
   describe('filterDeployments', () => {

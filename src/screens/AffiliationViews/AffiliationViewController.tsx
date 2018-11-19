@@ -6,7 +6,7 @@ import Spinner from 'components/Spinner';
 import { IApplicationDeployment } from 'models/ApplicationDeployment';
 import { Link } from 'react-router-dom';
 import DeploymentFilterService, {
-  IFilters
+  IFilter
 } from 'services/DeploymentFilterService';
 import {
   ApplicationDeploymentProvider,
@@ -31,7 +31,7 @@ interface IAffiliationViewControllerState {
   loading: boolean;
   isRefreshing: boolean;
   deployments: IApplicationDeployment[];
-  filters: IFilters;
+  filters: IFilter;
   filterPathUrl: string;
 }
 
@@ -44,8 +44,8 @@ class AffiliationViewController extends React.Component<
     isRefreshing: false,
     loading: false,
     filters: {
-      deploymentNames: [],
-      environmentNames: []
+      applications: [],
+      environments: []
     },
     filterPathUrl: ''
   };
@@ -103,8 +103,8 @@ class AffiliationViewController extends React.Component<
     if (affiliation !== prevProps.affiliation) {
       this.setState(() => ({
         filters: {
-          deploymentNames: [],
-          environmentNames: []
+          applications: [],
+          environments: []
         }
       }));
       this.fetchApplicationDeployments(affiliation);
@@ -129,11 +129,25 @@ class AffiliationViewController extends React.Component<
 
     this.setState(({ filters }) => ({
       filters: {
-        deploymentNames: newFilters.deploymentNames || filters.deploymentNames,
-        environmentNames:
-          newFilters.environmentNames || filters.environmentNames
+        applications: newFilters.applications || filters.applications,
+        environments:
+          newFilters.environments || filters.environments
       }
     }));
+  }
+
+  public updateFilter = (applications: string[], environments: string[]) => {
+    // tslint:disable-next-line:no-console
+    console.log(applications);
+    // tslint:disable-next-line:no-console
+    console.log(environments);
+    
+    this.setState({
+      filters: {
+        applications,
+        environments
+      }
+    });
   }
 
   public render() {
@@ -178,6 +192,7 @@ class AffiliationViewController extends React.Component<
                   this.refreshApplicationDeployments
                 }
                 affiliation={affiliation}
+                updateFilter={this.updateFilter}
               />
             )
           }

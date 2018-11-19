@@ -16,6 +16,7 @@ interface IMatrixViewProps {
   refreshApplicationDeployments: () => void;
   className?: string;
   affiliation: string;
+  updateFilter: (applications: string[], environments: string[]) => void;
 }
 
 const MatrixView = ({
@@ -23,11 +24,12 @@ const MatrixView = ({
   isRefreshing,
   refreshApplicationDeployments,
   time,
-  affiliation
+  affiliation,
+  updateFilter
 }: IMatrixViewProps) => (
   <div className={className}>
     <ActionBar>
-      <FilterWithApi affiliation={affiliation} />
+      <FilterWithApi affiliation={affiliation} updateFilter={updateFilter} />
       <TimeSince timeSince={time} />
       <LoadingButton
         style={{ minWidth: '120px' }}

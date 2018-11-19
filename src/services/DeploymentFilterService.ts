@@ -1,40 +1,40 @@
 import { IApplicationDeployment } from 'models/ApplicationDeployment';
 import * as qs from 'qs';
 
-export interface IFilters {
-  deploymentNames: string[];
-  environmentNames: string[];
+export interface IFilter {
+  applications: string[];
+  environments: string[];
 }
 
 export default class DeploymentFilterService {
-  public toFilter(query: string): IFilters {
+  public toFilter(query: string): IFilter {
     const queries = qs.parse(query, {
       ignoreQueryPrefix: true
     });
 
-    let deploymentNames = [];
-    let environmentNames = [];
+    let applications = [];
+    let environments = [];
     if (typeof queries.apps === 'string') {
-      deploymentNames.push(queries.apps);
+      applications.push(queries.apps);
     } else {
-      deploymentNames = queries.apps;
+      applications = queries.apps;
     }
     if (typeof queries.envs === 'string') {
-      environmentNames.push(queries.envs);
+      environments.push(queries.envs);
     } else {
-      environmentNames = queries.envs;
+      environments = queries.envs;
     }
 
     return {
-      deploymentNames,
-      environmentNames
+      applications,
+      environments
     };
   }
   public filterDeployments(
-    filters: IFilters,
+    filters: IFilter,
     deployments: IApplicationDeployment[]
   ): IApplicationDeployment[] {
-    const { deploymentNames, environmentNames } = filters;
+    const { applications, environments } = filters;
 
     const filterBy = (list: string[], toInclude: string) => {
       if (list.length === 0) {
@@ -44,16 +44,16 @@ export default class DeploymentFilterService {
     };
 
     return deployments
-      .filter(dep => filterBy(deploymentNames, dep.name))
-      .filter(dep => filterBy(environmentNames, dep.environment));
+      .filter(dep => filterBy(applications, dep.name))
+      .filter(dep => filterBy(environments, dep.environment));
   }
 
-  public toQuery(filters: IFilters): string {
-    const { deploymentNames, environmentNames } = filters;
+  public toQuery(filters: IFilter): string {
+    const { applications, environments } = filters;
     return qs.stringify(
       {
-        apps: deploymentNames,
-        envs: environmentNames
+        apps: applications,
+        envs: environments
       },
       {
         addQueryPrefix: true,
