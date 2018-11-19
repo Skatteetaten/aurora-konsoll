@@ -5,6 +5,7 @@ import LoadingButton from 'components/LoadingButton';
 import TimeSince from 'components/TimeSince';
 
 import withApplicationDeployments from '../ApplicationDeploymentContext';
+import { FilterWithApi } from './Filter';
 import { default as MatrixBase } from './Matrix';
 
 const Matrix = withApplicationDeployments(MatrixBase);
@@ -14,16 +15,19 @@ interface IMatrixViewProps {
   isRefreshing: boolean;
   refreshApplicationDeployments: () => void;
   className?: string;
+  affiliation: string;
 }
 
 const MatrixView = ({
   className,
   isRefreshing,
   refreshApplicationDeployments,
-  time
+  time,
+  affiliation
 }: IMatrixViewProps) => (
   <div className={className}>
     <ActionBar>
+      <FilterWithApi affiliation={affiliation} />
       <TimeSince timeSince={time} />
       <LoadingButton
         style={{ minWidth: '120px' }}

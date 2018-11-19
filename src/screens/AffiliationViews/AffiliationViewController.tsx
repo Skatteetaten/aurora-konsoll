@@ -177,6 +177,7 @@ class AffiliationViewController extends React.Component<
                 refreshApplicationDeployments={
                   this.refreshApplicationDeployments
                 }
+                affiliation={affiliation}
               />
             )
           }
