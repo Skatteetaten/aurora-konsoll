@@ -17,6 +17,6 @@ export class UserSettingsClient {
       return result.data;
     }
 
-    return { applicationDeploymentFilters: [] };
+    return { userSettings: { applicationDeploymentFilters: [] } };
   }
 }

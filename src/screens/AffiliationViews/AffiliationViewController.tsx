@@ -130,25 +130,19 @@ class AffiliationViewController extends React.Component<
     this.setState(({ filters }) => ({
       filters: {
         applications: newFilters.applications || filters.applications,
-        environments:
-          newFilters.environments || filters.environments
+        environments: newFilters.environments || filters.environments
       }
     }));
   }
 
   public updateFilter = (applications: string[], environments: string[]) => {
-    // tslint:disable-next-line:no-console
-    console.log(applications);
-    // tslint:disable-next-line:no-console
-    console.log(environments);
-    
     this.setState({
       filters: {
         applications,
         environments
       }
     });
-  }
+  };
 
   public render() {
     const { matchPath, affiliation, deploymentFilterService } = this.props;
