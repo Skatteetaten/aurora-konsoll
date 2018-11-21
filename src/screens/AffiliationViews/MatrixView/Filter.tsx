@@ -50,8 +50,8 @@ export class Filter extends React.Component<IFilterProps, IFilterState> {
     const { clients, updateFilter } = this.props;
     const result = await clients.userSettingsClient.getUserSettings();
     updateFilter(
-      result.userSettings.applicationDeploymentFilters[0].applications,
-      result.userSettings.applicationDeploymentFilters[0].environments
+      result.applicationDeploymentFilters[0].applications,
+      result.applicationDeploymentFilters[0].environments
     );
   };
 

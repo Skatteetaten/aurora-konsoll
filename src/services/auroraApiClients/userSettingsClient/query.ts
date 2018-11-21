@@ -1,20 +1,14 @@
 import gql from 'graphql-tag';
+import { IApplicationDeploymentFilters } from 'models/UserSettings';
 
-export interface IUserSettings {
+export interface IUserSettingsQuery {
   userSettings: {
     applicationDeploymentFilters: IApplicationDeploymentFilters[];
-  };
-}
-
-export interface IApplicationDeploymentFilters {
-  name: string;
-  affiliation: string;
-  applications: string[];
-  environments: string[];
+  }
 }
 
 export const USERSETTINGS_QUERY = gql`
-  query getUserSettingsForAllAffiliation {
+  query getUserSettingsForAllAffiliations {
     userSettings {
       applicationDeploymentFilters {
         name
