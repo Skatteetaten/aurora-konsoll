@@ -188,7 +188,7 @@ class AffiliationViewController extends React.Component<
                 affiliation={affiliation}
                 updateFilter={this.updateFilter}
                 allDeployments={deployments}
-                filteredDeployments={filteredDeployments}
+                filters={filters}
               />
             )
           }

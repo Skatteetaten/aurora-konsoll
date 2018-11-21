@@ -31,6 +31,7 @@ describe('Filter', () => {
     userSettingsClient: new UserSettingsClientMock()
   };
 
+  const emptyFilter = {applications: [], environments: []};
   const deployments: IApplicationDeployment[] = [
     {
       id: '1',
@@ -82,7 +83,7 @@ describe('Filter', () => {
         affiliation="paas"
         updateFilter={updateFilter}
         allDeployments={deployments}
-        filteredDeployments={deployments}
+        filters={emptyFilter}
         clients={clients}
       />
     );
@@ -101,7 +102,7 @@ describe('Filter', () => {
         affiliation="paas"
         updateFilter={updateFilter}
         allDeployments={deployments}
-        filteredDeployments={deployments}
+        filters={emptyFilter}
         clients={clients}
       />
     );
@@ -112,5 +113,23 @@ describe('Filter', () => {
     const environments = wrapper.state('environments');
     expect(environments).toHaveLength(1);
     expect(environments).toContain('env1');
+  });
+
+  it('should filter applications/environments based on input props', () => {
+    const wrapper = shallow(
+      <Filter
+        affiliation="paas"
+        updateFilter={updateFilter}
+        allDeployments={deployments}
+        filters={{applications: ['app1'], environments: []}}
+        clients={clients}
+      />
+    );
+    const applications = wrapper.state('applications');
+    const environments = wrapper.state('environments');
+
+    expect(applications).toHaveLength(1);
+    expect(applications).toContain('app1');
+    expect(environments).toHaveLength(0);
   });
 });

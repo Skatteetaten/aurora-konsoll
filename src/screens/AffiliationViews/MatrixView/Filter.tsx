@@ -7,12 +7,13 @@ import { IApplicationDeployment } from 'models/ApplicationDeployment';
 
 import ActionButton from 'aurora-frontend-react-komponenter/ActionButton';
 import Checkbox from 'aurora-frontend-react-komponenter/Checkbox';
+import { IFilter } from 'services/DeploymentFilterService';
 
 interface IFilterProps extends IAuroraApiComponentProps {
   affiliation: string;
   updateFilter: (applications: string[], environments: string[]) => void;
   allDeployments: IApplicationDeployment[];
-  filteredDeployments: IApplicationDeployment[];
+  filters: IFilter;
 }
 
 interface IFilterState {
@@ -25,6 +26,15 @@ export class Filter extends React.Component<IFilterProps, IFilterState> {
     applications: [],
     environments: []
   };
+
+  public componentDidMount() {
+    const { filters } = this.props;
+      this.setState({
+        applications: filters.applications,
+        environments: filters.environments
+      });
+      this.updateFilter();
+  }
 
   public getUserSettings = async () => {
     const { clients, updateFilter } = this.props;
@@ -78,6 +88,7 @@ export class Filter extends React.Component<IFilterProps, IFilterState> {
 
   public render() {
     const { allDeployments } = this.props;
+    const { applications, environments } = this.state;
 
     const removedDuplicateApplications = allDeployments
       .map(deployment => deployment.name)
@@ -95,6 +106,7 @@ export class Filter extends React.Component<IFilterProps, IFilterState> {
                 key={index}
                 boxSide={'start'}
                 label={application}
+                checked={applications.includes(application)}
                 onChange={this.updateApplicationFilter(application)}
               />
             ))}
@@ -104,6 +116,7 @@ export class Filter extends React.Component<IFilterProps, IFilterState> {
                 key={index}
                 boxSide={'start'}
                 label={environment}
+                checked={environments.includes(environment)}
                 onChange={this.updateEnvironmentFilter(environment)}
               />
             ))}

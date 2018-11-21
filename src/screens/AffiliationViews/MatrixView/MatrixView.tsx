@@ -5,6 +5,7 @@ import LoadingButton from 'components/LoadingButton';
 import TimeSince from 'components/TimeSince';
 
 import { IApplicationDeployment } from 'models/ApplicationDeployment';
+import { IFilter } from 'services/DeploymentFilterService';
 import withApplicationDeployments from '../ApplicationDeploymentContext';
 import FilterWithApi from './Filter';
 import { default as MatrixBase } from './Matrix';
@@ -19,7 +20,7 @@ interface IMatrixViewProps {
   affiliation: string;
   updateFilter: (applications: string[], environments: string[]) => void;
   allDeployments: IApplicationDeployment[];
-  filteredDeployments: IApplicationDeployment[];
+  filters: IFilter;
 }
 
 const MatrixView = ({
@@ -30,7 +31,7 @@ const MatrixView = ({
   affiliation,
   updateFilter,
   allDeployments,
-  filteredDeployments
+  filters
 }: IMatrixViewProps) => (
   <div className={className}>
     <ActionBar>
@@ -38,7 +39,7 @@ const MatrixView = ({
         affiliation={affiliation}
         updateFilter={updateFilter}
         allDeployments={allDeployments}
-        filteredDeployments={filteredDeployments}
+        filters={filters}
       />
       <TimeSince timeSince={time} />
       <LoadingButton
