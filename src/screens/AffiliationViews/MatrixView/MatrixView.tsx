@@ -6,7 +6,7 @@ import TimeSince from 'components/TimeSince';
 
 import { IApplicationDeployment } from 'models/ApplicationDeployment';
 import withApplicationDeployments from '../ApplicationDeploymentContext';
-import { FilterWithApi } from './Filter';
+import FilterWithApi from './Filter';
 import { default as MatrixBase } from './Matrix';
 
 const Matrix = withApplicationDeployments(MatrixBase);

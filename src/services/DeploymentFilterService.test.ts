@@ -81,8 +81,8 @@ describe('DeploymentFilterService', () => {
       expect(
         deploymentFilterService.toFilter('?apps=whoami-sub&envs=martin-dev')
       ).toEqual({
-        deploymentNames: ['whoami-sub'],
-        environmentNames: ['martin-dev']
+        applications: ['whoami-sub'],
+        environments: ['martin-dev']
       });
     });
 
@@ -92,8 +92,8 @@ describe('DeploymentFilterService', () => {
           '?apps=whoami-sub&apps=whoami&apps=skattemelding-core-mock&envs=martin-dev'
         )
       ).toEqual({
-        deploymentNames: ['whoami-sub', 'whoami', 'skattemelding-core-mock'],
-        environmentNames: ['martin-dev']
+        applications: ['whoami-sub', 'whoami', 'skattemelding-core-mock'],
+        environments: ['martin-dev']
       });
     });
   });
