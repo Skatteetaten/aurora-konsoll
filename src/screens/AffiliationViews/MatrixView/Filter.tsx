@@ -36,6 +36,16 @@ export class Filter extends React.Component<IFilterProps, IFilterState> {
       this.updateFilter();
   }
 
+  public componentDidUpdate(prevProps: IFilterProps) {
+    const { affiliation } = this.props;
+    if(prevProps.affiliation !== affiliation) {
+      this.setState({
+        applications: [],
+        environments: []
+      })
+    }
+  }
+
   public getUserSettings = async () => {
     const { clients, updateFilter } = this.props;
     const result = await clients.userSettingsClient.getUserSettings();
