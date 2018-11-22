@@ -132,4 +132,22 @@ describe('Filter', () => {
     expect(applications).toContain('app1');
     expect(environments).toHaveLength(0);
   });
+
+  it('should clear filters when affiliation is updated', () => {
+    const wrapper = shallow(
+      <Filter
+        affiliation="paas"
+        updateFilter={updateFilter}
+        allDeployments={deployments}
+        filters={{applications: ['app1'], environments: ['env1']}}
+        clients={clients}
+      />
+    );
+    wrapper.setProps({ affiliation: 'aurora' });
+    const applications = wrapper.state('applications');
+    const environments = wrapper.state('environments');
+
+    expect(applications).toHaveLength(0);
+    expect(environments).toHaveLength(0);
+  });
 });
