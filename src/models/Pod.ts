@@ -5,7 +5,7 @@ export interface IPodResource {
   ready: boolean;
   startTime: string;
   managementResponses?: {
-    health?: IHttpResponse;
+    health?: IManagementEndpointResponse;
   };
   links: Array<{
     name: string;
@@ -13,7 +13,16 @@ export interface IPodResource {
   }>;
 }
 
-export interface IHttpResponse {
-  loadedTime: string;
-  textResponse: string;
+export interface IManagementEndpointResponse {
+  hasResponse: boolean;
+  textResponse?: string;
+  createdAt: string;
+  httpCode?: number;
+  url?: string;
+  error?: IManagementEndpointError;
+}
+
+export interface IManagementEndpointError {
+  code: string;
+  message?: string;
 }

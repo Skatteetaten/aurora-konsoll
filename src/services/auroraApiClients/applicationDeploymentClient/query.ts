@@ -105,8 +105,15 @@ export const APPLICATION_DEPLOYMENT_DETAILS_QUERY = gql`
         startTime
         managementResponses {
           health {
-            loadedTime
+            hasResponse
             textResponse
+            createdAt
+            httpCode
+            url
+            error {
+              code
+              message
+            }
           }
         }
         links {
