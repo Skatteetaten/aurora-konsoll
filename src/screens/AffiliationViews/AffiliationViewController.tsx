@@ -163,7 +163,8 @@ class AffiliationViewController extends React.Component<
       loading,
       isRefreshing,
       filterPathUrl,
-      filters
+      filters,
+      allFilters
     } = this.state;
 
     if (loading && deployments.length === 0) {
@@ -201,6 +202,7 @@ class AffiliationViewController extends React.Component<
                 updateFilter={this.updateFilter}
                 allDeployments={deployments}
                 filters={filters}
+                allFilters={allFilters}
               />
             )
           }

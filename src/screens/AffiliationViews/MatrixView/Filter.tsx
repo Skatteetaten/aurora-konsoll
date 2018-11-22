@@ -7,7 +7,7 @@ import { IApplicationDeployment } from 'models/ApplicationDeployment';
 
 import ActionButton from 'aurora-frontend-react-komponenter/ActionButton';
 import Checkbox from 'aurora-frontend-react-komponenter/Checkbox';
-import { IUserSettings } from 'models/UserSettings';
+import { IApplicationDeploymentFilters, IUserSettings } from 'models/UserSettings';
 import { IFilter } from 'services/DeploymentFilterService';
 
 interface IFilterProps extends IAuroraApiComponentProps {
@@ -15,6 +15,7 @@ interface IFilterProps extends IAuroraApiComponentProps {
   updateFilter: (applications: string[], environments: string[]) => void;
   allDeployments: IApplicationDeployment[];
   filters: IFilter;
+  allFilters: IApplicationDeploymentFilters[];
 }
 
 interface IFilterState {
@@ -114,8 +115,14 @@ export class Filter extends React.Component<IFilterProps, IFilterState> {
   };
 
   public render() {
-    const { allDeployments } = this.props;
+    const { allDeployments, allFilters, affiliation } = this.props;
     const { applications, environments } = this.state;
+
+    const filterNames = allFilters
+      .filter(filter => filter.affiliation === affiliation)
+      .map(filter => filter.name);
+    // tslint:disable-next-line:no-console
+    console.log(filterNames);
 
     const removedDuplicateApplications = allDeployments
       .map(deployment => deployment.name)

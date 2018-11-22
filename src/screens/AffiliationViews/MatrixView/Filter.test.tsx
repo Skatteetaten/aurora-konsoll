@@ -84,6 +84,7 @@ describe('Filter', () => {
         updateFilter={updateFilter}
         allDeployments={deployments}
         filters={emptyFilter}
+        allFilters={[]}
         clients={clients}
       />
     );
@@ -103,6 +104,7 @@ describe('Filter', () => {
         updateFilter={updateFilter}
         allDeployments={deployments}
         filters={emptyFilter}
+        allFilters={[]}
         clients={clients}
       />
     );
@@ -122,6 +124,7 @@ describe('Filter', () => {
         updateFilter={updateFilter}
         allDeployments={deployments}
         filters={{applications: ['app1'], environments: []}}
+        allFilters={[]}
         clients={clients}
       />
     );
@@ -140,6 +143,7 @@ describe('Filter', () => {
         updateFilter={updateFilter}
         allDeployments={deployments}
         filters={{applications: ['app1'], environments: ['env1']}}
+        allFilters={[]}
         clients={clients}
       />
     );
