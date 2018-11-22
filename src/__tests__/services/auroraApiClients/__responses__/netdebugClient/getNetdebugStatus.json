@@ -1,0 +1,26 @@
+{
+  "data": {
+    "scan": {
+      "status": "CLOSED",
+      "open": {
+        "totalCount": 0,
+        "edges": []
+      },
+      "failed": {
+        "totalCount": 1,
+        "edges": [
+          {
+            "node": {
+              "status": "DNS_FAILED",
+              "message": "Klarte ikke resolve hostnavn til ip addresse.",
+              "resolvedIp": "http://localhost",
+              "clusterNode": {
+                "ip": "127.0.0.1"
+              }
+            }
+          }
+        ]
+      }
+    }
+  }
+}
