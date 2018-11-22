@@ -7,6 +7,7 @@ import { IApplicationDeployment } from 'models/ApplicationDeployment';
 
 import ActionButton from 'aurora-frontend-react-komponenter/ActionButton';
 import Checkbox from 'aurora-frontend-react-komponenter/Checkbox';
+import { IUserSettings } from 'models/UserSettings';
 import { IFilter } from 'services/DeploymentFilterService';
 
 interface IFilterProps extends IAuroraApiComponentProps {
@@ -54,6 +55,22 @@ export class Filter extends React.Component<IFilterProps, IFilterState> {
       result.applicationDeploymentFilters[0].environments
     );
   };
+
+  public updateUserSettings = async () => {
+    const { clients } = this.props;
+
+    const userSettings : IUserSettings = {
+      applicationDeploymentFilters: [{
+        name: 'testing',
+        affiliation: 'aurora',
+        applications: ['ao'],
+        environments: ['dev']
+      }]
+    };
+    const response = await clients.userSettingsClient.updateUserSettings(userSettings);
+    // tslint:disable-next-line:no-console
+    console.log(response);
+  }
 
   public updateApplicationFilter = (element: string) => () => {
     const { applications } = this.state;
@@ -134,6 +151,9 @@ export class Filter extends React.Component<IFilterProps, IFilterState> {
         </InfoDialog>
         <ActionButton onClick={this.getUserSettings}>
           Get user settings
+        </ActionButton>
+        <ActionButton onClick={this.updateUserSettings}>
+          Update user settings
         </ActionButton>
       </>
     );
