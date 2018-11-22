@@ -16,3 +16,5 @@ Object {
   ],
 }
 `;
+
+exports[`updateUserSettings should update user settings to GraphQL server 1`] = `true`;

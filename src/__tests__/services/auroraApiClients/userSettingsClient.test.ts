@@ -31,3 +31,20 @@ describe('getUserSettings', () => {
     expect(result).toMatchSnapshot();
   });
 });
+
+describe('updateUserSettings', () => {
+  it('should update user settings to GraphQL server', async () => {
+    serverMock.putResponse('updateUserSettings', { "data": {"updateUserSettings": true } });
+
+    const result = await userSettingsClient.updateUserSettings({
+      applicationDeploymentFilters: [{
+        name: 'my-filter',
+        affiliation: 'aurora',
+        applications: ['app'],
+        environments: ['env']
+      }]
+    });
+    expect(result).toBeTruthy();
+    expect(result).toMatchSnapshot();
+  });
+});
