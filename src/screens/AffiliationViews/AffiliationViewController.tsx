@@ -4,6 +4,7 @@ import { Route } from 'react-router';
 
 import Spinner from 'components/Spinner';
 import { IApplicationDeployment } from 'models/ApplicationDeployment';
+import { IApplicationDeploymentFilters } from 'models/UserSettings';
 import { Link } from 'react-router-dom';
 import DeploymentFilterService, {
   IFilter
@@ -32,6 +33,7 @@ interface IAffiliationViewControllerState {
   isRefreshing: boolean;
   deployments: IApplicationDeployment[];
   filters: IFilter;
+  allFilters: IApplicationDeploymentFilters[];
   filterPathUrl: string;
 }
 
@@ -47,6 +49,7 @@ class AffiliationViewController extends React.Component<
       applications: [],
       environments: []
     },
+    allFilters: [],
     filterPathUrl: ''
   };
 
@@ -75,6 +78,14 @@ class AffiliationViewController extends React.Component<
       deployments,
       loading: false
     }));
+  };
+
+  public fetchApplicationDeploymentFilters = async () => {
+    const { clients } = this.props;
+    const filters = await clients.userSettingsClient.getUserSettings();
+    this.setState({
+      allFilters: filters.applicationDeploymentFilters
+    });
   };
 
   public refreshApplicationDeployments = async () => {
@@ -124,6 +135,7 @@ class AffiliationViewController extends React.Component<
   public componentDidMount() {
     const { affiliation, deploymentFilterService } = this.props;
     this.fetchApplicationDeployments(affiliation);
+    this.fetchApplicationDeploymentFilters();
 
     const newFilters = deploymentFilterService.toFilter(window.location.search);
 

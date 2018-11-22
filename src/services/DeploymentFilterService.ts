@@ -2,6 +2,7 @@ import { IApplicationDeployment } from 'models/ApplicationDeployment';
 import * as qs from 'qs';
 
 export interface IFilter {
+  name?: string;
   applications: string[];
   environments: string[];
 }
