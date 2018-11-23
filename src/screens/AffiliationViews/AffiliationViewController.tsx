@@ -76,7 +76,11 @@ class AffiliationViewController extends React.Component<
 
     this.setState(() => ({
       deployments,
-      loading: false
+      loading: false,
+      filters: {
+        applications: [],
+        environments: []
+      }
     }));
   };
 
@@ -112,12 +116,6 @@ class AffiliationViewController extends React.Component<
       deploymentFilterService
     } = this.props;
     if (affiliation !== prevProps.affiliation) {
-      this.setState(() => ({
-        filters: {
-          applications: [],
-          environments: []
-        }
-      }));
       this.fetchApplicationDeployments(affiliation);
     }
 

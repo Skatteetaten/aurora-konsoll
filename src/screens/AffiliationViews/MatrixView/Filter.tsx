@@ -7,7 +7,13 @@ import { IApplicationDeployment } from 'models/ApplicationDeployment';
 
 import ActionButton from 'aurora-frontend-react-komponenter/ActionButton';
 import Checkbox from 'aurora-frontend-react-komponenter/Checkbox';
-import { IApplicationDeploymentFilters, IUserSettings } from 'models/UserSettings';
+import Dropdown, {
+  IDropdownOption
+} from 'aurora-frontend-react-komponenter/Dropdown';
+import {
+  IApplicationDeploymentFilters,
+  IUserSettings
+} from 'models/UserSettings';
 import { IFilter } from 'services/DeploymentFilterService';
 
 interface IFilterProps extends IAuroraApiComponentProps {
@@ -21,6 +27,7 @@ interface IFilterProps extends IAuroraApiComponentProps {
 interface IFilterState {
   applications: string[];
   environments: string[];
+  selectedFilterKey?: string;
 }
 
 export class Filter extends React.Component<IFilterProps, IFilterState> {
@@ -31,47 +38,55 @@ export class Filter extends React.Component<IFilterProps, IFilterState> {
 
   public componentDidMount() {
     const { filters } = this.props;
-      this.setState({
-        applications: filters.applications,
-        environments: filters.environments
-      });
-      this.updateFilter();
+    this.setState({
+      applications: filters.applications,
+      environments: filters.environments
+    });
+    this.updateFilter();
   }
 
   public componentDidUpdate(prevProps: IFilterProps) {
     const { affiliation } = this.props;
-    if(prevProps.affiliation !== affiliation) {
+
+    if (prevProps.affiliation !== affiliation) {
       this.setState({
         applications: [],
-        environments: []
-      })
+        environments: [],
+        selectedFilterKey: undefined
+      });
     }
   }
 
-  public getUserSettings = async () => {
-    const { clients, updateFilter } = this.props;
-    const result = await clients.userSettingsClient.getUserSettings();
-    updateFilter(
-      result.applicationDeploymentFilters[0].applications,
-      result.applicationDeploymentFilters[0].environments
-    );
-  };
-
   public updateUserSettings = async () => {
     const { clients } = this.props;
-
-    const userSettings : IUserSettings = {
-      applicationDeploymentFilters: [{
-        name: 'testing',
-        affiliation: 'aurora',
-        applications: ['ao'],
-        environments: ['dev']
-      }]
+    const userSettings: IUserSettings = {
+      applicationDeploymentFilters: [
+        {
+          name: 'testing1',
+          affiliation: 'paas',
+          applications: ['wallboard'],
+          environments: ['martin-dev']
+        },
+        {
+          name: 'testing2',
+          affiliation: 'paas',
+          applications: ['whoami'],
+          environments: ['martin-dev']
+        },
+        {
+          name: 'testing3',
+          affiliation: 'aurora',
+          applications: ['ao'],
+          environments: ['tools']
+        }
+      ]
     };
-    const response = await clients.userSettingsClient.updateUserSettings(userSettings);
+    const response = await clients.userSettingsClient.updateUserSettings(
+      userSettings
+    );
     // tslint:disable-next-line:no-console
     console.log(response);
-  }
+  };
 
   public updateApplicationFilter = (element: string) => () => {
     const { applications } = this.state;
@@ -99,10 +114,24 @@ export class Filter extends React.Component<IFilterProps, IFilterState> {
       const array = this.state.environments.filter(item => {
         return item !== element;
       });
-      this.setState(() => ({
+      this.setState({
         environments: array
-      }));
+      });
     }
+  };
+
+  public updateFilterNames = () => {
+    const { allFilters, affiliation } = this.props;
+
+    const filterNames = allFilters
+      .filter(filter => filter.affiliation === affiliation)
+      .map(filter => filter.name);
+    const keyAndFilterNames = filterNames.map(name => ({
+      text: name,
+      key: name
+    }));
+
+    return keyAndFilterNames;
   };
 
   public updateFilter = () => {
@@ -114,15 +143,21 @@ export class Filter extends React.Component<IFilterProps, IFilterState> {
     return <ActionButton onClick={applyChanges}>Sett filter</ActionButton>;
   };
 
-  public render() {
-    const { allDeployments, allFilters, affiliation } = this.props;
-    const { applications, environments } = this.state;
+  public handleOnChange = (option: IDropdownOption) => {
+    const { allFilters, updateFilter } = this.props;
+    this.setState({
+      selectedFilterKey: option.key
+    });
+    const currentFilter = allFilters.find(filter => filter.name === option.key);
 
-    const filterNames = allFilters
-      .filter(filter => filter.affiliation === affiliation)
-      .map(filter => filter.name);
-    // tslint:disable-next-line:no-console
-    console.log(filterNames);
+    if (currentFilter) {
+      updateFilter(currentFilter.applications, currentFilter.environments);
+    }
+  };
+
+  public render() {
+    const { allDeployments } = this.props;
+    const { applications, environments, selectedFilterKey } = this.state;
 
     const removedDuplicateApplications = allDeployments
       .map(deployment => deployment.name)
@@ -156,9 +191,12 @@ export class Filter extends React.Component<IFilterProps, IFilterState> {
             ))}
           </>
         </InfoDialog>
-        <ActionButton onClick={this.getUserSettings}>
-          Get user settings
-        </ActionButton>
+        <Dropdown
+          placeHolder={'Sett Filter'}
+          options={this.updateFilterNames()}
+          onChanged={this.handleOnChange}
+          selectedKey={selectedFilterKey}
+        />
         <ActionButton onClick={this.updateUserSettings}>
           Update user settings
         </ActionButton>
