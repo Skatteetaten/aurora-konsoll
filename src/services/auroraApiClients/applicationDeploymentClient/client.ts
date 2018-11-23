@@ -170,6 +170,7 @@ export class ApplicationDeploymentClient {
         environment: app.environment,
         id: app.id,
         name: app.name,
+        permission: app.namespace.permission,
         repository: imageRepository ? imageRepository.repository : '',
         status: {
           code: app.status.code,

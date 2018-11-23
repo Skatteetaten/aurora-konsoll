@@ -17,6 +17,7 @@ import TagTypeSelector, {
 import UpgradeVersionDialog from './UpgradeVersionDialog';
 
 interface IVersionViewProps {
+  hasPermissionToUpgrade: boolean;
   isFetchingTags: boolean;
   isRedeploying: boolean;
   canUpgrade: boolean;
@@ -39,6 +40,7 @@ const VersionView = ({
   isRedeploying,
   unavailableMessage,
   canUpgrade,
+  hasPermissionToUpgrade,
   selectedTagType,
   handlefetchTags,
   selectedTag,
@@ -59,15 +61,25 @@ const VersionView = ({
           imageTagType={selectedTagType}
           handleSelectStrategy={handleSelectStrategy}
         />
-        <ButtonWrapper>
-          <UpgradeVersionDialog
-            previousVersion={deployedTag.name}
-            newVersion={selectedTag && selectedTag.name}
-            isRedeploying={isRedeploying}
-            redeployWithVersion={redeployWithVersion}
-            canUpgrade={canUpgrade}
+        {hasPermissionToUpgrade ? (
+          <ButtonWrapper>
+            <UpgradeVersionDialog
+              previousVersion={deployedTag.name}
+              newVersion={selectedTag && selectedTag.name}
+              isRedeploying={isRedeploying}
+              redeployWithVersion={redeployWithVersion}
+              canUpgrade={canUpgrade}
+            />
+          </ButtonWrapper>
+        ) : (
+          <UnavailableServiceMessage
+            className="unavailable-upgrade-message"
+            message={{
+              description: 'Ikke mulig å endre versjon.',
+              reason: 'Manglende admin rettigheter.'
+            }}
           />
-        </ButtonWrapper>
+        )}
       </div>
       <div className="g-action-bar">
         <TextField label="Søk etter versjon" onChanged={handleVersionSearch} />
@@ -123,6 +135,10 @@ export default styled(VersionView)`
     max-width: 800px;
     margin-left: 30px;
     overflow-x: hidden;
+  }
+
+  .unavailable-upgrade-message {
+    margin-top: 30px;
   }
 `;
 
