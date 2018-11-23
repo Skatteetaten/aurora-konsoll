@@ -10,6 +10,7 @@ import Checkbox from 'aurora-frontend-react-komponenter/Checkbox';
 import Dropdown, {
   IDropdownOption
 } from 'aurora-frontend-react-komponenter/Dropdown';
+import TextField from 'aurora-frontend-react-komponenter/TextField';
 import {
   IApplicationDeploymentFilters,
   IUserSettings
@@ -18,7 +19,7 @@ import { IFilter } from 'services/DeploymentFilterService';
 
 interface IFilterProps extends IAuroraApiComponentProps {
   affiliation: string;
-  updateFilter: (applications: string[], environments: string[]) => void;
+  updateFilter: (filter: IFilter) => void;
   allDeployments: IApplicationDeployment[];
   filters: IFilter;
   allFilters: IApplicationDeploymentFilters[];
@@ -28,6 +29,7 @@ interface IFilterState {
   applications: string[];
   environments: string[];
   selectedFilterKey?: string;
+  currentFilterName?: string;
 }
 
 export class Filter extends React.Component<IFilterProps, IFilterState> {
@@ -136,14 +138,20 @@ export class Filter extends React.Component<IFilterProps, IFilterState> {
 
   public updateFilter = () => {
     const { updateFilter } = this.props;
-    const { applications, environments } = this.state;
+    const { currentFilterName, applications, environments } = this.state;
     const applyChanges = () => {
-      updateFilter(applications, environments);
+      updateFilter({ name: currentFilterName, applications, environments });
     };
     return <ActionButton onClick={applyChanges}>Sett filter</ActionButton>;
   };
 
-  public handleOnChange = (option: IDropdownOption) => {
+  public setCurrentFilterName = (filterName: string) => {
+    this.setState({
+      currentFilterName: filterName
+    });
+  };
+
+  public handleFilterChange = (option: IDropdownOption) => {
     const { allFilters, updateFilter } = this.props;
     this.setState({
       selectedFilterKey: option.key
@@ -151,7 +159,10 @@ export class Filter extends React.Component<IFilterProps, IFilterState> {
     const currentFilter = allFilters.find(filter => filter.name === option.key);
 
     if (currentFilter) {
-      updateFilter(currentFilter.applications, currentFilter.environments);
+      updateFilter({
+        applications: currentFilter.applications,
+        environments: currentFilter.environments
+      });
     }
   };
 
@@ -169,6 +180,11 @@ export class Filter extends React.Component<IFilterProps, IFilterState> {
       <>
         <InfoDialog title="Velg filter" renderFooterButtons={this.updateFilter}>
           <>
+            <TextField
+              placeHolder={'Filter navn'}
+              value={selectedFilterKey}
+              onChanged={this.setCurrentFilterName}
+            />
             applications:
             {removedDuplicateApplications.map((application, index) => (
               <Checkbox
@@ -194,7 +210,7 @@ export class Filter extends React.Component<IFilterProps, IFilterState> {
         <Dropdown
           placeHolder={'Sett Filter'}
           options={this.updateFilterNames()}
-          onChanged={this.handleOnChange}
+          onChanged={this.handleFilterChange}
           selectedKey={selectedFilterKey}
         />
         <ActionButton onClick={this.updateUserSettings}>

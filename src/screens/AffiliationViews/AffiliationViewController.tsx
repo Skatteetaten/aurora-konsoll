@@ -32,7 +32,7 @@ interface IAffiliationViewControllerState {
   loading: boolean;
   isRefreshing: boolean;
   deployments: IApplicationDeployment[];
-  filters: IFilter;
+  filter: IFilter;
   allFilters: IApplicationDeploymentFilters[];
   filterPathUrl: string;
 }
@@ -45,7 +45,7 @@ class AffiliationViewController extends React.Component<
     deployments: [],
     isRefreshing: false,
     loading: false,
-    filters: {
+    filter: {
       applications: [],
       environments: []
     },
@@ -77,7 +77,7 @@ class AffiliationViewController extends React.Component<
     this.setState(() => ({
       deployments,
       loading: false,
-      filters: {
+      filter: {
         applications: [],
         environments: []
       }
@@ -119,8 +119,8 @@ class AffiliationViewController extends React.Component<
       this.fetchApplicationDeployments(affiliation);
     }
 
-    const prevQuery = deploymentFilterService.toQuery(prevState.filters);
-    const query = deploymentFilterService.toQuery(this.state.filters);
+    const prevQuery = deploymentFilterService.toQuery(prevState.filter);
+    const query = deploymentFilterService.toQuery(this.state.filter);
 
     if (prevQuery !== query && query !== '') {
       updateUrlWithQuery(query);
@@ -137,21 +137,34 @@ class AffiliationViewController extends React.Component<
 
     const newFilters = deploymentFilterService.toFilter(window.location.search);
 
-    this.setState(({ filters }) => ({
-      filters: {
-        applications: newFilters.applications || filters.applications,
-        environments: newFilters.environments || filters.environments
+    this.setState(({ filter }) => ({
+      filter: {
+        applications: newFilters.applications || filter.applications,
+        environments: newFilters.environments || filter.environments
       }
     }));
   }
 
-  public updateFilter = (applications: string[], environments: string[]) => {
+  public  updateFilter = async (filter: IFilter) => {
+    const { affiliation, clients } = this.props;
+    const { allFilters } = this.state;
     this.setState({
-      filters: {
-        applications,
-        environments
-      }
+      filter
     });
+
+    if (filter.name) {
+      allFilters.push({
+        affiliation,
+        name: filter.name,
+        applications: filter.applications,
+        environments: filter.environments
+      });
+      const response = await clients.userSettingsClient.updateUserSettings({
+        applicationDeploymentFilters: allFilters
+      });
+      // tslint:disable-next-line:no-console
+      console.log(response);
+    }
   };
 
   public render() {
@@ -161,7 +174,7 @@ class AffiliationViewController extends React.Component<
       loading,
       isRefreshing,
       filterPathUrl,
-      filters,
+      filter,
       allFilters
     } = this.state;
 
@@ -170,7 +183,7 @@ class AffiliationViewController extends React.Component<
     }
 
     const filteredDeployments = deploymentFilterService.filterDeployments(
-      filters,
+      filter,
       deployments
     );
 
@@ -199,7 +212,7 @@ class AffiliationViewController extends React.Component<
                 affiliation={affiliation}
                 updateFilter={this.updateFilter}
                 allDeployments={deployments}
-                filters={filters}
+                filters={filter}
                 allFilters={allFilters}
               />
             )

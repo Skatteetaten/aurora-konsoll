@@ -3,7 +3,7 @@ export interface IUserSettings {
 }
 
 export interface IApplicationDeploymentFilters {
-  name: string;
+  name?: string;
   affiliation: string;
   applications: string[];
   environments: string[];

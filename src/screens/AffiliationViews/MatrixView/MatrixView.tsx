@@ -19,7 +19,7 @@ interface IMatrixViewProps {
   refreshApplicationDeployments: () => void;
   className?: string;
   affiliation: string;
-  updateFilter: (applications: string[], environments: string[]) => void;
+  updateFilter: (filter: IFilter) => void;
   allDeployments: IApplicationDeployment[];
   filters: IFilter;
   allFilters: IApplicationDeploymentFilters[]
