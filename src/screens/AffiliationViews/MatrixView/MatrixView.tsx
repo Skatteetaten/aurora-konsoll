@@ -22,7 +22,7 @@ interface IMatrixViewProps {
   updateFilter: (filter: IFilter) => void;
   allDeployments: IApplicationDeployment[];
   filters: IFilter;
-  allFilters: IApplicationDeploymentFilters[]
+  allFilters: IApplicationDeploymentFilters[];
 }
 
 const MatrixView = ({

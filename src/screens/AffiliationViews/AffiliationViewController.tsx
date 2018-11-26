@@ -4,6 +4,7 @@ import { Route } from 'react-router';
 
 import Spinner from 'components/Spinner';
 import { IApplicationDeployment } from 'models/ApplicationDeployment';
+import { errorStateManager } from 'models/StateManager/ErrorStateManager';
 import { IApplicationDeploymentFilters } from 'models/UserSettings';
 import { Link } from 'react-router-dom';
 import DeploymentFilterService, {
@@ -145,26 +146,34 @@ class AffiliationViewController extends React.Component<
     }));
   }
 
-  public  updateFilter = async (filter: IFilter) => {
+  public updateFilter = async (filter: IFilter) => {
     const { affiliation, clients } = this.props;
     const { allFilters } = this.state;
-    this.setState({
-      filter
-    });
+    const updatedFilters = allFilters.filter(f => f.name !== filter.name);
 
     if (filter.name) {
-      allFilters.push({
+      updatedFilters.push({
         affiliation,
         name: filter.name,
         applications: filter.applications,
         environments: filter.environments
       });
       const response = await clients.userSettingsClient.updateUserSettings({
-        applicationDeploymentFilters: allFilters
+        applicationDeploymentFilters: updatedFilters
       });
-      // tslint:disable-next-line:no-console
-      console.log(response);
+
+      if (response) {
+        this.setState({
+          filter,
+          allFilters: updatedFilters
+        });
+      } else {
+        errorStateManager.addError(new Error('Feil ved lagring av filter'));
+      }
     }
+    this.setState({
+      filter
+    });
   };
 
   public render() {

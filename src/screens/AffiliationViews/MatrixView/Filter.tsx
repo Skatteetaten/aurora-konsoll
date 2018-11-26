@@ -11,10 +11,7 @@ import Dropdown, {
   IDropdownOption
 } from 'aurora-frontend-react-komponenter/Dropdown';
 import TextField from 'aurora-frontend-react-komponenter/TextField';
-import {
-  IApplicationDeploymentFilters,
-  IUserSettings
-} from 'models/UserSettings';
+import { IApplicationDeploymentFilters } from 'models/UserSettings';
 import { IFilter } from 'services/DeploymentFilterService';
 
 interface IFilterProps extends IAuroraApiComponentProps {
@@ -44,7 +41,6 @@ export class Filter extends React.Component<IFilterProps, IFilterState> {
       applications: filters.applications,
       environments: filters.environments
     });
-    this.updateFilter();
   }
 
   public componentDidUpdate(prevProps: IFilterProps) {
@@ -58,37 +54,6 @@ export class Filter extends React.Component<IFilterProps, IFilterState> {
       });
     }
   }
-
-  public updateUserSettings = async () => {
-    const { clients } = this.props;
-    const userSettings: IUserSettings = {
-      applicationDeploymentFilters: [
-        {
-          name: 'testing1',
-          affiliation: 'paas',
-          applications: ['wallboard'],
-          environments: ['martin-dev']
-        },
-        {
-          name: 'testing2',
-          affiliation: 'paas',
-          applications: ['whoami'],
-          environments: ['martin-dev']
-        },
-        {
-          name: 'testing3',
-          affiliation: 'aurora',
-          applications: ['ao'],
-          environments: ['tools']
-        }
-      ]
-    };
-    const response = await clients.userSettingsClient.updateUserSettings(
-      userSettings
-    );
-    // tslint:disable-next-line:no-console
-    console.log(response);
-  };
 
   public updateApplicationFilter = (element: string) => () => {
     const { applications } = this.state;
@@ -136,11 +101,19 @@ export class Filter extends React.Component<IFilterProps, IFilterState> {
     return keyAndFilterNames;
   };
 
-  public updateFilter = () => {
+  public updateFilter = (close: () => void) => {
     const { updateFilter } = this.props;
     const { currentFilterName, applications, environments } = this.state;
     const applyChanges = () => {
-      updateFilter({ name: currentFilterName, applications, environments });
+      updateFilter({
+        name: currentFilterName,
+        applications,
+        environments
+      });
+      this.setState({
+        selectedFilterKey: currentFilterName
+      });
+      close();
     };
     return <ActionButton onClick={applyChanges}>Sett filter</ActionButton>;
   };
@@ -208,14 +181,12 @@ export class Filter extends React.Component<IFilterProps, IFilterState> {
           </>
         </InfoDialog>
         <Dropdown
+          style={{ width: '150px' }}
           placeHolder={'Sett Filter'}
           options={this.updateFilterNames()}
           onChanged={this.handleFilterChange}
           selectedKey={selectedFilterKey}
         />
-        <ActionButton onClick={this.updateUserSettings}>
-          Update user settings
-        </ActionButton>
       </>
     );
   }

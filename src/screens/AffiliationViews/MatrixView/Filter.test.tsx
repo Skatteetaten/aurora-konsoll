@@ -31,7 +31,7 @@ describe('Filter', () => {
     userSettingsClient: new UserSettingsClientMock()
   };
 
-  const emptyFilter = {applications: [], environments: []};
+  const emptyFilter = { applications: [], environments: [] };
   const deployments: IApplicationDeployment[] = [
     {
       id: '1',
@@ -123,7 +123,7 @@ describe('Filter', () => {
         affiliation="paas"
         updateFilter={updateFilter}
         allDeployments={deployments}
-        filters={{applications: ['app1'], environments: []}}
+        filters={{ applications: ['app1'], environments: [] }}
         allFilters={[]}
         clients={clients}
       />
@@ -142,7 +142,7 @@ describe('Filter', () => {
         affiliation="paas"
         updateFilter={updateFilter}
         allDeployments={deployments}
-        filters={{applications: ['app1'], environments: ['env1']}}
+        filters={{ applications: ['app1'], environments: ['env1'] }}
         allFilters={[]}
         clients={clients}
       />
