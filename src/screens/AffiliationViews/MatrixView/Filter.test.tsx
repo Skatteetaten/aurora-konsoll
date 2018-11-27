@@ -1,6 +1,7 @@
 import { shallow } from 'enzyme';
 import * as React from 'react';
 
+import Button from 'aurora-frontend-react-komponenter/Button';
 import Checkbox from 'aurora-frontend-react-komponenter/Checkbox';
 import { IApplicationDeployment } from 'models/ApplicationDeployment';
 import { ImageTagType } from 'models/ImageTagType';
@@ -152,6 +153,28 @@ describe('Filter', () => {
     const environments = wrapper.state('environments');
 
     expect(applications).toHaveLength(0);
+    expect(environments).toHaveLength(0);
+  });
+
+  it('should clear all checkboxes when clear button is clicked', () => {
+    const wrapper = shallow(
+      <Filter
+        affiliation="paas"
+        updateFilter={updateFilter}
+        allDeployments={deployments}
+        filters={{
+          applications: ['app1', 'app2', 'app3'],
+          environments: ['env1']
+        }}
+        allFilters={[]}
+        clients={clients}
+      />
+    );
+    const clearbutton = wrapper.find(Button);
+    clearbutton.simulate('click');
+    const applications = wrapper.state('applications');
+    expect(applications).toHaveLength(0);
+    const environments = wrapper.state('environments');
     expect(environments).toHaveLength(0);
   });
 });

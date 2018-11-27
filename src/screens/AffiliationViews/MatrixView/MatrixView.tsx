@@ -38,21 +38,25 @@ const MatrixView = ({
 }: IMatrixViewProps) => (
   <div className={className}>
     <ActionBar>
-      <FilterWithApi
-        affiliation={affiliation}
-        updateFilter={updateFilter}
-        allDeployments={allDeployments}
-        filters={filters}
-        allFilters={allFilters}
-      />
-      <TimeSince timeSince={time} />
-      <LoadingButton
-        style={{ minWidth: '120px' }}
-        loading={isRefreshing}
-        onClick={refreshApplicationDeployments}
-      >
-        Oppdater
-      </LoadingButton>
+      <StyledFilter>
+        <FilterWithApi
+          affiliation={affiliation}
+          updateFilter={updateFilter}
+          allDeployments={allDeployments}
+          filters={filters}
+          allFilters={allFilters}
+        />
+      </StyledFilter>
+      <StyledUpdate>
+        <TimeSince timeSince={time} />
+        <LoadingButton
+          style={{ minWidth: '120px' }}
+          loading={isRefreshing}
+          onClick={refreshApplicationDeployments}
+        >
+          Oppdater
+        </LoadingButton>
+      </StyledUpdate>
     </ActionBar>
     <Matrix />
   </div>
@@ -62,13 +66,22 @@ const ActionBar = styled.div`
   display: flex;
   padding: 10px;
   align-items: center;
-  justify-content: flex-end;
+  justify-content: space-between;
   flex-shrink: 0;
   height: 40px;
+`;
 
+const StyledFilter = styled.div`
+  display: flex;
+  align-items: center;
   button {
-    min-width: 120px;
+    margin-right: 20px;
   }
+`;
+
+const StyledUpdate = styled.div`
+  display: flex;
+  align-items: center;
 `;
 
 export default styled(MatrixView)`

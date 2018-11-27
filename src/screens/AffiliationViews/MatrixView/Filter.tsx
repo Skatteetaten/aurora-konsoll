@@ -7,9 +7,9 @@ import InfoDialog from 'components/InfoDialog';
 import { IApplicationDeployment } from 'models/ApplicationDeployment';
 
 import ActionButton from 'aurora-frontend-react-komponenter/ActionButton';
+import Button from 'aurora-frontend-react-komponenter/Button';
 import Checkbox from 'aurora-frontend-react-komponenter/Checkbox';
 import Dropdown from 'aurora-frontend-react-komponenter/Dropdown';
-import Grid from 'aurora-frontend-react-komponenter/Grid';
 import RadioButtonGroup from 'aurora-frontend-react-komponenter/RadioButtonGroup';
 import TextField from 'aurora-frontend-react-komponenter/TextField';
 import { IApplicationDeploymentFilters } from 'models/UserSettings';
@@ -29,6 +29,7 @@ interface IFilterState {
   environments: string[];
   selectedFilterKey?: string;
   currentFilterName?: string;
+  mode: string;
 }
 
 interface IFilterChange {
@@ -39,7 +40,8 @@ interface IFilterChange {
 export class Filter extends React.Component<IFilterProps, IFilterState> {
   public state: IFilterState = {
     applications: [],
-    environments: []
+    environments: [],
+    mode: 'create'
   };
 
   public componentDidMount() {
@@ -57,10 +59,18 @@ export class Filter extends React.Component<IFilterProps, IFilterState> {
       this.setState({
         applications: [],
         environments: [],
-        selectedFilterKey: undefined
+        selectedFilterKey: undefined,
+        mode: 'create'
       });
     }
   }
+
+  public removeDuplicates = (list: string[], element: string) => {
+    const array = list.filter(item => {
+      return item !== element;
+    });
+    return array;
+  };
 
   public updateApplicationFilter = (element: string) => () => {
     const { applications } = this.state;
@@ -69,11 +79,9 @@ export class Filter extends React.Component<IFilterProps, IFilterState> {
         applications: [...prevState.applications, element]
       }));
     } else {
-      const array = this.state.applications.filter(item => {
-        return item !== element;
-      });
+      const newArray = this.removeDuplicates(applications, element);
       this.setState(() => ({
-        applications: array
+        applications: newArray
       }));
     }
   };
@@ -85,11 +93,9 @@ export class Filter extends React.Component<IFilterProps, IFilterState> {
         environments: [...prevState.environments, element]
       }));
     } else {
-      const array = this.state.environments.filter(item => {
-        return item !== element;
-      });
+      const newArray = this.removeDuplicates(environments, element);
       this.setState({
-        environments: array
+        environments: newArray
       });
     }
   };
@@ -102,7 +108,8 @@ export class Filter extends React.Component<IFilterProps, IFilterState> {
       .map(filter => filter.name);
     const keyAndFilterNames = filterNames.map(name => ({
       text: name,
-      key: name
+      key: name,
+      title: name
     }));
 
     return keyAndFilterNames;
@@ -141,7 +148,8 @@ export class Filter extends React.Component<IFilterProps, IFilterState> {
     if (currentFilter) {
       this.setState({
         applications: currentFilter.applications,
-        environments: currentFilter.environments
+        environments: currentFilter.environments,
+        currentFilterName: currentFilter.name
       });
       updateFilter({
         applications: currentFilter.applications,
@@ -150,9 +158,16 @@ export class Filter extends React.Component<IFilterProps, IFilterState> {
     }
   };
 
+  public clearAllCheckboxes = () => {
+    this.setState({
+      applications: [],
+      environments: []
+    });
+  };
+
   public render() {
     const { className, allDeployments } = this.props;
-    const { applications, environments, selectedFilterKey } = this.state;
+    const { applications, environments, selectedFilterKey, mode } = this.state;
 
     const removedDuplicateApplications = allDeployments
       .map(deployment => deployment.name)
@@ -160,93 +175,165 @@ export class Filter extends React.Component<IFilterProps, IFilterState> {
     const removedDuplicateEnvironments = allDeployments
       .map(deployment => deployment.environment)
       .filter((item, index, self) => self.indexOf(item) === index);
-    const handleRadioButtonChange = (e: any, option: IFilterChange) => {
+    const handleRadioButtonChange = (e: Event, option: IFilterChange) => {
       this.handleFilterChange(option);
     };
-    return (
-      <div className={className}>
-        <InfoDialog title="Velg filter" renderFooterButtons={this.updateFilter}>
+
+    const renderOpenButton = (open: () => void) => (
+      <ActionButton
+        onClick={open}
+        iconSize={ActionButton.LARGE}
+        icon="Filter"
+        color="black"
+      >
+        Filter
+      </ActionButton>
+    );
+
+    const changeMode = (e: Event, option: IFilterChange) => {
+      this.setState({
+        mode: option.key
+      });
+    };
+
+    const renderMode = () => {
+      if (mode === 'create') {
+        return (
           <>
-            <Grid>
-              <Grid.Row>
-                <Grid.Col lg={4}>
-                  <InfoDialogColumn>
-                    <h3>Filternavn:</h3>
-                    <div>
-                      <TextField
-                        placeHolder={'Filter navn'}
-                        value={selectedFilterKey}
-                        onChanged={this.setCurrentFilterName}
-                      />
-                      <h3>Filters:</h3>
-                      <RadioButtonGroup
-                        boxSide={'start'}
-                        options={this.updateFilterNames()}
-                        onChange={handleRadioButtonChange}
-                      />
-                    </div>
-                  </InfoDialogColumn>
-                </Grid.Col>
-                <Grid.Col lg={4}>
-                  <InfoDialogColumn>
-                    <h3>Applications:</h3>
-                    <div>
-                      {removedDuplicateApplications.map(
-                        (application, index) => (
-                          <Checkbox
-                            key={index}
-                            boxSide={'start'}
-                            label={application}
-                            checked={applications.includes(application)}
-                            onChange={this.updateApplicationFilter(application)}
-                          />
-                        )
-                      )}
-                    </div>
-                  </InfoDialogColumn>
-                </Grid.Col>
-                <Grid.Col lg={4}>
-                  <InfoDialogColumn>
-                    <h3>Environments:</h3>
-                    <div>
-                      {removedDuplicateEnvironments.map(
-                        (environment, index) => (
-                          <Checkbox
-                            key={index}
-                            boxSide={'start'}
-                            label={environment}
-                            checked={environments.includes(environment)}
-                            onChange={this.updateEnvironmentFilter(environment)}
-                          />
-                        )
-                      )}
-                    </div>
-                  </InfoDialogColumn>
-                </Grid.Col>
-              </Grid.Row>
-            </Grid>
+            <h3>Lag filter:</h3>
+            <TextField
+              placeholder={'Navn'}
+              onChanged={this.setCurrentFilterName}
+            />
           </>
+        );
+      } else {
+        return (
+          <>
+            <h3>Lagrede filtre:</h3>
+            <div className="saved-filters">
+              <RadioButtonGroup
+                boxSide={'start'}
+                options={this.updateFilterNames()}
+                onChange={handleRadioButtonChange}
+                selectedKey={selectedFilterKey}
+              />
+            </div>
+            <ActionButton color="red" icon="Clear">
+              Slett filter
+            </ActionButton>
+          </>
+        );
+      }
+    };
+    return (
+      <>
+        <InfoDialog
+          title="Filter meny"
+          renderFooterButtons={this.updateFilter}
+          renderOpenDialogButton={renderOpenButton}
+        >
+          <div className={className}>
+            <dl>
+              <div className="styled-edit">
+                <RadioButtonGroup
+                  boxSide={'start'}
+                  defaultSelectedKey={mode}
+                  onChange={changeMode}
+                  options={[
+                    {
+                      key: 'create',
+                      text: 'Nytt',
+                      iconProps: { iconName: 'AddOutline' }
+                    },
+                    {
+                      key: 'edit',
+                      text: 'Rediger',
+                      iconProps: { iconName: 'Edit' }
+                    }
+                  ]}
+                />
+                {renderMode()}
+                <Button
+                  buttonType="primaryRoundedFilled"
+                  style={{ marginTop: '10px' }}
+                  onClick={this.clearAllCheckboxes}
+                >
+                  Clear
+                </Button>
+              </div>
+              <dt>
+                <h3>Applikasjoner:</h3>
+                <div className="apps-and-envs">
+                  {removedDuplicateApplications.map((application, index) => (
+                    <Checkbox
+                      key={index}
+                      boxSide={'start'}
+                      label={application}
+                      checked={applications.includes(application)}
+                      onChange={this.updateApplicationFilter(application)}
+                    />
+                  ))}
+                </div>
+              </dt>
+              <dt>
+                <h3>Miljøer:</h3>
+                <div className="apps-and-envs">
+                  {removedDuplicateEnvironments.map((environment, index) => (
+                    <Checkbox
+                      key={index}
+                      boxSide={'start'}
+                      label={environment}
+                      checked={environments.includes(environment)}
+                      onChange={this.updateEnvironmentFilter(environment)}
+                    />
+                  ))}
+                </div>
+              </dt>
+            </dl>
+          </div>
         </InfoDialog>
         <Dropdown
           style={{ width: '150px' }}
-          placeHolder={'Sett Filter'}
+          placeHolder={'Velg Filter'}
           options={this.updateFilterNames()}
           onChanged={this.handleFilterChange}
           selectedKey={selectedFilterKey}
         />
-      </div>
+      </>
     );
   }
 }
 
-const InfoDialogColumn = styled.div`
-  > div {
+const styledFilter = styled(Filter)`
+  dl {
+    display: flex;
+  }
+
+  .styled-edit {
+    min-width: 130px;
+    margin-top: 25px;
+    margin-right: 40px;
+  }
+
+  .apps-and-envs {
     max-height: 500px;
+    min-width: 250px;
+    width: auto;
+    padding-right: 10px;
+    padding-left: 5px;
+    margin-right: 40px;
+    overflow: auto;
+  }
+
+  .saved-filters {
+    max-height: 200px;
+    padding-right: 10px;
+    padding-left: 5px;
     overflow: auto;
   }
 `;
 
+export const FilterWithApi = withAuroraApi(styledFilter);
 
-export const FilterWithApi = withAuroraApi(Filter);
-
-export default Filter;
+export default styledFilter;
