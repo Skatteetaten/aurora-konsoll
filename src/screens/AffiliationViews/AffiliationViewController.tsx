@@ -87,7 +87,6 @@ class AffiliationViewController extends React.Component<
     this.setState({
       allFilters: filters.applicationDeploymentFilters
     });
-    return filters.applicationDeploymentFilters;
   };
 
   public refreshApplicationDeployments = async () => {
@@ -138,6 +137,7 @@ class AffiliationViewController extends React.Component<
   public componentDidMount() {
     const { affiliation, deploymentFilterService } = this.props;
     this.fetchApplicationDeployments(affiliation);
+    this.fetchApplicationDeploymentFilters();
 
     const newFilters = deploymentFilterService.toFilter(window.location.search);
     this.setState(({ filter }) => ({
@@ -146,15 +146,6 @@ class AffiliationViewController extends React.Component<
         environments: newFilters.environments || filter.environments
       }
     }));
-    this.fetchApplicationDeploymentFilters().then(fetchedFilters => {
-      const test = fetchedFilters.filter(
-        d =>
-          d.environments === this.state.filter.environments &&
-          d.applications === this.state.filter.applications
-      );
-      // tslint:disable-next-line:no-console
-      console.log(test);
-    });
   }
 
   public updateFilter = async (filter: IFilter) => {

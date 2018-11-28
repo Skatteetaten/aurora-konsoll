@@ -170,11 +170,16 @@ describe('Filter', () => {
         clients={clients}
       />
     );
+
+    wrapper.find(Checkbox).at(0).simulate('change');;
+    
     const clearbutton = wrapper.find(Button);
     clearbutton.simulate('click');
-    const applications = wrapper.state('applications');
-    expect(applications).toHaveLength(0);
-    const environments = wrapper.state('environments');
-    expect(environments).toHaveLength(0);
+    
+    const checkboxes = wrapper.find(Checkbox);
+    expect(checkboxes.at(0).prop('checked')).toBeFalsy();
+    expect(checkboxes.at(1).prop('checked')).toBeFalsy();
+    expect(checkboxes.at(2).prop('checked')).toBeFalsy();
+    expect(checkboxes.at(3).prop('checked')).toBeFalsy();
   });
 });
