@@ -7,6 +7,12 @@ Array [
     "environment": "aurora",
     "id": "q8u9fpw8f",
     "name": "console-next",
+    "permission": Object {
+      "paas": Object {
+        "admin": true,
+        "view": true,
+      },
+    },
     "repository": "docker-registry.aurora.sits.no:5000/ske_openshift_aurora_console/openshift-console-api",
     "status": Object {
       "code": "HEALTHY",

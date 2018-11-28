@@ -32,7 +32,7 @@
     "start:web": "react-scripts-ts start",
     "start:api": "npm run build:api -- --watch & nodemon --watch ./build-api --exec \"node ./build-api/server.js\"",
     "build": "npm-run-all -pl build:web build:api",
-    "build:web": "react-scripts-ts build",
+    "build:web": "GENERATE_SOURCEMAP=false react-scripts-ts build",
     "build:api": "webpack --config webpack.api.config.js",
     "test": "react-scripts-ts test --env=jsdom",
     "eject": "react-scripts-ts eject",

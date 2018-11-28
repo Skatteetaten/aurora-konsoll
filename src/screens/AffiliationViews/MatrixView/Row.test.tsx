@@ -26,6 +26,12 @@ describe('Row', () => {
           },
           releaseTo: releaseToParm
         },
+        permission: {
+          paas: {
+            admin: true,
+            view: true
+          }
+        },
         repository: '',
         time: ''
       }
