@@ -15,6 +15,11 @@ import TextField from 'aurora-frontend-react-komponenter/TextField';
 import { IApplicationDeploymentFilters } from 'models/UserSettings';
 import { IFilter } from 'services/DeploymentFilterService';
 
+enum FilterMode {
+  Create,
+  Edit
+}
+
 interface IFilterProps extends IAuroraApiComponentProps {
   className?: string;
   affiliation: string;
@@ -29,7 +34,7 @@ interface IFilterState {
   environments: string[];
   selectedFilterKey?: string;
   currentFilterName?: string;
-  mode: string;
+  mode: FilterMode;
 }
 
 interface IFilterChange {
@@ -37,11 +42,16 @@ interface IFilterChange {
   text: string;
 }
 
+interface IModeChange {
+  key: FilterMode;
+  text: string;
+}
+
 export class Filter extends React.Component<IFilterProps, IFilterState> {
   public state: IFilterState = {
     applications: [],
     environments: [],
-    mode: 'create'
+    mode: FilterMode.Create
   };
 
   public componentDidMount() {
@@ -60,7 +70,7 @@ export class Filter extends React.Component<IFilterProps, IFilterState> {
         applications: [],
         environments: [],
         selectedFilterKey: undefined,
-        mode: 'create'
+        mode: FilterMode.Create
       });
     }
   }
@@ -102,7 +112,6 @@ export class Filter extends React.Component<IFilterProps, IFilterState> {
 
   public updateFilterNames = () => {
     const { allFilters, affiliation } = this.props;
-
     const filterNames = allFilters
       .filter(filter => filter.affiliation === affiliation)
       .map(filter => filter.name);
@@ -190,14 +199,14 @@ export class Filter extends React.Component<IFilterProps, IFilterState> {
       </ActionButton>
     );
 
-    const changeMode = (e: Event, option: IFilterChange) => {
+    const changeMode = (e: Event, option: IModeChange) => {
       this.setState({
         mode: option.key
       });
     };
 
     const renderMode = () => {
-      if (mode === 'create') {
+      if (mode === FilterMode.Create) {
         return (
           <>
             <h3>Lag filter:</h3>
@@ -242,12 +251,12 @@ export class Filter extends React.Component<IFilterProps, IFilterState> {
                   onChange={changeMode}
                   options={[
                     {
-                      key: 'create',
+                      key: FilterMode.Create,
                       text: 'Nytt',
                       iconProps: { iconName: 'AddOutline' }
                     },
                     {
-                      key: 'edit',
+                      key: FilterMode.Edit,
                       text: 'Rediger',
                       iconProps: { iconName: 'Edit' }
                     }
@@ -294,7 +303,7 @@ export class Filter extends React.Component<IFilterProps, IFilterState> {
           </div>
         </InfoDialog>
         <Dropdown
-          style={{ width: '150px' }}
+          style={{ width: '250px' }}
           placeHolder={'Velg Filter'}
           options={this.updateFilterNames()}
           onChanged={this.handleFilterChange}
