@@ -1,7 +1,7 @@
 import * as React from 'react';
 import styled from 'styled-components';
 
-import Select from 'react-select';
+import ReactSelect from 'components/Select';
 
 import { IAuroraApiComponentProps, withAuroraApi } from 'components/AuroraApi';
 import InfoDialog from 'components/InfoDialog';
@@ -148,26 +148,31 @@ export class Filter extends React.Component<IFilterProps, IFilterState> {
       currentFilterName: filterName
     });
   };
+  public noOptionsMessage = () => {
+    return 'Ingen';
+  };
 
-  public handleFilterChange = (option: IFilterChange) => {
-    const { allFilters, updateFilter } = this.props;
-    this.setState({
-      selectedFilterKey: option.label
-    });
-    const currentFilter = allFilters.find(
-      filter => filter.name === option.label
-    );
-
-    if (currentFilter) {
+  public handleFilterChange = (option: any) => {
+    if (option) {
+      const { allFilters, updateFilter } = this.props;
       this.setState({
-        applications: currentFilter.applications,
-        environments: currentFilter.environments,
-        currentFilterName: currentFilter.name
+        selectedFilterKey: option.label
       });
-      updateFilter({
-        applications: currentFilter.applications,
-        environments: currentFilter.environments
-      });
+      const currentFilter = allFilters.find(
+        filter => filter.name === option.label
+      );
+
+      if (currentFilter) {
+        this.setState({
+          applications: currentFilter.applications,
+          environments: currentFilter.environments,
+          currentFilterName: currentFilter.name
+        });
+        updateFilter({
+          applications: currentFilter.applications,
+          environments: currentFilter.environments
+        });
+      }
     }
   };
 
@@ -207,13 +212,6 @@ export class Filter extends React.Component<IFilterProps, IFilterState> {
       this.setState({
         mode: option.key
       });
-    };
-
-    const dropdownStyles = {
-      zIndex: 999,
-      singleValue: () => ({
-        width: 200
-      })
     };
 
     const renderMode = () => {
@@ -314,7 +312,13 @@ export class Filter extends React.Component<IFilterProps, IFilterState> {
             </dl>
           </div>
         </InfoDialog>
-        <Select styles={dropdownStyles} options={this.updateFilterNames()} />
+        <ReactSelect
+          options={this.updateFilterNames()}
+          noOptionsMessage={this.noOptionsMessage}
+          placeholder={'Velg filter'}
+          selectedFilterKey={selectedFilterKey}
+          handleFilterChange={this.handleFilterChange}
+        />
       </>
     );
   }
