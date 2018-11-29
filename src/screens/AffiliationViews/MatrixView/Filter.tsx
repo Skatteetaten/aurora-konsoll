@@ -129,14 +129,14 @@ export class Filter extends React.Component<IFilterProps, IFilterState> {
     const { allFilters, affiliation } = this.props;
     const filterNames = allFilters
       .filter(filter => filter.affiliation === affiliation)
-      .map(filter => filter.name);
+      .map(filter => filter.name)
+      .sort();
     const keyAndFilterNames = filterNames.map(name => ({
       value: name,
       label: name,
       key: name,
       text: name
     }));
-
     return keyAndFilterNames;
   };
 
@@ -170,7 +170,8 @@ export class Filter extends React.Component<IFilterProps, IFilterState> {
     const { allFilters, updateFilter } = this.props;
     if (option) {
       this.setState({
-        selectedFilterKey: option.label
+        selectedFilterKey: option.label,
+        mode: FilterMode.Edit
       });
       const currentFilter = allFilters.find(
         filter => filter.name === option.label
@@ -210,10 +211,12 @@ export class Filter extends React.Component<IFilterProps, IFilterState> {
 
     const removedDuplicateApplications = allDeployments
       .map(deployment => deployment.name)
-      .filter((item, index, self) => self.indexOf(item) === index);
+      .filter((item, index, self) => self.indexOf(item) === index)
+      .sort();
     const removedDuplicateEnvironments = allDeployments
       .map(deployment => deployment.environment)
-      .filter((item, index, self) => self.indexOf(item) === index);
+      .filter((item, index, self) => self.indexOf(item) === index)
+      .sort();
     const handleRadioButtonChange = (e: Event, option: IFilterChange) => {
       this.handleFilterChange(option);
     };

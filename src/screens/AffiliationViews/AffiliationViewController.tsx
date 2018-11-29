@@ -174,6 +174,7 @@ class AffiliationViewController extends React.Component<
       }
     }
 
+    // skaper problemer når man lager et filter med 0 apps og 0 envs
     if (filter.applications.length === 0 && filter.environments.length === 0) {
       updateUrlWithQuery('/');
     }
