@@ -1,6 +1,8 @@
 import * as React from 'react';
 import styled from 'styled-components';
 
+import Select from 'react-select';
+
 import { IAuroraApiComponentProps, withAuroraApi } from 'components/AuroraApi';
 import InfoDialog from 'components/InfoDialog';
 
@@ -9,7 +11,6 @@ import { IApplicationDeployment } from 'models/ApplicationDeployment';
 import ActionButton from 'aurora-frontend-react-komponenter/ActionButton';
 import Button from 'aurora-frontend-react-komponenter/Button';
 import Checkbox from 'aurora-frontend-react-komponenter/Checkbox';
-import Dropdown from 'aurora-frontend-react-komponenter/Dropdown';
 import RadioButtonGroup from 'aurora-frontend-react-komponenter/RadioButtonGroup';
 import TextField from 'aurora-frontend-react-komponenter/TextField';
 import { IApplicationDeploymentFilters } from 'models/UserSettings';
@@ -38,8 +39,8 @@ interface IFilterState {
 }
 
 interface IFilterChange {
-  key: string;
-  text: string;
+  label: string;
+  value: string;
 }
 
 interface IModeChange {
@@ -116,9 +117,10 @@ export class Filter extends React.Component<IFilterProps, IFilterState> {
       .filter(filter => filter.affiliation === affiliation)
       .map(filter => filter.name);
     const keyAndFilterNames = filterNames.map(name => ({
-      text: name,
+      value: name,
+      label: name,
       key: name,
-      title: name
+      text: name
     }));
 
     return keyAndFilterNames;
@@ -150,9 +152,11 @@ export class Filter extends React.Component<IFilterProps, IFilterState> {
   public handleFilterChange = (option: IFilterChange) => {
     const { allFilters, updateFilter } = this.props;
     this.setState({
-      selectedFilterKey: option.key
+      selectedFilterKey: option.label
     });
-    const currentFilter = allFilters.find(filter => filter.name === option.key);
+    const currentFilter = allFilters.find(
+      filter => filter.name === option.label
+    );
 
     if (currentFilter) {
       this.setState({
@@ -205,12 +209,20 @@ export class Filter extends React.Component<IFilterProps, IFilterState> {
       });
     };
 
+    const dropdownStyles = {
+      zIndex: 999,
+      singleValue: () => ({
+        width: 200
+      })
+    };
+
     const renderMode = () => {
       if (mode === FilterMode.Create) {
         return (
           <>
             <h3>Lag filter:</h3>
             <TextField
+              style={{ width: '100px' }}
               placeholder={'Navn'}
               onChanged={this.setCurrentFilterName}
             />
@@ -302,13 +314,7 @@ export class Filter extends React.Component<IFilterProps, IFilterState> {
             </dl>
           </div>
         </InfoDialog>
-        <Dropdown
-          style={{ width: '250px' }}
-          placeHolder={'Velg Filter'}
-          options={this.updateFilterNames()}
-          onChanged={this.handleFilterChange}
-          selectedKey={selectedFilterKey}
-        />
+        <Select styles={dropdownStyles} options={this.updateFilterNames()} />
       </>
     );
   }
@@ -318,13 +324,13 @@ const styledFilter = styled(Filter)`
   dl {
     display: flex;
   }
-
+  h3 {
+    padding: 0px;
+    margin: 0 0 20px 0;
+  }
   .styled-edit {
-    min-width: 130px;
-    margin-top: 25px;
     margin-right: 40px;
   }
-
   .apps-and-envs {
     max-height: 500px;
     min-width: 250px;
@@ -334,7 +340,6 @@ const styledFilter = styled(Filter)`
     margin-right: 40px;
     overflow: auto;
   }
-
   .saved-filters {
     max-height: 200px;
     padding-right: 10px;

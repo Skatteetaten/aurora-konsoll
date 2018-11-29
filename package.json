@@ -12,6 +12,7 @@
     "metadata"
   ],
   "dependencies": {
+    "@types/react-select": "^2.0.8",
     "apollo-boost": "^0.1.16",
     "aurora-frontend-react-komponenter": "^1.0.25",
     "cors": "^2.8.4",
@@ -25,6 +26,7 @@
     "react-dom": "^16.5.1",
     "react-router-dom": "^4.3.1",
     "react-scripts-ts": "^2.17.0",
+    "react-select": "^2.1.2",
     "styled-components": "^3.4.8"
   },
   "scripts": {
