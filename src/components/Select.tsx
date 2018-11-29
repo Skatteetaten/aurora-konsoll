@@ -36,10 +36,10 @@ const Select = ({
   selectedFilterKey,
   handleFilterChange
 }: ISelectProps) => {
-  // const selected = {
-  //   label: selectedFilterKey,
-  //   value: selectedFilterKey
-  // };
+  const selected = {
+    label: selectedFilterKey,
+    value: selectedFilterKey
+  };
 
   return (
     <StyledSelect>
@@ -49,6 +49,7 @@ const Select = ({
         placeholder={placeholder}
         isClearable={true}
         noOptionsMessage={noOptionsMessage}
+        value={selected}
         onChange={handleFilterChange}
       />
     </StyledSelect>

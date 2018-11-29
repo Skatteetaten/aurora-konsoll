@@ -149,7 +149,7 @@ class AffiliationViewController extends React.Component<
   }
 
   public updateFilter = async (filter: IFilter) => {
-    const { affiliation, clients } = this.props;
+    const { affiliation, clients, updateUrlWithQuery } = this.props;
     const { allFilters } = this.state;
     const updatedFilters = allFilters.filter(f => f.name !== filter.name);
 
@@ -173,6 +173,11 @@ class AffiliationViewController extends React.Component<
         errorStateManager.addError(new Error('Feil ved lagring av filter'));
       }
     }
+
+    if (filter.applications.length === 0 && filter.environments.length === 0) {
+      updateUrlWithQuery('/');
+    }
+
     this.setState({
       filter
     });

@@ -64,7 +64,21 @@ export class Filter extends React.Component<IFilterProps, IFilterState> {
   }
 
   public componentDidUpdate(prevProps: IFilterProps) {
-    const { affiliation } = this.props;
+    const { affiliation, allFilters } = this.props;
+    const { selectedFilterKey, environments, applications } = this.state;
+
+    if (!selectedFilterKey) {
+      const enabledFilter = allFilters.find(
+        f =>
+          JSON.stringify(f.environments) === JSON.stringify(environments) &&
+          JSON.stringify(f.applications) === JSON.stringify(applications)
+      );
+      if (enabledFilter) {
+        this.setState({
+          selectedFilterKey: enabledFilter.name
+        });
+      }
+    }
 
     if (prevProps.affiliation !== affiliation) {
       this.setState({
@@ -152,9 +166,9 @@ export class Filter extends React.Component<IFilterProps, IFilterState> {
     return 'Ingen';
   };
 
-  public handleFilterChange = (option: any) => {
+  public handleFilterChange = (option: IFilterChange) => {
+    const { allFilters, updateFilter } = this.props;
     if (option) {
-      const { allFilters, updateFilter } = this.props;
       this.setState({
         selectedFilterKey: option.label
       });
@@ -173,6 +187,13 @@ export class Filter extends React.Component<IFilterProps, IFilterState> {
           environments: currentFilter.environments
         });
       }
+    } else {
+      this.setState({
+        applications: [],
+        environments: [],
+        currentFilterName: undefined
+      });
+      updateFilter({ applications: [], environments: [] });
     }
   };
 
