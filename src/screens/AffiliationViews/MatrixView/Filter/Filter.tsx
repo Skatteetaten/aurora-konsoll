@@ -100,12 +100,8 @@ export class Filter extends React.Component<IFilterProps, IFilterState> {
     }
   }
 
-  public removeDuplicates = (list: string[], element: string) => {
-    const array = list.filter(item => {
-      return item !== element;
-    });
-    return array;
-  };
+  public removeDuplicates = (list: string[], element: string) =>
+    list.filter(item => item !== element);
 
   public updateApplicationFilter = (element: string) => () => {
     const { applications } = this.state;
@@ -141,13 +137,12 @@ export class Filter extends React.Component<IFilterProps, IFilterState> {
       .filter(filter => filter.affiliation === affiliation)
       .map(filter => filter.name)
       .sort();
-    const keyAndFilterNames = filterNames.map(name => ({
+    return filterNames.map(name => ({
       value: name,
       label: name,
       key: name,
       text: name
     }));
-    return keyAndFilterNames;
   };
 
   public updateFilter = (close: () => void) => {
@@ -182,9 +177,6 @@ export class Filter extends React.Component<IFilterProps, IFilterState> {
     this.setState({
       currentFilterName: filterName
     });
-  };
-  public noOptionsMessage = () => {
-    return 'Ingen';
   };
 
   public handleFilterChange = (option: IFilterChange) => {
@@ -404,7 +396,6 @@ export class Filter extends React.Component<IFilterProps, IFilterState> {
         </InfoDialog>
         <ReactSelect
           options={this.updateFilterNames()}
-          noOptionsMessage={this.noOptionsMessage}
           placeholder={'Velg filter'}
           selectedKey={selectedFilterKey}
           handleChange={this.handleFilterChange}

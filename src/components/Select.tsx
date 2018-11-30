@@ -13,7 +13,6 @@ interface ISelectProps {
     label: string | undefined;
   }>;
   placeholder: string;
-  noOptionsMessage: () => string;
   selectedKey?: string;
   handleChange: (option: any) => void;
   isClearable: boolean;
@@ -33,7 +32,6 @@ const theme = (t: Theme) => ({
 const Select = ({
   options,
   placeholder,
-  noOptionsMessage,
   selectedKey,
   handleChange,
   isClearable
@@ -44,6 +42,8 @@ const Select = ({
         value: selectedKey
       }
     : undefined;
+
+  const noOptionsMessage = () => 'Ingen';
 
   return (
     <StyledSelect>
