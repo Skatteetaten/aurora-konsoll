@@ -14,8 +14,9 @@ interface ISelectProps {
   }>;
   placeholder: string;
   noOptionsMessage: () => string;
-  selectedFilterKey?: string;
-  handleFilterChange: (option: any) => void;
+  selectedKey?: string;
+  handleChange: (option: any) => void;
+  isClearable: boolean;
 }
 
 const theme = (t: Theme) => ({
@@ -33,29 +34,27 @@ const Select = ({
   options,
   placeholder,
   noOptionsMessage,
-  selectedFilterKey,
-  handleFilterChange
+  selectedKey,
+  handleChange,
+  isClearable
 }: ISelectProps) => {
-  const handleSelected = () => {
-    if (selectedFilterKey) {
-      return {
-        label: selectedFilterKey,
-        value: selectedFilterKey
-      };
-    } else {
-      return undefined;
-    }
-  };
+  const value = selectedKey
+    ? {
+        label: selectedKey,
+        value: selectedKey
+      }
+    : undefined;
+
   return (
     <StyledSelect>
       <ReactSelect
         options={options}
         theme={theme}
         placeholder={placeholder}
-        isClearable={true}
+        isClearable={isClearable}
         noOptionsMessage={noOptionsMessage}
-        value={handleSelected()}
-        onChange={handleFilterChange}
+        value={value}
+        onChange={handleChange}
       />
     </StyledSelect>
   );

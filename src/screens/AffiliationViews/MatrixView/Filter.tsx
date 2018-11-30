@@ -340,8 +340,9 @@ export class Filter extends React.Component<IFilterProps, IFilterState> {
           options={this.updateFilterNames()}
           noOptionsMessage={this.noOptionsMessage}
           placeholder={'Velg filter'}
-          selectedFilterKey={selectedFilterKey}
-          handleFilterChange={this.handleFilterChange}
+          selectedKey={selectedFilterKey}
+          handleChange={this.handleFilterChange}
+          isClearable={true}
         />
       </>
     );
