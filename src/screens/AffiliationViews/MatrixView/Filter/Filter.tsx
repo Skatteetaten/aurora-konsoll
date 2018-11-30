@@ -9,12 +9,17 @@ import InfoDialog from 'components/InfoDialog';
 import { IApplicationDeployment } from 'models/ApplicationDeployment';
 
 import ActionButton from 'aurora-frontend-react-komponenter/ActionButton';
-import Button from 'aurora-frontend-react-komponenter/Button';
 import Checkbox from 'aurora-frontend-react-komponenter/Checkbox';
 import RadioButtonGroup from 'aurora-frontend-react-komponenter/RadioButtonGroup';
 import TextField from 'aurora-frontend-react-komponenter/TextField';
 import { IApplicationDeploymentFilters } from 'models/UserSettings';
 import { IFilter } from 'services/DeploymentFilterService';
+import SelectionButtons from './SelectionButtons';
+
+export enum SelectionType {
+  Applications,
+  Environments
+}
 
 enum FilterMode {
   Create,
@@ -198,25 +203,54 @@ export class Filter extends React.Component<IFilterProps, IFilterState> {
     }
   };
 
-  public clearAllCheckboxes = () => {
-    this.setState({
-      applications: [],
-      environments: []
-    });
+  public clearAllCheckboxes = (type: SelectionType) => {
+    if (type === SelectionType.Applications) {
+      this.setState({
+        applications: []
+      });
+    } else {
+      this.setState({
+        environments: []
+      });
+    }
+  };
+
+  public selectAllCheckboxes = (type: SelectionType) => {
+    const values = this.removeDuplicateValues(type);
+    if (type === SelectionType.Applications) {
+      this.setState({
+        applications: values
+      });
+    } else {
+      this.setState({
+        environments: values
+      });
+    }
+  };
+
+  public removeDuplicateValues = (type: SelectionType) => {
+    const { allDeployments } = this.props;
+    return allDeployments
+      .map(
+        deployment =>
+          type === SelectionType.Applications
+            ? deployment.name
+            : deployment.environment
+      )
+      .filter((item, index, self) => self.indexOf(item) === index)
+      .sort();
   };
 
   public render() {
-    const { className, allDeployments } = this.props;
+    const { className } = this.props;
     const { applications, environments, selectedFilterKey, mode } = this.state;
 
-    const removedDuplicateApplications = allDeployments
-      .map(deployment => deployment.name)
-      .filter((item, index, self) => self.indexOf(item) === index)
-      .sort();
-    const removedDuplicateEnvironments = allDeployments
-      .map(deployment => deployment.environment)
-      .filter((item, index, self) => self.indexOf(item) === index)
-      .sort();
+    const removedDuplicateApplications = this.removeDuplicateValues(
+      SelectionType.Applications
+    );
+    const removedDuplicateEnvironments = this.removeDuplicateValues(
+      SelectionType.Environments
+    );
     const handleRadioButtonChange = (e: Event, option: IFilterChange) => {
       this.handleFilterChange(option);
     };
@@ -297,16 +331,14 @@ export class Filter extends React.Component<IFilterProps, IFilterState> {
                   ]}
                 />
                 {renderMode()}
-                <Button
-                  buttonType="primaryRoundedFilled"
-                  style={{ marginTop: '10px' }}
-                  onClick={this.clearAllCheckboxes}
-                >
-                  Clear
-                </Button>
               </div>
               <dt>
                 <h3>Applikasjoner:</h3>
+                <SelectionButtons
+                  type={SelectionType.Applications}
+                  onClear={this.clearAllCheckboxes}
+                  onSelect={this.selectAllCheckboxes}
+                />
                 <div className="apps-and-envs">
                   {removedDuplicateApplications.map((application, index) => (
                     <Checkbox
@@ -321,6 +353,11 @@ export class Filter extends React.Component<IFilterProps, IFilterState> {
               </dt>
               <dt>
                 <h3>Miljøer:</h3>
+                <SelectionButtons
+                  type={SelectionType.Environments}
+                  onClear={this.clearAllCheckboxes}
+                  onSelect={this.selectAllCheckboxes}
+                />
                 <div className="apps-and-envs">
                   {removedDuplicateEnvironments.map((environment, index) => (
                     <Checkbox
@@ -355,7 +392,8 @@ const styledFilter = styled(Filter)`
   }
   h3 {
     padding: 0px;
-    margin: 0 0 20px 0;
+    margin-top: 0;
+    margin-bottom: 0;
   }
   .styled-edit {
     margin-right: 40px;
@@ -365,7 +403,6 @@ const styledFilter = styled(Filter)`
     min-width: 250px;
     width: auto;
     padding-right: 10px;
-    padding-left: 5px;
     margin-right: 40px;
     overflow: auto;
   }

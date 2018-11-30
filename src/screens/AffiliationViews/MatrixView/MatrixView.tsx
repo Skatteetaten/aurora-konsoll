@@ -8,7 +8,7 @@ import { IApplicationDeployment } from 'models/ApplicationDeployment';
 import { IApplicationDeploymentFilters } from 'models/UserSettings';
 import { IFilter } from 'services/DeploymentFilterService';
 import withApplicationDeployments from '../ApplicationDeploymentContext';
-import { FilterWithApi } from './Filter';
+import { FilterWithApi } from './Filter/Filter';
 import { default as MatrixBase } from './Matrix';
 
 const Matrix = withApplicationDeployments(MatrixBase);
