@@ -151,7 +151,7 @@ class AffiliationViewController extends React.Component<
   public updateFilter = async (filter: IFilter) => {
     const { affiliation, clients, updateUrlWithQuery } = this.props;
     const { allFilters } = this.state;
-    const updatedFilters = allFilters.filter(f => f.name !== filter.name);
+    const updatedFilters = allFilters.filter(f => f.affiliation !== affiliation || f.name !== filter.name);
 
     if (filter.name) {
       updatedFilters.push({

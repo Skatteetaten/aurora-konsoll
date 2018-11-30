@@ -73,7 +73,9 @@ export class Filter extends React.Component<IFilterProps, IFilterState> {
     const { selectedFilterKey, environments, applications } = this.state;
 
     if (!selectedFilterKey) {
-      const enabledFilter = allFilters.find(
+      const enabledFilter = allFilters
+        .filter(f => f.affiliation === affiliation)
+        .find(
         f =>
           JSON.stringify(f.environments) === JSON.stringify(environments) &&
           JSON.stringify(f.applications) === JSON.stringify(applications)
@@ -296,7 +298,7 @@ export class Filter extends React.Component<IFilterProps, IFilterState> {
                 selectedKey={selectedFilterKey}
               />
             </div>
-            <ActionButton color="red" icon="Clear">
+            <ActionButton color="red" icon="Delete">
               Slett filter
             </ActionButton>
           </>
