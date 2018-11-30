@@ -77,6 +77,9 @@ describe('Filter', () => {
   const updateFilter = () => {
     return;
   };
+  const deleteFilter = (filtername: string) => {
+    return;
+  };
   it('should filter applications when checkbox is checked', () => {
     const wrapper = shallow(
       <Filter
@@ -86,6 +89,7 @@ describe('Filter', () => {
         filters={emptyFilter}
         allFilters={[]}
         clients={clients}
+        deleteFilter={deleteFilter}
       />
     );
     const checkbox = wrapper.find(Checkbox);
@@ -105,6 +109,7 @@ describe('Filter', () => {
         allDeployments={deployments}
         filters={emptyFilter}
         allFilters={[]}
+        deleteFilter={deleteFilter}
         clients={clients}
       />
     );
@@ -125,6 +130,7 @@ describe('Filter', () => {
         allDeployments={deployments}
         filters={{ applications: ['app1'], environments: [] }}
         allFilters={[]}
+        deleteFilter={deleteFilter}
         clients={clients}
       />
     );
@@ -144,6 +150,7 @@ describe('Filter', () => {
         allDeployments={deployments}
         filters={{ applications: ['app1'], environments: ['env1'] }}
         allFilters={[]}
+        deleteFilter={deleteFilter}
         clients={clients}
       />
     );
@@ -166,15 +173,23 @@ describe('Filter', () => {
           environments: ['env1']
         }}
         allFilters={[]}
+        deleteFilter={deleteFilter}
         clients={clients}
       />
     );
 
-    wrapper.find(Checkbox).at(0).simulate('change');
+    wrapper
+      .find(Checkbox)
+      .at(0)
+      .simulate('change');
 
-    (wrapper.instance() as Filter).clearAllCheckboxes(SelectionType.Applications);
-    (wrapper.instance() as Filter).clearAllCheckboxes(SelectionType.Environments);
-    
+    (wrapper.instance() as Filter).clearAllCheckboxes(
+      SelectionType.Applications
+    );
+    (wrapper.instance() as Filter).clearAllCheckboxes(
+      SelectionType.Environments
+    );
+
     const checkboxes = wrapper.find(Checkbox);
     expect(checkboxes.at(0).prop('checked')).toBeFalsy();
     expect(checkboxes.at(1).prop('checked')).toBeFalsy();
@@ -193,12 +208,17 @@ describe('Filter', () => {
           environments: []
         }}
         allFilters={[]}
+        deleteFilter={deleteFilter}
         clients={clients}
       />
     );
 
-    (wrapper.instance() as Filter).selectAllCheckboxes(SelectionType.Applications);
-    (wrapper.instance() as Filter).selectAllCheckboxes(SelectionType.Environments);
+    (wrapper.instance() as Filter).selectAllCheckboxes(
+      SelectionType.Applications
+    );
+    (wrapper.instance() as Filter).selectAllCheckboxes(
+      SelectionType.Environments
+    );
 
     const checkboxes = wrapper.find(Checkbox);
     expect(checkboxes.at(0).prop('checked')).toBeTruthy();

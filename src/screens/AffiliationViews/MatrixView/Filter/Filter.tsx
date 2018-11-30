@@ -6,6 +6,8 @@ import ReactSelect from 'components/Select';
 import { IAuroraApiComponentProps, withAuroraApi } from 'components/AuroraApi';
 import InfoDialog from 'components/InfoDialog';
 
+import { errorStateManager } from 'models/StateManager/ErrorStateManager';
+
 import { IApplicationDeployment } from 'models/ApplicationDeployment';
 
 import ActionButton from 'aurora-frontend-react-komponenter/ActionButton';
@@ -30,6 +32,7 @@ interface IFilterProps extends IAuroraApiComponentProps {
   className?: string;
   affiliation: string;
   updateFilter: (filter: IFilter) => void;
+  deleteFilter: (filterName: string) => void;
   allDeployments: IApplicationDeployment[];
   filters: IFilter;
   allFilters: IApplicationDeploymentFilters[];
@@ -76,10 +79,10 @@ export class Filter extends React.Component<IFilterProps, IFilterState> {
       const enabledFilter = allFilters
         .filter(f => f.affiliation === affiliation)
         .find(
-        f =>
-          JSON.stringify(f.environments) === JSON.stringify(environments) &&
-          JSON.stringify(f.applications) === JSON.stringify(applications)
-      );
+          f =>
+            JSON.stringify(f.environments) === JSON.stringify(environments) &&
+            JSON.stringify(f.applications) === JSON.stringify(applications)
+        );
       if (enabledFilter) {
         this.setState({
           selectedFilterKey: enabledFilter.name
@@ -151,15 +154,26 @@ export class Filter extends React.Component<IFilterProps, IFilterState> {
     const { updateFilter } = this.props;
     const { currentFilterName, applications, environments } = this.state;
     const applyChanges = () => {
-      updateFilter({
-        name: currentFilterName,
-        applications,
-        environments
-      });
-      this.setState({
-        selectedFilterKey: currentFilterName
-      });
-      close();
+      if (
+        currentFilterName &&
+        currentFilterName.length > 0 &&
+        applications.length === 0 &&
+        environments.length === 0
+      ) {
+        errorStateManager.addError(
+          new Error('Ingen applikasjoner og miljøer valgt')
+        );
+      } else {
+        updateFilter({
+          name: currentFilterName,
+          applications,
+          environments
+        });
+        this.setState({
+          selectedFilterKey: currentFilterName
+        });
+        close();
+      }
     };
     return <ActionButton onClick={applyChanges}>Sett filter</ActionButton>;
   };
@@ -243,6 +257,19 @@ export class Filter extends React.Component<IFilterProps, IFilterState> {
       .sort();
   };
 
+  public deleteFilter = () => {
+    const { deleteFilter } = this.props;
+    const { selectedFilterKey } = this.state;
+    if (selectedFilterKey && selectedFilterKey.length > 0) {
+      deleteFilter(selectedFilterKey);
+      this.setState({
+        applications: [],
+        environments: [],
+        selectedFilterKey: undefined
+      });
+    }
+  };
+
   public render() {
     const { className } = this.props;
     const { applications, environments, selectedFilterKey, mode } = this.state;
@@ -280,7 +307,7 @@ export class Filter extends React.Component<IFilterProps, IFilterState> {
           <>
             <h3>Lag filter:</h3>
             <TextField
-              style={{ width: '100px' }}
+              style={{ width: '190px' }}
               placeholder={'Navn'}
               onChanged={this.setCurrentFilterName}
             />
@@ -298,7 +325,7 @@ export class Filter extends React.Component<IFilterProps, IFilterState> {
                 selectedKey={selectedFilterKey}
               />
             </div>
-            <ActionButton color="red" icon="Delete">
+            <ActionButton color="red" icon="Delete" onClick={this.deleteFilter}>
               Slett filter
             </ActionButton>
           </>
@@ -409,7 +436,7 @@ const styledFilter = styled(Filter)`
     overflow: auto;
   }
   .saved-filters {
-    max-height: 200px;
+    max-height: 380px;
     padding-right: 10px;
     padding-left: 5px;
     overflow: auto;

@@ -23,6 +23,7 @@ interface IMatrixViewProps {
   allDeployments: IApplicationDeployment[];
   filters: IFilter;
   allFilters: IApplicationDeploymentFilters[];
+  deleteFilter: (filterName: string) => void;
 }
 
 const MatrixView = ({
@@ -34,7 +35,8 @@ const MatrixView = ({
   updateFilter,
   allDeployments,
   filters,
-  allFilters
+  allFilters,
+  deleteFilter
 }: IMatrixViewProps) => (
   <div className={className}>
     <ActionBar>
@@ -42,6 +44,7 @@ const MatrixView = ({
         <FilterWithApi
           affiliation={affiliation}
           updateFilter={updateFilter}
+          deleteFilter={deleteFilter}
           allDeployments={allDeployments}
           filters={filters}
           allFilters={allFilters}

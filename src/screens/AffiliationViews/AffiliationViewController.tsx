@@ -147,11 +147,33 @@ class AffiliationViewController extends React.Component<
       }
     }));
   }
+  public deleteFilter = async (filterName: string) => {
+    const { affiliation, clients } = this.props;
+    const { allFilters } = this.state;
+    const updatedFilters = allFilters.filter(
+      f => f.affiliation !== affiliation || f.name !== filterName
+    );
+    if (filterName) {
+      const response = await clients.userSettingsClient.updateUserSettings({
+        applicationDeploymentFilters: updatedFilters
+      });
+
+      if (response) {
+        this.setState({
+          allFilters: updatedFilters
+        });
+      } else {
+        errorStateManager.addError(new Error('Feil ved sletting av filter'));
+      }
+    }
+  };
 
   public updateFilter = async (filter: IFilter) => {
     const { affiliation, clients, updateUrlWithQuery } = this.props;
     const { allFilters } = this.state;
-    const updatedFilters = allFilters.filter(f => f.affiliation !== affiliation || f.name !== filter.name);
+    const updatedFilters = allFilters.filter(
+      f => f.affiliation !== affiliation || f.name !== filter.name
+    );
 
     if (filter.name) {
       updatedFilters.push({
@@ -174,7 +196,6 @@ class AffiliationViewController extends React.Component<
       }
     }
 
-    // skaper problemer når man lager et filter med 0 apps og 0 envs
     if (filter.applications.length === 0 && filter.environments.length === 0) {
       updateUrlWithQuery('/');
     }
@@ -228,6 +249,7 @@ class AffiliationViewController extends React.Component<
                 }
                 affiliation={affiliation}
                 updateFilter={this.updateFilter}
+                deleteFilter={this.deleteFilter}
                 allDeployments={deployments}
                 filters={filter}
                 allFilters={allFilters}
