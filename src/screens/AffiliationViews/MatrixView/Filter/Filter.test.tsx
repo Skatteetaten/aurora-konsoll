@@ -1,7 +1,6 @@
 import { shallow } from 'enzyme';
 import * as React from 'react';
 
-import Button from 'aurora-frontend-react-komponenter/Button';
 import Checkbox from 'aurora-frontend-react-komponenter/Checkbox';
 import { IApplicationDeployment } from 'models/ApplicationDeployment';
 import { ImageTagType } from 'models/ImageTagType';
@@ -12,7 +11,7 @@ import {
   NetdebugClient,
   UserSettingsClient
 } from 'services/auroraApiClients';
-import { Filter } from './Filter';
+import { Filter, SelectionType } from './Filter';
 
 describe('Filter', () => {
   const applicationCheckboxIndex = 0;
@@ -156,7 +155,7 @@ describe('Filter', () => {
     expect(environments).toHaveLength(0);
   });
 
-  it('should clear all checkboxes when clear button is clicked', () => {
+  it('should clear all checkboxes when clear function is executed', () => {
     const wrapper = shallow(
       <Filter
         affiliation="paas"
@@ -171,15 +170,40 @@ describe('Filter', () => {
       />
     );
 
-    wrapper.find(Checkbox).at(0).simulate('change');;
-    
-    const clearbutton = wrapper.find(Button);
-    clearbutton.simulate('click');
+    wrapper.find(Checkbox).at(0).simulate('change');
+
+    (wrapper.instance() as Filter).clearAllCheckboxes(SelectionType.Applications);
+    (wrapper.instance() as Filter).clearAllCheckboxes(SelectionType.Environments);
     
     const checkboxes = wrapper.find(Checkbox);
     expect(checkboxes.at(0).prop('checked')).toBeFalsy();
     expect(checkboxes.at(1).prop('checked')).toBeFalsy();
     expect(checkboxes.at(2).prop('checked')).toBeFalsy();
     expect(checkboxes.at(3).prop('checked')).toBeFalsy();
+  });
+
+  it('should select all checkboxes when select function is executed', () => {
+    const wrapper = shallow(
+      <Filter
+        affiliation="paas"
+        updateFilter={updateFilter}
+        allDeployments={deployments}
+        filters={{
+          applications: [],
+          environments: []
+        }}
+        allFilters={[]}
+        clients={clients}
+      />
+    );
+
+    (wrapper.instance() as Filter).selectAllCheckboxes(SelectionType.Applications);
+    (wrapper.instance() as Filter).selectAllCheckboxes(SelectionType.Environments);
+
+    const checkboxes = wrapper.find(Checkbox);
+    expect(checkboxes.at(0).prop('checked')).toBeTruthy();
+    expect(checkboxes.at(1).prop('checked')).toBeTruthy();
+    expect(checkboxes.at(2).prop('checked')).toBeTruthy();
+    expect(checkboxes.at(3).prop('checked')).toBeTruthy();
   });
 });
