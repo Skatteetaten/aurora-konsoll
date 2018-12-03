@@ -13,19 +13,14 @@ import { IApplicationDeployment } from 'models/ApplicationDeployment';
 import ActionButton from 'aurora-frontend-react-komponenter/ActionButton';
 import Checkbox from 'aurora-frontend-react-komponenter/Checkbox';
 import RadioButtonGroup from 'aurora-frontend-react-komponenter/RadioButtonGroup';
-import TextField from 'aurora-frontend-react-komponenter/TextField';
 import { IApplicationDeploymentFilters } from 'models/UserSettings';
 import { IFilter } from 'services/DeploymentFilterService';
+import FilterModeSelect, { FilterMode } from './FilterModeSelect';
 import SelectionButtons from './SelectionButtons';
 
 export enum SelectionType {
   Applications,
   Environments
-}
-
-enum FilterMode {
-  Create,
-  Edit
 }
 
 interface IFilterProps extends IAuroraApiComponentProps {
@@ -46,7 +41,7 @@ interface IFilterState {
   mode: FilterMode;
 }
 
-interface IFilterChange {
+export interface IFilterChange {
   label: string;
   value: string;
 }
@@ -132,7 +127,7 @@ export class Filter extends React.Component<IFilterProps, IFilterState> {
     }
   };
 
-  public updateFilterNames = () => {
+  public createFilterOptions = () => {
     const { allFilters, affiliation } = this.props;
     const filterNames = allFilters
       .filter(filter => filter.affiliation === affiliation)
@@ -273,9 +268,6 @@ export class Filter extends React.Component<IFilterProps, IFilterState> {
     const removedDuplicateEnvironments = this.removeDuplicateValues(
       SelectionType.Environments
     );
-    const handleRadioButtonChange = (e: Event, option: IFilterChange) => {
-      this.handleFilterChange(option);
-    };
 
     const renderOpenButton = (open: () => void) => (
       <ActionButton
@@ -292,38 +284,6 @@ export class Filter extends React.Component<IFilterProps, IFilterState> {
       this.setState({
         mode: option.key
       });
-    };
-
-    const renderMode = () => {
-      if (mode === FilterMode.Create) {
-        return (
-          <>
-            <h3>Lag filter:</h3>
-            <TextField
-              style={{ width: '190px' }}
-              placeholder={'Navn'}
-              onChanged={this.setCurrentFilterName}
-            />
-          </>
-        );
-      } else {
-        return (
-          <>
-            <h3>Lagrede filtre:</h3>
-            <div className="saved-filters">
-              <RadioButtonGroup
-                boxSide={'start'}
-                options={this.updateFilterNames()}
-                onChange={handleRadioButtonChange}
-                selectedKey={selectedFilterKey}
-              />
-            </div>
-            <ActionButton color="red" icon="Delete" onClick={this.deleteFilter}>
-              Slett filter
-            </ActionButton>
-          </>
-        );
-      }
     };
     return (
       <>
@@ -352,7 +312,14 @@ export class Filter extends React.Component<IFilterProps, IFilterState> {
                     }
                   ]}
                 />
-                {renderMode()}
+                <FilterModeSelect
+                  setCurrentFilterName={this.setCurrentFilterName}
+                  filterOptions={this.createFilterOptions()}
+                  selectedFilterKey={selectedFilterKey}
+                  deleteFilter={this.deleteFilter}
+                  mode={mode}
+                  handleFilterChange={this.handleFilterChange}
+                />
               </div>
               <dt>
                 <h3>Applikasjoner:</h3>
@@ -396,7 +363,7 @@ export class Filter extends React.Component<IFilterProps, IFilterState> {
           </div>
         </InfoDialog>
         <ReactSelect
-          options={this.updateFilterNames()}
+          options={this.createFilterOptions()}
           placeholder={'Velg filter'}
           selectedKey={selectedFilterKey}
           handleChange={this.handleFilterChange}
