@@ -7,13 +7,18 @@ import { Theme } from 'react-select/lib/types';
 import palette from 'aurora-frontend-react-komponenter/utils/palette';
 
 const { skeColor } = palette;
+
+export interface ISelectLabel {
+  label?: string;
+}
+
 interface ISelectProps {
   options: Array<{
     value: string | undefined;
     label: string | undefined;
   }>;
   placeholder: string;
-  selectedKey?: string;
+  selectedKey?: ISelectLabel;
   handleChange: (option: any) => void;
   isClearable: boolean;
 }
@@ -36,12 +41,8 @@ const Select = ({
   handleChange,
   isClearable
 }: ISelectProps) => {
-  const value = selectedKey
-    ? {
-        label: selectedKey,
-        value: selectedKey
-      }
-    : undefined;
+  const getValue = (key?: ISelectLabel) => 
+  (key) ? { label: key.label, value: key.label } : undefined
 
   const noOptionsMessage = () => 'Ingen';
 
@@ -53,7 +54,7 @@ const Select = ({
         placeholder={placeholder}
         isClearable={isClearable}
         noOptionsMessage={noOptionsMessage}
-        value={value}
+        value={getValue(selectedKey)}
         onChange={handleChange}
       />
     </StyledSelect>
