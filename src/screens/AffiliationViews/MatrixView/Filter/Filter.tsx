@@ -12,9 +12,9 @@ import { IApplicationDeployment } from 'models/ApplicationDeployment';
 
 import ActionButton from 'aurora-frontend-react-komponenter/ActionButton';
 import Checkbox from 'aurora-frontend-react-komponenter/Checkbox';
-import RadioButtonGroup from 'aurora-frontend-react-komponenter/RadioButtonGroup';
 import { IApplicationDeploymentFilters } from 'models/UserSettings';
 import { IFilter } from 'services/DeploymentFilterService';
+import FilterService from 'services/FilterService';
 import FilterModeSelect, { FilterMode } from './FilterModeSelect';
 import SelectionButtons from './SelectionButtons';
 
@@ -46,11 +46,6 @@ export interface IFilterChange {
   value: string;
 }
 
-interface IModeChange {
-  key: FilterMode;
-  text: string;
-}
-
 export class Filter extends React.Component<IFilterProps, IFilterState> {
   public state: IFilterState = {
     applications: [],
@@ -58,6 +53,8 @@ export class Filter extends React.Component<IFilterProps, IFilterState> {
     mode: FilterMode.Create,
     selectedFilterKey: undefined
   };
+
+  private filterService = new FilterService();
 
   public componentDidMount() {
     const { filters } = this.props;
@@ -67,26 +64,28 @@ export class Filter extends React.Component<IFilterProps, IFilterState> {
     });
   }
 
-  public componentDidUpdate(prevProps: IFilterProps) {
+  public setExistingFilter() {
     const { affiliation, allFilters } = this.props;
     const { selectedFilterKey, environments, applications } = this.state;
 
     if (!selectedFilterKey) {
-      const enabledFilter = allFilters
-        .filter(f => f.affiliation === affiliation)
-        .find(
-          f =>
-            JSON.stringify(f.environments) === JSON.stringify(environments) &&
-            JSON.stringify(f.applications) === JSON.stringify(applications)
-        );
+      const enabledFilter = this.filterService.findFilterByApplicationsAndEnvironments(
+        allFilters,
+        affiliation,
+        applications,
+        environments
+      );
       if (enabledFilter) {
         this.setState({
           selectedFilterKey: enabledFilter.name
         });
       }
     }
+  }
 
-    if (prevProps.affiliation !== affiliation) {
+  public clearOnAffiliationChange(prevAffiliation: string) {
+    const { affiliation } = this.props;
+    if (prevAffiliation !== affiliation) {
       this.setState({
         applications: [],
         environments: [],
@@ -96,8 +95,10 @@ export class Filter extends React.Component<IFilterProps, IFilterState> {
     }
   }
 
-  public removeDuplicates = (list: string[], element: string) =>
-    list.filter(item => item !== element);
+  public componentDidUpdate(prevProps: IFilterProps) {
+    this.setExistingFilter();
+    this.clearOnAffiliationChange(prevProps.affiliation);
+  }
 
   public updateApplicationFilter = (element: string) => () => {
     const { applications } = this.state;
@@ -106,7 +107,10 @@ export class Filter extends React.Component<IFilterProps, IFilterState> {
         applications: [...prevState.applications, element]
       }));
     } else {
-      const newArray = this.removeDuplicates(applications, element);
+      const newArray = this.filterService.removeDuplicates(
+        applications,
+        element
+      );
       this.setState(() => ({
         applications: newArray
       }));
@@ -120,37 +124,31 @@ export class Filter extends React.Component<IFilterProps, IFilterState> {
         environments: [...prevState.environments, element]
       }));
     } else {
-      const newArray = this.removeDuplicates(environments, element);
+      const newArray = this.filterService.removeDuplicates(
+        environments,
+        element
+      );
       this.setState({
         environments: newArray
       });
     }
   };
 
-  public createFilterOptions = () => {
-    const { allFilters, affiliation } = this.props;
-    const filterNames = allFilters
-      .filter(filter => filter.affiliation === affiliation)
-      .map(filter => filter.name)
-      .sort();
-    return filterNames.map(name => ({
-      value: name,
-      label: name,
-      key: name,
-      text: name
-    }));
+  public hasCurrentFilterName = () => {
+    const { currentFilterName } = this.state;
+    return currentFilterName && currentFilterName.length > 0;
   };
 
-  public updateFilter = (close: () => void) => {
+  public noFilterOptionsSelected = () => {
+    const { applications, environments } = this.state;
+    return applications.length === 0 && environments.length === 0;
+  };
+
+  public footerApplyButton = (close: () => void) => {
     const { updateFilter } = this.props;
     const { currentFilterName, applications, environments } = this.state;
     const applyChanges = () => {
-      if (
-        currentFilterName &&
-        currentFilterName.length > 0 &&
-        applications.length === 0 &&
-        environments.length === 0
-      ) {
+      if (this.hasCurrentFilterName() && this.noFilterOptionsSelected()) {
         errorStateManager.addError(
           new Error('Ingen applikasjoner og miljøer valgt')
         );
@@ -220,7 +218,11 @@ export class Filter extends React.Component<IFilterProps, IFilterState> {
   };
 
   public selectAllCheckboxes = (type: SelectionType) => {
-    const values = this.removeDuplicateValues(type);
+    const { allDeployments } = this.props;
+    const values = this.filterService.removeSelectionTypeDuplicateValues(
+      allDeployments,
+      type
+    );
     if (type === SelectionType.Applications) {
       this.setState({
         applications: values
@@ -230,19 +232,6 @@ export class Filter extends React.Component<IFilterProps, IFilterState> {
         environments: values
       });
     }
-  };
-
-  public removeDuplicateValues = (type: SelectionType) => {
-    const { allDeployments } = this.props;
-    return allDeployments
-      .map(
-        deployment =>
-          type === SelectionType.Applications
-            ? deployment.name
-            : deployment.environment
-      )
-      .filter((item, index, self) => self.indexOf(item) === index)
-      .sort();
   };
 
   public deleteFilter = () => {
@@ -259,14 +248,11 @@ export class Filter extends React.Component<IFilterProps, IFilterState> {
   };
 
   public render() {
-    const { className } = this.props;
+    const { className, allFilters, affiliation, allDeployments } = this.props;
     const { applications, environments, selectedFilterKey, mode } = this.state;
 
-    const removedDuplicateApplications = this.removeDuplicateValues(
-      SelectionType.Applications
-    );
-    const removedDuplicateEnvironments = this.removeDuplicateValues(
-      SelectionType.Environments
+    const selectionNames = this.filterService.createUniqueSelectionNames(
+      allDeployments
     );
 
     const renderOpenButton = (open: () => void) => (
@@ -280,41 +266,31 @@ export class Filter extends React.Component<IFilterProps, IFilterState> {
       </ActionButton>
     );
 
-    const changeMode = (e: Event, option: IModeChange) => {
+    const setMode = (m: FilterMode) => {
       this.setState({
-        mode: option.key
+        mode: m
       });
     };
+
+    const filterOptions = this.filterService.createFilterOptions(
+      allFilters,
+      affiliation
+    );
+
     return (
       <>
         <InfoDialog
           title="Filter meny"
-          renderFooterButtons={this.updateFilter}
+          renderFooterButtons={this.footerApplyButton}
           renderOpenDialogButton={renderOpenButton}
         >
           <div className={className}>
             <dl>
               <div className="styled-edit">
-                <RadioButtonGroup
-                  boxSide={'start'}
-                  defaultSelectedKey={mode}
-                  onChange={changeMode}
-                  options={[
-                    {
-                      key: FilterMode.Create,
-                      text: 'Nytt',
-                      iconProps: { iconName: 'AddOutline' }
-                    },
-                    {
-                      key: FilterMode.Edit,
-                      text: 'Rediger',
-                      iconProps: { iconName: 'Edit' }
-                    }
-                  ]}
-                />
                 <FilterModeSelect
+                  setMode={setMode}
                   setCurrentFilterName={this.setCurrentFilterName}
-                  filterOptions={this.createFilterOptions()}
+                  filterOptions={filterOptions}
                   selectedFilterKey={selectedFilterKey}
                   deleteFilter={this.deleteFilter}
                   mode={mode}
@@ -329,7 +305,7 @@ export class Filter extends React.Component<IFilterProps, IFilterState> {
                   onSelect={this.selectAllCheckboxes}
                 />
                 <div className="apps-and-envs">
-                  {removedDuplicateApplications.map((application, index) => (
+                  {selectionNames.applications.map((application, index) => (
                     <Checkbox
                       key={index}
                       boxSide={'start'}
@@ -348,7 +324,7 @@ export class Filter extends React.Component<IFilterProps, IFilterState> {
                   onSelect={this.selectAllCheckboxes}
                 />
                 <div className="apps-and-envs">
-                  {removedDuplicateEnvironments.map((environment, index) => (
+                  {selectionNames.environments.map((environment, index) => (
                     <Checkbox
                       key={index}
                       boxSide={'start'}
@@ -363,7 +339,7 @@ export class Filter extends React.Component<IFilterProps, IFilterState> {
           </div>
         </InfoDialog>
         <ReactSelect
-          options={this.createFilterOptions()}
+          options={filterOptions}
           placeholder={'Velg filter'}
           selectedKey={selectedFilterKey}
           handleChange={this.handleFilterChange}

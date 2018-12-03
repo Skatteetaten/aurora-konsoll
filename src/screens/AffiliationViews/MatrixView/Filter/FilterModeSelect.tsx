@@ -18,6 +18,7 @@ export interface IFilterOption {
 }
 
 interface IFilterModeSelectProps {
+  setMode: (mode: FilterMode) => void;
   setCurrentFilterName: (filterName: string) => void;
   filterOptions: IFilterOption[];
   selectedFilterKey?: string;
@@ -26,7 +27,13 @@ interface IFilterModeSelectProps {
   handleFilterChange: (option: IFilterChange) => void;
 }
 
+interface IModeChange {
+  key: FilterMode;
+  text: string;
+}
+
 const FilterModeSelect = ({
+  setMode,
   setCurrentFilterName,
   filterOptions,
   selectedFilterKey,
@@ -37,6 +44,10 @@ const FilterModeSelect = ({
   const handleRadioButtonChange = (e: Event, option: IFilterChange) => {
     handleFilterChange(option);
   };
+  const changeMode = (e: Event, option: IModeChange) => {
+    setMode(option.key);
+  };
+
   const newFilter = (
     <>
       <h3>Lag filter:</h3>
@@ -63,7 +74,28 @@ const FilterModeSelect = ({
       </ActionButton>
     </>
   );
-  return mode === FilterMode.Create ? newFilter : editFilter;
+  return (
+    <>
+      <RadioButtonGroup
+        boxSide={'start'}
+        defaultSelectedKey={mode}
+        onChange={changeMode}
+        options={[
+          {
+            key: FilterMode.Create,
+            text: 'Nytt',
+            iconProps: { iconName: 'AddOutline' }
+          },
+          {
+            key: FilterMode.Edit,
+            text: 'Rediger',
+            iconProps: { iconName: 'Edit' }
+          }
+        ]}
+      />
+      {mode === FilterMode.Create ? newFilter : editFilter}
+    </>
+  );
 };
 
 export default FilterModeSelect;
