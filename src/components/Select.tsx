@@ -8,17 +8,13 @@ import palette from 'aurora-frontend-react-komponenter/utils/palette';
 
 const { skeColor } = palette;
 
-export interface ISelectLabel {
-  label?: string;
-}
-
 interface ISelectProps {
   options: Array<{
     value: string | undefined;
     label: string | undefined;
   }>;
   placeholder: string;
-  selectedKey?: ISelectLabel;
+  selectedKey?: string;
   handleChange: (option: any) => void;
   isClearable: boolean;
 }
@@ -41,8 +37,7 @@ const Select = ({
   handleChange,
   isClearable
 }: ISelectProps) => {
-  const getValue = (key?: ISelectLabel) => 
-  (key) ? { label: key.label, value: key.label } : undefined
+  const getValue = (key?: string) => (key ? { label: key, value: key } : null);
 
   const noOptionsMessage = () => 'Ingen';
 

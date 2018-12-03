@@ -1,7 +1,7 @@
 import * as React from 'react';
 import styled from 'styled-components';
 
-import ReactSelect, { ISelectLabel } from 'components/Select';
+import ReactSelect from 'components/Select';
 
 import { IAuroraApiComponentProps, withAuroraApi } from 'components/AuroraApi';
 import InfoDialog from 'components/InfoDialog';
@@ -41,7 +41,7 @@ interface IFilterProps extends IAuroraApiComponentProps {
 interface IFilterState {
   applications: string[];
   environments: string[];
-  selectedFilterKey?: ISelectLabel;
+  selectedFilterKey?: string;
   currentFilterName?: string;
   mode: FilterMode;
 }
@@ -60,7 +60,8 @@ export class Filter extends React.Component<IFilterProps, IFilterState> {
   public state: IFilterState = {
     applications: [],
     environments: [],
-    mode: FilterMode.Create
+    mode: FilterMode.Create,
+    selectedFilterKey: undefined
   };
 
   public componentDidMount() {
@@ -85,9 +86,7 @@ export class Filter extends React.Component<IFilterProps, IFilterState> {
         );
       if (enabledFilter) {
         this.setState({
-          selectedFilterKey: {
-            label: enabledFilter.name
-          }
+          selectedFilterKey: enabledFilter.name
         });
       }
     }
@@ -96,7 +95,7 @@ export class Filter extends React.Component<IFilterProps, IFilterState> {
       this.setState({
         applications: [],
         environments: [],
-        selectedFilterKey: { label: undefined },
+        selectedFilterKey: undefined,
         mode: FilterMode.Create
       });
     }
@@ -167,9 +166,7 @@ export class Filter extends React.Component<IFilterProps, IFilterState> {
           environments
         });
         this.setState({
-          selectedFilterKey: {
-            label: currentFilterName
-          }
+          selectedFilterKey: currentFilterName
         });
         close();
       }
@@ -187,7 +184,7 @@ export class Filter extends React.Component<IFilterProps, IFilterState> {
     const { allFilters, updateFilter } = this.props;
     if (option) {
       this.setState({
-        selectedFilterKey: { label: option.label },
+        selectedFilterKey: option.label,
         mode: FilterMode.Edit
       });
       const currentFilter = allFilters.find(
@@ -256,8 +253,8 @@ export class Filter extends React.Component<IFilterProps, IFilterState> {
   public deleteFilter = () => {
     const { deleteFilter } = this.props;
     const { selectedFilterKey } = this.state;
-    if (selectedFilterKey && selectedFilterKey.label && selectedFilterKey.label.length > 0) {
-      deleteFilter(selectedFilterKey.label);
+    if (selectedFilterKey && selectedFilterKey.length > 0) {
+      deleteFilter(selectedFilterKey);
       this.setState({
         applications: [],
         environments: [],
