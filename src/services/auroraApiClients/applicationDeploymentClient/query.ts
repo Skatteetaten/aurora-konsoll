@@ -1,5 +1,6 @@
 import gql from 'graphql-tag';
 import { IPodResource } from 'models/Pod';
+import { StatusCode } from 'models/Status';
 import { IImageTag } from '../imageRepositoryClient/query';
 
 export interface IApplicationsConnectionQuery {
@@ -43,7 +44,7 @@ interface IApplicationDeployment {
     permission: IPermission;
   };
   status: {
-    code: string;
+    code: StatusCode;
     comment?: string;
   };
   version: {

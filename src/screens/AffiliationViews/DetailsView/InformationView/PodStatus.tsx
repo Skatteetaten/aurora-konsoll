@@ -5,8 +5,8 @@ import palette from 'aurora-frontend-react-komponenter/utils/palette';
 
 import IconLink, { IIconLinkData } from 'components/IconLink';
 import { IPodResource } from 'models/Pod';
-import { statusColors } from 'screens/AffiliationViews/MatrixView/Status';
 
+import { STATUS_COLORS } from 'models/Status';
 import { getLocalDatetime } from 'utils/date';
 import HealthResponseDialogSelector from './HealthResponseDialogSelector/HealthResponseDialogSelector';
 
@@ -118,7 +118,7 @@ export default styled(PodStatus)`
     align-items: flex-end;
     padding: 5px 10px;
     color: white;
-    background: ${statusColors.healthy};
+    background: ${STATUS_COLORS.healthy};
 
     span {
       font-weight: bold;

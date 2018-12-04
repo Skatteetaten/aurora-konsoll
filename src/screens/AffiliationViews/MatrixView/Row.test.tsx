@@ -3,6 +3,7 @@ import * as React from 'react';
 
 import { IApplicationDeployment } from 'models/ApplicationDeployment';
 import { ImageTagType } from 'models/ImageTagType';
+import { StatusCode } from 'models/Status';
 import Row, { IApplicationMap } from './Row';
 import Status from './Status';
 
@@ -15,7 +16,7 @@ describe('Row', () => {
         name: '',
         environment: 'dev',
         status: {
-          code: ''
+          code: StatusCode.HEALTHY
         },
         version: {
           auroraVersion: '',

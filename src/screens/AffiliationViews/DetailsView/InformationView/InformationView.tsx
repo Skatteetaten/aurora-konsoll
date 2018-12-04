@@ -8,6 +8,7 @@ import {
   IApplicationDeploymentDetails
 } from 'models/ApplicationDeployment';
 import { IDeploymentSpec } from 'models/DeploymentSpec';
+import { toStatusColor } from 'models/Status';
 import PodStatus from './PodStatus';
 
 interface IInformationViewProps {
@@ -49,6 +50,20 @@ const InformationView = ({
           margin: '30px 0'
         }}
       />
+      <div className="info-grid">
+        <div>
+          <h3>Helsestatus</h3>
+          <InfoContent
+            style={{
+              background: toStatusColor(deployment.status.code).base
+            }}
+            values={{
+              Status: deployment.status.code,
+              Kommentar: deployment.status.comment
+            }}
+          />
+        </div>
+      </div>
       <h3>Pods fra OpenShift</h3>
       <div className="info-deployments">
         {pods.map(pod => (
@@ -100,17 +115,27 @@ function getApplicationDeploymentValues(deployment: IApplicationDeployment) {
     'Image repository': deployment.repository
       .split('/')
       .slice(1)
-      .join('/'),
-    Status:
-      deployment.status.code +
-      (deployment.status.comment && ` (${deployment.status.comment})`)
+      .join('/')
   };
 }
 
 export default styled(InformationView)`
+  .health-status {
+    background: white;
+    display: flex;
+    p {
+      padding: 10px 0;
+      margin: 0;
+      &:first-child {
+        margin-right: 10px;
+      }
+    }
+  }
+
   .labels {
     display: flex;
   }
+
   .info-deployments {
     display: flex;
   }

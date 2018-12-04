@@ -2,14 +2,23 @@ import * as React from 'react';
 import styled from 'styled-components';
 
 interface IInfoContentProps {
+  style?: React.CSSProperties;
   className?: string;
   values: {
     [key: string]: any;
   };
 }
 
-const InfoContent = ({ values, className }: IInfoContentProps) => (
-  <div className={className}>
+const defaultStyle: React.CSSProperties = {
+  background: 'white'
+};
+
+const InfoContent = ({
+  values,
+  className,
+  style = defaultStyle
+}: IInfoContentProps) => (
+  <div className={className} style={style}>
     {Object.keys(values).map(k => (
       <dl key={k}>
         <dt>{k}</dt>
@@ -22,7 +31,6 @@ const InfoContent = ({ values, className }: IInfoContentProps) => (
 export default styled(InfoContent)`
   max-width: 650px;
   box-shadow: 0px 3px 8px 0px rgba(0, 0, 0, 0.2);
-  background: white;
   padding: 5px 10px;
 
   dl {

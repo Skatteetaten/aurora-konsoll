@@ -1,30 +1,30 @@
+import { IStatusColor, StatusCode, toStatusColor } from 'models/Status';
 import styled, { css } from 'styled-components';
 
-const statusColors = {
-  down: '#bb4f4f',
-  downHover: '#c64040',
-  healthy: '#4fbb82',
-  healthyHover: '#40c67f',
-  observe: '#bbad4f',
-  observeHover: '#c7b53b',
-  off: '#91919199',
-  offHover: '#b9b5b599',
-  unknown: '#4f8ebb',
-  unknownHover: '#4086c6'
+interface IStatusProps {
+  code: StatusCode;
+}
+
+interface IStatusAttrs {
+  statusColor?: IStatusColor;
+}
+
+const mapping = {
+  statusColor: (props: IStatusProps) => toStatusColor(props.code)
 };
 
-const Status = styled.td<{
-  name: string;
-}>`
+const Status = styled<IStatusProps, 'td'>('td').attrs<IStatusAttrs>(mapping)`
   cursor: pointer;
   padding: 0;
 
-  ${props => css`
-    background: ${statusColors[props.name]};
-    &:hover {
-      background: ${statusColors[props.name + 'Hover']};
-    }
-  `};
+  ${({ statusColor }) =>
+    statusColor &&
+    css`
+      background: ${statusColor.base};
+      &:hover {
+        background: ${statusColor.hover};
+      }
+    `};
 
   a {
     display: block;
@@ -35,7 +35,5 @@ const Status = styled.td<{
     text-overflow: ellipsis;
   }
 `;
-
-export { statusColors };
 
 export default Status;
