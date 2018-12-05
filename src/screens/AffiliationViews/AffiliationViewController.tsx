@@ -85,9 +85,11 @@ class AffiliationViewController extends React.Component<
   public fetchApplicationDeploymentFilters = async () => {
     const { clients } = this.props;
     const filters = await clients.userSettingsClient.getUserSettings();
-    this.setState({
-      allFilters: filters.applicationDeploymentFilters
-    });
+    if(filters) {
+      this.setState({
+        allFilters: filters.applicationDeploymentFilters
+      });
+    }
   };
 
   public refreshApplicationDeployments = async () => {
