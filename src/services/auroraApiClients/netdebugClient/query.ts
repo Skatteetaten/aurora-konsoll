@@ -1,7 +1,7 @@
 import gql from 'graphql-tag';
 
 export interface IScanQuery {
-  scan: {
+  scan?: {
     status: string;
     open?: IScanStatusQuery;
     failed?: IScanStatusQuery;
