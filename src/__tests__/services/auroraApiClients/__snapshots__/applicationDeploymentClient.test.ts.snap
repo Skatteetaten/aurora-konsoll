@@ -16,7 +16,9 @@ Array [
     "repository": "docker-registry.aurora.sits.no:5000/ske_openshift_aurora_console/openshift-console-api",
     "status": Object {
       "code": "HEALTHY",
-      "comment": "OK",
+      "description": undefined,
+      "details": undefined,
+      "statusCheckName": undefined,
     },
     "time": "2018-09-28T11:15:03.151Z",
     "version": Object {

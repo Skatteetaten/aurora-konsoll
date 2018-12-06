@@ -1,7 +1,10 @@
 import { IDeploymentSpec } from 'models/DeploymentSpec';
 import { IPodResource } from 'models/Pod';
 import { ITag } from 'models/Tag';
-import { IPermission } from 'services/auroraApiClients/applicationDeploymentClient/query';
+import {
+  IPermission,
+  IStatusCheck
+} from 'services/auroraApiClients/applicationDeploymentClient/query';
 import { StatusCode } from './Status';
 
 export interface IApplicationDeployment {
@@ -22,7 +25,9 @@ export interface IApplicationDeployment {
 
 export interface IApplicationDeploymentStatus {
   code: StatusCode;
-  comment?: string;
+  statusCheckName: string;
+  description: string;
+  details: IStatusCheck[];
 }
 
 export interface IApplicationDeploymentDetails {

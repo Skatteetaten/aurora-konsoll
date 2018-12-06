@@ -10,6 +10,7 @@ import {
 import { IDeploymentSpec } from 'models/DeploymentSpec';
 import { toStatusColor } from 'models/Status';
 import PodStatus from './PodStatus';
+import StatusCheckReport from './StatusCheckReport';
 
 interface IInformationViewProps {
   isFetchingDetails: boolean;
@@ -59,11 +60,13 @@ const InformationView = ({
             }}
             values={{
               Status: deployment.status.code,
-              Kommentar: deployment.status.comment
+              Statussjekk: deployment.status.statusCheckName,
+              Beskrivelse: deployment.status.description
             }}
           />
         </div>
       </div>
+      <StatusCheckReport statusChecks={deployment.status.details} />
       <h3>Pods fra OpenShift</h3>
       <div className="info-deployments">
         {pods.map(pod => (

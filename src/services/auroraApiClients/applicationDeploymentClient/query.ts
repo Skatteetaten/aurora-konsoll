@@ -32,6 +32,13 @@ interface IPermissionDetails {
   view: boolean;
 }
 
+export interface IStatusCheck {
+  name: string;
+  description: string;
+  failLevel: string;
+  hasFailed: boolean;
+}
+
 interface IApplicationDeployment {
   id: string;
   name: string;
@@ -45,7 +52,9 @@ interface IApplicationDeployment {
   };
   status: {
     code: StatusCode;
-    comment?: string;
+    statusCheckName: string;
+    description: string;
+    details: IStatusCheck[];
   };
   version: {
     auroraVersion?: string;
@@ -82,7 +91,14 @@ export const APPLICATIONS_QUERY = gql`
             }
             status {
               code
-              comment
+              statusCheckName
+              description
+              details {
+                name
+                description
+                failLevel
+                hasFailed
+              }
             }
             version {
               auroraVersion

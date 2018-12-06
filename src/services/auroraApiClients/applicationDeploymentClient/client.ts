@@ -174,7 +174,9 @@ export class ApplicationDeploymentClient {
         repository: imageRepository ? imageRepository.repository : '',
         status: {
           code: app.status.code,
-          comment: app.status.comment
+          statusCheckName: app.status.statusCheckName,
+          description: app.status.description,
+          details: app.status.details
         },
         time: app.time,
         version: {

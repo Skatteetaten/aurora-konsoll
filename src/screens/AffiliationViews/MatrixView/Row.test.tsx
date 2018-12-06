@@ -16,7 +16,10 @@ describe('Row', () => {
         name: '',
         environment: 'dev',
         status: {
-          code: StatusCode.HEALTHY
+          code: StatusCode.HEALTHY,
+          description: '',
+          details: [],
+          statusCheckName: ''
         },
         version: {
           auroraVersion: '',
