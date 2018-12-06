@@ -1,5 +1,4 @@
 import * as React from 'react';
-import styled from 'styled-components';
 
 import ReactSelect from 'react-select';
 import { Theme } from 'react-select/lib/types';
@@ -17,6 +16,7 @@ interface ISelectProps {
   selectedKey?: string;
   handleChange: (option: any) => void;
   isClearable: boolean;
+  className: string;
 }
 
 const theme = (t: Theme) => ({
@@ -35,14 +35,15 @@ const Select = ({
   placeholder,
   selectedKey,
   handleChange,
-  isClearable
+  isClearable,
+  className
 }: ISelectProps) => {
   const getValue = (key?: string) => (key ? { label: key, value: key } : null);
 
   const noOptionsMessage = () => 'Ingen';
 
   return (
-    <StyledSelect>
+
       <ReactSelect
         options={options}
         theme={theme}
@@ -51,14 +52,9 @@ const Select = ({
         noOptionsMessage={noOptionsMessage}
         value={getValue(selectedKey)}
         onChange={handleChange}
+        className={className}
       />
-    </StyledSelect>
   );
 };
-
-const StyledSelect = styled.div`
-  z-index: 1000;
-  width: 250px;
-`;
 
 export default Select;

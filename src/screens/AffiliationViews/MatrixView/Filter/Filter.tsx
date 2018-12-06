@@ -3,7 +3,6 @@ import styled from 'styled-components';
 
 import ReactSelect from 'components/Select';
 
-import { IAuroraApiComponentProps, withAuroraApi } from 'components/AuroraApi';
 import InfoDialog from 'components/InfoDialog';
 
 import { errorStateManager } from 'models/StateManager/ErrorStateManager';
@@ -23,7 +22,12 @@ export enum SelectionType {
   Environments
 }
 
-interface IFilterProps extends IAuroraApiComponentProps {
+interface ICheckboxValue {
+  name: string;
+  type: SelectionType;
+}
+
+interface IFilterProps {
   className?: string;
   affiliation: string;
   updateFilter: (filter: IFilter) => void;
@@ -100,37 +104,32 @@ export class Filter extends React.Component<IFilterProps, IFilterState> {
     this.clearOnAffiliationChange(prevProps.affiliation);
   }
 
-  public updateApplicationFilter = (element: string) => () => {
-    const { applications } = this.state;
-    if (!applications.includes(element)) {
-      this.setState(prevState => ({
-        applications: [...prevState.applications, element]
-      }));
-    } else {
-      const newArray = this.filterService.removeDuplicates(
-        applications,
-        element
-      );
-      this.setState(() => ({
-        applications: newArray
-      }));
-    }
-  };
+  public updateFilterState = (value: ICheckboxValue) => () => {
+    const { applications, environments } = this.state;
+    const isApplication = value.type === SelectionType.Applications;
 
-  public updateEnvironmentFilter = (element: string) => () => {
-    const { environments } = this.state;
-    if (!environments.includes(element)) {
-      this.setState(prevState => ({
-        environments: [...prevState.environments, element]
-      }));
+    const values = isApplication ? applications : environments;
+    if (!values.includes(value.name)) {
+      if (isApplication) {
+        this.setState(prevState => ({
+          applications: [...prevState.applications, value.name]
+        }));
+      } else {
+        this.setState(prevState => ({
+          environments: [...prevState.environments, value.name]
+        }));
+      }
     } else {
-      const newArray = this.filterService.removeDuplicates(
-        environments,
-        element
-      );
-      this.setState({
-        environments: newArray
-      });
+      const newArray = this.filterService.removeDuplicates(values, value.name);
+      if (isApplication) {
+        this.setState({
+          applications: newArray
+        });
+      } else {
+        this.setState({
+          environments: newArray
+        });
+      }
     }
   };
 
@@ -311,7 +310,10 @@ export class Filter extends React.Component<IFilterProps, IFilterState> {
                       boxSide={'start'}
                       label={application}
                       checked={applications.includes(application)}
-                      onChange={this.updateApplicationFilter(application)}
+                      onChange={this.updateFilterState({
+                        name: application,
+                        type: SelectionType.Applications
+                      })}
                     />
                   ))}
                 </div>
@@ -330,7 +332,10 @@ export class Filter extends React.Component<IFilterProps, IFilterState> {
                       boxSide={'start'}
                       label={environment}
                       checked={environments.includes(environment)}
-                      onChange={this.updateEnvironmentFilter(environment)}
+                      onChange={this.updateFilterState({
+                        name: environment,
+                        type: SelectionType.Environments
+                      })}
                     />
                   ))}
                 </div>
@@ -338,19 +343,26 @@ export class Filter extends React.Component<IFilterProps, IFilterState> {
             </dl>
           </div>
         </InfoDialog>
-        <ReactSelect
-          options={filterOptions}
-          placeholder={'Velg filter'}
-          selectedKey={selectedFilterKey}
-          handleChange={this.handleFilterChange}
-          isClearable={true}
-        />
+        <div className={className}>
+          <ReactSelect
+            options={filterOptions}
+            placeholder={'Velg filter'}
+            selectedKey={selectedFilterKey}
+            handleChange={this.handleFilterChange}
+            isClearable={true}
+            className="styled-select"
+          />
+        </div>
       </>
     );
   }
 }
 
 const styledFilter = styled(Filter)`
+  .styled-select {
+    z-index: 1000;
+    width: 250px;
+  }
   dl {
     display: flex;
   }
@@ -377,7 +389,5 @@ const styledFilter = styled(Filter)`
     overflow: auto;
   }
 `;
-
-export const FilterWithApi = withAuroraApi(styledFilter);
 
 export default styledFilter;

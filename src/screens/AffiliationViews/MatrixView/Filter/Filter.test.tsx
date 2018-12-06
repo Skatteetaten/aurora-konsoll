@@ -5,31 +5,11 @@ import Checkbox from 'aurora-frontend-react-komponenter/Checkbox';
 import { IApplicationDeployment } from 'models/ApplicationDeployment';
 import { ImageTagType } from 'models/ImageTagType';
 
-import {
-  ApplicationDeploymentClient,
-  ImageRepositoryClient,
-  NetdebugClient,
-  UserSettingsClient
-} from 'services/auroraApiClients';
 import { Filter, SelectionType } from './Filter';
 
 describe('Filter', () => {
   const applicationCheckboxIndex = 0;
   const environmentCheckboxIndex = 2;
-
-  const ApplicationDeploymentMock = jest.fn<ApplicationDeploymentClient>(
-    () => ({})
-  );
-  const ImageRepositoryClientMock = jest.fn<ImageRepositoryClient>(() => ({}));
-  const NetdebugClientMock = jest.fn<NetdebugClient>(() => ({}));
-  const UserSettingsClientMock = jest.fn<UserSettingsClient>(() => ({}));
-
-  const clients = {
-    applicationDeploymentClient: new ApplicationDeploymentMock(),
-    imageRepositoryClient: new ImageRepositoryClientMock(),
-    netdebugClient: new NetdebugClientMock(),
-    userSettingsClient: new UserSettingsClientMock()
-  };
 
   const emptyFilter = { applications: [], environments: [] };
   const deployments: IApplicationDeployment[] = [
@@ -88,7 +68,6 @@ describe('Filter', () => {
         allDeployments={deployments}
         filters={emptyFilter}
         allFilters={[]}
-        clients={clients}
         deleteFilter={deleteFilter}
       />
     );
@@ -110,7 +89,6 @@ describe('Filter', () => {
         filters={emptyFilter}
         allFilters={[]}
         deleteFilter={deleteFilter}
-        clients={clients}
       />
     );
     const checkbox = wrapper.find(Checkbox);
@@ -131,7 +109,6 @@ describe('Filter', () => {
         filters={{ applications: ['app1'], environments: [] }}
         allFilters={[]}
         deleteFilter={deleteFilter}
-        clients={clients}
       />
     );
     const applications = wrapper.state('applications');
@@ -151,7 +128,6 @@ describe('Filter', () => {
         filters={{ applications: ['app1'], environments: ['env1'] }}
         allFilters={[]}
         deleteFilter={deleteFilter}
-        clients={clients}
       />
     );
     wrapper.setProps({ affiliation: 'aurora' });
@@ -174,7 +150,6 @@ describe('Filter', () => {
         }}
         allFilters={[]}
         deleteFilter={deleteFilter}
-        clients={clients}
       />
     );
 
@@ -209,7 +184,6 @@ describe('Filter', () => {
         }}
         allFilters={[]}
         deleteFilter={deleteFilter}
-        clients={clients}
       />
     );
 

@@ -206,15 +206,15 @@ class AffiliationViewController extends React.Component<
       } else {
         errorStateManager.addError(new Error('Feil ved lagring av filter'));
       }
+    } else {
+      this.setState({
+        filter
+      });
     }
 
     if (filter.applications.length === 0 && filter.environments.length === 0) {
       updateUrlWithQuery('/');
     }
-
-    this.setState({
-      filter
-    });
   };
 
   public render() {

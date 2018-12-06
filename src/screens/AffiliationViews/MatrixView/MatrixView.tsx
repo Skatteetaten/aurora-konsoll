@@ -8,7 +8,7 @@ import { IApplicationDeployment } from 'models/ApplicationDeployment';
 import { IApplicationDeploymentFilters } from 'models/UserSettings';
 import { IFilter } from 'services/DeploymentFilterService';
 import withApplicationDeployments from '../ApplicationDeploymentContext';
-import { FilterWithApi } from './Filter/Filter';
+import Filter from './Filter/Filter';
 import { default as MatrixBase } from './Matrix';
 
 const Matrix = withApplicationDeployments(MatrixBase);
@@ -41,7 +41,7 @@ const MatrixView = ({
   <div className={className}>
     <ActionBar>
       <StyledFilter>
-        <FilterWithApi
+        <Filter
           affiliation={affiliation}
           updateFilter={updateFilter}
           deleteFilter={deleteFilter}
