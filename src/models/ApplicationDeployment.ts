@@ -1,5 +1,5 @@
 import { IDeploymentSpec } from 'models/DeploymentSpec';
-import { IPodResource } from 'models/Pod';
+import { IPodDetails, IPodResource } from 'models/Pod';
 import { ITag } from 'models/Tag';
 import { IPermission } from 'services/auroraApiClients/applicationDeploymentClient/query';
 
@@ -27,6 +27,7 @@ export interface IApplicationDeploymentStatus {
 export interface IApplicationDeploymentDetails {
   deploymentSpec?: IDeploymentSpec;
   pods: IPodResource[];
+  details: IPodDetails;
 }
 
 export interface IUserAndAffiliations {

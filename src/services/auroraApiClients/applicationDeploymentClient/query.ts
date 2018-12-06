@@ -1,5 +1,5 @@
 import gql from 'graphql-tag';
-import { IPodResource } from 'models/Pod';
+import { IPodDetails, IPodResource } from 'models/Pod';
 import { IImageTag } from '../imageRepositoryClient/query';
 
 export interface IApplicationsConnectionQuery {
@@ -107,6 +107,7 @@ export interface IApplicationDeploymentDetailsQuery {
         jsonRepresentation: string;
       };
     };
+    deployDetails: IPodDetails;
   };
 }
 
@@ -115,7 +116,6 @@ export const APPLICATION_DEPLOYMENT_DETAILS_QUERY = gql`
     applicationDeploymentDetails(id: $id) {
       podResources {
         name
-        status
         restartCount
         ready
         startTime
@@ -141,6 +141,9 @@ export const APPLICATION_DEPLOYMENT_DETAILS_QUERY = gql`
         current {
           jsonRepresentation
         }
+      }
+      deployDetails {
+        phase
       }
     }
   }

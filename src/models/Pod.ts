@@ -13,6 +13,10 @@ export interface IPodResource {
   }>;
 }
 
+export interface IPodDetails {
+  phase?: string;
+}
+
 export interface IManagementEndpointResponse {
   hasResponse: boolean;
   textResponse?: string;
