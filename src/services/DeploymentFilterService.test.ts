@@ -25,6 +25,12 @@ describe('DeploymentFilterService', () => {
           type: ImageTagType.AURORA_VERSION
         },
         releaseTo: undefined
+      },
+      permission: {
+        paas: {
+          admin: false,
+          view: true
+        }
       }
     },
     {
@@ -46,6 +52,12 @@ describe('DeploymentFilterService', () => {
           type: ImageTagType.MAJOR
         },
         releaseTo: undefined
+      },
+      permission: {
+        paas: {
+          admin: false,
+          view: true
+        }
       }
     }
   ];

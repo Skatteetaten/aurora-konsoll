@@ -17,7 +17,13 @@
                 },
                 "environment": "aurora",
                 "namespace": {
-                  "name": "aurora"
+                  "name": "aurora",
+                  "permission": {
+                    "paas": {
+                      "admin": true,
+                      "view": true
+                    }
+                  }
                 },
                 "status": {
                   "code": "HEALTHY",

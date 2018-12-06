@@ -1,6 +1,7 @@
 import { IDeploymentSpec } from 'models/DeploymentSpec';
 import { IPodResource } from 'models/Pod';
 import { ITag } from 'models/Tag';
+import { IPermission } from 'services/auroraApiClients/applicationDeploymentClient/query';
 
 export interface IApplicationDeployment {
   id: string;
@@ -13,6 +14,7 @@ export interface IApplicationDeployment {
     deployTag: ITag;
     releaseTo?: string;
   };
+  permission: IPermission;
   repository: string;
   time: string;
 }

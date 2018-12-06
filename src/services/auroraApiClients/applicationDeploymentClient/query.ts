@@ -22,6 +22,15 @@ interface IImageRepository {
   repository: string;
 }
 
+export interface IPermission {
+  paas: IPermissionDetails;
+}
+
+interface IPermissionDetails {
+  admin: boolean;
+  view: boolean;
+}
+
 interface IApplicationDeployment {
   id: string;
   name: string;
@@ -31,6 +40,7 @@ interface IApplicationDeployment {
   environment: string;
   namespace: {
     name: string;
+    permission: IPermission;
   };
   status: {
     code: string;
@@ -62,6 +72,12 @@ export const APPLICATIONS_QUERY = gql`
             environment
             namespace {
               name
+              permission {
+                paas {
+                  view
+                  admin
+                }
+              }
             }
             status {
               code

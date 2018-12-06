@@ -30,6 +30,12 @@ describe('Filter', () => {
         },
         releaseTo: ''
       },
+      permission: {
+        paas: {
+          admin: false,
+          view: true
+        }
+      },
       repository: '',
       time: ''
     },
@@ -49,6 +55,12 @@ describe('Filter', () => {
           lastModified: ''
         },
         releaseTo: ''
+      },
+      permission: {
+        paas: {
+          admin: false,
+          view: true
+        }
       },
       repository: '',
       time: ''

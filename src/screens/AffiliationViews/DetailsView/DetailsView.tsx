@@ -79,6 +79,7 @@ class DetailsView extends React.Component<
             </Route>
             <Route path={`${match.path}/version`}>
               <VersionView
+                hasPermissionToUpgrade={deployment.permission.paas.admin}
                 unavailableMessage={this.controller.getVersionViewUnavailableMessage()}
                 deployedTag={deployment.version.deployTag}
                 selectedTag={selectedTag}
