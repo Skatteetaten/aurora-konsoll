@@ -279,7 +279,7 @@ export class Filter extends React.Component<IFilterProps, IFilterState> {
     return (
       <>
         <InfoDialog
-          title="Filter meny"
+          title=""
           renderFooterButtons={this.footerApplyButton}
           renderOpenDialogButton={renderOpenButton}
         >
