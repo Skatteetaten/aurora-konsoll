@@ -31,7 +31,9 @@ const InformationView = ({
   if (isFetchingDetails) {
     return <Spinner />;
   }
-  const latestDeployTag = checkIfLatestDeployTag(deploymentDetails);
+  const isLatestDeployTag = AreAnyPodsRunningWithLatestDeployTag(
+    deploymentDetails
+  );
   return (
     <div className={className}>
       <div className="info-grid">
@@ -42,7 +44,10 @@ const InformationView = ({
         <div>
           <h3>Aktivt deployment</h3>
           <InfoContent
-            values={getApplicationDeploymentValues(deployment, latestDeployTag)}
+            values={getApplicationDeploymentValues(
+              deployment,
+              isLatestDeployTag
+            )}
           />
         </div>
       </div>
@@ -96,31 +101,31 @@ function getDeploymentSpecValues(deploymentSpec?: IDeploymentSpec) {
   return values;
 }
 
-function checkIfLatestDeployTag(
+function AreAnyPodsRunningWithLatestDeployTag(
   deploymentDetails: IApplicationDeploymentDetails
 ) {
   const { pods } = deploymentDetails;
-  let isLatestDeployTag = false;
+  let deployTag = false;
   {
     pods.forEach(pod => {
-      if (pod.phase === 'Running' && pod.latestDeployTag) {
-        isLatestDeployTag = true;
+      if (pod.phase === 'Running' && pod.latestDeployTag === true) {
+        deployTag = true;
       }
     });
   }
-  return isLatestDeployTag;
+  return deployTag;
 }
 
 function getApplicationDeploymentValues(
   deployment: IApplicationDeployment,
-  latestDeployTag: boolean
+  isLatestDeployTag: boolean
 ) {
-  const latestDeployTagCheck = latestDeployTag
-    ? `${deployment.version.deployTag.name} (er siste versjon)`
+  const deployTag = !isLatestDeployTag
+    ? `${deployment.version.deployTag.name} (er ikke siste versjon)`
     : deployment.version.deployTag.name;
 
   return {
-    Tag: latestDeployTagCheck,
+    Tag: deployTag,
     'Aurora version': deployment.version.auroraVersion,
     'Image repository': deployment.repository
       .split('/')

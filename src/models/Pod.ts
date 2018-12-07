@@ -2,11 +2,10 @@ export interface IPodResource {
   name: string;
   phase: string;
   deployTag: string;
-  status: string;
   restartCount: number;
   ready: boolean;
   startTime: string;
-  latestDeployTag: string;
+  latestDeployTag: boolean;
   managementResponses?: {
     health?: IManagementEndpointResponse;
   };
