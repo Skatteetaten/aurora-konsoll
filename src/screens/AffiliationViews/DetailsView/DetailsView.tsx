@@ -21,8 +21,7 @@ class DetailsView extends React.Component<
 > {
   public state: IDetailsViewState = {
     deploymentDetails: {
-      pods: [],
-      details: { phase: '' }
+      pods: []
     },
     loading: {
       fetchDetails: false,
