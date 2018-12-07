@@ -137,7 +137,7 @@ describe('InformationView', () => {
         deploymentDetails={deploymentDetailsWithoutLatestDeployTag}
       />
     );
-    expect(wrapper.text()).toContain('er ikke siste versjon');
+    expect(wrapper.text()).toContain('ikke siste versjon');
   });
 
   it('Given one of the pods has latestDeployTag=true and phase=Running, do not display "er ikke siste versjon"', () => {
@@ -150,6 +150,6 @@ describe('InformationView', () => {
         deploymentDetails={deploymentDetailsWithLatestDeployTag}
       />
     );
-    expect(wrapper.text()).not.toContain('er ikke siste versjon');
+    expect(wrapper.text()).not.toContain('ikke siste versjon');
   });
 });
