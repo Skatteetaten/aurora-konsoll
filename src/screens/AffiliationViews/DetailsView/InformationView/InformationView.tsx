@@ -105,15 +105,15 @@ function AreAnyPodsRunningWithLatestDeployTag(
   deploymentDetails: IApplicationDeploymentDetails
 ) {
   const { pods } = deploymentDetails;
-  let deployTag = false;
+  let isLatest = false;
   {
     pods.forEach(pod => {
-      if (pod.phase === 'Running' && pod.latestDeployTag === true) {
-        deployTag = true;
+      if (pod.phase === 'Running' && pod.latestDeployTag) {
+        isLatest = true;
       }
     });
   }
-  return deployTag;
+  return isLatest;
 }
 
 function getApplicationDeploymentValues(
@@ -121,7 +121,7 @@ function getApplicationDeploymentValues(
   isLatestDeployTag: boolean
 ) {
   const deployTag = !isLatestDeployTag
-    ? `${deployment.version.deployTag.name} (er ikke siste versjon)`
+    ? `${deployment.version.deployTag.name} (ikke siste versjon)`
     : deployment.version.deployTag.name;
 
   return {
