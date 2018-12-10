@@ -1,7 +1,6 @@
 export interface IPodResource {
   name: string;
   phase: string;
-  deployTag: string;
   restartCount: number;
   ready: boolean;
   startTime: string;

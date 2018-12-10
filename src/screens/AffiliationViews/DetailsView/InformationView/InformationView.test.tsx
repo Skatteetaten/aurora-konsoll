@@ -19,7 +19,6 @@ describe('InformationView', () => {
         ready: true,
         restartCount: 1,
         startTime: '2018-12-04T13:05:50Z',
-        deployTag: '',
         links: [
           {
             name: 'app',
@@ -34,7 +33,6 @@ describe('InformationView', () => {
         ready: true,
         restartCount: 1,
         startTime: '2018-12-04T13:05:50Z',
-        deployTag: '',
         links: [
           {
             name: 'app',
@@ -49,7 +47,6 @@ describe('InformationView', () => {
         ready: true,
         restartCount: 1,
         startTime: '2018-12-04T13:05:50Z',
-        deployTag: '',
         links: [
           {
             name: 'app',
@@ -69,7 +66,6 @@ describe('InformationView', () => {
         ready: true,
         restartCount: 1,
         startTime: '2018-12-04T13:05:50Z',
-        deployTag: '',
         links: [
           {
             name: 'app',
@@ -84,7 +80,20 @@ describe('InformationView', () => {
         ready: true,
         restartCount: 1,
         startTime: '2018-12-04T13:05:50Z',
-        deployTag: '',
+        links: [
+          {
+            name: 'app',
+            url: 'localhost/app'
+          }
+        ]
+      },
+      {
+        latestDeployTag: false,
+        name: 'martin-test-applikasjon-17-rmvrd',
+        phase: 'Running',
+        ready: true,
+        restartCount: 1,
+        startTime: '2018-12-04T13:05:50Z',
         links: [
           {
             name: 'app',
@@ -127,7 +136,7 @@ describe('InformationView', () => {
     return;
   };
 
-  it('Given none of the pods has latestDeployTag=true and phase=Running, do display "er ikke siste versjon"', () => {
+  it('Given none of the pods have latestDeployTag=true and phase=Running, do display "er ikke siste versjon"', () => {
     const wrapper = render(
       <InformationView
         deployment={deployment}
@@ -140,7 +149,7 @@ describe('InformationView', () => {
     expect(wrapper.text()).toContain('ikke siste versjon');
   });
 
-  it('Given one of the pods has latestDeployTag=true and phase=Running, do not display "er ikke siste versjon"', () => {
+  it('Given one of the pods have latestDeployTag=true and phase=Running, do not display "er ikke siste versjon"', () => {
     const wrapper = render(
       <InformationView
         deployment={deployment}
