@@ -4,7 +4,12 @@ import { Route } from 'react-router';
 
 import Spinner from 'components/Spinner';
 import { IApplicationDeployment } from 'models/ApplicationDeployment';
+import { errorStateManager } from 'models/StateManager/ErrorStateManager';
+import { IApplicationDeploymentFilters } from 'models/UserSettings';
 import { Link } from 'react-router-dom';
+import DeploymentFilterService, {
+  IFilter
+} from 'services/DeploymentFilterService';
 import {
   ApplicationDeploymentProvider,
   withApplicationDeployments
@@ -20,12 +25,16 @@ interface IAffiliationViewControllerProps extends IAuroraApiComponentProps {
   affiliation: string;
   matchPath: string;
   matchUrl: string;
+  updateUrlWithQuery: (query: string) => void;
 }
 
 interface IAffiliationViewControllerState {
   loading: boolean;
   isRefreshing: boolean;
   deployments: IApplicationDeployment[];
+  filter: IFilter;
+  allFilters: IApplicationDeploymentFilters[];
+  filterPathUrl: string;
 }
 
 class AffiliationViewController extends React.Component<
@@ -35,8 +44,16 @@ class AffiliationViewController extends React.Component<
   public state: IAffiliationViewControllerState = {
     deployments: [],
     isRefreshing: false,
-    loading: false
+    loading: false,
+    filter: {
+      applications: [],
+      environments: []
+    },
+    allFilters: [],
+    filterPathUrl: ''
   };
+
+  private deploymentFilterService = new DeploymentFilterService();
 
   public buildDeploymentLink = (
     deployment: IApplicationDeployment
@@ -50,11 +67,12 @@ class AffiliationViewController extends React.Component<
   };
 
   public fetchApplicationDeployments = async (affiliation: string) => {
+    const { clients } = this.props;
     this.setState(() => ({
       loading: true
     }));
 
-    const deployments = await this.props.clients.applicationDeploymentClient.findAllApplicationDeployments(
+    const deployments = await clients.applicationDeploymentClient.findAllApplicationDeployments(
       [affiliation]
     );
 
@@ -62,6 +80,16 @@ class AffiliationViewController extends React.Component<
       deployments,
       loading: false
     }));
+  };
+
+  public fetchApplicationDeploymentFilters = async () => {
+    const { clients } = this.props;
+    const filters = await clients.userSettingsClient.getUserSettings();
+    if(filters) {
+      this.setState({
+        allFilters: filters.applicationDeploymentFilters
+      });
+    }
   };
 
   public refreshApplicationDeployments = async () => {
@@ -78,23 +106,136 @@ class AffiliationViewController extends React.Component<
     });
   };
 
-  public componentDidUpdate(prevProps: IAffiliationViewControllerProps) {
-    if (this.props.affiliation !== prevProps.affiliation) {
-      this.fetchApplicationDeployments(this.props.affiliation);
+  public clearFilterOnAffiliationChange(prevAffiliation: string) {
+    const { affiliation } = this.props;
+    if (affiliation !== prevAffiliation) {
+      this.fetchApplicationDeployments(affiliation).then(() => {
+        this.setState({
+          filter: {
+            applications: [],
+            environments: []
+          }
+        });
+      });
+    }
+  }
+  public updateQueryOnNewParams(prevFilter: IFilter) {
+    const { updateUrlWithQuery } = this.props;
+    const { filter } = this.state;
+    const prevQuery = this.deploymentFilterService.toQuery(prevFilter);
+    const query = this.deploymentFilterService.toQuery(filter);
+
+    if (prevQuery !== query && query !== '') {
+      updateUrlWithQuery(query);
+      this.setState(() => ({
+        filterPathUrl: query
+      }));
     }
   }
 
-  public componentDidMount() {
-    this.fetchApplicationDeployments(this.props.affiliation);
+  public componentDidUpdate(
+    prevProps: IAffiliationViewControllerProps,
+    prevState: IAffiliationViewControllerState
+  ) {
+    this.clearFilterOnAffiliationChange(prevProps.affiliation);
+    this.updateQueryOnNewParams(prevState.filter);
   }
+
+  public componentDidMount() {
+    const { affiliation } = this.props;
+    this.fetchApplicationDeployments(affiliation);
+    this.fetchApplicationDeploymentFilters();
+
+    const newFilters = this.deploymentFilterService.toFilter(
+      window.location.search
+    );
+    this.setState(({ filter }) => ({
+      filter: {
+        applications: newFilters.applications || filter.applications,
+        environments: newFilters.environments || filter.environments
+      }
+    }));
+  }
+
+  public getUpdatedFilters = (filterName?: string) => {
+    const { allFilters } = this.state;
+    const { affiliation } = this.props;
+
+    return allFilters.filter(
+      f => f.affiliation !== affiliation || f.name !== filterName
+    );
+  };
+
+  public deleteFilter = async (filterName: string) => {
+    const { clients } = this.props;
+    const updatedFilters = this.getUpdatedFilters(filterName);
+    if (filterName) {
+      const response = await clients.userSettingsClient.updateUserSettings({
+        applicationDeploymentFilters: updatedFilters
+      });
+      if (response) {
+        this.setState({
+          allFilters: updatedFilters
+        });
+      } else {
+        errorStateManager.addError(new Error('Feil ved sletting av filter'));
+      }
+    }
+  };
+
+  public updateFilter = async (filter: IFilter) => {
+    const { affiliation, clients, updateUrlWithQuery } = this.props;
+    const updatedFilters = this.getUpdatedFilters(filter.name);
+
+    if (filter.name) {
+      updatedFilters.push({
+        affiliation,
+        name: filter.name,
+        applications: filter.applications,
+        environments: filter.environments
+      });
+      const response = await clients.userSettingsClient.updateUserSettings({
+        applicationDeploymentFilters: updatedFilters
+      });
+
+      if (response) {
+        this.setState({
+          filter,
+          allFilters: updatedFilters
+        });
+      } else {
+        errorStateManager.addError(new Error('Feil ved lagring av filter'));
+      }
+    } else {
+      this.setState({
+        filter
+      });
+    }
+
+    if (filter.applications.length === 0 && filter.environments.length === 0) {
+      updateUrlWithQuery('/');
+    }
+  };
 
   public render() {
     const { matchPath, affiliation } = this.props;
-    const { deployments, loading } = this.state;
+    const {
+      deployments,
+      loading,
+      isRefreshing,
+      filterPathUrl,
+      filter,
+      allFilters
+    } = this.state;
 
     if (loading && deployments.length === 0) {
       return <Spinner />;
     }
+
+    const filteredDeployments = this.deploymentFilterService.filterDeployments(
+      filter,
+      deployments
+    );
 
     const time = deployments.length > 0 ? deployments[0].time : '';
 
@@ -102,10 +243,11 @@ class AffiliationViewController extends React.Component<
       <ApplicationDeploymentProvider
         value={{
           buildDeploymentLink: this.buildDeploymentLink,
-          deployments,
+          deployments: filteredDeployments,
           refreshDeployments: this.refreshApplicationDeployments,
           fetchApplicationDeployments: () =>
-            this.fetchApplicationDeployments(affiliation)
+            this.fetchApplicationDeployments(affiliation),
+          filterPathUrl
         }}
       >
         <Route exact={true} path={`${matchPath}/deployments`}>
@@ -113,10 +255,16 @@ class AffiliationViewController extends React.Component<
             match && (
               <MatrixView
                 time={time}
-                isRefreshing={this.state.isRefreshing}
+                isRefreshing={isRefreshing}
                 refreshApplicationDeployments={
                   this.refreshApplicationDeployments
                 }
+                affiliation={affiliation}
+                updateFilter={this.updateFilter}
+                deleteFilter={this.deleteFilter}
+                allDeployments={deployments}
+                filters={filter}
+                allFilters={allFilters}
               />
             )
           }

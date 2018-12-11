@@ -1,0 +1,63 @@
+import { IApplicationDeployment } from 'models/ApplicationDeployment';
+import { IApplicationDeploymentFilters } from 'models/UserSettings';
+import { SelectionType } from 'screens/AffiliationViews/MatrixView/Filter/Filter';
+
+export interface IUniqueSelectionNames {
+  applications: string[];
+  environments: string[];
+}
+
+export default class FilterService {
+  public findFilterByApplicationsAndEnvironments(
+    allFilters: IApplicationDeploymentFilters[],
+    affiliation: string,
+    applications: string[],
+    environments: string[]
+  ) {
+    return allFilters
+      .filter(f => f.affiliation === affiliation)
+      .find(
+        f =>
+          JSON.stringify(f.environments) === JSON.stringify(environments) &&
+          JSON.stringify(f.applications) === JSON.stringify(applications)
+      );
+  }
+
+  public removeDuplicates = (list: string[], element: string) =>
+    list.filter(item => item !== element);
+
+  public createFilterOptions = (
+    allFilters: IApplicationDeploymentFilters[],
+    affiliation: string
+  ) => {
+    const filterNames = allFilters
+      .filter(filter => filter.affiliation === affiliation)
+      .map(filter => filter.name)
+      .sort();
+    return filterNames.map(name => ({
+      value: name,
+      label: name,
+      key: name,
+      text: name
+    }));
+  };
+
+  public removeSelectionTypeDuplicateValues = (allDeployments:  IApplicationDeployment[], type: SelectionType) => {
+    return allDeployments
+      .map(
+        deployment =>
+          type === SelectionType.Applications
+            ? deployment.name
+            : deployment.environment
+      )
+      .filter((item, index, self) => self.indexOf(item) === index)
+      .sort();
+  };
+
+  public createUniqueSelectionNames = (allDeployments: IApplicationDeployment[]) => {
+    return {
+      applications: this.removeSelectionTypeDuplicateValues(allDeployments, SelectionType.Applications),
+      environments: this.removeSelectionTypeDuplicateValues(allDeployments, SelectionType.Environments)
+    }
+  }
+}

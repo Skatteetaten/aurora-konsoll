@@ -1,5 +1,20 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
+exports[`getNetdebugStatus should fetch netdebug status from GraphQL server and normalize data 1`] = `
+Object {
+  "failed": Array [
+    Object {
+      "clusterNodeIp": "127.0.0.1",
+      "message": "Klarte ikke resolve hostnavn til ip addresse.",
+      "resolvedIp": "http://localhost",
+      "status": "DNS_FAILED",
+    },
+  ],
+  "open": Array [],
+  "status": "CLOSED",
+}
+`;
+
 exports[`getNetdebugStatus should handle netdebug result when response is only null 1`] = `
 Object {
   "failed": Array [],
