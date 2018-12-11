@@ -12,6 +12,8 @@ def overrides = [
   openShiftBuild: true,
   nodeVersion: 'node-8',
   credentialsId: 'github',
+  openShiftBaseImage: 'wrench8',
+  openShiftBaseImageVersion: '1',
   suggestVersionAndTagReleases: [
       [branch: 'master', versionHint: '0']
   ]

@@ -35,7 +35,7 @@ interface IPermissionDetails {
 export interface IStatusCheck {
   name: string;
   description: string;
-  failLevel: string;
+  failLevel: StatusCode;
   hasFailed: boolean;
 }
 

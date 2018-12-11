@@ -66,7 +66,10 @@ const InformationView = ({
           />
         </div>
       </div>
-      <StatusCheckReport statusChecks={deployment.status.details} />
+      <StatusCheckReport
+        statusChecks={deployment.status.details}
+        mainStatusName={deployment.status.statusCheckName}
+      />
       <h3>Pods fra OpenShift</h3>
       <div className="info-deployments">
         {pods.map(pod => (
