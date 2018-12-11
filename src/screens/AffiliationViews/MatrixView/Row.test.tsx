@@ -7,7 +7,7 @@ import Row, { IApplicationMap } from './Row';
 import Status from './Status';
 
 describe('Row', () => {
-  const createApplicationMap = (releaseToParm?: string) => {
+  const createApplicationMap = (releaseToParam?: string) => {
     const deployments: IApplicationDeployment[] = [
       {
         id: '',
@@ -24,7 +24,7 @@ describe('Row', () => {
             type: ImageTagType.AURORA_SNAPSHOT_VERSION,
             lastModified: ''
           },
-          releaseTo: releaseToParm
+          releaseTo: releaseToParam
         },
         permission: {
           paas: {

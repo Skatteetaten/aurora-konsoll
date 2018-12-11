@@ -12,7 +12,8 @@ import { errorStateManager } from 'models/StateManager/ErrorStateManager';
 import {
   ApplicationDeploymentClient,
   ImageRepositoryClient,
-  NetdebugClient
+  NetdebugClient,
+  UserSettingsClient
 } from 'services/auroraApiClients';
 import GoboClient from 'services/GoboClient';
 import './index.css';
@@ -40,7 +41,8 @@ async function init() {
   const clients: IApiClients = {
     applicationDeploymentClient: new ApplicationDeploymentClient(goboClient),
     imageRepositoryClient: new ImageRepositoryClient(goboClient),
-    netdebugClient: new NetdebugClient(goboClient)
+    netdebugClient: new NetdebugClient(goboClient),
+    userSettingsClient: new UserSettingsClient(goboClient)
   };
 
   ReactDOM.render(
