@@ -1,28 +1,19 @@
-import { IStatusColor, StatusCode, toStatusColor } from 'models/Status';
+import { StatusCode, toStatusColor } from 'models/Status';
 import styled, { css } from 'styled-components';
 
 interface IStatusProps {
   code: StatusCode;
 }
 
-interface IStatusAttrs {
-  statusColor?: IStatusColor;
-}
-
-const mapping = {
-  statusColor: (props: IStatusProps) => toStatusColor(props.code)
-};
-
-const Status = styled<IStatusProps, 'td'>('td').attrs<IStatusAttrs>(mapping)`
+const Status = styled<IStatusProps, 'td'>('td')`
   cursor: pointer;
   padding: 0;
 
-  ${({ statusColor }) =>
-    statusColor &&
+  ${({ code }) =>
     css`
-      background: ${statusColor.base};
+      background: ${toStatusColor(code).base};
       &:hover {
-        background: ${statusColor.hover};
+        background: ${toStatusColor(code).hover};
       }
     `};
 
