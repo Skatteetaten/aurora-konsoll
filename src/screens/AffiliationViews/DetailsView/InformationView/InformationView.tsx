@@ -1,6 +1,7 @@
 import * as React from 'react';
 import styled from 'styled-components';
 
+import Tooltip from 'components/IconWithTooltip';
 import InfoContent from 'components/InfoContent';
 import Spinner from 'components/Spinner';
 import {
@@ -34,6 +35,33 @@ const InformationView = ({
   const isLatestDeployTag = AreAnyPodsRunningWithLatestDeployTag(
     deploymentDetails
   );
+  const isCorrectDeploytag = isActiveTagSameAsAuroraConfigTag(
+    deploymentSpec,
+    deployment
+  );
+  const message = warningMessage(isLatestDeployTag, isCorrectDeploytag);
+
+  const deployTagName = deployment.version.deployTag.name;
+
+  const TagWithWarningMessage =
+    !isLatestDeployTag || !isCorrectDeploytag ? (
+      !Array.isArray(pods) || !pods.length ? (
+        deployTagName
+      ) : (
+        <>
+          <Tooltip
+            content={`Dette deployet kjører ikke ønsket versjon.\n\u2022 ${message}`}
+            icon="Info"
+          />
+          <div className="styledDeployTag" title={deployTagName}>
+            {deployTagName}
+          </div>
+        </>
+      )
+    ) : (
+      deployTagName
+    );
+
   return (
     <div className={className}>
       <div className="info-grid">
@@ -46,7 +74,7 @@ const InformationView = ({
           <InfoContent
             values={getApplicationDeploymentValues(
               deployment,
-              isLatestDeployTag
+              TagWithWarningMessage
             )}
           />
         </div>
@@ -116,14 +144,42 @@ function AreAnyPodsRunningWithLatestDeployTag(
   return isLatest;
 }
 
+function isActiveTagSameAsAuroraConfigTag(
+  deploymentSpec?: IDeploymentSpec,
+  deployment?: IApplicationDeployment
+) {
+  if (
+    deploymentSpec &&
+    deployment &&
+    deploymentSpec.version === deployment.version.deployTag.name
+  ) {
+    return true;
+  } else {
+    return false;
+  }
+}
+
+const warningMessage = (
+  isLatestDeployTag: boolean,
+  isCorrectDeployTag: boolean
+) => {
+  const newerImageAvailable = `Det finnes et nyere image for denne taggen tilgjengelig på Docker Registry.`;
+  const differentVersions = `Aktivt deploy sin tag stemmer ikke overens med Aurora Config. Deploy på nytt.`;
+  if (!isLatestDeployTag && !isCorrectDeployTag) {
+    return `${newerImageAvailable}\n\u2022 ${differentVersions}`;
+  } else if (isLatestDeployTag && !isCorrectDeployTag) {
+    return differentVersions;
+  } else if (!isLatestDeployTag && isCorrectDeployTag) {
+    return newerImageAvailable;
+  } else {
+    return ``;
+  }
+};
+
 function getApplicationDeploymentValues(
   deployment: IApplicationDeployment,
-  isLatestDeployTag: boolean
+  deployTag: string | JSX.Element
 ) {
-  const deployTag = !isLatestDeployTag
-    ? `${deployment.version.deployTag.name} (ikke siste versjon)`
-    : deployment.version.deployTag.name;
-
   return {
     Tag: deployTag,
     'Aurora version': deployment.version.auroraVersion,
@@ -144,16 +200,17 @@ export default styled(InformationView)`
   .info-deployments {
     display: flex;
   }
-
   .info-pod {
     flex: 1;
     margin-right: 10px;
   }
-
   .info-grid {
     display: flex;
     div {
       margin-right: 20px;
     }
+  }
+  .styledDeployTag {
+    padding-left: 25px;
   }
 `;
