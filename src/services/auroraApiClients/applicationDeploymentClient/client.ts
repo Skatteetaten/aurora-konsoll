@@ -175,7 +175,7 @@ export class ApplicationDeploymentClient {
         status: {
           code: app.status.code,
           reasons: app.status.reasons,
-          reports: app.status.details
+          reports: app.status.reports
         },
         time: app.time,
         version: {

@@ -53,7 +53,7 @@ interface IApplicationDeployment {
   status: {
     code: StatusCode;
     reasons: IStatusCheck[];
-    details: IStatusCheck[];
+    reports: IStatusCheck[];
   };
   version: {
     auroraVersion?: string;
@@ -93,7 +93,7 @@ export const APPLICATIONS_QUERY = gql`
               reasons {
                 ...statusCheck
               }
-              details {
+              reports {
                 ...statusCheck
               }
             }
