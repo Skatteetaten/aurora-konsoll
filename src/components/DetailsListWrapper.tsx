@@ -1,16 +1,19 @@
 import styled from 'styled-components';
 
-interface IDetailsListColor {
-  main: string;
-  selected: string;
+interface IDetailsListColors {
+  base: string;
+  hover: string;
 }
 
 interface IDetailsListWrapperProps {
-  mainIndex?: number;
-  selectedIndex?: number;
-  backgroundColor: {
-    base: IDetailsListColor;
-    hover: IDetailsListColor;
+  marked: {
+    main: number;
+    selected: number;
+  };
+  colors: {
+    main: IDetailsListColors;
+    selected: IDetailsListColors;
+    default: IDetailsListColors;
   };
 }
 
@@ -18,26 +21,26 @@ const DetailsListWrapper = styled.div<IDetailsListWrapperProps>`
   [data-item-index] {
     &:hover, &:active, &:focus {
       color: black;
-      background: #cde1f9;
+      background: ${props => props.colors.default.base};
     }
   }
 
-  [data-item-index="${props => props.selectedIndex}"] {
+  [data-item-index="${props => props.marked.selected}"] {
     color: black;
-    background: #8accff;
+      background: ${props => props.colors.selected.base};
 
     &:hover, &:active, &:focus {
-      background: #8accff;
+      background: ${props => props.colors.selected.hover};
     }
   }
 
-  [data-item-index="${props => props.mainIndex}"] {
+  [data-item-index="${props => props.marked.main}"] {
     color: black;
-    background: ${({ mainIndex, selectedIndex }) =>
-      mainIndex === selectedIndex ? '#e7b78a' : '#f9ede2'};
+    background: ${({ marked, colors }) =>
+      marked.main === marked.selected ? colors.main.hover : colors.main.base};
 
     &:hover, &:active, &:focus {
-      background: #e7b78a;
+      background: ${props => props.colors.main.hover};
     }
   }
 
@@ -51,14 +54,22 @@ const DetailsListWrapper = styled.div<IDetailsListWrapperProps>`
 `;
 
 DetailsListWrapper.defaultProps = {
-  backgroundColor: {
-    base: {
-      main: '#f9ede2',
-      selected: '#8accff'
+  marked: {
+    main: -1,
+    selected: -1
+  },
+  colors: {
+    main: {
+      base: '#f9ede2',
+      hover: '#e7b78a'
     },
-    hover: {
-      main: '#e7b78a',
-      selected: '#8accff'
+    selected: {
+      base: '#8accff',
+      hover: '#8accff'
+    },
+    default: {
+      base: '#cde1f9',
+      hover: '#cde1f9'
     }
   }
 };

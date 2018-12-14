@@ -2,6 +2,7 @@ import * as React from 'react';
 import styled from 'styled-components';
 
 import InfoContent from 'components/InfoContent';
+import InfoDialog from 'components/InfoDialog';
 import Spinner from 'components/Spinner';
 import {
   IApplicationDeployment,
@@ -37,12 +38,37 @@ const InformationView = ({
     <div className={className}>
       <div className="info-grid">
         <div>
+          <h3>Aktivt deployment</h3>
+          <InfoContent values={getApplicationDeploymentValues(deployment)} />
           <h3>Gjeldende AuroraConfig</h3>
           <InfoContent values={getDeploymentSpecValues(deploymentSpec)} />
         </div>
         <div>
-          <h3>Aktivt deployment</h3>
-          <InfoContent values={getApplicationDeploymentValues(deployment)} />
+          <h3>AuroraStatus</h3>
+          <div className="status-card">
+            <header
+              style={{
+                background: toStatusColor(deployment.status.code).base
+              }}
+            >
+              {deployment.status.code}
+            </header>
+            {deployment.status.reasons.length > 0 && (
+              <ul>
+                {deployment.status.reasons.map(reason => (
+                  <li key={reason.name}>
+                    {reason.name} ({reason.failLevel})
+                  </li>
+                ))}
+              </ul>
+            )}
+            <InfoDialog title="Helsesjekkrapport">
+              <StatusCheckReport
+                reports={deployment.status.reports}
+                reasons={deployment.status.reasons}
+              />
+            </InfoDialog>
+          </div>
         </div>
       </div>
       <hr
@@ -50,25 +76,6 @@ const InformationView = ({
           borderWidth: '2px',
           margin: '30px 0'
         }}
-      />
-      <div className="info-grid">
-        <div>
-          <h3>Helsestatus</h3>
-          <InfoContent
-            style={{
-              background: toStatusColor(deployment.status.code).base
-            }}
-            values={{
-              Status: deployment.status.code,
-              Statussjekk: deployment.status.statusCheckName,
-              Beskrivelse: deployment.status.description
-            }}
-          />
-        </div>
-      </div>
-      <StatusCheckReport
-        statusChecks={deployment.status.details}
-        mainStatusName={deployment.status.statusCheckName}
       />
       <h3>Pods fra OpenShift</h3>
       <div className="info-deployments">
@@ -126,6 +133,30 @@ function getApplicationDeploymentValues(deployment: IApplicationDeployment) {
 }
 
 export default styled(InformationView)`
+  .status-card {
+    min-width: 300px;
+    display: flex;
+    flex-direction: column;
+    border: 1px solid black;
+    background: white;
+
+    header {
+      font-weight: 700;
+      color: white;
+      text-align: center;
+      padding: 10px;
+    }
+
+    ul {
+      padding-left: 20px;
+      margin: 15px;
+    }
+
+    button {
+      border-top: 1px solid #e8e8e8;
+      padding: 20px;
+    }
+  }
   .health-status {
     background: white;
     display: flex;
@@ -153,8 +184,8 @@ export default styled(InformationView)`
 
   .info-grid {
     display: flex;
-    div {
-      margin-right: 20px;
+    > div {
+      margin-right: 40px;
     }
   }
 `;

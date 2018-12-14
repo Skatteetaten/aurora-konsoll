@@ -25,9 +25,8 @@ export interface IApplicationDeployment {
 
 export interface IApplicationDeploymentStatus {
   code: StatusCode;
-  statusCheckName: string;
-  description: string;
-  details: IStatusCheck[];
+  reasons: IStatusCheck[];
+  reports: IStatusCheck[];
 }
 
 export interface IApplicationDeploymentDetails {

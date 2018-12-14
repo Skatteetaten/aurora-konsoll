@@ -52,8 +52,7 @@ interface IApplicationDeployment {
   };
   status: {
     code: StatusCode;
-    statusCheckName: string;
-    description: string;
+    reasons: IStatusCheck[];
     details: IStatusCheck[];
   };
   version: {
@@ -91,13 +90,11 @@ export const APPLICATIONS_QUERY = gql`
             }
             status {
               code
-              statusCheckName
-              description
+              reasons {
+                ...statusCheck
+              }
               details {
-                name
-                description
-                failLevel
-                hasFailed
+                ...statusCheck
               }
             }
             version {
@@ -113,6 +110,13 @@ export const APPLICATIONS_QUERY = gql`
         }
       }
     }
+  }
+
+  fragment statusCheck on StatusCheck {
+    name
+    description
+    failLevel
+    hasFailed
   }
 `;
 
