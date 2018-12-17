@@ -52,6 +52,7 @@ const InformationView = ({
           <Tooltip
             content={`Dette deployet kjører ikke ønsket versjon.\n\u2022 ${message}`}
             icon="Info"
+            color="red"
           />
           <div className="styledDeployTag" title={deployTagName}>
             {deployTagName}
@@ -172,7 +173,7 @@ const warningMessage = (
   } else if (!isLatestDeployTag && isCorrectDeployTag) {
     return newerImageAvailable;
   } else {
-    return ``;
+    return '';
   }
 };
 

@@ -1,39 +1,48 @@
 import * as React from 'react';
 import styled from 'styled-components';
 
-import ActionButton from 'aurora-frontend-react-komponenter/ActionButton';
+import Icon from 'aurora-frontend-react-komponenter/Icon';
 import palette from 'aurora-frontend-react-komponenter/utils/palette';
 
 interface IIconWithTooltip {
   content: string;
   className?: string;
   icon: string;
+  color: string;
 }
 
-const IconWithTooltip = ({ className, content, icon }: IIconWithTooltip) => {
+const IconWithTooltip = ({
+  className,
+  content,
+  icon,
+  color
+}: IIconWithTooltip) => {
   return (
     <div className={className}>
-      <div className="tooltip">
-        <ActionButton
-          icon={icon}
-          color="red"
-          title=""
-          style={{
-            margin: '-12px -20px -11px -9px',
-            width: '10px',
-            cursor: 'default'
-          }}
-        />
-        <div className="tooltip-text">{content}</div>
+      <div className="position">
+        <div className="tooltip" title="">
+          <Icon
+            iconName={icon}
+            style={{
+              cursor: 'default',
+              color
+            }}
+          />
+          <div className="tooltip-text">{content}</div>
+        </div>
       </div>
     </div>
   );
 };
 
 export default styled(IconWithTooltip)`
+  .position {
+    position: relative;
+  }
+
   .tooltip {
     position: absolute;
-    display: inline-block;
+    display: inline;
     z-index: 100;
   }
 
@@ -47,8 +56,7 @@ export default styled(IconWithTooltip)`
     color: ${palette.skeColor.white};
     padding: 8px;
     z-index: 1;
-    top: 140%;
-    left: 30%;
+    top: 110%;
     box-shadow: 0px 0px 5px rgba(50, 50, 50, 0.75);
   }
 

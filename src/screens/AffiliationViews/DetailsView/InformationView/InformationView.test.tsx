@@ -20,7 +20,7 @@ describe('InformationView', () => {
     volumeName: 'volume'
   };
 
-  let deploymentSpec: IDeploymentSpec = {
+  const deploymentSpecWithSameVersion: IDeploymentSpec = {
     version: 'latest',
     affiliation: 'paas',
     alarm: true,
@@ -68,7 +68,7 @@ describe('InformationView', () => {
   };
 
   const deploymentDetailsWithoutLatestDeployTag: IApplicationDeploymentDetails = {
-    deploymentSpec,
+    deploymentSpec: deploymentSpecWithSameVersion,
     pods: [
       {
         latestDeployTag: true,
@@ -116,7 +116,7 @@ describe('InformationView', () => {
   };
 
   const deploymentDetailsWithLatestDeployTag: IApplicationDeploymentDetails = {
-    deploymentSpec,
+    deploymentSpec: deploymentSpecWithSameVersion,
     pods: [
       {
         latestDeployTag: true,
@@ -163,7 +163,7 @@ describe('InformationView', () => {
     ]
   };
 
-  deploymentSpec = {
+  const deploymentSpecWithDifferentVersion = {
     version: 'BUGFIX',
     affiliation: 'paas',
     alarm: true,
@@ -211,7 +211,7 @@ describe('InformationView', () => {
   };
 
   const deploymentDetailsWithWrongVersionInDeploymentSpec: IApplicationDeploymentDetails = {
-    deploymentSpec,
+    deploymentSpec: deploymentSpecWithDifferentVersion,
     pods: [
       {
         latestDeployTag: true,
@@ -328,7 +328,7 @@ describe('InformationView', () => {
     });
   });
   describe('isActiveTagSameAsAuroraConfigTag', () => {
-    it('Given is latestDeploytag and Aurora Configs version is differnt from active Deployment version, do display warning message', () => {
+    it('Given is latestDeploytag and Aurora Configs version is different from active deployment version, do display warning message', () => {
       const wrapper = shallow(
         <InformationView
           deployment={deployment}
