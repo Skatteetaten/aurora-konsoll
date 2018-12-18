@@ -52,7 +52,10 @@ const InformationView = ({
           <Tooltip
             content={`Dette deployet kjører ikke ønsket versjon.\n\u2022 ${message}`}
             icon="Info"
-            color="red"
+            iconStyle={{
+              cursor: 'default',
+              color: 'red'
+            }}
           />
           <div className="styledDeployTag" title={deployTagName}>
             {deployTagName}

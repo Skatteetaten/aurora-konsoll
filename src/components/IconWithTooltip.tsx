@@ -8,26 +8,20 @@ interface IIconWithTooltip {
   content: string;
   className?: string;
   icon: string;
-  color: string;
+  iconStyle?: object;
 }
 
 const IconWithTooltip = ({
   className,
   content,
   icon,
-  color
+  iconStyle
 }: IIconWithTooltip) => {
   return (
     <div className={className}>
       <div className="position">
         <div className="tooltip" title="">
-          <Icon
-            iconName={icon}
-            style={{
-              cursor: 'default',
-              color
-            }}
-          />
+          <Icon iconName={icon} style={iconStyle} />
           <div className="tooltip-text">{content}</div>
         </div>
       </div>

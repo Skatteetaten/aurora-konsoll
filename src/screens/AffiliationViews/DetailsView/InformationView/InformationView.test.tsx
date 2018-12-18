@@ -89,6 +89,7 @@ describe('InformationView', () => {
         />
       );
       const tooltip = wrapper.find(Tooltip);
+      expect(tooltip).toHaveLength(1);
       expect(tooltip.props().content).toContain(
         'Aktivt deploy sin tag stemmer ikke overens med Aurora Config. Deploy på nytt.'
       );
