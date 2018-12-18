@@ -8,7 +8,7 @@ interface IIconWithTooltip {
   content: string;
   className?: string;
   icon: string;
-  iconStyle?: object;
+  iconStyle?: React.CSSProperties;
 }
 
 const IconWithTooltip = ({
