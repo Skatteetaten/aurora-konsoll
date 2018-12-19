@@ -8,6 +8,7 @@ Object {
       "applications": Array [
         "ao",
       ],
+      "default": true,
       "environments": Array [
         "dev",
       ],

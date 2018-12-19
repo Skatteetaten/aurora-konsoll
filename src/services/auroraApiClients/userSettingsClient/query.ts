@@ -13,6 +13,7 @@ export const USERSETTINGS_QUERY = gql`
       applicationDeploymentFilters {
         name
         affiliation
+        default
         applications
         environments
       }

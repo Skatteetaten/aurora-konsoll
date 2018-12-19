@@ -191,6 +191,7 @@ class AffiliationViewController extends React.Component<
       updatedFilters.push({
         affiliation,
         name: filter.name,
+        default: !!filter.default,
         applications: filter.applications,
         environments: filter.environments
       });

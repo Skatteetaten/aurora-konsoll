@@ -3,6 +3,7 @@ import * as qs from 'qs';
 
 export interface IFilter {
   name?: string;
+  default?: boolean;
   applications: string[];
   environments: string[];
 }

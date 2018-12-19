@@ -15,6 +15,7 @@ import { IApplicationDeploymentFilters } from 'models/UserSettings';
 import { IFilter } from 'services/DeploymentFilterService';
 import FilterService from 'services/FilterService';
 import FilterModeSelect, { FilterMode } from './FilterModeSelect';
+import FooterText from './FooterText';
 import SelectionButtons from './SelectionButtons';
 
 export enum SelectionType {
@@ -163,7 +164,12 @@ export class Filter extends React.Component<IFilterProps, IFilterState> {
         close();
       }
     };
-    return <ActionButton onClick={applyChanges}>Sett filter</ActionButton>;
+    return (
+      <>
+        <FooterText filter="blabla" />
+        <ActionButton onClick={applyChanges}>Sett filter</ActionButton>
+      </>
+    );
   };
 
   public setCurrentFilterName = (filterName: string) => {
