@@ -82,13 +82,25 @@ class AffiliationViewController extends React.Component<
     }));
   };
 
-  public fetchApplicationDeploymentFilters = async () => {
-    const { clients } = this.props;
+  public fetchApplicationDeploymentFilters = async (paramsExists: any) => {
+    const { clients, affiliation } = this.props;
     const filters = await clients.userSettingsClient.getUserSettings();
-    if(filters) {
+    if (filters) {
       this.setState({
         allFilters: filters.applicationDeploymentFilters
       });
+
+      const filter = filters.applicationDeploymentFilters.find(
+        f => f.affiliation === affiliation && f.default === true
+      );
+      if (filter && !paramsExists) {
+        this.setState({
+          filter: {
+            applications: filter.applications,
+            environments: filter.environments
+          }
+        });
+      }
     }
   };
 
@@ -143,8 +155,11 @@ class AffiliationViewController extends React.Component<
 
   public componentDidMount() {
     const { affiliation } = this.props;
+    const paramsExists = this.deploymentFilterService.isParamsDefined(
+      window.location.search
+    );
     this.fetchApplicationDeployments(affiliation);
-    this.fetchApplicationDeploymentFilters();
+    this.fetchApplicationDeploymentFilters(paramsExists);
 
     const newFilters = this.deploymentFilterService.toFilter(
       window.location.search

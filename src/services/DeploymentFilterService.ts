@@ -32,6 +32,18 @@ export default class DeploymentFilterService {
       environments
     };
   }
+
+  public isParamsDefined(query: string) {
+    const queries = qs.parse(query, {
+      ignoreQueryPrefix: true
+    });
+    if (!queries.apps && !queries.envs) {
+      return false;
+    } else {
+      return true;
+    }
+  }
+
   public filterDeployments(
     filters: IFilter,
     deployments: IApplicationDeployment[]

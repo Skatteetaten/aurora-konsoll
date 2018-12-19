@@ -19,7 +19,7 @@ const FooterText = ({ filter }: IFooterTextProps) => (
       display: 'flex'
     }}
   >
-    {!!filter ? `Default filter: ${filter}` : ''}
+    {!!filter ? `Default filter: ${filter}` : 'Default filter ikke definert'}
   </div>
 );
 

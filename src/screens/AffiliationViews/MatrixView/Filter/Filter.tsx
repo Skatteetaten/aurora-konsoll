@@ -94,11 +94,19 @@ export class Filter extends React.Component<IFilterProps, IFilterState> {
       this.setState({
         applications: [],
         environments: [],
-        selectedFilterKey: undefined,
+        selectedFilterKey: this.getDefaultFilterName(),
         mode: FilterMode.Create
       });
     }
   }
+
+  public getDefaultFilterName = () => {
+    const { affiliation, allFilters } = this.props;
+    const filter = allFilters.find(
+      f => f.affiliation === affiliation && f.default
+    );
+    return !!filter ? filter.name : undefined;
+  };
 
   public componentDidUpdate(prevProps: IFilterProps) {
     this.setExistingFilter();
@@ -166,7 +174,7 @@ export class Filter extends React.Component<IFilterProps, IFilterState> {
     };
     return (
       <>
-        <FooterText filter="blabla" />
+        <FooterText filter={this.getDefaultFilterName()} />
         <ActionButton onClick={applyChanges}>Sett filter</ActionButton>
       </>
     );
