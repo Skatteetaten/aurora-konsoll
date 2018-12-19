@@ -2,16 +2,14 @@ import * as React from 'react';
 import styled from 'styled-components';
 
 import InfoContent from 'components/InfoContent';
-import InfoDialog from 'components/InfoDialog';
 import Spinner from 'components/Spinner';
 import {
   IApplicationDeployment,
   IApplicationDeploymentDetails
 } from 'models/ApplicationDeployment';
 import { IDeploymentSpec } from 'models/DeploymentSpec';
-import { toStatusColor } from 'models/Status';
 import PodStatus from './PodStatus';
-import StatusCheckReport from './StatusCheckReport';
+import StatusCheckReportCard from './StatusCheckReportCard';
 
 interface IInformationViewProps {
   isFetchingDetails: boolean;
@@ -44,31 +42,8 @@ const InformationView = ({
           <InfoContent values={getDeploymentSpecValues(deploymentSpec)} />
         </div>
         <div>
-          <h3>AuroraStatus</h3>
-          <div className="status-card">
-            <header
-              style={{
-                background: toStatusColor(deployment.status.code).base
-              }}
-            >
-              {deployment.status.code}
-            </header>
-            {deployment.status.reasons.length > 0 && (
-              <ul>
-                {deployment.status.reasons.map(reason => (
-                  <li key={reason.name}>
-                    {reason.name} ({reason.failLevel})
-                  </li>
-                ))}
-              </ul>
-            )}
-            <InfoDialog title="Helsesjekkrapport">
-              <StatusCheckReport
-                reports={deployment.status.reports}
-                reasons={deployment.status.reasons}
-              />
-            </InfoDialog>
-          </div>
+          <h3>AuroraStatus for deployment</h3>
+          <StatusCheckReportCard deployment={deployment} />
         </div>
       </div>
       <hr
@@ -133,30 +108,6 @@ function getApplicationDeploymentValues(deployment: IApplicationDeployment) {
 }
 
 export default styled(InformationView)`
-  .status-card {
-    min-width: 300px;
-    display: flex;
-    flex-direction: column;
-    border: 1px solid black;
-    background: white;
-
-    header {
-      font-weight: 700;
-      color: white;
-      text-align: center;
-      padding: 10px;
-    }
-
-    ul {
-      padding-left: 20px;
-      margin: 15px;
-    }
-
-    button {
-      border-top: 1px solid #e8e8e8;
-      padding: 20px;
-    }
-  }
   .health-status {
     background: white;
     display: flex;

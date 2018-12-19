@@ -1,0 +1,80 @@
+import * as React from 'react';
+
+import InfoDialog from 'components/InfoDialog';
+import { IApplicationDeployment } from 'models/ApplicationDeployment';
+import { toStatusColor } from 'models/Status';
+
+import styled from 'styled-components';
+import StatusCheckReport from './StatusCheckReport';
+
+interface IStatusCheckReportCardProps {
+  className?: string;
+  deployment: IApplicationDeployment;
+}
+
+const StatusCheckReportCard = ({
+  deployment,
+  className
+}: IStatusCheckReportCardProps) => (
+  <div className={className}>
+    <div className="status-card">
+      <header
+        style={{
+          background: toStatusColor(deployment.status.code).base
+        }}
+      >
+        {deployment.status.code}
+      </header>
+      {(deployment.status.reasons.length > 0 && (
+        <>
+          <p>Påvirkede sjekker:</p>
+          <ul>
+            {deployment.status.reasons.map(reason => (
+              <li key={reason.name}>
+                {reason.name} ({reason.failLevel})
+              </li>
+            ))}
+          </ul>
+        </>
+      )) || <p>Alle sjekker er OK.</p>}
+      <InfoDialog title="Helsesjekkrapport">
+        <StatusCheckReport
+          reports={deployment.status.reports}
+          reasons={deployment.status.reasons}
+        />
+      </InfoDialog>
+    </div>
+  </div>
+);
+
+export default styled(StatusCheckReportCard)`
+  .status-card {
+    min-width: 300px;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 0px 3px 8px 0px rgba(0, 0, 0, 0.2);
+    background: white;
+
+    p {
+      margin-left: 10px;
+    }
+
+    header {
+      font-weight: 700;
+      color: white;
+      text-align: center;
+      padding: 10px;
+    }
+
+    ul {
+      padding-left: 20px;
+      margin: 15px;
+      margin-top: 0;
+    }
+
+    button {
+      border-top: 1px solid #e8e8e8;
+      padding: 20px;
+    }
+  }
+`;

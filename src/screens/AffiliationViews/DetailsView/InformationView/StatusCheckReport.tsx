@@ -65,17 +65,14 @@ function getStatusIcon(hasFailed: boolean, level: StatusCode): string {
 }
 
 const StatusCheckReport = ({ reports, reasons }: IStatusCheckReportProps) => {
-  const renderDeployList = (
-    list: IStatusCheck[],
-    getIconName: (hasFailed: boolean, level: StatusCode) => string
-  ) => (
+  const renderDeployList = (list: IStatusCheck[]) => (
     <DetailsList
       columns={columns}
       items={list.sort((a, b) => a.name.localeCompare(b.name)).map(it => ({
         ...it,
         active: (
           <Icon
-            iconName={getIconName(it.hasFailed, it.failLevel)}
+            iconName={getStatusIcon(it.hasFailed, it.failLevel)}
             style={getIconStatusStyle(it.hasFailed, it.failLevel)}
             title={it.hasFailed ? it.failLevel : StatusCode.HEALTHY}
           />
@@ -89,22 +86,22 @@ const StatusCheckReport = ({ reports, reasons }: IStatusCheckReportProps) => {
   );
 
   return (
-    <div>
+    <div className="status-checks">
       {specialChecks.length > 0 && (
         <>
           <h3>
             Spesialsjekker <small>(overgår standardsjekker)</small>
           </h3>
-          {renderDeployList(specialChecks, () => 'Info')}
+          {renderDeployList(specialChecks)}
         </>
       )}
       <h3>Standardsjekker</h3>
-      {renderDeployList(reports, getStatusIcon)}
+      {renderDeployList(reports)}
       <div style={{ display: 'flex', marginTop: '20px' }}>
-        <StatusIconInfo code={StatusCode.HEALTHY} title="OK" />
+        <StatusIconInfo code={StatusCode.HEALTHY} />
         <StatusIconInfo code={StatusCode.OBSERVE} />
         <StatusIconInfo code={StatusCode.DOWN} />
-        <StatusIconInfo code={StatusCode.OFF} title="Informasjon" />
+        <StatusIconInfo code={StatusCode.OFF} />
       </div>
     </div>
   );
