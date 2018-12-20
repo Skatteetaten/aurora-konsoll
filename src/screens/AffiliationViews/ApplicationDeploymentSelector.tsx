@@ -14,7 +14,8 @@ type ApplicationDeploymentSelectorProps = IApplicationDeploymentContext &
 const ApplicationDeploymentSelector = ({
   deployments,
   fetchApplicationDeployments,
-  match
+  match,
+  filterPathUrl
 }: ApplicationDeploymentSelectorProps) => {
   const deployment = deployments.find(
     d => d.id === match.params.applicationDeploymentId
@@ -29,6 +30,7 @@ const ApplicationDeploymentSelector = ({
       {...props}
       deployment={deployment}
       fetchApplicationDeployments={fetchApplicationDeployments}
+      filterPathUrl={filterPathUrl}
     />
   );
 

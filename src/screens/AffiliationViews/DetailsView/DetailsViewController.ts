@@ -22,6 +22,7 @@ export interface IDetailsViewProps
     IAuroraApiComponentProps {
   deployment: IApplicationDeployment;
   fetchApplicationDeployments: () => void;
+  filterPathUrl: string;
 }
 
 export interface IDetailsViewState {
@@ -153,8 +154,8 @@ export default class DetailsViewController {
   };
 
   public goToDeploymentsPage = () => {
-    const { match, history } = this.component.props;
-    history.push(`/a/${match.params.affiliation}/deployments`);
+    const { match, history, filterPathUrl } = this.component.props;
+    history.push(`/a/${match.params.affiliation}/deployments/${filterPathUrl}`);
   };
 
   public onMount = () => {

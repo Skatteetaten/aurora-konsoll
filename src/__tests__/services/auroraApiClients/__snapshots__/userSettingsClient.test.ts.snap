@@ -1,0 +1,20 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`getUserSettings should fetch user settings from GraphQL server and normalize data 1`] = `
+Object {
+  "applicationDeploymentFilters": Array [
+    Object {
+      "affiliation": "aurora",
+      "applications": Array [
+        "ao",
+      ],
+      "environments": Array [
+        "dev",
+      ],
+      "name": "testing",
+    },
+  ],
+}
+`;
+
+exports[`updateUserSettings should update user settings to GraphQL server 1`] = `true`;

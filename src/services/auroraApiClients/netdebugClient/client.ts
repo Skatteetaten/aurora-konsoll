@@ -15,6 +15,11 @@ export interface IScanStatus {
 
 export class NetdebugClient {
   private client: GoboClient;
+  private errorMessage = {
+    failed: [],
+    open: [],
+    status: 'Noe gikk galt'
+  };
 
   constructor(client: GoboClient) {
     this.client = client;
@@ -32,23 +37,22 @@ export class NetdebugClient {
       }
     });
 
-    if (!result) {
-      return {
-        failed: [],
-        open: [],
-        status: 'Noe gikk galt'
-      };
+    if (result && result.data) {
+      return this.showNetdebugStatus(result.data);
     }
-
-    return this.showNetdebugStatus(result.data);
+    return this.errorMessage;
   }
 
   private showNetdebugStatus(item: IScanQuery): INetdebugResult {
-    return {
-      failed: this.normalizeScanStatus(item.scan.failed),
-      open: this.normalizeScanStatus(item.scan.open),
-      status: item.scan.status
-    };
+    if (item && item.scan) {
+      return {
+        failed: this.normalizeScanStatus(item.scan.failed),
+        open: this.normalizeScanStatus(item.scan.open),
+        status: item.scan.status
+      };
+    } else {
+      return this.errorMessage;
+    }
   }
 
   private normalizeScanStatus(scanStatus?: IScanStatusQuery): IScanStatus[] {

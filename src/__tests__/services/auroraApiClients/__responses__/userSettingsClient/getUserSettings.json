@@ -1,0 +1,18 @@
+{
+  "data": {
+    "userSettings": {
+      "applicationDeploymentFilters": [
+        {
+          "name": "testing",
+          "affiliation": "aurora",
+          "applications": [
+            "ao"
+          ],
+          "environments": [
+            "dev"
+          ]
+        }
+      ]
+    }
+  }
+}

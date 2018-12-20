@@ -4,7 +4,6 @@ import styled from 'styled-components';
 import DetailsList from 'aurora-frontend-react-komponenter/DetailsList';
 import { ImageTagType } from 'models/ImageTagType';
 import { ITag } from 'models/Tag';
-import { IColumn, Selection } from 'office-ui-fabric-react/lib/DetailsList';
 
 const detailListColumns = [
   {
@@ -47,7 +46,7 @@ export default class TagsList extends React.Component<
     selectedTagIndex: -1
   };
 
-  private selection = new Selection();
+  private selection = new DetailsList.Selection();
 
   public resetSelections = () => {
     this.selection.setAllSelected(false);
@@ -71,7 +70,7 @@ export default class TagsList extends React.Component<
     }
   };
 
-  public renderItemColoumn = (item?: any, index?: number, column?: IColumn) => {
+  public renderItemColoumn = (item?: any, index?: number, column?: any) => {
     if (column && column.fieldName) {
       return (
         <ColumnItem title={item[column.fieldName]}>
