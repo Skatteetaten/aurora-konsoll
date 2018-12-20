@@ -123,7 +123,10 @@ class AffiliationViewController extends React.Component<
     const { allFilters } = this.state;
     if (affiliation !== prevAffiliation) {
       this.fetchApplicationDeployments(affiliation).then(() => {
-        const defaultFilter = this.deploymentFilterService.findDefaultFilter(allFilters, affiliation);
+        const defaultFilter = this.deploymentFilterService.findDefaultFilter(
+          allFilters,
+          affiliation
+        );
         if (defaultFilter) {
           this.setState({
             filter: {
@@ -183,18 +186,14 @@ class AffiliationViewController extends React.Component<
     }));
   }
 
-  public getUpdatedFilters = (filterName?: string) => {
-    const { allFilters } = this.state;
-    const { affiliation } = this.props;
-
-    return allFilters.filter(
-      f => f.affiliation !== affiliation || f.name !== filterName
-    );
-  };
-
   public deleteFilter = async (filterName: string) => {
-    const { clients } = this.props;
-    const updatedFilters = this.getUpdatedFilters(filterName);
+    const { affiliation, clients } = this.props;
+    const { allFilters } = this.state;
+    const updatedFilters = this.deploymentFilterService.getOtherNonDefaultFilters(
+      allFilters,
+      affiliation,
+      { name: filterName, applications: [], environments: [], default: false }
+    );
     if (filterName) {
       const response = await clients.userSettingsClient.updateUserSettings({
         applicationDeploymentFilters: updatedFilters
@@ -210,9 +209,13 @@ class AffiliationViewController extends React.Component<
   };
 
   public updateFilter = async (filter: IFilter) => {
-    const { affiliation, clients } = this.props;
-    const updatedFilters = this.getUpdatedFilters(filter.name);
-
+    const { affiliation, clients, updateUrlWithQuery } = this.props;
+    const { allFilters } = this.state;
+    const updatedFilters = this.deploymentFilterService.getOtherNonDefaultFilters(
+      allFilters,
+      affiliation,
+      filter
+    );
     if (filter.name) {
       updatedFilters.push({
         affiliation,
@@ -237,6 +240,9 @@ class AffiliationViewController extends React.Component<
       this.setState({
         filter
       });
+    }
+    if (filter.applications.length === 0 && filter.environments.length === 0) {
+      updateUrlWithQuery(`/a/${affiliation}/deployments`);
     }
   };
 

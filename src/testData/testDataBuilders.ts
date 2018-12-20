@@ -7,6 +7,7 @@ import { IDeploymentSpec, IMount } from 'models/DeploymentSpec';
 import { ImageTagType } from 'models/ImageTagType';
 import { IPodResource } from 'models/Pod';
 import { IApplicationDeploymentFilters } from 'models/UserSettings';
+import { IFilter } from 'services/DeploymentFilterService';
 
 const mountFactory = Factory.Sync.makeFactory<IMount>({
   exist: true,
@@ -123,4 +124,11 @@ export const applicationDeploymentFilterFactory = Factory.Sync.makeFactory<
   default: true,
   applications: ['app1', 'app2'],
   environments: ['test']
+});
+
+export const filterFactory = Factory.Sync.makeFactory<IFilter>({
+  applications: [],
+  environments: [],
+  default: true,
+  name: 'auroraFilter'
 });

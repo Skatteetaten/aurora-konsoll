@@ -91,9 +91,14 @@ export class Filter extends React.Component<IFilterProps, IFilterState> {
   public clearOnAffiliationChange(prevAffiliation: string) {
     const { affiliation, updateFilter, allFilters } = this.props;
     if (prevAffiliation !== affiliation) {
-      const defaultFilter = this.filterService.getDefaultFilter(allFilters, affiliation);
+      const defaultFilter = this.filterService.getDefaultFilter(
+        allFilters,
+        affiliation
+      );
       if (defaultFilter) {
         this.setState({
+          applications: defaultFilter.applications,
+          environments: defaultFilter.environments,
           selectedFilterKey: defaultFilter.name,
           currentFilterName: defaultFilter.name
         });
@@ -156,30 +161,44 @@ export class Filter extends React.Component<IFilterProps, IFilterState> {
     return applications.length === 0 && environments.length === 0;
   };
 
-  public footerApplyButton = (close: () => void) => {
-    const { updateFilter, allFilters, affiliation } = this.props;
+  public applyFilter = (isDefault: boolean, close: () => void) => {
+    const { updateFilter } = this.props;
     const { currentFilterName, applications, environments } = this.state;
-    const applyChanges = () => {
-      if (this.hasCurrentFilterName() && this.noFilterOptionsSelected()) {
-        errorStateManager.addError(
-          new Error('Ingen applikasjoner og miljøer valgt')
-        );
-      } else {
-        updateFilter({
-          name: currentFilterName,
-          applications,
-          environments
-        });
-        this.setState({
-          selectedFilterKey: currentFilterName
-        });
-        close();
-      }
-    };
+    if (this.hasCurrentFilterName() && this.noFilterOptionsSelected()) {
+      errorStateManager.addError(
+        new Error('Ingen applikasjoner og miljøer valgt')
+      );
+    } else {
+      updateFilter({
+        name: currentFilterName,
+        default: isDefault,
+        applications,
+        environments
+      });
+      this.setState({
+        selectedFilterKey: currentFilterName
+      });
+      close();
+    }
+  };
+
+  public footerApplyButton = (close: () => void) => {
+    const { allFilters, affiliation } = this.props;
+    const applyDefaultFilter = () => this.applyFilter(true, close);
+    const applyNonDefaultFilter = () => this.applyFilter(false, close);
+
     return (
       <>
-        <FooterText filter={this.filterService.getDefaultFilterName(allFilters, affiliation)} />
-        <ActionButton onClick={applyChanges}>Sett filter</ActionButton>
+        <FooterText
+          filter={this.filterService.getDefaultFilterName(
+            allFilters,
+            affiliation
+          )}
+        />
+        <ActionButton onClick={applyDefaultFilter}>
+          Sett default filter
+        </ActionButton>
+        <ActionButton onClick={applyNonDefaultFilter}>Sett filter</ActionButton>
       </>
     );
   };
@@ -203,6 +222,8 @@ export class Filter extends React.Component<IFilterProps, IFilterState> {
 
       if (currentFilter) {
         this.setState({
+          applications: currentFilter.applications,
+          environments: currentFilter.environments,
           currentFilterName: currentFilter.name
         });
         updateFilter({

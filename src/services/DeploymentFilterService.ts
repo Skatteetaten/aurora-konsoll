@@ -73,9 +73,30 @@ export default class DeploymentFilterService {
     );
   }
 
-  public findDefaultFilter(allFilters: IApplicationDeploymentFilters[], affiliation: string) {
-    return allFilters.find(
-      f => f.affiliation === affiliation && f.default
-    );
+  public findDefaultFilter(
+    allFilters: IApplicationDeploymentFilters[],
+    affiliation: string
+  ) {
+    return allFilters.find(f => f.affiliation === affiliation && f.default);
   }
+
+  public getOtherNonDefaultFilters = (
+    allFilters: IApplicationDeploymentFilters[],
+    affiliation: string,
+    filter: IFilter
+  ) => {
+    let otherFilters = allFilters.filter(
+      f => f.affiliation !== affiliation || f.name !== filter.name
+    );
+
+    if (filter.default) {
+      otherFilters = otherFilters.map(f => {
+        if (f.affiliation === affiliation) {
+          f.default = false;
+        }
+        return f;
+      });
+    }
+    return otherFilters;
+  };
 }
