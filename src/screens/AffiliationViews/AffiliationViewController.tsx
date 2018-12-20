@@ -243,6 +243,12 @@ class AffiliationViewController extends React.Component<
     }
     if (filter.applications.length === 0 && filter.environments.length === 0) {
       updateUrlWithQuery(`/a/${affiliation}/deployments`);
+      const currentQuery = this.deploymentFilterService.toQuery(filter);
+      if (currentQuery === '') {
+        this.setState({
+          filterPathUrl: ''
+        });
+      }
     }
   };
 
