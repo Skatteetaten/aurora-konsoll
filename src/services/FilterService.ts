@@ -23,7 +23,7 @@ export default class FilterService {
       );
   }
 
-  public removeDuplicates = (list: string[], element: string) =>
+  public removeElement = (list: string[], element: string) =>
     list.filter(item => item !== element);
 
   public createFilterOptions = (

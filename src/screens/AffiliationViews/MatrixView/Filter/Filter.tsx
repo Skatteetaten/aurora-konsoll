@@ -133,7 +133,7 @@ export class Filter extends React.Component<IFilterProps, IFilterState> {
         }));
       }
     } else {
-      const newArray = this.filterService.removeDuplicates(values, value.name);
+      const newArray = this.filterService.removeElement(values, value.name);
       if (isApplication) {
         this.setState({
           applications: newArray
