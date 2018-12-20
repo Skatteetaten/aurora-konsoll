@@ -80,7 +80,7 @@ export interface IManagement {
   port: string;
 }
 
-interface IMount {
+export interface IMount {
   exist: boolean;
   mountName: string;
   path: string;

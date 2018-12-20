@@ -115,10 +115,11 @@ export const APPLICATION_DEPLOYMENT_DETAILS_QUERY = gql`
     applicationDeploymentDetails(id: $id) {
       podResources {
         name
-        status
+        phase
         restartCount
         ready
         startTime
+        latestDeployTag
         managementResponses {
           health {
             hasResponse
