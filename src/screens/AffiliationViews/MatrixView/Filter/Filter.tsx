@@ -89,24 +89,28 @@ export class Filter extends React.Component<IFilterProps, IFilterState> {
   }
 
   public clearOnAffiliationChange(prevAffiliation: string) {
-    const { affiliation } = this.props;
+    const { affiliation, updateFilter, allFilters } = this.props;
     if (prevAffiliation !== affiliation) {
-      this.setState({
-        applications: [],
-        environments: [],
-        selectedFilterKey: this.getDefaultFilterName(),
-        mode: FilterMode.Create
-      });
+      const defaultFilter = this.filterService.getDefaultFilter(allFilters, affiliation);
+      if (defaultFilter) {
+        this.setState({
+          selectedFilterKey: defaultFilter.name,
+          currentFilterName: defaultFilter.name
+        });
+        updateFilter({
+          applications: defaultFilter.applications,
+          environments: defaultFilter.environments
+        });
+      } else {
+        this.setState({
+          applications: [],
+          environments: [],
+          selectedFilterKey: undefined,
+          mode: FilterMode.Create
+        });
+      }
     }
   }
-
-  public getDefaultFilterName = () => {
-    const { affiliation, allFilters } = this.props;
-    const filter = allFilters.find(
-      f => f.affiliation === affiliation && f.default
-    );
-    return !!filter ? filter.name : undefined;
-  };
 
   public componentDidUpdate(prevProps: IFilterProps) {
     this.setExistingFilter();
@@ -153,7 +157,7 @@ export class Filter extends React.Component<IFilterProps, IFilterState> {
   };
 
   public footerApplyButton = (close: () => void) => {
-    const { updateFilter } = this.props;
+    const { updateFilter, allFilters, affiliation } = this.props;
     const { currentFilterName, applications, environments } = this.state;
     const applyChanges = () => {
       if (this.hasCurrentFilterName() && this.noFilterOptionsSelected()) {
@@ -174,7 +178,7 @@ export class Filter extends React.Component<IFilterProps, IFilterState> {
     };
     return (
       <>
-        <FooterText filter={this.getDefaultFilterName()} />
+        <FooterText filter={this.filterService.getDefaultFilterName(allFilters, affiliation)} />
         <ActionButton onClick={applyChanges}>Sett filter</ActionButton>
       </>
     );
@@ -199,8 +203,6 @@ export class Filter extends React.Component<IFilterProps, IFilterState> {
 
       if (currentFilter) {
         this.setState({
-          applications: currentFilter.applications,
-          environments: currentFilter.environments,
           currentFilterName: currentFilter.name
         });
         updateFilter({
@@ -212,7 +214,8 @@ export class Filter extends React.Component<IFilterProps, IFilterState> {
       this.setState({
         applications: [],
         environments: [],
-        currentFilterName: undefined
+        currentFilterName: undefined,
+        selectedFilterKey: undefined
       });
       updateFilter({ applications: [], environments: [] });
     }

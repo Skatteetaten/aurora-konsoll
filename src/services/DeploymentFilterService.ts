@@ -1,4 +1,5 @@
 import { IApplicationDeployment } from 'models/ApplicationDeployment';
+import { IApplicationDeploymentFilters } from 'models/UserSettings';
 import * as qs from 'qs';
 
 export interface IFilter {
@@ -37,11 +38,7 @@ export default class DeploymentFilterService {
     const queries = qs.parse(query, {
       ignoreQueryPrefix: true
     });
-    if (!queries.apps && !queries.envs) {
-      return false;
-    } else {
-      return true;
-    }
+    return queries.apps || queries.envs;
   }
 
   public filterDeployments(
@@ -73,6 +70,12 @@ export default class DeploymentFilterService {
         addQueryPrefix: true,
         arrayFormat: 'repeat'
       }
+    );
+  }
+
+  public findDefaultFilter(allFilters: IApplicationDeploymentFilters[], affiliation: string) {
+    return allFilters.find(
+      f => f.affiliation === affiliation && f.default
     );
   }
 }

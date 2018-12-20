@@ -120,14 +120,25 @@ class AffiliationViewController extends React.Component<
 
   public clearFilterOnAffiliationChange(prevAffiliation: string) {
     const { affiliation } = this.props;
+    const { allFilters } = this.state;
     if (affiliation !== prevAffiliation) {
       this.fetchApplicationDeployments(affiliation).then(() => {
-        this.setState({
-          filter: {
-            applications: [],
-            environments: []
-          }
-        });
+        const defaultFilter = this.deploymentFilterService.findDefaultFilter(allFilters, affiliation);
+        if (defaultFilter) {
+          this.setState({
+            filter: {
+              applications: defaultFilter.applications,
+              environments: defaultFilter.environments
+            }
+          });
+        } else {
+          this.setState({
+            filter: {
+              applications: [],
+              environments: []
+            }
+          });
+        }
       });
     }
   }
@@ -199,7 +210,7 @@ class AffiliationViewController extends React.Component<
   };
 
   public updateFilter = async (filter: IFilter) => {
-    const { affiliation, clients, updateUrlWithQuery } = this.props;
+    const { affiliation, clients } = this.props;
     const updatedFilters = this.getUpdatedFilters(filter.name);
 
     if (filter.name) {
@@ -226,10 +237,6 @@ class AffiliationViewController extends React.Component<
       this.setState({
         filter
       });
-    }
-
-    if (filter.applications.length === 0 && filter.environments.length === 0) {
-      updateUrlWithQuery('/');
     }
   };
 
