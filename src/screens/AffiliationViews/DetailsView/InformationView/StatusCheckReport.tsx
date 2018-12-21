@@ -3,6 +3,7 @@ import Icon from 'aurora-frontend-react-komponenter/Icon';
 import palette from 'aurora-frontend-react-komponenter/utils/palette';
 import * as React from 'react';
 
+import Collapse from 'components/Collapse';
 import { StatusCode, toStatusColor } from 'models/Status';
 import { IStatusCheck } from 'services/auroraApiClients/applicationDeploymentClient/query';
 import styled from 'styled-components';
@@ -85,18 +86,40 @@ const StatusCheckReport = ({ reports, reasons }: IStatusCheckReportProps) => {
     c => !reports.find(r => r.name === c.name)
   );
 
+  const standardChecks = {
+    hiddenBecauseMessage: '',
+    isCollapsed: false
+  };
+
+  if (specialChecks.length > 0) {
+    const joinedChecks = specialChecks.map(it => it.name).join(',');
+    standardChecks.hiddenBecauseMessage = `Utgår pga. spesialsjekk: ${joinedChecks}`;
+    standardChecks.isCollapsed = true;
+  }
+
   return (
     <div className="status-checks">
       {specialChecks.length > 0 && (
         <>
-          <h3>
-            Spesialsjekker <small>(overgår standardsjekker)</small>
-          </h3>
+          <h3>Spesialsjekker</h3>
           {renderDeployList(specialChecks)}
         </>
       )}
-      <h3>Standardsjekker</h3>
-      {renderDeployList(reports)}
+      <h3>
+        Standardsjekker{' '}
+        {standardChecks.isCollapsed && (
+          <small style={{ color: 'grey' }}>
+            {standardChecks.hiddenBecauseMessage}
+          </small>
+        )}
+      </h3>
+      {standardChecks.isCollapsed ? (
+        <Collapse isCollapsed={standardChecks.isCollapsed}>
+          {renderDeployList(reports)}
+        </Collapse>
+      ) : (
+        renderDeployList(reports)
+      )}
       <div style={{ display: 'flex', marginTop: '20px' }}>
         <StatusIconInfo code={StatusCode.HEALTHY} />
         <StatusIconInfo code={StatusCode.OBSERVE} />
