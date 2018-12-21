@@ -106,7 +106,6 @@ export class ApplicationDeploymentClient {
         id
       }
     });
-
     let deploymentSpec;
     let pods: IPodResource[] = [];
     if (result && result.data.applicationDeploymentDetails) {

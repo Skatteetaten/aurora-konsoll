@@ -36,7 +36,7 @@ const PodStatus = ({
 }: IPodStatusProps) => (
   <div className={className}>
     <div className="pod-status">
-      <span>{pod.status}</span>
+      <span>{pod.phase}</span>
       <div className="pod-icons">
         <IconLink
           name="Timeline"
