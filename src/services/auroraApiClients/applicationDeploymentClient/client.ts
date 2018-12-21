@@ -108,7 +108,7 @@ export class ApplicationDeploymentClient {
     });
     let deploymentSpec;
     let pods: IPodResource[] = [];
-    if (result && result.data.applicationDeploymentDetails) {
+    if (result && result.data && result.data.applicationDeploymentDetails) {
       const {
         deploymentSpecs,
         podResources

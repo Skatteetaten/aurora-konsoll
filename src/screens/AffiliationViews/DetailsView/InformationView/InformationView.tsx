@@ -16,9 +16,6 @@ import StatusCheckReportCard from './StatusCheckReportCard';
 const { skeColor } = palette;
 const bulletPoint = '\u2022';
 
-const { skeColor } = palette;
-const bulletPoint = '\u2022';
-
 interface IInformationViewProps {
   isFetchingDetails: boolean;
   deploymentDetails: IApplicationDeploymentDetails;

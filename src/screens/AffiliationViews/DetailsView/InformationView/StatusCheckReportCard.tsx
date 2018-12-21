@@ -15,37 +15,44 @@ interface IStatusCheckReportCardProps {
 const StatusCheckReportCard = ({
   deployment,
   className
-}: IStatusCheckReportCardProps) => (
-  <div className={className}>
-    <div className="status-card">
-      <header
-        style={{
-          background: toStatusColor(deployment.status.code).base
-        }}
-      >
-        {deployment.status.code}
-      </header>
-      {(deployment.status.reasons.length > 0 && (
-        <>
-          <p>Påvirkede sjekker:</p>
-          <ul>
-            {deployment.status.reasons.map(reason => (
-              <li key={reason.name}>
-                {reason.name} ({reason.failLevel})
-              </li>
-            ))}
-          </ul>
-        </>
-      )) || <p>Alle sjekker er OK.</p>}
-      <InfoDialog title="Helsesjekkrapport">
-        <StatusCheckReport
-          reports={deployment.status.reports}
-          reasons={deployment.status.reasons}
-        />
-      </InfoDialog>
+}: IStatusCheckReportCardProps) => {
+  const { reasons, reports } = deployment.status;
+  const specialChecks = reasons.filter(
+    c => !reports.find(r => r.name === c.name)
+  );
+  const reasonsToShow = specialChecks.length > 0 ? specialChecks : reasons;
+  return (
+    <div className={className}>
+      <div className="status-card">
+        <header
+          style={{
+            background: toStatusColor(deployment.status.code).base
+          }}
+        >
+          {deployment.status.code}
+        </header>
+        {(reasonsToShow.length > 0 && (
+          <>
+            <p>Påvirkede sjekker:</p>
+            <ul>
+              {reasonsToShow.map(reason => (
+                <li key={reason.name}>
+                  {reason.name} ({reason.failLevel})
+                </li>
+              ))}
+            </ul>
+          </>
+        )) || <p>Alle sjekker er OK.</p>}
+        <InfoDialog title="Helsesjekkrapport">
+          <StatusCheckReport
+            reports={deployment.status.reports}
+            reasons={deployment.status.reasons}
+          />
+        </InfoDialog>
+      </div>
     </div>
-  </div>
-);
+  );
+};
 
 export default styled(StatusCheckReportCard)`
   .status-card {
