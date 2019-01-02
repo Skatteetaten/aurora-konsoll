@@ -217,43 +217,31 @@ export class Filter extends React.Component<IFilterProps, IFilterState> {
           new Error('Ingen applikasjoner og miljøer valgt')
         );
       } else {
-        if (mode === FilterMode.Edit) {
-          if (defaultFilter && findDefaultFilter) {
-            updateFilter({
-              name: selectedFilterKey,
-              default: false,
-              applications:
-                currentFilter && currentFilter.applications.length > 0
-                  ? currentFilter.applications
-                  : [],
-              environments:
-                currentFilter && currentFilter.environments.length > 0
-                  ? currentFilter.environments
-                  : []
-            });
-            this.setState({
-              selectedFilterKey: currentFilterName
-            });
-          } else {
-            updateFilter({
-              name: selectedFilterKey,
-              default: true,
-              applications:
-                currentFilter && currentFilter.applications.length > 0
-                  ? currentFilter.applications
-                  : [],
-              environments:
-                currentFilter && currentFilter.environments.length > 0
-                  ? currentFilter.environments
-                  : []
-            });
-            this.setState({
-              selectedFilterKey: currentFilterName
-            });
-          }
-        } else if (mode === FilterMode.Create) {
+        if (defaultFilter && findDefaultFilter) {
           updateFilter({
-            name: currentFilterName,
+            name:
+              mode === FilterMode.Create
+                ? currentFilterName
+                : selectedFilterKey,
+            default: false,
+            applications:
+              currentFilter && currentFilter.applications.length > 0
+                ? currentFilter.applications
+                : [],
+            environments:
+              currentFilter && currentFilter.environments.length > 0
+                ? currentFilter.environments
+                : []
+          });
+          this.setState({
+            selectedFilterKey: currentFilterName
+          });
+        } else {
+          updateFilter({
+            name:
+              mode === FilterMode.Create
+                ? currentFilterName
+                : selectedFilterKey,
             default: true,
             applications:
               currentFilter && currentFilter.applications.length > 0
