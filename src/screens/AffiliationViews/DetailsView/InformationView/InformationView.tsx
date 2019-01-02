@@ -198,7 +198,7 @@ function getApplicationDeploymentValues(
       .join('/'),
     Status:
       deployment.status.code +
-      (deployment.status.comment && ` (${deployment.status.comment})`)
+      (!!deployment.status.comment ? ` (${deployment.status.comment})` : '')
   };
 }
 
