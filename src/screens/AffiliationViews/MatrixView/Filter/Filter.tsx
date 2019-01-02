@@ -160,7 +160,7 @@ export class Filter extends React.Component<IFilterProps, IFilterState> {
   };
 
   public applyFilter = (close: () => void) => {
-    const { updateFilter } = this.props;
+    const { updateFilter, allFilters, affiliation } = this.props;
     const {
       applications,
       environments,
@@ -174,8 +174,8 @@ export class Filter extends React.Component<IFilterProps, IFilterState> {
       );
     } else {
       const getDefaultFilterName = this.filterService.getDefaultFilterName(
-        this.props.allFilters,
-        this.props.affiliation
+        allFilters,
+        affiliation
       );
       updateFilter({
         name:
@@ -194,7 +194,7 @@ export class Filter extends React.Component<IFilterProps, IFilterState> {
   public footerApplyButton = (close: () => void) => {
     const { allFilters, affiliation, className, updateFilter } = this.props;
     const { selectedFilterKey, mode, currentFilterName } = this.state;
-    const applyNewDefaultFilter = () => this.applyFilter(close);
+    const applyNewFilter = () => this.applyFilter(close);
     const defaultFilter = this.filterService.getDefaultFilter(
       allFilters,
       affiliation
@@ -211,51 +211,29 @@ export class Filter extends React.Component<IFilterProps, IFilterState> {
       currentFilter &&
       defaultFilter.name === currentFilter.name;
 
-    const changeChecked = () => {
+    const handleDefaultValueChange = () => {
       if (this.hasCurrentFilterName() && this.noFilterOptionsSelected()) {
         errorStateManager.addError(
           new Error('Ingen applikasjoner og miljøer valgt')
         );
       } else {
-        if (defaultFilter && findDefaultFilter) {
-          updateFilter({
-            name:
-              mode === FilterMode.Create
-                ? currentFilterName
-                : selectedFilterKey,
-            default: false,
-            applications:
-              currentFilter && currentFilter.applications.length > 0
-                ? currentFilter.applications
-                : [],
-            environments:
-              currentFilter && currentFilter.environments.length > 0
-                ? currentFilter.environments
-                : []
-          });
-          this.setState({
-            selectedFilterKey: currentFilterName
-          });
-        } else {
-          updateFilter({
-            name:
-              mode === FilterMode.Create
-                ? currentFilterName
-                : selectedFilterKey,
-            default: true,
-            applications:
-              currentFilter && currentFilter.applications.length > 0
-                ? currentFilter.applications
-                : [],
-            environments:
-              currentFilter && currentFilter.environments.length > 0
-                ? currentFilter.environments
-                : []
-          });
-          this.setState({
-            selectedFilterKey: currentFilterName
-          });
-        }
+        const isDefault = defaultFilter && findDefaultFilter;
+        updateFilter({
+          name:
+            mode === FilterMode.Create ? currentFilterName : selectedFilterKey,
+          default: !!!isDefault,
+          applications:
+            currentFilter && currentFilter.applications.length > 0
+              ? currentFilter.applications
+              : [],
+          environments:
+            currentFilter && currentFilter.environments.length > 0
+              ? currentFilter.environments
+              : []
+        });
+        this.setState({
+          selectedFilterKey: currentFilterName
+        });
       }
     };
 
@@ -272,10 +250,10 @@ export class Filter extends React.Component<IFilterProps, IFilterState> {
             checked={!!isCurrentFilterDefault}
             boxSide="start"
             label="Standardvalg"
-            onChange={changeChecked}
+            onChange={handleDefaultValueChange}
           />
         </div>
-        <ActionButton onClick={applyNewDefaultFilter}>Sett filter</ActionButton>
+        <ActionButton onClick={applyNewFilter}>Sett filter</ActionButton>
       </span>
     );
   };
