@@ -38,11 +38,7 @@ const Row = ({ name, environments, apps, linkBuilder }: IRowProps) => {
 
     const Link = linkBuilder(deployment);
     return (
-      <Status
-        key={key}
-        name={deployment.status.code.toLowerCase()}
-        title={tooltip}
-      >
+      <Status key={key} code={deployment.status.code} title={tooltip}>
         <Link>{`${releaseToHint}${deployment.version.deployTag.name}`}</Link>
       </Status>
     );

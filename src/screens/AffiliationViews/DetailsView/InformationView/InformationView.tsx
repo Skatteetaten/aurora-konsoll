@@ -11,6 +11,7 @@ import {
 } from 'models/ApplicationDeployment';
 import { IDeploymentSpec } from 'models/DeploymentSpec';
 import PodStatus from './PodStatus';
+import StatusCheckReportCard from './StatusCheckReportCard';
 
 const { skeColor } = palette;
 const bulletPoint = '\u2022';
@@ -78,10 +79,6 @@ const InformationView = ({
     <div className={className}>
       <div className="info-grid">
         <div>
-          <h3>Gjeldende AuroraConfig</h3>
-          <InfoContent values={getDeploymentSpecValues(deploymentSpec)} />
-        </div>
-        <div>
           <h3>Aktivt deployment</h3>
           <InfoContent
             values={getApplicationDeploymentValues(
@@ -89,6 +86,12 @@ const InformationView = ({
               TagWithWarningMessage
             )}
           />
+          <h3>Gjeldende AuroraConfig</h3>
+          <InfoContent values={getDeploymentSpecValues(deploymentSpec)} />
+        </div>
+        <div>
+          <h3>AuroraStatus for deployment</h3>
+          <StatusCheckReportCard deployment={deployment} />
         </div>
       </div>
       <hr
@@ -195,17 +198,27 @@ function getApplicationDeploymentValues(
     'Image repository': deployment.repository
       .split('/')
       .slice(1)
-      .join('/'),
-    Status:
-      deployment.status.code +
-      (deployment.status.comment && ` (${deployment.status.comment})`)
+      .join('/')
   };
 }
 
 export default styled(InformationView)`
+  .health-status {
+    background: white;
+    display: flex;
+    p {
+      padding: 10px 0;
+      margin: 0;
+      &:first-child {
+        margin-right: 10px;
+      }
+    }
+  }
+
   .labels {
     display: flex;
   }
+
   .info-deployments {
     display: flex;
   }
@@ -215,8 +228,8 @@ export default styled(InformationView)`
   }
   .info-grid {
     display: flex;
-    div {
-      margin-right: 20px;
+    > div {
+      margin-right: 40px;
     }
   }
   .styledDeployTag {

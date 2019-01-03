@@ -1,3 +1,4 @@
+import { StatusCode } from 'models/Status';
 import { IApplicationDeployment } from '../models/ApplicationDeployment';
 import { ImageTagType } from '../models/ImageTagType';
 import DeploymentFilterService, { IFilter } from './DeploymentFilterService';
@@ -13,8 +14,9 @@ describe('DeploymentFilterService', () => {
       name: 'whoami-sub',
       repository: 'localhost/whoami',
       status: {
-        code: 'HEALTHY',
-        comment: ''
+        code: StatusCode.HEALTHY,
+        reasons: [],
+        reports: []
       },
       time: '2018-11-12T07:16:26.797Z',
       version: {
@@ -40,8 +42,9 @@ describe('DeploymentFilterService', () => {
       name: 'whoami',
       repository: 'localhost/robust-test',
       status: {
-        code: 'HEALTHY',
-        comment: ''
+        code: StatusCode.HEALTHY,
+        reasons: [],
+        reports: []
       },
       time: '2018-11-12T07:16:26.798Z',
       version: {

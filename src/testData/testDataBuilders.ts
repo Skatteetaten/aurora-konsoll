@@ -6,6 +6,7 @@ import {
 import { IDeploymentSpec, IMount } from 'models/DeploymentSpec';
 import { ImageTagType } from 'models/ImageTagType';
 import { IPodResource } from 'models/Pod';
+import { StatusCode } from 'models/Status';
 
 const mountFactory = Factory.Sync.makeFactory<IMount>({
   exist: true,
@@ -86,8 +87,9 @@ export const deploymentFactory = Factory.Sync.makeFactory<
   name: 'martin-test-applikasjon',
   repository: 'localhost/"martin-test-applikasjon',
   status: {
-    code: 'OBSERVE',
-    comment: 'POD_HEALTH_CHECK'
+    code: StatusCode.OBSERVE,
+    reasons: [],
+    reports: []
   },
   time: '2018-12-07T11:48:34.230Z',
   version: {

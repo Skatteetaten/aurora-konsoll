@@ -108,7 +108,7 @@ export class ApplicationDeploymentClient {
     });
     let deploymentSpec;
     let pods: IPodResource[] = [];
-    if (result && result.data.applicationDeploymentDetails) {
+    if (result && result.data && result.data.applicationDeploymentDetails) {
       const {
         deploymentSpecs,
         podResources
@@ -173,7 +173,8 @@ export class ApplicationDeploymentClient {
         repository: imageRepository ? imageRepository.repository : '',
         status: {
           code: app.status.code,
-          comment: app.status.comment
+          reasons: app.status.reasons,
+          reports: app.status.reports
         },
         time: app.time,
         version: {

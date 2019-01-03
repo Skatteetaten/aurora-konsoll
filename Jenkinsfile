@@ -1,6 +1,6 @@
 #!/usr/bin/env groovy
 
-def scriptVersion = 'feature/AOS-2708'
+def scriptVersion = 'v6'
 def jenkinsfile
 fileLoader.withGit('https://git.aurora.skead.no/scm/ao/aurora-pipeline-scripts.git', scriptVersion) {
    jenkinsfile = fileLoader.load('templates/webleveransepakke')
@@ -12,6 +12,8 @@ def overrides = [
   openShiftBuild: true,
   nodeVersion: 'node-8',
   credentialsId: 'github',
+  openShiftBaseImage: 'wrench8',
+  openShiftBaseImageVersion: '1',
   suggestVersionAndTagReleases: [
       [branch: 'master', versionHint: '0']
   ]
