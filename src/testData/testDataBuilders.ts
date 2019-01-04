@@ -6,9 +6,9 @@ import {
 import { IDeploymentSpec, IMount } from 'models/DeploymentSpec';
 import { ImageTagType } from 'models/ImageTagType';
 import { IPodResource } from 'models/Pod';
+import { StatusCode } from 'models/Status';
 import { IApplicationDeploymentFilters } from 'models/UserSettings';
 import { IFilter } from 'services/DeploymentFilterService';
-import { StatusCode } from 'models/Status';
 
 const mountFactory = Factory.Sync.makeFactory<IMount>({
   exist: true,
