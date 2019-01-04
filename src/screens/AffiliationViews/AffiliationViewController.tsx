@@ -82,13 +82,25 @@ class AffiliationViewController extends React.Component<
     }));
   };
 
-  public fetchApplicationDeploymentFilters = async () => {
-    const { clients } = this.props;
+  public fetchApplicationDeploymentFilters = async (paramsExists: any) => {
+    const { clients, affiliation } = this.props;
     const filters = await clients.userSettingsClient.getUserSettings();
-    if(filters) {
+    if (filters) {
       this.setState({
         allFilters: filters.applicationDeploymentFilters
       });
+
+      const filter = filters.applicationDeploymentFilters.find(
+        f => f.affiliation === affiliation && f.default === true
+      );
+      if (filter && !paramsExists) {
+        this.setState({
+          filter: {
+            applications: filter.applications,
+            environments: filter.environments
+          }
+        });
+      }
     }
   };
 
@@ -108,14 +120,28 @@ class AffiliationViewController extends React.Component<
 
   public clearFilterOnAffiliationChange(prevAffiliation: string) {
     const { affiliation } = this.props;
+    const { allFilters } = this.state;
     if (affiliation !== prevAffiliation) {
       this.fetchApplicationDeployments(affiliation).then(() => {
-        this.setState({
-          filter: {
-            applications: [],
-            environments: []
-          }
-        });
+        const defaultFilter = this.deploymentFilterService.findDefaultFilter(
+          allFilters,
+          affiliation
+        );
+        if (defaultFilter) {
+          this.setState({
+            filter: {
+              applications: defaultFilter.applications,
+              environments: defaultFilter.environments
+            }
+          });
+        } else {
+          this.setState({
+            filter: {
+              applications: [],
+              environments: []
+            }
+          });
+        }
       });
     }
   }
@@ -143,8 +169,11 @@ class AffiliationViewController extends React.Component<
 
   public componentDidMount() {
     const { affiliation } = this.props;
+    const paramsExists = this.deploymentFilterService.isParamsDefined(
+      window.location.search
+    );
     this.fetchApplicationDeployments(affiliation);
-    this.fetchApplicationDeploymentFilters();
+    this.fetchApplicationDeploymentFilters(paramsExists);
 
     const newFilters = this.deploymentFilterService.toFilter(
       window.location.search
@@ -157,18 +186,14 @@ class AffiliationViewController extends React.Component<
     }));
   }
 
-  public getUpdatedFilters = (filterName?: string) => {
-    const { allFilters } = this.state;
-    const { affiliation } = this.props;
-
-    return allFilters.filter(
-      f => f.affiliation !== affiliation || f.name !== filterName
-    );
-  };
-
   public deleteFilter = async (filterName: string) => {
-    const { clients } = this.props;
-    const updatedFilters = this.getUpdatedFilters(filterName);
+    const { affiliation, clients } = this.props;
+    const { allFilters } = this.state;
+    const updatedFilters = this.deploymentFilterService.getOtherNonDefaultFilters(
+      allFilters,
+      affiliation,
+      { name: filterName, applications: [], environments: [], default: false }
+    );
     if (filterName) {
       const response = await clients.userSettingsClient.updateUserSettings({
         applicationDeploymentFilters: updatedFilters
@@ -185,12 +210,17 @@ class AffiliationViewController extends React.Component<
 
   public updateFilter = async (filter: IFilter) => {
     const { affiliation, clients, updateUrlWithQuery } = this.props;
-    const updatedFilters = this.getUpdatedFilters(filter.name);
-
+    const { allFilters } = this.state;
+    const updatedFilters = this.deploymentFilterService.getOtherNonDefaultFilters(
+      allFilters,
+      affiliation,
+      filter
+    );
     if (filter.name) {
       updatedFilters.push({
         affiliation,
         name: filter.name,
+        default: !!filter.default,
         applications: filter.applications,
         environments: filter.environments
       });
@@ -211,9 +241,14 @@ class AffiliationViewController extends React.Component<
         filter
       });
     }
-
     if (filter.applications.length === 0 && filter.environments.length === 0) {
-      updateUrlWithQuery('/');
+      updateUrlWithQuery(`/a/${affiliation}/deployments`);
+      const currentQuery = this.deploymentFilterService.toQuery(filter);
+      if (currentQuery === '') {
+        this.setState({
+          filterPathUrl: ''
+        });
+      }
     }
   };
 

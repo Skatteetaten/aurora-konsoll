@@ -1,13 +1,11 @@
 import * as React from 'react';
 import styled from 'styled-components';
 
+import InfoDialog from 'components/InfoDialog';
 import ReactSelect from 'components/Select';
 
-import InfoDialog from 'components/InfoDialog';
-
-import { errorStateManager } from 'models/StateManager/ErrorStateManager';
-
 import { IApplicationDeployment } from 'models/ApplicationDeployment';
+import { errorStateManager } from 'models/StateManager/ErrorStateManager';
 
 import ActionButton from 'aurora-frontend-react-komponenter/ActionButton';
 import Checkbox from 'aurora-frontend-react-komponenter/Checkbox';
@@ -15,6 +13,7 @@ import { IApplicationDeploymentFilters } from 'models/UserSettings';
 import { IFilter } from 'services/DeploymentFilterService';
 import FilterService from 'services/FilterService';
 import FilterModeSelect, { FilterMode } from './FilterModeSelect';
+import FooterText from './FooterText';
 import SelectionButtons from './SelectionButtons';
 
 export enum SelectionType {
@@ -57,7 +56,6 @@ export class Filter extends React.Component<IFilterProps, IFilterState> {
     mode: FilterMode.Create,
     selectedFilterKey: undefined
   };
-
   private filterService = new FilterService();
 
   public componentDidMount() {
@@ -88,14 +86,32 @@ export class Filter extends React.Component<IFilterProps, IFilterState> {
   }
 
   public clearOnAffiliationChange(prevAffiliation: string) {
-    const { affiliation } = this.props;
+    const { affiliation, updateFilter, allFilters } = this.props;
     if (prevAffiliation !== affiliation) {
-      this.setState({
-        applications: [],
-        environments: [],
-        selectedFilterKey: undefined,
-        mode: FilterMode.Create
-      });
+      const defaultFilter = this.filterService.getDefaultFilter(
+        allFilters,
+        affiliation
+      );
+      if (defaultFilter) {
+        this.setState({
+          applications: defaultFilter.applications,
+          environments: defaultFilter.environments,
+          selectedFilterKey: defaultFilter.name,
+          currentFilterName: defaultFilter.name,
+          mode: FilterMode.Edit
+        });
+        updateFilter({
+          applications: defaultFilter.applications,
+          environments: defaultFilter.environments
+        });
+      } else {
+        this.setState({
+          applications: [],
+          environments: [],
+          selectedFilterKey: undefined,
+          mode: FilterMode.Create
+        });
+      }
     }
   }
 
@@ -120,7 +136,7 @@ export class Filter extends React.Component<IFilterProps, IFilterState> {
         }));
       }
     } else {
-      const newArray = this.filterService.removeDuplicates(values, value.name);
+      const newArray = this.filterService.removeElement(values, value.name);
       if (isApplication) {
         this.setState({
           applications: newArray
@@ -143,27 +159,103 @@ export class Filter extends React.Component<IFilterProps, IFilterState> {
     return applications.length === 0 && environments.length === 0;
   };
 
+  public applyFilter = (close: () => void) => {
+    const { updateFilter, allFilters, affiliation } = this.props;
+    const {
+      applications,
+      environments,
+      selectedFilterKey,
+      mode,
+      currentFilterName
+    } = this.state;
+    if (this.hasCurrentFilterName() && this.noFilterOptionsSelected()) {
+      errorStateManager.addError(
+        new Error('Ingen applikasjoner og miljøer valgt')
+      );
+    } else {
+      const getDefaultFilterName = this.filterService.getDefaultFilterName(
+        allFilters,
+        affiliation
+      );
+      updateFilter({
+        name:
+          mode === FilterMode.Create ? currentFilterName : selectedFilterKey,
+        default: getDefaultFilterName === selectedFilterKey ? true : false,
+        applications,
+        environments
+      });
+      this.setState({
+        selectedFilterKey: currentFilterName
+      });
+      close();
+    }
+  };
+
   public footerApplyButton = (close: () => void) => {
-    const { updateFilter } = this.props;
-    const { currentFilterName, applications, environments } = this.state;
-    const applyChanges = () => {
+    const { allFilters, affiliation, className, updateFilter } = this.props;
+    const { selectedFilterKey, mode, currentFilterName } = this.state;
+    const applyNewFilter = () => this.applyFilter(close);
+    const defaultFilter = this.filterService.getDefaultFilter(
+      allFilters,
+      affiliation
+    );
+    const findDefaultFilter = allFilters.find(
+      f => f.name === selectedFilterKey && f.default
+    );
+    const currentFilter = allFilters.find(
+      filter => filter.name === selectedFilterKey
+    );
+    const isCurrentFilterDefault =
+      defaultFilter &&
+      defaultFilter.default &&
+      currentFilter &&
+      defaultFilter.name === currentFilter.name;
+
+    const handleDefaultValueChange = () => {
       if (this.hasCurrentFilterName() && this.noFilterOptionsSelected()) {
         errorStateManager.addError(
           new Error('Ingen applikasjoner og miljøer valgt')
         );
       } else {
+        const isDefault = defaultFilter && findDefaultFilter;
         updateFilter({
-          name: currentFilterName,
-          applications,
-          environments
+          name:
+            mode === FilterMode.Create ? currentFilterName : selectedFilterKey,
+          default: !!!isDefault,
+          applications:
+            currentFilter && currentFilter.applications.length > 0
+              ? currentFilter.applications
+              : [],
+          environments:
+            currentFilter && currentFilter.environments.length > 0
+              ? currentFilter.environments
+              : []
         });
         this.setState({
           selectedFilterKey: currentFilterName
         });
-        close();
       }
     };
-    return <ActionButton onClick={applyChanges}>Sett filter</ActionButton>;
+
+    return (
+      <span className={className}>
+        <FooterText
+          filter={this.filterService.getDefaultFilterName(
+            allFilters,
+            affiliation
+          )}
+        />
+        <div className="styled-footer-buttons">
+          <Checkbox
+            checked={!!isCurrentFilterDefault}
+            boxSide="start"
+            label="Standardvalg"
+            onChange={handleDefaultValueChange}
+          />
+        </div>
+        <ActionButton onClick={applyNewFilter}>Sett filter</ActionButton>
+      </span>
+    );
   };
 
   public setCurrentFilterName = (filterName: string) => {
@@ -182,7 +274,6 @@ export class Filter extends React.Component<IFilterProps, IFilterState> {
       const currentFilter = allFilters.find(
         filter => filter.name === option.label
       );
-
       if (currentFilter) {
         this.setState({
           applications: currentFilter.applications,
@@ -198,7 +289,8 @@ export class Filter extends React.Component<IFilterProps, IFilterState> {
       this.setState({
         applications: [],
         environments: [],
-        currentFilterName: undefined
+        currentFilterName: undefined,
+        selectedFilterKey: undefined
       });
       updateFilter({ applications: [], environments: [] });
     }
@@ -387,6 +479,14 @@ const styledFilter = styled(Filter)`
     padding-right: 10px;
     padding-left: 5px;
     overflow: auto;
+  }
+  .styled-footer-buttons {
+    display: inline-flex;
+    padding-top: 10px;
+    padding-right: 15px;
+    .ms-Checkbox-text {
+      font-size: 16px;
+    }
   }
 `;
 

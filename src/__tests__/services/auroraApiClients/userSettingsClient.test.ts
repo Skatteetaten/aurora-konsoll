@@ -40,6 +40,7 @@ describe('updateUserSettings', () => {
       applicationDeploymentFilters: [{
         name: 'my-filter',
         affiliation: 'aurora',
+        default: true,
         applications: ['app'],
         environments: ['env']
       }]
