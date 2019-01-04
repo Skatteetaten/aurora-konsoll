@@ -10,7 +10,7 @@ interface IFooterTextProps {
   className?: string;
 }
 
-const FooterText = ({ filter, className }: IFooterTextProps) => (
+export const FooterText = ({ filter, className }: IFooterTextProps) => (
   <div className={className}>
     {!!filter ? `Standardvalg: ${filter}` : 'Standardvalg ikke definert'}
   </div>

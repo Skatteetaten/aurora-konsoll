@@ -1,6 +1,6 @@
 import { shallow } from 'enzyme';
 import * as React from 'react';
-import FooterText from './FooterText';
+import { FooterText } from './FooterText';
 
 describe('FooterText', () => {
   it('should display filter name when default exists', () => {
