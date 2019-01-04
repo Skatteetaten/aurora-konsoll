@@ -2,45 +2,24 @@ import { shallow } from 'enzyme';
 import * as React from 'react';
 
 import { IApplicationDeployment } from 'models/ApplicationDeployment';
-import { ImageTagType } from 'models/ImageTagType';
+import { deploymentFactory } from 'testData/testDataBuilders';
 import Row, { IApplicationMap } from './Row';
 import Status from './Status';
 
 describe('Row', () => {
-  const createApplicationMap = (releaseToParam?: string) => {
-    const deployments: IApplicationDeployment[] = [
-      {
-        id: '',
-        affiliation: '',
-        name: '',
+  const createApplicationMap = (releaseToParam?: string): IApplicationMap => {
+    return {
+      app: deploymentFactory.buildList(1, {
+        name: 'app',
         environment: 'dev',
-        status: {
-          code: ''
-        },
         version: {
-          auroraVersion: '',
           deployTag: {
-            name: 'version',
-            type: ImageTagType.AURORA_SNAPSHOT_VERSION,
-            lastModified: ''
+            name: 'version'
           },
           releaseTo: releaseToParam
-        },
-        permission: {
-          paas: {
-            admin: true,
-            view: true
-          }
-        },
-        repository: '',
-        time: ''
-      }
-    ];
-
-    const app: IApplicationMap = {
-      app: deployments
+        }
+      })
     };
-    return app;
   };
 
   const linkBuilder = (_: IApplicationDeployment) => () => <div />;

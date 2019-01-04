@@ -23,8 +23,8 @@ const SuccessResponseDialog = ({
   return (
     <InfoDialog
       renderFooterButtons={renderRefreshButton}
-      title={'Helsestatus' + status}
-      buttonText="Helsestatus"
+      title={'Pod helsestatus' + status}
+      buttonText="Pod helsestatus"
       subText={createdAtTime}
     >
       <StyledPre>{text}</StyledPre>

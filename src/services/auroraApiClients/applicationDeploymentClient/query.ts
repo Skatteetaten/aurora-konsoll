@@ -1,5 +1,6 @@
 import gql from 'graphql-tag';
 import { IPodResource } from 'models/Pod';
+import { StatusCode } from 'models/Status';
 import { IImageTag } from '../imageRepositoryClient/query';
 
 export interface IApplicationsConnectionQuery {
@@ -31,6 +32,13 @@ interface IPermissionDetails {
   view: boolean;
 }
 
+export interface IStatusCheck {
+  name: string;
+  description: string;
+  failLevel: StatusCode;
+  hasFailed: boolean;
+}
+
 interface IApplicationDeployment {
   id: string;
   name: string;
@@ -43,8 +51,9 @@ interface IApplicationDeployment {
     permission: IPermission;
   };
   status: {
-    code: string;
-    comment?: string;
+    code: StatusCode;
+    reasons: IStatusCheck[];
+    reports: IStatusCheck[];
   };
   version: {
     auroraVersion?: string;
@@ -81,7 +90,12 @@ export const APPLICATIONS_QUERY = gql`
             }
             status {
               code
-              comment
+              reasons {
+                ...statusCheck
+              }
+              reports {
+                ...statusCheck
+              }
             }
             version {
               auroraVersion
@@ -96,6 +110,13 @@ export const APPLICATIONS_QUERY = gql`
         }
       }
     }
+  }
+
+  fragment statusCheck on StatusCheck {
+    name
+    description
+    failLevel
+    hasFailed
   }
 `;
 

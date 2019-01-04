@@ -5,6 +5,7 @@ import Checkbox from 'aurora-frontend-react-komponenter/Checkbox';
 import { IApplicationDeployment } from 'models/ApplicationDeployment';
 import { ImageTagType } from 'models/ImageTagType';
 
+import { StatusCode } from 'models/Status';
 import { Filter, SelectionType } from './Filter';
 
 describe('Filter', () => {
@@ -19,7 +20,9 @@ describe('Filter', () => {
       name: 'app1',
       environment: 'env1',
       status: {
-        code: ''
+        code: StatusCode.HEALTHY,
+        reasons: [],
+        reports: []
       },
       version: {
         auroraVersion: '',
@@ -45,7 +48,9 @@ describe('Filter', () => {
       name: 'app2',
       environment: 'env2',
       status: {
-        code: ''
+        code: StatusCode.HEALTHY,
+        reasons: [],
+        reports: []
       },
       version: {
         auroraVersion: '',
