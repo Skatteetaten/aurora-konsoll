@@ -33,7 +33,7 @@ describe('UpgradeVersionDialog', () => {
     const wrapper = mount(
       <UpgradeVersionDialog
         previousVersion="latest"
-        newVersion="0.2.5"
+        newVersion={undefined}
         isRedeploying={false}
         isRedeployingCurrentVersion={false}
         redeployWithVersion={redeploy}
@@ -48,26 +48,7 @@ describe('UpgradeVersionDialog', () => {
     expect(button.prop('disabled')).toBeFalsy();
     expect(button.text()).toEqual('Deploy nåværende versjon');
   });
-  it('should enable button and the button should display "Deploy nåværende versjon" when canUpgrade=false', () => {
-    const wrapper = mount(
-      <UpgradeVersionDialog
-        previousVersion="latest"
-        newVersion="0.2.5"
-        isRedeploying={false}
-        isRedeployingCurrentVersion={false}
-        redeployWithVersion={redeploy}
-        redeployWithCurrentVersion={redeploy}
-        canUpgrade={true}
-      />
-    );
-    const spinner = wrapper.find(Spinner);
-    expect(spinner).toHaveLength(0);
-
-    const button = wrapper.find(Button);
-    expect(button.prop('disabled')).toBeFalsy();
-    expect(button.text()).toEqual('Endre versjon');
-  });
-  it('should ', () => {
+  it('should enable button and the button should display "Endre versjon" when canUpgrade=true', () => {
     const wrapper = mount(
       <UpgradeVersionDialog
         previousVersion="latest"
