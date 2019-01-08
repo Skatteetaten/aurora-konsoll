@@ -20,6 +20,7 @@ interface IVersionViewProps {
   hasPermissionToUpgrade: boolean;
   isFetchingTags: boolean;
   isRedeploying: boolean;
+  isRedeployingCurrentVersion: boolean;
   canUpgrade: boolean;
   unavailableMessage?: IUnavailableServiceMessage;
   selectedTagType: ImageTagType;
@@ -31,6 +32,7 @@ interface IVersionViewProps {
   handleSelectStrategy: (e: Event, option: IImageTagTypeOption) => void;
   handleVersionSearch: (value: string) => void;
   redeployWithVersion: () => void;
+  redeployWithCurrentVersion: () => void;
   handleSelectNextTag: (item: ITag) => void;
 }
 
@@ -38,6 +40,7 @@ const VersionView = ({
   tagsPaged,
   isFetchingTags,
   isRedeploying,
+  isRedeployingCurrentVersion,
   unavailableMessage,
   canUpgrade,
   hasPermissionToUpgrade,
@@ -49,6 +52,7 @@ const VersionView = ({
   handleSelectStrategy,
   handleVersionSearch,
   redeployWithVersion,
+  redeployWithCurrentVersion,
   handleSelectNextTag
 }: IVersionViewProps) => {
   if (unavailableMessage) {
@@ -67,7 +71,9 @@ const VersionView = ({
               previousVersion={deployedTag.name}
               newVersion={selectedTag && selectedTag.name}
               isRedeploying={isRedeploying}
+              isRedeployingCurrentVersion={isRedeployingCurrentVersion}
               redeployWithVersion={redeployWithVersion}
+              redeployWithCurrentVersion={redeployWithCurrentVersion}
               canUpgrade={canUpgrade}
             />
           </ButtonWrapper>
@@ -75,7 +81,8 @@ const VersionView = ({
           <UnavailableServiceMessage
             className="unavailable-upgrade-message"
             message={{
-              description: 'Ikke mulig å endre versjon.',
+              description:
+                'Ikke mulig å deploye nåværende eller annen versjon.',
               reason: 'Manglende admin rettigheter.'
             }}
           />

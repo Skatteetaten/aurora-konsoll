@@ -8,6 +8,7 @@ import { normalizeRawDeploymentSpec } from 'models/DeploymentSpec';
 import { IPodResource } from 'models/Pod';
 import GoboClient from 'services/GoboClient';
 import {
+  REDEPLOY_WITH_CURRENT_VERSION_MUTATION,
   REDEPLOY_WITH_VERSION_MUTATION,
   REFRESH_APPLICATION_DEPLOYMENT_MUTATION,
   REFRESH_APPLICATION_DEPLOYMENTS_MUTATION
@@ -52,6 +53,27 @@ export class ApplicationDeploymentClient {
 
     if (result && result.data) {
       return result.data.redeployWithVersion;
+    }
+
+    return false;
+  }
+
+  public async redeployWithCurrentVersion(
+    applicationDeploymentId: string
+  ): Promise<boolean> {
+    const result = await this.client.mutate<{
+      redeployWithCurrentVersion: boolean;
+    }>({
+      mutation: REDEPLOY_WITH_CURRENT_VERSION_MUTATION,
+      variables: {
+        input: {
+          applicationDeploymentId
+        }
+      }
+    });
+
+    if (result && result.data) {
+      return result.data.redeployWithCurrentVersion;
     }
 
     return false;

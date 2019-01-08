@@ -41,3 +41,5 @@ Object {
   "user": "Batman",
 }
 `;
+
+exports[`redeployWithCurrentVersion should redeploy with current version to GraphQL server 1`] = `true`;

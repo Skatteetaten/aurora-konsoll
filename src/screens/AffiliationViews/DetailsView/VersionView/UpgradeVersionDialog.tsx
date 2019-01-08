@@ -11,7 +11,9 @@ interface IUpgradeVersionDialogProps {
   previousVersion: string;
   newVersion: string | undefined;
   isRedeploying: boolean;
+  isRedeployingCurrentVersion: boolean;
   redeployWithVersion: () => void;
+  redeployWithCurrentVersion: () => void;
   canUpgrade: boolean;
 }
 
@@ -19,7 +21,9 @@ const UpgradeVersionDialog = ({
   previousVersion,
   newVersion,
   isRedeploying,
+  isRedeployingCurrentVersion,
   redeployWithVersion,
+  redeployWithCurrentVersion,
   canUpgrade
 }: IUpgradeVersionDialogProps) => {
   const renderFooterButtons = (close: () => void) => {
@@ -30,10 +34,34 @@ const UpgradeVersionDialog = ({
     return <ActionButton onClick={onClose}>Utfør</ActionButton>;
   };
 
+  const handleVersionChange = () => {
+    return canUpgrade ? 'Endre versjon' : 'Deploy nåværende versjon';
+  };
+
+  const redeployType = (open: () => void) => {
+    return canUpgrade ? open : redeployWithCurrentVersion;
+  };
+
+  const isLoading = () => {
+    return isRedeploying || isRedeployingCurrentVersion;
+  };
+
+  const displayTooltip = () => {
+    if (!canUpgrade && !isLoading()) {
+      return `Versjon: ${previousVersion}`;
+    }
+    return '';
+  };
+
   const renderOpenDialogButton = (open: () => void) => {
     return (
-      <Button buttonType="primary" onClick={open} disabled={!canUpgrade}>
-        {isRedeploying ? <Spinner /> : 'Endre versjon'}
+      <Button
+        buttonType="primary"
+        onClick={redeployType(open)}
+        title={displayTooltip()}
+        disabled={isRedeploying || isRedeployingCurrentVersion}
+      >
+        {isLoading() ? <Spinner /> : handleVersionChange()}
       </Button>
     );
   };

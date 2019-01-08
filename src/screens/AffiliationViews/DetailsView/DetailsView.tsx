@@ -27,7 +27,8 @@ class DetailsView extends React.Component<
       fetchDetails: false,
       fetchTags: false,
       redeploy: false,
-      update: false
+      update: false,
+      redeployCurrentVersion: false
     },
     selectedTagType: this.props.deployment.version.deployTag.type,
     tagsPagedGroup: defaultTagsPagedGroup(),
@@ -90,12 +91,16 @@ class DetailsView extends React.Component<
                 )}
                 isFetchingTags={loading.fetchTags}
                 isRedeploying={loading.redeploy}
+                isRedeployingCurrentVersion={loading.redeployCurrentVersion}
                 canUpgrade={this.controller.canUpgrade()}
                 handleSelectNextTag={this.controller.handleSelectNextTag}
                 handlefetchTags={this.controller.loadMoreTags}
                 handleSelectStrategy={this.controller.handleSelectStrategy}
                 handleVersionSearch={this.controller.handleVersionSearch}
                 redeployWithVersion={this.controller.redeployWithVersion}
+                redeployWithCurrentVersion={
+                  this.controller.redeployWithCurrentVersion
+                }
               />
             </Route>
           </Switch>
