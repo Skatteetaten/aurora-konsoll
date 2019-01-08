@@ -111,9 +111,6 @@ export default class DetailsViewController {
       fetchApplicationDeployments
     } = this.component.props;
 
-    // tslint:disable-next-line:no-console
-    console.log(deployment.id + '  ' + deployment.name);
-
     this.sm.loading.withLoading(['update'], async () => {
       const success = await clients.applicationDeploymentClient.refreshApplicationDeployment(
         deployment.id
