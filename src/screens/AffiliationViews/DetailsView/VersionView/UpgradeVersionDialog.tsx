@@ -11,7 +11,6 @@ interface IUpgradeVersionDialogProps {
   previousVersion: string;
   newVersion: string | undefined;
   isRedeploying: boolean;
-  isRedeployingCurrentVersion: boolean;
   redeployWithVersion: () => void;
   redeployWithCurrentVersion: () => void;
   canUpgrade: boolean;
@@ -21,7 +20,6 @@ const UpgradeVersionDialog = ({
   previousVersion,
   newVersion,
   isRedeploying,
-  isRedeployingCurrentVersion,
   redeployWithVersion,
   redeployWithCurrentVersion,
   canUpgrade
@@ -42,12 +40,8 @@ const UpgradeVersionDialog = ({
     return canUpgrade ? open : redeployWithCurrentVersion;
   };
 
-  const isLoading = () => {
-    return isRedeploying || isRedeployingCurrentVersion;
-  };
-
   const displayTooltip = () => {
-    if (!canUpgrade && !isLoading()) {
+    if (!canUpgrade && !isRedeploying) {
       return `Versjon: ${previousVersion}`;
     }
     return '';
@@ -59,9 +53,9 @@ const UpgradeVersionDialog = ({
         buttonType="primary"
         onClick={redeployType(open)}
         title={displayTooltip()}
-        disabled={isRedeploying || isRedeployingCurrentVersion}
+        disabled={isRedeploying}
       >
-        {isLoading() ? <Spinner /> : handleVersionChange()}
+        {isRedeploying ? <Spinner /> : handleVersionChange()}
       </Button>
     );
   };

@@ -39,7 +39,6 @@ interface IDetailsViewLoading {
   fetchDetails: boolean;
   redeploy: boolean;
   update: boolean;
-  redeployCurrentVersion: boolean;
 }
 
 interface IStateManagers {
@@ -94,7 +93,7 @@ export default class DetailsViewController {
 
   public redeployWithCurrentVersion = () => {
     const { clients, deployment } = this.component.props;
-    this.sm.loading.withLoading(['redeployCurrentVersion'], async () => {
+    this.sm.loading.withLoading(['redeploy'], async () => {
       const success = await clients.applicationDeploymentClient.redeployWithCurrentVersion(
         deployment.id
       );
@@ -216,7 +215,7 @@ export default class DetailsViewController {
   public canUpgrade = () => {
     const { deployment } = this.component.props;
     const { selectedTag, loading } = this.component.state;
-    if (!selectedTag || loading.redeployCurrentVersion) {
+    if (!selectedTag || loading.redeploy) {
       return false;
     }
     return (

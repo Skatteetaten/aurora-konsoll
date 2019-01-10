@@ -20,7 +20,6 @@ interface IVersionViewProps {
   hasPermissionToUpgrade: boolean;
   isFetchingTags: boolean;
   isRedeploying: boolean;
-  isRedeployingCurrentVersion: boolean;
   canUpgrade: boolean;
   unavailableMessage?: IUnavailableServiceMessage;
   selectedTagType: ImageTagType;
@@ -40,7 +39,6 @@ const VersionView = ({
   tagsPaged,
   isFetchingTags,
   isRedeploying,
-  isRedeployingCurrentVersion,
   unavailableMessage,
   canUpgrade,
   hasPermissionToUpgrade,
@@ -71,7 +69,6 @@ const VersionView = ({
               previousVersion={deployedTag.name}
               newVersion={selectedTag && selectedTag.name}
               isRedeploying={isRedeploying}
-              isRedeployingCurrentVersion={isRedeployingCurrentVersion}
               redeployWithVersion={redeployWithVersion}
               redeployWithCurrentVersion={redeployWithCurrentVersion}
               canUpgrade={canUpgrade}

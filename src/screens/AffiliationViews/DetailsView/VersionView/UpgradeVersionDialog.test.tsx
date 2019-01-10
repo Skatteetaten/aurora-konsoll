@@ -11,13 +11,12 @@ describe('UpgradeVersionDialog', () => {
     return;
   };
 
-  it('should disable button and the button should show a spinner when isRedeployingCurrentVersion=true', () => {
+  it('should disable button and the button should show a spinner when isRedeploying=true', () => {
     const wrapper = mount(
       <UpgradeVersionDialog
         previousVersion="latest"
         newVersion="0.2.5"
         isRedeploying={true}
-        isRedeployingCurrentVersion={false}
         redeployWithVersion={redeploy}
         redeployWithCurrentVersion={redeploy}
         canUpgrade={true}
@@ -35,7 +34,6 @@ describe('UpgradeVersionDialog', () => {
         previousVersion="latest"
         newVersion={undefined}
         isRedeploying={false}
-        isRedeployingCurrentVersion={false}
         redeployWithVersion={redeploy}
         redeployWithCurrentVersion={redeploy}
         canUpgrade={false}
@@ -54,7 +52,6 @@ describe('UpgradeVersionDialog', () => {
         previousVersion="latest"
         newVersion="0.2.5"
         isRedeploying={false}
-        isRedeployingCurrentVersion={false}
         redeployWithVersion={redeploy}
         redeployWithCurrentVersion={redeploy}
         canUpgrade={true}
