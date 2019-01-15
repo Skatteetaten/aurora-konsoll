@@ -1,13 +1,13 @@
-// import * as SchemaActions from './actions';
-// import * as schemaConstants from './constants';
-// import schemaReducers, { ISchemaState, SchemaAction } from './reducer';
-// import * as schemaSelectors from './selectors';
+import * as schemasActions from './actions';
+import * as schemasConstants from './constants';
+import schemasReducer, { IDatabaseState, SchemaAction } from './reducers';
+import * as countersSelectors from './selectors';
 
-// export {
-//   SchemaActions,
-//   schemaConstants,
-//   schemaReducers,
-//   ISchemaState,
-//   schemaSelectors,
-//   SchemaAction
-// };
+export {
+  schemasConstants,
+  schemasActions,
+  countersSelectors,
+  schemasReducer,
+  IDatabaseState,
+  SchemaAction
+};

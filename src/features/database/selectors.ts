@@ -1,3 +1,3 @@
-// import { ISchemaState } from './reducer';
+import { IDatabaseState } from './reducers';
 
-// export const reduxState = (state: ISchemaState) => state.reduxState;
+export const getSchema = (state: IDatabaseState) => state.schema;

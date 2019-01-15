@@ -121,6 +121,11 @@ class App extends React.Component<IAppProps, IAppState> {
                   path="/netdebug"
                   component={NetdebugWithApi}
                 />
+                <Route
+                  exact={true}
+                  path="/database"
+                  component={NetdebugWithApi}
+                />
               </Switch>
             )}
           </Layout>

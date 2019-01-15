@@ -10,6 +10,7 @@ const mapStateToProps = (state: RootState) => ({
 export const CounterConnected = connect(
   mapStateToProps,
   {
-    onIncrement: countersActions.increment
+    onIncrement: countersActions.increment,
+    onAdd: countersActions.add
   }
 )(counter);

@@ -1,4 +1,4 @@
-import { createAsyncAction } from 'typesafe-actions';
+import { action } from 'typesafe-actions';
 
 import {
   FETCHED_SCHEMA_FAILURE,
@@ -6,8 +6,9 @@ import {
   FETCHED_SCHEMA_SUCCESS
 } from './constants';
 
-export const fetchSchema = createAsyncAction(
-  FETCHED_SCHEMA_REQUEST,
-  FETCHED_SCHEMA_SUCCESS,
-  FETCHED_SCHEMA_FAILURE
-)<void, string[], Error>();
+export const fetchSchemaRequest = () =>
+  action(FETCHED_SCHEMA_REQUEST, 'loading');
+export const fetchSchemaSuccess = (response: any) =>
+  action(FETCHED_SCHEMA_SUCCESS, response);
+export const fetchSchemaFailure = (errorMessage: string) =>
+  action(FETCHED_SCHEMA_FAILURE, errorMessage);

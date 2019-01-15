@@ -1,13 +1,10 @@
 import { combineReducers } from 'redux';
-import { StateType } from 'typesafe-actions';
 import { countersReducer } from '../features/counter';
-import { netDebugCall } from '../services/auroraApiClients/databaseClient/reducer';
+import { schemasReducer } from '../features/database';
 
 const rootReducer = combineReducers({
   counters: countersReducer,
-  schemas: netDebugCall
+  databaseSchemas: schemasReducer
 });
-
-export type RootState = StateType<typeof rootReducer>;
 
 export default rootReducer;

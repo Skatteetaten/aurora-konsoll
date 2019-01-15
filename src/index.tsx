@@ -4,7 +4,7 @@ import * as ReactDOM from 'react-dom';
 import { BrowserRouter } from 'react-router-dom';
 
 import { Provider } from 'react-redux';
-import store from './store';
+import createStoreWithClients from './store';
 
 import { AuroraApiProvider, IApiClients } from 'components/AuroraApi';
 import App from 'screens/App';
@@ -49,7 +49,7 @@ async function init() {
   };
 
   ReactDOM.render(
-    <Provider store={store}>
+    <Provider store={createStoreWithClients(clients)}>
       <AuroraApiProvider clients={clients}>
         <BrowserRouter>
           <App tokenStore={tokenStore} />
