@@ -1,8 +1,10 @@
 import { IApplicationDeployment } from 'models/ApplicationDeployment';
+import { IApplicationDeploymentFilters } from 'models/UserSettings';
 import * as qs from 'qs';
 
 export interface IFilter {
   name?: string;
+  default?: boolean;
   applications: string[];
   environments: string[];
 }
@@ -31,6 +33,14 @@ export default class DeploymentFilterService {
       environments
     };
   }
+
+  public isParamsDefined(query: string) {
+    const queries = qs.parse(query, {
+      ignoreQueryPrefix: true
+    });
+    return queries.apps || queries.envs;
+  }
+
   public filterDeployments(
     filters: IFilter,
     deployments: IApplicationDeployment[]
@@ -62,4 +72,31 @@ export default class DeploymentFilterService {
       }
     );
   }
+
+  public findDefaultFilter(
+    allFilters: IApplicationDeploymentFilters[],
+    affiliation: string
+  ) {
+    return allFilters.find(f => f.affiliation === affiliation && f.default);
+  }
+
+  public getOtherNonDefaultFilters = (
+    allFilters: IApplicationDeploymentFilters[],
+    affiliation: string,
+    filter: IFilter
+  ) => {
+    let otherFilters = allFilters.filter(
+      f => f.affiliation !== affiliation || f.name !== filter.name
+    );
+
+    if (filter.default) {
+      otherFilters = otherFilters.map(f => {
+        if (f.affiliation === affiliation) {
+          f.default = false;
+        }
+        return f;
+      });
+    }
+    return otherFilters;
+  };
 }

@@ -5,6 +5,7 @@
         {
           "name": "testing",
           "affiliation": "aurora",
+          "default": true,
           "applications": [
             "ao"
           ],

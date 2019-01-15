@@ -23,7 +23,7 @@ export default class FilterService {
       );
   }
 
-  public removeDuplicates = (list: string[], element: string) =>
+  public removeElement = (list: string[], element: string) =>
     list.filter(item => item !== element);
 
   public createFilterOptions = (
@@ -60,4 +60,13 @@ export default class FilterService {
       environments: this.removeSelectionTypeDuplicateValues(allDeployments, SelectionType.Environments)
     }
   }
+
+
+  public getDefaultFilterName = (allFilters: IApplicationDeploymentFilters[], affiliation: string) => {
+    const defaultFilter = this.getDefaultFilter(allFilters, affiliation);
+    return !!defaultFilter ? defaultFilter.name : undefined;
+  };
+
+  public getDefaultFilter = (allFilters: IApplicationDeploymentFilters[], affiliation: string) => 
+    allFilters.find(f => f.affiliation === affiliation && f.default);
 }

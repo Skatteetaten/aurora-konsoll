@@ -1,68 +1,18 @@
-import { StatusCode } from 'models/Status';
+import {
+  applicationDeploymentFilterFactory,
+  deploymentFactory,
+  filterFactory
+} from 'testData/testDataBuilders';
+
 import { IApplicationDeployment } from '../models/ApplicationDeployment';
-import { ImageTagType } from '../models/ImageTagType';
 import DeploymentFilterService, { IFilter } from './DeploymentFilterService';
 
 describe('DeploymentFilterService', () => {
   const deploymentFilterService = new DeploymentFilterService();
 
   const deployments: IApplicationDeployment[] = [
-    {
-      id: 'c08af1c8e7ae92080ac86113521c19d25a437f43',
-      affiliation: 'paas',
-      environment: 'martin-dev',
-      name: 'whoami-sub',
-      repository: 'localhost/whoami',
-      status: {
-        code: StatusCode.HEALTHY,
-        reasons: [],
-        reports: []
-      },
-      time: '2018-11-12T07:16:26.797Z',
-      version: {
-        auroraVersion: '2.3.0-b1.17.0-flange-8.181.1',
-        deployTag: {
-          lastModified: '',
-          name: 'test',
-          type: ImageTagType.AURORA_VERSION
-        },
-        releaseTo: undefined
-      },
-      permission: {
-        paas: {
-          admin: false,
-          view: true
-        }
-      }
-    },
-    {
-      id: 'f82d667296d48369ffa4e5d3718b494e90e14ee1',
-      affiliation: 'paas',
-      environment: 'robust-test',
-      name: 'whoami',
-      repository: 'localhost/robust-test',
-      status: {
-        code: StatusCode.HEALTHY,
-        reasons: [],
-        reports: []
-      },
-      time: '2018-11-12T07:16:26.798Z',
-      version: {
-        auroraVersion: '1.3.23-b1.14.0-flange-8.152.18',
-        deployTag: {
-          lastModified: '',
-          name: '1',
-          type: ImageTagType.MAJOR
-        },
-        releaseTo: undefined
-      },
-      permission: {
-        paas: {
-          admin: false,
-          view: true
-        }
-      }
-    }
+    deploymentFactory.build({ environment: 'martin-dev', name: 'whoami-sub' }),
+    deploymentFactory.build({ environment: 'robust-test', name: 'whoami' })
   ];
 
   const testFilters: IFilter = {
@@ -118,6 +68,25 @@ describe('DeploymentFilterService', () => {
       expect(deploymentFilterService.toQuery(testFilters)).toEqual(
         '?apps=whoami-sub&envs=martin-dev'
       );
+    });
+  });
+
+  describe('getOtherNonDefaultFilters', () => {
+    it('Given set filters expect query to equal', () => {
+      const applicationDeploymentFilters = [
+        applicationDeploymentFilterFactory.build(),
+        applicationDeploymentFilterFactory.build({
+          name: 'auroraFilter'
+        })
+      ];
+
+      const result = deploymentFilterService.getOtherNonDefaultFilters(
+        applicationDeploymentFilters,
+        'paas',
+        filterFactory.build()
+      );
+      expect(result).toHaveLength(1);
+      expect(result[0].default).toBeFalsy();
     });
   });
 });

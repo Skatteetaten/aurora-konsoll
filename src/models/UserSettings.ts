@@ -5,6 +5,7 @@ export interface IUserSettings {
 export interface IApplicationDeploymentFilters {
   name?: string;
   affiliation: string;
+  default: boolean;
   applications: string[];
   environments: string[];
 }
