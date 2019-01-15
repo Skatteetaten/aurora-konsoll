@@ -3,6 +3,9 @@ import * as React from 'react';
 import * as ReactDOM from 'react-dom';
 import { BrowserRouter } from 'react-router-dom';
 
+import { Provider } from 'react-redux';
+import store from './store';
+
 import { AuroraApiProvider, IApiClients } from 'components/AuroraApi';
 import App from 'screens/App';
 import { tokenStore } from 'services/TokenStore';
@@ -46,11 +49,13 @@ async function init() {
   };
 
   ReactDOM.render(
-    <AuroraApiProvider clients={clients}>
-      <BrowserRouter>
-        <App tokenStore={tokenStore} />
-      </BrowserRouter>
-    </AuroraApiProvider>,
+    <Provider store={store}>
+      <AuroraApiProvider clients={clients}>
+        <BrowserRouter>
+          <App tokenStore={tokenStore} />
+        </BrowserRouter>
+      </AuroraApiProvider>
+    </Provider>,
     document.getElementById('root') as HTMLElement
   );
 }

@@ -11,6 +11,8 @@ import withApplicationDeployments from '../ApplicationDeploymentContext';
 import Filter from './Filter/Filter';
 import { default as MatrixBase } from './Matrix';
 
+import { CounterConnected } from 'connected';
+
 const Matrix = withApplicationDeployments(MatrixBase);
 
 interface IMatrixViewProps {
@@ -49,6 +51,7 @@ const MatrixView = ({
           filters={filters}
           allFilters={allFilters}
         />
+        <CounterConnected label={'Teller'} />
       </StyledFilter>
       <StyledUpdate>
         <TimeSince timeSince={time} />
