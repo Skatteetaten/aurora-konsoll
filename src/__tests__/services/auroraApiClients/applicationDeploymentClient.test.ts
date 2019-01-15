@@ -45,3 +45,19 @@ describe('findAllApplicationDeployments', () => {
     expect(result).toMatchSnapshot();
   });
 });
+
+describe('redeployWithCurrentVersion', () => {
+  it('should redeploy with current version to GraphQL server', async () => {
+    serverMock.putResponse('redeployWithCurrentVersion', {
+      data: {
+        redeployWithCurrentVersion: true
+      }
+    });
+
+    const result = await applicationDeploymentClient.redeployWithCurrentVersion(
+      'c45410e594f22s964534543454ss'
+    );
+    expect(result).toBeTruthy();
+    expect(result).toMatchSnapshot();
+  });
+});
