@@ -19,11 +19,12 @@ export const fetchSchemas: Thunk = (host: string, port: string) => async (
   getState,
   { clients }
 ) => {
-  dispatch(fetchSchemaRequest());
+  dispatch(fetchSchemaRequest(true));
   try {
     const result = await clients.netdebugClient.findNetdebugStatus(host, port);
+    dispatch(fetchSchemaRequest(false));
     dispatch(fetchSchemaSuccess(result));
-  } catch (err) {
-    dispatch(fetchSchemaFailure(err));
+  } catch {
+    dispatch(fetchSchemaFailure(true));
   }
 };

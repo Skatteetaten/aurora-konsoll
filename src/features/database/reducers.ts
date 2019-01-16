@@ -2,7 +2,7 @@ import { combineReducers } from 'redux';
 import { ActionType } from 'typesafe-actions';
 import * as actions from './actions';
 
-import { SchemasAction } from './models';
+import { INetdebugResult } from 'services/auroraApiClients';
 
 import {
   FETCHED_SCHEMA_FAILURE,
@@ -10,21 +10,35 @@ import {
   FETCHED_SCHEMA_SUCCESS
 } from './constants';
 
-export type SchemaAction = ActionType<typeof actions>;
+export type SchemasAction = ActionType<typeof actions>;
 
 export interface IDatabaseState {
-  readonly schema: any;
+  readonly isLoading: boolean;
+  readonly items?: INetdebugResult | null;
+  readonly hasErrored: boolean;
 }
 
 export default combineReducers<IDatabaseState, SchemasAction>({
-  schema: (state = '', action) => {
+  isLoading: (state = false, action) => {
     switch (action.type) {
       case FETCHED_SCHEMA_REQUEST:
-        return action.payload;
+        return action.payload.isLoading;
+      default:
+        return state;
+    }
+  },
+  items: (state = null, action) => {
+    switch (action.type) {
       case FETCHED_SCHEMA_SUCCESS:
-        return action.payload;
+        return action.payload.response;
+      default:
+        return state;
+    }
+  },
+  hasErrored: (state = false, action) => {
+    switch (action.type) {
       case FETCHED_SCHEMA_FAILURE:
-        return action.payload;
+        return action.payload.errorMessage;
       default:
         return state;
     }

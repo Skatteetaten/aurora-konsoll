@@ -1,14 +1,14 @@
 import { connect } from 'react-redux';
 import { schema } from '../features/database/componenets/schema';
 
-import { fetchSchemas } from '../features/database/functions';
-
+import { fetchSchemas } from '../features/database/asyncActions';
+import { getError, getItems, getLoading } from '../features/database/selectors';
 import { RootState } from '../store/types';
 
-import { getSchema } from '../features/database/selectors';
-
 const mapStateToProps = (state: RootState) => ({
-  result: getSchema(state.databaseSchemas)
+  error: getError(state.databaseSchemas),
+  items: getItems(state.databaseSchemas),
+  isLoading: getLoading(state.databaseSchemas)
 });
 
 export const SchemaConnected = connect(
