@@ -1,6 +1,8 @@
 import * as React from 'react';
 
 import Tooltip from 'components/IconWithTooltip';
+import InfoContent from 'components/InfoContent';
+
 import { mount } from 'enzyme';
 
 import {
@@ -98,4 +100,31 @@ describe('InformationView', () => {
       );
     });
   });
+  /* TODO: test
+  describe('ifMessageIsSetShowIt', () => {
+    it('Given an application with a message, show it in active deployment', () => {
+      const wrapper = mount(
+        <InformationView
+          deployment={deploymentFactory.build({
+            message: "May the force be with you!"
+          })}
+          isFetchingDetails={false}
+          isUpdating={false}
+          refreshApplicationDeployment={refreshApplicationDeployment}
+          deploymentDetails={deploymentDetailsFactory.build({
+            pods: [downPod, runningLatestPod],
+            deploymentSpec: deploymentSpecFactory.build()
+          })}
+        />
+      );
+      const info = wrapper.find(InfoContent);
+info.containsAnyMatchingElements.
+      expect(tooltip.props().content).toContain(
+        'Aktivt deploy sin tag stemmer ikke overens med Aurora Config. Deploy på nytt.'
+      );
+      expect(tooltip.props().content).not.toContain(
+        'Det finnes et nyere image for denne taggen tilgjengelig på Docker Registry'
+      );
+    });
+  });*/
 });

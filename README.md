@@ -1,5 +1,9 @@
 # Aurora Konsoll
 
+## Getting started
+npm ci
+GOBO_URL=http://m86862-gobo.aurora.utv.paas.skead.no npm start
+
 ## IntelliJ Setup
 
 ### Prettier
