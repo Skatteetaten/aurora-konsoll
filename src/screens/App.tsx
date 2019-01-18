@@ -15,6 +15,7 @@ import Layout from 'components/Layout';
 import { ITokenStore } from 'services/TokenStore';
 import AcceptTokenRoute from './AcceptTokenView/AcceptTokenRoute';
 
+import AffiliationNotDefined from 'components/AffiliationNotDefined';
 import { withAuroraApi } from 'components/AuroraApi';
 import ErrorBoundary from 'components/ErrorBoundary/ErrorBoundary';
 import { errorStateManager } from 'models/StateManager/ErrorStateManager';
@@ -50,10 +51,19 @@ class App extends React.Component<IAppProps, IAppState> {
 
   public onAffiliationChangeFromSelector = (affiliation: string) => {
     const { location, history } = this.props;
-    const newPath = location.pathname.replace(
-      /\/a\/(\b\w*[-]?\w*\b)\/(\w*)(\/.*)?/,
-      `/a/${affiliation}/$2`
-    );
+    let newPath = '';
+
+    if (location.pathname.startsWith('/a/')) {
+      newPath = location.pathname.replace(
+        /\/a\/(\b\w*[-]?\w*\b)\/(\w*)(\/.*)?/,
+        `/a/${affiliation}/$2`
+      );
+    } else if (location.pathname.startsWith('/db/')) {
+      newPath = location.pathname.replace(
+        /\/a\/(\b\w*[-]?\w*\b)\/(\w*)(\/.*)?/,
+        `/db/${affiliation}/$2`
+      );
+    }
     history.push(newPath);
   };
 
@@ -92,6 +102,14 @@ class App extends React.Component<IAppProps, IAppState> {
       />
     );
 
+    const renderAffiliationNotSelectedScreen = () => (
+      <AffiliationNotDefined
+        message={'Verktøyet du har valgt krever en tilhørighet'}
+      />
+    );
+    // tslint:disable-next-line:no-console
+    console.log(renderAffiliationNotSelectedScreen);
+
     return (
       <StyledSkeBasis menuExpanded={isMenuExpanded}>
         <ErrorBoundary errorSM={errorStateManager}>
@@ -101,7 +119,10 @@ class App extends React.Component<IAppProps, IAppState> {
             handleMenuExpand={this.handleMenuExpand}
             affiliation={affiliation}
             affiliations={affiliations}
-            showAffiliationSelector={location.pathname.startsWith('/a/')}
+            showAffiliationSelector={
+              location.pathname.startsWith('/a/') ||
+              location.pathname.startsWith('/db/')
+            }
             onAffiliationChange={this.onAffiliationChangeFromSelector}
           >
             <AcceptTokenRoute onTokenUpdated={this.onTokenUpdated} />
@@ -122,9 +143,8 @@ class App extends React.Component<IAppProps, IAppState> {
                   component={NetdebugWithApi}
                 />
                 <Route
-                  exact={true}
-                  path="/database"
-                  component={NetdebugWithApi}
+                  path="/db/:affiliation"
+                  render={renderAffiliationViewValidator}
                 />
               </Switch>
             )}

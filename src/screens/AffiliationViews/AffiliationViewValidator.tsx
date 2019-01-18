@@ -27,7 +27,6 @@ class AffiliationViewValidator extends React.Component<
 
     const pathAffiliation = match.params.affiliation;
     const isValidAffiliation = affiliations.find(a => a === pathAffiliation);
-
     if (isValidAffiliation && affiliation !== pathAffiliation) {
       onAffiliationValidated(pathAffiliation);
     }

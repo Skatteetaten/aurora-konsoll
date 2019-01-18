@@ -14,6 +14,7 @@ import { fetchConfiguration, IConfiguration } from 'utils/config';
 import { errorStateManager } from 'models/StateManager/ErrorStateManager';
 import {
   ApplicationDeploymentClient,
+  DatabaseClient,
   ImageRepositoryClient,
   NetdebugClient,
   UserSettingsClient
@@ -45,7 +46,8 @@ async function init() {
     applicationDeploymentClient: new ApplicationDeploymentClient(goboClient),
     imageRepositoryClient: new ImageRepositoryClient(goboClient),
     netdebugClient: new NetdebugClient(goboClient),
-    userSettingsClient: new UserSettingsClient(goboClient)
+    userSettingsClient: new UserSettingsClient(goboClient),
+    databaseClient: new DatabaseClient(goboClient)
   };
 
   ReactDOM.render(

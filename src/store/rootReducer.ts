@@ -1,10 +1,8 @@
 import { combineReducers } from 'redux';
-import { countersReducer } from '../features/counter';
-import { schemasReducer } from '../features/database';
+import { databaseReducer } from 'screens/DatabaseView/state/reducers';
 
 const rootReducer = combineReducers({
-  counters: countersReducer,
-  databaseSchemas: schemasReducer
+  database: databaseReducer
 });
 
 export default rootReducer;

@@ -1,0 +1,33 @@
+import gql from 'graphql-tag';
+import { IDatabaseSchema } from 'models/schemas';
+
+export interface IDatabaseSchemasQuery {
+  databaseSchemas?: IDatabaseSchema[];
+}
+
+export const DATABASE_SCHEMAS_QUERY = gql`
+  query getdatabaseSchemas($affiliations: [String!]!) {
+    databaseSchemas(affiliations: $affiliations) {
+      id
+      type
+      jdbcUrl
+      affiliation {
+        name
+      }
+      name
+      databaseEngine
+      applicationDeployment {
+        id
+      }
+      createdBy
+      createdDate
+      lastUsedDate
+      sizeInMb
+      users {
+        username
+        password
+        type
+      }
+    }
+  }
+`;

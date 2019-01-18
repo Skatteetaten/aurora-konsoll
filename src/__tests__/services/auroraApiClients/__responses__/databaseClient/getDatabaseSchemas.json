@@ -1,0 +1,20 @@
+{
+  "data": {
+    "databaseSchemas": [
+      {
+        "id": "123",
+        "type": "oracle",
+        "affiliation": {
+          "name": "paas"
+        }
+      },
+      {
+        "id": "234",
+        "type": "oracle",
+        "affiliation": {
+          "name": "paas"
+        }
+      }
+    ]
+  }
+}
