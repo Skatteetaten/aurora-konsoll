@@ -6,7 +6,7 @@ export interface IDatabaseSchemasQuery {
 }
 
 export const DATABASE_SCHEMAS_QUERY = gql`
-  query getdatabaseSchemas($affiliations: [String!]!) {
+  query getDatabaseSchemas($affiliations: [String!]!) {
     databaseSchemas(affiliations: $affiliations) {
       id
       type

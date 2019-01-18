@@ -2,18 +2,26 @@
   "data": {
     "databaseSchemas": [
       {
-        "id": "123",
-        "type": "oracle",
+        "id": "d83cdd47-4bfe-41b5-9271-doijadOIASD",
+        "type": "MANAGED",
+        "jdbcUrl": "jdbc:oracle:thin:@localhost:1521/db",
         "affiliation": {
           "name": "paas"
-        }
-      },
-      {
-        "id": "234",
-        "type": "oracle",
-        "affiliation": {
-          "name": "paas"
-        }
+        },
+        "name": "AOIJDOISJDASDAF",
+        "databaseEngine": "ORACLE",
+        "applicationDeployment": null,
+        "createdBy": "default",
+        "createdDate": "+49635-05-22T19:10:00Z",
+        "lastUsedDate": "+49635-05-24T19:13:20Z",
+        "sizeInMb": 0.25,
+        "users": [
+          {
+            "username": "AOIJDOISJDASDAF",
+            "password": "lkdsmadkmsaLKDMMKDSM",
+            "type": "SCHEMA"
+          }
+        ]
       }
     ]
   }

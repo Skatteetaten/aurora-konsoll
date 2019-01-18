@@ -23,14 +23,12 @@ afterAll(() => {
   serverMock.close();
 });
 
-// tslint:disable-next-line:no-console
-console.log(getDatabaseSchemas);
-
 describe('getDatabaseSchemas', () => {
   it('should fetch database schemas from GraphQL server', async () => {
     serverMock.putResponse('getDatabaseSchemas', getDatabaseSchemas);
 
-    const result = await databaseClient.getSchemas(['aurora']);
+    const result = await databaseClient.getSchemas(['paas']);
+    expect(errorStateManager.errorCount).toEqual(0);
     expect(result).toMatchSnapshot();
   });
 });
