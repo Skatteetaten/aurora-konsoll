@@ -3,6 +3,7 @@ import { RouteComponentProps } from 'react-router-dom';
 import { MenuType } from 'screens/App';
 import AffiliationSelector from './AffiliationSelector';
 import { AffiliationViewControllerWithApi } from './AffiliationViewController';
+import DatabaseViewController from './DatabaseView/DatabaseViewController';
 
 export type AffiliationRouteProps = RouteComponentProps<{
   affiliation: string;
@@ -52,32 +53,41 @@ class AffiliationViewValidator extends React.Component<
     if (affiliations.length === 0) {
       return false;
     }
-
     if (match.params.affiliation === '_') {
       let title = '';
       let createLink = (a: string) => '';
-      if(type === MenuType.DEPLOYMENTS) {
+      if (type === MenuType.DEPLOYMENTS) {
         title = `Velkommen ${user}`;
         createLink = (a: string) => `/a/${a}/deployments`;
-      } else if(type === MenuType.DATABASE) {
+      } else if (type === MenuType.DATABASE) {
         title = 'Velg tilhørighet';
         createLink = (a: string) => `/db/${a}/databaseSchemas`;
       }
 
-      return <AffiliationSelector title={title} createLink={createLink} affiliations={affiliations} />;
+      return (
+        <AffiliationSelector
+          title={title}
+          createLink={createLink}
+          affiliations={affiliations}
+        />
+      );
     }
 
     if (!affiliation) {
       return <p>{affiliation} er ikke en gyldig affiliation.</p>;
     }
-    return (
-      <AffiliationViewControllerWithApi
-        affiliation={affiliation}
-        matchPath={match.path}
-        matchUrl={match.url}
-        updateUrlWithQuery={this.updateUrlWithQuery}
-      />
-    );
+    if (type === MenuType.DEPLOYMENTS) {
+      return (
+        <AffiliationViewControllerWithApi
+          affiliation={affiliation}
+          matchPath={match.path}
+          matchUrl={match.url}
+          updateUrlWithQuery={this.updateUrlWithQuery}
+        />
+      );
+    } else {
+      return <DatabaseViewController affiliation={affiliation} />;
+    }
   }
 }
 

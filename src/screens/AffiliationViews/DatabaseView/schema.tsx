@@ -7,13 +7,14 @@ export interface ISchemaProps {
   onFetch: (affiliations: string[]) => any;
   items: IDatabaseSchemas;
   isLoading: boolean;
+  affiliation: string;
 }
 
 export const schema = (props: ISchemaProps) => {
-  const { onFetch, items, isLoading } = props;
+  const { onFetch, items, isLoading, affiliation } = props;
 
   const handleFetchDatabaseSchemas = () => {
-    onFetch(['paas']);
+    onFetch([affiliation]);
   };
   // tslint:disable-next-line:no-console
   console.log(items && items.databaseSchemas);
