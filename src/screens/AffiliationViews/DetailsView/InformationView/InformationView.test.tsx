@@ -100,13 +100,13 @@ describe('InformationView', () => {
       );
     });
   });
-  /* TODO: test
   describe('ifMessageIsSetShowIt', () => {
     it('Given an application with a message, show it in active deployment', () => {
+      const message = 'May the force be with you!';
       const wrapper = mount(
         <InformationView
           deployment={deploymentFactory.build({
-            message: "May the force be with you!"
+            message
           })}
           isFetchingDetails={false}
           isUpdating={false}
@@ -117,14 +117,8 @@ describe('InformationView', () => {
           })}
         />
       );
-      const info = wrapper.find(InfoContent);
-info.containsAnyMatchingElements.
-      expect(tooltip.props().content).toContain(
-        'Aktivt deploy sin tag stemmer ikke overens med Aurora Config. Deploy på nytt.'
-      );
-      expect(tooltip.props().content).not.toContain(
-        'Det finnes et nyere image for denne taggen tilgjengelig på Docker Registry'
-      );
+      const info = wrapper.find(InfoContent).find('div#active-deployment');
+      expect(info.html()).toContain(message);
     });
-  });*/
+  });
 });

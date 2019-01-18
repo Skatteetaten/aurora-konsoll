@@ -80,7 +80,8 @@ const InformationView = ({
       <div className="info-grid">
         <div>
           <h3>Aktivt deployment</h3>
-        <InfoContent
+          <InfoContent
+            id="active-deployment"
             values={getApplicationDeploymentValues(
               deployment,
               TagWithWarningMessage
@@ -88,7 +89,6 @@ const InformationView = ({
           />
           <h3>Gjeldende AuroraConfig</h3>
           <InfoContent values={getDeploymentSpecValues(deploymentSpec)} />
-          
         </div>
         <div>
           <h3>AuroraStatus for deployment</h3>
@@ -195,18 +195,18 @@ function getApplicationDeploymentValues(
 ) {
   let info: { [key: string]: any } = {};
 
-  info ={
+  info = {
     Tag: deployTag,
     'Aurora version': deployment.version.auroraVersion,
     'Image repository': deployment.repository
       .split('/')
       .slice(1)
-      .join('/'),
+      .join('/')
   };
-  if(deployment.message){
-    info.Message=deployment.message
+  if (deployment.message) {
+    info.Message = deployment.message;
   }
-  return info
+  return info;
 }
 
 export default styled(InformationView)`
