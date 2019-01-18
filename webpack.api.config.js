@@ -9,13 +9,16 @@ module.exports = {
         loader: 'ts-loader',
         exclude: /node_modules/,
         options: {
-          configFile: 'tsconfig.api.json'
+          configFile: 'tsconfig.json'
         }
       }
     ]
   },
   resolve: {
-    extensions: ['.ts', '.js']
+    extensions: ['.ts', '.js'],
+    alias: {
+      models: path.resolve(__dirname, 'src/models/')
+    }
   },
   output: {
     filename: 'server.js',
