@@ -5,7 +5,7 @@ import styled from 'styled-components';
 interface IAffiliationSelectorProps {
   affiliations: string[];
   title: string;
-  linkTemplate: string;
+  createLink: (affiliation: string) => string;
   className?: string;
 }
 
@@ -13,14 +13,14 @@ const AffiliationSelector = ({
   affiliations,
   className,
   title,
-  linkTemplate
+  createLink
 }: IAffiliationSelectorProps) => (
   <div className={className}>
     <div>
       <h1>{title}</h1>
       <div className="affiliation-list">
         {affiliations.sort((a1, a2) => a1.localeCompare(a2)).map(a => (
-          <Link to={linkTemplate} key={a}>
+          <Link to={createLink(a)} key={a}>
             <li>{a}</li>
           </Link>
         ))}

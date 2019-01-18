@@ -15,7 +15,6 @@ import Layout from 'components/Layout';
 import { ITokenStore } from 'services/TokenStore';
 import AcceptTokenRoute from './AcceptTokenView/AcceptTokenRoute';
 
-import AffiliationNotDefined from 'components/AffiliationNotDefined';
 import { withAuroraApi } from 'components/AuroraApi';
 import ErrorBoundary from 'components/ErrorBoundary/ErrorBoundary';
 import { errorStateManager } from 'models/StateManager/ErrorStateManager';
@@ -23,6 +22,10 @@ import AffiliationViewValidator, {
   AffiliationRouteProps
 } from './AffiliationViews/AffiliationViewValidator';
 import { NetdebugWithApi } from './NetdebugView/Netdebug';
+
+export enum MenuType {
+  DEPLOYMENTS, DATABASE
+}
 
 interface IAppProps extends IAuroraApiComponentProps, RouteComponentProps<{}> {
   tokenStore: ITokenStore;
@@ -90,25 +93,27 @@ class App extends React.Component<IAppProps, IAppState> {
     const { affiliation, affiliations, isMenuExpanded, user } = this.state;
     const { location } = this.props;
 
-    const renderAffiliationViewValidator = (
+    const renderAffiliationViewValidatorDeployments =  (
       routeProps: AffiliationRouteProps
+    ) => renderAffiliationViewValidator(routeProps, MenuType.DEPLOYMENTS);
+
+    const renderAffiliationViewValidatorDatabase =  (
+      routeProps: AffiliationRouteProps
+    ) => renderAffiliationViewValidator(routeProps, MenuType.DATABASE);
+
+    const renderAffiliationViewValidator = (
+      routeProps: AffiliationRouteProps,
+      type: MenuType
     ) => (
       <AffiliationViewValidator
         {...routeProps}
         user={user}
+        type={type}
         affiliation={affiliation}
         affiliations={affiliations}
         onAffiliationValidated={this.onSelectedAffiliationValidated}
       />
     );
-
-    const renderAffiliationNotSelectedScreen = () => (
-      <AffiliationNotDefined
-        message={'Verktøyet du har valgt krever en tilhørighet'}
-      />
-    );
-    // tslint:disable-next-line:no-console
-    console.log(renderAffiliationNotSelectedScreen);
 
     return (
       <StyledSkeBasis menuExpanded={isMenuExpanded}>
@@ -135,7 +140,7 @@ class App extends React.Component<IAppProps, IAppState> {
                 />
                 <Route
                   path="/a/:affiliation"
-                  render={renderAffiliationViewValidator}
+                  render={renderAffiliationViewValidatorDeployments}
                 />
                 <Route
                   exact={true}
@@ -144,7 +149,7 @@ class App extends React.Component<IAppProps, IAppState> {
                 />
                 <Route
                   path="/db/:affiliation"
-                  render={renderAffiliationViewValidator}
+                  render={renderAffiliationViewValidatorDatabase}
                 />
               </Switch>
             )}

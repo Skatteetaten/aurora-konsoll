@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { RouteComponentProps } from 'react-router-dom';
+import { MenuType } from 'screens/App';
 import AffiliationSelector from './AffiliationSelector';
 import { AffiliationViewControllerWithApi } from './AffiliationViewController';
 
@@ -11,6 +12,7 @@ interface IAffiliationViewValidatorProps extends AffiliationRouteProps {
   user: string;
   affiliation?: string;
   affiliations: string[];
+  type: MenuType;
   onAffiliationValidated: (affiliation: string) => void;
 }
 
@@ -45,14 +47,24 @@ class AffiliationViewValidator extends React.Component<
   }
 
   public render() {
-    const { affiliation, affiliations, match, user } = this.props;
+    const { affiliation, affiliations, match, user, type } = this.props;
 
     if (affiliations.length === 0) {
       return false;
     }
 
     if (match.params.affiliation === '_') {
-      return <AffiliationSelector user={user} affiliations={affiliations} />;
+      let title = '';
+      let createLink = (a: string) => '';
+      if(type === MenuType.DEPLOYMENTS) {
+        title = `Velkommen ${user}`;
+        createLink = (a: string) => `/a/${a}/deployments`;
+      } else if(type === MenuType.DATABASE) {
+        title = 'Velg tilhørighet';
+        createLink = (a: string) => `/db/${a}/databaseSchemas`;
+      }
+
+      return <AffiliationSelector title={title} createLink={createLink} affiliations={affiliations} />;
     }
 
     if (!affiliation) {
