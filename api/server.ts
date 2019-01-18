@@ -5,7 +5,7 @@ import 'isomorphic-fetch';
 import {
   getAllApplicationDeployments,
   getUserAndAffiliations
-} from './clients/applicationDeploymentClient/client2';
+} from './clients/applicationDeploymentClient/client';
 
 import { AUTHORIZATION_URI, CLIENT_ID, GRAPHQL_URL, PORT } from './config';
 import { graphqlClientMiddleware } from './GraphQLRestMapper';
