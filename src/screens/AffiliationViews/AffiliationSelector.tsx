@@ -4,21 +4,23 @@ import styled from 'styled-components';
 
 interface IAffiliationSelectorProps {
   affiliations: string[];
-  user: string;
+  title: string;
+  linkTemplate: string;
   className?: string;
 }
 
 const AffiliationSelector = ({
   affiliations,
   className,
-  user
+  title,
+  linkTemplate
 }: IAffiliationSelectorProps) => (
   <div className={className}>
     <div>
-      <h1>Velkommen {user}</h1>
+      <h1>{title}</h1>
       <div className="affiliation-list">
         {affiliations.sort((a1, a2) => a1.localeCompare(a2)).map(a => (
-          <Link to={`/a/${a}/deployments`} key={a}>
+          <Link to={linkTemplate} key={a}>
             <li>{a}</li>
           </Link>
         ))}

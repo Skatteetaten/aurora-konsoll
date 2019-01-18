@@ -60,7 +60,7 @@ class App extends React.Component<IAppProps, IAppState> {
       );
     } else if (location.pathname.startsWith('/db/')) {
       newPath = location.pathname.replace(
-        /\/a\/(\b\w*[-]?\w*\b)\/(\w*)(\/.*)?/,
+        /\/db\/(\b\w*[-]?\w*\b)\/(\w*)(\/.*)?/,
         `/db/${affiliation}/$2`
       );
     }
