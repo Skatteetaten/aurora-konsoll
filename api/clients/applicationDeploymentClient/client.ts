@@ -6,7 +6,7 @@ import {
 import { normalizeRawDeploymentSpec } from 'models/DeploymentSpec';
 
 import { IPodResource } from 'models/Pod';
-import GoboClient from '../..//GoboClient';
+import GraphQLClient from '../../GraphQLClient';
 import {
   REDEPLOY_WITH_VERSION_MUTATION,
   REFRESH_APPLICATION_DEPLOYMENT_MUTATION,
@@ -30,9 +30,9 @@ function formatName(user: string) {
 }
 
 export class ApplicationDeploymentClient {
-  private client: GoboClient;
+  private client: GraphQLClient;
 
-  constructor(client: GoboClient) {
+  constructor(client: GraphQLClient) {
     this.client = client;
   }
 

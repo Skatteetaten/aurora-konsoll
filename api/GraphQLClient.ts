@@ -5,51 +5,51 @@ interface IVariables {
   [key: string]: any;
 }
 
-interface IGoboResult<T> {
+interface IGraphQLResult<T> {
   data: T;
   errors?: GraphQLError[];
 }
 
-interface IGoboClientOptions {
+interface IGraphQLClientOptions {
   headers?: Record<string, string>;
   url: string;
 }
 
-interface IGoboQuery {
+export interface IGraphQLQuery {
   query: DocumentNode;
   variables?: IVariables;
 }
 
-interface IGoboMutation {
+export interface IGraphQLMutation {
   mutation: DocumentNode;
   variables?: IVariables;
 }
 
-export default class GoboClient {
-  private options: IGoboClientOptions;
+export default class GraphQLClient {
+  private options: IGraphQLClientOptions;
 
-  constructor(options: IGoboClientOptions) {
+  constructor(options: IGraphQLClientOptions) {
     this.options = options;
   }
 
   public async query<T>({
     query,
     variables
-  }: IGoboQuery): Promise<IGoboResult<T> | undefined> {
+  }: IGraphQLQuery): Promise<IGraphQLResult<T> | undefined> {
     return await this.doRequest<T>(query, variables);
   }
 
   public async mutate<T>({
     mutation,
     variables
-  }: IGoboMutation): Promise<IGoboResult<T> | undefined> {
+  }: IGraphQLMutation): Promise<IGraphQLResult<T> | undefined> {
     return await this.doRequest<T>(mutation, variables);
   }
 
   private async doRequest<T>(
     document: DocumentNode,
     variables?: IVariables
-  ): Promise<IGoboResult<T> | undefined> {
+  ): Promise<IGraphQLResult<T> | undefined> {
     const res = await fetch(this.options.url, {
       method: 'POST',
       headers: {

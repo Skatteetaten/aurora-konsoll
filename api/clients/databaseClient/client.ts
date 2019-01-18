@@ -1,13 +1,13 @@
-import GoboClient from '../../GoboClient';
+import GraphQLClient from '../../GraphQLClient';
 
 import { IDatabaseSchemas } from 'models/schemas';
 import { errorStateManager } from 'models/StateManager/ErrorStateManager';
 import { DATABASE_SCHEMAS_QUERY, IDatabaseSchemasQuery } from './query.ts';
 
 export class DatabaseClient {
-  private client: GoboClient;
+  private client: GraphQLClient;
 
-  constructor(client: GoboClient) {
+  constructor(client: GraphQLClient) {
     this.client = client;
   }
 

@@ -2,22 +2,20 @@
 import * as express from 'express';
 import 'isomorphic-fetch';
 
-import { ApplicationDeploymentClient } from './clients';
+import {
+  getAllApplicationDeployments,
+  getUserAndAffiliations
+} from './clients/applicationDeploymentClient/client2';
+
 import { AUTHORIZATION_URI, CLIENT_ID, GRAPHQL_URL, PORT } from './config';
-import GoboClient from './GoboClient';
+import { graphqlClientMiddleware } from './GraphQLRestMapper';
 
 const app = express();
 app.use(express.json());
+app.use(graphqlClientMiddleware(GRAPHQL_URL));
 
-const goboClient = new GoboClient({ url: GRAPHQL_URL });
-const applicationClient = new ApplicationDeploymentClient(goboClient);
-
-app.get('/api/applications', async (req, res) => {
-  const result = await applicationClient.findAllApplicationDeployments([
-    'aurora'
-  ]);
-  res.send(result);
-});
+app.get('/api/user', getUserAndAffiliations);
+app.get('/api/:affiliation/applications', getAllApplicationDeployments);
 
 app.get('/api/config', (req, res) => {
   return res.send({

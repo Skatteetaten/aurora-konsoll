@@ -1,6 +1,6 @@
 import { errorStateManager } from 'models/StateManager/ErrorStateManager';
 import { defaultTagsPagedGroup, ITagsPaged, ITagsPagedGroup } from 'models/Tag';
-import GoboClient from '../../GoboClient';
+import GraphQLClient from '../../GraphQLClient';
 import {
   IImageTagsConnection,
   ITagsGroupedQuery,
@@ -10,9 +10,9 @@ import {
 } from './query';
 
 export class ImageRepositoryClient {
-  private client: GoboClient;
+  private client: GraphQLClient;
 
-  constructor(client: GoboClient) {
+  constructor(client: GraphQLClient) {
     this.client = client;
   }
 

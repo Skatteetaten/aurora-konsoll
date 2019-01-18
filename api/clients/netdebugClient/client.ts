@@ -1,4 +1,4 @@
-import GoboClient from '../../GoboClient';
+import GraphQLClient from '../../GraphQLClient';
 import { IScanQuery, IScanStatusQuery, NETDEBUG_QUERY } from './query';
 
 export interface INetdebugResult {
@@ -14,14 +14,14 @@ export interface IScanStatus {
 }
 
 export class NetdebugClient {
-  private client: GoboClient;
+  private client: GraphQLClient;
   private errorMessage = {
     failed: [],
     open: [],
     status: 'Noe gikk galt'
   };
 
-  constructor(client: GoboClient) {
+  constructor(client: GraphQLClient) {
     this.client = client;
   }
 

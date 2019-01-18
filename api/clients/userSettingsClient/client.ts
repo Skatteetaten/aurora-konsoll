@@ -1,12 +1,12 @@
 import { IUserSettings } from 'models/UserSettings';
-import GoboClient from '../../GoboClient';
+import GraphQLClient from '../../GraphQLClient';
 import { UPDATE_USERSETTINGS_MUTATION } from './mutation';
 import { IUserSettingsQuery, USERSETTINGS_QUERY } from './query';
 
 export class UserSettingsClient {
-  private client: GoboClient;
+  private client: GraphQLClient;
 
-  constructor(client: GoboClient) {
+  constructor(client: GraphQLClient) {
     this.client = client;
   }
 
