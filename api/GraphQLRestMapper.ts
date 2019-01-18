@@ -27,8 +27,6 @@ export function queryCreator<T, R>(
   mapParamsToVariables?: (params: any) => any
 ) {
   return async (req: IRequest, res: Response) => {
-    // tslint:disable-next-line:no-console
-    console.log(req.params);
     const result = await req.graphqlClient.query<T>({
       query,
       variables: mapParamsToVariables
@@ -39,7 +37,10 @@ export function queryCreator<T, R>(
     if (!result) {
       res.sendStatus(500).send('Internal server error');
     } else {
-      res.send(transform(result.data));
+      res.send({
+        data: transform(result.data),
+        errors: result.errors
+      });
     }
   };
 }
