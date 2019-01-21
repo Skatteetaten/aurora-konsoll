@@ -2,20 +2,19 @@
 import * as express from 'express';
 import 'isomorphic-fetch';
 
-import {
-  getAllApplicationDeployments,
-  getUserAndAffiliations
-} from './clients/applicationDeploymentClient/client';
-
 import { AUTHORIZATION_URI, CLIENT_ID, GRAPHQL_URL, PORT } from './config';
 import { graphqlClientMiddleware } from './GraphQLRestMapper';
 
+import { userAffiliationController } from './controllers/UserAffiliationController';
+
 const app = express();
+
+// Register middelwares
 app.use(express.json());
 app.use(graphqlClientMiddleware(GRAPHQL_URL));
 
-app.get('/api/user', getUserAndAffiliations);
-app.get('/api/:affiliation/applications', getAllApplicationDeployments);
+// Register controllers
+app.use(userAffiliationController);
 
 app.get('/api/config', (req, res) => {
   return res.send({
