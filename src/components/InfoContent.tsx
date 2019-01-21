@@ -4,6 +4,7 @@ import styled from 'styled-components';
 interface IInfoContentProps {
   style?: React.CSSProperties;
   className?: string;
+  id?: string;
   values: {
     [key: string]: any;
   };
@@ -16,9 +17,10 @@ const defaultStyle: React.CSSProperties = {
 const InfoContent = ({
   values,
   className,
+  id,
   style = defaultStyle
 }: IInfoContentProps) => (
-  <div className={className} style={style}>
+  <div className={className} style={style} id={id}>
     {Object.keys(values).map(k => (
       <dl key={k}>
         <dt>{k}</dt>

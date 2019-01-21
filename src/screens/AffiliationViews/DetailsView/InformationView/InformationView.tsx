@@ -81,6 +81,7 @@ const InformationView = ({
         <div>
           <h3>Aktivt deployment</h3>
           <InfoContent
+            id="active-deployment"
             values={getApplicationDeploymentValues(
               deployment,
               TagWithWarningMessage
@@ -192,7 +193,9 @@ function getApplicationDeploymentValues(
   deployment: IApplicationDeployment,
   deployTag: string | JSX.Element
 ) {
-  return {
+  let info: { [key: string]: any } = {};
+
+  info = {
     Tag: deployTag,
     'Aurora version': deployment.version.auroraVersion,
     'Image repository': deployment.repository
@@ -200,6 +203,10 @@ function getApplicationDeploymentValues(
       .slice(1)
       .join('/')
   };
+  if (deployment.message) {
+    info.Message = deployment.message;
+  }
+  return info;
 }
 
 export default styled(InformationView)`

@@ -198,6 +198,7 @@ export class ApplicationDeploymentClient {
           reasons: app.status.reasons,
           reports: app.status.reports
         },
+        message: app.message,
         time: app.time,
         version: {
           releaseTo: app.version.releaseTo,
