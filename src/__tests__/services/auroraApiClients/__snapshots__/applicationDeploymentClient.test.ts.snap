@@ -6,6 +6,7 @@ Array [
     "affiliation": "aurora",
     "environment": "aurora",
     "id": "q8u9fpw8f",
+    "message": "hello",
     "name": "console-next",
     "permission": Object {
       "paas": Object {

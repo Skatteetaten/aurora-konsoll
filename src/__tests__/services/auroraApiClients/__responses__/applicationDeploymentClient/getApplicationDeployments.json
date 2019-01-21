@@ -16,6 +16,7 @@
                   "name": "aurora"
                 },
                 "environment": "aurora",
+                "message": "hello",
                 "namespace": {
                   "name": "aurora",
                   "permission": {
