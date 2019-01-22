@@ -15,6 +15,7 @@ export const DATABASE_SCHEMAS_QUERY = gql`
         name
       }
       name
+      appDbName
       databaseEngine
       applicationDeployment {
         id
@@ -25,7 +26,6 @@ export const DATABASE_SCHEMAS_QUERY = gql`
       sizeInMb
       users {
         username
-        password
         type
       }
     }

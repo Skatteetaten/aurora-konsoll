@@ -1,5 +1,5 @@
 import { connect } from 'react-redux';
-import { schema } from './schema';
+import { Schema } from './schema';
 
 import { RootState } from 'store/types';
 import { fetchSchemas } from './state/actions';
@@ -18,4 +18,4 @@ export const SchemaConnected = connect(
   {
     onFetch: (affiliations: string[]) => fetchSchemas(affiliations)
   }
-)(schema);
+)(Schema);
