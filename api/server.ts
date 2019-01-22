@@ -1,21 +1,22 @@
 /* tslint:disable:no-console */
-import axios from 'axios';
 import * as express from 'express';
+import * as proxy from 'http-proxy-middleware';
 
 import { AUTHORIZATION_URI, CLIENT_ID, GRAPHQL_URL, PORT } from './config';
 
 const app = express();
-app.use(express.json());
-
-app.post('/api/graphql', async (req, res) => {
-  const result = await axios.post(GRAPHQL_URL, req.body, {
-    headers: {
-      Authorization: req.header('Authorization')
+app.use(
+  '/api/graphql',
+  proxy({
+    changeOrigin: true,
+    target: GRAPHQL_URL,
+    pathRewrite: {
+      '/api/graphql': '/graphql'
     }
-  });
+  })
+);
 
-  res.send(result.data);
-});
+app.use(express.json());
 
 app.get('/api/config', (req, res) => {
   return res.send({
