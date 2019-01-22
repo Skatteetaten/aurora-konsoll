@@ -5,88 +5,13 @@ import styled from 'styled-components';
 import DetailsList from 'aurora-frontend-react-komponenter/DetailsList';
 import Spinner from 'components/Spinner';
 import { IDatabaseSchemas, IDatabaseSchemaView } from 'models/schemas';
+import DatabaseSchemaService, { defaultSortDirections, SortDirection } from 'services/DatabaseSchemaService';
 
 interface IColumns {
   key: number;
   fieldName: string;
 }
 
-enum SortDirection {
-  ASC,
-  DESC,
-  NONE
-}
-
-const columns = (index: number, sortDirection: SortDirection) => {
-  const cols = [
-    {
-      fieldName: 'type',
-      isResizable: true,
-      key: 0,
-      maxWidth: 100,
-      minWidth: 100,
-      name: 'Type',
-      iconName: ''
-    },
-    {
-      fieldName: 'appDbName',
-      isResizable: true,
-      key: 1,
-      maxWidth: 150,
-      minWidth: 150,
-      name: 'ApplikasjonsDB',
-      iconName: ''
-    },
-    {
-      fieldName: 'createdDate',
-      isResizable: true,
-      key: 2,
-      maxWidth: 100,
-      minWidth: 100,
-      name: 'Opprettet',
-      iconName: ''
-    },
-    {
-      fieldName: 'lastUsedDate',
-      isResizable: true,
-      key: 3,
-      maxWidth: 100,
-      minWidth: 100,
-      name: 'Sist brukt',
-      iconName: ''
-    },
-    {
-      fieldName: 'sizeInMb',
-      isResizable: true,
-      key: 4,
-      maxWidth: 125,
-      minWidth: 125,
-      name: 'Størrelse (MB)',
-      iconName: ''
-    },
-    {
-      fieldName: 'createdBy',
-      isResizable: true,
-      key: 5,
-      maxWidth: 100,
-      minWidth: 100,
-      name: 'Bruker',
-      iconName: ''
-    }
-  ];
-  if (index > -1) {
-    const currentCol = cols[index];
-    if (
-      sortDirection === SortDirection.NONE ||
-      sortDirection === SortDirection.DESC
-    ) {
-      currentCol.iconName = 'Down';
-    } else if (sortDirection === SortDirection.ASC) {
-      currentCol.iconName = 'Up';
-    }
-  }
-  return cols;
-};
 
 export interface ISchemaProps {
   onFetch: (affiliations: string[]) => void;
@@ -102,16 +27,16 @@ interface ISchemaState {
   selectedColumnIndex: number;
 }
 
-const defaultSortDirections = new Array<SortDirection>(6).fill(
-  SortDirection.NONE
-);
 
 export class Schema extends React.Component<ISchemaProps, ISchemaState> {
+  
   public state = {
     viewItems: [],
     columnSortDirections: defaultSortDirections,
     selectedColumnIndex: -1
   };
+
+  private databaseSchemaService = new DatabaseSchemaService();
 
   public sortByColumn = (
     ev: React.MouseEvent<HTMLElement>,
@@ -123,24 +48,11 @@ export class Schema extends React.Component<ISchemaProps, ISchemaState> {
     const newSortDirections = defaultSortDirections;
     const prevSortDirection = columnSortDirections[column.key];
 
-    if (
-      prevSortDirection === SortDirection.NONE ||
-      prevSortDirection === SortDirection.DESC
-    ) {
+    if (this.databaseSchemaService.sortNextAscending(prevSortDirection)) {
       newSortDirections[column.key] = SortDirection.ASC;
     } else if (prevSortDirection === SortDirection.ASC) {
       newSortDirections[column.key] = SortDirection.DESC;
     }
-
-    const getValue = (value: any) =>
-      typeof value === 'string' ? (value as string).toLowerCase() : value;
-    const dateValidator = /^\d{1,2}[.]\d{1,2}[.]\d{4}$/;
-
-    const isDate = (value: any) => {
-      return (
-        typeof value === 'string' && (value as string).match(dateValidator)
-      );
-    };
 
     const createDate = (value: string | null) => {
       if (value === null) {
@@ -155,16 +67,14 @@ export class Schema extends React.Component<ISchemaProps, ISchemaState> {
       }
     };
 
-    const sortAscending =
-      prevSortDirection === SortDirection.NONE ||
-      prevSortDirection === SortDirection.DESC;
+    const sortAscending = this.databaseSchemaService.sortNextAscending(prevSortDirection);
 
     const sortedItems = viewItems.slice(0).sort((a: any, b: any) => {
-      const valueA = getValue(a[name]);
-      const valueB = getValue(b[name]);
+      const valueA = this.databaseSchemaService.lowerCaseIfString(a[name]);
+      const valueB = this.databaseSchemaService.lowerCaseIfString(b[name]);
       if (valueA === valueB) {
         return 0;
-      } else if (isDate(valueA) || isDate(valueB)) {
+      } else if (this.databaseSchemaService.isDate(valueA) || this.databaseSchemaService.isDate(valueB)) {
         const dateA = createDate(valueA).getTime();
         const dateB = createDate(valueB).getTime();
         return sortAscending ? dateB - dateA : dateA - dateB;
@@ -236,7 +146,7 @@ export class Schema extends React.Component<ISchemaProps, ISchemaState> {
         <div className="styledContainer">
           <div className="styledTable">
             <DetailsList
-              columns={columns(
+              columns={this.databaseSchemaService.createColumns(
                 selectedColumnIndex,
                 columnSortDirections[selectedColumnIndex]
               )}
