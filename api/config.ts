@@ -14,6 +14,4 @@ const CLIENT_ID = env.CLIENT_ID || 'aurora-openshift-console-dev';
 
 const GOBO_URL = env.GOBO_URL || 'http://gobo.aurora.utv.paas.skead.no';
 
-const GRAPHQL_URL = env.GRAPHQL_URL || `${GOBO_URL}/graphql`;
-
-export { CLIENT_ID, AUTHORIZATION_URI, PORT, GRAPHQL_URL };
+export { CLIENT_ID, AUTHORIZATION_URI, PORT, GOBO_URL };
