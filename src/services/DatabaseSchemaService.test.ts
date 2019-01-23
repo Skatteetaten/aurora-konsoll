@@ -104,7 +104,6 @@ describe('DatabaseSchemaService', () => {
     });
   });
 
-
   describe('Filter database schema view', () => {
     it('filter database schema for column values', () => {
       const viewItem1 = databaseSchemaViewFactory.build({

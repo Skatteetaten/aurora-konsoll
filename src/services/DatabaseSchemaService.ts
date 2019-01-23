@@ -72,10 +72,12 @@ export const filterDatabaseSchemaView = (filter: string) => {
     v.createdBy.includes(filter) ||
     v.appDbName.includes(filter) ||
     v.createdDate.includes(filter) ||
-    ((!v.lastUsedDate || v.lastUsedDate === null) ? false : v.lastUsedDate.includes(filter)) ||
+    (!v.lastUsedDate || v.lastUsedDate === null
+      ? false
+      : v.lastUsedDate.includes(filter)) ||
     v.sizeInMb.toString().includes(filter) ||
     v.type.includes(filter);
-}
+};
 
 export default class DatabaseSchemaService {
   public sortNextAscending(sortDirection: SortDirection) {

@@ -70,17 +70,23 @@ export class Schema extends React.Component<ISchemaProps, ISchemaState> {
   };
 
   public componentDidMount() {
+    const { affiliation, onFetch } = this.props;
     this.handleFetchDatabaseSchemas();
+    onFetch([affiliation]);
   }
 
   public componentDidUpdate(prevProps: ISchemaProps) {
-    const { affiliation, items } = this.props;
+    const { affiliation, items, onFetch } = this.props;
+
+    if (prevProps.items !== items) {
+      this.handleFetchDatabaseSchemas();
+    }
     if (
       prevProps.affiliation !== affiliation ||
       (prevProps.items.databaseSchemas.length === 0 &&
         items.databaseSchemas.length > 0)
     ) {
-      this.handleFetchDatabaseSchemas();
+      onFetch([affiliation]);
       this.setState({
         columnSortDirections: defaultSortDirections,
         selectedColumnIndex: -1
@@ -88,8 +94,7 @@ export class Schema extends React.Component<ISchemaProps, ISchemaState> {
     }
   }
   public handleFetchDatabaseSchemas = () => {
-    const { onFetch, affiliation, items } = this.props;
-    onFetch([affiliation]);
+    const { items } = this.props;
     let viewItems: IDatabaseSchemaView[];
 
     const dateOptions = {
@@ -123,18 +128,25 @@ export class Schema extends React.Component<ISchemaProps, ISchemaState> {
 
   public render() {
     const { isLoading, className } = this.props;
-    const { viewItems, selectedColumnIndex, columnSortDirections, filter } = this.state;
+    const {
+      viewItems,
+      selectedColumnIndex,
+      columnSortDirections,
+      filter
+    } = this.state;
 
     if (isLoading) {
       return <Spinner />;
     }
-
     const filteredItems = viewItems.filter(filterDatabaseSchemaView(filter));
 
     return (
       <div className={className}>
         <div className="styledInput">
-          <TextField placeholder="Søk etter skjema" onChanged={this.onFilterChange} />
+          <TextField
+            placeholder="Søk etter skjema"
+            onChanged={this.onFilterChange}
+          />
         </div>
         <div className="styledContainer">
           <div className="styledTable">
@@ -156,7 +168,7 @@ export class Schema extends React.Component<ISchemaProps, ISchemaState> {
     this.setState({
       filter: text
     });
-  }
+  };
 }
 
 export default styled(Schema)`
