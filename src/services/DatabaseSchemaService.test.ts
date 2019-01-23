@@ -1,6 +1,7 @@
 import { databaseSchemaViewFactory } from 'testData/testDataBuilders';
 import DatabaseSchemaService, {
   defaultColumns,
+  filterDatabaseSchemaView,
   SortDirection
 } from './DatabaseSchemaService';
 
@@ -35,6 +36,7 @@ describe('DatabaseSchemaService', () => {
       expect(sortItems[0].createdBy).toEqual('b');
       expect(sortItems[1].createdBy).toEqual('a');
     });
+
     it('sort createdDate column ascending', () => {
       const viewItem1 = databaseSchemaViewFactory.build({
         createdDate: '23.01.2019'
@@ -66,6 +68,7 @@ describe('DatabaseSchemaService', () => {
       expect(sortItems[0].sizeInMb).toEqual(1);
       expect(sortItems[1].sizeInMb).toEqual(0);
     });
+
     it('do not sort lastUsedDate column given null values', () => {
       const viewItem1 = databaseSchemaViewFactory.build({
         lastUsedDate: null,
@@ -83,6 +86,7 @@ describe('DatabaseSchemaService', () => {
       expect(sortItems[0].createdBy).toEqual('56789');
       expect(sortItems[1].createdBy).toEqual('12345');
     });
+
     it('sort createdBy column ignoring case', () => {
       const viewItem1 = databaseSchemaViewFactory.build({
         createdBy: 'ABC'
@@ -97,6 +101,24 @@ describe('DatabaseSchemaService', () => {
       );
       expect(sortItems[0].createdBy).toEqual('bcd');
       expect(sortItems[1].createdBy).toEqual('ABC');
+    });
+  });
+
+
+  describe('Filter database schema view', () => {
+    it('filter database schema for column values', () => {
+      const viewItem1 = databaseSchemaViewFactory.build({
+        createdBy: 'my-super-duper-user'
+      });
+      const viewItem2 = databaseSchemaViewFactory.build({
+        createdBy: '123'
+      });
+
+      const createdFilter = filterDatabaseSchemaView('duper');
+      const filteredItems = [viewItem1, viewItem2].filter(createdFilter);
+
+      expect(filteredItems.length).toEqual(1);
+      expect(filteredItems[0].createdBy).toEqual('my-super-duper-user');
     });
   });
 });

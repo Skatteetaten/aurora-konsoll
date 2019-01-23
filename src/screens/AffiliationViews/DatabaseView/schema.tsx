@@ -3,10 +3,13 @@ import * as React from 'react';
 import styled from 'styled-components';
 
 import DetailsList from 'aurora-frontend-react-komponenter/DetailsList';
+import TextField from 'aurora-frontend-react-komponenter/TextField';
 import Spinner from 'components/Spinner';
+
 import { IDatabaseSchemas, IDatabaseSchemaView } from 'models/schemas';
 import DatabaseSchemaService, {
   defaultSortDirections,
+  filterDatabaseSchemaView,
   SortDirection
 } from 'services/DatabaseSchemaService';
 
@@ -22,13 +25,15 @@ interface ISchemaState {
   viewItems: IDatabaseSchemaView[];
   columnSortDirections: SortDirection[];
   selectedColumnIndex: number;
+  filter: string;
 }
 
 export class Schema extends React.Component<ISchemaProps, ISchemaState> {
   public state = {
     viewItems: [],
     columnSortDirections: defaultSortDirections,
-    selectedColumnIndex: -1
+    selectedColumnIndex: -1,
+    filter: ''
   };
 
   private databaseSchemaService = new DatabaseSchemaService();
@@ -118,14 +123,19 @@ export class Schema extends React.Component<ISchemaProps, ISchemaState> {
 
   public render() {
     const { isLoading, className } = this.props;
-    const { viewItems, selectedColumnIndex, columnSortDirections } = this.state;
+    const { viewItems, selectedColumnIndex, columnSortDirections, filter } = this.state;
 
     if (isLoading) {
       return <Spinner />;
     }
 
+    const filteredItems = viewItems.filter(filterDatabaseSchemaView(filter));
+
     return (
       <div className={className}>
+        <div className="styledInput">
+          <TextField placeholder="Søk etter skjema" onChanged={this.onFilterChange} />
+        </div>
         <div className="styledContainer">
           <div className="styledTable">
             <DetailsList
@@ -133,7 +143,7 @@ export class Schema extends React.Component<ISchemaProps, ISchemaState> {
                 selectedColumnIndex,
                 columnSortDirections[selectedColumnIndex]
               )}
-              items={viewItems}
+              items={filteredItems}
               onColumnHeaderClick={this.sortByColumn}
             />
           </div>
@@ -141,22 +151,32 @@ export class Schema extends React.Component<ISchemaProps, ISchemaState> {
       </div>
     );
   }
+
+  private onFilterChange = (text: string) => {
+    this.setState({
+      filter: text
+    });
+  }
 }
 
 export default styled(Schema)`
   max-height: 100%;
   overflow-x: auto;
+  margin: 20px 0 0 20px;
+
+  .styledInput {
+    width: 300px;
+    margin-bottom: 20px;
+  }
 
   .styledTable {
     grid-area: table;
-    margin: 20px auto 0 auto;
     i {
       float: right;
     }
   }
 
   .styledContainer {
-    grid-area: content;
     display: flex;
   }
 `;

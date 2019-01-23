@@ -11,8 +11,8 @@ export const defaultColumns = () => [
     fieldName: 'type',
     isResizable: true,
     key: 0,
-    maxWidth: 100,
-    minWidth: 100,
+    maxWidth: 120,
+    minWidth: 120,
     name: 'Type',
     iconName: ''
   },
@@ -20,8 +20,8 @@ export const defaultColumns = () => [
     fieldName: 'appDbName',
     isResizable: true,
     key: 1,
-    maxWidth: 150,
-    minWidth: 150,
+    maxWidth: 200,
+    minWidth: 200,
     name: 'ApplikasjonsDB',
     iconName: ''
   },
@@ -29,8 +29,8 @@ export const defaultColumns = () => [
     fieldName: 'createdDate',
     isResizable: true,
     key: 2,
-    maxWidth: 100,
-    minWidth: 100,
+    maxWidth: 120,
+    minWidth: 120,
     name: 'Opprettet',
     iconName: ''
   },
@@ -38,8 +38,8 @@ export const defaultColumns = () => [
     fieldName: 'lastUsedDate',
     isResizable: true,
     key: 3,
-    maxWidth: 100,
-    minWidth: 100,
+    maxWidth: 120,
+    minWidth: 120,
     name: 'Sist brukt',
     iconName: ''
   },
@@ -47,8 +47,8 @@ export const defaultColumns = () => [
     fieldName: 'sizeInMb',
     isResizable: true,
     key: 4,
-    maxWidth: 125,
-    minWidth: 125,
+    maxWidth: 175,
+    minWidth: 175,
     name: 'Størrelse (MB)',
     iconName: ''
   },
@@ -56,8 +56,8 @@ export const defaultColumns = () => [
     fieldName: 'createdBy',
     isResizable: true,
     key: 5,
-    maxWidth: 100,
-    minWidth: 100,
+    maxWidth: 120,
+    minWidth: 120,
     name: 'Bruker',
     iconName: ''
   }
@@ -66,6 +66,16 @@ export const defaultColumns = () => [
 export const defaultSortDirections = new Array<SortDirection>(6).fill(
   SortDirection.NONE
 );
+
+export const filterDatabaseSchemaView = (filter: string) => {
+  return (v: IDatabaseSchemaView) =>
+    v.createdBy.includes(filter) ||
+    v.appDbName.includes(filter) ||
+    v.createdDate.includes(filter) ||
+    ((!v.lastUsedDate || v.lastUsedDate === null) ? false : v.lastUsedDate.includes(filter)) ||
+    v.sizeInMb.toString().includes(filter) ||
+    v.type.includes(filter);
+}
 
 export default class DatabaseSchemaService {
   public sortNextAscending(sortDirection: SortDirection) {
