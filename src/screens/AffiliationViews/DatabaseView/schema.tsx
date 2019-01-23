@@ -5,13 +5,10 @@ import styled from 'styled-components';
 import DetailsList from 'aurora-frontend-react-komponenter/DetailsList';
 import Spinner from 'components/Spinner';
 import { IDatabaseSchemas, IDatabaseSchemaView } from 'models/schemas';
-import DatabaseSchemaService, { defaultSortDirections, SortDirection } from 'services/DatabaseSchemaService';
-
-interface IColumns {
-  key: number;
-  fieldName: string;
-}
-
+import DatabaseSchemaService, {
+  defaultSortDirections,
+  SortDirection
+} from 'services/DatabaseSchemaService';
 
 export interface ISchemaProps {
   onFetch: (affiliations: string[]) => void;
@@ -27,9 +24,7 @@ interface ISchemaState {
   selectedColumnIndex: number;
 }
 
-
 export class Schema extends React.Component<ISchemaProps, ISchemaState> {
-  
   public state = {
     viewItems: [],
     columnSortDirections: defaultSortDirections,
@@ -40,7 +35,10 @@ export class Schema extends React.Component<ISchemaProps, ISchemaState> {
 
   public sortByColumn = (
     ev: React.MouseEvent<HTMLElement>,
-    column: IColumns
+    column: {
+      key: number;
+      fieldName: string;
+    }
   ): void => {
     const { viewItems, columnSortDirections } = this.state;
     const name = column.fieldName! as keyof any;
@@ -53,35 +51,11 @@ export class Schema extends React.Component<ISchemaProps, ISchemaState> {
     } else if (prevSortDirection === SortDirection.ASC) {
       newSortDirections[column.key] = SortDirection.DESC;
     }
-
-    const createDate = (value: string | null) => {
-      if (value === null) {
-        return new Date(0);
-      } else {
-        const values = value.split('.');
-        return new Date(
-          Number(values[2]),
-          Number(values[1]) - 1,
-          Number(values[0])
-        );
-      }
-    };
-
-    const sortAscending = this.databaseSchemaService.sortNextAscending(prevSortDirection);
-
-    const sortedItems = viewItems.slice(0).sort((a: any, b: any) => {
-      const valueA = this.databaseSchemaService.lowerCaseIfString(a[name]);
-      const valueB = this.databaseSchemaService.lowerCaseIfString(b[name]);
-      if (valueA === valueB) {
-        return 0;
-      } else if (this.databaseSchemaService.isDate(valueA) || this.databaseSchemaService.isDate(valueB)) {
-        const dateA = createDate(valueA).getTime();
-        const dateB = createDate(valueB).getTime();
-        return sortAscending ? dateB - dateA : dateA - dateB;
-      } else {
-        return (sortAscending ? valueA < valueB : valueA > valueB) ? 1 : -1;
-      }
-    });
+    const sortedItems = this.databaseSchemaService.sortItems(
+      viewItems,
+      prevSortDirection,
+      name
+    );
 
     this.setState({
       viewItems: sortedItems,
@@ -112,13 +86,22 @@ export class Schema extends React.Component<ISchemaProps, ISchemaState> {
     const { onFetch, affiliation, items } = this.props;
     onFetch([affiliation]);
     let viewItems: IDatabaseSchemaView[];
+
+    const dateOptions = {
+      day: '2-digit',
+      month: '2-digit',
+      year: 'numeric'
+    };
     if (items.databaseSchemas.length > 0) {
       viewItems = items.databaseSchemas.map(i => {
         return {
-          createdDate: new Date(i.createdDate).toLocaleDateString('nb-NO'),
+          createdDate: new Date(i.createdDate).toLocaleDateString(
+            'nb-NO',
+            dateOptions
+          ),
           lastUsedDate:
             i.lastUsedDate &&
-            new Date(i.lastUsedDate).toLocaleDateString('nb-NO'),
+            new Date(i.lastUsedDate).toLocaleDateString('nb-NO', dateOptions),
           appDbName: i.appDbName,
           type: i.type,
           sizeInMb: i.sizeInMb,

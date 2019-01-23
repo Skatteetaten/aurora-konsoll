@@ -14,7 +14,7 @@ export interface IDatabaseSchema {
   databaseEngine: string;
   createdBy: string;
   createdDate: Date;
-  lastUsedDate?: Date;
+  lastUsedDate?: Date | null;
   sizeInMb: number;
   users: Array<{
     username: string;
@@ -27,6 +27,6 @@ export interface IDatabaseSchemaView {
   appDbName: string;
   createdBy: string;
   createdDate: string;
-  lastUsedDate?: string;
+  lastUsedDate?: string | null;
   sizeInMb: number;
 }
