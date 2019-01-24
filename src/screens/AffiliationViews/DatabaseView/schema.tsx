@@ -148,17 +148,15 @@ export class Schema extends React.Component<ISchemaProps, ISchemaState> {
             onChanged={this.onFilterChange}
           />
         </div>
-        <div className="styledContainer">
-          <div className="styledTable">
-            <DetailsList
-              columns={this.databaseSchemaService.createColumns(
-                selectedColumnIndex,
-                columnSortDirections[selectedColumnIndex]
-              )}
-              items={filteredItems}
-              onColumnHeaderClick={this.sortByColumn}
-            />
-          </div>
+        <div className="styledTable">
+          <DetailsList
+            columns={this.databaseSchemaService.createColumns(
+              selectedColumnIndex,
+              columnSortDirections[selectedColumnIndex]
+            )}
+            items={filteredItems}
+            onColumnHeaderClick={this.sortByColumn}
+          />
         </div>
       </div>
     );
@@ -172,23 +170,20 @@ export class Schema extends React.Component<ISchemaProps, ISchemaState> {
 }
 
 export default styled(Schema)`
-  max-height: 100%;
+  height: 100%;
   overflow-x: auto;
-  margin: 20px 0 0 20px;
 
   .styledInput {
+    margin: 20px;
     width: 300px;
-    margin-bottom: 20px;
   }
 
   .styledTable {
+    margin-left: 20px;
+    display: flex;
     grid-area: table;
     i {
       float: right;
     }
-  }
-
-  .styledContainer {
-    display: flex;
   }
 `;

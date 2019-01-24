@@ -22,7 +22,7 @@ export const defaultColumns = () => [
     key: 1,
     maxWidth: 200,
     minWidth: 200,
-    name: 'ApplikasjonsDB',
+    name: 'Applikasjonsdatabase',
     iconName: ''
   },
   {

@@ -6,7 +6,7 @@ import {
 import { IDeploymentSpec, IMount } from 'models/DeploymentSpec';
 import { ImageTagType } from 'models/ImageTagType';
 import { IPodResource } from 'models/Pod';
-import { IDatabaseSchemaView } from 'models/schemas';
+import { IDatabaseSchema, IDatabaseSchemaView } from 'models/schemas';
 import { StatusCode } from 'models/Status';
 import { IApplicationDeploymentFilters } from 'models/UserSettings';
 import { IFilter } from 'services/DeploymentFilterService';
@@ -145,4 +145,19 @@ export const databaseSchemaViewFactory = Factory.Sync.makeFactory<
   lastUsedDate: '23.01.2019',
   sizeInMb: 0.75,
   type: 'MANAGED'
+});
+
+export const databaseSchemaFactory = Factory.Sync.makeFactory<IDatabaseSchema>({
+  appDbName: 'db',
+  createdBy: '12345',
+  createdDate: new Date(2019, 0, 12),
+  lastUsedDate: new Date(2019, 0, 22),
+  sizeInMb: 0.75,
+  type: 'MANAGED',
+  affiliation: { name: 'paas' },
+  databaseEngine: 'oracle',
+  id: '1234.1234.1234',
+  jdbcUrl: 'jdbcurl-123',
+  name: 'l4342',
+  users: []
 });
