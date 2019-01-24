@@ -17,12 +17,12 @@ export const defaultColumns = () => [
     iconName: ''
   },
   {
-    fieldName: 'appDbName',
+    fieldName: 'discriminator',
     isResizable: true,
     key: 1,
     maxWidth: 200,
     minWidth: 200,
-    name: 'Applikasjonsdatabase',
+    name: 'Diskriminator',
     iconName: ''
   },
   {
@@ -70,7 +70,7 @@ export const defaultSortDirections = new Array<SortDirection>(6).fill(
 export const filterDatabaseSchemaView = (filter: string) => {
   return (v: IDatabaseSchemaView) =>
     v.createdBy.includes(filter) ||
-    v.appDbName.includes(filter) ||
+    v.discriminator.includes(filter) ||
     v.createdDate.includes(filter) ||
     (!v.lastUsedDate || v.lastUsedDate === null
       ? false

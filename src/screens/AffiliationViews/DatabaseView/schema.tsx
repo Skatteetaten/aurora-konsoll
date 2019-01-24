@@ -112,7 +112,7 @@ export class Schema extends React.Component<ISchemaProps, ISchemaState> {
           lastUsedDate:
             i.lastUsedDate &&
             new Date(i.lastUsedDate).toLocaleDateString('nb-NO', dateOptions),
-          appDbName: i.appDbName,
+          discriminator: i.discriminator,
           type: i.type,
           sizeInMb: i.sizeInMb,
           createdBy: i.createdBy

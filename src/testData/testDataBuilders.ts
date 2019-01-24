@@ -139,7 +139,7 @@ export const filterFactory = Factory.Sync.makeFactory<IFilter>({
 export const databaseSchemaViewFactory = Factory.Sync.makeFactory<
   IDatabaseSchemaView
 >({
-  appDbName: 'db',
+  discriminator: 'db',
   createdBy: '12345',
   createdDate: '01.12.2015',
   lastUsedDate: '23.01.2019',
@@ -148,7 +148,7 @@ export const databaseSchemaViewFactory = Factory.Sync.makeFactory<
 });
 
 export const databaseSchemaFactory = Factory.Sync.makeFactory<IDatabaseSchema>({
-  appDbName: 'db',
+  discriminator: 'db',
   createdBy: '12345',
   createdDate: new Date(2019, 0, 12),
   lastUsedDate: new Date(2019, 0, 22),

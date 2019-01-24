@@ -7,7 +7,7 @@ export interface IDatabaseSchema {
   type: string;
   jdbcUrl: string;
   name: string;
-  appDbName: string;
+  discriminator: string;
   affiliation: {
     name: string;
   };
@@ -24,7 +24,7 @@ export interface IDatabaseSchema {
 
 export interface IDatabaseSchemaView {
   type: string;
-  appDbName: string;
+  discriminator: string;
   createdBy: string;
   createdDate: string;
   lastUsedDate?: string | null;
