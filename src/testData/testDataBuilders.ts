@@ -139,6 +139,7 @@ export const filterFactory = Factory.Sync.makeFactory<IFilter>({
 export const databaseSchemaViewFactory = Factory.Sync.makeFactory<
   IDatabaseSchemaView
 >({
+  id: '123',
   discriminator: 'db',
   createdBy: '12345',
   createdDate: '01.12.2015',

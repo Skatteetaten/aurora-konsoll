@@ -29,4 +29,5 @@ export interface IDatabaseSchemaView {
   createdDate: string;
   lastUsedDate?: string | null;
   sizeInMb: number;
+  id: string;
 }

@@ -1,5 +1,5 @@
 import { connect } from 'react-redux';
-import Schema from './schema';
+import Schema from './DatabaseSchemaTable';
 
 import { RootState } from 'store/types';
 import { fetchSchemas } from './state/actions';

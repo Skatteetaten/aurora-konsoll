@@ -6,12 +6,13 @@ import DetailsList from 'aurora-frontend-react-komponenter/DetailsList';
 import TextField from 'aurora-frontend-react-komponenter/TextField';
 import Spinner from 'components/Spinner';
 
-import { IDatabaseSchemas, IDatabaseSchemaView } from 'models/schemas';
+import { IDatabaseSchema, IDatabaseSchemas, IDatabaseSchemaView } from 'models/schemas';
 import DatabaseSchemaService, {
   defaultSortDirections,
   filterDatabaseSchemaView,
   SortDirection
 } from 'services/DatabaseSchemaService';
+import DatabaseSchemaDialog from './DatabaseSchemaDialog';
 
 export interface ISchemaProps {
   onFetch: (affiliations: string[]) => void;
@@ -26,6 +27,7 @@ interface ISchemaState {
   columnSortDirections: SortDirection[];
   selectedColumnIndex: number;
   filter: string;
+  selectedSchema?: IDatabaseSchema;
 }
 
 export class Schema extends React.Component<ISchemaProps, ISchemaState> {
@@ -33,7 +35,8 @@ export class Schema extends React.Component<ISchemaProps, ISchemaState> {
     viewItems: [],
     columnSortDirections: defaultSortDirections,
     selectedColumnIndex: -1,
-    filter: ''
+    filter: '',
+    selectedSchema: undefined
   };
 
   private databaseSchemaService = new DatabaseSchemaService();
@@ -105,6 +108,7 @@ export class Schema extends React.Component<ISchemaProps, ISchemaState> {
     if (items.databaseSchemas.length > 0) {
       viewItems = items.databaseSchemas.map(i => {
         return {
+          id: i.id,
           createdDate: new Date(i.createdDate).toLocaleDateString(
             'nb-NO',
             dateOptions
@@ -132,7 +136,8 @@ export class Schema extends React.Component<ISchemaProps, ISchemaState> {
       viewItems,
       selectedColumnIndex,
       columnSortDirections,
-      filter
+      filter,
+      selectedSchema
     } = this.state;
 
     if (isLoading) {
@@ -156,8 +161,10 @@ export class Schema extends React.Component<ISchemaProps, ISchemaState> {
             )}
             items={filteredItems}
             onColumnHeaderClick={this.sortByColumn}
+            onActiveItemChanged={this.onRowClicked}
           />
         </div>
+        {selectedSchema && <DatabaseSchemaDialog schema={selectedSchema} />}
       </div>
     );
   }
@@ -167,6 +174,14 @@ export class Schema extends React.Component<ISchemaProps, ISchemaState> {
       filter: text
     });
   };
+
+  private onRowClicked = (item: IDatabaseSchemaView) => {
+    const { items } = this.props;
+    const selectedSchema = items.databaseSchemas.find((i: IDatabaseSchema) => i.id === item.id);
+    this.setState({
+      selectedSchema
+    });
+  }
 }
 
 export default styled(Schema)`
