@@ -5,8 +5,16 @@ import styled from 'styled-components';
 import DetailsList from 'aurora-frontend-react-komponenter/DetailsList';
 import TextField from 'aurora-frontend-react-komponenter/TextField';
 import Spinner from 'components/Spinner';
+import {
+  IObjectWithKey,
+  Selection
+} from 'office-ui-fabric-react/lib/DetailsList';
 
-import { IDatabaseSchema, IDatabaseSchemas, IDatabaseSchemaView } from 'models/schemas';
+import {
+  IDatabaseSchema,
+  IDatabaseSchemas,
+  IDatabaseSchemaView
+} from 'models/schemas';
 import DatabaseSchemaService, {
   defaultSortDirections,
   filterDatabaseSchemaView,
@@ -40,6 +48,10 @@ export class Schema extends React.Component<ISchemaProps, ISchemaState> {
   };
 
   private databaseSchemaService = new DatabaseSchemaService();
+
+  private selection = new Selection({
+    onSelectionChanged: () => this.onRowClicked()
+  });
 
   public sortByColumn = (
     ev: React.MouseEvent<HTMLElement>,
@@ -161,10 +173,14 @@ export class Schema extends React.Component<ISchemaProps, ISchemaState> {
             )}
             items={filteredItems}
             onColumnHeaderClick={this.sortByColumn}
-            onActiveItemChanged={this.onRowClicked}
+            selection={this.selection}
           />
         </div>
-        {selectedSchema && <DatabaseSchemaDialog schema={selectedSchema} />}
+
+        <DatabaseSchemaDialog
+          schema={selectedSchema}
+          clearSelectedSchema={this.clearSelectedSchema}
+        />
       </div>
     );
   }
@@ -175,13 +191,26 @@ export class Schema extends React.Component<ISchemaProps, ISchemaState> {
     });
   };
 
-  private onRowClicked = (item: IDatabaseSchemaView) => {
+  private onRowClicked = () => {
     const { items } = this.props;
-    const selectedSchema = items.databaseSchemas.find((i: IDatabaseSchema) => i.id === item.id);
+    const selected: IObjectWithKey[] = this.selection.getSelection();
+    let selectedSchema;
+    if (selected.length > 0) {
+      const selectedId = (selected[0] as IDatabaseSchema).id;
+      selectedSchema = items.databaseSchemas.find(
+        (i: IDatabaseSchema) => i.id === selectedId
+      );
+    }
     this.setState({
       selectedSchema
     });
-  }
+  };
+  private clearSelectedSchema = () => {
+    this.selection.setAllSelected(false);
+    this.setState({
+      selectedSchema: undefined
+    });
+  };
 }
 
 export default styled(Schema)`
