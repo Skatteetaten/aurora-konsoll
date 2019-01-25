@@ -22,16 +22,17 @@ class DatabaseSchemaDialog extends React.Component<
   IDatabaseSchemaDialogProps,
   IDatabaseSchemaDialogState
 > {
-  constructor(props: IDatabaseSchemaDialogProps) {
-    super(props);
-    this.state = {
-      affiliation: props.schema ? props.schema.affiliation.name : ''
-    };
+
+  public state = {
+    affiliation: ''
   }
 
   public hideDialog = () => {
     const { clearSelectedSchema } = this.props;
     clearSelectedSchema();
+    this.setState({
+      affiliation: ''
+    });
   };
 
   public updateAffiliation = (affiliation: string) => {
@@ -40,20 +41,25 @@ class DatabaseSchemaDialog extends React.Component<
     });
   };
 
-  public componentDidUpdate(prevProps: IDatabaseSchemaDialogProps) {
+  public persistChanges = () => {
     const { schema } = this.props;
-    if (schema && prevProps.schema && prevProps.schema.id !== schema.id) {
-      this.setState({
-        affiliation: schema.affiliation.name
-      });
+    const { affiliation } = this.state;
+    if(affiliation.length > 0) {
+      // tslint:disable-next-line:no-console
+      console.log(affiliation);
+    } else {
+      // tslint:disable-next-line:no-console
+      console.log(schema ? schema.affiliation.name : '');
     }
   }
 
   public render() {
     const { schema, className } = this.props;
+
     if (!schema) {
       return <div />;
     }
+
     return (
       <Dialog
         hidden={!!!schema}
@@ -81,19 +87,47 @@ class DatabaseSchemaDialog extends React.Component<
             </Grid.Row>
             <Grid.Row>
               <Grid.Col lg={6}>
+                <h3>Tilkoblingsinformasjon</h3>
+              </Grid.Col>
+              <Grid.Col lg={6}>
+                <h3>Labels</h3>
                 <TextField
                   id={'affiliation'}
                   label={'Tilhørighet'}
-                  value={
-                    this.props.schema && this.props.schema.affiliation.name
-                  }
+                  value={schema ? schema.affiliation.name : ''}
                   onChanged={this.updateAffiliation}
+                />
+                <TextField
+                  id={'environment'}
+                  label={'Miljø'}
+                  value={'miljø'}
+                />
+                <TextField
+                  id={'application'}
+                  label={'Applikasjon'}
+                  value={'applikasjon'}
+                />
+                <TextField
+                  id={'discriminator'}
+                  label={'Diskriminator'}
+                  value={'diskriminator'}
+                />
+                <TextField
+                  id={'userId'}
+                  label={'Bruker'}
+                  value={'bruker'}
+                />
+                <TextField
+                  id={'description'}
+                  label={'Beskrivelse'}
+                  value={'beskrivelse'}
                 />
               </Grid.Col>
             </Grid.Row>
           </Grid>
         </div>
         <Dialog.Footer>
+          <ActionButton onClick={this.persistChanges}>Lagre</ActionButton>
           <ActionButton onClick={this.hideDialog}>Lukk</ActionButton>
         </Dialog.Footer>
       </Dialog>
