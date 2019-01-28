@@ -140,6 +140,8 @@ export const databaseSchemaViewFactory = Factory.Sync.makeFactory<
   IDatabaseSchemaView
 >({
   id: '123',
+  application: 'application',
+  environment: 'environment',
   discriminator: 'db',
   createdBy: '12345',
   createdDate: '01.12.2015',
@@ -150,6 +152,8 @@ export const databaseSchemaViewFactory = Factory.Sync.makeFactory<
 
 export const databaseSchemaFactory = Factory.Sync.makeFactory<IDatabaseSchema>({
   discriminator: 'db',
+  application: 'application',
+  environment: 'environment',
   createdBy: '12345',
   createdDate: new Date(2019, 0, 12),
   lastUsedDate: new Date(2019, 0, 22),

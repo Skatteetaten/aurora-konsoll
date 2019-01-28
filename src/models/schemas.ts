@@ -7,6 +7,9 @@ export interface IDatabaseSchema {
   type: string;
   jdbcUrl: string;
   name: string;
+  application: string;
+  environment: string;
+  description?: string | null;
   discriminator: string;
   affiliation: {
     name: string;
@@ -24,6 +27,8 @@ export interface IDatabaseSchema {
 
 export interface IDatabaseSchemaView {
   type: string;
+  application: string;
+  environment: string;
   discriminator: string;
   createdBy: string;
   createdDate: string;

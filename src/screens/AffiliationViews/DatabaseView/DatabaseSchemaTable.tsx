@@ -125,6 +125,8 @@ export class Schema extends React.Component<ISchemaProps, ISchemaState> {
       viewItems = items.databaseSchemas.map(i => {
         return {
           id: i.id,
+          environment: i.environment,
+          application: i.application,
           createdDate: new Date(i.createdDate).toLocaleDateString(
             'nb-NO',
             dateOptions

@@ -2,6 +2,7 @@ import * as React from 'react';
 import styled from 'styled-components';
 
 import ActionButton from 'aurora-frontend-react-komponenter/ActionButton';
+import Button from 'aurora-frontend-react-komponenter/Button';
 import Dialog from 'aurora-frontend-react-komponenter/Dialog';
 import Grid from 'aurora-frontend-react-komponenter/Grid';
 import TextField from 'aurora-frontend-react-komponenter/TextField';
@@ -60,6 +61,7 @@ class DatabaseSchemaDialog extends React.Component<
       return <div />;
     }
 
+    const user = schema.users[0];
     return (
       <Dialog
         hidden={!!!schema}
@@ -88,15 +90,23 @@ class DatabaseSchemaDialog extends React.Component<
             <Grid.Row>
               <Grid.Col lg={6}>
                 <h3>Tilkoblingsinformasjon</h3>
+                <TextField
+                  id={'username'}
+                  label={'Brukernavn'}
+                  value={user.username}
+                  readonly={true}
+                />
+                <TextField
+                  id={'jdbcUrl'}
+                  label={'jdbcUrl'}
+                  value={schema.jdbcUrl}
+                  readonly={true}
+                />
+                 <Button buttonType="primary">TEST JDBC TILKOBLING</Button>
+                 <p>Gyldig JDBC tilkobling: </p>
               </Grid.Col>
               <Grid.Col lg={6}>
                 <h3>Labels</h3>
-                <TextField
-                  id={'affiliation'}
-                  label={'Tilhørighet'}
-                  value={schema ? schema.affiliation.name : ''}
-                  onChanged={this.updateAffiliation}
-                />
                 <TextField
                   id={'environment'}
                   label={'Miljø'}
