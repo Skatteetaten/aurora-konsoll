@@ -149,7 +149,14 @@ export class Schema extends React.Component<ISchemaProps, ISchemaState> {
   };
 
   public render() {
-    const { isFetching, className } = this.props;
+    const {
+      isFetching,
+      className,
+      onUpdate,
+      isUpdating,
+      onFetch,
+      affiliation
+    } = this.props;
     const {
       viewItems,
       selectedColumnIndex,
@@ -161,6 +168,11 @@ export class Schema extends React.Component<ISchemaProps, ISchemaState> {
     if (isFetching) {
       return <Spinner />;
     }
+
+    if (isUpdating) {
+      onFetch([affiliation]);
+    }
+
     const filteredItems = viewItems.filter(filterDatabaseSchemaView(filter));
 
     return (
@@ -186,6 +198,7 @@ export class Schema extends React.Component<ISchemaProps, ISchemaState> {
         <DatabaseSchemaDialog
           schema={selectedSchema}
           clearSelectedSchema={this.clearSelectedSchema}
+          onUpdate={onUpdate}
         />
       </div>
     );

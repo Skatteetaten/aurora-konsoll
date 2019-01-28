@@ -7,52 +7,138 @@ import Dialog from 'aurora-frontend-react-komponenter/Dialog';
 import Grid from 'aurora-frontend-react-komponenter/Grid';
 import TextField from 'aurora-frontend-react-komponenter/TextField';
 
-import { IDatabaseSchema } from 'models/schemas';
+import { IDatabaseSchema, IDatabaseSchemaInput } from 'models/schemas';
 
 export interface IDatabaseSchemaDialogProps {
   schema?: IDatabaseSchema;
   className?: string;
   clearSelectedSchema: () => void;
+  onUpdate: (databaseSchema: IDatabaseSchemaInput) => void;
 }
 
 export interface IDatabaseSchemaDialogState {
-  affiliation: string;
+  updatedSchemaValues: {
+    id: string;
+    discriminator: string;
+    createdBy: string;
+    description?: string | null;
+    environment: string;
+    application: string;
+    affiliation: string;
+  };
 }
 
 class DatabaseSchemaDialog extends React.Component<
   IDatabaseSchemaDialogProps,
   IDatabaseSchemaDialogState
 > {
-
   public state = {
-    affiliation: ''
+    updatedSchemaValues: {
+      id: '',
+      discriminator: '',
+      createdBy: '',
+      description: '',
+      environment: '',
+      application: '',
+      affiliation: ''
+    }
+  };
+
+  public componentDidUpdate(prevProps: IDatabaseSchemaDialogProps) {
+    const { schema } = this.props;
+    if (schema) {
+      if (typeof prevProps.schema === 'undefined') {
+        this.setState({
+          updatedSchemaValues: {
+            id: schema.id,
+            discriminator: schema.discriminator,
+            createdBy: schema.createdBy,
+            description: schema.description ? schema.description : '',
+            environment: schema.environment,
+            application: schema.application,
+            affiliation: schema.affiliation.name
+          }
+        });
+      }
+    }
   }
 
   public hideDialog = () => {
     const { clearSelectedSchema } = this.props;
     clearSelectedSchema();
-    this.setState({
-      affiliation: ''
-    });
   };
 
-  public updateAffiliation = (affiliation: string) => {
-    this.setState({
-      affiliation
-    });
+  public handleEnvironmentValue = (environment: string) => {
+    this.setState(state => ({
+      updatedSchemaValues: {
+        ...state.updatedSchemaValues,
+        environment
+      }
+    }));
   };
 
-  public persistChanges = () => {
-    const { schema } = this.props;
-    const { affiliation } = this.state;
-    if(affiliation.length > 0) {
-      // tslint:disable-next-line:no-console
-      console.log(affiliation);
-    } else {
-      // tslint:disable-next-line:no-console
-      console.log(schema ? schema.affiliation.name : '');
+  public handleApplicationValue = (application: string) => {
+    this.setState(state => ({
+      updatedSchemaValues: {
+        ...state.updatedSchemaValues,
+        application
+      }
+    }));
+  };
+
+  public handleIdValue = (id: string) => {
+    this.setState(state => ({
+      updatedSchemaValues: {
+        ...state.updatedSchemaValues,
+        id
+      }
+    }));
+  };
+
+  public handleDiscriminatorValue = (discriminator: string) => {
+    this.setState(state => ({
+      updatedSchemaValues: {
+        ...state.updatedSchemaValues,
+        discriminator
+      }
+    }));
+  };
+
+  public handleUserIdValue = (createdBy: string) => {
+    this.setState(state => ({
+      updatedSchemaValues: {
+        ...state.updatedSchemaValues,
+        createdBy
+      }
+    }));
+  };
+
+  public handleDescriptionValue = (description: string) => {
+    this.setState(state => ({
+      updatedSchemaValues: {
+        ...state.updatedSchemaValues,
+        description
+      }
+    }));
+  };
+
+  public updateLabels = () => {
+    const { schema, onUpdate } = this.props;
+    const { updatedSchemaValues } = this.state;
+    if (schema) {
+      const newValues: IDatabaseSchemaInput = {
+        affiliation: schema.affiliation.name,
+        application: updatedSchemaValues.application,
+        description: updatedSchemaValues.description,
+        environment: updatedSchemaValues.environment,
+        discriminator: updatedSchemaValues.discriminator,
+        id: schema.id,
+        userId: updatedSchemaValues.createdBy
+      };
+      onUpdate(newValues);
+      this.hideDialog();
     }
-  }
+  };
 
   public render() {
     const { schema, className } = this.props;
@@ -102,42 +188,47 @@ class DatabaseSchemaDialog extends React.Component<
                   value={schema.jdbcUrl}
                   readonly={true}
                 />
-                 <Button buttonType="primary">TEST JDBC TILKOBLING</Button>
-                 <p>Gyldig JDBC tilkobling: </p>
+                <Button buttonType="primary">TEST JDBC TILKOBLING</Button>
+                <p>Gyldig JDBC tilkobling: </p>
               </Grid.Col>
               <Grid.Col lg={6}>
                 <h3>Labels</h3>
                 <TextField
                   id={'environment'}
                   label={'Miljø'}
-                  value={'miljø'}
+                  value={schema.environment}
+                  onChanged={this.handleEnvironmentValue}
                 />
                 <TextField
                   id={'application'}
                   label={'Applikasjon'}
-                  value={'applikasjon'}
+                  value={schema.application}
+                  onChanged={this.handleApplicationValue}
                 />
                 <TextField
                   id={'discriminator'}
                   label={'Diskriminator'}
-                  value={'diskriminator'}
+                  value={schema.discriminator}
+                  onChanged={this.handleDiscriminatorValue}
                 />
                 <TextField
                   id={'userId'}
                   label={'Bruker'}
-                  value={'bruker'}
+                  value={schema.createdBy}
+                  onChanged={this.handleUserIdValue}
                 />
                 <TextField
                   id={'description'}
                   label={'Beskrivelse'}
-                  value={'beskrivelse'}
+                  value={schema.description}
+                  onChanged={this.handleDescriptionValue}
                 />
               </Grid.Col>
             </Grid.Row>
           </Grid>
         </div>
         <Dialog.Footer>
-          <ActionButton onClick={this.persistChanges}>Lagre</ActionButton>
+          <ActionButton onClick={this.updateLabels}>Lagre</ActionButton>
           <ActionButton onClick={this.hideDialog}>Lukk</ActionButton>
         </Dialog.Footer>
       </Dialog>

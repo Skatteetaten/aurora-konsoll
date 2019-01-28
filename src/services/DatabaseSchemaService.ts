@@ -88,6 +88,8 @@ export const defaultSortDirections = new Array<SortDirection>(8).fill(
 export const filterDatabaseSchemaView = (filter: string) => {
   return (v: IDatabaseSchemaView) =>
     v.createdBy.includes(filter) ||
+    v.application.includes(filter) ||
+    v.environment.includes(filter) ||
     v.discriminator.includes(filter) ||
     v.createdDate.includes(filter) ||
     (!v.lastUsedDate || v.lastUsedDate === null
