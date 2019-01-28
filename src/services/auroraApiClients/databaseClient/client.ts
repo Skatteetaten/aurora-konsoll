@@ -1,7 +1,8 @@
 import GoboClient from 'services/GoboClient';
 
-import { IDatabaseSchemas } from 'models/schemas';
+import { IDatabaseSchemaInput, IDatabaseSchemas } from 'models/schemas';
 import { errorStateManager } from 'models/StateManager/ErrorStateManager';
+import { UPDATE_DATABASESCHEMA_MUTATION } from './mutation';
 import { DATABASE_SCHEMAS_QUERY, IDatabaseSchemasQuery } from './query.ts';
 
 export class DatabaseClient {
@@ -23,5 +24,22 @@ export class DatabaseClient {
     }
     errorStateManager.addError(new Error(`Kunne ikke finne database skjemaer`));
     return { databaseSchemas: [] };
+  }
+
+  public async updateSchema(databaseSchema: IDatabaseSchemaInput) {
+    const result = await this.client.mutate<{
+      updateDatabaseSchema: boolean;
+    }>({
+      mutation: UPDATE_DATABASESCHEMA_MUTATION,
+      variables: {
+        input: databaseSchema
+      }
+    });
+
+    if (result && result.data) {
+      return result.data.updateDatabaseSchema;
+    }
+
+    return false;
   }
 }

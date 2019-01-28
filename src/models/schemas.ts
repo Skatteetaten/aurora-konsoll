@@ -31,3 +31,13 @@ export interface IDatabaseSchemaView {
   sizeInMb: number;
   id: string;
 }
+
+export interface IDatabaseSchemaInput {
+  id: string;
+  discriminator: string;
+  userId: string;
+  description?: string | null;
+  environment: string;
+  application: string;
+  affiliation: string;
+}

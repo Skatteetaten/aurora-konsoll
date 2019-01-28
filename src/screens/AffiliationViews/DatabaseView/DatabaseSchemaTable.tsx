@@ -12,6 +12,7 @@ import {
 
 import {
   IDatabaseSchema,
+  IDatabaseSchemaInput,
   IDatabaseSchemas,
   IDatabaseSchemaView
 } from 'models/schemas';
@@ -24,8 +25,11 @@ import DatabaseSchemaDialog from './DatabaseSchemaDialog';
 
 export interface ISchemaProps {
   onFetch: (affiliations: string[]) => void;
+  onUpdate: (databaseSchema: IDatabaseSchemaInput) => void;
   items: IDatabaseSchemas;
-  isLoading: boolean;
+  isFetching: boolean;
+  isUpdating: boolean;
+  updateResponse: boolean;
   affiliation: string;
   className?: string;
 }
@@ -143,7 +147,7 @@ export class Schema extends React.Component<ISchemaProps, ISchemaState> {
   };
 
   public render() {
-    const { isLoading, className } = this.props;
+    const { isFetching, className } = this.props;
     const {
       viewItems,
       selectedColumnIndex,
@@ -152,7 +156,7 @@ export class Schema extends React.Component<ISchemaProps, ISchemaState> {
       selectedSchema
     } = this.state;
 
-    if (isLoading) {
+    if (isFetching) {
       return <Spinner />;
     }
     const filteredItems = viewItems.filter(filterDatabaseSchemaView(filter));

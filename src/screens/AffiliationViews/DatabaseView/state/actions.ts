@@ -6,15 +6,23 @@ import { IAuroraApiComponentProps } from 'components/AuroraApi';
 
 import { RootAction, RootState } from 'store/types';
 
-import { IDatabaseSchemas } from 'models/schemas';
+import { IDatabaseSchemaInput, IDatabaseSchemas } from 'models/schemas';
 
 export const FETCHED_SCHEMA_REQUEST = 'database/FETCHED_SCHEMA_REQUEST';
 export const FETCHED_SCHEMA_SUCCESS = 'database/FETCHED_SCHEMA_SUCCESS';
 
-export const fetchSchemaRequest = (isLoading: boolean) =>
-  action(FETCHED_SCHEMA_REQUEST, { isLoading });
-export const fetchSchemaSuccess = (response: IDatabaseSchemas) =>
-  action(FETCHED_SCHEMA_SUCCESS, { response });
+export const UPDATE_SCHEMA_REQUEST = 'database/UPDATE_SCHEMA_REQUEST';
+export const UPDATE_SCHEMA_SUCCESS = 'database/UPDATE_SCHEMA_SUCCESS';
+
+export const fetchSchemaRequest = (isFetchingSchemas: boolean) =>
+  action(FETCHED_SCHEMA_REQUEST, { isFetchingSchemas });
+export const fetchSchemaSuccess = (databaseSchemas: IDatabaseSchemas) =>
+  action(FETCHED_SCHEMA_SUCCESS, { databaseSchemas });
+
+export const updateSchemaRequest = (isUpdatingSchema: boolean) =>
+  action(UPDATE_SCHEMA_REQUEST, { isUpdatingSchema });
+export const updateSchemaSuccess = (updateSchemaResponse: boolean) =>
+  action(UPDATE_SCHEMA_SUCCESS, { updateSchemaResponse });
 
 export type Thunk = ActionCreator<
   ThunkAction<void, RootState, IAuroraApiComponentProps, RootAction>
@@ -31,4 +39,18 @@ export const fetchSchemas: Thunk = (affiliations: string[]) => async (
   dispatch(fetchSchemaSuccess(result));
 };
 
-export default { fetchSchemaRequest, fetchSchemaSuccess };
+export const updateSchema: Thunk = (
+  databaseSchema: IDatabaseSchemaInput
+) => async (dispatch, getState, { clients }) => {
+  dispatch(updateSchemaRequest(true));
+  const result = await clients.databaseClient.updateSchema(databaseSchema);
+  dispatch(updateSchemaRequest(false));
+  dispatch(updateSchemaSuccess(result));
+};
+
+export default {
+  fetchSchemaRequest,
+  fetchSchemaSuccess,
+  updateSchemaRequest,
+  updateSchemaSuccess
+};
