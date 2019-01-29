@@ -46,6 +46,7 @@ export const updateSchema: Thunk = (
   const result = await clients.databaseClient.updateSchema(databaseSchema);
   dispatch(updateSchemaRequest(false));
   dispatch(updateSchemaSuccess(result));
+  dispatch(fetchSchemas(databaseSchema.affiliation));
 };
 
 export default {

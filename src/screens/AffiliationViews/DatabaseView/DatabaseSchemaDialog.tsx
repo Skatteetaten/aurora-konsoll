@@ -68,56 +68,11 @@ class DatabaseSchemaDialog extends React.Component<
     clearSelectedSchema();
   };
 
-  public handleEnvironmentValue = (environment: string) => {
+  public handleLabelChange = (field: string) => (value: string) => {
     this.setState(state => ({
       updatedSchemaValues: {
         ...state.updatedSchemaValues,
-        environment
-      }
-    }));
-  };
-
-  public handleApplicationValue = (application: string) => {
-    this.setState(state => ({
-      updatedSchemaValues: {
-        ...state.updatedSchemaValues,
-        application
-      }
-    }));
-  };
-
-  public handleIdValue = (id: string) => {
-    this.setState(state => ({
-      updatedSchemaValues: {
-        ...state.updatedSchemaValues,
-        id
-      }
-    }));
-  };
-
-  public handleDiscriminatorValue = (discriminator: string) => {
-    this.setState(state => ({
-      updatedSchemaValues: {
-        ...state.updatedSchemaValues,
-        discriminator
-      }
-    }));
-  };
-
-  public handleUserIdValue = (createdBy: string) => {
-    this.setState(state => ({
-      updatedSchemaValues: {
-        ...state.updatedSchemaValues,
-        createdBy
-      }
-    }));
-  };
-
-  public handleDescriptionValue = (description: string) => {
-    this.setState(state => ({
-      updatedSchemaValues: {
-        ...state.updatedSchemaValues,
-        description
+        [field]: value
       }
     }));
   };
@@ -142,10 +97,19 @@ class DatabaseSchemaDialog extends React.Component<
 
   public render() {
     const { schema, className } = this.props;
-
+    const { updatedSchemaValues } = this.state;
     if (!schema) {
       return <div />;
     }
+    const dateOptions = {
+      minute: '2-digit',
+      hour: '2-digit',
+      day: '2-digit',
+      month: '2-digit',
+      year: 'numeric'
+    };
+    const dateTimeformat = (date?: Date | null) =>
+      date ? new Date(date).toLocaleDateString('nb-NO', dateOptions) : '';
 
     const user = schema.users[0];
     return (
@@ -160,19 +124,18 @@ class DatabaseSchemaDialog extends React.Component<
             <Grid.Row>
               <Grid.Col lg={2} className="styled-labels">
                 <p>Id: </p>
-                <p>Opprettet av: </p>
+                <p>Type: </p>
                 <p>Sist brukt: </p>
                 <p>Opprettet: </p>
-                <p>Type: </p>
               </Grid.Col>
               <Grid.Col lg={10}>
                 <p>{schema.id}</p>
-                <p>{schema.createdBy}</p>
-                <p>{schema.lastUsedDate}</p>
-                <p>{schema.createdDate}</p>
                 <p>{schema.type}</p>
+                <p>{dateTimeformat(schema.lastUsedDate)}</p>
+                <p>{dateTimeformat(schema.createdDate)}</p>
               </Grid.Col>
             </Grid.Row>
+            <hr />
             <Grid.Row>
               <Grid.Col lg={6}>
                 <h3>Tilkoblingsinformasjon</h3>
@@ -180,56 +143,61 @@ class DatabaseSchemaDialog extends React.Component<
                   id={'username'}
                   label={'Brukernavn'}
                   value={user.username}
-                  readonly={true}
+                  disabled={true}
                 />
                 <TextField
                   id={'jdbcUrl'}
-                  label={'jdbcUrl'}
+                  label={'JDBC url'}
                   value={schema.jdbcUrl}
-                  readonly={true}
+                  disabled={true}
                 />
-                <Button buttonType="primary">TEST JDBC TILKOBLING</Button>
+                <div className="styled-jdbc">
+                  <Button buttonType="primary" style={{ width: '100%' }}>
+                    TEST JDBC TILKOBLING
+                  </Button>
+                </div>
                 <p>Gyldig JDBC tilkobling: </p>
               </Grid.Col>
-              <Grid.Col lg={6}>
+              <Grid.Col lg={1} />
+              <Grid.Col lg={5}>
                 <h3>Labels</h3>
                 <TextField
                   id={'environment'}
                   label={'Miljø'}
-                  value={schema.environment}
-                  onChanged={this.handleEnvironmentValue}
+                  value={updatedSchemaValues.environment}
+                  onChanged={this.handleLabelChange('environment')}
                 />
                 <TextField
                   id={'application'}
                   label={'Applikasjon'}
-                  value={schema.application}
-                  onChanged={this.handleApplicationValue}
+                  value={updatedSchemaValues.application}
+                  onChanged={this.handleLabelChange('application')}
                 />
                 <TextField
                   id={'discriminator'}
                   label={'Diskriminator'}
-                  value={schema.discriminator}
-                  onChanged={this.handleDiscriminatorValue}
+                  value={updatedSchemaValues.discriminator}
+                  onChanged={this.handleLabelChange('discriminator')}
                 />
                 <TextField
-                  id={'userId'}
+                  id={'createdBy'}
                   label={'Bruker'}
-                  value={schema.createdBy}
-                  onChanged={this.handleUserIdValue}
+                  value={updatedSchemaValues.createdBy}
+                  onChanged={this.handleLabelChange('createdBy')}
                 />
                 <TextField
                   id={'description'}
                   label={'Beskrivelse'}
-                  value={schema.description}
-                  onChanged={this.handleDescriptionValue}
+                  value={updatedSchemaValues.description}
+                  onChanged={this.handleLabelChange('description')}
                 />
               </Grid.Col>
             </Grid.Row>
           </Grid>
         </div>
         <Dialog.Footer>
-          <ActionButton onClick={this.updateLabels}>Lagre</ActionButton>
-          <ActionButton onClick={this.hideDialog}>Lukk</ActionButton>
+          <ActionButton onClick={this.hideDialog}>Avbryt</ActionButton>
+          <ActionButton onClick={this.updateLabels}>Oppdater</ActionButton>
         </Dialog.Footer>
       </Dialog>
     );
@@ -239,5 +207,11 @@ class DatabaseSchemaDialog extends React.Component<
 export default styled(DatabaseSchemaDialog)`
   .styled-labels {
     font-weight: bold;
+  }
+  .styled-jdbc {
+    padding-top: 10px;
+  }
+  .ms-TextField-wrapper {
+    padding-bottom: 7px;
   }
 `;
