@@ -6,8 +6,11 @@ import Button from 'aurora-frontend-react-komponenter/Button';
 import Dialog from 'aurora-frontend-react-komponenter/Dialog';
 import Grid from 'aurora-frontend-react-komponenter/Grid';
 import TextField from 'aurora-frontend-react-komponenter/TextField';
+import palette from 'aurora-frontend-react-komponenter/utils/palette';
 
 import { IDatabaseSchema, IDatabaseSchemaInput } from 'models/schemas';
+
+const { skeColor } = palette;
 
 export interface IDatabaseSchemaDialogProps {
   schema?: IDatabaseSchema;
@@ -93,6 +96,25 @@ class DatabaseSchemaDialog extends React.Component<
       onUpdate(newValues);
       this.hideDialog();
     }
+  };
+
+  public isUpdateButtonDisabled = () => {
+    const { schema } = this.props;
+    const { updatedSchemaValues } = this.state;
+
+    const isUnchangedValues = schema &&
+    schema.application === updatedSchemaValues.application &&
+    schema.description === updatedSchemaValues.description &&
+    schema.environment === updatedSchemaValues.environment &&
+    schema.discriminator === updatedSchemaValues.discriminator &&
+    schema.createdBy === updatedSchemaValues.createdBy;
+
+    const isEmptyValues = updatedSchemaValues.application === '' ||
+    updatedSchemaValues.environment === '' ||
+    updatedSchemaValues.discriminator === '' ||
+    updatedSchemaValues.createdBy === '';
+
+    return isUnchangedValues || isEmptyValues;
   };
 
   public render() {
@@ -195,10 +217,12 @@ class DatabaseSchemaDialog extends React.Component<
             </Grid.Row>
           </Grid>
         </div>
-        <Dialog.Footer>
-          <ActionButton onClick={this.hideDialog}>Avbryt</ActionButton>
-          <ActionButton onClick={this.updateLabels}>Oppdater</ActionButton>
-        </Dialog.Footer>
+        <div className={className}>
+          <Dialog.Footer>
+            <ActionButton onClick={this.hideDialog}>Avbryt</ActionButton>
+            <ActionButton onClick={this.updateLabels} disabled={this.isUpdateButtonDisabled()}>Oppdater</ActionButton>
+          </Dialog.Footer>
+        </div>
       </Dialog>
     );
   }
@@ -213,5 +237,9 @@ export default styled(DatabaseSchemaDialog)`
   }
   .ms-TextField-wrapper {
     padding-bottom: 7px;
+  }
+
+  .ms-Button.is-disabled {
+    color: ${skeColor.grey};
   }
 `;
