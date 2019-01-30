@@ -1,9 +1,9 @@
 import { IDatabaseSchema, IDatabaseSchemas } from 'models/schemas';
 import {
+  DELETE_SCHEMA_RESPONSE,
   FETCHED_SCHEMA_REQUEST,
-  FETCHED_SCHEMA_SUCCESS,
-  UPDATE_SCHEMA_REQUEST,
-  UPDATE_SCHEMA_SUCCESS
+  FETCHED_SCHEMA_RESPONSE,
+  UPDATE_SCHEMA_RESPONSE
 } from './actions';
 import { databaseReducer as reducer } from './reducers';
 
@@ -14,10 +14,11 @@ const schemaItems: IDatabaseSchema = databaseSchemaFactory.build();
 const items: IDatabaseSchemas = { databaseSchemas: [schemaItems] };
 
 describe('database schema reducer', () => {
+
   it('should return isFetching as false and items as list in response', () => {
     expect(
       reducer(undefined, {
-        type: FETCHED_SCHEMA_SUCCESS,
+        type: FETCHED_SCHEMA_RESPONSE,
         payload: { databaseSchemas: items }
       })
     ).toMatchObject({
@@ -25,6 +26,7 @@ describe('database schema reducer', () => {
       databaseSchemas: items
     });
   });
+
   it('should return isFetching as true and items as empty list', () => {
     expect(
       reducer(undefined, {
@@ -36,26 +38,26 @@ describe('database schema reducer', () => {
       databaseSchemas: emptyItems
     });
   });
-  it('should return isUpdating as true and updateSchemaResponse as false', () => {
+
+  it('should return update schema as true given response', () => {
     expect(
       reducer(undefined, {
-        type: UPDATE_SCHEMA_REQUEST,
-        payload: { isUpdatingSchema: true }
+        type: UPDATE_SCHEMA_RESPONSE,
+        payload: { response: true }
       })
     ).toMatchObject({
-      isUpdatingSchema: true,
-      updateSchemaResponse: false
+      updateSchemaResponse: true
     });
   });
-  it('should return isUpdating as false and updateSchemaResponse as true', () => {
+
+  it('should return delete schema as true given response', () => {
     expect(
       reducer(undefined, {
-        type: UPDATE_SCHEMA_SUCCESS,
-        payload: { updateSchemaResponse: true }
+        type: DELETE_SCHEMA_RESPONSE,
+        payload: { response: true }
       })
     ).toMatchObject({
-      isUpdatingSchema: false,
-      updateSchemaResponse: true
+      deleteSchemaResponse: true
     });
   });
 });

@@ -5,7 +5,7 @@ import {
   IDatabaseSchemas
 } from 'models/schemas';
 import { errorStateManager } from 'models/StateManager/ErrorStateManager';
-import { UPDATE_DATABASESCHEMA_MUTATION } from './mutation';
+import { DELETE_DATABASESCHEMA_MUTATION, UPDATE_DATABASESCHEMA_MUTATION } from './mutation';
 import { DATABASE_SCHEMAS_QUERY, IDatabaseSchemasQuery } from './query.ts';
 
 export class DatabaseClient {
@@ -41,6 +41,25 @@ export class DatabaseClient {
 
     if (result && result.data) {
       return result.data.updateDatabaseSchema;
+    }
+
+    return false;
+  }
+
+  public async deleteSchema(id: string) {
+    const result = await this.client.mutate<{
+      deleteDatabaseSchema: boolean;
+    }>({
+      mutation: DELETE_DATABASESCHEMA_MUTATION,
+      variables: {
+        input: {
+          id
+        }
+      }
+    });
+
+    if (result && result.data) {
+      return result.data.deleteDatabaseSchema;
     }
 
     return false;

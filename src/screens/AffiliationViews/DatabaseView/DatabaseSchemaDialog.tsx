@@ -8,6 +8,7 @@ import Grid from 'aurora-frontend-react-komponenter/Grid';
 import TextField from 'aurora-frontend-react-komponenter/TextField';
 import palette from 'aurora-frontend-react-komponenter/utils/palette';
 
+import ConfirmationDialog from 'components/ConfirmationDialog';
 import {
   IDatabaseSchema,
   IDatabaseSchemaInputWithUserId
@@ -21,6 +22,7 @@ export interface IDatabaseSchemaDialogProps {
   className?: string;
   clearSelectedSchema: () => void;
   onUpdate: (databaseSchema: IDatabaseSchemaInputWithUserId) => void;
+  onDelete: (databaseSchema: IDatabaseSchema) => void;
   databaseSchemaService: DatabaseSchemaService;
 }
 
@@ -61,7 +63,7 @@ class DatabaseSchemaDialog extends React.Component<
             id: schema.id,
             discriminator: schema.discriminator,
             createdBy: schema.createdBy,
-            description: schema.description ? schema.description : null,
+            description: schema.description ? schema.description : '',
             environment: schema.environment,
             application: schema.application,
             affiliation: schema.affiliation.name
@@ -101,6 +103,50 @@ class DatabaseSchemaDialog extends React.Component<
       onUpdate(newValues);
       this.hideDialog();
     }
+  };
+
+  public renderConfirmationOpenButton = (open: () => void) => (
+    <ActionButton
+      onClick={open}
+      iconSize={ActionButton.LARGE}
+      icon="Delete"
+      color="black"
+      style={{ float: 'left' }}
+    >
+      Slett
+    </ActionButton>
+  );
+
+  public renderConfirmationFooterButtons = (close: () => void) => {
+    const { schema, onDelete } = this.props;
+    const deleteSchema = () => {
+      if (schema) {
+        onDelete(schema);
+        close();
+        this.hideDialog();
+      }
+    };
+
+    return (
+      <>
+        <ActionButton
+          onClick={close}
+          iconSize={ActionButton.LARGE}
+          icon="Cancel"
+          color="black"
+        >
+          Nei
+        </ActionButton>
+        <ActionButton
+          onClick={deleteSchema}
+          iconSize={ActionButton.LARGE}
+          icon="Check"
+          color="black"
+        >
+          Ja
+        </ActionButton>
+      </>
+    );
   };
 
   public render() {
@@ -205,6 +251,14 @@ class DatabaseSchemaDialog extends React.Component<
         </div>
         <div className={className}>
           <Dialog.Footer>
+            <ConfirmationDialog
+              title="Slett databaseskjema"
+              text={`Ønsker du å slette databaseskjemaet til ${
+                updatedSchemaValues.application
+              }?`}
+              renderOpenDialogButton={this.renderConfirmationOpenButton}
+              renderFooterButtons={this.renderConfirmationFooterButtons}
+            />
             <ActionButton onClick={this.hideDialog}>Avbryt</ActionButton>
             <ActionButton
               onClick={this.updateLabels}

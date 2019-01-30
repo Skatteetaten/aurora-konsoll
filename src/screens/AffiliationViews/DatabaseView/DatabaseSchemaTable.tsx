@@ -26,9 +26,9 @@ import DatabaseSchemaDialog from './DatabaseSchemaDialog';
 export interface ISchemaProps {
   onFetch: (affiliations: string[]) => void;
   onUpdate: (databaseSchema: IDatabaseSchemaInputWithUserId) => void;
+  onDelete: (databaseSchema: IDatabaseSchema) => void;
   items: IDatabaseSchemas;
   isFetching: boolean;
-  isUpdating: boolean;
   updateResponse: boolean;
   affiliation: string;
   className?: string;
@@ -151,7 +151,7 @@ export class Schema extends React.Component<ISchemaProps, ISchemaState> {
   };
 
   public render() {
-    const { isFetching, className, onUpdate } = this.props;
+    const { isFetching, className, onUpdate, onDelete } = this.props;
     const {
       viewItems,
       selectedColumnIndex,
@@ -190,6 +190,7 @@ export class Schema extends React.Component<ISchemaProps, ISchemaState> {
           schema={selectedSchema}
           clearSelectedSchema={this.clearSelectedSchema}
           onUpdate={onUpdate}
+          onDelete={onDelete}
           databaseSchemaService={this.databaseSchemaService}
         />
       </div>

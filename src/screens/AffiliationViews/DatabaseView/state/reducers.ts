@@ -1,10 +1,10 @@
 import { combineReducers } from 'redux';
 import { ActionType } from 'typesafe-actions';
 import actions, {
+  DELETE_SCHEMA_RESPONSE,
   FETCHED_SCHEMA_REQUEST,
-  FETCHED_SCHEMA_SUCCESS,
-  UPDATE_SCHEMA_REQUEST,
-  UPDATE_SCHEMA_SUCCESS
+  FETCHED_SCHEMA_RESPONSE,
+  UPDATE_SCHEMA_RESPONSE
 } from './actions';
 
 import { IDatabaseSchemas } from 'models/schemas';
@@ -13,9 +13,9 @@ export type DatabaseSchemasAction = ActionType<typeof actions>;
 
 export interface ISchemasState {
   readonly isFetchingSchemas: boolean;
-  readonly isUpdatingSchema: boolean;
   readonly databaseSchemas: IDatabaseSchemas;
   readonly updateSchemaResponse: boolean;
+  readonly deleteSchemaResponse: boolean;
 }
 
 export const databaseReducer = combineReducers<
@@ -32,24 +32,24 @@ export const databaseReducer = combineReducers<
   },
   databaseSchemas: (state = { databaseSchemas: [] }, action) => {
     switch (action.type) {
-      case FETCHED_SCHEMA_SUCCESS:
+      case FETCHED_SCHEMA_RESPONSE:
         return action.payload.databaseSchemas;
-      default:
-        return state;
-    }
-  },
-  isUpdatingSchema: (state = false, action) => {
-    switch (action.type) {
-      case UPDATE_SCHEMA_REQUEST:
-        return action.payload.isUpdatingSchema;
       default:
         return state;
     }
   },
   updateSchemaResponse: (state = false, action) => {
     switch (action.type) {
-      case UPDATE_SCHEMA_SUCCESS:
-        return action.payload.updateSchemaResponse;
+      case UPDATE_SCHEMA_RESPONSE:
+        return action.payload.response;
+      default:
+        return state;
+    }
+  },
+  deleteSchemaResponse: (state = false, action) => {
+    switch (action.type) {
+      case DELETE_SCHEMA_RESPONSE:
+        return action.payload.response;
       default:
         return state;
     }
