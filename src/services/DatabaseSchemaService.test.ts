@@ -1,4 +1,4 @@
-import { databaseSchemaViewFactory } from 'testData/testDataBuilders';
+import { databaseSchemaFactory, databaseSchemaInputWithCreatedByFactory, databaseSchemaViewFactory } from 'testData/testDataBuilders';
 import DatabaseSchemaService, {
   defaultColumns,
   filterDatabaseSchemaView,
@@ -24,6 +24,7 @@ describe('DatabaseSchemaService', () => {
       expect(cols[0].iconName).toEqual('Down');
     });
   });
+
   describe('sort items', () => {
     it('sort createdBy column descending', () => {
       const viewItem1 = databaseSchemaViewFactory.build({ createdBy: 'a' });
@@ -118,6 +119,39 @@ describe('DatabaseSchemaService', () => {
 
       expect(filteredItems.length).toEqual(1);
       expect(filteredItems[0].createdBy).toEqual('my-super-duper-user');
+    });
+  });
+
+  describe('Is update button disabled', () => {
+    const databaseSchema = databaseSchemaFactory.build();
+    
+    it('Button is disabled given unchanged and non-empty values', () => {
+      const updatedDatabaseSchema = databaseSchemaInputWithCreatedByFactory.build();
+
+      const isDisabled = databaseSchemaService.isUpdateButtonDisabled(updatedDatabaseSchema, databaseSchema);
+      expect(isDisabled).toBeTruthy();
+    });
+
+    it('Button is enabled given changed value', () => {
+      const updatedDatabaseSchema = databaseSchemaInputWithCreatedByFactory.build({ application: 'referanse' });
+
+      const isDisabled = databaseSchemaService.isUpdateButtonDisabled(updatedDatabaseSchema, databaseSchema);
+      expect(isDisabled).toBeFalsy();
+    });
+
+    it('Button is disabled given empty value', () => {
+      const updatedDatabaseSchema = databaseSchemaInputWithCreatedByFactory.build({ environment: '' });
+
+      const isDisabled = databaseSchemaService.isUpdateButtonDisabled(updatedDatabaseSchema, databaseSchema);
+      expect(isDisabled).toBeTruthy();
+    });
+
+    it('Button is enabled given null description and empty input', () => {
+      const databaseSchemaWithNullDescription = databaseSchemaFactory.build({ description: null});
+      const updatedDatabaseSchema = databaseSchemaInputWithCreatedByFactory.build({ description: '' });
+
+      const isDisabled = databaseSchemaService.isUpdateButtonDisabled(updatedDatabaseSchema, databaseSchemaWithNullDescription);
+      expect(isDisabled).toBeFalsy();
     });
   });
 });
