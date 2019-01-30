@@ -60,6 +60,7 @@ interface IApplicationDeployment {
     deployTag: IImageTag;
     releaseTo?: string;
   };
+  message?: string;
   time: string;
 }
 
@@ -106,6 +107,7 @@ export const APPLICATIONS_QUERY = gql`
               releaseTo
             }
             time
+            message
           }
         }
       }

@@ -6,6 +6,7 @@ Array [
     "affiliation": "aurora",
     "environment": "aurora",
     "id": "q8u9fpw8f",
+    "message": "hello",
     "name": "console-next",
     "permission": Object {
       "paas": Object {
@@ -41,3 +42,5 @@ Object {
   "user": "Batman",
 }
 `;
+
+exports[`redeployWithCurrentVersion should redeploy with current version to GraphQL server 1`] = `true`;

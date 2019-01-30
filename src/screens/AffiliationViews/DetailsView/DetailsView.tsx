@@ -96,6 +96,9 @@ class DetailsView extends React.Component<
                 handleSelectStrategy={this.controller.handleSelectStrategy}
                 handleVersionSearch={this.controller.handleVersionSearch}
                 redeployWithVersion={this.controller.redeployWithVersion}
+                redeployWithCurrentVersion={
+                  this.controller.redeployWithCurrentVersion
+                }
               />
             </Route>
           </Switch>
