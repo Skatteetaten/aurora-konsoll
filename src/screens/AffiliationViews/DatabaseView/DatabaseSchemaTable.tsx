@@ -107,6 +107,7 @@ export class Schema extends React.Component<ISchemaProps, ISchemaState> {
     ) {
       onFetch([affiliation]);
       this.setState({
+        filter: '',
         columnSortDirections: defaultSortDirections,
         selectedColumnIndex: -1
       });
@@ -144,7 +145,8 @@ export class Schema extends React.Component<ISchemaProps, ISchemaState> {
       viewItems = [];
     }
     this.setState({
-      viewItems
+      viewItems,
+      filter: ''
     });
   };
 
