@@ -40,9 +40,17 @@ export interface IDatabaseSchemaView {
 export interface IDatabaseSchemaInput {
   id: string;
   discriminator: string;
-  userId: string;
   description?: string | null;
   environment: string;
   application: string;
   affiliation: string;
+}
+
+export interface IDatabaseSchemaInputWithUserId extends IDatabaseSchemaInput {
+  userId: string;
+}
+
+export interface IDatabaseSchemaInputWithCreatedBy
+  extends IDatabaseSchemaInput {
+  createdBy: string;
 }

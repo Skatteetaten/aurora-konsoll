@@ -1,6 +1,9 @@
 import GoboClient from 'services/GoboClient';
 
-import { IDatabaseSchemaInput, IDatabaseSchemas } from 'models/schemas';
+import {
+  IDatabaseSchemaInputWithUserId,
+  IDatabaseSchemas
+} from 'models/schemas';
 import { errorStateManager } from 'models/StateManager/ErrorStateManager';
 import { UPDATE_DATABASESCHEMA_MUTATION } from './mutation';
 import { DATABASE_SCHEMAS_QUERY, IDatabaseSchemasQuery } from './query.ts';
@@ -26,7 +29,7 @@ export class DatabaseClient {
     return { databaseSchemas: [] };
   }
 
-  public async updateSchema(databaseSchema: IDatabaseSchemaInput) {
+  public async updateSchema(databaseSchema: IDatabaseSchemaInputWithUserId) {
     const result = await this.client.mutate<{
       updateDatabaseSchema: boolean;
     }>({

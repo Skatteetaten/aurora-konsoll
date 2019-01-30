@@ -1,4 +1,8 @@
-import { IDatabaseSchemaView } from 'models/schemas';
+import {
+  IDatabaseSchema,
+  IDatabaseSchemaInputWithCreatedBy,
+  IDatabaseSchemaView
+} from 'models/schemas';
 
 export enum SortDirection {
   ASC,
@@ -121,6 +125,29 @@ export default class DatabaseSchemaService {
       }
     }
     return columns;
+  }
+
+  public isUpdateButtonDisabled(
+    updatedSchemaValues: IDatabaseSchemaInputWithCreatedBy,
+    schema?: IDatabaseSchema
+  ) {
+    const isUnchangedValues =
+      schema &&
+      schema.application === updatedSchemaValues.application &&
+      (schema.description === updatedSchemaValues.description ||
+        (schema.description === null &&
+          updatedSchemaValues.description === '')) &&
+      schema.environment === updatedSchemaValues.environment &&
+      schema.discriminator === updatedSchemaValues.discriminator &&
+      schema.createdBy === updatedSchemaValues.createdBy;
+
+    const isEmptyValues =
+      updatedSchemaValues.application === '' ||
+      updatedSchemaValues.environment === '' ||
+      updatedSchemaValues.discriminator === '' ||
+      updatedSchemaValues.createdBy === '';
+
+    return isUnchangedValues || isEmptyValues;
   }
 
   public sortItems(

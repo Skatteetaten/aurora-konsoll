@@ -8,7 +8,11 @@ import Grid from 'aurora-frontend-react-komponenter/Grid';
 import TextField from 'aurora-frontend-react-komponenter/TextField';
 import palette from 'aurora-frontend-react-komponenter/utils/palette';
 
-import { IDatabaseSchema, IDatabaseSchemaInput } from 'models/schemas';
+import {
+  IDatabaseSchema,
+  IDatabaseSchemaInputWithUserId
+} from 'models/schemas';
+import DatabaseSchemaService from 'services/DatabaseSchemaService';
 
 const { skeColor } = palette;
 
@@ -16,7 +20,8 @@ export interface IDatabaseSchemaDialogProps {
   schema?: IDatabaseSchema;
   className?: string;
   clearSelectedSchema: () => void;
-  onUpdate: (databaseSchema: IDatabaseSchemaInput) => void;
+  onUpdate: (databaseSchema: IDatabaseSchemaInputWithUserId) => void;
+  databaseSchemaService: DatabaseSchemaService;
 }
 
 export interface IDatabaseSchemaDialogState {
@@ -56,7 +61,7 @@ class DatabaseSchemaDialog extends React.Component<
             id: schema.id,
             discriminator: schema.discriminator,
             createdBy: schema.createdBy,
-            description: schema.description ? schema.description : '',
+            description: schema.description ? schema.description : null,
             environment: schema.environment,
             application: schema.application,
             affiliation: schema.affiliation.name
@@ -84,7 +89,7 @@ class DatabaseSchemaDialog extends React.Component<
     const { schema, onUpdate } = this.props;
     const { updatedSchemaValues } = this.state;
     if (schema) {
-      const newValues: IDatabaseSchemaInput = {
+      const newValues: IDatabaseSchemaInputWithUserId = {
         affiliation: schema.affiliation.name,
         application: updatedSchemaValues.application,
         description: updatedSchemaValues.description,
@@ -98,27 +103,8 @@ class DatabaseSchemaDialog extends React.Component<
     }
   };
 
-  public isUpdateButtonDisabled = () => {
-    const { schema } = this.props;
-    const { updatedSchemaValues } = this.state;
-
-    const isUnchangedValues = schema &&
-    schema.application === updatedSchemaValues.application &&
-    schema.description === updatedSchemaValues.description &&
-    schema.environment === updatedSchemaValues.environment &&
-    schema.discriminator === updatedSchemaValues.discriminator &&
-    schema.createdBy === updatedSchemaValues.createdBy;
-
-    const isEmptyValues = updatedSchemaValues.application === '' ||
-    updatedSchemaValues.environment === '' ||
-    updatedSchemaValues.discriminator === '' ||
-    updatedSchemaValues.createdBy === '';
-
-    return isUnchangedValues || isEmptyValues;
-  };
-
   public render() {
-    const { schema, className } = this.props;
+    const { schema, className, databaseSchemaService } = this.props;
     const { updatedSchemaValues } = this.state;
     if (!schema) {
       return <div />;
@@ -130,7 +116,7 @@ class DatabaseSchemaDialog extends React.Component<
       month: '2-digit',
       year: 'numeric'
     };
-    const dateTimeformat = (date?: Date | null) =>
+    const dateTimeFormat = (date?: Date | null) =>
       date ? new Date(date).toLocaleDateString('nb-NO', dateOptions) : '';
 
     const user = schema.users[0];
@@ -153,8 +139,8 @@ class DatabaseSchemaDialog extends React.Component<
               <Grid.Col lg={10}>
                 <p>{schema.id}</p>
                 <p>{schema.type}</p>
-                <p>{dateTimeformat(schema.lastUsedDate)}</p>
-                <p>{dateTimeformat(schema.createdDate)}</p>
+                <p>{dateTimeFormat(schema.lastUsedDate)}</p>
+                <p>{dateTimeFormat(schema.createdDate)}</p>
               </Grid.Col>
             </Grid.Row>
             <hr />
@@ -220,7 +206,15 @@ class DatabaseSchemaDialog extends React.Component<
         <div className={className}>
           <Dialog.Footer>
             <ActionButton onClick={this.hideDialog}>Avbryt</ActionButton>
-            <ActionButton onClick={this.updateLabels} disabled={this.isUpdateButtonDisabled()}>Oppdater</ActionButton>
+            <ActionButton
+              onClick={this.updateLabels}
+              disabled={databaseSchemaService.isUpdateButtonDisabled(
+                updatedSchemaValues,
+                schema
+              )}
+            >
+              Oppdater
+            </ActionButton>
           </Dialog.Footer>
         </div>
       </Dialog>
@@ -236,7 +230,7 @@ export default styled(DatabaseSchemaDialog)`
     padding-top: 10px;
   }
   .ms-TextField-wrapper {
-    padding-bottom: 7px;
+    padding-bottom: 10px;
   }
 
   .ms-Button.is-disabled {

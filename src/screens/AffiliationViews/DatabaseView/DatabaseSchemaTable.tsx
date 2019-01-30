@@ -12,7 +12,7 @@ import {
 
 import {
   IDatabaseSchema,
-  IDatabaseSchemaInput,
+  IDatabaseSchemaInputWithUserId,
   IDatabaseSchemas,
   IDatabaseSchemaView
 } from 'models/schemas';
@@ -25,7 +25,7 @@ import DatabaseSchemaDialog from './DatabaseSchemaDialog';
 
 export interface ISchemaProps {
   onFetch: (affiliations: string[]) => void;
-  onUpdate: (databaseSchema: IDatabaseSchemaInput) => void;
+  onUpdate: (databaseSchema: IDatabaseSchemaInputWithUserId) => void;
   items: IDatabaseSchemas;
   isFetching: boolean;
   isUpdating: boolean;
@@ -188,6 +188,7 @@ export class Schema extends React.Component<ISchemaProps, ISchemaState> {
           schema={selectedSchema}
           clearSelectedSchema={this.clearSelectedSchema}
           onUpdate={onUpdate}
+          databaseSchemaService={this.databaseSchemaService}
         />
       </div>
     );

@@ -1,7 +1,7 @@
 import { connect } from 'react-redux';
 import Schema from './DatabaseSchemaTable';
 
-import { IDatabaseSchemaInput } from 'models/schemas';
+import { IDatabaseSchemaInputWithUserId } from 'models/schemas';
 import { RootState } from 'store/types';
 import { fetchSchemas, updateSchema } from './state/actions';
 import { ISchemasState } from './state/reducers';
@@ -22,7 +22,7 @@ export const SchemaConnected = connect(
   mapStateToProps,
   {
     onFetch: (affiliations: string[]) => fetchSchemas(affiliations),
-    onUpdate: (databaseSchema: IDatabaseSchemaInput) =>
+    onUpdate: (databaseSchema: IDatabaseSchemaInputWithUserId) =>
       updateSchema(databaseSchema)
   }
 )(Schema);

@@ -6,7 +6,10 @@ import { IAuroraApiComponentProps } from 'components/AuroraApi';
 
 import { RootAction, RootState } from 'store/types';
 
-import { IDatabaseSchemaInput, IDatabaseSchemas } from 'models/schemas';
+import {
+  IDatabaseSchemaInputWithUserId,
+  IDatabaseSchemas
+} from 'models/schemas';
 
 export const FETCHED_SCHEMA_REQUEST = 'database/FETCHED_SCHEMA_REQUEST';
 export const FETCHED_SCHEMA_SUCCESS = 'database/FETCHED_SCHEMA_SUCCESS';
@@ -40,7 +43,7 @@ export const fetchSchemas: Thunk = (affiliations: string[]) => async (
 };
 
 export const updateSchema: Thunk = (
-  databaseSchema: IDatabaseSchemaInput
+  databaseSchema: IDatabaseSchemaInputWithUserId
 ) => async (dispatch, getState, { clients }) => {
   dispatch(updateSchemaRequest(true));
   const result = await clients.databaseClient.updateSchema(databaseSchema);
