@@ -244,6 +244,7 @@ class DatabaseSchemaDialog extends React.Component<
                   label={'Beskrivelse'}
                   value={updatedSchemaValues.description}
                   onChanged={this.handleLabelChange('description')}
+                  multiline={true}
                 />
               </Grid.Col>
             </Grid.Row>
