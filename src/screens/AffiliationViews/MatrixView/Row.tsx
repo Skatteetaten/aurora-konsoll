@@ -11,9 +11,16 @@ interface IRowProps {
   environments: string[];
   apps: IApplicationMap;
   linkBuilder: (deployment: IApplicationDeployment) => React.ComponentType;
+  showExactVersion: boolean;
 }
 
-const Row = ({ name, environments, apps, linkBuilder }: IRowProps) => {
+const Row = ({
+  name,
+  environments,
+  apps,
+  linkBuilder,
+  showExactVersion
+}: IRowProps) => {
   const cells = environments.map((environment, index) => {
     const key = `${environment}::${name}`;
 
@@ -37,14 +44,29 @@ const Row = ({ name, environments, apps, linkBuilder }: IRowProps) => {
     const releaseToHint = deployment.version.releaseTo ? '*' : '';
 
     const Link = linkBuilder(deployment);
+    const version =
+      (showExactVersion && getExactVersion(deployment.version.auroraVersion)) ||
+      deployment.version.deployTag.name;
     return (
       <Status key={key} code={deployment.status.code} title={tooltip}>
-        <Link>{`${releaseToHint}${deployment.version.deployTag.name}`}</Link>
+        <Link>{`${releaseToHint}${version}`}</Link>
       </Status>
     );
   });
 
   return <tr>{cells}</tr>;
 };
+
+function getExactVersion(auroraVersion?: string): string | undefined {
+  if (typeof auroraVersion === 'undefined') {
+    return;
+  }
+
+  const shortVersion = auroraVersion.split(/(^(\d+\.)(\d+\.)(\*|\d+))/);
+  if (shortVersion.length > 1) {
+    return shortVersion[1];
+  }
+  return;
+}
 
 export default Row;

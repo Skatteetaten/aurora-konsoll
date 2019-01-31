@@ -1,6 +1,8 @@
 import * as React from 'react';
 import styled from 'styled-components';
 
+import Checkbox from 'aurora-frontend-react-komponenter/Checkbox';
+
 import LoadingButton from 'components/LoadingButton';
 import TimeSince from 'components/TimeSince';
 
@@ -24,6 +26,8 @@ interface IMatrixViewProps {
   filters: IFilter;
   allFilters: IApplicationDeploymentFilters[];
   deleteFilter: (filterName: string) => void;
+  showExactVersion: boolean;
+  toggleShowExactVersion: () => void;
 }
 
 const MatrixView = ({
@@ -36,7 +40,9 @@ const MatrixView = ({
   allDeployments,
   filters,
   allFilters,
-  deleteFilter
+  deleteFilter,
+  showExactVersion,
+  toggleShowExactVersion
 }: IMatrixViewProps) => (
   <div className={className}>
     <ActionBar>
@@ -50,6 +56,12 @@ const MatrixView = ({
           allFilters={allFilters}
         />
       </StyledFilter>
+      <Checkbox
+        boxSide={'start'}
+        label="Vis eksakt versjon"
+        checked={showExactVersion}
+        onChange={toggleShowExactVersion}
+      />
       <StyledUpdate>
         <TimeSince timeSince={time} />
         <LoadingButton
@@ -61,7 +73,7 @@ const MatrixView = ({
         </LoadingButton>
       </StyledUpdate>
     </ActionBar>
-    <Matrix />
+    <Matrix showExactVersion={showExactVersion} />
   </div>
 );
 
