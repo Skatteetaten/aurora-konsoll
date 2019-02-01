@@ -9,7 +9,8 @@ import { RootAction, RootState } from 'store/types';
 import {
   IDatabaseSchema,
   IDatabaseSchemaInputWithUserId,
-  IDatabaseSchemas
+  IDatabaseSchemas,
+  IJdbcUser
 } from 'models/schemas';
 
 export const FETCHED_SCHEMA_REQUEST = 'database/FETCHED_SCHEMA_REQUEST';
@@ -17,7 +18,12 @@ export const FETCHED_SCHEMA_RESPONSE = 'database/FETCHED_SCHEMA_RESPONSE';
 
 export const UPDATE_SCHEMA_RESPONSE = 'database/UPDATE_SCHEMA_RESPONSE';
 
-export const DELETE_SCHEMA_RESPONSE = 'database/UPDATE_SCHEMA_RESPONSE';
+export const DELETE_SCHEMA_RESPONSE = 'database/DELETE_SCHEMA_RESPONSE';
+
+export const TEST_JDBC_CONNECTION_FOR_ID_RESPONSE =
+  'database/TEST_JDBC_CONNECTION_FOR_ID_RESPONSE';
+export const TEST_JDBC_CONNECTION_FOR_JDBCUSER_RESPONSE =
+  'database/TEST_JDBC_CONNECTION_FOR_JDBCUSER_RESPONSE';
 
 export const fetchSchemaRequest = (isFetchingSchemas: boolean) =>
   action(FETCHED_SCHEMA_REQUEST, { isFetchingSchemas });
@@ -29,6 +35,11 @@ export const updateSchemaResponse = (response: boolean) =>
 
 export const deleteSchemaResponse = (response: boolean) =>
   action(DELETE_SCHEMA_RESPONSE, { response });
+
+export const testJdbcConnectionForIdResponse = (response: boolean) =>
+  action(TEST_JDBC_CONNECTION_FOR_ID_RESPONSE, { response });
+export const testJdbcConnectionForJdbcUserResponse = (response: boolean) =>
+  action(TEST_JDBC_CONNECTION_FOR_JDBCUSER_RESPONSE, { response });
 
 export type Thunk = ActionCreator<
   ThunkAction<void, RootState, IAuroraApiComponentProps, RootAction>
@@ -53,16 +64,39 @@ export const updateSchema: Thunk = (
   dispatch(fetchSchemas([databaseSchema.affiliation]));
 };
 
-export const deleteSchema: Thunk = (
-  databaseSchema: IDatabaseSchema
-) => async (dispatch, getState, { clients }) => {
+export const deleteSchema: Thunk = (databaseSchema: IDatabaseSchema) => async (
+  dispatch,
+  getState,
+  { clients }
+) => {
   const result = await clients.databaseClient.deleteSchema(databaseSchema.id);
   dispatch(deleteSchemaResponse(result));
   dispatch(fetchSchemas([databaseSchema.affiliation.name]));
-}
+};
+
+export const testJdbcConnectionForId: Thunk = (id: string) => async (
+  dispatch,
+  getState,
+  { clients }
+) => {
+  const result = await clients.databaseClient.testJdbcConnectionForId(id);
+  dispatch(testJdbcConnectionForIdResponse(result));
+};
+
+export const testJdbcConnectionForJdbcUser: Thunk = (
+  jdbcUser: IJdbcUser
+) => async (dispatch, getState, { clients }) => {
+  const result = await clients.databaseClient.testJdbcConnectionForJdbcUser(
+    jdbcUser
+  );
+  dispatch(testJdbcConnectionForJdbcUserResponse(result));
+};
 
 export default {
   fetchSchemaRequest,
   fetchSchemaResponse,
-  updateSchemaResponse
+  updateSchemaResponse,
+  deleteSchemaResponse,
+  testJdbcConnectionForIdResponse,
+  testJdbcConnectionForJdbcUserResponse
 };

@@ -54,3 +54,9 @@ export interface IDatabaseSchemaInputWithCreatedBy
   extends IDatabaseSchemaInput {
   createdBy: string;
 }
+
+export interface IJdbcUser {
+  username: string;
+  password: string;
+  jdbcUrl: string;
+}

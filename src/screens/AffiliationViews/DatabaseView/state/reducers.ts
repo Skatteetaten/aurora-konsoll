@@ -4,6 +4,8 @@ import actions, {
   DELETE_SCHEMA_RESPONSE,
   FETCHED_SCHEMA_REQUEST,
   FETCHED_SCHEMA_RESPONSE,
+  TEST_JDBC_CONNECTION_FOR_ID_RESPONSE,
+  TEST_JDBC_CONNECTION_FOR_JDBCUSER_RESPONSE,
   UPDATE_SCHEMA_RESPONSE
 } from './actions';
 
@@ -16,6 +18,8 @@ export interface ISchemasState {
   readonly databaseSchemas: IDatabaseSchemas;
   readonly updateSchemaResponse: boolean;
   readonly deleteSchemaResponse: boolean;
+  readonly testJdbcConnectionForIdResponse: boolean;
+  readonly testJdbcConnectionForJdbcUserResponse: boolean;
 }
 
 export const databaseReducer = combineReducers<
@@ -49,6 +53,22 @@ export const databaseReducer = combineReducers<
   deleteSchemaResponse: (state = false, action) => {
     switch (action.type) {
       case DELETE_SCHEMA_RESPONSE:
+        return action.payload.response;
+      default:
+        return state;
+    }
+  },
+  testJdbcConnectionForIdResponse: (state = false, action) => {
+    switch (action.type) {
+      case TEST_JDBC_CONNECTION_FOR_ID_RESPONSE:
+        return action.payload.response;
+      default:
+        return state;
+    }
+  },
+  testJdbcConnectionForJdbcUserResponse: (state = false, action) => {
+    switch (action.type) {
+      case TEST_JDBC_CONNECTION_FOR_JDBCUSER_RESPONSE:
         return action.payload.response;
       default:
         return state;
