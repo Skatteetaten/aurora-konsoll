@@ -14,6 +14,7 @@ import {
   IDatabaseSchemaInputWithUserId
 } from 'models/schemas';
 import DatabaseSchemaService from 'services/DatabaseSchemaService';
+import { getLocalDatetime } from 'utils/date';
 
 const { skeColor } = palette;
 
@@ -155,15 +156,9 @@ class DatabaseSchemaDialog extends React.Component<
     if (!schema) {
       return <div />;
     }
-    const dateOptions = {
-      minute: '2-digit',
-      hour: '2-digit',
-      day: '2-digit',
-      month: '2-digit',
-      year: 'numeric'
-    };
+
     const dateTimeFormat = (date?: Date | null) =>
-      date ? new Date(date).toLocaleDateString('nb-NO', dateOptions) : '';
+      date ? getLocalDatetime(date) : '';
 
     const user = schema.users[0];
     return (

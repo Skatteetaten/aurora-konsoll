@@ -12,6 +12,16 @@ export function getTimestamp(time: string | number | Date): string {
   });
 }
 
+export function getLocalDate(time: string | number | Date): string {
+  return getLocalDatetime(time, {
+    day: '2-digit',
+    hour: undefined,
+    minute: undefined,
+    month: '2-digit',
+    year: 'numeric'
+  });
+}
+
 export function getLocalDatetime(
   date?: string | number | Date,
   override: any = {}

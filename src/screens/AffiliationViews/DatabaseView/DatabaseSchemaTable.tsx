@@ -9,6 +9,7 @@ import {
   IObjectWithKey,
   Selection
 } from 'office-ui-fabric-react/lib/DetailsList';
+import { getLocalDate } from 'utils/date';
 
 import {
   IDatabaseSchema,
@@ -117,24 +118,14 @@ export class Schema extends React.Component<ISchemaProps, ISchemaState> {
     const { items } = this.props;
     let viewItems: IDatabaseSchemaView[];
 
-    const dateOptions = {
-      day: '2-digit',
-      month: '2-digit',
-      year: 'numeric'
-    };
     if (items.databaseSchemas.length > 0) {
       viewItems = items.databaseSchemas.map(i => {
         return {
           id: i.id,
           environment: i.environment,
           application: i.application,
-          createdDate: new Date(i.createdDate).toLocaleDateString(
-            'nb-NO',
-            dateOptions
-          ),
-          lastUsedDate:
-            i.lastUsedDate &&
-            new Date(i.lastUsedDate).toLocaleDateString('nb-NO', dateOptions),
+          createdDate: getLocalDate(i.createdDate),
+          lastUsedDate: i.lastUsedDate && getLocalDate(i.lastUsedDate),
           discriminator: i.discriminator,
           type: i.type,
           sizeInMb: i.sizeInMb,
