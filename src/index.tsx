@@ -36,7 +36,7 @@ async function init() {
   const token = tokenStore.getToken();
   const goboClient = new GoboClient({
     errorHandler: errorStateManager,
-    url: config.GRAPHQL_URL,
+    url: '/api/graphql',
     headers: {
       Authorization: token ? `Bearer ${token}` : ''
     }
