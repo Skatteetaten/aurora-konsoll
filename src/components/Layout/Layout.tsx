@@ -48,6 +48,11 @@ const Layout = ({
       iconName: 'Code',
       name: 'Netdebug',
       to: '/netdebug'
+    },
+    {
+      iconName: 'Save',
+      name: 'Database',
+      to: `/db/${affiliation || '_'}/databaseSchemas`
     }
   ].map(item => ({
     ...item,
