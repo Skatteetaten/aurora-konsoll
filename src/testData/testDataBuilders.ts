@@ -6,7 +6,7 @@ import {
 import { IDeploymentSpec, IMount } from 'models/DeploymentSpec';
 import { ImageTagType } from 'models/ImageTagType';
 import { IPodResource } from 'models/Pod';
-import { IDatabaseSchema, IDatabaseSchemaView } from 'models/schemas';
+import { IDatabaseSchema, IDatabaseSchemaInputWithCreatedBy, IDatabaseSchemaView } from 'models/schemas';
 import { StatusCode } from 'models/Status';
 import { IApplicationDeploymentFilters } from 'models/UserSettings';
 import { IFilter } from 'services/DeploymentFilterService';
@@ -139,6 +139,9 @@ export const filterFactory = Factory.Sync.makeFactory<IFilter>({
 export const databaseSchemaViewFactory = Factory.Sync.makeFactory<
   IDatabaseSchemaView
 >({
+  id: '123',
+  application: 'application',
+  environment: 'environment',
   discriminator: 'db',
   createdBy: '12345',
   createdDate: '01.12.2015',
@@ -149,6 +152,9 @@ export const databaseSchemaViewFactory = Factory.Sync.makeFactory<
 
 export const databaseSchemaFactory = Factory.Sync.makeFactory<IDatabaseSchema>({
   discriminator: 'db',
+  application: 'application',
+  environment: 'environment',
+  description: 'description',
   createdBy: '12345',
   createdDate: new Date(2019, 0, 12),
   lastUsedDate: new Date(2019, 0, 22),
@@ -160,4 +166,14 @@ export const databaseSchemaFactory = Factory.Sync.makeFactory<IDatabaseSchema>({
   jdbcUrl: 'jdbcurl-123',
   name: 'l4342',
   users: []
+});
+
+export const databaseSchemaInputWithCreatedByFactory = Factory.Sync.makeFactory<IDatabaseSchemaInputWithCreatedBy>({
+  id: '1234.1234.1234',
+  discriminator: 'db',
+  description: 'description',
+  application: 'application',
+  environment: 'environment',
+  affiliation: 'paas',
+  createdBy: '12345'
 });

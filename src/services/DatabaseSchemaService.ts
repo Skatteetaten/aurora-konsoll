@@ -1,4 +1,8 @@
-import { IDatabaseSchemaView } from 'models/schemas';
+import {
+  IDatabaseSchema,
+  IDatabaseSchemaInputWithCreatedBy,
+  IDatabaseSchemaView
+} from 'models/schemas';
 
 export enum SortDirection {
   ASC,
@@ -17,9 +21,27 @@ export const defaultColumns = () => [
     iconName: ''
   },
   {
-    fieldName: 'discriminator',
+    fieldName: 'environment',
     isResizable: true,
     key: 1,
+    maxWidth: 200,
+    minWidth: 200,
+    name: 'Miljø',
+    iconName: ''
+  },
+  {
+    fieldName: 'application',
+    isResizable: true,
+    key: 2,
+    maxWidth: 200,
+    minWidth: 200,
+    name: 'Applikasjon',
+    iconName: ''
+  },
+  {
+    fieldName: 'discriminator',
+    isResizable: true,
+    key: 3,
     maxWidth: 200,
     minWidth: 200,
     name: 'Diskriminator',
@@ -28,7 +50,7 @@ export const defaultColumns = () => [
   {
     fieldName: 'createdDate',
     isResizable: true,
-    key: 2,
+    key: 4,
     maxWidth: 120,
     minWidth: 120,
     name: 'Opprettet',
@@ -37,7 +59,7 @@ export const defaultColumns = () => [
   {
     fieldName: 'lastUsedDate',
     isResizable: true,
-    key: 3,
+    key: 5,
     maxWidth: 120,
     minWidth: 120,
     name: 'Sist brukt',
@@ -46,7 +68,7 @@ export const defaultColumns = () => [
   {
     fieldName: 'sizeInMb',
     isResizable: true,
-    key: 4,
+    key: 6,
     maxWidth: 175,
     minWidth: 175,
     name: 'Størrelse (MB)',
@@ -55,7 +77,7 @@ export const defaultColumns = () => [
   {
     fieldName: 'createdBy',
     isResizable: true,
-    key: 5,
+    key: 7,
     maxWidth: 120,
     minWidth: 120,
     name: 'Bruker',
@@ -63,13 +85,15 @@ export const defaultColumns = () => [
   }
 ];
 
-export const defaultSortDirections = new Array<SortDirection>(6).fill(
+export const defaultSortDirections = new Array<SortDirection>(8).fill(
   SortDirection.NONE
 );
 
 export const filterDatabaseSchemaView = (filter: string) => {
   return (v: IDatabaseSchemaView) =>
     v.createdBy.includes(filter) ||
+    v.application.includes(filter) ||
+    v.environment.includes(filter) ||
     v.discriminator.includes(filter) ||
     v.createdDate.includes(filter) ||
     (!v.lastUsedDate || v.lastUsedDate === null
@@ -101,6 +125,29 @@ export default class DatabaseSchemaService {
       }
     }
     return columns;
+  }
+
+  public isUpdateButtonDisabled(
+    updatedSchemaValues: IDatabaseSchemaInputWithCreatedBy,
+    schema?: IDatabaseSchema
+  ) {
+    const isUnchangedValues =
+      schema &&
+      schema.application === updatedSchemaValues.application &&
+      (schema.description === updatedSchemaValues.description ||
+        (schema.description === null &&
+          updatedSchemaValues.description === '')) &&
+      schema.environment === updatedSchemaValues.environment &&
+      schema.discriminator === updatedSchemaValues.discriminator &&
+      schema.createdBy === updatedSchemaValues.createdBy;
+
+    const isEmptyValues =
+      updatedSchemaValues.application === '' ||
+      updatedSchemaValues.environment === '' ||
+      updatedSchemaValues.discriminator === '' ||
+      updatedSchemaValues.createdBy === '';
+
+    return isUnchangedValues || isEmptyValues;
   }
 
   public sortItems(

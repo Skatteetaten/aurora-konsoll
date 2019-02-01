@@ -21,6 +21,7 @@ export interface IApplicationDeployment {
   permission: IPermission;
   repository: string;
   time: string;
+  message?: string;
 }
 
 export interface IApplicationDeploymentStatus {

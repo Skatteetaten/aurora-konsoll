@@ -91,6 +91,18 @@ export default class DetailsViewController {
     });
   };
 
+  public redeployWithCurrentVersion = () => {
+    const { clients, deployment } = this.component.props;
+    this.sm.loading.withLoading(['redeploy'], async () => {
+      const success = await clients.applicationDeploymentClient.redeployWithCurrentVersion(
+        deployment.id
+      );
+      if (success) {
+        this.component.props.fetchApplicationDeployments();
+      }
+    });
+  };
+
   public refreshApplicationDeployment = () => {
     const {
       clients,
@@ -203,7 +215,7 @@ export default class DetailsViewController {
   public canUpgrade = () => {
     const { deployment } = this.component.props;
     const { selectedTag, loading } = this.component.state;
-    if (!selectedTag) {
+    if (!selectedTag || loading.redeploy) {
       return false;
     }
     return (

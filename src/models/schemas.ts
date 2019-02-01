@@ -7,6 +7,9 @@ export interface IDatabaseSchema {
   type: string;
   jdbcUrl: string;
   name: string;
+  application: string;
+  environment: string;
+  description?: string | null;
   discriminator: string;
   affiliation: {
     name: string;
@@ -24,9 +27,30 @@ export interface IDatabaseSchema {
 
 export interface IDatabaseSchemaView {
   type: string;
+  application: string;
+  environment: string;
   discriminator: string;
   createdBy: string;
   createdDate: string;
   lastUsedDate?: string | null;
   sizeInMb: number;
+  id: string;
+}
+
+export interface IDatabaseSchemaInput {
+  id: string;
+  discriminator: string;
+  description?: string | null;
+  environment: string;
+  application: string;
+  affiliation: string;
+}
+
+export interface IDatabaseSchemaInputWithUserId extends IDatabaseSchemaInput {
+  userId: string;
+}
+
+export interface IDatabaseSchemaInputWithCreatedBy
+  extends IDatabaseSchemaInput {
+  createdBy: string;
 }

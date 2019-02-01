@@ -5,18 +5,31 @@ import styled from 'styled-components';
 import DetailsList from 'aurora-frontend-react-komponenter/DetailsList';
 import TextField from 'aurora-frontend-react-komponenter/TextField';
 import Spinner from 'components/Spinner';
+import {
+  IObjectWithKey,
+  Selection
+} from 'office-ui-fabric-react/lib/DetailsList';
 
-import { IDatabaseSchemas, IDatabaseSchemaView } from 'models/schemas';
+import {
+  IDatabaseSchema,
+  IDatabaseSchemaInputWithUserId,
+  IDatabaseSchemas,
+  IDatabaseSchemaView
+} from 'models/schemas';
 import DatabaseSchemaService, {
   defaultSortDirections,
   filterDatabaseSchemaView,
   SortDirection
 } from 'services/DatabaseSchemaService';
+import DatabaseSchemaDialog from './DatabaseSchemaDialog';
 
 export interface ISchemaProps {
   onFetch: (affiliations: string[]) => void;
+  onUpdate: (databaseSchema: IDatabaseSchemaInputWithUserId) => void;
+  onDelete: (databaseSchema: IDatabaseSchema) => void;
   items: IDatabaseSchemas;
-  isLoading: boolean;
+  isFetching: boolean;
+  updateResponse: boolean;
   affiliation: string;
   className?: string;
 }
@@ -26,6 +39,7 @@ interface ISchemaState {
   columnSortDirections: SortDirection[];
   selectedColumnIndex: number;
   filter: string;
+  selectedSchema?: IDatabaseSchema;
 }
 
 export class Schema extends React.Component<ISchemaProps, ISchemaState> {
@@ -33,10 +47,15 @@ export class Schema extends React.Component<ISchemaProps, ISchemaState> {
     viewItems: [],
     columnSortDirections: defaultSortDirections,
     selectedColumnIndex: -1,
-    filter: ''
+    filter: '',
+    selectedSchema: undefined
   };
 
   private databaseSchemaService = new DatabaseSchemaService();
+
+  private selection = new Selection({
+    onSelectionChanged: () => this.onRowClicked()
+  });
 
   public sortByColumn = (
     ev: React.MouseEvent<HTMLElement>,
@@ -88,6 +107,7 @@ export class Schema extends React.Component<ISchemaProps, ISchemaState> {
     ) {
       onFetch([affiliation]);
       this.setState({
+        filter: '',
         columnSortDirections: defaultSortDirections,
         selectedColumnIndex: -1
       });
@@ -105,6 +125,9 @@ export class Schema extends React.Component<ISchemaProps, ISchemaState> {
     if (items.databaseSchemas.length > 0) {
       viewItems = items.databaseSchemas.map(i => {
         return {
+          id: i.id,
+          environment: i.environment,
+          application: i.application,
           createdDate: new Date(i.createdDate).toLocaleDateString(
             'nb-NO',
             dateOptions
@@ -122,22 +145,25 @@ export class Schema extends React.Component<ISchemaProps, ISchemaState> {
       viewItems = [];
     }
     this.setState({
-      viewItems
+      viewItems,
+      filter: ''
     });
   };
 
   public render() {
-    const { isLoading, className } = this.props;
+    const { isFetching, className, onUpdate, onDelete } = this.props;
     const {
       viewItems,
       selectedColumnIndex,
       columnSortDirections,
-      filter
+      filter,
+      selectedSchema
     } = this.state;
 
-    if (isLoading) {
+    if (isFetching) {
       return <Spinner />;
     }
+
     const filteredItems = viewItems.filter(filterDatabaseSchemaView(filter));
 
     return (
@@ -156,8 +182,17 @@ export class Schema extends React.Component<ISchemaProps, ISchemaState> {
             )}
             items={filteredItems}
             onColumnHeaderClick={this.sortByColumn}
+            selection={this.selection}
           />
         </div>
+
+        <DatabaseSchemaDialog
+          schema={selectedSchema}
+          clearSelectedSchema={this.clearSelectedSchema}
+          onUpdate={onUpdate}
+          onDelete={onDelete}
+          databaseSchemaService={this.databaseSchemaService}
+        />
       </div>
     );
   }
@@ -165,6 +200,27 @@ export class Schema extends React.Component<ISchemaProps, ISchemaState> {
   private onFilterChange = (text: string) => {
     this.setState({
       filter: text
+    });
+  };
+
+  private onRowClicked = () => {
+    const { items } = this.props;
+    const selected: IObjectWithKey[] = this.selection.getSelection();
+    let selectedSchema;
+    if (selected.length > 0) {
+      const selectedId = (selected[0] as IDatabaseSchema).id;
+      selectedSchema = items.databaseSchemas.find(
+        (i: IDatabaseSchema) => i.id === selectedId
+      );
+    }
+    this.setState({
+      selectedSchema
+    });
+  };
+  private clearSelectedSchema = () => {
+    this.selection.setAllSelected(false);
+    this.setState({
+      selectedSchema: undefined
     });
   };
 }

@@ -15,6 +15,9 @@ export const DATABASE_SCHEMAS_QUERY = gql`
         name
       }
       name
+      application
+      environment
+      description
       discriminator
       databaseEngine
       applicationDeployment {
