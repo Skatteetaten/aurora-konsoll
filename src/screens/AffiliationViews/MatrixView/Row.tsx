@@ -58,7 +58,7 @@ const Row = ({
 };
 
 function getExactVersion(auroraVersion?: string): string | undefined {
-  if (typeof auroraVersion === 'undefined') {
+  if (!auroraVersion) {
     return;
   }
 
