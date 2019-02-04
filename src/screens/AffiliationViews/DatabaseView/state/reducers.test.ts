@@ -69,7 +69,7 @@ describe('database schema reducer', () => {
         payload: { response: true }
       })
     ).toMatchObject({
-      testJdbcConnectionForIdResponse: true
+      testJdbcConnectionResponse: true
     });
   });
 
@@ -80,7 +80,7 @@ describe('database schema reducer', () => {
         payload: { response: true }
       })
     ).toMatchObject({
-      testJdbcConnectionForJdbcUserResponse: true
+      testJdbcConnectionResponse: true
     });
   });
 });

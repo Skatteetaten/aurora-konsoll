@@ -18,8 +18,7 @@ export interface ISchemasState {
   readonly databaseSchemas: IDatabaseSchemas;
   readonly updateSchemaResponse: boolean;
   readonly deleteSchemaResponse: boolean;
-  readonly testJdbcConnectionForIdResponse: boolean;
-  readonly testJdbcConnectionForJdbcUserResponse: boolean;
+  readonly testJdbcConnectionResponse: boolean;
 }
 
 export const databaseReducer = combineReducers<
@@ -58,16 +57,10 @@ export const databaseReducer = combineReducers<
         return state;
     }
   },
-  testJdbcConnectionForIdResponse: (state = false, action) => {
+  testJdbcConnectionResponse: (state = false, action) => {
     switch (action.type) {
       case TEST_JDBC_CONNECTION_FOR_ID_RESPONSE:
         return action.payload.response;
-      default:
-        return state;
-    }
-  },
-  testJdbcConnectionForJdbcUserResponse: (state = false, action) => {
-    switch (action.type) {
       case TEST_JDBC_CONNECTION_FOR_JDBCUSER_RESPONSE:
         return action.payload.response;
       default:
