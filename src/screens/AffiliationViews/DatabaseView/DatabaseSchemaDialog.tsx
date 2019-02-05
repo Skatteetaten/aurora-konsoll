@@ -252,19 +252,21 @@ class DatabaseSchemaDialog extends React.Component<
                     TEST JDBC TILKOBLING
                   </LoadingButton>
                 </div>
-                <p className="styled-jdbc-status">
+                <p className="styled-jdbc-wrapper">
                   Gyldig JDBC tilkobling:
                   {displayLoadingOrNotStarted() && (
-                    <span className="bold">ikke testet</span>
+                    <span className="bold styled-jdbc-status">ikke testet</span>
                   )}
                   {displaySuccess() && (
                     <Icon
+                      className="styled-jdbc-status"
                       iconName="Check"
                       style={{ color: skeColor.green, fontSize: '30px' }}
                     />
                   )}
                   {displayFailure() && (
                     <Icon
+                      className="styled-jdbc-status"
                       iconName="Clear"
                       style={{
                         color: skeColor.pink,
@@ -344,11 +346,15 @@ export default styled(DatabaseSchemaDialog)`
     font-weight: bold;
   }
 
+  .styled-jdbc-status {
+    margin-left: 7px;
+  }
+
   .styled-jdbc {
     padding-top: 10px;
   }
 
-  .styled-jdbc-status {
+  .styled-jdbc-wrapper {
     display: flex;
     align-items: center;
     height: 30px;
