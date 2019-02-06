@@ -79,7 +79,8 @@ class DatabaseSchemaDialog extends React.Component<
             environment: schema.environment,
             application: schema.application,
             affiliation: schema.affiliation.name
-          }
+          },
+          jdcbTestState: JdcbTestState.NOT_STARTED
         });
       }
     }
