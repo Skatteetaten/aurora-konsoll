@@ -1,5 +1,6 @@
 import { IDatabaseSchema, IDatabaseSchemas } from 'models/schemas';
 import {
+  CREATE_DATABASE_SCHEMA_RESPONSE,
   DELETE_SCHEMA_RESPONSE,
   FETCHED_SCHEMA_REQUEST,
   FETCHED_SCHEMA_RESPONSE,
@@ -81,6 +82,17 @@ describe('database schema reducer', () => {
       })
     ).toMatchObject({
       testJdbcConnectionResponse: true
+    });
+  });
+
+  it('should return create database schema result as true given response', () => {
+    expect(
+      reducer(undefined, {
+        type: CREATE_DATABASE_SCHEMA_RESPONSE,
+        payload: { response: true }
+      })
+    ).toMatchObject({
+      createDatabaseSchemaResponse: true
     });
   });
 });

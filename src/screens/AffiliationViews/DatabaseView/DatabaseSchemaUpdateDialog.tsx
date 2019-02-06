@@ -12,7 +12,7 @@ import ConfirmationDialog from 'components/ConfirmationDialog';
 import LoadingButton from 'components/LoadingButton';
 import {
   IDatabaseSchema,
-  IDatabaseSchemaInputWithUserId
+  IUpdateDatabaseSchemaInputWithUserId
 } from 'models/schemas';
 import DatabaseSchemaService from 'services/DatabaseSchemaService';
 import { getLocalDatetime } from 'utils/date';
@@ -25,18 +25,18 @@ enum JdcbTestState {
   RESPONSE
 }
 
-export interface IDatabaseSchemaDialogProps {
+export interface IDatabaseSchemaUpdateDialogProps {
   schema?: IDatabaseSchema;
   className?: string;
   clearSelectedSchema: () => void;
-  onUpdate: (databaseSchema: IDatabaseSchemaInputWithUserId) => void;
+  onUpdate: (databaseSchema: IUpdateDatabaseSchemaInputWithUserId) => void;
   onDelete: (databaseSchema: IDatabaseSchema) => void;
   onTestJdbcConnectionForId: (id: string) => void;
   databaseSchemaService: DatabaseSchemaService;
   testJdbcConnectionResponse: boolean;
 }
 
-export interface IDatabaseSchemaDialogState {
+export interface IDatabaseSchemaUpdateDialogState {
   updatedSchemaValues: {
     id: string;
     discriminator: string;
@@ -49,9 +49,9 @@ export interface IDatabaseSchemaDialogState {
   jdcbTestState: JdcbTestState;
 }
 
-class DatabaseSchemaDialog extends React.Component<
-  IDatabaseSchemaDialogProps,
-  IDatabaseSchemaDialogState
+class DatabaseSchemaUpdateDialog extends React.Component<
+  IDatabaseSchemaUpdateDialogProps,
+  IDatabaseSchemaUpdateDialogState
 > {
   public state = {
     updatedSchemaValues: {
@@ -66,7 +66,7 @@ class DatabaseSchemaDialog extends React.Component<
     jdcbTestState: JdcbTestState.NOT_STARTED
   };
 
-  public componentDidUpdate(prevProps: IDatabaseSchemaDialogProps) {
+  public componentDidUpdate(prevProps: IDatabaseSchemaUpdateDialogProps) {
     const { schema } = this.props;
     if (schema) {
       if (typeof prevProps.schema === 'undefined') {
@@ -103,7 +103,7 @@ class DatabaseSchemaDialog extends React.Component<
     const { schema, onUpdate } = this.props;
     const { updatedSchemaValues } = this.state;
     if (schema) {
-      const newValues: IDatabaseSchemaInputWithUserId = {
+      const newValues: IUpdateDatabaseSchemaInputWithUserId = {
         affiliation: schema.affiliation.name,
         application: updatedSchemaValues.application,
         description: updatedSchemaValues.description,
@@ -341,7 +341,7 @@ class DatabaseSchemaDialog extends React.Component<
   }
 }
 
-export default styled(DatabaseSchemaDialog)`
+export default styled(DatabaseSchemaUpdateDialog)`
   .bold {
     font-weight: bold;
   }

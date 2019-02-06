@@ -37,8 +37,7 @@ export interface IDatabaseSchemaView {
   id: string;
 }
 
-export interface IDatabaseSchemaInput {
-  id: string;
+interface IDatabaseSchemaInput {
   discriminator: string;
   description?: string | null;
   environment: string;
@@ -46,13 +45,21 @@ export interface IDatabaseSchemaInput {
   affiliation: string;
 }
 
-export interface IDatabaseSchemaInputWithUserId extends IDatabaseSchemaInput {
+export interface IUpdateDatabaseSchemaInputWithUserId
+  extends IDatabaseSchemaInput {
+  id: string;
   userId: string;
 }
 
-export interface IDatabaseSchemaInputWithCreatedBy
+export interface IUpdateDatabaseSchemaInputWithCreatedBy
   extends IDatabaseSchemaInput {
+  id: string;
   createdBy: string;
+}
+
+export interface ICreateDatabaseSchemaInput extends IDatabaseSchemaInput {
+  jdbcUser?: IJdbcUser | null;
+  userId: string;
 }
 
 export interface IJdbcUser {

@@ -1,7 +1,7 @@
 import {
   IDatabaseSchema,
-  IDatabaseSchemaInputWithCreatedBy,
-  IDatabaseSchemaView
+  IDatabaseSchemaView,
+  IUpdateDatabaseSchemaInputWithCreatedBy
 } from 'models/schemas';
 
 export enum SortDirection {
@@ -128,7 +128,7 @@ export default class DatabaseSchemaService {
   }
 
   public isUpdateButtonDisabled(
-    updatedSchemaValues: IDatabaseSchemaInputWithCreatedBy,
+    updatedSchemaValues: IUpdateDatabaseSchemaInputWithCreatedBy,
     schema?: IDatabaseSchema
   ) {
     const isUnchangedValues =

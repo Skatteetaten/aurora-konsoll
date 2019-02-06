@@ -12,24 +12,28 @@ import {
 import { getLocalDate } from 'utils/date';
 
 import {
+  ICreateDatabaseSchemaInput,
   IDatabaseSchema,
-  IDatabaseSchemaInputWithUserId,
   IDatabaseSchemas,
-  IDatabaseSchemaView
+  IDatabaseSchemaView,
+  IUpdateDatabaseSchemaInputWithUserId
 } from 'models/schemas';
 import DatabaseSchemaService, {
   defaultSortDirections,
   filterDatabaseSchemaView,
   SortDirection
 } from 'services/DatabaseSchemaService';
-import DatabaseSchemaDialog from './DatabaseSchemaDialog';
+import DatabaseSchemaCreateDialog from './DatabaseSchemaCreateDialog';
+import DatabaseSchemaDialog from './DatabaseSchemaUpdateDialog';
 
 export interface ISchemaProps {
   onFetch: (affiliations: string[]) => void;
-  onUpdate: (databaseSchema: IDatabaseSchemaInputWithUserId) => void;
+  onUpdate: (databaseSchema: IUpdateDatabaseSchemaInputWithUserId) => void;
   onDelete: (databaseSchema: IDatabaseSchema) => void;
+  onCreate: (databaseSchema: ICreateDatabaseSchemaInput) => void;
   onTestJdbcConnectionForId: (id: string) => void;
   items: IDatabaseSchemas;
+  createResponse: boolean;
   isFetching: boolean;
   updateResponse: boolean;
   affiliation: string;
@@ -150,7 +154,9 @@ export class Schema extends React.Component<ISchemaProps, ISchemaState> {
       onUpdate,
       onDelete,
       onTestJdbcConnectionForId,
-      testJdbcConnectionResponse
+      testJdbcConnectionResponse,
+      onCreate,
+      createResponse
     } = this.props;
     const {
       viewItems,
@@ -168,11 +174,19 @@ export class Schema extends React.Component<ISchemaProps, ISchemaState> {
 
     return (
       <div className={className}>
-        <div className="styledInput">
-          <TextField
-            placeholder="Søk etter skjema"
-            onChanged={this.onFilterChange}
-          />
+        <div className="styled-action-bar">
+          <div className="styled-input">
+            <TextField
+              placeholder="Søk etter skjema"
+              onChanged={this.onFilterChange}
+            />
+          </div>
+          <div className="styled-create">
+            <DatabaseSchemaCreateDialog
+              onCreate={onCreate}
+              createResponse={createResponse}
+            />
+          </div>
         </div>
         <div className="styledTable">
           <DetailsList
@@ -231,9 +245,19 @@ export default styled(Schema)`
   height: 100%;
   overflow-x: auto;
 
-  .styledInput {
+  .styled-action-bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
     margin: 20px;
+  }
+
+  .styled-input {
     width: 300px;
+  }
+
+  .styled-create {
+    margin-right: 20px;
   }
 
   .styledTable {

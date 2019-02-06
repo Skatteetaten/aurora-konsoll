@@ -6,7 +6,11 @@ import {
 import { IDeploymentSpec, IMount } from 'models/DeploymentSpec';
 import { ImageTagType } from 'models/ImageTagType';
 import { IPodResource } from 'models/Pod';
-import { IDatabaseSchema, IDatabaseSchemaInputWithCreatedBy, IDatabaseSchemaView } from 'models/schemas';
+import {
+  IDatabaseSchema,
+  IDatabaseSchemaView,
+  IUpdateDatabaseSchemaInputWithCreatedBy
+} from 'models/schemas';
 import { StatusCode } from 'models/Status';
 import { IApplicationDeploymentFilters } from 'models/UserSettings';
 import { IFilter } from 'services/DeploymentFilterService';
@@ -168,7 +172,9 @@ export const databaseSchemaFactory = Factory.Sync.makeFactory<IDatabaseSchema>({
   users: []
 });
 
-export const databaseSchemaInputWithCreatedByFactory = Factory.Sync.makeFactory<IDatabaseSchemaInputWithCreatedBy>({
+export const databaseSchemaInputWithCreatedByFactory = Factory.Sync.makeFactory<
+  IUpdateDatabaseSchemaInputWithCreatedBy
+>({
   id: '1234.1234.1234',
   discriminator: 'db',
   description: 'description',

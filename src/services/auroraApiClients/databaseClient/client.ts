@@ -1,12 +1,14 @@
 import GoboClient from 'services/GoboClient';
 
 import {
-  IDatabaseSchemaInputWithUserId,
+  ICreateDatabaseSchemaInput,
   IDatabaseSchemas,
-  IJdbcUser
+  IJdbcUser,
+  IUpdateDatabaseSchemaInputWithUserId
 } from 'models/schemas';
 import { errorStateManager } from 'models/StateManager/ErrorStateManager';
 import {
+  CREATE_DATABASE_SCHEMA_MUTATION,
   DELETE_DATABASESCHEMA_MUTATION,
   TEST_JDBC_CONNECTION_FOR_ID_MUTATION,
   UPDATE_DATABASESCHEMA_MUTATION
@@ -34,7 +36,9 @@ export class DatabaseClient {
     return { databaseSchemas: [] };
   }
 
-  public async updateSchema(databaseSchema: IDatabaseSchemaInputWithUserId) {
+  public async updateSchema(
+    databaseSchema: IUpdateDatabaseSchemaInputWithUserId
+  ) {
     const result = await this.client.mutate<{
       updateDatabaseSchema: boolean;
     }>({
@@ -101,6 +105,25 @@ export class DatabaseClient {
 
     if (result && result.data) {
       return result.data.testJdbcConnectionForJdbcUser;
+    }
+
+    return false;
+  }
+
+  public async createDatabaseSchema(
+    databaseSchema: ICreateDatabaseSchemaInput
+  ) {
+    const result = await this.client.mutate<{
+      createDatabaseSchema: boolean;
+    }>({
+      mutation: CREATE_DATABASE_SCHEMA_MUTATION,
+      variables: {
+        input: databaseSchema
+      }
+    });
+
+    if (result && result.data) {
+      return result.data.createDatabaseSchema;
     }
 
     return false;

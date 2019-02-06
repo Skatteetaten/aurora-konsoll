@@ -1,6 +1,7 @@
 import { combineReducers } from 'redux';
 import { ActionType } from 'typesafe-actions';
 import actions, {
+  CREATE_DATABASE_SCHEMA_RESPONSE,
   DELETE_SCHEMA_RESPONSE,
   FETCHED_SCHEMA_REQUEST,
   FETCHED_SCHEMA_RESPONSE,
@@ -19,6 +20,7 @@ export interface ISchemasState {
   readonly updateSchemaResponse: boolean;
   readonly deleteSchemaResponse: boolean;
   readonly testJdbcConnectionResponse: boolean;
+  readonly createDatabaseSchemaResponse: boolean;
 }
 
 export const databaseReducer = combineReducers<
@@ -62,6 +64,14 @@ export const databaseReducer = combineReducers<
       case TEST_JDBC_CONNECTION_FOR_ID_RESPONSE:
         return action.payload.response;
       case TEST_JDBC_CONNECTION_FOR_JDBCUSER_RESPONSE:
+        return action.payload.response;
+      default:
+        return state;
+    }
+  },
+  createDatabaseSchemaResponse: (state = false, action) => {
+    switch (action.type) {
+      case CREATE_DATABASE_SCHEMA_RESPONSE:
         return action.payload.response;
       default:
         return state;
