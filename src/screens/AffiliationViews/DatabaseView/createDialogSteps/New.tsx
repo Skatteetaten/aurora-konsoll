@@ -1,4 +1,5 @@
 import * as React from 'react';
+import styled from 'styled-components';
 
 import { ICreateDatabaseSchemaInput } from 'models/schemas';
 import Labels from '../Labels';
@@ -6,9 +7,10 @@ import Labels from '../Labels';
 export interface INewProps {
   labels: ICreateDatabaseSchemaInput;
   setLabels: (labels: ICreateDatabaseSchemaInput) => void;
+  className?: string;
 }
 
-const New = ({ labels, setLabels }: INewProps) => {
+const New = ({ labels, setLabels, className }: INewProps) => {
   const handleLabelChange = (field: string) => (value: string) => {
     setLabels({
       ...labels,
@@ -16,7 +18,18 @@ const New = ({ labels, setLabels }: INewProps) => {
     });
   };
 
-  return <Labels handleLabelChange={handleLabelChange} />;
+  return (
+    <div className={className}>
+      <div className="styled-labels">
+        <Labels handleLabelChange={handleLabelChange} />
+      </div>
+    </div>
+  );
 };
 
-export default New;
+export default styled(New)`
+  .styled-labels {
+    width: 470px;
+    margin: 0 auto;
+  }
+`;
