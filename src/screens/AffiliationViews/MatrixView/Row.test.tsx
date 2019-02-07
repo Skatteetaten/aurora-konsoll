@@ -13,6 +13,7 @@ describe('Row', () => {
         name: 'app',
         environment: 'dev',
         version: {
+          auroraVersion: '1.2.3',
           deployTag: {
             name: 'version'
           },
@@ -52,5 +53,22 @@ describe('Row', () => {
     const status = wrapper.find(Status);
 
     expect(status.props().title).toContain('prod');
+  });
+
+  it('Given showSemanticVersion is true, add a new line with semantic version', () => {
+    const wrapper = shallow(
+      <Row
+        name="app"
+        environments={['test', 'dev']}
+        apps={createApplicationMap('prod')}
+        linkBuilder={linkBuilder}
+        showSemanticVersion={true}
+      />
+    );
+
+    const span = wrapper.find('span');
+    const br = wrapper.find('br');
+    expect(br.getElements().length).toBe(1);
+    expect(span.text()).toContain('1.2.3');
   });
 });
