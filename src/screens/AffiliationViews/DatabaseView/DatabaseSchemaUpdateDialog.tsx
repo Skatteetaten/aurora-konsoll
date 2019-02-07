@@ -4,26 +4,19 @@ import styled from 'styled-components';
 import ActionButton from 'aurora-frontend-react-komponenter/ActionButton';
 import Dialog from 'aurora-frontend-react-komponenter/Dialog';
 import Grid from 'aurora-frontend-react-komponenter/Grid';
-import Icon from 'aurora-frontend-react-komponenter/Icon';
-import TextField from 'aurora-frontend-react-komponenter/TextField';
 import palette from 'aurora-frontend-react-komponenter/utils/palette';
 
 import ConfirmationDialog from 'components/ConfirmationDialog';
-import LoadingButton from 'components/LoadingButton';
 import {
   IDatabaseSchema,
   IUpdateDatabaseSchemaInputWithUserId
 } from 'models/schemas';
 import DatabaseSchemaService from 'services/DatabaseSchemaService';
 import { getLocalDatetime } from 'utils/date';
+import JdbcConnection from './JdbcConnection';
+import Labels from './Labels';
 
 const { skeColor } = palette;
-
-enum JdcbTestState {
-  NOT_STARTED,
-  LOADING,
-  RESPONSE
-}
 
 export interface IDatabaseSchemaUpdateDialogProps {
   schema?: IDatabaseSchema;
@@ -46,7 +39,6 @@ export interface IDatabaseSchemaUpdateDialogState {
     application: string;
     affiliation: string;
   };
-  jdcbTestState: JdcbTestState;
 }
 
 class DatabaseSchemaUpdateDialog extends React.Component<
@@ -62,8 +54,7 @@ class DatabaseSchemaUpdateDialog extends React.Component<
       environment: '',
       application: '',
       affiliation: ''
-    },
-    jdcbTestState: JdcbTestState.NOT_STARTED
+    }
   };
 
   public componentDidUpdate(prevProps: IDatabaseSchemaUpdateDialogProps) {
@@ -161,46 +152,21 @@ class DatabaseSchemaUpdateDialog extends React.Component<
     );
   };
 
-  public handleTestJdbcConnection = async () => {
-    const { onTestJdbcConnectionForId, schema } = this.props;
-    const handleJdbcLoading = () => {
-      this.setState({
-        jdcbTestState: JdcbTestState.RESPONSE
-      });
-    };
-    if (schema) {
-      this.setState({
-        jdcbTestState: JdcbTestState.LOADING
-      });
-      await onTestJdbcConnectionForId(schema.id);
-      handleJdbcLoading();
-    }
-  };
-
   public render() {
     const {
       schema,
       className,
       databaseSchemaService,
-      testJdbcConnectionResponse
+      testJdbcConnectionResponse,
+      onTestJdbcConnectionForId
     } = this.props;
-    const { updatedSchemaValues, jdcbTestState } = this.state;
+    const { updatedSchemaValues } = this.state;
     if (!schema) {
       return <div />;
     }
 
     const dateTimeFormat = (date?: Date | null) =>
       date ? getLocalDatetime(date) : '';
-
-    const displayLoadingOrNotStarted = () =>
-      jdcbTestState === JdcbTestState.LOADING ||
-      jdcbTestState === JdcbTestState.NOT_STARTED;
-
-    const displaySuccess = () =>
-      !displayLoadingOrNotStarted() && testJdbcConnectionResponse;
-
-    const displayFailure = () =>
-      !displayLoadingOrNotStarted() && !testJdbcConnectionResponse;
 
     const user = schema.users[0];
     return (
@@ -229,86 +195,23 @@ class DatabaseSchemaUpdateDialog extends React.Component<
             <hr />
             <Grid.Row>
               <Grid.Col lg={6}>
-                <h3>Tilkoblingsinformasjon</h3>
-                <TextField
-                  id={'username'}
-                  label={'Brukernavn'}
-                  value={user.username}
-                  disabled={true}
+                <JdbcConnection
+                  username={user.username}
+                  jdbcUrl={schema.jdbcUrl}
+                  id={schema.id}
+                  onTestJdbcConnectionForId={onTestJdbcConnectionForId}
+                  testJdbcConnectionResponse={testJdbcConnectionResponse}
                 />
-                <TextField
-                  id={'jdbcUrl'}
-                  label={'JDBC url'}
-                  value={schema.jdbcUrl}
-                  disabled={true}
-                />
-                <div className="styled-jdbc">
-                  <LoadingButton
-                    onClick={this.handleTestJdbcConnection}
-                    buttonType="primary"
-                    style={{ width: '100%' }}
-                    loading={jdcbTestState === JdcbTestState.LOADING}
-                  >
-                    TEST JDBC TILKOBLING
-                  </LoadingButton>
-                </div>
-                <p className="styled-jdbc-wrapper">
-                  Gyldig JDBC tilkobling:
-                  {displayLoadingOrNotStarted() && (
-                    <span className="bold styled-jdbc-status">ikke testet</span>
-                  )}
-                  {displaySuccess() && (
-                    <Icon
-                      className="styled-jdbc-status"
-                      iconName="Check"
-                      style={{ color: skeColor.green, fontSize: '30px' }}
-                    />
-                  )}
-                  {displayFailure() && (
-                    <Icon
-                      className="styled-jdbc-status"
-                      iconName="Clear"
-                      style={{
-                        color: skeColor.pink,
-                        fontSize: '30px'
-                      }}
-                    />
-                  )}
-                </p>
               </Grid.Col>
               <Grid.Col lg={1} />
               <Grid.Col lg={5}>
-                <h3>Labels</h3>
-                <TextField
-                  id={'environment'}
-                  label={'Miljø'}
-                  value={updatedSchemaValues.environment}
-                  onChanged={this.handleLabelChange('environment')}
-                />
-                <TextField
-                  id={'application'}
-                  label={'Applikasjon'}
-                  value={updatedSchemaValues.application}
-                  onChanged={this.handleLabelChange('application')}
-                />
-                <TextField
-                  id={'discriminator'}
-                  label={'Diskriminator'}
-                  value={updatedSchemaValues.discriminator}
-                  onChanged={this.handleLabelChange('discriminator')}
-                />
-                <TextField
-                  id={'createdBy'}
-                  label={'Bruker'}
-                  value={updatedSchemaValues.createdBy}
-                  onChanged={this.handleLabelChange('createdBy')}
-                />
-                <TextField
-                  id={'description'}
-                  label={'Beskrivelse'}
-                  value={updatedSchemaValues.description}
-                  onChanged={this.handleLabelChange('description')}
-                  multiline={true}
+                <Labels
+                  environment={updatedSchemaValues.environment}
+                  application={updatedSchemaValues.application}
+                  discriminator={updatedSchemaValues.discriminator}
+                  createdBy={updatedSchemaValues.createdBy}
+                  description={updatedSchemaValues.description}
+                  handleLabelChange={this.handleLabelChange}
                 />
               </Grid.Col>
             </Grid.Row>

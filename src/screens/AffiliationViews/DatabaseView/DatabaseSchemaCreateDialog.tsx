@@ -3,8 +3,15 @@ import styled from 'styled-components';
 
 import Button from 'aurora-frontend-react-komponenter/Button';
 import Dialog from 'aurora-frontend-react-komponenter/Dialog';
-import TabLink, { TabLinkWrapper } from 'components/TabLink';
 import { ICreateDatabaseSchemaInput } from 'models/schemas';
+import New from './createDialogSteps/New';
+import Type from './createDialogSteps/Type';
+
+export enum Step {
+  TYPE,
+  NEW,
+  EXTERNAL
+}
 
 interface IDatabaseSchemaCreateDialogProps {
   className?: string;
@@ -14,6 +21,7 @@ interface IDatabaseSchemaCreateDialogProps {
 
 interface IDatabaseSchemaCreateDialogState {
   isOpen: boolean;
+  step: Step;
 }
 
 class DatabaseSchemaCreateDialog extends React.Component<
@@ -21,25 +29,8 @@ class DatabaseSchemaCreateDialog extends React.Component<
   IDatabaseSchemaCreateDialogState
 > {
   public state = {
-    isOpen: false
-  };
-
-  public create = () => {
-    const { onCreate } = this.props;
-    const newSchema: ICreateDatabaseSchemaInput = {
-      affiliation: 'paas',
-      application: 'martin-dev2',
-      description: 'dette fungerer!!',
-      discriminator: 'ny-db',
-      environment: 'martin-env2',
-      userId: 'm79861',
-      jdbcUser: {
-        jdbcUrl: 'localhost',
-        password: 'password',
-        username: 'username'
-      }
-    };
-    onCreate(newSchema);
+    isOpen: false,
+    step: Step.TYPE
   };
 
   public toggleDialog = (isOpen: boolean) => () => {
@@ -48,38 +39,60 @@ class DatabaseSchemaCreateDialog extends React.Component<
     });
   };
 
+  public handleLabelChange = (field: string) => (value: string) => {
+    return;
+  };
+
+  public setStep = (newStep: string) => {
+    this.setState({
+      step: Number(newStep)
+    });
+  };
+
   public render() {
-    const { className } = this.props;
-    const { isOpen } = this.state;
+    const { className, onCreate } = this.props;
+    const { isOpen, step } = this.state;
 
     const close = this.toggleDialog(false);
     const open = this.toggleDialog(true);
+
+    const isNew = step === Step.NEW;
+    const isType = step === Step.TYPE;
+
     return (
-      <div className={className}>
+      <>
         <Button buttonType="primary" icon="AddOutline" onClick={open}>
           Nytt skjema
         </Button>
         <Dialog
+          title={
+            isType
+              ? 'Velg skjematype'
+              : isNew
+              ? 'Nytt skjema'
+              : 'Eksternt skjema'
+          }
           hidden={!isOpen}
           dialogMinWidth="1000px"
           dialogMaxWidth="90%"
+          dialogMinHeight="1000px"
           onDismiss={close}
         >
-          <TabLinkWrapper>
-            <TabLink to={`/databaseSchemas/create/type`}>
-              Velg skjematype
-            </TabLink>
-            <TabLink to={`/databaseSchemas/create/labels`}>Sett labels</TabLink>
-          </TabLinkWrapper>
-          <Dialog.Footer>
-            <Button buttonType="primary" icon="AddOutline" onClick={open}>
-              Nytt skjema
-            </Button>
-          </Dialog.Footer>
+          <div className={className}>
+            <div className="styled-dialog">
+              {isType && <Type setStep={this.setStep} />}
+              {isNew && <New onCreate={onCreate} />}
+            </div>
+          </div>
+          <Dialog.Footer>{isNew && <Button>Opprett</Button>}</Dialog.Footer>
         </Dialog>
-      </div>
+      </>
     );
   }
 }
 
-export default styled(DatabaseSchemaCreateDialog)``;
+export default styled(DatabaseSchemaCreateDialog)`
+  .styled-dialog {
+    height: 400px;
+  }
+`;
