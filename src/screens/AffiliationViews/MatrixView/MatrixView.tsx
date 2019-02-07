@@ -55,13 +55,14 @@ const MatrixView = ({
           filters={filters}
           allFilters={allFilters}
         />
+        <Checkbox
+          boxSide={'start'}
+          label="Vis sematisk versjon"
+          checked={showExactVersion}
+          onChange={toggleShowExactVersion}
+          className="versionCheckbox"
+        />
       </StyledFilter>
-      <Checkbox
-        boxSide={'start'}
-        label="Vis eksakt versjon"
-        checked={showExactVersion}
-        onChange={toggleShowExactVersion}
-      />
       <StyledUpdate>
         <TimeSince timeSince={time} />
         <LoadingButton
@@ -91,6 +92,10 @@ const StyledFilter = styled.div`
   align-items: center;
   button {
     margin-right: 20px;
+  }
+
+  .versionCheckbox {
+    margin-left: 30px;
   }
 `;
 
