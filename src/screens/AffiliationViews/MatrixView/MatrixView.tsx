@@ -26,8 +26,8 @@ interface IMatrixViewProps {
   filters: IFilter;
   allFilters: IApplicationDeploymentFilters[];
   deleteFilter: (filterName: string) => void;
-  showExactVersion: boolean;
-  toggleShowExactVersion: () => void;
+  showSemanticVersion: boolean;
+  toggleShowSemanticVersion: () => void;
 }
 
 const MatrixView = ({
@@ -41,8 +41,8 @@ const MatrixView = ({
   filters,
   allFilters,
   deleteFilter,
-  showExactVersion,
-  toggleShowExactVersion
+  showSemanticVersion: showExactVersion,
+  toggleShowSemanticVersion: toggleShowExactVersion
 }: IMatrixViewProps) => (
   <div className={className}>
     <ActionBar>
@@ -74,7 +74,7 @@ const MatrixView = ({
         </LoadingButton>
       </StyledUpdate>
     </ActionBar>
-    <Matrix showExactVersion={showExactVersion} />
+    <Matrix showSemanticVersion={showExactVersion} />
   </div>
 );
 

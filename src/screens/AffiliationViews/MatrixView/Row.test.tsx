@@ -31,7 +31,7 @@ describe('Row', () => {
         environments={['test', 'dev']}
         apps={createApplicationMap()}
         linkBuilder={linkBuilder}
-        showExactVersion={false}
+        showSemanticVersion={false}
       />
     );
     const status = wrapper.find(Status);
@@ -45,7 +45,7 @@ describe('Row', () => {
         environments={['test', 'dev']}
         apps={createApplicationMap('prod')}
         linkBuilder={linkBuilder}
-        showExactVersion={false}
+        showSemanticVersion={false}
       />
     );
 

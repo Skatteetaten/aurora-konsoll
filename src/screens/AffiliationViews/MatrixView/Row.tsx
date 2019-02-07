@@ -11,7 +11,7 @@ interface IRowProps {
   environments: string[];
   apps: IApplicationMap;
   linkBuilder: (deployment: IApplicationDeployment) => React.ComponentType;
-  showExactVersion: boolean;
+  showSemanticVersion: boolean;
 }
 
 const Row = ({
@@ -19,7 +19,7 @@ const Row = ({
   environments,
   apps,
   linkBuilder,
-  showExactVersion
+  showSemanticVersion: showExactVersion
 }: IRowProps) => {
   const cells = environments.map((environment, index) => {
     const key = `${environment}::${name}`;
@@ -37,19 +37,33 @@ const Row = ({
       return <td key={key}>-</td>;
     }
 
-    const tooltip = deployment.version.releaseTo
+    const isReleaseTo = !!deployment.version.releaseTo;
+    const tooltip = isReleaseTo
       ? `ReleaseTo: ${deployment.version.releaseTo}`
       : deployment.version.deployTag.name;
 
     const releaseToHint = deployment.version.releaseTo ? '*' : '';
 
     const Link = linkBuilder(deployment);
-    const version =
-      (showExactVersion && getExactVersion(deployment.version.auroraVersion)) ||
-      deployment.version.deployTag.name;
+    const deployTag = deployment.version.deployTag.name;
+    const semanticVersion =
+      showExactVersion && getExactVersion(deployment.version.auroraVersion);
+
+    const isSameVersion =
+      semanticVersion && deployTag.localeCompare(semanticVersion) === 0;
     return (
       <Status key={key} code={deployment.status.code} title={tooltip}>
-        <Link>{`${releaseToHint}${version}`}</Link>
+        <Link>
+          <span>
+            {`${releaseToHint}${deployTag}`}
+            {!isSameVersion && (
+              <>
+                <br />
+                {semanticVersion}
+              </>
+            )}
+          </span>
+        </Link>
       </Status>
     );
   });

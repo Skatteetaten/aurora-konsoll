@@ -5,14 +5,14 @@ import Row, { IApplicationMap } from './Row';
 
 interface IMatrixProps {
   className?: string;
-  showExactVersion: boolean;
+  showSemanticVersion: boolean;
 }
 
 const Matrix = ({
   deployments,
   buildDeploymentLink,
   className,
-  showExactVersion
+  showSemanticVersion: showExactVersion
 }: IApplicationDeploymentContext & IMatrixProps) => {
   const environments = deployments.reduce((acc, app) => {
     if (acc.indexOf(app.environment) === -1) {
@@ -46,7 +46,7 @@ const Matrix = ({
             .map(name => (
               <Row
                 key={name}
-                showExactVersion={showExactVersion}
+                showSemanticVersion={showExactVersion}
                 name={name}
                 environments={environments}
                 apps={apps}
