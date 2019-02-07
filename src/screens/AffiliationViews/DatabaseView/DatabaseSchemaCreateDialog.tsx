@@ -15,6 +15,7 @@ export enum Step {
 
 interface IDatabaseSchemaCreateDialogProps {
   className?: string;
+  affiliation: string;
   onCreate: (databaseSchema: ICreateDatabaseSchemaInput) => void;
   createResponse: boolean;
 }
@@ -22,6 +23,7 @@ interface IDatabaseSchemaCreateDialogProps {
 interface IDatabaseSchemaCreateDialogState {
   isOpen: boolean;
   step: Step;
+  labels: ICreateDatabaseSchemaInput
 }
 
 class DatabaseSchemaCreateDialog extends React.Component<
@@ -30,7 +32,15 @@ class DatabaseSchemaCreateDialog extends React.Component<
 > {
   public state = {
     isOpen: false,
-    step: Step.TYPE
+    step: Step.TYPE,
+    labels: {
+      discriminator: '',
+      createdBy: '',
+      description: '',
+      environment: '',
+      application: '',
+      affiliation: this.props.affiliation
+    }
   };
 
   public toggleDialog = (isOpen: boolean) => () => {
@@ -49,9 +59,21 @@ class DatabaseSchemaCreateDialog extends React.Component<
     });
   };
 
+  public setLabels = (labels: ICreateDatabaseSchemaInput) => {
+    this.setState({
+      labels
+    });
+  }
+
+  public createDatabaseSchema = () => {
+    const { onCreate } = this.props;
+    const { labels } = this.state;
+    onCreate(labels);
+  };
+
   public render() {
-    const { className, onCreate } = this.props;
-    const { isOpen, step } = this.state;
+    const { className } = this.props;
+    const { isOpen, step, labels } = this.state;
 
     const close = this.toggleDialog(false);
     const open = this.toggleDialog(true);
@@ -81,10 +103,10 @@ class DatabaseSchemaCreateDialog extends React.Component<
           <div className={className}>
             <div className="styled-dialog">
               {isType && <Type setStep={this.setStep} />}
-              {isNew && <New onCreate={onCreate} />}
+              {isNew && <New setLabels={this.setLabels} labels={labels} />}
             </div>
           </div>
-          <Dialog.Footer>{isNew && <Button>Opprett</Button>}</Dialog.Footer>
+          <Dialog.Footer>{isNew && <Button onClick={this.createDatabaseSchema}>Opprett</Button>}</Dialog.Footer>
         </Dialog>
       </>
     );

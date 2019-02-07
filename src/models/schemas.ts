@@ -45,12 +45,6 @@ interface IDatabaseSchemaInput {
   affiliation: string;
 }
 
-export interface IUpdateDatabaseSchemaInputWithUserId
-  extends IDatabaseSchemaInput {
-  id: string;
-  userId: string;
-}
-
 export interface IUpdateDatabaseSchemaInputWithCreatedBy
   extends IDatabaseSchemaInput {
   id: string;
@@ -59,7 +53,7 @@ export interface IUpdateDatabaseSchemaInputWithCreatedBy
 
 export interface ICreateDatabaseSchemaInput extends IDatabaseSchemaInput {
   jdbcUser?: IJdbcUser | null;
-  userId: string;
+  createdBy: string;
 }
 
 export interface IJdbcUser {

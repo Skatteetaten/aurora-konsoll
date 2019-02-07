@@ -41,7 +41,7 @@ const Type = ({ setStep, className }: ITypeProps) => {
     <div className={className}>
       <NavigationTile
         contents={contents}
-        className="centring"
+        className="styled-tile"
         renderContent={renderContent}
       />
     </div>
@@ -49,7 +49,7 @@ const Type = ({ setStep, className }: ITypeProps) => {
 };
 
 export default styled(Type)`
-  .centring {
+  .styled-tile {
     padding-top: 100px;
     ul li {
       cursor: pointer;

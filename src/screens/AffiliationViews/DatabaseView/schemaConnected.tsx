@@ -5,7 +5,7 @@ import {
   ICreateDatabaseSchemaInput,
   IDatabaseSchema,
   IJdbcUser,
-  IUpdateDatabaseSchemaInputWithUserId
+  IUpdateDatabaseSchemaInputWithCreatedBy
 } from 'models/schemas';
 import { RootState } from 'store/types';
 import {
@@ -38,7 +38,7 @@ export const SchemaConnected = connect(
   mapStateToProps,
   {
     onFetch: (affiliations: string[]) => fetchSchemas(affiliations),
-    onUpdate: (databaseSchema: IUpdateDatabaseSchemaInputWithUserId) =>
+    onUpdate: (databaseSchema: IUpdateDatabaseSchemaInputWithCreatedBy) =>
       updateSchema(databaseSchema),
     onDelete: (databaseSchema: IDatabaseSchema) => deleteSchema(databaseSchema),
     onTestJdbcConnectionForId: (id: string) => testJdbcConnectionForId(id),

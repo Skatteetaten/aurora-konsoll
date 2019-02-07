@@ -11,7 +11,7 @@ import {
   IDatabaseSchema,
   IDatabaseSchemas,
   IJdbcUser,
-  IUpdateDatabaseSchemaInputWithUserId
+  IUpdateDatabaseSchemaInputWithCreatedBy
 } from 'models/schemas';
 
 export const FETCHED_SCHEMA_REQUEST = 'database/FETCHED_SCHEMA_REQUEST';
@@ -64,7 +64,7 @@ export const fetchSchemas: Thunk = (affiliations: string[]) => async (
 };
 
 export const updateSchema: Thunk = (
-  databaseSchema: IUpdateDatabaseSchemaInputWithUserId
+  databaseSchema: IUpdateDatabaseSchemaInputWithCreatedBy
 ) => async (dispatch, getState, { clients }) => {
   const result = await clients.databaseClient.updateSchema(databaseSchema);
   dispatch(updateSchemaResponse(result));

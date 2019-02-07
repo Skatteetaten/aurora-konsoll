@@ -4,7 +4,7 @@ import {
   ICreateDatabaseSchemaInput,
   IDatabaseSchemas,
   IJdbcUser,
-  IUpdateDatabaseSchemaInputWithUserId
+  IUpdateDatabaseSchemaInputWithCreatedBy
 } from 'models/schemas';
 import { errorStateManager } from 'models/StateManager/ErrorStateManager';
 import {
@@ -37,7 +37,7 @@ export class DatabaseClient {
   }
 
   public async updateSchema(
-    databaseSchema: IUpdateDatabaseSchemaInputWithUserId
+    databaseSchema: IUpdateDatabaseSchemaInputWithCreatedBy
   ) {
     const result = await this.client.mutate<{
       updateDatabaseSchema: boolean;

@@ -9,7 +9,7 @@ import palette from 'aurora-frontend-react-komponenter/utils/palette';
 import ConfirmationDialog from 'components/ConfirmationDialog';
 import {
   IDatabaseSchema,
-  IUpdateDatabaseSchemaInputWithUserId
+  IUpdateDatabaseSchemaInputWithCreatedBy
 } from 'models/schemas';
 import DatabaseSchemaService from 'services/DatabaseSchemaService';
 import { getLocalDatetime } from 'utils/date';
@@ -22,7 +22,7 @@ export interface IDatabaseSchemaUpdateDialogProps {
   schema?: IDatabaseSchema;
   className?: string;
   clearSelectedSchema: () => void;
-  onUpdate: (databaseSchema: IUpdateDatabaseSchemaInputWithUserId) => void;
+  onUpdate: (databaseSchema: IUpdateDatabaseSchemaInputWithCreatedBy) => void;
   onDelete: (databaseSchema: IDatabaseSchema) => void;
   onTestJdbcConnectionForId: (id: string) => void;
   databaseSchemaService: DatabaseSchemaService;
@@ -94,14 +94,14 @@ class DatabaseSchemaUpdateDialog extends React.Component<
     const { schema, onUpdate } = this.props;
     const { updatedSchemaValues } = this.state;
     if (schema) {
-      const newValues: IUpdateDatabaseSchemaInputWithUserId = {
+      const newValues: IUpdateDatabaseSchemaInputWithCreatedBy = {
         affiliation: schema.affiliation.name,
         application: updatedSchemaValues.application,
         description: updatedSchemaValues.description,
         environment: updatedSchemaValues.environment,
         discriminator: updatedSchemaValues.discriminator,
         id: schema.id,
-        userId: updatedSchemaValues.createdBy
+        createdBy: updatedSchemaValues.createdBy
       };
       onUpdate(newValues);
       this.hideDialog();
