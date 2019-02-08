@@ -201,6 +201,7 @@ class DatabaseSchemaUpdateDialog extends React.Component<
                   id={schema.id}
                   onTestJdbcConnectionForId={onTestJdbcConnectionForId}
                   testJdbcConnectionResponse={testJdbcConnectionResponse}
+                  disabled={true}
                 />
               </Grid.Col>
               <Grid.Col lg={1} />

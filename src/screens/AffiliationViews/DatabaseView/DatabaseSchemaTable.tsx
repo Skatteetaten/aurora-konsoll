@@ -16,6 +16,7 @@ import {
   IDatabaseSchema,
   IDatabaseSchemas,
   IDatabaseSchemaView,
+  IJdbcUser,
   IUpdateDatabaseSchemaInputWithCreatedBy
 } from 'models/schemas';
 import DatabaseSchemaService, {
@@ -24,7 +25,7 @@ import DatabaseSchemaService, {
   SortDirection
 } from 'services/DatabaseSchemaService';
 import DatabaseSchemaCreateDialog from './DatabaseSchemaCreateDialog';
-import DatabaseSchemaDialog from './DatabaseSchemaUpdateDialog';
+import DatabaseSchemaUpdateDialog from './DatabaseSchemaUpdateDialog';
 
 export interface ISchemaProps {
   onFetch: (affiliations: string[]) => void;
@@ -32,6 +33,7 @@ export interface ISchemaProps {
   onDelete: (databaseSchema: IDatabaseSchema) => void;
   onCreate: (databaseSchema: ICreateDatabaseSchemaInput) => void;
   onTestJdbcConnectionForId: (id: string) => void;
+  onTestJdbcConnectionForUser: (jdbcUser: IJdbcUser) => void;
   items: IDatabaseSchemas;
   createResponse: boolean;
   isFetching: boolean;
@@ -157,7 +159,8 @@ export class Schema extends React.Component<ISchemaProps, ISchemaState> {
       testJdbcConnectionResponse,
       onCreate,
       createResponse,
-      affiliation
+      affiliation,
+      onTestJdbcConnectionForUser
     } = this.props;
     const {
       viewItems,
@@ -187,6 +190,8 @@ export class Schema extends React.Component<ISchemaProps, ISchemaState> {
               affiliation={affiliation}
               onCreate={onCreate}
               createResponse={createResponse}
+              onTestJdbcConnectionForUser={onTestJdbcConnectionForUser}
+              testJdbcConnectionResponse={testJdbcConnectionResponse}
             />
           </div>
         </div>
@@ -202,7 +207,7 @@ export class Schema extends React.Component<ISchemaProps, ISchemaState> {
           />
         </div>
 
-        <DatabaseSchemaDialog
+        <DatabaseSchemaUpdateDialog
           schema={selectedSchema}
           clearSelectedSchema={this.clearSelectedSchema}
           onUpdate={onUpdate}

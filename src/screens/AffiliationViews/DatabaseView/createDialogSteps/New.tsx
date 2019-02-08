@@ -5,15 +5,19 @@ import { ICreateDatabaseSchemaInput } from 'models/schemas';
 import Labels from '../Labels';
 
 export interface INewProps {
-  labels: ICreateDatabaseSchemaInput;
-  setLabels: (labels: ICreateDatabaseSchemaInput) => void;
+  databaseSchemaInput: ICreateDatabaseSchemaInput;
+  setDatabaseSchemaInput: (labels: ICreateDatabaseSchemaInput) => void;
   className?: string;
 }
 
-const New = ({ labels, setLabels, className }: INewProps) => {
+const New = ({
+  databaseSchemaInput,
+  setDatabaseSchemaInput,
+  className
+}: INewProps) => {
   const handleLabelChange = (field: string) => (value: string) => {
-    setLabels({
-      ...labels,
+    setDatabaseSchemaInput({
+      ...databaseSchemaInput,
       [field]: value
     });
   };

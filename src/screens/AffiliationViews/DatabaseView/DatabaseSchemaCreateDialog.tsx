@@ -4,8 +4,9 @@ import styled from 'styled-components';
 import Button from 'aurora-frontend-react-komponenter/Button';
 import Dialog from 'aurora-frontend-react-komponenter/Dialog';
 import LoadingButton from 'components/LoadingButton';
-import { ICreateDatabaseSchemaInput } from 'models/schemas';
+import { ICreateDatabaseSchemaInput, IJdbcUser } from 'models/schemas';
 import DatabaseSchemaService from 'services/DatabaseSchemaService';
+import External from './createDialogSteps/External';
 import New from './createDialogSteps/New';
 import Type from './createDialogSteps/Type';
 
@@ -19,14 +20,16 @@ interface IDatabaseSchemaCreateDialogProps {
   className?: string;
   affiliation: string;
   onCreate: (databaseSchema: ICreateDatabaseSchemaInput) => void;
+  onTestJdbcConnectionForUser: (jdbcUser: IJdbcUser) => void;
   createResponse: boolean;
+  testJdbcConnectionResponse: boolean;
 }
 
 interface IDatabaseSchemaCreateDialogState {
   isOpen: boolean;
   isLoading: boolean;
   step: Step;
-  labels: ICreateDatabaseSchemaInput;
+  databaseSchemaInput: ICreateDatabaseSchemaInput;
 }
 
 class DatabaseSchemaCreateDialog extends React.Component<
@@ -37,13 +40,18 @@ class DatabaseSchemaCreateDialog extends React.Component<
     isOpen: false,
     isLoading: false,
     step: Step.TYPE,
-    labels: {
+    databaseSchemaInput: {
       discriminator: '',
       createdBy: '',
       description: '',
       environment: '',
       application: '',
-      affiliation: this.props.affiliation
+      affiliation: this.props.affiliation,
+      jdbcUser: {
+        username: '',
+        password: '',
+        jdbcUrl: ''
+      }
     }
   };
 
@@ -70,19 +78,21 @@ class DatabaseSchemaCreateDialog extends React.Component<
     });
   };
 
-  public setLabels = (labels: ICreateDatabaseSchemaInput) => {
+  public setDatabaseSchemaInput = (
+    databaseSchemaInput: ICreateDatabaseSchemaInput
+  ) => {
     this.setState({
-      labels
+      databaseSchemaInput
     });
   };
 
   public createDatabaseSchema = async () => {
     const { onCreate } = this.props;
-    const { labels } = this.state;
+    const { databaseSchemaInput } = this.state;
     this.setState({
       isLoading: true
     });
-    await onCreate(labels);
+    await onCreate(databaseSchemaInput);
   };
 
   public componentWillUnmount() {
@@ -92,14 +102,19 @@ class DatabaseSchemaCreateDialog extends React.Component<
   }
 
   public render() {
-    const { className } = this.props;
-    const { isOpen, isLoading, step, labels } = this.state;
+    const {
+      className,
+      onTestJdbcConnectionForUser,
+      testJdbcConnectionResponse
+    } = this.props;
+    const { isOpen, isLoading, step, databaseSchemaInput } = this.state;
 
     const close = this.toggleDialog(false);
     const open = this.toggleDialog(true);
 
     const isNew = step === Step.NEW;
     const isType = step === Step.TYPE;
+    const isExternal = step === Step.EXTERNAL;
 
     return (
       <>
@@ -123,7 +138,20 @@ class DatabaseSchemaCreateDialog extends React.Component<
           <div className={className}>
             <div className="styled-dialog">
               {isType && <Type setStep={this.setStep} />}
-              {isNew && <New setLabels={this.setLabels} labels={labels} />}
+              {isNew && (
+                <New
+                  setDatabaseSchemaInput={this.setDatabaseSchemaInput}
+                  databaseSchemaInput={databaseSchemaInput}
+                />
+              )}
+              {isExternal && (
+                <External
+                  setDatabaseSchemaInput={this.setDatabaseSchemaInput}
+                  databaseSchemaInput={databaseSchemaInput}
+                  onTestJdbcConnectionForUser={onTestJdbcConnectionForUser}
+                  testJdbcConnectionResponse={testJdbcConnectionResponse}
+                />
+              )}
             </div>
           </div>
           <Dialog.Footer>
@@ -135,7 +163,9 @@ class DatabaseSchemaCreateDialog extends React.Component<
                 style={{ width: '150px' }}
                 loading={isLoading}
                 disabled={
-                  this.databaseSchemaService.hasEmptyValues(labels) || isLoading
+                  this.databaseSchemaService.hasEmptyValues(
+                    databaseSchemaInput
+                  ) || isLoading
                 }
               >
                 Opprett

@@ -4,6 +4,7 @@ import Icon from 'aurora-frontend-react-komponenter/Icon';
 import TextField from 'aurora-frontend-react-komponenter/TextField';
 import palette from 'aurora-frontend-react-komponenter/utils/palette';
 import LoadingButton from 'components/LoadingButton';
+import { IJdbcUser } from 'models/schemas';
 
 const { skeColor } = palette;
 
@@ -18,8 +19,10 @@ export interface IJdbcConnectionProps {
   jdbcUrl?: string;
   id?: string;
   password?: string;
-  onTestJdbcConnectionForId: (id: string) => void;
+  onTestJdbcConnectionForId?: (id: string) => void;
+  onTestJdbcConnectionForUser?: (jdbcUser: IJdbcUser) => void;
   testJdbcConnectionResponse: boolean;
+  disabled: boolean;
 }
 
 export interface IJdbcConnectionState {
@@ -35,7 +38,14 @@ class JdbcConnection extends React.Component<
   };
 
   public handleTestJdbcConnection = async () => {
-    const { onTestJdbcConnectionForId, id } = this.props;
+    const {
+      onTestJdbcConnectionForId,
+      onTestJdbcConnectionForUser,
+      id,
+      jdbcUrl,
+      password,
+      username
+    } = this.props;
     const handleJdbcLoading = () => {
       this.setState({
         jdcbTestState: JdcbTestState.RESPONSE
@@ -45,13 +55,28 @@ class JdbcConnection extends React.Component<
       this.setState({
         jdcbTestState: JdcbTestState.LOADING
       });
-      await onTestJdbcConnectionForId(id);
+      if (onTestJdbcConnectionForId) {
+        await onTestJdbcConnectionForId(id);
+      } else {
+        if (onTestJdbcConnectionForUser && password && jdbcUrl && username) {
+          await onTestJdbcConnectionForUser({
+            password,
+            jdbcUrl,
+            username
+          });
+        }
+      }
       handleJdbcLoading();
     }
   };
 
   public render() {
-    const { username, jdbcUrl, testJdbcConnectionResponse } = this.props;
+    const {
+      testJdbcConnectionResponse,
+      username,
+      jdbcUrl,
+      disabled
+    } = this.props;
     const { jdcbTestState } = this.state;
 
     const displayLoadingOrNotStarted = () =>
@@ -71,13 +96,13 @@ class JdbcConnection extends React.Component<
           id={'username'}
           label={'Brukernavn'}
           value={username}
-          disabled={true}
+          disabled={disabled}
         />
         <TextField
           id={'jdbcUrl'}
           label={'JDBC url'}
           value={jdbcUrl}
-          disabled={true}
+          disabled={disabled}
         />
         <div className="styled-jdbc">
           <LoadingButton
