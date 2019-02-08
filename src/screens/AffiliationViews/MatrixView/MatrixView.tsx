@@ -41,8 +41,8 @@ const MatrixView = ({
   filters,
   allFilters,
   deleteFilter,
-  showSemanticVersion: showExactVersion,
-  toggleShowSemanticVersion: toggleShowExactVersion
+  showSemanticVersion,
+  toggleShowSemanticVersion
 }: IMatrixViewProps) => (
   <div className={className}>
     <ActionBar>
@@ -58,8 +58,8 @@ const MatrixView = ({
         <Checkbox
           boxSide={'start'}
           label="Vis sematisk versjon"
-          checked={showExactVersion}
-          onChange={toggleShowExactVersion}
+          checked={showSemanticVersion}
+          onChange={toggleShowSemanticVersion}
           className="versionCheckbox"
         />
       </StyledFilter>
