@@ -193,15 +193,15 @@ class DatabaseSchemaDialog extends React.Component<
     const dateTimeFormat = (date?: Date | null) =>
       date ? getLocalDatetime(date) : '';
 
-    const displayLoadingOrNotStarted = () =>
+    const displayLoadingOrNotStarted =
       jdcbTestState === JdcbTestState.LOADING ||
       jdcbTestState === JdcbTestState.NOT_STARTED;
 
-    const displaySuccess = () =>
-      !displayLoadingOrNotStarted() && testJdbcConnectionResponse;
+    const displaySuccess =
+      !displayLoadingOrNotStarted && testJdbcConnectionResponse;
 
-    const displayFailure = () =>
-      !displayLoadingOrNotStarted() && !testJdbcConnectionResponse;
+    const displayFailure =
+      !displayLoadingOrNotStarted && !testJdbcConnectionResponse;
 
     const user = schema.users[0];
     return (
@@ -255,17 +255,17 @@ class DatabaseSchemaDialog extends React.Component<
                 </div>
                 <p className="styled-jdbc-wrapper">
                   Gyldig JDBC tilkobling:
-                  {displayLoadingOrNotStarted() && (
+                  {displayLoadingOrNotStarted && (
                     <span className="bold styled-jdbc-status">ikke testet</span>
                   )}
-                  {displaySuccess() && (
+                  {displaySuccess && (
                     <Icon
                       className="styled-jdbc-status"
                       iconName="Check"
                       style={{ color: skeColor.green, fontSize: '30px' }}
                     />
                   )}
-                  {displayFailure() && (
+                  {displayFailure && (
                     <Icon
                       className="styled-jdbc-status"
                       iconName="Clear"
