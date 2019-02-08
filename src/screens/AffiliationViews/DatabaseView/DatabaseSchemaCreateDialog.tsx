@@ -3,6 +3,7 @@ import styled from 'styled-components';
 
 import Button from 'aurora-frontend-react-komponenter/Button';
 import Dialog from 'aurora-frontend-react-komponenter/Dialog';
+import LoadingButton from 'components/LoadingButton';
 import { ICreateDatabaseSchemaInput } from 'models/schemas';
 import New from './createDialogSteps/New';
 import Type from './createDialogSteps/Type';
@@ -22,8 +23,9 @@ interface IDatabaseSchemaCreateDialogProps {
 
 interface IDatabaseSchemaCreateDialogState {
   isOpen: boolean;
+  isLoading: boolean;
   step: Step;
-  labels: ICreateDatabaseSchemaInput
+  labels: ICreateDatabaseSchemaInput;
 }
 
 class DatabaseSchemaCreateDialog extends React.Component<
@@ -32,6 +34,7 @@ class DatabaseSchemaCreateDialog extends React.Component<
 > {
   public state = {
     isOpen: false,
+    isLoading: false,
     step: Step.TYPE,
     labels: {
       discriminator: '',
@@ -63,17 +66,27 @@ class DatabaseSchemaCreateDialog extends React.Component<
     this.setState({
       labels
     });
-  }
+  };
 
-  public createDatabaseSchema = () => {
+  public createDatabaseSchema = async () => {
     const { onCreate } = this.props;
     const { labels } = this.state;
-    onCreate(labels);
+    this.setState({
+      isLoading: true
+    });
+    await onCreate(labels);
   };
+
+  public componentWillUnmount() {
+    this.setState({
+      step: Step.TYPE,
+      isLoading: false
+    });
+  }
 
   public render() {
     const { className } = this.props;
-    const { isOpen, step, labels } = this.state;
+    const { isOpen, isLoading, step, labels } = this.state;
 
     const close = this.toggleDialog(false);
     const open = this.toggleDialog(true);
@@ -106,7 +119,19 @@ class DatabaseSchemaCreateDialog extends React.Component<
               {isNew && <New setLabels={this.setLabels} labels={labels} />}
             </div>
           </div>
-          <Dialog.Footer>{isNew && <Button onClick={this.createDatabaseSchema}>Opprett</Button>}</Dialog.Footer>
+          <Dialog.Footer>
+            {isType && <div style={{ height: '5px' }} />}
+            {isNew && (
+              <LoadingButton
+                onClick={this.createDatabaseSchema}
+                buttonType="primaryRounded"
+                style={{ width: '150px' }}
+                loading={isLoading}
+              >
+                Opprett
+              </LoadingButton>
+            )}
+          </Dialog.Footer>
         </Dialog>
       </>
     );
