@@ -74,7 +74,7 @@ const MatrixView = ({
         </LoadingButton>
       </StyledUpdate>
     </ActionBar>
-    <Matrix showSemanticVersion={showExactVersion} />
+    <Matrix showSemanticVersion={showSemanticVersion} />
   </div>
 );
 
