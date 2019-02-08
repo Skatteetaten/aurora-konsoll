@@ -1,5 +1,6 @@
 import {
   IDatabaseSchema,
+  IDatabaseSchemaInput,
   IDatabaseSchemaView,
   IUpdateDatabaseSchemaInputWithCreatedBy
 } from 'models/schemas';
@@ -127,6 +128,15 @@ export default class DatabaseSchemaService {
     return columns;
   }
 
+  public hasEmptyValues(input: IDatabaseSchemaInput) {
+    return (
+      input.application.trim() === '' ||
+      input.environment.trim() === '' ||
+      input.discriminator.trim() === '' ||
+      input.createdBy.trim() === ''
+    );
+  }
+
   public isUpdateButtonDisabled(
     updatedSchemaValues: IUpdateDatabaseSchemaInputWithCreatedBy,
     schema?: IDatabaseSchema
@@ -141,13 +151,9 @@ export default class DatabaseSchemaService {
       schema.discriminator === updatedSchemaValues.discriminator &&
       schema.createdBy === updatedSchemaValues.createdBy;
 
-    const isEmptyValues =
-      updatedSchemaValues.application === '' ||
-      updatedSchemaValues.environment === '' ||
-      updatedSchemaValues.discriminator === '' ||
-      updatedSchemaValues.createdBy === '';
+    const isEmpty = this.hasEmptyValues(updatedSchemaValues);
 
-    return isUnchangedValues || isEmptyValues;
+    return isUnchangedValues || isEmpty;
   }
 
   public sortItems(

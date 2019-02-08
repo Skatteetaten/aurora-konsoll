@@ -5,6 +5,7 @@ import Button from 'aurora-frontend-react-komponenter/Button';
 import Dialog from 'aurora-frontend-react-komponenter/Dialog';
 import LoadingButton from 'components/LoadingButton';
 import { ICreateDatabaseSchemaInput } from 'models/schemas';
+import DatabaseSchemaService from 'services/DatabaseSchemaService';
 import New from './createDialogSteps/New';
 import Type from './createDialogSteps/Type';
 
@@ -46,10 +47,17 @@ class DatabaseSchemaCreateDialog extends React.Component<
     }
   };
 
+  private databaseSchemaService = new DatabaseSchemaService();
+
   public toggleDialog = (isOpen: boolean) => () => {
     this.setState({
       isOpen
     });
+    if (isOpen) {
+      this.setState({
+        step: Step.TYPE
+      });
+    }
   };
 
   public handleLabelChange = (field: string) => (value: string) => {
@@ -79,7 +87,6 @@ class DatabaseSchemaCreateDialog extends React.Component<
 
   public componentWillUnmount() {
     this.setState({
-      step: Step.TYPE,
       isLoading: false
     });
   }
@@ -124,9 +131,12 @@ class DatabaseSchemaCreateDialog extends React.Component<
             {isNew && (
               <LoadingButton
                 onClick={this.createDatabaseSchema}
-                buttonType="primaryRounded"
+                buttonType="primaryRoundedFilled"
                 style={{ width: '150px' }}
                 loading={isLoading}
+                disabled={
+                  this.databaseSchemaService.hasEmptyValues(labels) || isLoading
+                }
               >
                 Opprett
               </LoadingButton>

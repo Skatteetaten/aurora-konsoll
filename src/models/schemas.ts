@@ -37,23 +37,22 @@ export interface IDatabaseSchemaView {
   id: string;
 }
 
-interface IDatabaseSchemaInput {
+export interface IDatabaseSchemaInput {
   discriminator: string;
   description?: string | null;
   environment: string;
   application: string;
   affiliation: string;
+  createdBy: string;
 }
 
 export interface IUpdateDatabaseSchemaInputWithCreatedBy
   extends IDatabaseSchemaInput {
   id: string;
-  createdBy: string;
 }
 
 export interface ICreateDatabaseSchemaInput extends IDatabaseSchemaInput {
   jdbcUser?: IJdbcUser | null;
-  createdBy: string;
 }
 
 export interface IJdbcUser {

@@ -8,6 +8,7 @@ import { ImageTagType } from 'models/ImageTagType';
 import { IPodResource } from 'models/Pod';
 import {
   IDatabaseSchema,
+  IDatabaseSchemaInput,
   IDatabaseSchemaView,
   IUpdateDatabaseSchemaInputWithCreatedBy
 } from 'models/schemas';
@@ -170,6 +171,16 @@ export const databaseSchemaFactory = Factory.Sync.makeFactory<IDatabaseSchema>({
   jdbcUrl: 'jdbcurl-123',
   name: 'l4342',
   users: []
+});
+
+export const databaseSchemaInputFactory = Factory.Sync.makeFactory<
+  IDatabaseSchemaInput
+>({
+  application: 'application',
+  environment: 'environment',
+  discriminator: 'db',
+  createdBy: '12345',
+  affiliation: 'paas'
 });
 
 export const databaseSchemaInputWithCreatedByFactory = Factory.Sync.makeFactory<
