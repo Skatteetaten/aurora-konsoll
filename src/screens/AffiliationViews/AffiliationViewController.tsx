@@ -35,6 +35,7 @@ interface IAffiliationViewControllerState {
   filter: IFilter;
   allFilters: IApplicationDeploymentFilters[];
   filterPathUrl: string;
+  showSemanticVersion: boolean;
 }
 
 class AffiliationViewController extends React.Component<
@@ -50,7 +51,8 @@ class AffiliationViewController extends React.Component<
       environments: []
     },
     allFilters: [],
-    filterPathUrl: ''
+    filterPathUrl: '',
+    showSemanticVersion: false
   };
 
   private deploymentFilterService = new DeploymentFilterService();
@@ -252,6 +254,12 @@ class AffiliationViewController extends React.Component<
     }
   };
 
+  public toggleShowSemanticVersion = () => {
+    this.setState(state => ({
+      showSemanticVersion: !state.showSemanticVersion
+    }));
+  };
+
   public render() {
     const { matchPath, affiliation } = this.props;
     const {
@@ -260,7 +268,8 @@ class AffiliationViewController extends React.Component<
       isRefreshing,
       filterPathUrl,
       filter,
-      allFilters
+      allFilters,
+      showSemanticVersion: showExactVersion
     } = this.state;
 
     if (loading && deployments.length === 0) {
@@ -300,6 +309,8 @@ class AffiliationViewController extends React.Component<
                 allDeployments={deployments}
                 filters={filter}
                 allFilters={allFilters}
+                showSemanticVersion={showExactVersion}
+                toggleShowSemanticVersion={this.toggleShowSemanticVersion}
               />
             )
           }

@@ -3,20 +3,23 @@ import styled from 'styled-components';
 import { IApplicationDeploymentContext } from '../ApplicationDeploymentContext';
 import Row, { IApplicationMap } from './Row';
 
+interface IMatrixProps {
+  className?: string;
+  showSemanticVersion: boolean;
+}
+
 const Matrix = ({
   deployments,
   buildDeploymentLink,
-  className
-}: IApplicationDeploymentContext & { className?: string }) => {
-  const environments = deployments.reduce(
-    (acc, app) => {
-      if (acc.indexOf(app.environment) === -1) {
-        return acc.concat(app.environment);
-      }
-      return acc;
-    },
-    [' ']
-  );
+  className,
+  showSemanticVersion: showExactVersion
+}: IApplicationDeploymentContext & IMatrixProps) => {
+  const environments = deployments.reduce((acc, app) => {
+    if (acc.indexOf(app.environment) === -1) {
+      return acc.concat(app.environment);
+    }
+    return acc;
+  }, [' ']);
 
   const apps: IApplicationMap = deployments.reduce((acc, app) => {
     if (acc[app.name]) {
@@ -43,6 +46,7 @@ const Matrix = ({
             .map(name => (
               <Row
                 key={name}
+                showSemanticVersion={showExactVersion}
                 name={name}
                 environments={environments}
                 apps={apps}

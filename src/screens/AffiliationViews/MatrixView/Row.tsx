@@ -11,9 +11,16 @@ interface IRowProps {
   environments: string[];
   apps: IApplicationMap;
   linkBuilder: (deployment: IApplicationDeployment) => React.ComponentType;
+  showSemanticVersion: boolean;
 }
 
-const Row = ({ name, environments, apps, linkBuilder }: IRowProps) => {
+const Row = ({
+  name,
+  environments,
+  apps,
+  linkBuilder,
+  showSemanticVersion: showExactVersion
+}: IRowProps) => {
   const cells = environments.map((environment, index) => {
     const key = `${environment}::${name}`;
 
@@ -30,21 +37,50 @@ const Row = ({ name, environments, apps, linkBuilder }: IRowProps) => {
       return <td key={key}>-</td>;
     }
 
-    const tooltip = deployment.version.releaseTo
+    const isReleaseTo = !!deployment.version.releaseTo;
+    const tooltip = isReleaseTo
       ? `ReleaseTo: ${deployment.version.releaseTo}`
       : deployment.version.deployTag.name;
 
     const releaseToHint = deployment.version.releaseTo ? '*' : '';
 
     const Link = linkBuilder(deployment);
+    const deployTag = deployment.version.deployTag.name;
+    const semanticVersion =
+      showExactVersion && getExactVersion(deployment.version.auroraVersion);
+
+    const isSameVersion =
+      semanticVersion && deployTag.localeCompare(semanticVersion) === 0;
     return (
       <Status key={key} code={deployment.status.code} title={tooltip}>
-        <Link>{`${releaseToHint}${deployment.version.deployTag.name}`}</Link>
+        <Link>
+          <span>
+            {`${releaseToHint}${deployTag}`}
+            {!isSameVersion && (
+              <>
+                <br />
+                {semanticVersion}
+              </>
+            )}
+          </span>
+        </Link>
       </Status>
     );
   });
 
   return <tr>{cells}</tr>;
 };
+
+function getExactVersion(auroraVersion?: string): string | undefined {
+  if (!auroraVersion) {
+    return;
+  }
+
+  const shortVersion = auroraVersion.split(/(^(\d+\.)(\d+\.)(\*|\d+))/);
+  if (shortVersion.length > 1) {
+    return shortVersion[1];
+  }
+  return;
+}
 
 export default Row;

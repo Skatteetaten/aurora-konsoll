@@ -1,6 +1,8 @@
 import * as React from 'react';
 import styled from 'styled-components';
 
+import Checkbox from 'aurora-frontend-react-komponenter/Checkbox';
+
 import LoadingButton from 'components/LoadingButton';
 import TimeSince from 'components/TimeSince';
 
@@ -24,6 +26,8 @@ interface IMatrixViewProps {
   filters: IFilter;
   allFilters: IApplicationDeploymentFilters[];
   deleteFilter: (filterName: string) => void;
+  showSemanticVersion: boolean;
+  toggleShowSemanticVersion: () => void;
 }
 
 const MatrixView = ({
@@ -36,7 +40,9 @@ const MatrixView = ({
   allDeployments,
   filters,
   allFilters,
-  deleteFilter
+  deleteFilter,
+  showSemanticVersion,
+  toggleShowSemanticVersion
 }: IMatrixViewProps) => (
   <div className={className}>
     <ActionBar>
@@ -48,6 +54,13 @@ const MatrixView = ({
           allDeployments={allDeployments}
           filters={filters}
           allFilters={allFilters}
+        />
+        <Checkbox
+          boxSide={'start'}
+          label="Vis sematisk versjon"
+          checked={showSemanticVersion}
+          onChange={toggleShowSemanticVersion}
+          className="versionCheckbox"
         />
       </StyledFilter>
       <StyledUpdate>
@@ -61,7 +74,7 @@ const MatrixView = ({
         </LoadingButton>
       </StyledUpdate>
     </ActionBar>
-    <Matrix />
+    <Matrix showSemanticVersion={showExactVersion} />
   </div>
 );
 
@@ -79,6 +92,10 @@ const StyledFilter = styled.div`
   align-items: center;
   button {
     margin-right: 20px;
+  }
+
+  .versionCheckbox {
+    margin-left: 30px;
   }
 `;
 
