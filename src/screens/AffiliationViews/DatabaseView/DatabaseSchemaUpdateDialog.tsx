@@ -250,20 +250,6 @@ export default styled(DatabaseSchemaUpdateDialog)`
     font-weight: bold;
   }
 
-  .styled-jdbc-status {
-    margin-left: 7px;
-  }
-
-  .styled-jdbc {
-    padding-top: 10px;
-  }
-
-  .styled-jdbc-wrapper {
-    display: flex;
-    align-items: center;
-    height: 30px;
-  }
-
   .ms-TextField-wrapper {
     padding-bottom: 10px;
   }

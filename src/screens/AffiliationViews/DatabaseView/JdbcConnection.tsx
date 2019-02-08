@@ -5,6 +5,7 @@ import TextField from 'aurora-frontend-react-komponenter/TextField';
 import palette from 'aurora-frontend-react-komponenter/utils/palette';
 import LoadingButton from 'components/LoadingButton';
 import { IJdbcUser } from 'models/schemas';
+import styled from 'styled-components';
 
 const { skeColor } = palette;
 
@@ -23,6 +24,7 @@ export interface IJdbcConnectionProps {
   onTestJdbcConnectionForUser?: (jdbcUser: IJdbcUser) => void;
   testJdbcConnectionResponse: boolean;
   disabled: boolean;
+  className?: string;
 }
 
 export interface IJdbcConnectionState {
@@ -75,7 +77,8 @@ class JdbcConnection extends React.Component<
       testJdbcConnectionResponse,
       username,
       jdbcUrl,
-      disabled
+      disabled,
+      className
     } = this.props;
     const { jdcbTestState } = this.state;
 
@@ -90,7 +93,7 @@ class JdbcConnection extends React.Component<
       !displayLoadingOrNotStarted() && !testJdbcConnectionResponse;
 
     return (
-      <>
+      <div className={className}>
         <h3>Tilkoblingsinformasjon</h3>
         <TextField
           id={'username'}
@@ -137,9 +140,30 @@ class JdbcConnection extends React.Component<
             />
           )}
         </p>
-      </>
+      </div>
     );
   }
 }
 
-export default JdbcConnection;
+export default styled(JdbcConnection)`
+  .bold {
+    font-weight: bold;
+  }
+  .ms-TextField-wrapper {
+    padding-bottom: 10px;
+  }
+
+  .styled-jdbc-status {
+    margin-left: 7px;
+  }
+
+  .styled-jdbc {
+    padding-top: 10px;
+  }
+
+  .styled-jdbc-wrapper {
+    display: flex;
+    align-items: center;
+    height: 30px;
+  }
+`;
