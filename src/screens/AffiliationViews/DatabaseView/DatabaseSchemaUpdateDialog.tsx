@@ -2,6 +2,7 @@ import * as React from 'react';
 import styled from 'styled-components';
 
 import ActionButton from 'aurora-frontend-react-komponenter/ActionButton';
+import Button from 'aurora-frontend-react-komponenter/Button';
 import Dialog from 'aurora-frontend-react-komponenter/Dialog';
 import Grid from 'aurora-frontend-react-komponenter/Grid';
 import palette from 'aurora-frontend-react-komponenter/utils/palette';
@@ -230,8 +231,18 @@ class DatabaseSchemaUpdateDialog extends React.Component<
               renderOpenDialogButton={this.renderConfirmationOpenButton}
               renderFooterButtons={this.renderConfirmationFooterButtons}
             />
-            <ActionButton onClick={this.hideDialog}>Avbryt</ActionButton>
-            <ActionButton
+            <Button
+              buttonType="primaryRoundedFilled"
+              style={{ width: '120px', marginRight: '10px' }}
+              icon="Clear"
+              onClick={this.hideDialog}
+            >
+              Avbryt
+            </Button>
+            <Button
+              buttonType="primaryRoundedFilled"
+              style={{ width: '120px' }}
+              icon="Check"
               onClick={this.updateLabels}
               disabled={databaseSchemaService.isUpdateButtonDisabled(
                 updatedSchemaValues,
@@ -239,7 +250,7 @@ class DatabaseSchemaUpdateDialog extends React.Component<
               )}
             >
               Oppdater
-            </ActionButton>
+            </Button>
           </Dialog.Footer>
         </div>
       </Dialog>

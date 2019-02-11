@@ -189,7 +189,7 @@ class DatabaseSchemaCreateDialog extends React.Component<
                 <Button
                   onClick={back}
                   buttonType="primaryRoundedFilled"
-                  style={{ width: '150px', marginRight: '10px' }}
+                  style={{ width: '120px', marginRight: '10px' }}
                   icon="ArrowBack"
                 >
                   Tilbake
@@ -200,7 +200,7 @@ class DatabaseSchemaCreateDialog extends React.Component<
               <LoadingButton
                 onClick={this.createDatabaseSchema}
                 buttonType="primaryRoundedFilled"
-                style={{ width: '150px' }}
+                style={{ width: '120px' }}
                 icon="Check"
                 loading={isLoading}
                 disabled={
@@ -216,7 +216,7 @@ class DatabaseSchemaCreateDialog extends React.Component<
               <LoadingButton
                 onClick={this.createDatabaseSchema}
                 buttonType="primaryRoundedFilled"
-                style={{ width: '150px' }}
+                style={{ width: '120px' }}
                 icon="Check"
                 loading={isLoading}
                 disabled={
