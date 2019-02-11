@@ -2,7 +2,8 @@ import {
   databaseSchemaFactory,
   databaseSchemaInputFactory,
   databaseSchemaInputWithCreatedByFactory,
-  databaseSchemaViewFactory
+  databaseSchemaViewFactory,
+  jdbcUserFactory
 } from 'testData/testDataBuilders';
 import DatabaseSchemaService, {
   defaultColumns,
@@ -179,15 +180,36 @@ describe('DatabaseSchemaService', () => {
       expect(isDisabled).toBeFalsy();
     });
 
-    it('hasEmptyValues given affiliation with only spaces', () => {
+    it('hasEmptyLabelValues given affiliation with only spaces', () => {
       const databaseSchemaInput = databaseSchemaInputFactory.build({
         environment: '      '
       });
 
-      const hasEmptyValues = databaseSchemaService.hasEmptyValues(
+      const hasEmptyValues = databaseSchemaService.hasEmptyLabelValues(
         databaseSchemaInput
       );
       expect(hasEmptyValues).toBeTruthy();
+    });
+
+    it('hasEmptyJdbcValues given undefined jdbcUser', () => {
+      const isUndefined = databaseSchemaService.hasEmptyJdbcValues(undefined);
+      expect(isUndefined).toBeTruthy();
+    });
+
+    it('hasEmptyJdbcValues given jdbcUrl with spaces', () => {
+      const jdbcUserInput = jdbcUserFactory.build({
+        jdbcUrl: '       '
+      });
+
+      const isEmpty = databaseSchemaService.hasEmptyJdbcValues(jdbcUserInput);
+      expect(isEmpty).toBeTruthy();
+    });
+
+    it('hasEmptyJdbcValues given valid jdbcUser', () => {
+      const jdbcUserInput = jdbcUserFactory.build();
+
+      const isValid = databaseSchemaService.hasEmptyJdbcValues(jdbcUserInput);
+      expect(isValid).toBeFalsy();
     });
   });
 });

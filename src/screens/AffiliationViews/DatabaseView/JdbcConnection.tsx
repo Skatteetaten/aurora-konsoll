@@ -23,8 +23,11 @@ export interface IJdbcConnectionProps {
   onTestJdbcConnectionForId?: (id: string) => void;
   onTestJdbcConnectionForUser?: (jdbcUser: IJdbcUser) => void;
   testJdbcConnectionResponse: boolean;
-  disabled: boolean;
+  isDisabledFields: boolean;
   className?: string;
+  hasPasswordField: boolean;
+  canNotTest: boolean;
+  handleJdbcChange?: (field: string) => (value: string) => void;
 }
 
 export interface IJdbcConnectionState {
@@ -77,8 +80,12 @@ class JdbcConnection extends React.Component<
       testJdbcConnectionResponse,
       username,
       jdbcUrl,
-      disabled,
-      className
+      isDisabledFields,
+      className,
+      hasPasswordField,
+      password,
+      canNotTest,
+      handleJdbcChange
     } = this.props;
     const { jdcbTestState } = this.state;
 
@@ -99,13 +106,26 @@ class JdbcConnection extends React.Component<
           id={'username'}
           label={'Brukernavn'}
           value={username}
-          disabled={disabled}
+          disabled={isDisabledFields}
+          onChanged={handleJdbcChange && handleJdbcChange('username')}
         />
+        {hasPasswordField && (
+          <TextField
+            id={'password'}
+            label={'Passord'}
+            value={password}
+            disabled={isDisabledFields}
+            onChanged={handleJdbcChange && handleJdbcChange('password')}
+            type="password"
+          />
+        )}
         <TextField
           id={'jdbcUrl'}
           label={'JDBC url'}
           value={jdbcUrl}
-          disabled={disabled}
+          disabled={isDisabledFields}
+          help="jdbc:oracle:thin:@<db server>.skead.no:<port>/<sid>"
+          onChanged={handleJdbcChange && handleJdbcChange('jdbcUrl')}
         />
         <div className="styled-jdbc">
           <LoadingButton
@@ -113,6 +133,7 @@ class JdbcConnection extends React.Component<
             buttonType="primary"
             style={{ width: '100%' }}
             loading={jdcbTestState === JdcbTestState.LOADING}
+            disabled={canNotTest}
           >
             TEST JDBC TILKOBLING
           </LoadingButton>
@@ -165,5 +186,8 @@ export default styled(JdbcConnection)`
     display: flex;
     align-items: center;
     height: 30px;
+  }
+  .ms-Callout-main {
+    width: 380px;
   }
 `;

@@ -37,19 +37,21 @@ class DatabaseSchemaCreateDialog extends React.Component<
   IDatabaseSchemaCreateDialogProps,
   IDatabaseSchemaCreateDialogState
 > {
+  public resetInput: ICreateDatabaseSchemaInput = {
+    discriminator: '',
+    createdBy: '',
+    description: '',
+    environment: '',
+    application: '',
+    affiliation: this.props.affiliation,
+    jdbcUser: null
+  };
+
   public state = {
     isOpen: false,
     isLoading: false,
     step: Step.TYPE,
-    databaseSchemaInput: {
-      discriminator: '',
-      createdBy: '',
-      description: '',
-      environment: '',
-      application: '',
-      affiliation: this.props.affiliation,
-      jdbcUser: null
-    }
+    databaseSchemaInput: this.resetInput
   };
 
   private databaseSchemaService = new DatabaseSchemaService();
@@ -61,6 +63,10 @@ class DatabaseSchemaCreateDialog extends React.Component<
     if (isOpen) {
       this.setState({
         step: Step.TYPE
+      });
+    } else {
+      this.setState({
+        databaseSchemaInput: this.resetInput
       });
     }
   };
@@ -81,6 +87,15 @@ class DatabaseSchemaCreateDialog extends React.Component<
     this.setState({
       databaseSchemaInput
     });
+  };
+
+  public setJdbcUserInput = (jdbcUser: IJdbcUser) => {
+    this.setState(state => ({
+      databaseSchemaInput: {
+        ...state.databaseSchemaInput,
+        jdbcUser
+      }
+    }));
   };
 
   public createDatabaseSchema = async () => {
@@ -109,15 +124,7 @@ class DatabaseSchemaCreateDialog extends React.Component<
     const back = () => {
       this.setState({
         step: Step.TYPE,
-        databaseSchemaInput: {
-          discriminator: '',
-          createdBy: '',
-          description: '',
-          environment: '',
-          application: '',
-          affiliation: this.props.affiliation,
-          jdbcUser: null
-        }
+        databaseSchemaInput: this.resetInput
       });
     };
 
@@ -127,7 +134,6 @@ class DatabaseSchemaCreateDialog extends React.Component<
     const isNew = step === Step.NEW;
     const isType = step === Step.TYPE;
     const isExternal = step === Step.EXTERNAL;
-
     return (
       <>
         <Button buttonType="primary" icon="AddOutline" onClick={open}>
@@ -160,9 +166,11 @@ class DatabaseSchemaCreateDialog extends React.Component<
               {isExternal && (
                 <External
                   setDatabaseSchemaInput={this.setDatabaseSchemaInput}
+                  setJdbcUserInput={this.setJdbcUserInput}
                   databaseSchemaInput={databaseSchemaInput}
                   onTestJdbcConnectionForUser={onTestJdbcConnectionForUser}
                   testJdbcConnectionResponse={testJdbcConnectionResponse}
+                  databaseSchemaService={this.databaseSchemaService}
                 />
               )}
             </div>
@@ -196,7 +204,7 @@ class DatabaseSchemaCreateDialog extends React.Component<
                 icon="Check"
                 loading={isLoading}
                 disabled={
-                  this.databaseSchemaService.hasEmptyValues(
+                  this.databaseSchemaService.hasEmptyLabelValues(
                     databaseSchemaInput
                   ) || isLoading
                 }
@@ -204,7 +212,26 @@ class DatabaseSchemaCreateDialog extends React.Component<
                 Opprett
               </LoadingButton>
             )}
-            {isExternal && <div />}
+            {isExternal && (
+              <LoadingButton
+                onClick={this.createDatabaseSchema}
+                buttonType="primaryRoundedFilled"
+                style={{ width: '150px' }}
+                icon="Check"
+                loading={isLoading}
+                disabled={
+                  this.databaseSchemaService.hasEmptyLabelValues(
+                    databaseSchemaInput
+                  ) ||
+                  this.databaseSchemaService.hasEmptyJdbcValues(
+                    databaseSchemaInput.jdbcUser
+                  ) ||
+                  isLoading
+                }
+              >
+                Opprett
+              </LoadingButton>
+            )}
           </Dialog.Footer>
         </Dialog>
       </>

@@ -10,6 +10,7 @@ import {
   IDatabaseSchema,
   IDatabaseSchemaInput,
   IDatabaseSchemaView,
+  IJdbcUser,
   IUpdateDatabaseSchemaInputWithCreatedBy
 } from 'models/schemas';
 import { StatusCode } from 'models/Status';
@@ -193,4 +194,10 @@ export const databaseSchemaInputWithCreatedByFactory = Factory.Sync.makeFactory<
   environment: 'environment',
   affiliation: 'paas',
   createdBy: '12345'
+});
+
+export const jdbcUserFactory = Factory.Sync.makeFactory<IJdbcUser>({
+  jdbcUrl: 'jdbc:oracle:thin:@test.skead.no:1521/referanse',
+  password: 'password',
+  username: 'username'
 });

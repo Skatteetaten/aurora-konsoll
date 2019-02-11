@@ -2,6 +2,7 @@ import {
   IDatabaseSchema,
   IDatabaseSchemaInput,
   IDatabaseSchemaView,
+  IJdbcUser,
   IUpdateDatabaseSchemaInputWithCreatedBy
 } from 'models/schemas';
 
@@ -128,13 +129,25 @@ export default class DatabaseSchemaService {
     return columns;
   }
 
-  public hasEmptyValues(input: IDatabaseSchemaInput) {
+  public hasEmptyLabelValues(input: IDatabaseSchemaInput) {
     return (
       input.application.trim() === '' ||
       input.environment.trim() === '' ||
       input.discriminator.trim() === '' ||
       input.createdBy.trim() === ''
     );
+  }
+
+  public hasEmptyJdbcValues(input: IJdbcUser | null | undefined) {
+    if (!input || !input.username || !input.password || !input.jdbcUrl) {
+      return true;
+    } else {
+      return (
+        input.jdbcUrl.trim() === '' ||
+        input.password.trim() === '' ||
+        input.username.trim() === ''
+      );
+    }
   }
 
   public isUpdateButtonDisabled(
@@ -151,7 +164,7 @@ export default class DatabaseSchemaService {
       schema.discriminator === updatedSchemaValues.discriminator &&
       schema.createdBy === updatedSchemaValues.createdBy;
 
-    const isEmpty = this.hasEmptyValues(updatedSchemaValues);
+    const isEmpty = this.hasEmptyLabelValues(updatedSchemaValues);
 
     return isUnchangedValues || isEmpty;
   }
