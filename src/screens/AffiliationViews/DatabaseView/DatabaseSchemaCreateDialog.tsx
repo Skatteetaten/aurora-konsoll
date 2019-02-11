@@ -1,6 +1,7 @@
 import * as React from 'react';
 import styled from 'styled-components';
 
+import ActionButton from 'aurora-frontend-react-komponenter/ActionButton';
 import Button from 'aurora-frontend-react-komponenter/Button';
 import Dialog from 'aurora-frontend-react-komponenter/Dialog';
 import LoadingButton from 'components/LoadingButton';
@@ -47,11 +48,7 @@ class DatabaseSchemaCreateDialog extends React.Component<
       environment: '',
       application: '',
       affiliation: this.props.affiliation,
-      jdbcUser: {
-        username: '',
-        password: '',
-        jdbcUrl: ''
-      }
+      jdbcUser: null
     }
   };
 
@@ -109,6 +106,21 @@ class DatabaseSchemaCreateDialog extends React.Component<
     } = this.props;
     const { isOpen, isLoading, step, databaseSchemaInput } = this.state;
 
+    const back = () => {
+      this.setState({
+        step: Step.TYPE,
+        databaseSchemaInput: {
+          discriminator: '',
+          createdBy: '',
+          description: '',
+          environment: '',
+          application: '',
+          affiliation: this.props.affiliation,
+          jdbcUser: null
+        }
+      });
+    };
+
     const close = this.toggleDialog(false);
     const open = this.toggleDialog(true);
 
@@ -134,6 +146,7 @@ class DatabaseSchemaCreateDialog extends React.Component<
           dialogMaxWidth="90%"
           dialogMinHeight="1000px"
           onDismiss={close}
+          isBlocking={!isType}
         >
           <div className={className}>
             <div className="styled-dialog">
@@ -156,11 +169,31 @@ class DatabaseSchemaCreateDialog extends React.Component<
           </div>
           <Dialog.Footer>
             {isType && <div style={{ height: '5px' }} />}
+            {!isType && (
+              <>
+                <ActionButton
+                  onClick={close}
+                  style={{ float: 'left' }}
+                  icon="Cancel"
+                >
+                  Lukk
+                </ActionButton>
+                <Button
+                  onClick={back}
+                  buttonType="primaryRoundedFilled"
+                  style={{ width: '150px', marginRight: '10px' }}
+                  icon="ArrowBack"
+                >
+                  Tilbake
+                </Button>
+              </>
+            )}
             {isNew && (
               <LoadingButton
                 onClick={this.createDatabaseSchema}
                 buttonType="primaryRoundedFilled"
                 style={{ width: '150px' }}
+                icon="Check"
                 loading={isLoading}
                 disabled={
                   this.databaseSchemaService.hasEmptyValues(
@@ -171,6 +204,7 @@ class DatabaseSchemaCreateDialog extends React.Component<
                 Opprett
               </LoadingButton>
             )}
+            {isExternal && <div />}
           </Dialog.Footer>
         </Dialog>
       </>
