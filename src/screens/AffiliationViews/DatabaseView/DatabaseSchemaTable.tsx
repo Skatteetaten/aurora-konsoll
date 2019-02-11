@@ -28,11 +28,13 @@ export interface ISchemaProps {
   onFetch: (affiliations: string[]) => void;
   onUpdate: (databaseSchema: IDatabaseSchemaInputWithUserId) => void;
   onDelete: (databaseSchema: IDatabaseSchema) => void;
+  onTestJdbcConnectionForId: (id: string) => void;
   items: IDatabaseSchemas;
   isFetching: boolean;
   updateResponse: boolean;
   affiliation: string;
   className?: string;
+  testJdbcConnectionResponse: boolean;
 }
 
 interface ISchemaState {
@@ -142,7 +144,14 @@ export class Schema extends React.Component<ISchemaProps, ISchemaState> {
   };
 
   public render() {
-    const { isFetching, className, onUpdate, onDelete } = this.props;
+    const {
+      isFetching,
+      className,
+      onUpdate,
+      onDelete,
+      onTestJdbcConnectionForId,
+      testJdbcConnectionResponse
+    } = this.props;
     const {
       viewItems,
       selectedColumnIndex,
@@ -183,6 +192,8 @@ export class Schema extends React.Component<ISchemaProps, ISchemaState> {
           onUpdate={onUpdate}
           onDelete={onDelete}
           databaseSchemaService={this.databaseSchemaService}
+          onTestJdbcConnectionForId={onTestJdbcConnectionForId}
+          testJdbcConnectionResponse={testJdbcConnectionResponse}
         />
       </div>
     );

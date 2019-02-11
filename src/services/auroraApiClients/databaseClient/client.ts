@@ -2,10 +2,15 @@ import GoboClient from 'services/GoboClient';
 
 import {
   IDatabaseSchemaInputWithUserId,
-  IDatabaseSchemas
+  IDatabaseSchemas,
+  IJdbcUser
 } from 'models/schemas';
 import { errorStateManager } from 'models/StateManager/ErrorStateManager';
-import { DELETE_DATABASESCHEMA_MUTATION, UPDATE_DATABASESCHEMA_MUTATION } from './mutation';
+import {
+  DELETE_DATABASESCHEMA_MUTATION,
+  TEST_JDBC_CONNECTION_FOR_ID_MUTATION,
+  UPDATE_DATABASESCHEMA_MUTATION
+} from './mutation';
 import { DATABASE_SCHEMAS_QUERY, IDatabaseSchemasQuery } from './query.ts';
 
 export class DatabaseClient {
@@ -60,6 +65,42 @@ export class DatabaseClient {
 
     if (result && result.data) {
       return result.data.deleteDatabaseSchema;
+    }
+
+    return false;
+  }
+
+  public async testJdbcConnectionForId(id: string) {
+    const result = await this.client.mutate<{
+      testJdbcConnectionForId: boolean;
+    }>({
+      mutation: TEST_JDBC_CONNECTION_FOR_ID_MUTATION,
+      variables: {
+        id
+      }
+    });
+
+    if (result && result.data) {
+      return result.data.testJdbcConnectionForId;
+    }
+
+    return false;
+  }
+
+  public async testJdbcConnectionForJdbcUser(jdbcUser: IJdbcUser) {
+    const result = await this.client.mutate<{
+      testJdbcConnectionForJdbcUser: boolean;
+    }>({
+      mutation: TEST_JDBC_CONNECTION_FOR_ID_MUTATION,
+      variables: {
+        input: {
+          jdbcUser
+        }
+      }
+    });
+
+    if (result && result.data) {
+      return result.data.testJdbcConnectionForJdbcUser;
     }
 
     return false;

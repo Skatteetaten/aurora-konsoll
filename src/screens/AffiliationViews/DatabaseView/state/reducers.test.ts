@@ -3,6 +3,8 @@ import {
   DELETE_SCHEMA_RESPONSE,
   FETCHED_SCHEMA_REQUEST,
   FETCHED_SCHEMA_RESPONSE,
+  TEST_JDBC_CONNECTION_FOR_ID_RESPONSE,
+  TEST_JDBC_CONNECTION_FOR_JDBCUSER_RESPONSE,
   UPDATE_SCHEMA_RESPONSE
 } from './actions';
 import { databaseReducer as reducer } from './reducers';
@@ -14,7 +16,6 @@ const schemaItems: IDatabaseSchema = databaseSchemaFactory.build();
 const items: IDatabaseSchemas = { databaseSchemas: [schemaItems] };
 
 describe('database schema reducer', () => {
-
   it('should return isFetching as false and items as list in response', () => {
     expect(
       reducer(undefined, {
@@ -58,6 +59,28 @@ describe('database schema reducer', () => {
       })
     ).toMatchObject({
       deleteSchemaResponse: true
+    });
+  });
+
+  it('should return jdbc connection result for id as true given response', () => {
+    expect(
+      reducer(undefined, {
+        type: TEST_JDBC_CONNECTION_FOR_ID_RESPONSE,
+        payload: { response: true }
+      })
+    ).toMatchObject({
+      testJdbcConnectionResponse: true
+    });
+  });
+
+  it('should return jdbc connection result for jdbc user as true given response', () => {
+    expect(
+      reducer(undefined, {
+        type: TEST_JDBC_CONNECTION_FOR_JDBCUSER_RESPONSE,
+        payload: { response: true }
+      })
+    ).toMatchObject({
+      testJdbcConnectionResponse: true
     });
   });
 });
