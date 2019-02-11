@@ -56,23 +56,21 @@ class JdbcConnection extends React.Component<
         jdcbTestState: JdcbTestState.RESPONSE
       });
     };
-    if (id) {
-      this.setState({
-        jdcbTestState: JdcbTestState.LOADING
-      });
-      if (onTestJdbcConnectionForId) {
-        await onTestJdbcConnectionForId(id);
-      } else {
-        if (onTestJdbcConnectionForUser && password && jdbcUrl && username) {
-          await onTestJdbcConnectionForUser({
-            password,
-            jdbcUrl,
-            username
-          });
-        }
+    this.setState({
+      jdcbTestState: JdcbTestState.LOADING
+    });
+    if (onTestJdbcConnectionForId && id) {
+      await onTestJdbcConnectionForId(id);
+    } else if (onTestJdbcConnectionForUser) {
+      if (onTestJdbcConnectionForUser && password && jdbcUrl && username) {
+        await onTestJdbcConnectionForUser({
+          password,
+          jdbcUrl,
+          username
+        });
       }
-      handleJdbcLoading();
     }
+    handleJdbcLoading();
   };
 
   public render() {

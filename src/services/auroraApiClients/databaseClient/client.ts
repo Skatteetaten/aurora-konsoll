@@ -11,6 +11,7 @@ import {
   CREATE_DATABASE_SCHEMA_MUTATION,
   DELETE_DATABASESCHEMA_MUTATION,
   TEST_JDBC_CONNECTION_FOR_ID_MUTATION,
+  TEST_JDBC_CONNECTION_FOR_JDBCUSER_MUTATION,
   UPDATE_DATABASESCHEMA_MUTATION
 } from './mutation';
 import { DATABASE_SCHEMAS_QUERY, IDatabaseSchemasQuery } from './query.ts';
@@ -95,11 +96,9 @@ export class DatabaseClient {
     const result = await this.client.mutate<{
       testJdbcConnectionForJdbcUser: boolean;
     }>({
-      mutation: TEST_JDBC_CONNECTION_FOR_ID_MUTATION,
+      mutation: TEST_JDBC_CONNECTION_FOR_JDBCUSER_MUTATION,
       variables: {
-        input: {
-          jdbcUser
-        }
+        input: jdbcUser
       }
     });
 

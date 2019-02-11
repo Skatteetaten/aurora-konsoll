@@ -166,7 +166,7 @@ class DatabaseSchemaUpdateDialog extends React.Component<
     }
 
     const dateTimeFormat = (date?: Date | null) =>
-      date ? getLocalDatetime(date) : '';
+      date ? getLocalDatetime(date) : '-';
 
     const user = schema.users[0];
     return (
@@ -182,14 +182,14 @@ class DatabaseSchemaUpdateDialog extends React.Component<
               <Grid.Col lg={2} className="bold">
                 <p>Id: </p>
                 <p>Type: </p>
-                <p>Sist brukt: </p>
                 <p>Opprettet: </p>
+                <p>Sist brukt: </p>
               </Grid.Col>
               <Grid.Col lg={10}>
                 <p>{schema.id}</p>
                 <p>{schema.type}</p>
-                <p>{dateTimeFormat(schema.lastUsedDate)}</p>
                 <p>{dateTimeFormat(schema.createdDate)}</p>
+                <p>{dateTimeFormat(schema.lastUsedDate)}</p>
               </Grid.Col>
             </Grid.Row>
             <hr />
