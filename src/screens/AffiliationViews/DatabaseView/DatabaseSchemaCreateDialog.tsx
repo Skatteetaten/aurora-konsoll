@@ -5,17 +5,11 @@ import ActionButton from 'aurora-frontend-react-komponenter/ActionButton';
 import Button from 'aurora-frontend-react-komponenter/Button';
 import Dialog from 'aurora-frontend-react-komponenter/Dialog';
 import LoadingButton from 'components/LoadingButton';
-import { ICreateDatabaseSchemaInput, IJdbcUser } from 'models/schemas';
+import { ICreateDatabaseSchemaInput, IJdbcUser, Step } from 'models/schemas';
 import DatabaseSchemaService from 'services/DatabaseSchemaService';
 import External from './createDialogSteps/External';
 import New from './createDialogSteps/New';
 import Type from './createDialogSteps/Type';
-
-export enum Step {
-  TYPE,
-  NEW,
-  EXTERNAL
-}
 
 interface IDatabaseSchemaCreateDialogProps {
   className?: string;
@@ -75,9 +69,9 @@ class DatabaseSchemaCreateDialog extends React.Component<
     return;
   };
 
-  public setStep = (newStep: string) => {
+  public setStep = (step: Step) => {
     this.setState({
-      step: Number(newStep)
+      step
     });
   };
 

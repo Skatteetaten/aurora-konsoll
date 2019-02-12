@@ -2,12 +2,7 @@ import * as React from 'react';
 import styled from 'styled-components';
 
 import NavigationTile from 'aurora-frontend-react-komponenter/NavigationTile';
-
-enum Step {
-  TYPE,
-  NEW,
-  EXTERNAL
-}
+import { Step } from 'models/schemas';
 
 const contents = [
   {
@@ -25,14 +20,14 @@ const contents = [
 ];
 
 interface ITypeProps {
-  setStep: (step: string) => void;
+  setStep: (step: Step) => void;
   className?: string;
 }
 
 const Type = ({ setStep, className }: ITypeProps) => {
   const renderContent = (to: string, content: JSX.Element) => {
     const handleStepChange = () => {
-      setStep(to);
+      setStep(Number(to));
     };
     return <a onClick={handleStepChange}>{content}</a>;
   };

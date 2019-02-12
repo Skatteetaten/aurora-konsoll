@@ -60,3 +60,9 @@ export interface IJdbcUser {
   password: string;
   jdbcUrl: string;
 }
+
+export enum Step {
+  TYPE,
+  NEW,
+  EXTERNAL
+}
