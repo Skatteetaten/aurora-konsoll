@@ -7,6 +7,7 @@ import { IDeploymentSpec, IMount } from 'models/DeploymentSpec';
 import { ImageTagType } from 'models/ImageTagType';
 import { IPodResource } from 'models/Pod';
 import {
+  ICreateDatabaseSchemaResponse,
   IDatabaseSchema,
   IDatabaseSchemaInput,
   IDatabaseSchemaView,
@@ -200,4 +201,11 @@ export const jdbcUserFactory = Factory.Sync.makeFactory<IJdbcUser>({
   jdbcUrl: 'jdbc:oracle:thin:@test.skead.no:1521/referanse',
   password: 'password',
   username: 'username'
+});
+
+export const createDatabaseSchemaResponse = Factory.Sync.makeFactory<
+  ICreateDatabaseSchemaResponse
+>({
+  id: '123',
+  jdbcUser: jdbcUserFactory.build()
 });

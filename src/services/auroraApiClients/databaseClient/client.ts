@@ -2,6 +2,7 @@ import GoboClient from 'services/GoboClient';
 
 import {
   ICreateDatabaseSchemaInput,
+  ICreateDatabaseSchemaResponse,
   IDatabaseSchemas,
   IJdbcUser,
   IUpdateDatabaseSchemaInputWithCreatedBy
@@ -41,7 +42,7 @@ export class DatabaseClient {
     databaseSchema: IUpdateDatabaseSchemaInputWithCreatedBy
   ) {
     const result = await this.client.mutate<{
-      updateDatabaseSchema: boolean;
+      updateDatabaseSchema: { id: string };
     }>({
       mutation: UPDATE_DATABASESCHEMA_MUTATION,
       variables: {
@@ -49,8 +50,8 @@ export class DatabaseClient {
       }
     });
 
-    if (result && result.data) {
-      return result.data.updateDatabaseSchema;
+    if (result && result.data && result.data.updateDatabaseSchema) {
+      return true;
     }
 
     return false;
@@ -113,7 +114,11 @@ export class DatabaseClient {
     databaseSchema: ICreateDatabaseSchemaInput
   ) {
     const result = await this.client.mutate<{
-      createDatabaseSchema: boolean;
+      createDatabaseSchema: {
+        id: string;
+        jdbcUrl: string;
+        users: [{ username: string; password: string }];
+      };
     }>({
       mutation: CREATE_DATABASE_SCHEMA_MUTATION,
       variables: {
@@ -121,10 +126,22 @@ export class DatabaseClient {
       }
     });
 
-    if (result && result.data) {
-      return result.data.createDatabaseSchema;
+    if (result && result.data && result.data.createDatabaseSchema) {
+      const graphqlResult = result.data.createDatabaseSchema;
+      const response: ICreateDatabaseSchemaResponse = {
+        id: graphqlResult.id,
+        jdbcUser: {
+          jdbcUrl: graphqlResult.jdbcUrl,
+          password: graphqlResult.users[0].password,
+          username: graphqlResult.users[0].username
+        }
+      };
+      return response;
     }
 
-    return false;
+    return {
+      id: '',
+      jdbcUser: { jdbcUrl: '', username: '', password: '' }
+    };
   }
 }

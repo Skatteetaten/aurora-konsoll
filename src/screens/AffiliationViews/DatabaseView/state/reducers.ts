@@ -10,7 +10,10 @@ import actions, {
   UPDATE_SCHEMA_RESPONSE
 } from './actions';
 
-import { IDatabaseSchemas } from 'models/schemas';
+import {
+  ICreateDatabaseSchemaResponse,
+  IDatabaseSchemas
+} from 'models/schemas';
 
 export type DatabaseSchemasAction = ActionType<typeof actions>;
 
@@ -20,7 +23,7 @@ export interface ISchemasState {
   readonly updateSchemaResponse: boolean;
   readonly deleteSchemaResponse: boolean;
   readonly testJdbcConnectionResponse: boolean;
-  readonly createDatabaseSchemaResponse: boolean;
+  readonly createDatabaseSchemaResponse: ICreateDatabaseSchemaResponse;
 }
 
 export const databaseReducer = combineReducers<
@@ -69,7 +72,14 @@ export const databaseReducer = combineReducers<
         return state;
     }
   },
-  createDatabaseSchemaResponse: (state = false, action) => {
+
+  createDatabaseSchemaResponse: (
+    state: ICreateDatabaseSchemaResponse = {
+      id: '',
+      jdbcUser: { jdbcUrl: '', username: '', password: '' }
+    },
+    action
+  ) => {
     switch (action.type) {
       case CREATE_DATABASE_SCHEMA_RESPONSE:
         return action.payload.response;

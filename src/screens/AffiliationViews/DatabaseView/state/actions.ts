@@ -8,6 +8,7 @@ import { RootAction, RootState } from 'store/types';
 
 import {
   ICreateDatabaseSchemaInput,
+  ICreateDatabaseSchemaResponse,
   IDatabaseSchema,
   IDatabaseSchemas,
   IJdbcUser,
@@ -45,8 +46,9 @@ export const testJdbcConnectionForIdResponse = (response: boolean) =>
 export const testJdbcConnectionForJdbcUserResponse = (response: boolean) =>
   action(TEST_JDBC_CONNECTION_FOR_JDBCUSER_RESPONSE, { response });
 
-export const createDatabaseSchemaResponse = (response: boolean) =>
-  action(CREATE_DATABASE_SCHEMA_RESPONSE, { response });
+export const createDatabaseSchemaResponse = (
+  response: ICreateDatabaseSchemaResponse
+) => action(CREATE_DATABASE_SCHEMA_RESPONSE, { response });
 
 export type Thunk = ActionCreator<
   ThunkAction<void, RootState, IAuroraApiComponentProps, RootAction>
@@ -106,7 +108,6 @@ export const createDatabaseSchema: Thunk = (
     databaseSchema
   );
   dispatch(createDatabaseSchemaResponse(result));
-  dispatch(fetchSchemas([databaseSchema.affiliation]));
 };
 
 export default {

@@ -5,7 +5,12 @@ import ActionButton from 'aurora-frontend-react-komponenter/ActionButton';
 import Button from 'aurora-frontend-react-komponenter/Button';
 import Dialog from 'aurora-frontend-react-komponenter/Dialog';
 import LoadingButton from 'components/LoadingButton';
-import { ICreateDatabaseSchemaInput, IJdbcUser, Step } from 'models/schemas';
+import {
+  ICreateDatabaseSchemaInput,
+  ICreateDatabaseSchemaResponse,
+  IJdbcUser,
+  Step
+} from 'models/schemas';
 import DatabaseSchemaService from 'services/DatabaseSchemaService';
 import External from './createDialogSteps/External';
 import New from './createDialogSteps/New';
@@ -14,9 +19,10 @@ import Type from './createDialogSteps/Type';
 interface IDatabaseSchemaCreateDialogProps {
   className?: string;
   affiliation: string;
+  onFetch: (affiliations: string[]) => void;
   onCreate: (databaseSchema: ICreateDatabaseSchemaInput) => void;
   onTestJdbcConnectionForUser: (jdbcUser: IJdbcUser) => void;
-  createResponse: boolean;
+  createResponse: ICreateDatabaseSchemaResponse;
   testJdbcConnectionResponse: boolean;
 }
 
@@ -99,19 +105,19 @@ class DatabaseSchemaCreateDialog extends React.Component<
       isLoading: true
     });
     await onCreate(databaseSchemaInput);
-  };
-
-  public componentWillUnmount() {
     this.setState({
-      isLoading: false
+      step: Step.SUMMARY
     });
-  }
+  };
 
   public render() {
     const {
       className,
       onTestJdbcConnectionForUser,
-      testJdbcConnectionResponse
+      testJdbcConnectionResponse,
+      onFetch,
+      affiliation,
+      createResponse
     } = this.props;
     const { isOpen, isLoading, step, databaseSchemaInput } = this.state;
 
@@ -122,12 +128,20 @@ class DatabaseSchemaCreateDialog extends React.Component<
       });
     };
 
+    const closeAndFetch = () => {
+      onFetch([affiliation]);
+    };
+
     const close = this.toggleDialog(false);
     const open = this.toggleDialog(true);
 
     const isNew = step === Step.NEW;
     const isType = step === Step.TYPE;
     const isExternal = step === Step.EXTERNAL;
+    const isSummary = step === Step.SUMMARY;
+
+    // tslint:disable-next-line:no-console
+    console.log(createResponse);
     return (
       <>
         <Button buttonType="primary" icon="AddOutline" onClick={open}>
@@ -151,6 +165,7 @@ class DatabaseSchemaCreateDialog extends React.Component<
           <div className={className}>
             <div className="styled-dialog">
               {isType && <Type setStep={this.setStep} />}
+              {isExternal && <div />}
               {isNew && (
                 <New
                   setDatabaseSchemaInput={this.setDatabaseSchemaInput}
@@ -167,11 +182,12 @@ class DatabaseSchemaCreateDialog extends React.Component<
                   databaseSchemaService={this.databaseSchemaService}
                 />
               )}
+              {isSummary && <div />}
             </div>
           </div>
           <Dialog.Footer>
             {isType && <div style={{ height: '5px' }} />}
-            {!isType && (
+            {(isNew || isExternal) && (
               <>
                 <ActionButton
                   onClick={close}
@@ -189,6 +205,16 @@ class DatabaseSchemaCreateDialog extends React.Component<
                   Tilbake
                 </Button>
               </>
+            )}
+            {isSummary && (
+              <Button
+                onClick={closeAndFetch}
+                buttonType="primaryRoundedFilled"
+                style={{ width: '120px' }}
+                icon="Cancel"
+              >
+                Fullfør
+              </Button>
             )}
             {isNew && (
               <LoadingButton

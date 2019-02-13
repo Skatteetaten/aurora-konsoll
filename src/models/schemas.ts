@@ -22,6 +22,7 @@ export interface IDatabaseSchema {
   users: Array<{
     username: string;
     type: string;
+    password?: string;
   }>;
 }
 
@@ -61,8 +62,14 @@ export interface IJdbcUser {
   jdbcUrl: string;
 }
 
+export interface ICreateDatabaseSchemaResponse {
+  id: string;
+  jdbcUser: IJdbcUser;
+}
+
 export enum Step {
   TYPE,
   NEW,
-  EXTERNAL
+  EXTERNAL,
+  SUMMARY
 }

@@ -10,7 +10,10 @@ import {
 } from './actions';
 import { databaseReducer as reducer } from './reducers';
 
-import { databaseSchemaFactory } from 'testData/testDataBuilders';
+import {
+  createDatabaseSchemaResponse,
+  databaseSchemaFactory
+} from 'testData/testDataBuilders';
 
 const emptyItems: IDatabaseSchemas = { databaseSchemas: [] };
 const schemaItems: IDatabaseSchema = databaseSchemaFactory.build();
@@ -89,10 +92,10 @@ describe('database schema reducer', () => {
     expect(
       reducer(undefined, {
         type: CREATE_DATABASE_SCHEMA_RESPONSE,
-        payload: { response: true }
+        payload: { response: createDatabaseSchemaResponse.build() }
       })
     ).toMatchObject({
-      createDatabaseSchemaResponse: true
+      createDatabaseSchemaResponse: createDatabaseSchemaResponse.build()
     });
   });
 });

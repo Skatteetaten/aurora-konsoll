@@ -13,6 +13,7 @@ import { getLocalDate } from 'utils/date';
 
 import {
   ICreateDatabaseSchemaInput,
+  ICreateDatabaseSchemaResponse,
   IDatabaseSchema,
   IDatabaseSchemas,
   IDatabaseSchemaView,
@@ -35,7 +36,7 @@ export interface ISchemaProps {
   onTestJdbcConnectionForId: (id: string) => void;
   onTestJdbcConnectionForUser: (jdbcUser: IJdbcUser) => void;
   items: IDatabaseSchemas;
-  createResponse: boolean;
+  createResponse: ICreateDatabaseSchemaResponse;
   isFetching: boolean;
   updateResponse: boolean;
   affiliation: string;
@@ -160,7 +161,8 @@ export class Schema extends React.Component<ISchemaProps, ISchemaState> {
       onCreate,
       createResponse,
       affiliation,
-      onTestJdbcConnectionForUser
+      onTestJdbcConnectionForUser,
+      onFetch
     } = this.props;
     const {
       viewItems,
@@ -192,6 +194,7 @@ export class Schema extends React.Component<ISchemaProps, ISchemaState> {
               createResponse={createResponse}
               onTestJdbcConnectionForUser={onTestJdbcConnectionForUser}
               testJdbcConnectionResponse={testJdbcConnectionResponse}
+              onFetch={onFetch}
             />
           </div>
         </div>
