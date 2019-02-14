@@ -1,5 +1,6 @@
 import { IDatabaseSchema, IDatabaseSchemas } from 'models/schemas';
 import {
+  CREATE_DATABASE_SCHEMA_RESPONSE,
   DELETE_SCHEMA_RESPONSE,
   FETCHED_SCHEMA_REQUEST,
   FETCHED_SCHEMA_RESPONSE,
@@ -9,7 +10,10 @@ import {
 } from './actions';
 import { databaseReducer as reducer } from './reducers';
 
-import { databaseSchemaFactory } from 'testData/testDataBuilders';
+import {
+  createDatabaseSchemaResponse,
+  databaseSchemaFactory
+} from 'testData/testDataBuilders';
 
 const emptyItems: IDatabaseSchemas = { databaseSchemas: [] };
 const schemaItems: IDatabaseSchema = databaseSchemaFactory.build();
@@ -81,6 +85,17 @@ describe('database schema reducer', () => {
       })
     ).toMatchObject({
       testJdbcConnectionResponse: true
+    });
+  });
+
+  it('should return create database schema result as true given response', () => {
+    expect(
+      reducer(undefined, {
+        type: CREATE_DATABASE_SCHEMA_RESPONSE,
+        payload: { response: createDatabaseSchemaResponse.build() }
+      })
+    ).toMatchObject({
+      createDatabaseSchemaResponse: createDatabaseSchemaResponse.build()
     });
   });
 });

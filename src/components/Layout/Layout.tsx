@@ -67,7 +67,7 @@ const Layout = ({
       <Header title="Aurora Konsoll" user={user} className="g-header">
         {showAffiliationSelector && (
           <Dropdown
-            placeHolder="Velg tilhørighet"
+            placeholder="Velg tilhørighet"
             options={toDropdownOptions(affiliations)}
             onChanged={onAffiliationChanged}
             selectedKey={affiliation}

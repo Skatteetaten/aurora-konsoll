@@ -12,24 +12,31 @@ import {
 import { getLocalDate } from 'utils/date';
 
 import {
+  ICreateDatabaseSchemaInput,
+  ICreateDatabaseSchemaResponse,
   IDatabaseSchema,
-  IDatabaseSchemaInputWithUserId,
   IDatabaseSchemas,
-  IDatabaseSchemaView
+  IDatabaseSchemaView,
+  IJdbcUser,
+  IUpdateDatabaseSchemaInputWithCreatedBy
 } from 'models/schemas';
 import DatabaseSchemaService, {
   defaultSortDirections,
   filterDatabaseSchemaView,
   SortDirection
 } from 'services/DatabaseSchemaService';
-import DatabaseSchemaDialog from './DatabaseSchemaDialog';
+import DatabaseSchemaCreateDialog from './DatabaseSchemaCreateDialog';
+import DatabaseSchemaUpdateDialog from './DatabaseSchemaUpdateDialog';
 
 export interface ISchemaProps {
   onFetch: (affiliations: string[]) => void;
-  onUpdate: (databaseSchema: IDatabaseSchemaInputWithUserId) => void;
+  onUpdate: (databaseSchema: IUpdateDatabaseSchemaInputWithCreatedBy) => void;
   onDelete: (databaseSchema: IDatabaseSchema) => void;
+  onCreate: (databaseSchema: ICreateDatabaseSchemaInput) => void;
   onTestJdbcConnectionForId: (id: string) => void;
+  onTestJdbcConnectionForUser: (jdbcUser: IJdbcUser) => void;
   items: IDatabaseSchemas;
+  createResponse: ICreateDatabaseSchemaResponse;
   isFetching: boolean;
   updateResponse: boolean;
   affiliation: string;
@@ -150,7 +157,12 @@ export class Schema extends React.Component<ISchemaProps, ISchemaState> {
       onUpdate,
       onDelete,
       onTestJdbcConnectionForId,
-      testJdbcConnectionResponse
+      testJdbcConnectionResponse,
+      onCreate,
+      createResponse,
+      affiliation,
+      onTestJdbcConnectionForUser,
+      onFetch
     } = this.props;
     const {
       viewItems,
@@ -168,11 +180,23 @@ export class Schema extends React.Component<ISchemaProps, ISchemaState> {
 
     return (
       <div className={className}>
-        <div className="styledInput">
-          <TextField
-            placeholder="Søk etter skjema"
-            onChanged={this.onFilterChange}
-          />
+        <div className="styled-action-bar">
+          <div className="styled-input">
+            <TextField
+              placeholder="Søk etter skjema"
+              onChanged={this.onFilterChange}
+            />
+          </div>
+          <div className="styled-create">
+            <DatabaseSchemaCreateDialog
+              affiliation={affiliation}
+              onCreate={onCreate}
+              createResponse={createResponse}
+              onTestJdbcConnectionForUser={onTestJdbcConnectionForUser}
+              testJdbcConnectionResponse={testJdbcConnectionResponse}
+              onFetch={onFetch}
+            />
+          </div>
         </div>
         <div className="styledTable">
           <DetailsList
@@ -186,7 +210,7 @@ export class Schema extends React.Component<ISchemaProps, ISchemaState> {
           />
         </div>
 
-        <DatabaseSchemaDialog
+        <DatabaseSchemaUpdateDialog
           schema={selectedSchema}
           clearSelectedSchema={this.clearSelectedSchema}
           onUpdate={onUpdate}
@@ -231,9 +255,19 @@ export default styled(Schema)`
   height: 100%;
   overflow-x: auto;
 
-  .styledInput {
+  .styled-action-bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
     margin: 20px;
+  }
+
+  .styled-input {
     width: 300px;
+  }
+
+  .styled-create {
+    margin-right: 20px;
   }
 
   .styledTable {

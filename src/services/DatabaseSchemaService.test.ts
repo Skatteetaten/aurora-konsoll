@@ -1,4 +1,10 @@
-import { databaseSchemaFactory, databaseSchemaInputWithCreatedByFactory, databaseSchemaViewFactory } from 'testData/testDataBuilders';
+import {
+  databaseSchemaFactory,
+  databaseSchemaInputFactory,
+  databaseSchemaInputWithCreatedByFactory,
+  databaseSchemaViewFactory,
+  jdbcUserFactory
+} from 'testData/testDataBuilders';
 import DatabaseSchemaService, {
   defaultColumns,
   filterDatabaseSchemaView,
@@ -124,34 +130,86 @@ describe('DatabaseSchemaService', () => {
 
   describe('Is update button disabled', () => {
     const databaseSchema = databaseSchemaFactory.build();
-    
+
     it('Button is disabled given unchanged and non-empty values', () => {
       const updatedDatabaseSchema = databaseSchemaInputWithCreatedByFactory.build();
 
-      const isDisabled = databaseSchemaService.isUpdateButtonDisabled(updatedDatabaseSchema, databaseSchema);
+      const isDisabled = databaseSchemaService.isUpdateButtonDisabled(
+        updatedDatabaseSchema,
+        databaseSchema
+      );
       expect(isDisabled).toBeTruthy();
     });
 
     it('Button is enabled given changed value', () => {
-      const updatedDatabaseSchema = databaseSchemaInputWithCreatedByFactory.build({ application: 'referanse' });
+      const updatedDatabaseSchema = databaseSchemaInputWithCreatedByFactory.build(
+        { application: 'referanse' }
+      );
 
-      const isDisabled = databaseSchemaService.isUpdateButtonDisabled(updatedDatabaseSchema, databaseSchema);
+      const isDisabled = databaseSchemaService.isUpdateButtonDisabled(
+        updatedDatabaseSchema,
+        databaseSchema
+      );
       expect(isDisabled).toBeFalsy();
     });
 
     it('Button is disabled given empty value', () => {
-      const updatedDatabaseSchema = databaseSchemaInputWithCreatedByFactory.build({ environment: '' });
+      const updatedDatabaseSchema = databaseSchemaInputWithCreatedByFactory.build(
+        { environment: '' }
+      );
 
-      const isDisabled = databaseSchemaService.isUpdateButtonDisabled(updatedDatabaseSchema, databaseSchema);
+      const isDisabled = databaseSchemaService.isUpdateButtonDisabled(
+        updatedDatabaseSchema,
+        databaseSchema
+      );
       expect(isDisabled).toBeTruthy();
     });
 
     it('Button is enabled given null description and empty input', () => {
-      const databaseSchemaWithNullDescription = databaseSchemaFactory.build({ description: null});
-      const updatedDatabaseSchema = databaseSchemaInputWithCreatedByFactory.build({ description: '' });
+      const databaseSchemaWithNullDescription = databaseSchemaFactory.build({
+        description: null
+      });
+      const updatedDatabaseSchema = databaseSchemaInputWithCreatedByFactory.build(
+        { description: '' }
+      );
 
-      const isDisabled = databaseSchemaService.isUpdateButtonDisabled(updatedDatabaseSchema, databaseSchemaWithNullDescription);
+      const isDisabled = databaseSchemaService.isUpdateButtonDisabled(
+        updatedDatabaseSchema,
+        databaseSchemaWithNullDescription
+      );
       expect(isDisabled).toBeFalsy();
+    });
+
+    it('hasEmptyLabelValues given affiliation with only spaces', () => {
+      const databaseSchemaInput = databaseSchemaInputFactory.build({
+        environment: '      '
+      });
+
+      const hasEmptyValues = databaseSchemaService.hasEmptyLabelValues(
+        databaseSchemaInput
+      );
+      expect(hasEmptyValues).toBeTruthy();
+    });
+
+    it('hasEmptyJdbcValues given undefined jdbcUser', () => {
+      const isUndefined = databaseSchemaService.hasEmptyJdbcValues(undefined);
+      expect(isUndefined).toBeTruthy();
+    });
+
+    it('hasEmptyJdbcValues given jdbcUrl with spaces', () => {
+      const jdbcUserInput = jdbcUserFactory.build({
+        jdbcUrl: '       '
+      });
+
+      const isEmpty = databaseSchemaService.hasEmptyJdbcValues(jdbcUserInput);
+      expect(isEmpty).toBeTruthy();
+    });
+
+    it('hasEmptyJdbcValues given valid jdbcUser', () => {
+      const jdbcUserInput = jdbcUserFactory.build();
+
+      const isValid = databaseSchemaService.hasEmptyJdbcValues(jdbcUserInput);
+      expect(isValid).toBeFalsy();
     });
   });
 });

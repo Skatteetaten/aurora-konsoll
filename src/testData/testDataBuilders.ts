@@ -6,7 +6,14 @@ import {
 import { IDeploymentSpec, IMount } from 'models/DeploymentSpec';
 import { ImageTagType } from 'models/ImageTagType';
 import { IPodResource } from 'models/Pod';
-import { IDatabaseSchema, IDatabaseSchemaInputWithCreatedBy, IDatabaseSchemaView } from 'models/schemas';
+import {
+  ICreateDatabaseSchemaResponse,
+  IDatabaseSchema,
+  IDatabaseSchemaInput,
+  IDatabaseSchemaView,
+  IJdbcUser,
+  IUpdateDatabaseSchemaInputWithCreatedBy
+} from 'models/schemas';
 import { StatusCode } from 'models/Status';
 import { IApplicationDeploymentFilters } from 'models/UserSettings';
 import { IFilter } from 'services/DeploymentFilterService';
@@ -168,7 +175,19 @@ export const databaseSchemaFactory = Factory.Sync.makeFactory<IDatabaseSchema>({
   users: []
 });
 
-export const databaseSchemaInputWithCreatedByFactory = Factory.Sync.makeFactory<IDatabaseSchemaInputWithCreatedBy>({
+export const databaseSchemaInputFactory = Factory.Sync.makeFactory<
+  IDatabaseSchemaInput
+>({
+  application: 'application',
+  environment: 'environment',
+  discriminator: 'db',
+  createdBy: '12345',
+  affiliation: 'paas'
+});
+
+export const databaseSchemaInputWithCreatedByFactory = Factory.Sync.makeFactory<
+  IUpdateDatabaseSchemaInputWithCreatedBy
+>({
   id: '1234.1234.1234',
   discriminator: 'db',
   description: 'description',
@@ -176,4 +195,17 @@ export const databaseSchemaInputWithCreatedByFactory = Factory.Sync.makeFactory<
   environment: 'environment',
   affiliation: 'paas',
   createdBy: '12345'
+});
+
+export const jdbcUserFactory = Factory.Sync.makeFactory<IJdbcUser>({
+  jdbcUrl: 'jdbc:oracle:thin:@test.skead.no:1521/referanse',
+  password: 'password',
+  username: 'username'
+});
+
+export const createDatabaseSchemaResponse = Factory.Sync.makeFactory<
+  ICreateDatabaseSchemaResponse
+>({
+  id: '123',
+  jdbcUser: jdbcUserFactory.build()
 });

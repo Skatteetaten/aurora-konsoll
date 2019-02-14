@@ -1,7 +1,9 @@
 import {
   IDatabaseSchema,
-  IDatabaseSchemaInputWithCreatedBy,
-  IDatabaseSchemaView
+  IDatabaseSchemaInput,
+  IDatabaseSchemaView,
+  IJdbcUser,
+  IUpdateDatabaseSchemaInputWithCreatedBy
 } from 'models/schemas';
 
 export enum SortDirection {
@@ -127,8 +129,29 @@ export default class DatabaseSchemaService {
     return columns;
   }
 
+  public hasEmptyLabelValues(input: IDatabaseSchemaInput) {
+    return (
+      input.application.trim() === '' ||
+      input.environment.trim() === '' ||
+      input.discriminator.trim() === '' ||
+      input.createdBy.trim() === ''
+    );
+  }
+
+  public hasEmptyJdbcValues(input: IJdbcUser | null | undefined) {
+    if (!input || !input.username || !input.password || !input.jdbcUrl) {
+      return true;
+    } else {
+      return (
+        input.jdbcUrl.trim() === '' ||
+        input.password.trim() === '' ||
+        input.username.trim() === ''
+      );
+    }
+  }
+
   public isUpdateButtonDisabled(
-    updatedSchemaValues: IDatabaseSchemaInputWithCreatedBy,
+    updatedSchemaValues: IUpdateDatabaseSchemaInputWithCreatedBy,
     schema?: IDatabaseSchema
   ) {
     const isUnchangedValues =
@@ -141,13 +164,9 @@ export default class DatabaseSchemaService {
       schema.discriminator === updatedSchemaValues.discriminator &&
       schema.createdBy === updatedSchemaValues.createdBy;
 
-    const isEmptyValues =
-      updatedSchemaValues.application === '' ||
-      updatedSchemaValues.environment === '' ||
-      updatedSchemaValues.discriminator === '' ||
-      updatedSchemaValues.createdBy === '';
+    const isEmpty = this.hasEmptyLabelValues(updatedSchemaValues);
 
-    return isUnchangedValues || isEmptyValues;
+    return isUnchangedValues || isEmpty;
   }
 
   public sortItems(

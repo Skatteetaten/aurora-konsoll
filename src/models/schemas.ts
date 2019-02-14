@@ -22,6 +22,7 @@ export interface IDatabaseSchema {
   users: Array<{
     username: string;
     type: string;
+    password?: string;
   }>;
 }
 
@@ -38,25 +39,37 @@ export interface IDatabaseSchemaView {
 }
 
 export interface IDatabaseSchemaInput {
-  id: string;
   discriminator: string;
   description?: string | null;
   environment: string;
   application: string;
   affiliation: string;
-}
-
-export interface IDatabaseSchemaInputWithUserId extends IDatabaseSchemaInput {
-  userId: string;
-}
-
-export interface IDatabaseSchemaInputWithCreatedBy
-  extends IDatabaseSchemaInput {
   createdBy: string;
+}
+
+export interface IUpdateDatabaseSchemaInputWithCreatedBy
+  extends IDatabaseSchemaInput {
+  id: string;
+}
+
+export interface ICreateDatabaseSchemaInput extends IDatabaseSchemaInput {
+  jdbcUser?: IJdbcUser | null;
 }
 
 export interface IJdbcUser {
   username: string;
   password: string;
   jdbcUrl: string;
+}
+
+export interface ICreateDatabaseSchemaResponse {
+  id: string;
+  jdbcUser: IJdbcUser;
+}
+
+export enum Step {
+  TYPE,
+  NEW,
+  EXTERNAL,
+  SUMMARY
 }
