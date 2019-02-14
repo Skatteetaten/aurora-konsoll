@@ -14,6 +14,7 @@ import {
 import DatabaseSchemaService from 'services/DatabaseSchemaService';
 import External from './createDialogSteps/External';
 import New from './createDialogSteps/New';
+import Summary from './createDialogSteps/Summary';
 import Type from './createDialogSteps/Type';
 
 interface IDatabaseSchemaCreateDialogProps {
@@ -140,21 +141,26 @@ class DatabaseSchemaCreateDialog extends React.Component<
     const isExternal = step === Step.EXTERNAL;
     const isSummary = step === Step.SUMMARY;
 
-    // tslint:disable-next-line:no-console
-    console.log(createResponse);
+    const getTitle = () => {
+      switch (step) {
+        case Step.TYPE:
+          return 'Velg skjematype';
+        case Step.NEW:
+          return 'Nytt skjema';
+        case Step.EXTERNAL:
+          return 'Eksternt skjema';
+        case Step.SUMMARY:
+          return 'Oppsummering';
+      }
+    };
+
     return (
       <>
         <Button buttonType="primary" icon="AddOutline" onClick={open}>
           Nytt skjema
         </Button>
         <Dialog
-          title={
-            isType
-              ? 'Velg skjematype'
-              : isNew
-              ? 'Nytt skjema'
-              : 'Eksternt skjema'
-          }
+          title={getTitle()}
           hidden={!isOpen}
           dialogMinWidth="1000px"
           dialogMaxWidth="90%"
@@ -165,7 +171,6 @@ class DatabaseSchemaCreateDialog extends React.Component<
           <div className={className}>
             <div className="styled-dialog">
               {isType && <Type setStep={this.setStep} />}
-              {isExternal && <div />}
               {isNew && (
                 <New
                   setDatabaseSchemaInput={this.setDatabaseSchemaInput}
@@ -182,7 +187,7 @@ class DatabaseSchemaCreateDialog extends React.Component<
                   databaseSchemaService={this.databaseSchemaService}
                 />
               )}
-              {isSummary && <div />}
+              {isSummary && <Summary createResponse={createResponse} />}
             </div>
           </div>
           <Dialog.Footer>
@@ -211,7 +216,7 @@ class DatabaseSchemaCreateDialog extends React.Component<
                 onClick={closeAndFetch}
                 buttonType="primaryRoundedFilled"
                 style={{ width: '120px' }}
-                icon="Cancel"
+                icon="Completed"
               >
                 Fullfør
               </Button>

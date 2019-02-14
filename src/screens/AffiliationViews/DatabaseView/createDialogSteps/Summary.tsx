@@ -1,56 +1,49 @@
 import * as React from 'react';
+import styled from 'styled-components';
 
 import Card from 'aurora-frontend-react-komponenter/Card';
 import Grid from 'aurora-frontend-react-komponenter/Grid';
-import TextField from 'aurora-frontend-react-komponenter/TextField';
+import { ICreateDatabaseSchemaResponse } from 'models/schemas';
 
 interface ISummaryProps {
-  id: string;
-  jdbcUrl: string;
-  password: string;
+  createResponse: ICreateDatabaseSchemaResponse;
+  className?: string;
 }
 
-const Summary = (props: ISummaryProps) => {
+const Summary = ({ createResponse, className }: ISummaryProps) => {
+  const createRow = (label: string, value: string) => (
+    <Grid.Row rowSpacing={Grid.SPACE_LARGE}>
+      <Grid.Col lg={2}>
+        <div className="styled-label">{label}</div>
+      </Grid.Col>
+
+      <Grid.Col lg={10}>
+        <div className="styled-value">{value}</div>
+      </Grid.Col>
+    </Grid.Row>
+  );
+
   return (
-    <div>
-      <Card color={Card.WHITE} title="Du må betale omregistreringsavgift">
+    <div className={className}>
+      <Card color={Card.GREEN}>
         <Grid>
-          <Grid.Row>
-            <Grid.Col xl={2} md={8}>
-              <TextField
-                id={'my-readonlyfield-1'}
-                readonly={true}
-                label="Beløp"
-                value={'3600'}
-                inputSize={'large'}
-                boldText={true}
-              />
-            </Grid.Col>
-            <Grid.Col xl={3} md={8}>
-              <TextField
-                id={'my-readonlyfield-2'}
-                readonly={true}
-                label="KID"
-                value={'4432 1233 4324 5425'}
-                inputSize={'large'}
-                boldText={true}
-              />
-            </Grid.Col>
-            <Grid.Col xl={3} md={8}>
-              <TextField
-                id={'my-readonlyfield-3'}
-                readonly={true}
-                label="Kontonummer"
-                value={'9484 12 31435'}
-                inputSize={'large'}
-                boldText={true}
-              />
-            </Grid.Col>
-          </Grid.Row>
+          {createRow('Database ID:', createResponse.id)}
+          {createRow('JDBC url:', createResponse.jdbcUser.jdbcUrl)}
+          {createRow('Brukernavn:', createResponse.jdbcUser.username)}
+          {createRow('Passord:', createResponse.jdbcUser.password)}
         </Grid>
       </Card>
     </div>
   );
 };
 
-export default Summary;
+export default styled(Summary)`
+  .styled-label {
+    font-weight: bold;
+    font-size: 20px;
+  }
+
+  .styled-value {
+    font-size: 20px;
+  }
+`;
