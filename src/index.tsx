@@ -3,6 +3,9 @@ import * as React from 'react';
 import * as ReactDOM from 'react-dom';
 import { BrowserRouter } from 'react-router-dom';
 
+import { Provider } from 'react-redux';
+import createStoreWithClients from './store';
+
 import { AuroraApiProvider, IApiClients } from 'components/AuroraApi';
 import App from 'screens/App';
 import { tokenStore } from 'services/TokenStore';
@@ -11,6 +14,7 @@ import { fetchConfiguration, IConfiguration } from 'utils/config';
 import { errorStateManager } from 'models/StateManager/ErrorStateManager';
 import {
   ApplicationDeploymentClient,
+  DatabaseClient,
   ImageRepositoryClient,
   NetdebugClient,
   UserSettingsClient
@@ -42,15 +46,18 @@ async function init() {
     applicationDeploymentClient: new ApplicationDeploymentClient(goboClient),
     imageRepositoryClient: new ImageRepositoryClient(goboClient),
     netdebugClient: new NetdebugClient(goboClient),
-    userSettingsClient: new UserSettingsClient(goboClient)
+    userSettingsClient: new UserSettingsClient(goboClient),
+    databaseClient: new DatabaseClient(goboClient)
   };
 
   ReactDOM.render(
-    <AuroraApiProvider clients={clients}>
-      <BrowserRouter>
-        <App tokenStore={tokenStore} />
-      </BrowserRouter>
-    </AuroraApiProvider>,
+    <Provider store={createStoreWithClients(clients)}>
+      <AuroraApiProvider clients={clients}>
+        <BrowserRouter>
+          <App tokenStore={tokenStore} />
+        </BrowserRouter>
+      </AuroraApiProvider>
+    </Provider>,
     document.getElementById('root') as HTMLElement
   );
 }

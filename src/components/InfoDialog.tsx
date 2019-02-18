@@ -17,6 +17,7 @@ interface InfoDialogProps {
   children: JSX.Element;
   renderOpenDialogButton?: (openDialog: () => void) => JSX.Element;
   renderFooterButtons?: (closeDialog: () => void) => JSX.Element;
+  hideCloseButton?: boolean;
 }
 
 interface InfoDialogState {
@@ -51,6 +52,7 @@ class InfoDialog extends React.Component<InfoDialogProps, InfoDialogState> {
     const {
       renderOpenDialogButton,
       renderFooterButtons,
+      hideCloseButton,
       children,
       title,
       subText,
@@ -79,7 +81,9 @@ class InfoDialog extends React.Component<InfoDialogProps, InfoDialogState> {
           {children}
           <Dialog.Footer>
             {renderFooterButtons && renderFooterButtons(close)}
-            <ActionButton onClick={close}>Lukk</ActionButton>
+            {!hideCloseButton && (
+              <ActionButton onClick={close}>Lukk</ActionButton>
+            )}
           </Dialog.Footer>
         </Dialog>
       </>

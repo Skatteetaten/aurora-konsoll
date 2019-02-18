@@ -23,6 +23,10 @@ import AffiliationViewValidator, {
 } from './AffiliationViews/AffiliationViewValidator';
 import { NetdebugWithApi } from './NetdebugView/Netdebug';
 
+export enum MenuType {
+  DEPLOYMENTS, DATABASE
+}
+
 interface IAppProps extends IAuroraApiComponentProps, RouteComponentProps<{}> {
   tokenStore: ITokenStore;
 }
@@ -50,10 +54,19 @@ class App extends React.Component<IAppProps, IAppState> {
 
   public onAffiliationChangeFromSelector = (affiliation: string) => {
     const { location, history } = this.props;
-    const newPath = location.pathname.replace(
-      /\/a\/(\b\w*[-]?\w*\b)\/(\w*)(\/.*)?/,
-      `/a/${affiliation}/$2`
-    );
+    let newPath = '';
+
+    if (location.pathname.startsWith('/a/')) {
+      newPath = location.pathname.replace(
+        /\/a\/(\b\w*[-]?\w*\b)\/(\w*)(\/.*)?/,
+        `/a/${affiliation}/$2`
+      );
+    } else if (location.pathname.startsWith('/db/')) {
+      newPath = location.pathname.replace(
+        /\/db\/(\b\w*[-]?\w*\b)\/(\w*)(\/.*)?/,
+        `/db/${affiliation}/$2`
+      );
+    }
     history.push(newPath);
   };
 
@@ -80,12 +93,22 @@ class App extends React.Component<IAppProps, IAppState> {
     const { affiliation, affiliations, isMenuExpanded, user } = this.state;
     const { location } = this.props;
 
-    const renderAffiliationViewValidator = (
+    const renderAffiliationViewValidatorDeployments =  (
       routeProps: AffiliationRouteProps
+    ) => renderAffiliationViewValidator(routeProps, MenuType.DEPLOYMENTS);
+
+    const renderAffiliationViewValidatorDatabase =  (
+      routeProps: AffiliationRouteProps
+    ) => renderAffiliationViewValidator(routeProps, MenuType.DATABASE);
+
+    const renderAffiliationViewValidator = (
+      routeProps: AffiliationRouteProps,
+      type: MenuType
     ) => (
       <AffiliationViewValidator
         {...routeProps}
         user={user}
+        type={type}
         affiliation={affiliation}
         affiliations={affiliations}
         onAffiliationValidated={this.onSelectedAffiliationValidated}
@@ -101,7 +124,10 @@ class App extends React.Component<IAppProps, IAppState> {
             handleMenuExpand={this.handleMenuExpand}
             affiliation={affiliation}
             affiliations={affiliations}
-            showAffiliationSelector={location.pathname.startsWith('/a/')}
+            showAffiliationSelector={
+              location.pathname.startsWith('/a/') ||
+              location.pathname.startsWith('/db/')
+            }
             onAffiliationChange={this.onAffiliationChangeFromSelector}
           >
             <AcceptTokenRoute onTokenUpdated={this.onTokenUpdated} />
@@ -114,12 +140,16 @@ class App extends React.Component<IAppProps, IAppState> {
                 />
                 <Route
                   path="/a/:affiliation"
-                  render={renderAffiliationViewValidator}
+                  render={renderAffiliationViewValidatorDeployments}
                 />
                 <Route
                   exact={true}
                   path="/netdebug"
                   component={NetdebugWithApi}
+                />
+                <Route
+                  path="/db/:affiliation"
+                  render={renderAffiliationViewValidatorDatabase}
                 />
               </Switch>
             )}

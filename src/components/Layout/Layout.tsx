@@ -48,6 +48,11 @@ const Layout = ({
       iconName: 'Code',
       name: 'Netdebug',
       to: '/netdebug'
+    },
+    {
+      iconName: 'Save',
+      name: 'Database',
+      to: `/db/${affiliation || '_'}/databaseSchemas`
     }
   ].map(item => ({
     ...item,
@@ -62,7 +67,7 @@ const Layout = ({
       <Header title="Aurora Konsoll" user={user} className="g-header">
         {showAffiliationSelector && (
           <Dropdown
-            placeHolder="Velg tilhørighet"
+            placeholder="Velg tilhørighet"
             options={toDropdownOptions(affiliations)}
             onChanged={onAffiliationChanged}
             selectedKey={affiliation}
