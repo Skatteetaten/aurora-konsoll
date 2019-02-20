@@ -133,6 +133,11 @@ class DatabaseSchemaCreateDialog extends React.Component<
 
     const closeAndFetch = () => {
       onFetch([affiliation]);
+      this.setState({
+        isOpen: false,
+        isLoading: false,
+        databaseSchemaInput: this.resetInput
+      });
     };
 
     const close = this.toggleDialog(false);

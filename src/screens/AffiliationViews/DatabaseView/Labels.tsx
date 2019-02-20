@@ -48,7 +48,6 @@ const Labels = ({
       label={'Bruker'}
       value={createdBy}
       onChanged={handleLabelChange('createdBy')}
-      disabled={true}
     />
     <TextField
       id={'description'}
