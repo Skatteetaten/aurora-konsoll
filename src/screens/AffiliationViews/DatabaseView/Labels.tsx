@@ -62,6 +62,6 @@ const Labels = ({
 
 export default styled(Labels)`
   .ms-Callout-main {
-    width: 380px;
+    width: 247px;
   }
 `;
