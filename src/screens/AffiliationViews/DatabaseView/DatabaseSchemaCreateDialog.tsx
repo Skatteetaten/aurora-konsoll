@@ -5,6 +5,7 @@ import ActionButton from 'aurora-frontend-react-komponenter/ActionButton';
 import Button from 'aurora-frontend-react-komponenter/Button';
 import Dialog from 'aurora-frontend-react-komponenter/Dialog';
 import LoadingButton from 'components/LoadingButton';
+import { IUserAndAffiliations } from 'models/ApplicationDeployment';
 import {
   ICreateDatabaseSchemaInput,
   ICreateDatabaseSchemaResponse,
@@ -25,6 +26,7 @@ interface IDatabaseSchemaCreateDialogProps {
   onTestJdbcConnectionForUser: (jdbcUser: IJdbcUser) => void;
   createResponse: ICreateDatabaseSchemaResponse;
   testJdbcConnectionResponse: boolean;
+  currentUser: IUserAndAffiliations;
 }
 
 interface IDatabaseSchemaCreateDialogState {
@@ -40,7 +42,7 @@ class DatabaseSchemaCreateDialog extends React.Component<
 > {
   public resetInput: ICreateDatabaseSchemaInput = {
     discriminator: '',
-    createdBy: '',
+    createdBy: this.props.currentUser.id,
     description: '',
     environment: '',
     application: '',

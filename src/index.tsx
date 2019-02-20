@@ -7,11 +7,11 @@ import { Provider } from 'react-redux';
 import createStoreWithClients from './store';
 
 import { AuroraApiProvider, IApiClients } from 'components/AuroraApi';
-import App from 'screens/App';
 import { tokenStore } from 'services/TokenStore';
 import { fetchConfiguration, IConfiguration } from 'utils/config';
 
 import { errorStateManager } from 'models/StateManager/ErrorStateManager';
+import App from 'screens/App';
 import {
   ApplicationDeploymentClient,
   DatabaseClient,
@@ -20,6 +20,7 @@ import {
   UserSettingsClient
 } from 'services/auroraApiClients';
 import GoboClient from 'services/GoboClient';
+import { StartupConnected } from 'StartupConnected';
 import './index.css';
 
 async function init() {
@@ -52,11 +53,13 @@ async function init() {
 
   ReactDOM.render(
     <Provider store={createStoreWithClients(clients)}>
-      <AuroraApiProvider clients={clients}>
-        <BrowserRouter>
-          <App tokenStore={tokenStore} />
-        </BrowserRouter>
-      </AuroraApiProvider>
+      <StartupConnected>
+        <AuroraApiProvider clients={clients}>
+          <BrowserRouter>
+            <App tokenStore={tokenStore} />
+          </BrowserRouter>
+        </AuroraApiProvider>
+      </StartupConnected>
     </Provider>,
     document.getElementById('root') as HTMLElement
   );

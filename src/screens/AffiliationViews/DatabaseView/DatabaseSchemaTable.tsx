@@ -11,6 +11,7 @@ import {
 } from 'office-ui-fabric-react/lib/DetailsList';
 import { getLocalDate } from 'utils/date';
 
+import { IUserAndAffiliations } from 'models/ApplicationDeployment';
 import {
   ICreateDatabaseSchemaInput,
   ICreateDatabaseSchemaResponse,
@@ -42,6 +43,7 @@ export interface ISchemaProps {
   affiliation: string;
   className?: string;
   testJdbcConnectionResponse: boolean;
+  currentUser: IUserAndAffiliations;
 }
 
 interface ISchemaState {
@@ -162,7 +164,8 @@ export class Schema extends React.Component<ISchemaProps, ISchemaState> {
       createResponse,
       affiliation,
       onTestJdbcConnectionForUser,
-      onFetch
+      onFetch,
+      currentUser
     } = this.props;
     const {
       viewItems,
@@ -195,6 +198,7 @@ export class Schema extends React.Component<ISchemaProps, ISchemaState> {
               onTestJdbcConnectionForUser={onTestJdbcConnectionForUser}
               testJdbcConnectionResponse={testJdbcConnectionResponse}
               onFetch={onFetch}
+              currentUser={currentUser}
             />
           </div>
         </div>
