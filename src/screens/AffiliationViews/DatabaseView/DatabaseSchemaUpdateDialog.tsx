@@ -216,6 +216,7 @@ class DatabaseSchemaUpdateDialog extends React.Component<
                   createdBy={updatedSchemaValues.createdBy}
                   description={updatedSchemaValues.description}
                   handleLabelChange={this.handleLabelChange}
+                  displayCreatedByField={true}
                 />
               </Grid.Col>
             </Grid.Row>

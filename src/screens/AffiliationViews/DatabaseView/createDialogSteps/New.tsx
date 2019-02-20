@@ -27,7 +27,7 @@ const New = ({
       <div className="styled-labels">
         <Labels
           handleLabelChange={handleLabelChange}
-          createdBy={databaseSchemaInput.createdBy}
+          displayCreatedByField={false}
         />
       </div>
     </div>

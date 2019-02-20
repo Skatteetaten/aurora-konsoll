@@ -10,6 +10,7 @@ interface ILabelsProps {
   discriminator?: string;
   createdBy?: string;
   description?: string;
+  displayCreatedByField: boolean;
   handleLabelChange: (field: string) => (value: string) => void;
 }
 
@@ -20,7 +21,8 @@ const Labels = ({
   createdBy,
   description,
   handleLabelChange,
-  className
+  className,
+  displayCreatedByField
 }: ILabelsProps) => (
   <div className={className}>
     <h3>Labels</h3>
@@ -43,13 +45,15 @@ const Labels = ({
       help="Benyttes av systemet for å finne et databaseskjema"
       onChanged={handleLabelChange('discriminator')}
     />
-    <TextField
-      id={'createdBy'}
-      label={'Bruker'}
-      value={createdBy}
-      onChanged={handleLabelChange('createdBy')}
-      disabled={true}
-    />
+    {displayCreatedByField && (
+      <TextField
+        id={'createdBy'}
+        label={'Bruker'}
+        value={createdBy}
+        onChanged={handleLabelChange('createdBy')}
+        disabled={true}
+      />
+    )}
     <TextField
       id={'description'}
       label={'Beskrivelse'}
