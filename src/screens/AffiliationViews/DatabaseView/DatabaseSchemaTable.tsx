@@ -199,6 +199,7 @@ export class Schema extends React.Component<ISchemaProps, ISchemaState> {
               testJdbcConnectionResponse={testJdbcConnectionResponse}
               onFetch={onFetch}
               currentUser={currentUser}
+              isFetching={isFetching}
             />
           </div>
         </div>
@@ -263,7 +264,7 @@ export default styled(Schema)`
     display: flex;
     align-items: center;
     justify-content: space-between;
-    margin: 20px;
+    margin: 20px 0 20px 20px;
   }
 
   .styled-input {

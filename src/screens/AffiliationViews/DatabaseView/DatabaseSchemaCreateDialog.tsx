@@ -27,6 +27,7 @@ interface IDatabaseSchemaCreateDialogProps {
   createResponse: ICreateDatabaseSchemaResponse;
   testJdbcConnectionResponse: boolean;
   currentUser: IUserAndAffiliations;
+  isFetching: boolean;
 }
 
 interface IDatabaseSchemaCreateDialogState {
@@ -120,7 +121,8 @@ class DatabaseSchemaCreateDialog extends React.Component<
       testJdbcConnectionResponse,
       onFetch,
       affiliation,
-      createResponse
+      createResponse,
+      isFetching
     } = this.props;
     const { isOpen, isLoading, step, databaseSchemaInput } = this.state;
 
@@ -158,9 +160,21 @@ class DatabaseSchemaCreateDialog extends React.Component<
 
     return (
       <>
-        <Button buttonType="primary" icon="AddOutline" onClick={open}>
+        <Button
+          buttonType="primaryRoundedFilled"
+          icon="AddOutline"
+          onClick={open}
+        >
           Nytt skjema
         </Button>
+        <LoadingButton
+          icon="Update"
+          style={{ minWidth: '120px', marginLeft: '15px' }}
+          loading={isFetching}
+          onClick={closeAndFetch}
+        >
+          Oppdater
+        </LoadingButton>
         <Dialog
           title={getTitle()}
           hidden={!isOpen}
