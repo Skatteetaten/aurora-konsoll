@@ -19,9 +19,9 @@ async function fetchConfiguration(): Promise<IConfiguration | Error> {
 
 async function isDbhUrlDefined(): Promise<boolean | Error> {
   try {
-    const data = await fetch('/api/dbh');
-    const response = await data.json();
-    if (Object.keys(response as IDbhConfiguration).length > 0) {
+    const response = await fetch('/api/dbhUrl');
+    const responseJson = await response.json();
+    if (Object.keys(responseJson as IDbhConfiguration).length > 0) {
       return true;
     } else {
       return false;

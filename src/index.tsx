@@ -36,9 +36,12 @@ async function init() {
   if (!tokenStore.isTokenValid()) {
     redirectToLoginPage(config.AUTHORIZATION_URI, config.CLIENT_ID);
   }
-  const hasDbhUrl = await isDbhUrlDefined();
+  const dbhConfigOrError = await isDbhUrlDefined();
 
-  const displayDatabaseView = hasDbhUrl as boolean | Error;
+  if ((dbhConfigOrError as Error).message) {
+    throw new Error((dbhConfigOrError as Error).message);
+  }
+  const displayDatabaseView = dbhConfigOrError as boolean;
 
   const token = tokenStore.getToken();
   const goboClient = new GoboClient({

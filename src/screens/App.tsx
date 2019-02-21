@@ -30,7 +30,7 @@ export enum MenuType {
 
 interface IAppProps extends IAuroraApiComponentProps, RouteComponentProps<{}> {
   tokenStore: ITokenStore;
-  displayDatabaseView: boolean | Error;
+  displayDatabaseView: boolean;
 }
 
 interface IAppState {
@@ -55,7 +55,7 @@ class App extends React.Component<IAppProps, IAppState> {
   };
 
   public onAffiliationChangeFromSelector = (affiliation: string) => {
-    const { location, history } = this.props;
+    const { location, history, displayDatabaseView } = this.props;
     let newPath = '';
 
     if (location.pathname.startsWith('/a/')) {
@@ -63,7 +63,7 @@ class App extends React.Component<IAppProps, IAppState> {
         /\/a\/(\b\w*[-]?\w*\b)\/(\w*)(\/.*)?/,
         `/a/${affiliation}/$2`
       );
-    } else if (location.pathname.startsWith('/db/')) {
+    } else if (location.pathname.startsWith('/db/') && displayDatabaseView) {
       newPath = location.pathname.replace(
         /\/db\/(\b\w*[-]?\w*\b)\/(\w*)(\/.*)?/,
         `/db/${affiliation}/$2`
@@ -93,7 +93,7 @@ class App extends React.Component<IAppProps, IAppState> {
   public render() {
     const isAuthenticated = this.props.tokenStore.isTokenValid();
     const { affiliation, affiliations, isMenuExpanded, user } = this.state;
-    const { location } = this.props;
+    const { location, displayDatabaseView } = this.props;
 
     const renderAffiliationViewValidatorDeployments = (
       routeProps: AffiliationRouteProps
@@ -131,6 +131,7 @@ class App extends React.Component<IAppProps, IAppState> {
               location.pathname.startsWith('/db/')
             }
             onAffiliationChange={this.onAffiliationChangeFromSelector}
+            displayDatabaseView={displayDatabaseView}
           >
             <AcceptTokenRoute onTokenUpdated={this.onTokenUpdated} />
             {isAuthenticated && (
@@ -149,10 +150,12 @@ class App extends React.Component<IAppProps, IAppState> {
                   path="/netdebug"
                   component={NetdebugWithApi}
                 />
-                <Route
-                  path="/db/:affiliation"
-                  render={renderAffiliationViewValidatorDatabase}
-                />
+                {displayDatabaseView && (
+                  <Route
+                    path="/db/:affiliation"
+                    render={renderAffiliationViewValidatorDatabase}
+                  />
+                )}
               </Switch>
             )}
           </Layout>

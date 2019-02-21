@@ -31,7 +31,7 @@ app.get('/api/config', (req, res) => {
   });
 });
 
-app.get('/api/dbh', (req, res) => {
+app.get('/api/dbhUrl', (req, res) => {
   return res.send({
     INTEGRATIONS_DBH_URL
   });
