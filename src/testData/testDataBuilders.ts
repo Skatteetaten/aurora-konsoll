@@ -153,6 +153,7 @@ export const databaseSchemaViewFactory = Factory.Sync.makeFactory<
   createdBy: '12345',
   createdDate: '01.12.2015',
   lastUsedDate: '23.01.2019',
+  uses: 1,
   sizeInMb: 0.75,
   type: 'MANAGED'
 });
@@ -165,6 +166,7 @@ export const databaseSchemaFactory = Factory.Sync.makeFactory<IDatabaseSchema>({
   createdBy: '12345',
   createdDate: new Date(2019, 0, 12),
   lastUsedDate: new Date(2019, 0, 22),
+  applicationDeployments: [],
   sizeInMb: 0.75,
   type: 'MANAGED',
   affiliation: { name: 'paas' },

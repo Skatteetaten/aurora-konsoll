@@ -84,12 +84,21 @@ export const defaultColumns = () => [
     minWidth: 120,
     name: 'Bruker',
     iconName: ''
+  },
+  {
+    fieldName: 'uses',
+    isResizable: true,
+    key: 8,
+    maxWidth: 120,
+    minWidth: 120,
+    name: 'I bruk av',
+    iconName: ''
   }
 ];
 
-export const defaultSortDirections = new Array<SortDirection>(8).fill(
-  SortDirection.NONE
-);
+export const defaultSortDirections = new Array<SortDirection>(
+  defaultColumns().length
+).fill(SortDirection.NONE);
 
 export const filterDatabaseSchemaView = (filter: string) => {
   return (v: IDatabaseSchemaView) =>

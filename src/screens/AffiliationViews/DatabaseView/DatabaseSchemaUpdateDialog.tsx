@@ -8,7 +8,9 @@ import Grid from 'aurora-frontend-react-komponenter/Grid';
 import palette from 'aurora-frontend-react-komponenter/utils/palette';
 
 import ConfirmationDialog from 'components/ConfirmationDialog';
+import SkeLink from 'components/SkeLink';
 import {
+  IDatabaseApplicationDeployment,
   IDatabaseSchema,
   IUpdateDatabaseSchemaInputWithCreatedBy
 } from 'models/schemas';
@@ -185,12 +187,16 @@ class DatabaseSchemaUpdateDialog extends React.Component<
                 <p>Type: </p>
                 <p>Opprettet: </p>
                 <p>Sist brukt: </p>
+                <p>Brukes av: </p>
               </Grid.Col>
               <Grid.Col lg={10}>
                 <p>{schema.id}</p>
                 <p>{schema.type}</p>
                 <p>{dateTimeFormat(schema.createdDate)}</p>
                 <p>{dateTimeFormat(schema.lastUsedDate)}</p>
+                <ApplicationLinks
+                  applicationDeployments={schema.applicationDeployments}
+                />
               </Grid.Col>
             </Grid.Row>
             <hr />
@@ -257,6 +263,40 @@ class DatabaseSchemaUpdateDialog extends React.Component<
     );
   }
 }
+
+interface IApplicationLinksProps {
+  applicationDeployments: IDatabaseApplicationDeployment[];
+  className?: string;
+}
+
+const ApplicationLinks = styled(
+  ({ applicationDeployments, className }: IApplicationLinksProps) => {
+    const title = (app: IDatabaseApplicationDeployment) => `
+Miljø: ${app.namespace.name}
+Affiliation: ${app.affiliation.name}
+`;
+
+    const links = applicationDeployments.map(it => [
+      <SkeLink
+        key={it.id}
+        title={title(it)}
+        to={`/a/${it.affiliation.name}/deployments/${it.id}/info`}
+      >
+        {it.name}
+      </SkeLink>
+    ]);
+
+    if (links.length === 0) {
+      return <p>Ingen</p>;
+    }
+
+    return <div className={className}>{links}</div>;
+  }
+)`
+  a {
+    margin-right: 5px;
+  }
+`;
 
 export default styled(DatabaseSchemaUpdateDialog)`
   .bold {
