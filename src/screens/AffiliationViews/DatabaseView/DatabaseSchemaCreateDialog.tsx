@@ -185,11 +185,7 @@ class DatabaseSchemaCreateDialog extends React.Component<
           isBlocking={!isType}
         >
           <div className={className}>
-            <div
-              className={`styled-dialog${
-                isExternal ? ' styled-external-dialog' : ''
-              }`}
-            >
+            <div className="styled-dialog">
               {isType && <Type setStep={this.setStep} />}
               {isNew && (
                 <New
@@ -287,8 +283,5 @@ class DatabaseSchemaCreateDialog extends React.Component<
 export default styled(DatabaseSchemaCreateDialog)`
   .styled-dialog {
     height: 380px;
-  }
-  .styled-external-dialog {
-    padding-bottom: 17px;
   }
 `;
