@@ -2,7 +2,13 @@
 import * as express from 'express';
 import * as proxy from 'http-proxy-middleware';
 
-import { AUTHORIZATION_URI, CLIENT_ID, GOBO_URL, PORT } from './config';
+import {
+  AUTHORIZATION_URI,
+  CLIENT_ID,
+  GOBO_URL,
+  INTEGRATIONS_DBH_URL,
+  PORT
+} from './config';
 
 const app = express();
 app.use(
@@ -22,6 +28,12 @@ app.get('/api/config', (req, res) => {
   return res.send({
     AUTHORIZATION_URI,
     CLIENT_ID
+  });
+});
+
+app.get('/api/dbh', (req, res) => {
+  return res.send({
+    INTEGRATIONS_DBH_URL
   });
 });
 

@@ -9,7 +9,11 @@ import createStoreWithClients from './store';
 import { AuroraApiProvider, IApiClients } from 'components/AuroraApi';
 import App from 'screens/App';
 import { tokenStore } from 'services/TokenStore';
-import { fetchConfiguration, IConfiguration } from 'utils/config';
+import {
+  fetchConfiguration,
+  IConfiguration,
+  isDbhUrlDefined
+} from 'utils/config';
 
 import { errorStateManager } from 'models/StateManager/ErrorStateManager';
 import {
@@ -32,6 +36,9 @@ async function init() {
   if (!tokenStore.isTokenValid()) {
     redirectToLoginPage(config.AUTHORIZATION_URI, config.CLIENT_ID);
   }
+  const hasDbhUrl = await isDbhUrlDefined();
+
+  const displayDatabaseView = hasDbhUrl as boolean | Error;
 
   const token = tokenStore.getToken();
   const goboClient = new GoboClient({
@@ -54,7 +61,10 @@ async function init() {
     <Provider store={createStoreWithClients(clients)}>
       <AuroraApiProvider clients={clients}>
         <BrowserRouter>
-          <App tokenStore={tokenStore} />
+          <App
+            tokenStore={tokenStore}
+            displayDatabaseView={displayDatabaseView}
+          />
         </BrowserRouter>
       </AuroraApiProvider>
     </Provider>,

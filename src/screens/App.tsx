@@ -24,11 +24,13 @@ import AffiliationViewValidator, {
 import { NetdebugWithApi } from './NetdebugView/Netdebug';
 
 export enum MenuType {
-  DEPLOYMENTS, DATABASE
+  DEPLOYMENTS,
+  DATABASE
 }
 
 interface IAppProps extends IAuroraApiComponentProps, RouteComponentProps<{}> {
   tokenStore: ITokenStore;
+  displayDatabaseView: boolean | Error;
 }
 
 interface IAppState {
@@ -93,11 +95,11 @@ class App extends React.Component<IAppProps, IAppState> {
     const { affiliation, affiliations, isMenuExpanded, user } = this.state;
     const { location } = this.props;
 
-    const renderAffiliationViewValidatorDeployments =  (
+    const renderAffiliationViewValidatorDeployments = (
       routeProps: AffiliationRouteProps
     ) => renderAffiliationViewValidator(routeProps, MenuType.DEPLOYMENTS);
 
-    const renderAffiliationViewValidatorDatabase =  (
+    const renderAffiliationViewValidatorDatabase = (
       routeProps: AffiliationRouteProps
     ) => renderAffiliationViewValidator(routeProps, MenuType.DATABASE);
 
