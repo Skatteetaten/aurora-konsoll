@@ -1,7 +1,7 @@
 import { IDropdownOption } from 'aurora-frontend-react-komponenter/Dropdown';
 
 function toDropdownOptions(names: string[]): IDropdownOption[] {
-  return names
+  const dropdownNames = names
     .map(name => name.toLowerCase())
     .filter((name, index, self) => self.indexOf(name) === index)
     .sort()
@@ -15,6 +15,7 @@ function toDropdownOptions(names: string[]): IDropdownOption[] {
       ],
       []
     );
+  return [{ key: 'Ingen', text: '' }, ...dropdownNames];
 }
 
 export { toDropdownOptions };

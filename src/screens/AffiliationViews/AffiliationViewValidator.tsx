@@ -1,6 +1,11 @@
 import * as React from 'react';
+
+import { connect } from 'react-redux';
+
+import { IUserAndAffiliations } from 'models/ApplicationDeployment';
 import { RouteComponentProps } from 'react-router-dom';
 import { MenuType } from 'screens/App';
+import { RootState } from 'store/types';
 import AffiliationSelector from './AffiliationSelector';
 import { AffiliationViewControllerWithApi } from './AffiliationViewController';
 import DatabaseViewController from './DatabaseView/DatabaseViewController';
@@ -10,11 +15,10 @@ export type AffiliationRouteProps = RouteComponentProps<{
 }>;
 
 interface IAffiliationViewValidatorProps extends AffiliationRouteProps {
-  user: string;
   affiliation?: string;
-  affiliations: string[];
   type: MenuType;
   onAffiliationValidated: (affiliation: string) => void;
+  currentUser: IUserAndAffiliations;
 }
 
 class AffiliationViewValidator extends React.Component<
@@ -23,13 +27,15 @@ class AffiliationViewValidator extends React.Component<
   public validateAndSetAffiliation = () => {
     const {
       affiliation,
-      affiliations,
       onAffiliationValidated,
+      currentUser,
       match
     } = this.props;
 
     const pathAffiliation = match.params.affiliation;
-    const isValidAffiliation = affiliations.find(a => a === pathAffiliation);
+    const isValidAffiliation = currentUser.affiliations.find(
+      a => a === pathAffiliation
+    );
     if (isValidAffiliation && affiliation !== pathAffiliation) {
       onAffiliationValidated(pathAffiliation);
     }
@@ -48,16 +54,16 @@ class AffiliationViewValidator extends React.Component<
   }
 
   public render() {
-    const { affiliation, affiliations, match, user, type } = this.props;
+    const { affiliation, currentUser, match, type } = this.props;
 
-    if (affiliations.length === 0) {
+    if (currentUser.affiliations.length === 0) {
       return false;
     }
     if (match.params.affiliation === '_') {
       let title = '';
       let createLink = (a: string) => '';
       if (type === MenuType.DEPLOYMENTS) {
-        title = `Velkommen ${user}`;
+        title = `Velkommen ${currentUser.user}`;
         createLink = (a: string) => `/a/${a}/deployments`;
       } else if (type === MenuType.DATABASE) {
         title = 'Velg tilhørighet';
@@ -68,7 +74,7 @@ class AffiliationViewValidator extends React.Component<
         <AffiliationSelector
           title={title}
           createLink={createLink}
-          affiliations={affiliations}
+          affiliations={currentUser.affiliations}
         />
       );
     }
@@ -91,4 +97,13 @@ class AffiliationViewValidator extends React.Component<
   }
 }
 
-export default AffiliationViewValidator;
+const mapStateToProps = (state: RootState) => ({
+  currentUser: state.startup.currentUser
+});
+
+const AffiliationViewValidatorConnected = connect(
+  mapStateToProps,
+  null
+)(AffiliationViewValidator);
+
+export default AffiliationViewValidatorConnected;

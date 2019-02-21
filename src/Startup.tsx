@@ -1,10 +1,14 @@
 import * as React from 'react';
 
-export interface IStartupProps {
+import { connect } from 'react-redux';
+
+import { getCurrentUser } from './state/actions';
+
+interface IStartupProps {
   onFetchCurrentUser: () => void;
 }
 
-export default class Startup extends React.Component<IStartupProps, {}> {
+class Startup extends React.Component<IStartupProps, {}> {
   public componentDidMount() {
     const { onFetchCurrentUser } = this.props;
     onFetchCurrentUser();
@@ -13,3 +17,10 @@ export default class Startup extends React.Component<IStartupProps, {}> {
     return this.props.children;
   }
 }
+
+export const StartupConnected = connect(
+  null,
+  {
+    onFetchCurrentUser: () => getCurrentUser()
+  }
+)(Startup);
