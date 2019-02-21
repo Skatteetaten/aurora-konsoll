@@ -27,12 +27,7 @@ app.use(express.json());
 app.get('/api/config', (req, res) => {
   return res.send({
     AUTHORIZATION_URI,
-    CLIENT_ID
-  });
-});
-
-app.get('/api/dbhUrl', (req, res) => {
-  return res.send({
+    CLIENT_ID,
     INTEGRATIONS_DBH_URL
   });
 });
