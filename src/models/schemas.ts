@@ -47,7 +47,7 @@ export interface IDatabaseSchemaView {
   createdDate: string;
   lastUsedDate?: string | null;
   sizeInMb: number;
-  uses: number;
+  applicationDeploymentsUses: number;
   id: string;
 }
 

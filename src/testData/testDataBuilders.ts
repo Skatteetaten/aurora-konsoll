@@ -153,7 +153,7 @@ export const databaseSchemaViewFactory = Factory.Sync.makeFactory<
   createdBy: '12345',
   createdDate: '01.12.2015',
   lastUsedDate: '23.01.2019',
-  uses: 1,
+  applicationDeploymentsUses: 1,
   sizeInMb: 0.75,
   type: 'MANAGED'
 });

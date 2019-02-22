@@ -86,7 +86,7 @@ export const defaultColumns = () => [
     iconName: ''
   },
   {
-    fieldName: 'uses',
+    fieldName: 'applicationDeploymentsUses',
     isResizable: true,
     key: 8,
     maxWidth: 120,
