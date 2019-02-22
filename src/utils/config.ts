@@ -1,7 +1,7 @@
 interface IConfiguration {
   AUTHORIZATION_URI: string;
   CLIENT_ID: string;
-  INTEGRATIONS_DBH_URL: boolean;
+  DBH_ENABLED: boolean;
 }
 
 async function fetchConfiguration(): Promise<IConfiguration | Error> {

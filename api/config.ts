@@ -14,6 +14,6 @@ const CLIENT_ID = env.CLIENT_ID || 'aurora-openshift-console-dev';
 
 const GOBO_URL = env.GOBO_URL || 'http://gobo.aurora.utv.paas.skead.no';
 
-const INTEGRATIONS_DBH_URL = !!env.INTEGRATIONS_DBH_URL;
+const DBH_ENABLED = !!env.INTEGRATIONS_DBH_URL;
 
-export { CLIENT_ID, AUTHORIZATION_URI, PORT, GOBO_URL, INTEGRATIONS_DBH_URL };
+export { CLIENT_ID, AUTHORIZATION_URI, PORT, GOBO_URL, DBH_ENABLED };

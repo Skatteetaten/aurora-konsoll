@@ -56,7 +56,7 @@ async function init() {
         <BrowserRouter>
           <App
             tokenStore={tokenStore}
-            displayDatabaseView={config.INTEGRATIONS_DBH_URL}
+            displayDatabaseView={config.DBH_ENABLED}
           />
         </BrowserRouter>
       </AuroraApiProvider>

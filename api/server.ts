@@ -5,8 +5,8 @@ import * as proxy from 'http-proxy-middleware';
 import {
   AUTHORIZATION_URI,
   CLIENT_ID,
+  DBH_ENABLED,
   GOBO_URL,
-  INTEGRATIONS_DBH_URL,
   PORT
 } from './config';
 
@@ -28,7 +28,7 @@ app.get('/api/config', (req, res) => {
   return res.send({
     AUTHORIZATION_URI,
     CLIENT_ID,
-    INTEGRATIONS_DBH_URL
+    DBH_ENABLED
   });
 });
 
