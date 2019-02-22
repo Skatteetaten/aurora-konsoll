@@ -7,6 +7,7 @@ import {
   IJdbcUser,
   IUpdateDatabaseSchemaInputWithCreatedBy
 } from 'models/schemas';
+import { IStartupState } from 'state/reducers';
 import { RootState } from 'store/types';
 import {
   createDatabaseSchema,
@@ -25,13 +26,15 @@ const getTestConnectionResponse = (state: ISchemasState) =>
   state.testJdbcConnectionResponse;
 const getCreateDatabaseSchemaRespnse = (state: ISchemasState) =>
   state.createDatabaseSchemaResponse;
+const getCurrentUser = (state: IStartupState) => state.currentUser;
 
 const mapStateToProps = (state: RootState) => ({
   items: getItems(state.database),
   isFetching: getFetchingStatus(state.database),
   updateResponse: getUpdateResponse(state.database),
   testJdbcConnectionResponse: getTestConnectionResponse(state.database),
-  createResponse: getCreateDatabaseSchemaRespnse(state.database)
+  createResponse: getCreateDatabaseSchemaRespnse(state.database),
+  currentUser: getCurrentUser(state.startup)
 });
 
 export const SchemaConnected = connect(

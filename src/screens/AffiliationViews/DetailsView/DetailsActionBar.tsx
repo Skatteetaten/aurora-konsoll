@@ -38,6 +38,7 @@ const DetailsActionBar = ({
       style={{ minWidth: '120px' }}
       loading={isRefreshing}
       onClick={refreshApplicationDeployment}
+      icon="Update"
     >
       Oppdater
     </LoadingButton>

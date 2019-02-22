@@ -5,6 +5,7 @@ import { Omit } from 'types/utils';
 
 export interface IApplicationDeploymentContext {
   deployments: IApplicationDeployment[];
+  allDeployments: IApplicationDeployment[];
   fetchApplicationDeployments: () => void;
   refreshDeployments: () => void;
   buildDeploymentLink: (
@@ -17,6 +18,7 @@ const ApplicationDeploymentContext = React.createContext<
   IApplicationDeploymentContext
 >({
   buildDeploymentLink: (_: IApplicationDeployment) => () => <div />,
+  allDeployments: [],
   deployments: [],
   refreshDeployments: () => {
     return;

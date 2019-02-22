@@ -12,12 +12,12 @@ type ApplicationDeploymentSelectorProps = IApplicationDeploymentContext &
   ApplicationDeploymentDetailsRoute;
 
 const ApplicationDeploymentSelector = ({
-  deployments,
+  allDeployments,
   fetchApplicationDeployments,
   match,
   filterPathUrl
 }: ApplicationDeploymentSelectorProps) => {
-  const deployment = deployments.find(
+  const deployment = allDeployments.find(
     d => d.id === match.params.applicationDeploymentId
   );
 

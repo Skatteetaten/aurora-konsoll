@@ -9,10 +9,11 @@ import Image from 'aurora-frontend-react-komponenter/Image';
 import separatorImg from 'aurora-frontend-react-komponenter/TopBanner/assets/separator.png';
 import Logo from 'aurora-frontend-react-komponenter/TopBanner/assets/ske-logo.svg';
 import palette from 'aurora-frontend-react-komponenter/utils/palette';
+import { IUserAndAffiliations } from 'models/ApplicationDeployment';
 
 interface IHeaderProps {
   title: string;
-  user: string;
+  currentUser: IUserAndAffiliations;
   className?: string;
   children?: React.ReactNode;
 }
@@ -22,7 +23,7 @@ const logOut = () => {
   window.location.reload();
 };
 
-const Header = ({ title, user, className, children }: IHeaderProps) => {
+const Header = ({ title, currentUser, className, children }: IHeaderProps) => {
   return (
     <div className={className}>
       <div className="g-header-layout">
@@ -39,7 +40,7 @@ const Header = ({ title, user, className, children }: IHeaderProps) => {
           <Dropdown
             renderTitle={
               <>
-                <p>{user}</p>
+                <p>{currentUser.user}</p>
                 <Icon iconName="Person" className="user-icon" />
               </>
             }
