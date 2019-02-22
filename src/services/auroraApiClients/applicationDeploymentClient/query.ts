@@ -173,6 +173,7 @@ export const APPLICATION_DEPLOYMENT_DETAILS_QUERY = gql`
 export interface IUserAffiliationsQuery {
   currentUser: {
     name: string;
+    id: string;
   };
   affiliations: {
     edges: Array<{
@@ -187,6 +188,7 @@ export const USER_AFFILIATIONS_QUERY = gql`
   query getUserAndAffiliations {
     currentUser {
       name
+      id
     }
     affiliations(checkForVisibility: true) {
       edges {

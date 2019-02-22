@@ -11,6 +11,7 @@ import {
 } from 'office-ui-fabric-react/lib/DetailsList';
 import { getLocalDate } from 'utils/date';
 
+import { IUserAndAffiliations } from 'models/ApplicationDeployment';
 import {
   ICreateDatabaseSchemaInput,
   ICreateDatabaseSchemaResponse,
@@ -42,6 +43,7 @@ export interface ISchemaProps {
   affiliation: string;
   className?: string;
   testJdbcConnectionResponse: boolean;
+  currentUser: IUserAndAffiliations;
 }
 
 interface ISchemaState {
@@ -145,8 +147,7 @@ export class Schema extends React.Component<ISchemaProps, ISchemaState> {
       viewItems = [];
     }
     this.setState({
-      viewItems,
-      filter: ''
+      viewItems
     });
   };
 
@@ -162,7 +163,8 @@ export class Schema extends React.Component<ISchemaProps, ISchemaState> {
       createResponse,
       affiliation,
       onTestJdbcConnectionForUser,
-      onFetch
+      onFetch,
+      currentUser
     } = this.props;
     const {
       viewItems,
@@ -171,10 +173,6 @@ export class Schema extends React.Component<ISchemaProps, ISchemaState> {
       filter,
       selectedSchema
     } = this.state;
-
-    if (isFetching) {
-      return <Spinner />;
-    }
 
     const filteredItems = viewItems.filter(filterDatabaseSchemaView(filter));
 
@@ -185,6 +183,7 @@ export class Schema extends React.Component<ISchemaProps, ISchemaState> {
             <TextField
               placeholder="Søk etter skjema"
               onChanged={this.onFilterChange}
+              value={filter}
             />
           </div>
           <div className="styled-create">
@@ -195,20 +194,26 @@ export class Schema extends React.Component<ISchemaProps, ISchemaState> {
               onTestJdbcConnectionForUser={onTestJdbcConnectionForUser}
               testJdbcConnectionResponse={testJdbcConnectionResponse}
               onFetch={onFetch}
+              currentUser={currentUser}
+              isFetching={isFetching}
             />
           </div>
         </div>
-        <div className="styledTable">
-          <DetailsList
-            columns={this.databaseSchemaService.createColumns(
-              selectedColumnIndex,
-              columnSortDirections[selectedColumnIndex]
-            )}
-            items={filteredItems}
-            onColumnHeaderClick={this.sortByColumn}
-            selection={this.selection}
-          />
-        </div>
+        {isFetching ? (
+          <Spinner />
+        ) : (
+          <div className="styledTable">
+            <DetailsList
+              columns={this.databaseSchemaService.createColumns(
+                selectedColumnIndex,
+                columnSortDirections[selectedColumnIndex]
+              )}
+              items={filteredItems}
+              onColumnHeaderClick={this.sortByColumn}
+              selection={this.selection}
+            />
+          </div>
+        )}
 
         <DatabaseSchemaUpdateDialog
           schema={selectedSchema}
@@ -259,7 +264,7 @@ export default styled(Schema)`
     display: flex;
     align-items: center;
     justify-content: space-between;
-    margin: 20px;
+    margin: 20px 0 20px 20px;
   }
 
   .styled-input {

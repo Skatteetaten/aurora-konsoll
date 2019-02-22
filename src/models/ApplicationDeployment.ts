@@ -38,4 +38,5 @@ export interface IApplicationDeploymentDetails {
 export interface IUserAndAffiliations {
   affiliations: string[];
   user: string;
+  id: string;
 }

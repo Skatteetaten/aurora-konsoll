@@ -70,7 +70,10 @@ const External = ({
         </Grid.Col>
         <Grid.Col lg={1} />
         <Grid.Col lg={5}>
-          <Labels handleLabelChange={handleLabelChange} />
+          <Labels
+            handleLabelChange={handleLabelChange}
+            displayCreatedByField={false}
+          />
         </Grid.Col>
       </Grid.Row>
     </Grid>
