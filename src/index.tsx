@@ -20,7 +20,7 @@ import {
   UserSettingsClient
 } from 'services/auroraApiClients';
 import GoboClient from 'services/GoboClient';
-import { StartupConnected } from 'StartupConnected';
+import { StartupConnected } from 'Startup';
 import './index.css';
 
 async function init() {

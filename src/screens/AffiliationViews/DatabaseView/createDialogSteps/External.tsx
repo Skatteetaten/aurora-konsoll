@@ -72,7 +72,7 @@ const External = ({
         <Grid.Col lg={5}>
           <Labels
             handleLabelChange={handleLabelChange}
-            createdBy={databaseSchemaInput.createdBy}
+            displayCreatedByField={false}
           />
         </Grid.Col>
       </Grid.Row>

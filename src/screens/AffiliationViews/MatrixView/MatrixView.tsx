@@ -69,6 +69,7 @@ const MatrixView = ({
           style={{ minWidth: '120px' }}
           loading={isRefreshing}
           onClick={refreshApplicationDeployments}
+          icon="Update"
         >
           Oppdater
         </LoadingButton>
