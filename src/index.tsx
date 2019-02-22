@@ -33,8 +33,6 @@ async function init() {
     redirectToLoginPage(config.AUTHORIZATION_URI, config.CLIENT_ID);
   }
 
-  const displayDatabaseView = !!config.INTEGRATIONS_DBH_URL;
-
   const token = tokenStore.getToken();
   const goboClient = new GoboClient({
     errorHandler: errorStateManager,
@@ -58,7 +56,7 @@ async function init() {
         <BrowserRouter>
           <App
             tokenStore={tokenStore}
-            displayDatabaseView={displayDatabaseView}
+            displayDatabaseView={config.INTEGRATIONS_DBH_URL}
           />
         </BrowserRouter>
       </AuroraApiProvider>
