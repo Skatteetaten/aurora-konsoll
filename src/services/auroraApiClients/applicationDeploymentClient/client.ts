@@ -160,13 +160,15 @@ export class ApplicationDeploymentClient {
     if (!result) {
       return {
         affiliations: [],
-        user: ''
+        user: '',
+        id: ''
       };
     }
 
     return {
       affiliations: result.data.affiliations.edges.map(edge => edge.node.name),
-      user: formatName(result.data.currentUser.name)
+      user: formatName(result.data.currentUser.name),
+      id: result.data.currentUser.id
     };
   }
 

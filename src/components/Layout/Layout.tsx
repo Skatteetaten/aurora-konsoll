@@ -1,11 +1,15 @@
 import * as React from 'react';
 
+import { connect } from 'react-redux';
+
 import Dropdown, {
   IDropdownOption
 } from 'aurora-frontend-react-komponenter/Dropdown';
 
 import { toDropdownOptions } from 'utils/aurora-frontend';
 
+import { IUserAndAffiliations } from 'models/ApplicationDeployment';
+import { RootState } from 'store/types';
 import styled from 'styled-components';
 import Header from './Header';
 import Menu from './Menu';
@@ -14,31 +18,32 @@ import MenuNavLink, { IMenuNavLinkData } from './MenuNavLink';
 
 interface ILayoutProps {
   affiliation?: string;
-  affiliations: string[];
   className?: string;
   handleMenuExpand: () => void;
   isMenuExpanded: boolean;
-  user: string;
   showAffiliationSelector: boolean;
   children: React.ReactNode;
   onAffiliationChange: (affiliation: string) => void;
   displayDatabaseView: boolean;
+  currentUser: IUserAndAffiliations;
 }
 
 const Layout = ({
   affiliation,
-  affiliations,
   className,
   isMenuExpanded,
   handleMenuExpand,
-  user,
   showAffiliationSelector,
   children,
   onAffiliationChange,
-  displayDatabaseView
+  displayDatabaseView,
+  currentUser
 }: ILayoutProps) => {
-  const onAffiliationChanged = (item: IDropdownOption) =>
-    onAffiliationChange(item.text);
+  const onAffiliationChanged = (item: IDropdownOption, index: number) => {
+    if (index > 0) {
+      onAffiliationChange(item.text);
+    }
+  };
 
   const databaseMenuLink: IMenuNavLinkData = {
     iconName: 'Save',
@@ -73,11 +78,15 @@ const Layout = ({
 
   return (
     <div className={layoutClassNames}>
-      <Header title="Aurora Konsoll" user={user} className="g-header">
+      <Header
+        title="Aurora Konsoll"
+        className="g-header"
+        currentUser={currentUser}
+      >
         {showAffiliationSelector && (
           <Dropdown
             placeholder="Velg tilhørighet"
-            options={toDropdownOptions(affiliations)}
+            options={toDropdownOptions(currentUser.affiliations)}
             onChanged={onAffiliationChanged}
             selectedKey={affiliation}
           />
@@ -97,7 +106,7 @@ const Layout = ({
   );
 };
 
-export default styled(Layout)`
+const StyledLayout = styled(Layout)`
   height: 100%;
   display: grid;
   grid-template-rows: auto 1fr;
@@ -121,3 +130,14 @@ export default styled(Layout)`
     max-width: 250px;
   }
 `;
+
+const mapStateToProps = (state: RootState) => ({
+  currentUser: state.startup.currentUser
+});
+
+const LayoutConnected = connect(
+  mapStateToProps,
+  null
+)(StyledLayout);
+
+export default LayoutConnected;

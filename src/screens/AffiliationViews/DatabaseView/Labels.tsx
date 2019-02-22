@@ -1,13 +1,16 @@
 import * as React from 'react';
+import styled from 'styled-components';
 
 import TextField from 'aurora-frontend-react-komponenter/TextField';
 
 interface ILabelsProps {
+  className?: string;
   environment?: string;
   application?: string;
   discriminator?: string;
   createdBy?: string;
   description?: string;
+  displayCreatedByField: boolean;
   handleLabelChange: (field: string) => (value: string) => void;
 }
 
@@ -17,9 +20,11 @@ const Labels = ({
   discriminator,
   createdBy,
   description,
-  handleLabelChange
+  handleLabelChange,
+  className,
+  displayCreatedByField
 }: ILabelsProps) => (
-  <>
+  <div className={className}>
     <h3>Labels</h3>
     <TextField
       id={'environment'}
@@ -37,14 +42,18 @@ const Labels = ({
       id={'discriminator'}
       label={'Diskriminator'}
       value={discriminator}
+      help="Benyttes av systemet for å finne et databaseskjema"
       onChanged={handleLabelChange('discriminator')}
     />
-    <TextField
-      id={'createdBy'}
-      label={'Bruker'}
-      value={createdBy}
-      onChanged={handleLabelChange('createdBy')}
-    />
+    {displayCreatedByField && (
+      <TextField
+        id={'createdBy'}
+        label={'Bruker'}
+        value={createdBy}
+        onChanged={handleLabelChange('createdBy')}
+        disabled={true}
+      />
+    )}
     <TextField
       id={'description'}
       label={'Beskrivelse'}
@@ -52,7 +61,11 @@ const Labels = ({
       onChanged={handleLabelChange('description')}
       multiline={true}
     />
-  </>
+  </div>
 );
 
-export default Labels;
+export default styled(Labels)`
+  .ms-Callout-main {
+    width: 247px;
+  }
+`;

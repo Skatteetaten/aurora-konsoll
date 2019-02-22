@@ -20,9 +20,6 @@ export const DATABASE_SCHEMAS_QUERY = gql`
       description
       discriminator
       databaseEngine
-      applicationDeployment {
-        id
-      }
       createdBy
       createdDate
       lastUsedDate

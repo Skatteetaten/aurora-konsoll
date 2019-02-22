@@ -11,14 +11,14 @@ import styled from 'styled-components';
 import SkeBasis from 'aurora-frontend-react-komponenter/SkeBasis';
 
 import { IAuroraApiComponentProps } from 'components/AuroraApi';
-import Layout from 'components/Layout';
 import { ITokenStore } from 'services/TokenStore';
 import AcceptTokenRoute from './AcceptTokenView/AcceptTokenRoute';
 
 import { withAuroraApi } from 'components/AuroraApi';
 import ErrorBoundary from 'components/ErrorBoundary/ErrorBoundary';
+import LayoutConnected from 'components/Layout/Layout';
 import { errorStateManager } from 'models/StateManager/ErrorStateManager';
-import AffiliationViewValidator, {
+import AffiliationViewValidatorConnected, {
   AffiliationRouteProps
 } from './AffiliationViews/AffiliationViewValidator';
 import { NetdebugWithApi } from './NetdebugView/Netdebug';
@@ -35,17 +35,13 @@ interface IAppProps extends IAuroraApiComponentProps, RouteComponentProps<{}> {
 
 interface IAppState {
   affiliation?: string;
-  affiliations: string[];
   isMenuExpanded: boolean;
-  user: string;
 }
 
 class App extends React.Component<IAppProps, IAppState> {
   public state: IAppState = {
     affiliation: undefined,
-    affiliations: [],
-    isMenuExpanded: true,
-    user: ''
+    isMenuExpanded: true
   };
 
   public handleMenuExpand = () => {
@@ -78,21 +74,10 @@ class App extends React.Component<IAppProps, IAppState> {
     });
   };
 
-  public async componentDidMount() {
-    const {
-      affiliations,
-      user
-    } = await this.props.clients.applicationDeploymentClient.findUserAndAffiliations();
-
-    this.setState(() => ({
-      affiliations,
-      user
-    }));
-  }
-
   public render() {
     const isAuthenticated = this.props.tokenStore.isTokenValid();
-    const { affiliation, affiliations, isMenuExpanded, user } = this.state;
+
+    const { affiliation, isMenuExpanded } = this.state;
     const { location, displayDatabaseView } = this.props;
 
     const renderAffiliationViewValidatorDeployments = (
@@ -107,12 +92,10 @@ class App extends React.Component<IAppProps, IAppState> {
       routeProps: AffiliationRouteProps,
       type: MenuType
     ) => (
-      <AffiliationViewValidator
+      <AffiliationViewValidatorConnected
         {...routeProps}
-        user={user}
         type={type}
         affiliation={affiliation}
-        affiliations={affiliations}
         onAffiliationValidated={this.onSelectedAffiliationValidated}
       />
     );
@@ -120,12 +103,10 @@ class App extends React.Component<IAppProps, IAppState> {
     return (
       <StyledSkeBasis menuExpanded={isMenuExpanded}>
         <ErrorBoundary errorSM={errorStateManager}>
-          <Layout
-            user={user}
+          <LayoutConnected
             isMenuExpanded={isMenuExpanded}
             handleMenuExpand={this.handleMenuExpand}
             affiliation={affiliation}
-            affiliations={affiliations}
             showAffiliationSelector={
               location.pathname.startsWith('/a/') ||
               location.pathname.startsWith('/db/')
@@ -158,7 +139,7 @@ class App extends React.Component<IAppProps, IAppState> {
                 )}
               </Switch>
             )}
-          </Layout>
+          </LayoutConnected>
         </ErrorBoundary>
       </StyledSkeBasis>
     );
