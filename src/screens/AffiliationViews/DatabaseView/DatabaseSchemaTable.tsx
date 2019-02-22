@@ -147,8 +147,7 @@ export class Schema extends React.Component<ISchemaProps, ISchemaState> {
       viewItems = [];
     }
     this.setState({
-      viewItems,
-      filter: ''
+      viewItems
     });
   };
 
@@ -175,10 +174,6 @@ export class Schema extends React.Component<ISchemaProps, ISchemaState> {
       selectedSchema
     } = this.state;
 
-    if (isFetching) {
-      return <Spinner />;
-    }
-
     const filteredItems = viewItems.filter(filterDatabaseSchemaView(filter));
 
     return (
@@ -188,6 +183,7 @@ export class Schema extends React.Component<ISchemaProps, ISchemaState> {
             <TextField
               placeholder="Søk etter skjema"
               onChanged={this.onFilterChange}
+              value={filter}
             />
           </div>
           <div className="styled-create">
@@ -203,17 +199,21 @@ export class Schema extends React.Component<ISchemaProps, ISchemaState> {
             />
           </div>
         </div>
-        <div className="styledTable">
-          <DetailsList
-            columns={this.databaseSchemaService.createColumns(
-              selectedColumnIndex,
-              columnSortDirections[selectedColumnIndex]
-            )}
-            items={filteredItems}
-            onColumnHeaderClick={this.sortByColumn}
-            selection={this.selection}
-          />
-        </div>
+        {isFetching ? (
+          <Spinner />
+        ) : (
+          <div className="styledTable">
+            <DetailsList
+              columns={this.databaseSchemaService.createColumns(
+                selectedColumnIndex,
+                columnSortDirections[selectedColumnIndex]
+              )}
+              items={filteredItems}
+              onColumnHeaderClick={this.sortByColumn}
+              selection={this.selection}
+            />
+          </div>
+        )}
 
         <DatabaseSchemaUpdateDialog
           schema={selectedSchema}
