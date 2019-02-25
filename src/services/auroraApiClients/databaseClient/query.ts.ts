@@ -20,6 +20,16 @@ export const DATABASE_SCHEMAS_QUERY = gql`
       description
       discriminator
       databaseEngine
+      applicationDeployments {
+        id
+        name
+        affiliation {
+          name
+        }
+        namespace {
+          name
+        }
+      }
       createdBy
       createdDate
       lastUsedDate

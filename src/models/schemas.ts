@@ -14,6 +14,7 @@ export interface IDatabaseSchema {
   affiliation: {
     name: string;
   };
+  applicationDeployments: IDatabaseApplicationDeployment[];
   databaseEngine: string;
   createdBy: string;
   createdDate: Date;
@@ -26,6 +27,17 @@ export interface IDatabaseSchema {
   }>;
 }
 
+export interface IDatabaseApplicationDeployment {
+  id: string;
+  affiliation: {
+    name: string;
+  };
+  name: string;
+  namespace: {
+    name: string;
+  };
+}
+
 export interface IDatabaseSchemaView {
   type: string;
   application: string;
@@ -35,6 +47,7 @@ export interface IDatabaseSchemaView {
   createdDate: string;
   lastUsedDate?: string | null;
   sizeInMb: number;
+  applicationDeploymentsUses: number;
   id: string;
 }
 

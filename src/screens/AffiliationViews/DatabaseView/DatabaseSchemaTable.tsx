@@ -139,6 +139,7 @@ export class Schema extends React.Component<ISchemaProps, ISchemaState> {
           lastUsedDate: i.lastUsedDate && getLocalDate(i.lastUsedDate),
           discriminator: i.discriminator,
           type: i.type,
+          applicationDeploymentsUses: i.applicationDeployments.length,
           sizeInMb: i.sizeInMb,
           createdBy: i.createdBy
         };
