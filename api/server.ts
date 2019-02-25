@@ -2,7 +2,13 @@
 import * as express from 'express';
 import * as proxy from 'http-proxy-middleware';
 
-import { AUTHORIZATION_URI, CLIENT_ID, GOBO_URL, PORT } from './config';
+import {
+  AUTHORIZATION_URI,
+  CLIENT_ID,
+  DBH_ENABLED,
+  GOBO_URL,
+  PORT
+} from './config';
 
 const app = express();
 app.use(
@@ -21,7 +27,8 @@ app.use(express.json());
 app.get('/api/config', (req, res) => {
   return res.send({
     AUTHORIZATION_URI,
-    CLIENT_ID
+    CLIENT_ID,
+    DBH_ENABLED
   });
 });
 

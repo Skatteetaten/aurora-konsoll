@@ -24,6 +24,7 @@ interface ILayoutProps {
   showAffiliationSelector: boolean;
   children: React.ReactNode;
   onAffiliationChange: (affiliation: string) => void;
+  displayDatabaseView: boolean;
   currentUser: IUserAndAffiliations;
 }
 
@@ -34,13 +35,20 @@ const Layout = ({
   handleMenuExpand,
   showAffiliationSelector,
   children,
-  currentUser,
-  onAffiliationChange
+  onAffiliationChange,
+  displayDatabaseView,
+  currentUser
 }: ILayoutProps) => {
   const onAffiliationChanged = (item: IDropdownOption, index: number) => {
     if (index > 0) {
       onAffiliationChange(item.text);
     }
+  };
+
+  const databaseMenuLink: IMenuNavLinkData = {
+    iconName: 'Save',
+    name: 'Database',
+    to: `/db/${affiliation || '_'}/databaseSchemas`
   };
 
   const menuLinks: IMenuNavLinkData[] = [
@@ -53,13 +61,14 @@ const Layout = ({
       iconName: 'Code',
       name: 'Netdebug',
       to: '/netdebug'
-    },
-    {
-      iconName: 'Save',
-      name: 'Database',
-      to: `/db/${affiliation || '_'}/databaseSchemas`
     }
-  ].map(item => ({
+  ];
+
+  if (displayDatabaseView) {
+    menuLinks.push(databaseMenuLink);
+  }
+
+  menuLinks.map(item => ({
     ...item,
     showName: isMenuExpanded
   }));
