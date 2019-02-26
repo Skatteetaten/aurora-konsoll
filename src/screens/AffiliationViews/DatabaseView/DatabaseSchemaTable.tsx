@@ -2,15 +2,19 @@ import * as React from 'react';
 
 import styled from 'styled-components';
 
+import ActionButton from 'aurora-frontend-react-komponenter/ActionButton';
 import DetailsList from 'aurora-frontend-react-komponenter/DetailsList';
 import TextField from 'aurora-frontend-react-komponenter/TextField';
 import Spinner from 'components/Spinner';
 import {
+  CheckboxVisibility,
   IObjectWithKey,
-  Selection
+  Selection,
+  SelectionMode
 } from 'office-ui-fabric-react/lib/DetailsList';
 import { getLocalDate } from 'utils/date';
 
+import ConfirmationDialog from 'components/ConfirmationDialog';
 import { IUserAndAffiliations } from 'models/ApplicationDeployment';
 import {
   ICreateDatabaseSchemaInput,
@@ -52,6 +56,8 @@ interface ISchemaState {
   selectedColumnIndex: number;
   filter: string;
   selectedSchema?: IDatabaseSchema;
+  deleteMode: boolean;
+  deleteSelectionIds: string[];
 }
 
 export class Schema extends React.Component<ISchemaProps, ISchemaState> {
@@ -60,13 +66,19 @@ export class Schema extends React.Component<ISchemaProps, ISchemaState> {
     columnSortDirections: defaultSortDirections,
     selectedColumnIndex: -1,
     filter: '',
-    selectedSchema: undefined
+    selectedSchema: undefined,
+    deleteMode: false,
+    deleteSelectionIds: []
   };
 
   private databaseSchemaService = new DatabaseSchemaService();
 
   private selection = new Selection({
-    onSelectionChanged: () => this.onRowClicked()
+    onSelectionChanged: () => {
+      this.state.deleteMode
+        ? this.onSelectRowClicked()
+        : this.onUpdateRowClicked();
+    }
   });
 
   public sortByColumn = (
@@ -172,20 +184,74 @@ export class Schema extends React.Component<ISchemaProps, ISchemaState> {
       selectedColumnIndex,
       columnSortDirections,
       filter,
-      selectedSchema
+      selectedSchema,
+      deleteMode
     } = this.state;
 
     const filteredItems = viewItems.filter(filterDatabaseSchemaView(filter));
 
+    const renderConfirmationOpenButton = (open: () => void) => (
+      <ActionButton
+        iconSize={ActionButton.LARGE}
+        color="green"
+        icon="Completed"
+        style={{
+          minWidth: '120px',
+          marginLeft: '15px',
+          float: 'left'
+        }}
+        onClick={open}
+      >
+        Slett valgte
+      </ActionButton>
+    );
+
+    const renderConfirmationFooterButtons = () => <div />;
+
     return (
       <div className={className}>
         <div className="styled-action-bar">
-          <div className="styled-input">
-            <TextField
-              placeholder="Søk etter skjema"
-              onChanged={this.onFilterChange}
-              value={filter}
-            />
+          <div className="styled-input-and-delete">
+            <div className="styled-input">
+              <TextField
+                placeholder="Søk etter skjema"
+                onChanged={this.onFilterChange}
+                value={filter}
+              />
+            </div>
+            {!deleteMode && (
+              <ActionButton
+                iconSize={ActionButton.LARGE}
+                color="red"
+                icon="Delete"
+                style={{ minWidth: '120px', marginLeft: '15px', float: 'left' }}
+                onClick={this.enterDeletionMode}
+              >
+                Slett skjemaer
+              </ActionButton>
+            )}
+            {deleteMode && (
+              <ConfirmationDialog
+                title="Slett databaseskjema"
+                text={this.getSelectionDetails()}
+                renderOpenDialogButton={renderConfirmationOpenButton}
+                renderFooterButtons={renderConfirmationFooterButtons}
+              />
+            )}
+            {deleteMode && (
+              <ActionButton
+                iconSize={ActionButton.LARGE}
+                color="red"
+                icon="Cancel"
+                style={{
+                  minWidth: '120px',
+                  float: 'left'
+                }}
+                onClick={this.exitDeletionMode}
+              >
+                Avbryt
+              </ActionButton>
+            )}
           </div>
           <div className="styled-create">
             <DatabaseSchemaCreateDialog
@@ -209,9 +275,15 @@ export class Schema extends React.Component<ISchemaProps, ISchemaState> {
                 selectedColumnIndex,
                 columnSortDirections[selectedColumnIndex]
               )}
+              selectionMode={SelectionMode.multiple}
               items={filteredItems}
               onColumnHeaderClick={this.sortByColumn}
               selection={this.selection}
+              checkboxVisibility={
+                this.state.deleteMode
+                  ? CheckboxVisibility.always
+                  : CheckboxVisibility.hidden
+              }
             />
           </div>
         )}
@@ -229,13 +301,45 @@ export class Schema extends React.Component<ISchemaProps, ISchemaState> {
     );
   }
 
+  private exitDeletionMode = () => {
+    this.setState({
+      deleteMode: false,
+      deleteSelectionIds: []
+    });
+  };
+
+  private getSelectionDetails(): string {
+    switch (this.state.deleteSelectionIds.length) {
+      case 0:
+        return 'Ingen skjemaer valgt';
+      case 1:
+        return `Et skjema valgt, med id: ${this.state.deleteSelectionIds[0]}`;
+      default:
+        return `Valgte skjemaer: ${this.state.deleteSelectionIds}`;
+    }
+  }
+
+  private enterDeletionMode = () => {
+    this.setState({
+      deleteMode: true
+    });
+  };
+
   private onFilterChange = (text: string) => {
     this.setState({
       filter: text
     });
   };
 
-  private onRowClicked = () => {
+  private onSelectRowClicked = () => {
+    const selected: IObjectWithKey[] = this.selection.getSelection();
+    const selectedIds = (selected as IDatabaseSchema[]).map(it => it.id);
+    this.setState({
+      deleteSelectionIds: selectedIds
+    });
+  };
+
+  private onUpdateRowClicked = () => {
     const { items } = this.props;
     const selected: IObjectWithKey[] = this.selection.getSelection();
     let selectedSchema;
@@ -261,11 +365,25 @@ export default styled(Schema)`
   height: 100%;
   overflow-x: auto;
 
+  .ms-Check {
+    border: 1px solid black;
+    border-radius: 10px;
+  }
+
+  .is-checked {
+    border: 1px solid white !important;
+  }
+
   .styled-action-bar {
     display: flex;
     align-items: center;
     justify-content: space-between;
     margin: 20px 0 20px 20px;
+  }
+
+  .styled-input-and-delete {
+    display: flex;
+    align-items: center;
   }
 
   .styled-input {

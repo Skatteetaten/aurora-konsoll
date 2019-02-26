@@ -174,7 +174,7 @@ class DatabaseSchemaCreateDialog extends React.Component<
         </Button>
         <LoadingButton
           icon="Update"
-          style={{ minWidth: '120px', marginLeft: '15px' }}
+          style={{ minWidth: '141px', marginLeft: '15px' }}
           loading={isFetching}
           onClick={closeAndFetch}
         >

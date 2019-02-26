@@ -4,6 +4,7 @@ import {
   ICreateDatabaseSchemaInput,
   ICreateDatabaseSchemaResponse,
   IDatabaseSchemas,
+  IDeleteDatabaseSchemasResponse,
   IJdbcUser,
   IUpdateDatabaseSchemaInputWithCreatedBy
 } from 'models/schemas';
@@ -74,6 +75,28 @@ export class DatabaseClient {
     }
 
     return false;
+  }
+
+  public async deleteSchemas(ids: string[]) {
+    const result = await this.client.mutate<{
+      deleteDatabaseSchemas: IDeleteDatabaseSchemasResponse;
+    }>({
+      mutation: DELETE_DATABASESCHEMA_MUTATION,
+      variables: {
+        input: {
+          ids
+        }
+      }
+    });
+
+    if (result && result.data) {
+      return result.data.deleteDatabaseSchemas;
+    }
+
+    return {
+      failed: [],
+      succeeded: []
+    } as IDeleteDatabaseSchemasResponse;
   }
 
   public async testJdbcConnectionForId(id: string) {
