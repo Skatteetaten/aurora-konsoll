@@ -57,7 +57,7 @@ const MatrixView = ({
         />
         <Checkbox
           boxSide={'start'}
-          label="Vis sematisk versjon"
+          label="Vis semantisk versjon"
           checked={showSemanticVersion}
           onChange={toggleShowSemanticVersion}
           className="versionCheckbox"
