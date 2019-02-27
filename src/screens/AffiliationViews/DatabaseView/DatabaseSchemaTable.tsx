@@ -22,6 +22,7 @@ import {
   IDatabaseSchema,
   IDatabaseSchemas,
   IDatabaseSchemaView,
+  IDeleteDatabaseSchemasResponse,
   IJdbcUser,
   IUpdateDatabaseSchemaInputWithCreatedBy
 } from 'models/schemas';
@@ -38,6 +39,7 @@ export interface ISchemaProps {
   onUpdate: (databaseSchema: IUpdateDatabaseSchemaInputWithCreatedBy) => void;
   onDelete: (databaseSchema: IDatabaseSchema) => void;
   onCreate: (databaseSchema: ICreateDatabaseSchemaInput) => void;
+  onDeleteSchemas: (ids: string[]) => IDeleteDatabaseSchemasResponse;
   onTestJdbcConnectionForId: (id: string) => void;
   onTestJdbcConnectionForUser: (jdbcUser: IJdbcUser) => void;
   items: IDatabaseSchemas;
@@ -48,6 +50,7 @@ export interface ISchemaProps {
   className?: string;
   testJdbcConnectionResponse: boolean;
   currentUser: IUserAndAffiliations;
+  deleteResponse: IDeleteDatabaseSchemasResponse;
 }
 
 interface ISchemaState {
@@ -178,6 +181,7 @@ export class Schema extends React.Component<ISchemaProps, ISchemaState> {
       onTestJdbcConnectionForUser,
       onFetch,
       currentUser
+      // onDeleteSchemas
     } = this.props;
     const {
       viewItems,
@@ -185,7 +189,8 @@ export class Schema extends React.Component<ISchemaProps, ISchemaState> {
       columnSortDirections,
       filter,
       selectedSchema,
-      deleteMode
+      deleteMode,
+      deleteSelectionIds
     } = this.state;
 
     const filteredItems = viewItems.filter(filterDatabaseSchemaView(filter));
@@ -206,7 +211,37 @@ export class Schema extends React.Component<ISchemaProps, ISchemaState> {
       </ActionButton>
     );
 
-    const renderConfirmationFooterButtons = () => <div />;
+    const renderConfirmationFooterButtons = (close: () => void) => {
+      const deleteSchemas = () => {
+        if (deleteSelectionIds.length > 0) {
+          // tslint:disable-next-line:no-console
+          console.log(deleteSelectionIds);
+          // onDeleteSchemas(deleteSelectionIds);
+          close();
+        }
+      };
+      return (
+        <>
+          <ActionButton
+            iconSize={ActionButton.LARGE}
+            icon="Check"
+            color="black"
+            onClick={deleteSchemas}
+          >
+            Ja
+          </ActionButton>
+
+          <ActionButton
+            onClick={close}
+            iconSize={ActionButton.LARGE}
+            icon="Cancel"
+            color="black"
+          >
+            Nei
+          </ActionButton>
+        </>
+      );
+    };
 
     return (
       <div className={className}>
@@ -301,21 +336,24 @@ export class Schema extends React.Component<ISchemaProps, ISchemaState> {
     );
   }
 
+  private deselect = () => this.selection.setAllSelected(false);
+
   private exitDeletionMode = () => {
     this.setState({
       deleteMode: false,
       deleteSelectionIds: []
     });
+    this.deselect();
   };
 
   private getSelectionDetails(): string {
     switch (this.state.deleteSelectionIds.length) {
       case 0:
         return 'Ingen skjemaer valgt';
-      case 1:
-        return `Et skjema valgt, med id: ${this.state.deleteSelectionIds[0]}`;
       default:
-        return `Valgte skjemaer: ${this.state.deleteSelectionIds}`;
+        return `Vil du slette ${
+          this.state.deleteSelectionIds.length
+        } skjemaer?`;
     }
   }
 
@@ -364,15 +402,6 @@ export class Schema extends React.Component<ISchemaProps, ISchemaState> {
 export default styled(Schema)`
   height: 100%;
   overflow-x: auto;
-
-  .ms-Check {
-    border: 1px solid black;
-    border-radius: 10px;
-  }
-
-  .is-checked {
-    border: 1px solid white !important;
-  }
 
   .styled-action-bar {
     display: flex;

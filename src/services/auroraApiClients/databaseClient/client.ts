@@ -11,7 +11,7 @@ import {
 import { errorStateManager } from 'models/StateManager/ErrorStateManager';
 import {
   CREATE_DATABASE_SCHEMA_MUTATION,
-  DELETE_DATABASESCHEMA_MUTATION,
+  DELETE_DATABASESCHEMAS_MUTATION,
   TEST_JDBC_CONNECTION_FOR_ID_MUTATION,
   TEST_JDBC_CONNECTION_FOR_JDBCUSER_MUTATION,
   UPDATE_DATABASESCHEMA_MUTATION
@@ -58,37 +58,17 @@ export class DatabaseClient {
     return false;
   }
 
-  public async deleteSchema(id: string) {
-    const result = await this.client.mutate<{
-      deleteDatabaseSchema: boolean;
-    }>({
-      mutation: DELETE_DATABASESCHEMA_MUTATION,
-      variables: {
-        input: {
-          id
-        }
-      }
-    });
-
-    if (result && result.data) {
-      return result.data.deleteDatabaseSchema;
-    }
-
-    return false;
-  }
-
   public async deleteSchemas(ids: string[]) {
     const result = await this.client.mutate<{
       deleteDatabaseSchemas: IDeleteDatabaseSchemasResponse;
     }>({
-      mutation: DELETE_DATABASESCHEMA_MUTATION,
+      mutation: DELETE_DATABASESCHEMAS_MUTATION,
       variables: {
         input: {
           ids
         }
       }
     });
-
     if (result && result.data) {
       return result.data.deleteDatabaseSchemas;
     }

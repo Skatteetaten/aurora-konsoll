@@ -11,6 +11,7 @@ import {
   ICreateDatabaseSchemaResponse,
   IDatabaseSchema,
   IDatabaseSchemas,
+  IDeleteDatabaseSchemasResponse,
   IJdbcUser,
   IUpdateDatabaseSchemaInputWithCreatedBy
 } from 'models/schemas';
@@ -21,6 +22,7 @@ export const FETCHED_SCHEMA_RESPONSE = 'database/FETCHED_SCHEMA_RESPONSE';
 export const UPDATE_SCHEMA_RESPONSE = 'database/UPDATE_SCHEMA_RESPONSE';
 
 export const DELETE_SCHEMA_RESPONSE = 'database/DELETE_SCHEMA_RESPONSE';
+export const DELETE_SCHEMAS_RESPONSE = 'database/DELETE_SCHEMAS_RESPONSE';
 
 export const TEST_JDBC_CONNECTION_FOR_ID_RESPONSE =
   'database/TEST_JDBC_CONNECTION_FOR_ID_RESPONSE';
@@ -38,8 +40,9 @@ export const fetchSchemaResponse = (databaseSchemas: IDatabaseSchemas) =>
 export const updateSchemaResponse = (response: boolean) =>
   action(UPDATE_SCHEMA_RESPONSE, { response });
 
-export const deleteSchemaResponse = (response: boolean) =>
-  action(DELETE_SCHEMA_RESPONSE, { response });
+export const deleteSchemasResponse = (
+  response: IDeleteDatabaseSchemasResponse
+) => action(DELETE_SCHEMAS_RESPONSE, { response });
 
 export const testJdbcConnectionForIdResponse = (response: boolean) =>
   action(TEST_JDBC_CONNECTION_FOR_ID_RESPONSE, { response });
@@ -78,9 +81,20 @@ export const deleteSchema: Thunk = (databaseSchema: IDatabaseSchema) => async (
   getState,
   { clients }
 ) => {
-  const result = await clients.databaseClient.deleteSchema(databaseSchema.id);
-  dispatch(deleteSchemaResponse(result));
+  const result = await clients.databaseClient.deleteSchemas([
+    databaseSchema.id
+  ]);
+  dispatch(deleteSchemasResponse(result));
   dispatch(fetchSchemas([databaseSchema.affiliation.name]));
+};
+
+export const deleteSchemas: Thunk = (ids: string[]) => async (
+  dispatch,
+  getState,
+  { clients }
+) => {
+  const result = await clients.databaseClient.deleteSchemas(ids);
+  dispatch(deleteSchemasResponse(result));
 };
 
 export const testJdbcConnectionForId: Thunk = (id: string) => async (
@@ -114,7 +128,7 @@ export default {
   fetchSchemaRequest,
   fetchSchemaResponse,
   updateSchemaResponse,
-  deleteSchemaResponse,
+  deleteSchemasResponse,
   testJdbcConnectionForIdResponse,
   testJdbcConnectionForJdbcUserResponse,
   createDatabaseSchemaResponse

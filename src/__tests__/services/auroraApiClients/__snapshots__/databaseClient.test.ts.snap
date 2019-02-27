@@ -1,5 +1,12 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
+exports[`deleteDatabaseSchemas should delete no schemas given no ids 1`] = `
+Object {
+  "failed": Array [],
+  "succeeded": Array [],
+}
+`;
+
 exports[`getDatabaseSchemas should fetch database schemas from GraphQL server 1`] = `
 Object {
   "databaseSchemas": Array [

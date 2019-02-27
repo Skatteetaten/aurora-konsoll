@@ -1,7 +1,7 @@
 import { IDatabaseSchema, IDatabaseSchemas } from 'models/schemas';
 import {
   CREATE_DATABASE_SCHEMA_RESPONSE,
-  DELETE_SCHEMA_RESPONSE,
+  DELETE_SCHEMAS_RESPONSE,
   FETCHED_SCHEMA_REQUEST,
   FETCHED_SCHEMA_RESPONSE,
   TEST_JDBC_CONNECTION_FOR_ID_RESPONSE,
@@ -58,11 +58,11 @@ describe('database schema reducer', () => {
   it('should return delete schema as true given response', () => {
     expect(
       reducer(undefined, {
-        type: DELETE_SCHEMA_RESPONSE,
-        payload: { response: true }
+        type: DELETE_SCHEMAS_RESPONSE,
+        payload: { response: { succeeded: ['123'], failed: ['234'] } }
       })
     ).toMatchObject({
-      deleteSchemaResponse: true
+      deleteSchemasResponse: { succeeded: ['123'], failed: ['234'] }
     });
   });
 

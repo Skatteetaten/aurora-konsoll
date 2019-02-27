@@ -12,6 +12,7 @@ import { RootState } from 'store/types';
 import {
   createDatabaseSchema,
   deleteSchema,
+  deleteSchemas,
   fetchSchemas,
   testJdbcConnectionForId,
   testJdbcConnectionForJdbcUser,
@@ -27,6 +28,7 @@ const getTestConnectionResponse = (state: ISchemasState) =>
 const getCreateDatabaseSchemaRespnse = (state: ISchemasState) =>
   state.createDatabaseSchemaResponse;
 const getCurrentUser = (state: IStartupState) => state.currentUser;
+const getDeletionInfo = (state: ISchemasState) => state.deleteSchemasResponse;
 
 const mapStateToProps = (state: RootState) => ({
   items: getItems(state.database),
@@ -34,7 +36,8 @@ const mapStateToProps = (state: RootState) => ({
   updateResponse: getUpdateResponse(state.database),
   testJdbcConnectionResponse: getTestConnectionResponse(state.database),
   createResponse: getCreateDatabaseSchemaRespnse(state.database),
-  currentUser: getCurrentUser(state.startup)
+  currentUser: getCurrentUser(state.startup),
+  deleteResponse: getDeletionInfo(state.database)
 });
 
 export const SchemaConnected = connect(
@@ -48,6 +51,7 @@ export const SchemaConnected = connect(
     onTestJdbcConnectionForUser: (jdbcUser: IJdbcUser) =>
       testJdbcConnectionForJdbcUser(jdbcUser),
     onCreate: (databaseSchema: ICreateDatabaseSchemaInput) =>
-      createDatabaseSchema(databaseSchema)
+      createDatabaseSchema(databaseSchema),
+    onDeleteSchemas: (ids: string[]) => deleteSchemas(ids)
   }
 )(Schema);

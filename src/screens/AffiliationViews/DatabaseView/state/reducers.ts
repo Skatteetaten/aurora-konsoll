@@ -2,7 +2,7 @@ import { combineReducers } from 'redux';
 import { ActionType } from 'typesafe-actions';
 import actions, {
   CREATE_DATABASE_SCHEMA_RESPONSE,
-  DELETE_SCHEMA_RESPONSE,
+  DELETE_SCHEMAS_RESPONSE,
   FETCHED_SCHEMA_REQUEST,
   FETCHED_SCHEMA_RESPONSE,
   TEST_JDBC_CONNECTION_FOR_ID_RESPONSE,
@@ -12,7 +12,8 @@ import actions, {
 
 import {
   ICreateDatabaseSchemaResponse,
-  IDatabaseSchemas
+  IDatabaseSchemas,
+  IDeleteDatabaseSchemasResponse
 } from 'models/schemas';
 
 export type DatabaseSchemasAction = ActionType<typeof actions>;
@@ -20,8 +21,8 @@ export type DatabaseSchemasAction = ActionType<typeof actions>;
 export interface ISchemasState {
   readonly isFetchingSchemas: boolean;
   readonly databaseSchemas: IDatabaseSchemas;
+  readonly deleteSchemasResponse: IDeleteDatabaseSchemasResponse;
   readonly updateSchemaResponse: boolean;
-  readonly deleteSchemaResponse: boolean;
   readonly testJdbcConnectionResponse: boolean;
   readonly createDatabaseSchemaResponse: ICreateDatabaseSchemaResponse;
 }
@@ -54,9 +55,9 @@ export const databaseReducer = combineReducers<
         return state;
     }
   },
-  deleteSchemaResponse: (state = false, action) => {
+  deleteSchemasResponse: (state = { failed: [], succeeded: [] }, action) => {
     switch (action.type) {
-      case DELETE_SCHEMA_RESPONSE:
+      case DELETE_SCHEMAS_RESPONSE:
         return action.payload.response;
       default:
         return state;

@@ -8,15 +8,12 @@ export const UPDATE_DATABASESCHEMA_MUTATION = gql`
   }
 `;
 
-export const DELETE_DATABASESCHEMA_MUTATION = gql`
-  mutation deleteDatabaseSchema($input: DeleteDatabaseSchemaInput!) {
-    deleteDatabaseSchema(input: $input)
-  }
-`;
-
 export const DELETE_DATABASESCHEMAS_MUTATION = gql`
-  mutation deleteDatabaseSchemas($input: [DeleteDatabaseSchemaInput!]!) {
-    deleteDatabaseSchemas(input: $input)
+  mutation deleteDatabaseSchemas($input: [DeleteDatabaseSchemasInput!]!) {
+    deleteDatabaseSchemas(input: $input) {
+      succeeded
+      failed
+    }
   }
 `;
 
