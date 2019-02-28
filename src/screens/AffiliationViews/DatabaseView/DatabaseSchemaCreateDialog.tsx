@@ -114,6 +114,17 @@ class DatabaseSchemaCreateDialog extends React.Component<
     });
   };
 
+  public componentDidUpdate(prevProps: IDatabaseSchemaCreateDialogProps) {
+    if (this.props.affiliation !== prevProps.affiliation) {
+      this.setState(state => ({
+        databaseSchemaInput: {
+          ...state.databaseSchemaInput,
+          affiliation: this.props.affiliation
+        }
+      }));
+    }
+  }
+
   public render() {
     const {
       className,
