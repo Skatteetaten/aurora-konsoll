@@ -61,19 +61,21 @@ interface ISchemaState {
   selectedSchema?: IDatabaseSchema;
   deleteMode: boolean;
   deleteSelectionIds: string[];
+  prevIndices: number[];
 }
 
 export class Schema extends React.Component<ISchemaProps, ISchemaState> {
-  public state = {
+  public state: ISchemaState = {
     viewItems: [],
     columnSortDirections: defaultSortDirections,
     selectedColumnIndex: -1,
     filter: '',
     selectedSchema: undefined,
     deleteMode: false,
-    deleteSelectionIds: []
+    deleteSelectionIds: [],
+    prevIndices: []
   };
-
+  private selectedIndices: any[] = [];
   private databaseSchemaService = new DatabaseSchemaService();
 
   private selection = new Selection({
@@ -111,7 +113,8 @@ export class Schema extends React.Component<ISchemaProps, ISchemaState> {
     this.setState({
       viewItems: sortedItems,
       columnSortDirections: newSortDirections,
-      selectedColumnIndex: column.key
+      selectedColumnIndex: column.key,
+      prevIndices: this.selectedIndices
     });
   };
 
@@ -121,8 +124,68 @@ export class Schema extends React.Component<ISchemaProps, ISchemaState> {
     onFetch([affiliation]);
   }
 
+  public toListIndex(index: number) {
+    const viewItems = this.selection.getItems();
+    const viewItem = viewItems[index];
+    return this.state.viewItems.findIndex(listItem => listItem === viewItem);
+  }
+
+  public toViewIndex(index: number) {
+    const listItem = this.state.viewItems[index];
+    const viewIndex = this.selection
+      .getItems()
+      .findIndex(viewItem => viewItem === listItem);
+    return viewIndex;
+  }
+
+  public saveSelection = () => {
+    const newIndices = this.selection
+      .getSelectedIndices()
+      .map(index => this.toListIndex(index))
+      .filter(index => this.selectedIndices.indexOf(index) === -1);
+
+    const unselectedIndices = this.selection
+      .getItems()
+      .map((item, index) => index)
+      .filter(index => this.selection.isIndexSelected(index) === false)
+      .map(index => this.toListIndex(index));
+
+    this.selectedIndices = this.selectedIndices.filter(
+      index => unselectedIndices.indexOf(index) === -1
+    );
+
+    this.selectedIndices = [...this.selectedIndices, ...newIndices];
+  };
+
+  public restoreSelection() {
+    const results: number[] = [];
+
+    for (const i of this.state.prevIndices) {
+      if (this.selectedIndices.indexOf(this.state.prevIndices[i]) !== -1) {
+        results.push(this.state.prevIndices[i]);
+      }
+    }
+
+    if (this.state.prevIndices) {
+      for (const i of this.state.prevIndices) {
+        if (!results.includes(i)) {
+          this.selection.setIndexSelected(i, false, false);
+        }
+      }
+    }
+
+    const indices = this.selectedIndices
+      .map(index => this.toViewIndex(index))
+      .filter(index => index !== -1);
+
+    for (const i of indices) {
+      this.selection.setIndexSelected(i, true, false);
+    }
+  }
+
   public componentDidUpdate(prevProps: ISchemaProps) {
     const { affiliation, items, onFetch } = this.props;
+    this.restoreSelection();
 
     if (prevProps.items !== items) {
       this.handleFetchDatabaseSchemas();
@@ -192,6 +255,8 @@ export class Schema extends React.Component<ISchemaProps, ISchemaState> {
       deleteMode,
       deleteSelectionIds
     } = this.state;
+
+    this.saveSelection();
 
     const filteredItems = viewItems.filter(filterDatabaseSchemaView(filter));
 
