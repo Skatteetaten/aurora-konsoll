@@ -138,7 +138,7 @@ export class Schema extends React.Component<ISchemaProps, ISchemaState> {
     return viewIndex;
   }
 
-  public saveSelection = () => {
+  public currentSelected = () => {
     const newIndices = this.selection
       .getSelectedIndices()
       .map(index => this.toListIndex(index))
@@ -153,22 +153,17 @@ export class Schema extends React.Component<ISchemaProps, ISchemaState> {
     this.selectedIndices = this.selectedIndices.filter(
       index => unselectedIndices.indexOf(index) === -1
     );
-
     this.selectedIndices = [...this.selectedIndices, ...newIndices];
   };
 
-  public restoreSelection() {
-    const results: number[] = [];
+  public updateCurrentSelection() {
+    const intersection = this.state.prevIndices.filter(element =>
+      this.selectedIndices.includes(element)
+    );
 
-    for (const i of this.state.prevIndices) {
-      if (this.selectedIndices.indexOf(this.state.prevIndices[i]) !== -1) {
-        results.push(this.state.prevIndices[i]);
-      }
-    }
-
-    if (this.state.prevIndices) {
+    if (this.state.prevIndices.length > 0) {
       for (const i of this.state.prevIndices) {
-        if (!results.includes(i)) {
+        if (!intersection.includes(i)) {
           this.selection.setIndexSelected(i, false, false);
         }
       }
@@ -179,14 +174,15 @@ export class Schema extends React.Component<ISchemaProps, ISchemaState> {
       .filter(index => index !== -1);
 
     for (const i of indices) {
-      this.selection.setIndexSelected(i, true, false);
+      if (!intersection.includes(i)) {
+        this.selection.setIndexSelected(i, true, false);
+      }
     }
   }
 
   public componentDidUpdate(prevProps: ISchemaProps) {
     const { affiliation, items, onFetch } = this.props;
-    this.restoreSelection();
-
+    this.updateCurrentSelection();
     if (prevProps.items !== items) {
       this.handleFetchDatabaseSchemas();
     }
@@ -256,9 +252,9 @@ export class Schema extends React.Component<ISchemaProps, ISchemaState> {
       deleteSelectionIds
     } = this.state;
 
-    this.saveSelection();
-
     const filteredItems = viewItems.filter(filterDatabaseSchemaView(filter));
+
+    this.currentSelected();
 
     const renderConfirmationOpenButton = (open: () => void) => (
       <ActionButton
