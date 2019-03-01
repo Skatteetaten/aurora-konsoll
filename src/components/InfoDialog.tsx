@@ -8,13 +8,14 @@ interface InfoDialogProps {
   title: string;
   subText?: string;
   buttonText?: string;
+  isBlocking?: boolean;
   buttonStyle?:
     | 'primary'
     | 'primaryRounded'
     | 'primaryRoundedFilled'
     | 'warning'
     | 'secondary';
-  children: JSX.Element;
+  children?: JSX.Element;
   renderOpenDialogButton?: (openDialog: () => void) => JSX.Element;
   renderFooterButtons?: (closeDialog: () => void) => JSX.Element;
   hideCloseButton?: boolean;
@@ -53,6 +54,7 @@ class InfoDialog extends React.Component<InfoDialogProps, InfoDialogState> {
       renderOpenDialogButton,
       renderFooterButtons,
       hideCloseButton,
+      isBlocking,
       children,
       title,
       subText,
@@ -77,6 +79,7 @@ class InfoDialog extends React.Component<InfoDialogProps, InfoDialogState> {
           helpText={subText}
           dialogMinWidth="500px"
           dialogMaxWidth="90%"
+          isBlocking={!!isBlocking}
         >
           {children}
           <Dialog.Footer>

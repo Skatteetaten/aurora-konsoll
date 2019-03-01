@@ -5,6 +5,7 @@ import styled from 'styled-components';
 import ActionButton from 'aurora-frontend-react-komponenter/ActionButton';
 import DetailsList from 'aurora-frontend-react-komponenter/DetailsList';
 import TextField from 'aurora-frontend-react-komponenter/TextField';
+
 import Spinner from 'components/Spinner';
 import {
   CheckboxVisibility,
@@ -14,7 +15,6 @@ import {
 } from 'office-ui-fabric-react/lib/DetailsList';
 import { getLocalDate } from 'utils/date';
 
-import ConfirmationDialog from 'components/ConfirmationDialog';
 import { IUserAndAffiliations } from 'models/ApplicationDeployment';
 import {
   ICreateDatabaseSchemaInput,
@@ -31,8 +31,38 @@ import DatabaseSchemaService, {
   filterDatabaseSchemaView,
   SortDirection
 } from 'services/DatabaseSchemaService';
+import { StyledPre } from '../DetailsView/InformationView/HealthResponseDialogSelector/utilComponents';
+import ConfirmDeletionDialog from './ConfirmDeletionDialog';
 import DatabaseSchemaCreateDialog from './DatabaseSchemaCreateDialog';
 import DatabaseSchemaUpdateDialog from './DatabaseSchemaUpdateDialog';
+import DeletionSummary from './DeletionSummary';
+
+const columns = [
+  {
+    key: 'column1',
+    name: 'Applikasjon',
+    fieldName: 'application',
+    minWidth: 200,
+    maxWidth: 200,
+    isResizable: true
+  },
+  {
+    key: 'column2',
+    name: 'Miljø',
+    fieldName: 'environment',
+    minWidth: 200,
+    maxWidth: 200,
+    isResizable: true
+  },
+  {
+    key: 'column3',
+    name: 'Diskriminator',
+    fieldName: 'discriminator',
+    minWidth: 200,
+    maxWidth: 200,
+    isResizable: true
+  }
+];
 
 export interface ISchemaProps {
   onFetch: (affiliations: string[]) => void;
@@ -62,6 +92,8 @@ interface ISchemaState {
   deleteMode: boolean;
   deleteSelectionIds: string[];
   prevIndices: number[];
+  extendedInfo: IDatabaseSchema[];
+  hasDeletionInformation: boolean;
 }
 
 export class Schema extends React.Component<ISchemaProps, ISchemaState> {
@@ -73,7 +105,9 @@ export class Schema extends React.Component<ISchemaProps, ISchemaState> {
     selectedSchema: undefined,
     deleteMode: false,
     deleteSelectionIds: [],
-    prevIndices: []
+    prevIndices: [],
+    extendedInfo: [],
+    hasDeletionInformation: false
   };
   private selectedIndices: any[] = [];
   private databaseSchemaService = new DatabaseSchemaService();
@@ -180,9 +214,15 @@ export class Schema extends React.Component<ISchemaProps, ISchemaState> {
     }
   }
 
-  public componentDidUpdate(prevProps: ISchemaProps) {
+  public componentDidUpdate(prevProps: ISchemaProps, prevState: ISchemaState) {
     const { affiliation, items, onFetch } = this.props;
+
+    if (prevState.filter !== this.state.filter) {
+      this.deselect();
+    }
+
     this.updateCurrentSelection();
+
     if (prevProps.items !== items) {
       this.handleFetchDatabaseSchemas();
     }
@@ -199,6 +239,7 @@ export class Schema extends React.Component<ISchemaProps, ISchemaState> {
       });
     }
   }
+
   public handleFetchDatabaseSchemas = () => {
     const { items } = this.props;
     let viewItems: IDatabaseSchemaView[];
@@ -226,6 +267,19 @@ export class Schema extends React.Component<ISchemaProps, ISchemaState> {
     });
   };
 
+  public databaseInfo = () => {
+    for (const id of this.state.deleteSelectionIds) {
+      const foundId = this.props.items.databaseSchemas.find(
+        (it: IDatabaseSchema) => it.id === id
+      );
+      if (foundId) {
+        this.setState(prevState => ({
+          extendedInfo: [...prevState.extendedInfo, foundId]
+        }));
+      }
+    }
+  };
+
   public render() {
     const {
       isFetching,
@@ -239,7 +293,8 @@ export class Schema extends React.Component<ISchemaProps, ISchemaState> {
       affiliation,
       onTestJdbcConnectionForUser,
       onFetch,
-      currentUser
+      currentUser,
+      deleteResponse
       // onDeleteSchemas
     } = this.props;
     const {
@@ -249,57 +304,94 @@ export class Schema extends React.Component<ISchemaProps, ISchemaState> {
       filter,
       selectedSchema,
       deleteMode,
-      deleteSelectionIds
+      deleteSelectionIds,
+      extendedInfo,
+      hasDeletionInformation
     } = this.state;
 
     const filteredItems = viewItems.filter(filterDatabaseSchemaView(filter));
 
     this.currentSelected();
 
-    const renderConfirmationOpenButton = (open: () => void) => (
-      <ActionButton
-        iconSize={ActionButton.LARGE}
-        color="green"
-        icon="Completed"
-        style={{
-          minWidth: '120px',
-          marginLeft: '15px',
-          float: 'left'
-        }}
-        onClick={open}
-      >
-        Slett valgte
-      </ActionButton>
-    );
+    const renderConfirmationOpenButton = (open: () => void) => {
+      const onClick = () => {
+        open();
+        this.databaseInfo();
+      };
+
+      return (
+        <ActionButton
+          iconSize={ActionButton.LARGE}
+          color="green"
+          icon="Completed"
+          style={{
+            minWidth: '120px',
+            marginLeft: '15px',
+            float: 'left'
+          }}
+          onClick={onClick}
+          disabled={!(deleteSelectionIds.length > 0)}
+        >
+          Slett valgte
+        </ActionButton>
+      );
+    };
 
     const renderConfirmationFooterButtons = (close: () => void) => {
+      const onExit = () => {
+        this.setState({
+          hasDeletionInformation: false
+        });
+        close();
+      };
+
+      const onCancel = () => {
+        this.setState({
+          hasDeletionInformation: true
+        });
+        close();
+      };
+
       const deleteSchemas = () => {
         if (deleteSelectionIds.length > 0) {
-          // tslint:disable-next-line:no-console
-          console.log(deleteSelectionIds);
           // onDeleteSchemas(deleteSelectionIds);
-          close();
+          this.setState({
+            extendedInfo: [],
+            hasDeletionInformation: true
+          });
         }
       };
       return (
         <>
-          <ActionButton
-            iconSize={ActionButton.LARGE}
-            icon="Check"
-            color="black"
-            onClick={deleteSchemas}
-          >
-            Ja
-          </ActionButton>
+          {hasDeletionInformation ? (
+            <ActionButton
+              onClick={onExit}
+              iconSize={ActionButton.LARGE}
+              color="black"
+            >
+              Avslutt
+            </ActionButton>
+          ) : (
+            <>
+              <ActionButton
+                iconSize={ActionButton.LARGE}
+                icon="Check"
+                color="black"
+                onClick={deleteSchemas}
+              >
+                Ja
+              </ActionButton>
 
-          <ActionButton
-            onClick={close}
-            iconSize={ActionButton.LARGE}
-            icon="Cancel"
-            color="black"
-          >
-            Nei
-          </ActionButton>
+              <ActionButton
+                onClick={onCancel}
+                iconSize={ActionButton.LARGE}
+                icon="Cancel"
+                color="black"
+              >
+                Nei
+              </ActionButton>
+            </>
+          )}
         </>
       );
     };
@@ -327,12 +419,31 @@ export class Schema extends React.Component<ISchemaProps, ISchemaState> {
               </ActionButton>
             )}
             {deleteMode && (
-              <ConfirmationDialog
-                title="Slett databaseskjema"
-                text={this.getSelectionDetails()}
+              <ConfirmDeletionDialog
+                title="Slett databaseskjemaer"
                 renderOpenDialogButton={renderConfirmationOpenButton}
                 renderFooterButtons={renderConfirmationFooterButtons}
-              />
+                isBlocking={true}
+              >
+                {extendedInfo &&
+                  (hasDeletionInformation ? (
+                    <DeletionSummary deleteResponse={deleteResponse} />
+                  ) : (
+                    <>
+                      <StyledPre>
+                        <DetailsList
+                          columns={columns}
+                          items={extendedInfo.map(it => ({
+                            application: it.application,
+                            environment: it.environment,
+                            discriminator: it.discriminator
+                          }))}
+                        />
+                      </StyledPre>
+                      <h4>{this.getSelectionDetails()}</h4>
+                    </>
+                  ))}
+              </ConfirmDeletionDialog>
             )}
             {deleteMode && (
               <ActionButton
@@ -411,10 +522,12 @@ export class Schema extends React.Component<ISchemaProps, ISchemaState> {
     switch (this.state.deleteSelectionIds.length) {
       case 0:
         return 'Ingen skjemaer valgt';
+      case 1:
+        return `Vil du slette dette skjemaet?`;
       default:
-        return `Vil du slette ${
+        return `Vil du slette disse ${
           this.state.deleteSelectionIds.length
-        } skjemaer?`;
+        } skjemaene?`;
     }
   }
 
