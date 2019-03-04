@@ -39,11 +39,11 @@ import DatabaseSchemaCreateDialog from './DatabaseSchemaCreateDialog';
 import DatabaseSchemaUpdateDialog from './DatabaseSchemaUpdateDialog';
 import DeletionSummary from './DeletionSummary';
 
-export const renderDeletionSchemaInfo = (extendedInfo: IDatabaseSchema[]) => (
+export const renderDetailsListWithSchemaInfo = (schemas: IDatabaseSchema[]) => (
   <StyledPre>
     <DetailsList
       columns={deletionDialogColumns}
-      items={extendedInfo.map(it => ({
+      items={schemas.map(it => ({
         application: it.application,
         environment: it.environment,
         discriminator: it.discriminator
@@ -245,7 +245,7 @@ export class Schema extends React.Component<ISchemaProps, ISchemaState> {
       deleteMode,
       deleteSelectionIds,
       extendedInfo,
-      hasDeletionInformation
+      hasDeletionInformation: hasDeletionResponse
     } = this.state;
 
     this.databaseSchemaService.currentSelection(
@@ -302,10 +302,11 @@ export class Schema extends React.Component<ISchemaProps, ISchemaState> {
       };
       return (
         <>
-          {hasDeletionInformation ? (
+          {hasDeletionResponse ? (
             <ActionButton
               onClick={onExit}
               iconSize={ActionButton.LARGE}
+              icon="Completed"
               color="black"
             >
               Avslutt
@@ -363,16 +364,20 @@ export class Schema extends React.Component<ISchemaProps, ISchemaState> {
                 renderFooterButtons={renderConfirmationFooterButtons}
                 isBlocking={true}
               >
-                {extendedInfo &&
-                  (hasDeletionInformation ? (
+                {!!extendedInfo &&
+                  (hasDeletionResponse ? (
                     <DeletionSummary
                       deleteResponse={deleteResponse}
                       items={items}
                     />
                   ) : (
                     <>
-                      {renderDeletionSchemaInfo(extendedInfo)}
-                      <h4>{this.getSelectionDetails()}</h4>
+                      {renderDetailsListWithSchemaInfo(extendedInfo)}
+                      <h4>
+                        {this.databaseSchemaService.getSelectionDetails(
+                          deleteSelectionIds
+                        )}
+                      </h4>
                     </>
                   ))}
               </ConfirmDeletionDialog>
@@ -449,19 +454,6 @@ export class Schema extends React.Component<ISchemaProps, ISchemaState> {
     });
     this.deselect();
   };
-
-  private getSelectionDetails(): string {
-    switch (this.state.deleteSelectionIds.length) {
-      case 0:
-        return 'Ingen skjemaer valgt';
-      case 1:
-        return `Vil du slette dette skjemaet?`;
-      default:
-        return `Vil du slette disse ${
-          this.state.deleteSelectionIds.length
-        } skjemaene?`;
-    }
-  }
 
   private enterDeletionMode = () => {
     this.setState({

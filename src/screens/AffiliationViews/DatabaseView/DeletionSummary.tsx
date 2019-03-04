@@ -8,7 +8,7 @@ import {
   IDatabaseSchemas,
   IDeleteDatabaseSchemasResponse
 } from 'models/schemas';
-import { renderDeletionSchemaInfo } from './DatabaseSchemaTable';
+import { renderDetailsListWithSchemaInfo } from './DatabaseSchemaTable';
 
 interface IDeletionSummaryProps {
   deleteResponse: IDeleteDatabaseSchemasResponse;
@@ -31,7 +31,7 @@ const DeletionSummary = ({
         extendedInfoList.push(foundId);
       }
     }
-    return renderDeletionSchemaInfo(extendedInfoList);
+    return renderDetailsListWithSchemaInfo(extendedInfoList);
   };
 
   const createRows = (label: string, value: string[]) => (

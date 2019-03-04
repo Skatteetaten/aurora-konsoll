@@ -14,7 +14,7 @@ export enum SortDirection {
   NONE
 }
 
-export let selectedIndices: any[] = [];
+export let selectedIndices: number[] = [];
 
 export const deletionDialogColumns = [
   {
@@ -151,6 +151,15 @@ export default class DatabaseSchemaService {
       sortDirection === SortDirection.NONE ||
       sortDirection === SortDirection.DESC
     );
+  }
+
+  public getSelectionDetails(deleteSelectionIds: string[]): string {
+    switch (deleteSelectionIds.length) {
+      case 1:
+        return `Vil du slette dette skjemaet?`;
+      default:
+        return `Vil du slette disse ${deleteSelectionIds.length} skjemaene?`;
+    }
   }
 
   public toListIndex(
