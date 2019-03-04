@@ -136,20 +136,20 @@ class DatabaseSchemaUpdateDialog extends React.Component<
     return (
       <>
         <ActionButton
-          onClick={close}
-          iconSize={ActionButton.LARGE}
-          icon="Cancel"
-          color="black"
-        >
-          Nei
-        </ActionButton>
-        <ActionButton
           onClick={deleteSchema}
           iconSize={ActionButton.LARGE}
           icon="Check"
           color="black"
         >
           Ja
+        </ActionButton>
+        <ActionButton
+          onClick={close}
+          iconSize={ActionButton.LARGE}
+          icon="Cancel"
+          color="black"
+        >
+          Nei
         </ActionButton>
       </>
     );

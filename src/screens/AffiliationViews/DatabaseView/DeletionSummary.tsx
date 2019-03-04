@@ -3,24 +3,44 @@ import styled from 'styled-components';
 
 import Card from 'aurora-frontend-react-komponenter/Card';
 import Grid from 'aurora-frontend-react-komponenter/Grid';
-import { IDeleteDatabaseSchemasResponse } from 'models/schemas';
+import {
+  IDatabaseSchema,
+  IDatabaseSchemas,
+  IDeleteDatabaseSchemasResponse
+} from 'models/schemas';
+import { renderDeletionSchemaInfo } from './DatabaseSchemaTable';
 
 interface IDeletionSummaryProps {
   deleteResponse: IDeleteDatabaseSchemasResponse;
   className?: string;
+  items: IDatabaseSchemas;
 }
 
 const DeletionSummary = ({
   deleteResponse,
-  className
+  className,
+  items
 }: IDeletionSummaryProps) => {
+  const getDatabaseSchemaInfoById = (value: string[]) => {
+    const extendedInfoList: IDatabaseSchema[] = [];
+    for (const id of value) {
+      const foundId = items.databaseSchemas.find(
+        (it: IDatabaseSchema) => it.id === id
+      );
+      if (foundId) {
+        extendedInfoList.push(foundId);
+      }
+    }
+    return renderDeletionSchemaInfo(extendedInfoList);
+  };
+
   const createRows = (label: string, value: string[]) => (
     <>
       <Grid.Row rowSpacing={Grid.SPACE_LARGE}>
         <div className="styled-label">{label}</div>
       </Grid.Row>
       <Grid.Row rowSpacing={Grid.SPACE_LARGE}>
-        <div className="styled-value">{value.join(', ')}</div>
+        <div className="styled-value">{getDatabaseSchemaInfoById(value)}</div>
       </Grid.Row>
     </>
   );
@@ -31,13 +51,11 @@ const DeletionSummary = ({
         <Grid>
           {createRows(
             'Følgende databaseskjemaer ble slettet:',
-            ['123', '123123']
-            // deleteResponse.succeeded (above only for testing)
+            deleteResponse.succeeded
           )}
           {createRows(
             'Klarte ikke å slette databaseskjemaene:',
-            ['123', '123123']
-            // deleteResponse.failed (above only for testing)
+            deleteResponse.failed
           )}
         </Grid>
       </Card>

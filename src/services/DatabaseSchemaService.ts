@@ -6,11 +6,42 @@ import {
   IUpdateDatabaseSchemaInputWithCreatedBy
 } from 'models/schemas';
 
+import { Selection } from 'office-ui-fabric-react/lib/DetailsList';
+
 export enum SortDirection {
   ASC,
   DESC,
   NONE
 }
+
+export let selectedIndices: any[] = [];
+
+export const deletionDialogColumns = [
+  {
+    key: 'column1',
+    name: 'Applikasjon',
+    fieldName: 'application',
+    minWidth: 200,
+    maxWidth: 200,
+    isResizable: true
+  },
+  {
+    key: 'column2',
+    name: 'Miljø',
+    fieldName: 'environment',
+    minWidth: 200,
+    maxWidth: 200,
+    isResizable: true
+  },
+  {
+    key: 'column3',
+    name: 'Diskriminator',
+    fieldName: 'discriminator',
+    minWidth: 200,
+    maxWidth: 200,
+    isResizable: true
+  }
+];
 
 export const defaultColumns = () => [
   {
@@ -120,6 +151,74 @@ export default class DatabaseSchemaService {
       sortDirection === SortDirection.NONE ||
       sortDirection === SortDirection.DESC
     );
+  }
+
+  public toListIndex(
+    index: number,
+    selection: Selection,
+    items: IDatabaseSchemaView[]
+  ) {
+    const viewItems = selection.getItems();
+    const viewItem = viewItems[index];
+    return items.findIndex(listItem => listItem === viewItem);
+  }
+
+  public toViewIndex(
+    index: number,
+    selection: Selection,
+    items: IDatabaseSchemaView[]
+  ) {
+    const listItem = items[index];
+    return selection.getItems().findIndex(viewItem => viewItem === listItem);
+  }
+
+  public currentSelection = (
+    selection: Selection,
+    items: IDatabaseSchemaView[]
+  ) => {
+    const newIndices = selection
+      .getSelectedIndices()
+      .map(index => this.toListIndex(index, selection, items))
+      .filter(index => selectedIndices.indexOf(index) === -1);
+
+    const unselectedIndices = selection
+      .getItems()
+      .map((item, index) => index)
+      .filter(index => selection.isIndexSelected(index) === false)
+      .map(index => this.toListIndex(index, selection, items));
+
+    selectedIndices = selectedIndices.filter(
+      index => unselectedIndices.indexOf(index) === -1
+    );
+    selectedIndices = [...selectedIndices, ...newIndices];
+  };
+
+  public updateCurrentSelection(
+    selection: Selection,
+    prevIndices: number[],
+    items: IDatabaseSchemaView[]
+  ) {
+    const intersection = prevIndices.filter(element =>
+      selectedIndices.includes(element)
+    );
+
+    if (prevIndices.length > 0) {
+      for (const i of prevIndices) {
+        if (!intersection.includes(i)) {
+          selection.setIndexSelected(i, false, false);
+        }
+      }
+    }
+
+    const indices = selectedIndices
+      .map(index => this.toViewIndex(index, selection, items))
+      .filter(index => index !== -1);
+
+    for (const i of indices) {
+      if (!intersection.includes(i)) {
+        selection.setIndexSelected(i, true, false);
+      }
+    }
   }
 
   public createColumns(index: number, sortDirection: SortDirection) {

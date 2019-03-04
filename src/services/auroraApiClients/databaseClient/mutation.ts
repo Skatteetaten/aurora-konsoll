@@ -9,7 +9,7 @@ export const UPDATE_DATABASESCHEMA_MUTATION = gql`
 `;
 
 export const DELETE_DATABASESCHEMAS_MUTATION = gql`
-  mutation deleteDatabaseSchemas($input: [DeleteDatabaseSchemasInput!]!) {
+  mutation deleteDatabaseSchemas($input: DeleteDatabaseSchemasInput!) {
     deleteDatabaseSchemas(input: $input) {
       succeeded
       failed

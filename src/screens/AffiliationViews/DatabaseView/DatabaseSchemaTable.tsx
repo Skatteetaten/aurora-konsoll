@@ -28,7 +28,9 @@ import {
 } from 'models/schemas';
 import DatabaseSchemaService, {
   defaultSortDirections,
+  deletionDialogColumns,
   filterDatabaseSchemaView,
+  selectedIndices,
   SortDirection
 } from 'services/DatabaseSchemaService';
 import { StyledPre } from '../DetailsView/InformationView/HealthResponseDialogSelector/utilComponents';
@@ -37,32 +39,18 @@ import DatabaseSchemaCreateDialog from './DatabaseSchemaCreateDialog';
 import DatabaseSchemaUpdateDialog from './DatabaseSchemaUpdateDialog';
 import DeletionSummary from './DeletionSummary';
 
-const columns = [
-  {
-    key: 'column1',
-    name: 'Applikasjon',
-    fieldName: 'application',
-    minWidth: 200,
-    maxWidth: 200,
-    isResizable: true
-  },
-  {
-    key: 'column2',
-    name: 'Miljø',
-    fieldName: 'environment',
-    minWidth: 200,
-    maxWidth: 200,
-    isResizable: true
-  },
-  {
-    key: 'column3',
-    name: 'Diskriminator',
-    fieldName: 'discriminator',
-    minWidth: 200,
-    maxWidth: 200,
-    isResizable: true
-  }
-];
+export const renderDeletionSchemaInfo = (extendedInfo: IDatabaseSchema[]) => (
+  <StyledPre>
+    <DetailsList
+      columns={deletionDialogColumns}
+      items={extendedInfo.map(it => ({
+        application: it.application,
+        environment: it.environment,
+        discriminator: it.discriminator
+      }))}
+    />
+  </StyledPre>
+);
 
 export interface ISchemaProps {
   onFetch: (affiliations: string[]) => void;
@@ -109,7 +97,6 @@ export class Schema extends React.Component<ISchemaProps, ISchemaState> {
     extendedInfo: [],
     hasDeletionInformation: false
   };
-  private selectedIndices: any[] = [];
   private databaseSchemaService = new DatabaseSchemaService();
 
   private selection = new Selection({
@@ -119,6 +106,9 @@ export class Schema extends React.Component<ISchemaProps, ISchemaState> {
         : this.onUpdateRowClicked();
     }
   });
+
+  public filteredItems = () =>
+    this.state.viewItems.filter(filterDatabaseSchemaView(this.state.filter));
 
   public sortByColumn = (
     ev: React.MouseEvent<HTMLElement>,
@@ -148,7 +138,7 @@ export class Schema extends React.Component<ISchemaProps, ISchemaState> {
       viewItems: sortedItems,
       columnSortDirections: newSortDirections,
       selectedColumnIndex: column.key,
-      prevIndices: this.selectedIndices
+      prevIndices: selectedIndices
     });
   };
 
@@ -158,70 +148,19 @@ export class Schema extends React.Component<ISchemaProps, ISchemaState> {
     onFetch([affiliation]);
   }
 
-  public toListIndex(index: number) {
-    const viewItems = this.selection.getItems();
-    const viewItem = viewItems[index];
-    return this.state.viewItems.findIndex(listItem => listItem === viewItem);
-  }
-
-  public toViewIndex(index: number) {
-    const listItem = this.state.viewItems[index];
-    const viewIndex = this.selection
-      .getItems()
-      .findIndex(viewItem => viewItem === listItem);
-    return viewIndex;
-  }
-
-  public currentSelected = () => {
-    const newIndices = this.selection
-      .getSelectedIndices()
-      .map(index => this.toListIndex(index))
-      .filter(index => this.selectedIndices.indexOf(index) === -1);
-
-    const unselectedIndices = this.selection
-      .getItems()
-      .map((item, index) => index)
-      .filter(index => this.selection.isIndexSelected(index) === false)
-      .map(index => this.toListIndex(index));
-
-    this.selectedIndices = this.selectedIndices.filter(
-      index => unselectedIndices.indexOf(index) === -1
-    );
-    this.selectedIndices = [...this.selectedIndices, ...newIndices];
-  };
-
-  public updateCurrentSelection() {
-    const intersection = this.state.prevIndices.filter(element =>
-      this.selectedIndices.includes(element)
-    );
-
-    if (this.state.prevIndices.length > 0) {
-      for (const i of this.state.prevIndices) {
-        if (!intersection.includes(i)) {
-          this.selection.setIndexSelected(i, false, false);
-        }
-      }
-    }
-
-    const indices = this.selectedIndices
-      .map(index => this.toViewIndex(index))
-      .filter(index => index !== -1);
-
-    for (const i of indices) {
-      if (!intersection.includes(i)) {
-        this.selection.setIndexSelected(i, true, false);
-      }
-    }
-  }
-
   public componentDidUpdate(prevProps: ISchemaProps, prevState: ISchemaState) {
     const { affiliation, items, onFetch } = this.props;
+    const { prevIndices, filter } = this.state;
 
-    if (prevState.filter !== this.state.filter) {
+    if (prevState.filter !== filter) {
       this.deselect();
     }
 
-    this.updateCurrentSelection();
+    this.databaseSchemaService.updateCurrentSelection(
+      this.selection,
+      prevIndices,
+      this.filteredItems()
+    );
 
     if (prevProps.items !== items) {
       this.handleFetchDatabaseSchemas();
@@ -267,7 +206,7 @@ export class Schema extends React.Component<ISchemaProps, ISchemaState> {
     });
   };
 
-  public databaseInfo = () => {
+  public getDatabaseSchemaInfoById = () => {
     for (const id of this.state.deleteSelectionIds) {
       const foundId = this.props.items.databaseSchemas.find(
         (it: IDatabaseSchema) => it.id === id
@@ -294,11 +233,11 @@ export class Schema extends React.Component<ISchemaProps, ISchemaState> {
       onTestJdbcConnectionForUser,
       onFetch,
       currentUser,
-      deleteResponse
-      // onDeleteSchemas
+      deleteResponse,
+      onDeleteSchemas,
+      items
     } = this.props;
     const {
-      viewItems,
       selectedColumnIndex,
       columnSortDirections,
       filter,
@@ -309,14 +248,15 @@ export class Schema extends React.Component<ISchemaProps, ISchemaState> {
       hasDeletionInformation
     } = this.state;
 
-    const filteredItems = viewItems.filter(filterDatabaseSchemaView(filter));
-
-    this.currentSelected();
+    this.databaseSchemaService.currentSelection(
+      this.selection,
+      this.filteredItems()
+    );
 
     const renderConfirmationOpenButton = (open: () => void) => {
       const onClick = () => {
         open();
-        this.databaseInfo();
+        this.getDatabaseSchemaInfoById();
       };
 
       return (
@@ -339,22 +279,21 @@ export class Schema extends React.Component<ISchemaProps, ISchemaState> {
 
     const renderConfirmationFooterButtons = (close: () => void) => {
       const onExit = () => {
-        this.setState({
-          hasDeletionInformation: false
-        });
-        close();
+        onCancel();
+        onFetch([affiliation]);
       };
 
       const onCancel = () => {
         this.setState({
-          hasDeletionInformation: true
+          extendedInfo: [],
+          hasDeletionInformation: false
         });
         close();
       };
 
       const deleteSchemas = () => {
         if (deleteSelectionIds.length > 0) {
-          // onDeleteSchemas(deleteSelectionIds);
+          onDeleteSchemas(deleteSelectionIds);
           this.setState({
             extendedInfo: [],
             hasDeletionInformation: true
@@ -374,14 +313,13 @@ export class Schema extends React.Component<ISchemaProps, ISchemaState> {
           ) : (
             <>
               <ActionButton
+                onClick={deleteSchemas}
                 iconSize={ActionButton.LARGE}
                 icon="Check"
                 color="black"
-                onClick={deleteSchemas}
               >
                 Ja
               </ActionButton>
-
               <ActionButton
                 onClick={onCancel}
                 iconSize={ActionButton.LARGE}
@@ -415,7 +353,7 @@ export class Schema extends React.Component<ISchemaProps, ISchemaState> {
                 style={{ minWidth: '120px', marginLeft: '15px', float: 'left' }}
                 onClick={this.enterDeletionMode}
               >
-                Slett skjemaer
+                Velg skjemaer for sletting
               </ActionButton>
             )}
             {deleteMode && (
@@ -427,19 +365,13 @@ export class Schema extends React.Component<ISchemaProps, ISchemaState> {
               >
                 {extendedInfo &&
                   (hasDeletionInformation ? (
-                    <DeletionSummary deleteResponse={deleteResponse} />
+                    <DeletionSummary
+                      deleteResponse={deleteResponse}
+                      items={items}
+                    />
                   ) : (
                     <>
-                      <StyledPre>
-                        <DetailsList
-                          columns={columns}
-                          items={extendedInfo.map(it => ({
-                            application: it.application,
-                            environment: it.environment,
-                            discriminator: it.discriminator
-                          }))}
-                        />
-                      </StyledPre>
+                      {renderDeletionSchemaInfo(extendedInfo)}
                       <h4>{this.getSelectionDetails()}</h4>
                     </>
                   ))}
@@ -483,7 +415,7 @@ export class Schema extends React.Component<ISchemaProps, ISchemaState> {
                 columnSortDirections[selectedColumnIndex]
               )}
               selectionMode={SelectionMode.multiple}
-              items={filteredItems}
+              items={this.filteredItems()}
               onColumnHeaderClick={this.sortByColumn}
               selection={this.selection}
               checkboxVisibility={
