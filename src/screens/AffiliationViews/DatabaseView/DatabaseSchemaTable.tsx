@@ -107,8 +107,10 @@ export class Schema extends React.Component<ISchemaProps, ISchemaState> {
     }
   });
 
-  public filteredItems = () =>
-    this.state.viewItems.filter(filterDatabaseSchemaView(this.state.filter));
+  public filteredItems = () => {
+    const { viewItems, filter } = this.state;
+    return viewItems.filter(filterDatabaseSchemaView(filter));
+  };
 
   public sortByColumn = (
     ev: React.MouseEvent<HTMLElement>,
@@ -207,8 +209,10 @@ export class Schema extends React.Component<ISchemaProps, ISchemaState> {
   };
 
   public getDatabaseSchemaInfoById = () => {
-    for (const id of this.state.deleteSelectionIds) {
-      const foundId = this.props.items.databaseSchemas.find(
+    const { items } = this.props;
+    const { deleteSelectionIds } = this.state;
+    for (const id of deleteSelectionIds) {
+      const foundId = items.databaseSchemas.find(
         (it: IDatabaseSchema) => it.id === id
       );
       if (foundId) {
@@ -423,7 +427,7 @@ export class Schema extends React.Component<ISchemaProps, ISchemaState> {
               onColumnHeaderClick={this.sortByColumn}
               selection={this.selection}
               checkboxVisibility={
-                this.state.deleteMode
+                deleteMode
                   ? CheckboxVisibility.always
                   : CheckboxVisibility.hidden
               }

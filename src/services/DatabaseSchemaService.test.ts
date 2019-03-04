@@ -221,7 +221,7 @@ describe('DatabaseSchemaService', () => {
       expect(selectionDetails).toEqual('Vil du slette disse 3 skjemaene?');
     });
 
-    it('getSelectionDetails given one schemas', () => {
+    it('getSelectionDetails given one schema', () => {
       const selectionDetails = databaseSchemaService.getSelectionDetails([
         '123'
       ]);
