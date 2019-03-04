@@ -211,5 +211,21 @@ describe('DatabaseSchemaService', () => {
       const isValid = databaseSchemaService.hasEmptyJdbcValues(jdbcUserInput);
       expect(isValid).toBeFalsy();
     });
+
+    it('getSelectionDetails given 3 schemas', () => {
+      const selectionDetails = databaseSchemaService.getSelectionDetails([
+        '123',
+        '234',
+        '345'
+      ]);
+      expect(selectionDetails).toEqual('Vil du slette disse 3 skjemaene?');
+    });
+
+    it('getSelectionDetails given one schemas', () => {
+      const selectionDetails = databaseSchemaService.getSelectionDetails([
+        '123'
+      ]);
+      expect(selectionDetails).toEqual('Vil du slette dette skjemaet?');
+    });
   });
 });

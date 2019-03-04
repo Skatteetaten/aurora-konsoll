@@ -364,22 +364,21 @@ export class Schema extends React.Component<ISchemaProps, ISchemaState> {
                 renderFooterButtons={renderConfirmationFooterButtons}
                 isBlocking={true}
               >
-                {!!extendedInfo &&
-                  (hasDeletionResponse ? (
-                    <DeletionSummary
-                      deleteResponse={deleteResponse}
-                      items={items}
-                    />
-                  ) : (
-                    <>
-                      {renderDetailsListWithSchemaInfo(extendedInfo)}
-                      <h4>
-                        {this.databaseSchemaService.getSelectionDetails(
-                          deleteSelectionIds
-                        )}
-                      </h4>
-                    </>
-                  ))}
+                {hasDeletionResponse ? (
+                  <DeletionSummary
+                    deleteResponse={deleteResponse}
+                    items={items}
+                  />
+                ) : (
+                  <>
+                    {renderDetailsListWithSchemaInfo(extendedInfo)}
+                    <h4>
+                      {this.databaseSchemaService.getSelectionDetails(
+                        deleteSelectionIds
+                      )}
+                    </h4>
+                  </>
+                )}
               </ConfirmDeletionDialog>
             )}
             {deleteMode && (
