@@ -213,7 +213,7 @@ export default class DatabaseSchemaService {
 
     if (prevIndices.length > 0) {
       for (const i of prevIndices) {
-        if (!intersection.includes(i)) {
+        if (!intersection.includes(i) && selection.isIndexSelected(i)) {
           selection.setIndexSelected(i, false, false);
         }
       }
