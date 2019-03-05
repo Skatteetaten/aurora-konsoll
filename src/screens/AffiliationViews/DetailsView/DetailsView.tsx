@@ -7,6 +7,7 @@ import Card from 'components/Card';
 import TabLink, { TabLinkWrapper } from 'components/TabLink';
 import { defaultTagsPagedGroup } from 'models/Tag';
 
+import { ImageTagType } from 'models/ImageTagType';
 import DetailsActionBar from './DetailsActionBar';
 import DetailsViewController, {
   IDetailsViewProps,
@@ -29,7 +30,9 @@ class DetailsView extends React.Component<
       redeploy: false,
       update: false
     },
-    selectedTagType: this.props.deployment.version.deployTag.type,
+    selectedTagType: this.props.deployment.version.releaseTo
+      ? ImageTagType.BUGFIX
+      : this.props.deployment.version.deployTag.type,
     tagsPagedGroup: defaultTagsPagedGroup(),
     versionSearchText: ''
   };
