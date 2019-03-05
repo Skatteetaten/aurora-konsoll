@@ -30,7 +30,7 @@ class DetailsView extends React.Component<
       redeploy: false,
       update: false
     },
-    selectedTagType: this.props.deployment.version.releaseTo
+    selectedTagType: !!this.props.deployment.version.releaseTo
       ? ImageTagType.BUGFIX
       : this.props.deployment.version.deployTag.type,
     tagsPagedGroup: defaultTagsPagedGroup(),
