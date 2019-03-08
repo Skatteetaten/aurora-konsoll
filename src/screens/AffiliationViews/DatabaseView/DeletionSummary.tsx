@@ -4,7 +4,6 @@ import styled from 'styled-components';
 import Card from 'aurora-frontend-react-komponenter/Card';
 import Grid from 'aurora-frontend-react-komponenter/Grid';
 import {
-  IDatabaseSchema,
   IDatabaseSchemas,
   IDeleteDatabaseSchemasResponse
 } from 'models/schemas';
@@ -21,26 +20,20 @@ const DeletionSummary = ({
   className,
   items
 }: IDeletionSummaryProps) => {
-  const getDatabaseSchemaInfoById = (value: string[]) => {
-    const extendedInfoList: IDatabaseSchema[] = [];
-    for (const id of value) {
-      const foundId = items.databaseSchemas.find(
-        (it: IDatabaseSchema) => it.id === id
-      );
-      if (foundId) {
-        extendedInfoList.push(foundId);
-      }
-    }
+  const getDatabaseSchemaInfoById = (ids: string[]) => {
+    const extendedInfoList = items.databaseSchemas.filter(
+      it => -1 !== ids.indexOf(it.id)
+    );
     return renderDetailsListWithSchemaInfo(extendedInfoList);
   };
 
-  const createRows = (label: string, value: string[]) => (
+  const createRows = (label: string, ids: string[]) => (
     <>
       <Grid.Row rowSpacing={Grid.SPACE_LARGE}>
         <div className="styled-label">{label}</div>
       </Grid.Row>
       <Grid.Row rowSpacing={Grid.SPACE_LARGE}>
-        <div className="styled-value">{getDatabaseSchemaInfoById(value)}</div>
+        <div className="styled-value">{getDatabaseSchemaInfoById(ids)}</div>
       </Grid.Row>
     </>
   );
