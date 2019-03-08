@@ -20,7 +20,7 @@
     "graphql-tag": "2.10.1",
     "http-proxy-middleware": "0.19.1",
     "isomorphic-fetch": "2.2.1",
-    "office-ui-fabric-react": "6.143.1",
+    "office-ui-fabric-react": "6.114.0",
     "qs": "6.6.0",
     "react": "16.7.0",
     "react-dom": "16.7.0",
