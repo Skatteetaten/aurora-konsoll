@@ -50,7 +50,6 @@ function getOptionLabel(imageTagType: ImageTagType): string {
 export default styled(TagOption)`
   position: relative;
   left: 28px;
-  margin-bottom: 5px;
   h3 {
     margin: 0;
     margin-bottom: 2px;

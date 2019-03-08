@@ -66,7 +66,7 @@ const MatrixView = ({
       <StyledUpdate>
         <TimeSince timeSince={time} />
         <LoadingButton
-          style={{ minWidth: '120px' }}
+          style={{ minWidth: '141px' }}
           loading={isRefreshing}
           onClick={refreshApplicationDeployments}
           icon="Update"

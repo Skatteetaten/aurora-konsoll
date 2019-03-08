@@ -4,13 +4,14 @@ import {
   ICreateDatabaseSchemaInput,
   ICreateDatabaseSchemaResponse,
   IDatabaseSchemas,
+  IDeleteDatabaseSchemasResponse,
   IJdbcUser,
   IUpdateDatabaseSchemaInputWithCreatedBy
 } from 'models/schemas';
 import { errorStateManager } from 'models/StateManager/ErrorStateManager';
 import {
   CREATE_DATABASE_SCHEMA_MUTATION,
-  DELETE_DATABASESCHEMA_MUTATION,
+  DELETE_DATABASESCHEMAS_MUTATION,
   TEST_JDBC_CONNECTION_FOR_ID_MUTATION,
   TEST_JDBC_CONNECTION_FOR_JDBCUSER_MUTATION,
   UPDATE_DATABASESCHEMA_MUTATION
@@ -57,23 +58,25 @@ export class DatabaseClient {
     return false;
   }
 
-  public async deleteSchema(id: string) {
+  public async deleteSchemas(ids: string[]) {
     const result = await this.client.mutate<{
-      deleteDatabaseSchema: boolean;
+      deleteDatabaseSchemas: IDeleteDatabaseSchemasResponse;
     }>({
-      mutation: DELETE_DATABASESCHEMA_MUTATION,
+      mutation: DELETE_DATABASESCHEMAS_MUTATION,
       variables: {
         input: {
-          id
+          ids
         }
       }
     });
-
     if (result && result.data) {
-      return result.data.deleteDatabaseSchema;
+      return result.data.deleteDatabaseSchemas;
     }
 
-    return false;
+    return {
+      failed: [],
+      succeeded: []
+    } as IDeleteDatabaseSchemasResponse;
   }
 
   public async testJdbcConnectionForId(id: string) {

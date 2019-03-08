@@ -482,11 +482,9 @@ const styledFilter = styled(Filter)`
   }
   .styled-footer-buttons {
     display: inline-flex;
-    padding-top: 10px;
-    padding-right: 15px;
-    .ms-Checkbox-text {
-      font-size: 16px;
-    }
+    padding-right: 10px;
+    position: relative;
+    top: 5px;
   }
 `;
 

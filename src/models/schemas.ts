@@ -80,6 +80,11 @@ export interface ICreateDatabaseSchemaResponse {
   jdbcUser: IJdbcUser;
 }
 
+export interface IDeleteDatabaseSchemasResponse {
+  succeeded: string[];
+  failed: string[];
+}
+
 export enum Step {
   TYPE,
   NEW,

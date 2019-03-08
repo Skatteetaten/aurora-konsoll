@@ -20,9 +20,8 @@ const StyledFooterText = styled(FooterText)`
   float: left;
   color: ${skeColor.lightGrey};
   font-size: 16px;
-  height: 40px;
-  align-items: 'center';
-  display: 'flex';
+  position: relative;
+  top: 8px;
 `;
 
 export default StyledFooterText;

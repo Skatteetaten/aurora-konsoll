@@ -35,7 +35,7 @@ const DetailsActionBar = ({
     <h1>{title}</h1>
     <TimeSince timeSince={updatedTime} />
     <LoadingButton
-      style={{ minWidth: '120px' }}
+      style={{ minWidth: '141px' }}
       loading={isRefreshing}
       onClick={refreshApplicationDeployment}
       icon="Update"
