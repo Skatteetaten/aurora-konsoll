@@ -5,7 +5,7 @@ import styled from 'styled-components';
 import { withAuroraApi } from 'components/AuroraApi';
 import Card from 'components/Card';
 import TabLink, { TabLinkWrapper } from 'components/TabLink';
-import { defaultTagsPagedGroup } from 'models/Tag';
+import { defaultTagsPagedGroup, ITag } from 'models/Tag';
 
 import { ImageTagType } from 'models/ImageTagType';
 import DetailsActionBar from './DetailsActionBar';
@@ -30,9 +30,7 @@ class DetailsView extends React.Component<
       redeploy: false,
       update: false
     },
-    selectedTagType: !!this.props.deployment.version.releaseTo
-      ? ImageTagType.BUGFIX
-      : this.props.deployment.version.deployTag.type,
+    selectedTagType: this.props.deployment.version.deployTag.type,
     tagsPagedGroup: defaultTagsPagedGroup(),
     versionSearchText: ''
   };
@@ -43,6 +41,79 @@ class DetailsView extends React.Component<
     this.controller.onMount();
   }
 
+  public async componentDidUpdate() {
+    if (
+      this.state.deploymentDetails.deploymentSpec &&
+      this.state.deploymentDetails.deploymentSpec.version &&
+      this.props.deployment.version.releaseTo
+    ) {
+      this.setState({
+        selectedTagType: this.filterfunction()
+      });
+    }
+  }
+
+  public filterfunction = () => {
+    const isCorrentVersion = (it: ITag) =>
+      this.state.deploymentDetails.deploymentSpec &&
+      it.name === this.state.deploymentDetails.deploymentSpec.version;
+    if (
+      this.state.tagsPagedGroup.auroraSnapshotVersion.tags.filter(
+        isCorrentVersion
+      ).length > 0
+    ) {
+      return ImageTagType.AURORA_SNAPSHOT_VERSION;
+    } else if (
+      this.state.tagsPagedGroup.auroraVersion.tags.filter(isCorrentVersion)
+        .length > 0
+    ) {
+      return ImageTagType.AURORA_VERSION;
+    } else if (
+      this.state.tagsPagedGroup.bugfix.tags.filter(isCorrentVersion).length > 0
+    ) {
+      return ImageTagType.BUGFIX;
+    } else if (
+      this.state.tagsPagedGroup.commitHash.tags.filter(isCorrentVersion)
+        .length > 0
+    ) {
+      return ImageTagType.COMMIT_HASH;
+    } else if (
+      this.state.tagsPagedGroup.latest.tags.filter(isCorrentVersion).length > 0
+    ) {
+      return ImageTagType.LATEST;
+    } else if (
+      this.state.tagsPagedGroup.major.tags.filter(isCorrentVersion).length > 0
+    ) {
+      return ImageTagType.MAJOR;
+    } else if (
+      this.state.tagsPagedGroup.minor.tags.filter(isCorrentVersion).length > 0
+    ) {
+      return ImageTagType.MINOR;
+    } else if (
+      this.state.tagsPagedGroup.snapshot.tags.filter(isCorrentVersion).length >
+      0
+    ) {
+      return ImageTagType.SNAPSHOT;
+    } else {
+      return ImageTagType.AURORA_SNAPSHOT_VERSION;
+    }
+  };
+
+  public deployVersion = (): ITag => {
+    if (
+      this.state.deploymentDetails.deploymentSpec &&
+      this.props.deployment.version.releaseTo
+    ) {
+      return {
+        name: this.state.deploymentDetails.deploymentSpec.version,
+        lastModified: '',
+        type: this.state.selectedTagType
+      };
+    } else {
+      return this.props.deployment.version.deployTag;
+    }
+  };
+
   public render() {
     const { deployment, match } = this.props;
     const {
@@ -52,6 +123,9 @@ class DetailsView extends React.Component<
       selectedTag,
       versionSearchText
     } = this.state;
+
+    // tslint:disable-next-line:no-console
+    console.log(selectedTagType);
     return (
       <DetailsViewGrid>
         <DetailsActionBar
@@ -84,7 +158,7 @@ class DetailsView extends React.Component<
               <VersionView
                 hasPermissionToUpgrade={deployment.permission.paas.admin}
                 unavailableMessage={this.controller.getVersionViewUnavailableMessage()}
-                deployedTag={deployment.version.deployTag}
+                deployedTag={this.deployVersion()}
                 selectedTag={selectedTag}
                 selectedTagType={selectedTagType}
                 tagsPaged={this.controller.sm.tag.getTagsPageFiltered(
@@ -93,7 +167,7 @@ class DetailsView extends React.Component<
                 )}
                 isFetchingTags={loading.fetchTags}
                 isRedeploying={loading.redeploy}
-                canUpgrade={this.controller.canUpgrade()}
+                canUpgrade={!!this.controller.canUpgrade()}
                 handleSelectNextTag={this.controller.handleSelectNextTag}
                 handlefetchTags={this.controller.loadMoreTags}
                 handleSelectStrategy={this.controller.handleSelectStrategy}
@@ -102,6 +176,7 @@ class DetailsView extends React.Component<
                 redeployWithCurrentVersion={
                   this.controller.redeployWithCurrentVersion
                 }
+                hasReleaseTo={this.filterfunction()}
               />
             </Route>
           </Switch>

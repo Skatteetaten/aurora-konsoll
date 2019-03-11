@@ -33,6 +33,7 @@ interface IVersionViewProps {
   redeployWithVersion: () => void;
   redeployWithCurrentVersion: () => void;
   handleSelectNextTag: (item: ITag) => void;
+  hasReleaseTo: ImageTagType;
 }
 
 const VersionView = ({
@@ -51,16 +52,18 @@ const VersionView = ({
   handleVersionSearch,
   redeployWithVersion,
   redeployWithCurrentVersion,
-  handleSelectNextTag
+  handleSelectNextTag,
+  hasReleaseTo
 }: IVersionViewProps) => {
   if (unavailableMessage) {
     return <UnavailableServiceMessage message={unavailableMessage} />;
   }
+
   return (
     <div className={className}>
       <div className="g-control-group">
         <TagTypeSelector
-          imageTagType={selectedTagType}
+          imageTagType={!selectedTagType ? hasReleaseTo : selectedTagType}
           handleSelectStrategy={handleSelectStrategy}
         />
         {hasPermissionToUpgrade ? (
@@ -101,7 +104,7 @@ const VersionView = ({
       <div className="g-details-list">
         <TagsList
           tags={tagsPaged.tags}
-          imageTagType={selectedTagType}
+          imageTagType={!selectedTagType ? hasReleaseTo : selectedTagType}
           selectedTag={selectedTag}
           deployedTag={deployedTag}
           handleSelectNextTag={handleSelectNextTag}

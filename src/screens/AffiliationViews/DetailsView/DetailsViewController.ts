@@ -131,19 +131,20 @@ export default class DetailsViewController {
     const { clients, deployment } = this.component.props;
     const { selectedTagType } = this.component.state;
 
-    const current: ITagsPaged = this.sm.tag.getTagsPaged(selectedTagType);
-    const cursor = current.endCursor;
+      const current: ITagsPaged = this.sm.tag.getTagsPaged(selectedTagType);
+      const cursor = current.endCursor;
 
-    this.sm.loading.withLoading(['fetchTags'], async () => {
-      const tagsPaged = await clients.imageRepositoryClient.findTagsPaged(
-        deployment.repository,
-        selectedTagType,
-        15,
-        cursor
-      );
+      this.sm.loading.withLoading(['fetchTags'], async () => {
+        const tagsPaged = await clients.imageRepositoryClient.findTagsPaged(
+          deployment.repository,
+          selectedTagType,
+          15,
+          cursor
+        );
 
-      this.sm.tag.updateTagsPaged(selectedTagType, tagsPaged);
-    });
+        this.sm.tag.updateTagsPaged(selectedTagType, tagsPaged);
+      });
+
   };
 
   public handleSelectStrategy = (e: Event, option: IImageTagTypeOption) => {
@@ -215,7 +216,14 @@ export default class DetailsViewController {
   public canUpgrade = () => {
     const { deployment } = this.component.props;
     const { selectedTag, loading } = this.component.state;
-    if (!selectedTag || loading.redeploy) {
+
+    const isAuroraVersionSelectedTag = () =>
+      this.component.state.deploymentDetails.deploymentSpec &&
+      selectedTag &&
+      selectedTag.name ===
+        this.component.state.deploymentDetails.deploymentSpec.version;
+
+    if (!selectedTag || loading.redeploy || isAuroraVersionSelectedTag()) {
       return false;
     }
     return (
