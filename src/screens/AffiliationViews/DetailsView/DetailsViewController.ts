@@ -28,6 +28,7 @@ export interface IDetailsViewProps
 export interface IDetailsViewState {
   tagsPagedGroup: ITagsPagedGroup;
   deploymentDetails: IApplicationDeploymentDetails;
+  deployTag: ITag;
   selectedTag?: ITag;
   selectedTagType: ImageTagType;
   loading: IDetailsViewLoading;
@@ -88,6 +89,13 @@ export default class DetailsViewController {
       );
       if (success) {
         this.component.props.fetchApplicationDeployments();
+        const deploymentDetails = await clients.applicationDeploymentClient.findApplicationDeploymentDetails(
+          deployment.id
+        );
+        this.component.setState({
+          deploymentDetails,
+          isInitialTagType: true
+        });
       }
     });
   };

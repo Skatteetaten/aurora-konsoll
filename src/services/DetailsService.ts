@@ -1,80 +1,36 @@
-import {
-  IApplicationDeployment,
-  IApplicationDeploymentDetails
-} from 'models/ApplicationDeployment';
-import { ImageTagType } from 'models/ImageTagType';
-import { ITag, ITagsPagedGroup } from 'models/Tag';
+import { IApplicationDeploymentDetails } from 'models/ApplicationDeployment';
+import { IDeploymentSpec } from 'models/DeploymentSpec';
+import { ITag, ITagsPaged, ITagsPagedGroup } from 'models/Tag';
 
 export default class DetailsService {
-  public findTagTypeWithVersion = (
+  public findTagForDeploymentSpec = (
     tagsPagedGroup: ITagsPagedGroup,
-    deploymentDetails: IApplicationDeploymentDetails
-  ) => {
-    const containsCurrentVersion = (it: ITag) =>
-      deploymentDetails.deploymentSpec &&
-      it.name === deploymentDetails.deploymentSpec.version;
-    if (
-      tagsPagedGroup.auroraSnapshotVersion.tags.filter(containsCurrentVersion)
-        .length > 0
-    ) {
-      return ImageTagType.AURORA_SNAPSHOT_VERSION;
-    } else if (
-      tagsPagedGroup.auroraVersion.tags.filter(containsCurrentVersion).length >
-      0
-    ) {
-      return ImageTagType.AURORA_VERSION;
-    } else if (
-      tagsPagedGroup.bugfix.tags.filter(containsCurrentVersion).length > 0
-    ) {
-      return ImageTagType.BUGFIX;
-    } else if (
-      tagsPagedGroup.commitHash.tags.filter(containsCurrentVersion).length > 0
-    ) {
-      return ImageTagType.COMMIT_HASH;
-    } else if (
-      tagsPagedGroup.latest.tags.filter(containsCurrentVersion).length > 0
-    ) {
-      return ImageTagType.LATEST;
-    } else if (
-      tagsPagedGroup.major.tags.filter(containsCurrentVersion).length > 0
-    ) {
-      return ImageTagType.MAJOR;
-    } else if (
-      tagsPagedGroup.minor.tags.filter(containsCurrentVersion).length > 0
-    ) {
-      return ImageTagType.MINOR;
-    } else if (
-      tagsPagedGroup.snapshot.tags.filter(containsCurrentVersion).length > 0
-    ) {
-      return ImageTagType.SNAPSHOT;
-    } else {
-      return ImageTagType.AURORA_SNAPSHOT_VERSION;
+    deploymentSpec?: IDeploymentSpec
+  ): ITag | undefined => {
+    if (!deploymentSpec) {
+      return undefined;
     }
-  };
-
-  public deployTag = (
-    deploymentDetails: IApplicationDeploymentDetails,
-    deployment: IApplicationDeployment,
-    selectedTagType: ImageTagType
-  ): ITag => {
-    if (deploymentDetails.deploymentSpec && deployment.version.releaseTo) {
-      return {
-        name: deploymentDetails.deploymentSpec.version,
-        lastModified: '',
-        type: selectedTagType
-      };
-    } else {
-      return deployment.version.deployTag;
-    }
+    return Object.keys(tagsPagedGroup).reduce(
+      (acc: ITag | undefined, key: string) => {
+        if (acc) {
+          return acc;
+        }
+        const tag = (tagsPagedGroup[key] as ITagsPaged).tags.find(
+          it => it.name === deploymentSpec.version
+        );
+        return tag;
+      },
+      undefined
+    );
   };
 
   public hasRecivedTagsAndVersion = (
     tagsPagedGroup: ITagsPagedGroup,
     deploymentDetails: IApplicationDeploymentDetails
-  ) => {
+  ): boolean => {
     return (
-      deploymentDetails.deploymentSpec &&
-      deploymentDetails.deploymentSpec.version &&
+      !!deploymentDetails.deploymentSpec &&
+      !!deploymentDetails.deploymentSpec.version &&
       (tagsPagedGroup.auroraVersion.tags.length > 0 ||
         tagsPagedGroup.bugfix.tags.length > 0 ||
         tagsPagedGroup.commitHash.tags.length > 0 ||

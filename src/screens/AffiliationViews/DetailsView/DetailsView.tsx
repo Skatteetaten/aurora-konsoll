@@ -30,6 +30,7 @@ class DetailsView extends React.Component<
       redeploy: false,
       update: false
     },
+    deployTag: this.props.deployment.version.deployTag,
     selectedTagType: this.props.deployment.version.deployTag.type,
     tagsPagedGroup: defaultTagsPagedGroup(),
     versionSearchText: '',
@@ -55,11 +56,15 @@ class DetailsView extends React.Component<
         deploymentDetails
       )
     ) {
+      const deploymentSpecTag = this.detailsService.findTagForDeploymentSpec(
+        tagsPagedGroup,
+        deploymentDetails.deploymentSpec
+      );
+      const tag = deploymentSpecTag || deployment.version.deployTag;
+
       this.setState({
-        selectedTagType: this.detailsService.findTagTypeWithVersion(
-          tagsPagedGroup,
-          deploymentDetails
-        ),
+        deployTag: tag,
+        selectedTagType: tag.type,
         isInitialTagType: false
       });
     }
@@ -72,6 +77,7 @@ class DetailsView extends React.Component<
       loading,
       selectedTagType,
       selectedTag,
+      deployTag,
       versionSearchText
     } = this.state;
 
@@ -107,11 +113,7 @@ class DetailsView extends React.Component<
               <VersionView
                 hasPermissionToUpgrade={deployment.permission.paas.admin}
                 unavailableMessage={this.controller.getVersionViewUnavailableMessage()}
-                deployedTag={this.detailsService.deployTag(
-                  deploymentDetails,
-                  deployment,
-                  selectedTagType
-                )}
+                deployedTag={deployTag}
                 selectedTag={selectedTag}
                 selectedTagType={selectedTagType}
                 tagsPaged={this.controller.sm.tag.getTagsPageFiltered(
