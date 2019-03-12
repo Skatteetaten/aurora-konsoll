@@ -24,7 +24,7 @@ const TagTypeSelector = ({
 }: ITagTypeSelector) => (
   <RadioButtonWrapper>
     <RadioButtonGroup
-      defaultSelectedKey={imageTagType}
+      selectedKey={imageTagType}
       options={versionStategyOptions}
       onChange={handleSelectStrategy}
     />

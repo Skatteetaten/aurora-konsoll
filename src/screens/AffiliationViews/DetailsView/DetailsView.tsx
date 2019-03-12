@@ -7,6 +7,7 @@ import Card from 'components/Card';
 import TabLink, { TabLinkWrapper } from 'components/TabLink';
 import { defaultTagsPagedGroup } from 'models/Tag';
 
+import DetailsService from 'services/DetailsService';
 import DetailsActionBar from './DetailsActionBar';
 import DetailsViewController, {
   IDetailsViewProps,
@@ -29,15 +30,44 @@ class DetailsView extends React.Component<
       redeploy: false,
       update: false
     },
+    deployTag: this.props.deployment.version.deployTag,
     selectedTagType: this.props.deployment.version.deployTag.type,
     tagsPagedGroup: defaultTagsPagedGroup(),
-    versionSearchText: ''
+    versionSearchText: '',
+    isInitialTagType: true
   };
+
+  private detailsService = new DetailsService();
 
   private controller = new DetailsViewController(this);
 
   public async componentDidMount() {
     this.controller.onMount();
+  }
+
+  public async componentDidUpdate() {
+    const { tagsPagedGroup, deploymentDetails, isInitialTagType } = this.state;
+    const { deployment } = this.props;
+    if (
+      deployment.version.releaseTo &&
+      isInitialTagType &&
+      this.detailsService.hasRecivedTagsAndVersion(
+        tagsPagedGroup,
+        deploymentDetails
+      )
+    ) {
+      const deploymentSpecTag = this.detailsService.findTagForDeploymentSpec(
+        tagsPagedGroup,
+        deploymentDetails.deploymentSpec
+      );
+      const tag = deploymentSpecTag || deployment.version.deployTag;
+
+      this.setState({
+        deployTag: tag,
+        selectedTagType: tag.type,
+        isInitialTagType: false
+      });
+    }
   }
 
   public render() {
@@ -47,8 +77,10 @@ class DetailsView extends React.Component<
       loading,
       selectedTagType,
       selectedTag,
+      deployTag,
       versionSearchText
     } = this.state;
+
     return (
       <DetailsViewGrid>
         <DetailsActionBar
@@ -81,7 +113,7 @@ class DetailsView extends React.Component<
               <VersionView
                 hasPermissionToUpgrade={deployment.permission.paas.admin}
                 unavailableMessage={this.controller.getVersionViewUnavailableMessage()}
-                deployedTag={deployment.version.deployTag}
+                deployedTag={deployTag}
                 selectedTag={selectedTag}
                 selectedTagType={selectedTagType}
                 tagsPaged={this.controller.sm.tag.getTagsPageFiltered(
@@ -90,7 +122,7 @@ class DetailsView extends React.Component<
                 )}
                 isFetchingTags={loading.fetchTags}
                 isRedeploying={loading.redeploy}
-                canUpgrade={this.controller.canUpgrade()}
+                canUpgrade={!!this.controller.canUpgrade()}
                 handleSelectNextTag={this.controller.handleSelectNextTag}
                 handlefetchTags={this.controller.loadMoreTags}
                 handleSelectStrategy={this.controller.handleSelectStrategy}

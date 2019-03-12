@@ -28,10 +28,12 @@ export interface IDetailsViewProps
 export interface IDetailsViewState {
   tagsPagedGroup: ITagsPagedGroup;
   deploymentDetails: IApplicationDeploymentDetails;
+  deployTag: ITag;
   selectedTag?: ITag;
   selectedTagType: ImageTagType;
   loading: IDetailsViewLoading;
   versionSearchText: string;
+  isInitialTagType: boolean;
 }
 
 interface IDetailsViewLoading {
@@ -87,6 +89,13 @@ export default class DetailsViewController {
       );
       if (success) {
         this.component.props.fetchApplicationDeployments();
+        const deploymentDetails = await clients.applicationDeploymentClient.findApplicationDeploymentDetails(
+          deployment.id
+        );
+        this.component.setState({
+          deploymentDetails,
+          isInitialTagType: true
+        });
       }
     });
   };
@@ -215,7 +224,14 @@ export default class DetailsViewController {
   public canUpgrade = () => {
     const { deployment } = this.component.props;
     const { selectedTag, loading } = this.component.state;
-    if (!selectedTag || loading.redeploy) {
+
+    const isAuroraVersionSelectedTag = () =>
+      this.component.state.deploymentDetails.deploymentSpec &&
+      selectedTag &&
+      selectedTag.name ===
+        this.component.state.deploymentDetails.deploymentSpec.version;
+
+    if (!selectedTag || loading.redeploy || isAuroraVersionSelectedTag()) {
       return false;
     }
     return (

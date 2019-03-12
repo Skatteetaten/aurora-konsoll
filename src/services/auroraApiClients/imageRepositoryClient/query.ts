@@ -102,6 +102,7 @@ export const TAGS_GROUPED_QUERY = gql`
       node {
         name
         lastModified
+        type
       }
     }
   }

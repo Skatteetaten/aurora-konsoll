@@ -56,6 +56,7 @@ const VersionView = ({
   if (unavailableMessage) {
     return <UnavailableServiceMessage message={unavailableMessage} />;
   }
+
   return (
     <div className={className}>
       <div className="g-control-group">
