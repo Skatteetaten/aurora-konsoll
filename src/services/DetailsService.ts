@@ -10,32 +10,41 @@ export default class DetailsService {
     tagsPagedGroup: ITagsPagedGroup,
     deploymentDetails: IApplicationDeploymentDetails
   ) => {
-    const isCorrentVersion = (it: ITag) =>
+    const containsCurrentVersion = (it: ITag) =>
       deploymentDetails.deploymentSpec &&
       it.name === deploymentDetails.deploymentSpec.version;
     if (
-      tagsPagedGroup.auroraSnapshotVersion.tags.filter(isCorrentVersion)
+      tagsPagedGroup.auroraSnapshotVersion.tags.filter(containsCurrentVersion)
         .length > 0
     ) {
       return ImageTagType.AURORA_SNAPSHOT_VERSION;
     } else if (
-      tagsPagedGroup.auroraVersion.tags.filter(isCorrentVersion).length > 0
+      tagsPagedGroup.auroraVersion.tags.filter(containsCurrentVersion).length >
+      0
     ) {
       return ImageTagType.AURORA_VERSION;
-    } else if (tagsPagedGroup.bugfix.tags.filter(isCorrentVersion).length > 0) {
+    } else if (
+      tagsPagedGroup.bugfix.tags.filter(containsCurrentVersion).length > 0
+    ) {
       return ImageTagType.BUGFIX;
     } else if (
-      tagsPagedGroup.commitHash.tags.filter(isCorrentVersion).length > 0
+      tagsPagedGroup.commitHash.tags.filter(containsCurrentVersion).length > 0
     ) {
       return ImageTagType.COMMIT_HASH;
-    } else if (tagsPagedGroup.latest.tags.filter(isCorrentVersion).length > 0) {
+    } else if (
+      tagsPagedGroup.latest.tags.filter(containsCurrentVersion).length > 0
+    ) {
       return ImageTagType.LATEST;
-    } else if (tagsPagedGroup.major.tags.filter(isCorrentVersion).length > 0) {
+    } else if (
+      tagsPagedGroup.major.tags.filter(containsCurrentVersion).length > 0
+    ) {
       return ImageTagType.MAJOR;
-    } else if (tagsPagedGroup.minor.tags.filter(isCorrentVersion).length > 0) {
+    } else if (
+      tagsPagedGroup.minor.tags.filter(containsCurrentVersion).length > 0
+    ) {
       return ImageTagType.MINOR;
     } else if (
-      tagsPagedGroup.snapshot.tags.filter(isCorrentVersion).length > 0
+      tagsPagedGroup.snapshot.tags.filter(containsCurrentVersion).length > 0
     ) {
       return ImageTagType.SNAPSHOT;
     } else {
