@@ -32,6 +32,7 @@ export interface IDetailsViewState {
   selectedTagType: ImageTagType;
   loading: IDetailsViewLoading;
   versionSearchText: string;
+  isInitialTagType: boolean;
 }
 
 interface IDetailsViewLoading {
@@ -131,20 +132,19 @@ export default class DetailsViewController {
     const { clients, deployment } = this.component.props;
     const { selectedTagType } = this.component.state;
 
-      const current: ITagsPaged = this.sm.tag.getTagsPaged(selectedTagType);
-      const cursor = current.endCursor;
+    const current: ITagsPaged = this.sm.tag.getTagsPaged(selectedTagType);
+    const cursor = current.endCursor;
 
-      this.sm.loading.withLoading(['fetchTags'], async () => {
-        const tagsPaged = await clients.imageRepositoryClient.findTagsPaged(
-          deployment.repository,
-          selectedTagType,
-          15,
-          cursor
-        );
+    this.sm.loading.withLoading(['fetchTags'], async () => {
+      const tagsPaged = await clients.imageRepositoryClient.findTagsPaged(
+        deployment.repository,
+        selectedTagType,
+        15,
+        cursor
+      );
 
-        this.sm.tag.updateTagsPaged(selectedTagType, tagsPaged);
-      });
-
+      this.sm.tag.updateTagsPaged(selectedTagType, tagsPaged);
+    });
   };
 
   public handleSelectStrategy = (e: Event, option: IImageTagTypeOption) => {

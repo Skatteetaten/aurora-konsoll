@@ -5,9 +5,9 @@ import styled from 'styled-components';
 import { withAuroraApi } from 'components/AuroraApi';
 import Card from 'components/Card';
 import TabLink, { TabLinkWrapper } from 'components/TabLink';
-import { defaultTagsPagedGroup, ITag } from 'models/Tag';
+import { defaultTagsPagedGroup } from 'models/Tag';
 
-import { ImageTagType } from 'models/ImageTagType';
+import DetailsService from 'services/DetailsService';
 import DetailsActionBar from './DetailsActionBar';
 import DetailsViewController, {
   IDetailsViewProps,
@@ -32,8 +32,11 @@ class DetailsView extends React.Component<
     },
     selectedTagType: this.props.deployment.version.deployTag.type,
     tagsPagedGroup: defaultTagsPagedGroup(),
-    versionSearchText: ''
+    versionSearchText: '',
+    isInitialTagType: true
   };
+
+  private detailsService = new DetailsService();
 
   private controller = new DetailsViewController(this);
 
@@ -42,77 +45,25 @@ class DetailsView extends React.Component<
   }
 
   public async componentDidUpdate() {
+    const { tagsPagedGroup, deploymentDetails, isInitialTagType } = this.state;
+    const { deployment } = this.props;
     if (
-      this.state.deploymentDetails.deploymentSpec &&
-      this.state.deploymentDetails.deploymentSpec.version &&
-      this.props.deployment.version.releaseTo
+      deployment.version.releaseTo &&
+      isInitialTagType &&
+      this.detailsService.hasRecivedTagsAndVersion(
+        tagsPagedGroup,
+        deploymentDetails
+      )
     ) {
       this.setState({
-        selectedTagType: this.filterfunction()
+        selectedTagType: this.detailsService.findTagTypeWithVersion(
+          tagsPagedGroup,
+          deploymentDetails
+        ),
+        isInitialTagType: false
       });
     }
   }
-
-  public filterfunction = () => {
-    const isCorrentVersion = (it: ITag) =>
-      this.state.deploymentDetails.deploymentSpec &&
-      it.name === this.state.deploymentDetails.deploymentSpec.version;
-    if (
-      this.state.tagsPagedGroup.auroraSnapshotVersion.tags.filter(
-        isCorrentVersion
-      ).length > 0
-    ) {
-      return ImageTagType.AURORA_SNAPSHOT_VERSION;
-    } else if (
-      this.state.tagsPagedGroup.auroraVersion.tags.filter(isCorrentVersion)
-        .length > 0
-    ) {
-      return ImageTagType.AURORA_VERSION;
-    } else if (
-      this.state.tagsPagedGroup.bugfix.tags.filter(isCorrentVersion).length > 0
-    ) {
-      return ImageTagType.BUGFIX;
-    } else if (
-      this.state.tagsPagedGroup.commitHash.tags.filter(isCorrentVersion)
-        .length > 0
-    ) {
-      return ImageTagType.COMMIT_HASH;
-    } else if (
-      this.state.tagsPagedGroup.latest.tags.filter(isCorrentVersion).length > 0
-    ) {
-      return ImageTagType.LATEST;
-    } else if (
-      this.state.tagsPagedGroup.major.tags.filter(isCorrentVersion).length > 0
-    ) {
-      return ImageTagType.MAJOR;
-    } else if (
-      this.state.tagsPagedGroup.minor.tags.filter(isCorrentVersion).length > 0
-    ) {
-      return ImageTagType.MINOR;
-    } else if (
-      this.state.tagsPagedGroup.snapshot.tags.filter(isCorrentVersion).length >
-      0
-    ) {
-      return ImageTagType.SNAPSHOT;
-    } else {
-      return ImageTagType.AURORA_SNAPSHOT_VERSION;
-    }
-  };
-
-  public deployVersion = (): ITag => {
-    if (
-      this.state.deploymentDetails.deploymentSpec &&
-      this.props.deployment.version.releaseTo
-    ) {
-      return {
-        name: this.state.deploymentDetails.deploymentSpec.version,
-        lastModified: '',
-        type: this.state.selectedTagType
-      };
-    } else {
-      return this.props.deployment.version.deployTag;
-    }
-  };
 
   public render() {
     const { deployment, match } = this.props;
@@ -124,8 +75,6 @@ class DetailsView extends React.Component<
       versionSearchText
     } = this.state;
 
-    // tslint:disable-next-line:no-console
-    console.log(selectedTagType);
     return (
       <DetailsViewGrid>
         <DetailsActionBar
@@ -158,7 +107,11 @@ class DetailsView extends React.Component<
               <VersionView
                 hasPermissionToUpgrade={deployment.permission.paas.admin}
                 unavailableMessage={this.controller.getVersionViewUnavailableMessage()}
-                deployedTag={this.deployVersion()}
+                deployedTag={this.detailsService.deployTag(
+                  deploymentDetails,
+                  deployment,
+                  selectedTagType
+                )}
                 selectedTag={selectedTag}
                 selectedTagType={selectedTagType}
                 tagsPaged={this.controller.sm.tag.getTagsPageFiltered(
@@ -176,7 +129,6 @@ class DetailsView extends React.Component<
                 redeployWithCurrentVersion={
                   this.controller.redeployWithCurrentVersion
                 }
-                hasReleaseTo={this.filterfunction()}
               />
             </Route>
           </Switch>

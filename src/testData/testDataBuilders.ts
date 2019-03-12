@@ -15,6 +15,7 @@ import {
   IUpdateDatabaseSchemaInputWithCreatedBy
 } from 'models/schemas';
 import { StatusCode } from 'models/Status';
+import { ITagsPagedGroup } from 'models/Tag';
 import { IApplicationDeploymentFilters } from 'models/UserSettings';
 import { IFilter } from 'services/DeploymentFilterService';
 
@@ -175,6 +176,91 @@ export const databaseSchemaFactory = Factory.Sync.makeFactory<IDatabaseSchema>({
   jdbcUrl: 'jdbcurl-123',
   name: 'l4342',
   users: []
+});
+
+export const tagsPagedGroupFactory = Factory.Sync.makeFactory<ITagsPagedGroup>({
+  auroraSnapshotVersion: {
+    tags: [
+      {
+        name: 'aurora-versjon-test',
+        lastModified: '',
+        type: ImageTagType.AURORA_SNAPSHOT_VERSION
+      }
+    ],
+    endCursor: '',
+    hasNextPage: false
+  },
+  auroraVersion: {
+    tags: [
+      {
+        name: 'aurora-versjon-test',
+        lastModified: '',
+        type: ImageTagType.AURORA_VERSION
+      }
+    ],
+    endCursor: '',
+    hasNextPage: false
+  },
+  bugfix: {
+    tags: [
+      {
+        name: '0.1.5',
+        lastModified: '',
+        type: ImageTagType.BUGFIX
+      }
+    ],
+    endCursor: '',
+    hasNextPage: false
+  },
+  commitHash: {
+    tags: [],
+    endCursor: '',
+    hasNextPage: false
+  },
+  latest: {
+    tags: [
+      {
+        name: 'latest',
+        lastModified: '',
+        type: ImageTagType.LATEST
+      }
+    ],
+    endCursor: '',
+    hasNextPage: false
+  },
+  major: {
+    tags: [
+      {
+        name: '0',
+        lastModified: '',
+        type: ImageTagType.MAJOR
+      }
+    ],
+    endCursor: '',
+    hasNextPage: false
+  },
+  minor: {
+    tags: [
+      {
+        name: '0.1',
+        lastModified: '',
+        type: ImageTagType.MINOR
+      }
+    ],
+    endCursor: '',
+    hasNextPage: false
+  },
+  snapshot: {
+    tags: [
+      {
+        name: 'feature-aurora-versjon123',
+        lastModified: '',
+        type: ImageTagType.SNAPSHOT
+      }
+    ],
+    endCursor: '',
+    hasNextPage: false
+  }
 });
 
 export const databaseSchemaInputFactory = Factory.Sync.makeFactory<
