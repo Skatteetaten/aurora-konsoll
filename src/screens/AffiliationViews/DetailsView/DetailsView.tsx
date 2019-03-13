@@ -30,7 +30,7 @@ class DetailsView extends React.Component<
       redeploy: false,
       update: false
     },
-    deployTag: this.props.deployment.version.deployTag,
+    releaseToDeployTag: this.props.deployment.version.deployTag,
     selectedTagType: this.props.deployment.version.deployTag.type,
     tagsPagedGroup: defaultTagsPagedGroup(),
     versionSearchText: '',
@@ -49,7 +49,7 @@ class DetailsView extends React.Component<
     const { tagsPagedGroup, deploymentDetails, isInitialTagType } = this.state;
     const { deployment } = this.props;
     if (
-      deployment.version.releaseTo &&
+      !!deployment.version.releaseTo &&
       isInitialTagType &&
       this.detailsService.hasRecivedTagsAndVersion(
         tagsPagedGroup,
@@ -63,12 +63,20 @@ class DetailsView extends React.Component<
       const tag = deploymentSpecTag || deployment.version.deployTag;
 
       this.setState({
-        deployTag: tag,
+        releaseToDeployTag: tag,
         selectedTagType: tag.type,
         isInitialTagType: false
       });
     }
   }
+
+  public getDeployTag = () => {
+    const { deployment } = this.props;
+    const { releaseToDeployTag } = this.state;
+    return !!deployment.version.releaseTo
+      ? releaseToDeployTag
+      : deployment.version.deployTag;
+  };
 
   public render() {
     const { deployment, match } = this.props;
@@ -77,7 +85,6 @@ class DetailsView extends React.Component<
       loading,
       selectedTagType,
       selectedTag,
-      deployTag,
       versionSearchText
     } = this.state;
 
@@ -113,7 +120,7 @@ class DetailsView extends React.Component<
               <VersionView
                 hasPermissionToUpgrade={deployment.permission.paas.admin}
                 unavailableMessage={this.controller.getVersionViewUnavailableMessage()}
-                deployedTag={deployTag}
+                deployedTag={this.getDeployTag()}
                 selectedTag={selectedTag}
                 selectedTagType={selectedTagType}
                 tagsPaged={this.controller.sm.tag.getTagsPageFiltered(

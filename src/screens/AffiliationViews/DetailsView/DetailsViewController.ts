@@ -28,7 +28,7 @@ export interface IDetailsViewProps
 export interface IDetailsViewState {
   tagsPagedGroup: ITagsPagedGroup;
   deploymentDetails: IApplicationDeploymentDetails;
-  deployTag: ITag;
+  releaseToDeployTag: ITag;
   selectedTag?: ITag;
   selectedTagType: ImageTagType;
   loading: IDetailsViewLoading;
