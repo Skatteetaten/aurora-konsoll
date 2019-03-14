@@ -1,8 +1,9 @@
 # Aurora Konsoll
 
 ## Getting started
-npm ci
-GOBO_URL=http://m86862-gobo.aurora.utv.paas.skead.no npm start
+
+npm ci <br />
+env INTEGRATIONS_GOBO_URL=<'url'> INTEGRATIONS_DBH_URL=<'url'> npm start
 
 ## IntelliJ Setup
 
