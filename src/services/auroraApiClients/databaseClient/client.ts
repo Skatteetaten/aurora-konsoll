@@ -16,7 +16,7 @@ import {
   TEST_JDBC_CONNECTION_FOR_JDBCUSER_MUTATION,
   UPDATE_DATABASESCHEMA_MUTATION
 } from './mutation';
-import { DATABASE_SCHEMAS_QUERY, IDatabaseSchemasQuery } from './query.ts';
+import { DATABASE_SCHEMAS_QUERY, IDatabaseSchemasQuery } from './query';
 
 export class DatabaseClient {
   private client: GoboClient;

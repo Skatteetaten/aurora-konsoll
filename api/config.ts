@@ -12,7 +12,8 @@ const PORT = Number(env.HTTP_PORT || 9090);
 
 const CLIENT_ID = env.CLIENT_ID || 'aurora-openshift-console-dev';
 
-const GOBO_URL = env.GOBO_URL || 'http://gobo.aurora.utv.paas.skead.no';
+const GOBO_URL =
+  env.INTEGRATIONS_GOBO_URL || 'http://gobo.aurora.utv.paas.skead.no';
 
 const DBH_ENABLED = !!env.INTEGRATIONS_DBH_URL;
 
