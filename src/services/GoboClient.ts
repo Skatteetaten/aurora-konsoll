@@ -1,6 +1,8 @@
 import { GraphQLError, OperationDefinitionNode } from 'graphql';
 import { DefinitionNode, DocumentNode, print } from 'graphql/language';
 
+import { v4 as uuid } from 'uuid';
+
 import ErrorStateManager from 'models/StateManager/ErrorStateManager';
 
 interface IVariables {
@@ -48,6 +50,9 @@ export default class GoboClient {
   }: IGoboMutation): Promise<IGoboResult<T> | undefined> {
     return await this.doRequest<T>(mutation, variables);
   }
+  private generatedUuid = (): string => {
+    return uuid();
+  };
 
   private async doRequest<T>(
     document: DocumentNode,
@@ -57,6 +62,7 @@ export default class GoboClient {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
+        Korrelasjonsid: this.generatedUuid(),
         Accept: '*/*',
         ...this.options.headers
       },
@@ -88,8 +94,8 @@ export default class GoboClient {
   }
 
   private getDocumentName(definitions: ReadonlyArray<DefinitionNode>): string {
-    const names = definitions.map(
-      (def: OperationDefinitionNode) => (def.name ? def.name.value : '')
+    const names = definitions.map((def: OperationDefinitionNode) =>
+      def.name ? def.name.value : ''
     );
 
     return names.length > 0 ? names[0] : '';

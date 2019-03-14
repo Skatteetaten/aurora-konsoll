@@ -39,7 +39,8 @@ async function init() {
     errorHandler: errorStateManager,
     url: '/api/graphql',
     headers: {
-      Authorization: token ? `Bearer ${token}` : ''
+      Authorization: token ? `Bearer ${token}` : '',
+      KlientID: config.APPLICATION_NAME
     }
   });
 

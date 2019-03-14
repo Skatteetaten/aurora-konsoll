@@ -3,6 +3,7 @@ import * as express from 'express';
 import * as proxy from 'http-proxy-middleware';
 
 import {
+  APPLICATION_NAME,
   AUTHORIZATION_URI,
   CLIENT_ID,
   DBH_ENABLED,
@@ -28,6 +29,7 @@ app.get('/api/config', (req, res) => {
   return res.send({
     AUTHORIZATION_URI,
     CLIENT_ID,
+    APPLICATION_NAME,
     DBH_ENABLED
   });
 });
