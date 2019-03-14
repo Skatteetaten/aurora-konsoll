@@ -1,11 +1,3 @@
-import {
-  IDatabaseSchema,
-  IDatabaseSchemaInput,
-  IDatabaseSchemaView,
-  IJdbcUser,
-  IUpdateDatabaseSchemaInputWithCreatedBy
-} from 'models/schemas';
-
 import { Selection } from 'office-ui-fabric-react/lib/DetailsList';
 
 export enum SortDirection {
