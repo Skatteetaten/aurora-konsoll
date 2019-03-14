@@ -50,9 +50,6 @@ export default class GoboClient {
   }: IGoboMutation): Promise<IGoboResult<T> | undefined> {
     return await this.doRequest<T>(mutation, variables);
   }
-  private generatedUuid = (): string => {
-    return uuid();
-  };
 
   private async doRequest<T>(
     document: DocumentNode,
@@ -62,7 +59,7 @@ export default class GoboClient {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        Korrelasjonsid: this.generatedUuid(),
+        Korrelasjonsid: uuid(),
         Accept: '*/*',
         ...this.options.headers
       },
