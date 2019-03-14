@@ -5,6 +5,8 @@ def overrides = [
     scriptVersion  : 'v6',
     pipelineScript: 'https://git.aurora.skead.no/scm/ao/aurora-pipeline-scripts.git',
     credentialsId: "github",
+    jiraFiksetIKomponentversjon: true,
+    chatRoom: "#aos-notifications",
     versionStrategy: [
         [ branch: 'master', versionHint: '0']
     ]
