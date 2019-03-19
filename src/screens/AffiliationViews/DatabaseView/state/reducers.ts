@@ -1,13 +1,13 @@
-import { combineReducers } from 'redux';
 import { ActionType } from 'typesafe-actions';
 import actions, {
-  CREATE_DATABASE_SCHEMA_RESPONSE,
-  DELETE_SCHEMAS_RESPONSE,
-  FETCHED_SCHEMA_REQUEST,
-  FETCHED_SCHEMA_RESPONSE,
-  TEST_JDBC_CONNECTION_FOR_ID_RESPONSE,
-  TEST_JDBC_CONNECTION_FOR_JDBCUSER_RESPONSE,
-  UPDATE_SCHEMA_RESPONSE
+  createDatabaseSchemaResponse,
+  deleteSchemaResponse,
+  deleteSchemasResponse,
+  fetchSchemaRequest,
+  fetchSchemaResponse,
+  testJdbcConnectionForIdResponse,
+  testJdbcConnectionForJdbcUserResponse,
+  updateSchemaResponse
 } from './actions';
 
 import {
@@ -15,77 +15,62 @@ import {
   IDatabaseSchemas,
   IDeleteDatabaseSchemasResponse
 } from 'models/schemas';
+import { handleAction, reduceReducers } from 'redux-ts-utils';
 
 export type DatabaseSchemasAction = ActionType<typeof actions>;
 
 export interface ISchemasState {
-  readonly isFetchingSchemas: boolean;
-  readonly databaseSchemas: IDatabaseSchemas;
-  readonly deleteSchemasResponse: IDeleteDatabaseSchemasResponse;
-  readonly updateSchemaResponse: boolean;
-  readonly testJdbcConnectionResponse: boolean;
-  readonly createDatabaseSchemaResponse: ICreateDatabaseSchemaResponse;
+  readonly isFetchingSchemas?: boolean;
+  readonly databaseSchemas?: IDatabaseSchemas;
+  readonly updateSchemaResponse?: boolean;
+  readonly deleteSchemasResponse?: IDeleteDatabaseSchemasResponse;
+  readonly testJdbcConnectionResponse?: boolean;
+  readonly createDatabaseSchemaResponse?: ICreateDatabaseSchemaResponse;
 }
 
-export const databaseReducer = combineReducers<
-  ISchemasState,
-  DatabaseSchemasAction
->({
-  isFetchingSchemas: (state = false, action) => {
-    switch (action.type) {
-      case FETCHED_SCHEMA_REQUEST:
-        return action.payload.isFetchingSchemas;
-      default:
-        return state;
-    }
-  },
-  databaseSchemas: (state = { databaseSchemas: [] }, action) => {
-    switch (action.type) {
-      case FETCHED_SCHEMA_RESPONSE:
-        return action.payload.databaseSchemas;
-      default:
-        return state;
-    }
-  },
-  updateSchemaResponse: (state = false, action) => {
-    switch (action.type) {
-      case UPDATE_SCHEMA_RESPONSE:
-        return action.payload.response;
-      default:
-        return state;
-    }
-  },
-  deleteSchemasResponse: (state = { failed: [], succeeded: [] }, action) => {
-    switch (action.type) {
-      case DELETE_SCHEMAS_RESPONSE:
-        return action.payload.response;
-      default:
-        return state;
-    }
-  },
-  testJdbcConnectionResponse: (state = false, action) => {
-    switch (action.type) {
-      case TEST_JDBC_CONNECTION_FOR_ID_RESPONSE:
-        return action.payload.response;
-      case TEST_JDBC_CONNECTION_FOR_JDBCUSER_RESPONSE:
-        return action.payload.response;
-      default:
-        return state;
-    }
-  },
-
-  createDatabaseSchemaResponse: (
-    state: ICreateDatabaseSchemaResponse = {
+const initialState = () => {
+  return {
+    isFetchingSchemas: false,
+    databaseSchemas: { databaseSchemas: [] },
+    updateSchemaResponse: false,
+    deleteSchemasResponse: { failed: [], succeeded: [] },
+    testJdbcConnectionResponse: false,
+    createDatabaseSchemaResponse: {
       id: '',
       jdbcUser: { jdbcUrl: '', username: '', password: '' }
-    },
-    action
-  ) => {
-    switch (action.type) {
-      case CREATE_DATABASE_SCHEMA_RESPONSE:
-        return action.payload.response;
-      default:
-        return state;
     }
-  }
-});
+  };
+};
+
+export const databaseReducer = reduceReducers<ISchemasState>(
+  [
+    handleAction(fetchSchemaRequest, (state, { payload }) => {
+      return { isFetchingSchemas: payload };
+    }),
+    handleAction(fetchSchemaResponse, (state, { payload }) => {
+      return { databaseSchemas: payload.databaseSchemas };
+    }),
+    handleAction(updateSchemaResponse, (state, { payload }) => {
+      return { updateSchemaResponse: payload };
+    }),
+    handleAction(deleteSchemaResponse, (state, { payload }) => {
+      return { deleteSchemasResponse: payload };
+    }),
+    handleAction(deleteSchemasResponse, (state, { payload }) => {
+      return { deleteSchemasResponse: payload };
+    }),
+    handleAction(testJdbcConnectionForIdResponse, (state, { payload }) => {
+      return { testJdbcConnectionResponse: payload };
+    }),
+    handleAction(
+      testJdbcConnectionForJdbcUserResponse,
+      (state, { payload }) => {
+        return { testJdbcConnectionResponse: payload };
+      }
+    ),
+    handleAction(createDatabaseSchemaResponse, (state, { payload }) => {
+      return { createDatabaseSchemaResponse: payload };
+    })
+  ],
+  initialState()
+);
