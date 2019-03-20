@@ -20,15 +20,15 @@ import { handleAction, reduceReducers } from 'redux-ts-utils';
 export type DatabaseSchemasAction = ActionType<typeof actions>;
 
 export interface ISchemasState {
-  readonly isFetchingSchemas?: boolean;
-  readonly databaseSchemas?: IDatabaseSchemas;
-  readonly updateSchemaResponse?: boolean;
-  readonly deleteSchemasResponse?: IDeleteDatabaseSchemasResponse;
-  readonly testJdbcConnectionResponse?: boolean;
-  readonly createDatabaseSchemaResponse?: ICreateDatabaseSchemaResponse;
+  readonly isFetchingSchemas: boolean;
+  readonly databaseSchemas: IDatabaseSchemas;
+  readonly updateSchemaResponse: boolean;
+  readonly deleteSchemasResponse: IDeleteDatabaseSchemasResponse;
+  readonly testJdbcConnectionResponse: boolean;
+  readonly createDatabaseSchemaResponse: ICreateDatabaseSchemaResponse;
 }
 
-const initialState = () => {
+const initialState = (): ISchemasState => {
   return {
     isFetchingSchemas: false,
     databaseSchemas: { databaseSchemas: [] },
@@ -42,34 +42,41 @@ const initialState = () => {
   };
 };
 
+// function updateStateWithPayload(name: string) {
+//   return (state, { payload }) => {
+//     state[name] = payload;
+//   }
+// }
+
 export const databaseReducer = reduceReducers<ISchemasState>(
   [
     handleAction(fetchSchemaRequest, (state, { payload }) => {
-      return { isFetchingSchemas: payload };
+      state.isFetchingSchemas = payload;
     }),
     handleAction(fetchSchemaResponse, (state, { payload }) => {
-      return { databaseSchemas: payload.databaseSchemas };
+      state.databaseSchemas = payload;
     }),
     handleAction(updateSchemaResponse, (state, { payload }) => {
-      return { updateSchemaResponse: payload };
+      state.updateSchemaResponse = payload;
     }),
-    handleAction(deleteSchemaResponse, (state, { payload }) => {
-      return { deleteSchemasResponse: payload };
-    }),
+    handleAction(
+      deleteSchemaResponse,
+      (state, { payload }) => (state.deleteSchemasResponse = payload)
+    ),
     handleAction(deleteSchemasResponse, (state, { payload }) => {
-      return { deleteSchemasResponse: payload };
+      state.deleteSchemasResponse = payload;
     }),
     handleAction(testJdbcConnectionForIdResponse, (state, { payload }) => {
-      return { testJdbcConnectionResponse: payload };
+      state.testJdbcConnectionResponse = payload;
     }),
     handleAction(
       testJdbcConnectionForJdbcUserResponse,
       (state, { payload }) => {
-        return { testJdbcConnectionResponse: payload };
+        state.testJdbcConnectionResponse = payload;
       }
     ),
     handleAction(createDatabaseSchemaResponse, (state, { payload }) => {
-      return { createDatabaseSchemaResponse: payload };
+      state.createDatabaseSchemaResponse = payload;
     })
   ],
   initialState()
