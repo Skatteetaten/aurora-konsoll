@@ -42,42 +42,46 @@ const initialState = (): ISchemasState => {
   };
 };
 
-// function updateStateWithPayload(name: string) {
-//   return (state, { payload }) => {
-//     state[name] = payload;
-//   }
-// }
+function updateStateWithPayload(name: string) {
+  return (state: ISchemasState, { payload }: DatabaseSchemasAction) => {
+    state[name] = payload;
+  };
+}
 
 export const databaseReducer = reduceReducers<ISchemasState>(
   [
-    handleAction(fetchSchemaRequest, (state, { payload }) => {
-      state.isFetchingSchemas = payload;
-    }),
-    handleAction(fetchSchemaResponse, (state, { payload }) => {
-      state.databaseSchemas = payload;
-    }),
-    handleAction(updateSchemaResponse, (state, { payload }) => {
-      state.updateSchemaResponse = payload;
-    }),
+    handleAction(
+      fetchSchemaRequest,
+      updateStateWithPayload('isFetchingSchemas')
+    ),
+    handleAction(
+      fetchSchemaResponse,
+      updateStateWithPayload('databaseSchemas')
+    ),
+    handleAction(
+      updateSchemaResponse,
+      updateStateWithPayload('updateSchemaResponse')
+    ),
     handleAction(
       deleteSchemaResponse,
-      (state, { payload }) => (state.deleteSchemasResponse = payload)
+      updateStateWithPayload('deleteSchemasResponse')
     ),
-    handleAction(deleteSchemasResponse, (state, { payload }) => {
-      state.deleteSchemasResponse = payload;
-    }),
-    handleAction(testJdbcConnectionForIdResponse, (state, { payload }) => {
-      state.testJdbcConnectionResponse = payload;
-    }),
+    handleAction(
+      deleteSchemasResponse,
+      updateStateWithPayload('deleteSchemasResponse')
+    ),
+    handleAction(
+      testJdbcConnectionForIdResponse,
+      updateStateWithPayload('testJdbcConnectionResponse')
+    ),
     handleAction(
       testJdbcConnectionForJdbcUserResponse,
-      (state, { payload }) => {
-        state.testJdbcConnectionResponse = payload;
-      }
+      updateStateWithPayload('testJdbcConnectionResponse')
     ),
-    handleAction(createDatabaseSchemaResponse, (state, { payload }) => {
-      state.createDatabaseSchemaResponse = payload;
-    })
+    handleAction(
+      createDatabaseSchemaResponse,
+      updateStateWithPayload('createDatabaseSchemaResponse')
+    )
   ],
   initialState()
 );

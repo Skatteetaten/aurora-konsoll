@@ -7,8 +7,10 @@ import { IUserAndAffiliations } from 'models/ApplicationDeployment';
 import { createAction } from 'redux-ts-utils';
 import { RootAction, RootState } from 'store/types';
 
+const currentUserAction = (action: string) => `currentUser/${action}`;
+
 export const fetchCurrentUserResponse = createAction<IUserAndAffiliations>(
-  'currentUser/FETCHED_CURRENT_USER'
+  currentUserAction('FETCHED_CURRENT_USER')
 );
 
 export type Thunk = ActionCreator<

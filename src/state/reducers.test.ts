@@ -1,23 +1,32 @@
-// import { IUserAndAffiliations } from 'models/ApplicationDeployment';
-// import { FETCHED_CURRENT_USER } from './actions';
+import {
+  startupFactory,
+  userAndAffiliationsFactory
+} from 'testData/testDataBuilders';
+import { fetchCurrentUserResponse } from './actions';
+import { startupReducer } from './reducers';
 
-// import { startupReducer as reducer } from './reducers';
+describe('startup actions', () => {
+  it('should return type of action fetchCurrentUserResponse and payload', () => {
+    expect(
+      fetchCurrentUserResponse(userAndAffiliationsFactory.build())
+    ).toEqual({
+      payload: userAndAffiliationsFactory.build(),
+      type: 'currentUser/FETCHED_CURRENT_USER'
+    });
+  });
+});
 
-// const currentUser: IUserAndAffiliations = {
-//   id: 'b34534',
-//   user: 'batman',
-//   affiliations: ['sirius']
-// };
-
-// describe('startup reducer', () => {
-//   it('should return current user', () => {
-//     expect(
-//       reducer(undefined, {
-//         type: FETCHED_CURRENT_USER,
-//         payload: { currentUser }
-//       })
-//     ).toMatchObject({
-//       currentUser
-//     });
-//   });
-// });
+describe('startup reducer', () => {
+  it('given defaultState and action fetchCurrentUserResponse with given values should change currentUser to given values', () => {
+    expect(
+      startupReducer(
+        startupFactory.build(),
+        fetchCurrentUserResponse(userAndAffiliationsFactory.build())
+      )
+    ).toEqual(
+      startupFactory.build({
+        currentUser: userAndAffiliationsFactory.build()
+      })
+    );
+  });
+});

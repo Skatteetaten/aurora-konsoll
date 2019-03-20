@@ -10,11 +10,22 @@ export interface IStartupState {
   readonly currentUser: IUserAndAffiliations;
 }
 
+function updateStateWithPayload(name: string) {
+  return (state: IStartupState, { payload }: StartupAction) => {
+    state[name] = payload;
+  };
+}
+
+const initialState: IStartupState = {
+  currentUser: { id: '', user: '', affiliations: [] }
+};
+
 export const startupReducer = reduceReducers<IStartupState>(
   [
-    handleAction(fetchCurrentUserResponse, (state, { payload }) => {
-      return { currentUser: payload };
-    })
+    handleAction(
+      fetchCurrentUserResponse,
+      updateStateWithPayload('currentUser')
+    )
   ],
-  { currentUser: { id: '', user: '', affiliations: [] } }
+  initialState
 );
