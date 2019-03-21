@@ -1,3 +1,4 @@
+import each from 'jest-each';
 import {
   createDatabaseSchemaResponseFactory,
   databaseSchemasFactory,
@@ -81,78 +82,83 @@ describe('database schema actions', () => {
 });
 
 describe('database schema reducer', () => {
-  it('given defaultState and action fetchSchemaRequest(true) should change isFetchingSchemas to true', () => {
-    expect(
-      databaseReducer(schemasFactory.build(), fetchSchemaRequest(true))
-    ).toEqual(
-      schemasFactory.build({
-        isFetchingSchemas: true
-      })
-    );
-  });
-
-  it('given defaultState and action createDatabaseSchemaResponse with given values should change createDatabaseSchemaResponse to given values', () => {
-    expect(
-      databaseReducer(
-        schemasFactory.build(),
-        createDatabaseSchemaResponse(
+  each([
+    [
+      { name: 'createDatabaseSchemaResponse', item: schemasFactory.build() },
+      {
+        name: 'createDatabaseSchemaResponse',
+        item: createDatabaseSchemaResponse(
           createDatabaseSchemaResponseFactory.build()
         )
-      )
-    ).toEqual(
+      },
       schemasFactory.build({
         createDatabaseSchemaResponse: createDatabaseSchemaResponseFactory.build()
       })
-    );
-  });
-
-  it('given defaultState and action deleteSchemasResponse with given values should change deleteSchemasResponse to given values', () => {
-    expect(
-      databaseReducer(
-        schemasFactory.build(),
-        deleteSchemasResponse(deleteDatabaseSchemasResponseFactory.build())
-      )
-    ).toEqual(
+    ],
+    [
+      { name: 'fetchSchemaRequest', item: schemasFactory.build() },
+      {
+        name: 'isFetchingSchemas',
+        item: fetchSchemaRequest(true)
+      },
+      schemasFactory.build({
+        isFetchingSchemas: true
+      })
+    ],
+    [
+      { name: 'deleteSchemasResponse', item: schemasFactory.build() },
+      {
+        name: 'deleteSchemasResponse',
+        item: deleteSchemasResponse(
+          deleteDatabaseSchemasResponseFactory.build()
+        )
+      },
       schemasFactory.build({
         deleteSchemasResponse: deleteDatabaseSchemasResponseFactory.build()
       })
-    );
-  });
-
-  it('given defaultState and action deleteSchemasResponse with given values should change deleteSchemasResponse to given values', () => {
-    expect(
-      databaseReducer(
-        schemasFactory.build(),
-        deleteSchemaResponse(deleteDatabaseSchemasResponseFactory.build())
-      )
-    ).toEqual(
+    ],
+    [
+      { name: 'deleteSchemaResponse', item: schemasFactory.build() },
+      {
+        name: 'deleteSchemasResponse',
+        item: deleteSchemaResponse(deleteDatabaseSchemasResponseFactory.build())
+      },
       schemasFactory.build({
         deleteSchemasResponse: deleteDatabaseSchemasResponseFactory.build()
       })
-    );
-  });
-
-  it('given defaultState and action updateSchemaResponse(true) should change updateSchemaResponse to true', () => {
-    expect(
-      databaseReducer(schemasFactory.build(), updateSchemaResponse(true))
-    ).toEqual(schemasFactory.build({ updateSchemaResponse: true }));
-  });
-
-  it('given defaultState and action testJdbcConnectionForIdResponse(true) should change testJdbcConnectionResponse to true', () => {
-    expect(
-      databaseReducer(
-        schemasFactory.build(),
-        testJdbcConnectionForIdResponse(true)
-      )
-    ).toEqual(schemasFactory.build({ testJdbcConnectionResponse: true }));
-  });
-
-  it('given defaultState and action testJdbcConnectionForJdbcUserResponse(true) should change testJdbcConnectionResponse to true', () => {
-    expect(
-      databaseReducer(
-        schemasFactory.build(),
-        testJdbcConnectionForJdbcUserResponse(true)
-      )
-    ).toEqual(schemasFactory.build({ testJdbcConnectionResponse: true }));
+    ],
+    [
+      { name: 'updateSchemaResponse', item: schemasFactory.build() },
+      {
+        name: 'updateSchemaResponse',
+        item: updateSchemaResponse(true)
+      },
+      schemasFactory.build({ updateSchemaResponse: true })
+    ],
+    [
+      { name: 'testJdbcConnectionForIdResponse', item: schemasFactory.build() },
+      {
+        name: 'testJdbcConnectionResponse',
+        item: testJdbcConnectionForIdResponse(true)
+      },
+      schemasFactory.build({ testJdbcConnectionResponse: true })
+    ],
+    [
+      {
+        name: 'testJdbcConnectionForJdbcUserResponse',
+        item: schemasFactory.build()
+      },
+      {
+        name: 'testJdbcConnectionResponse',
+        item: testJdbcConnectionForIdResponse(true)
+      },
+      schemasFactory.build({ testJdbcConnectionResponse: true })
+    ]
+  ]).describe.only('', (a, b, expected) => {
+    test.only(`given defaultState and action ${
+      a.name
+    } with given value should change ${b.name} to given value`, () => {
+      expect(databaseReducer(a.item, b.item)).toEqual(expected);
+    });
   });
 });
