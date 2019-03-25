@@ -39,3 +39,21 @@ export function getLocalDatetime(
     return '-';
   }
 }
+
+export function isDate(value: any) {
+  const dateValidator = /^\d{2}[.]\d{2}[.]\d{4}$/;
+  return typeof value === 'string' && (value as string).match(dateValidator);
+}
+
+export function createDate(value: string | null) {
+  if (value === null) {
+    return new Date(0);
+  } else {
+    const values = value.split('.');
+    return new Date(
+      Number(values[2]),
+      Number(values[1]) - 1,
+      Number(values[0])
+    );
+  }
+}

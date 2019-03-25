@@ -1,58 +1,37 @@
 import * as React from 'react';
 
 import DetailsList from 'aurora-frontend-react-komponenter/DetailsList';
+import CertificateService from 'services/CertificateService';
+import { SortDirection } from 'services/DatabaseSchemaService';
 
-import { getLocalDate } from 'utils/date';
-import { mockData } from './mockData';
+interface ITableProps {
+  items: any[];
+  onColumnHeaderClick: (
+    ev: React.MouseEvent<HTMLElement, MouseEvent>,
+    column: { key: number; fieldName: string }
+  ) => void;
+  certificateService: CertificateService;
+  columnSortDirections: SortDirection[];
+  selectedColumnIndex: number;
+}
 
-const Stringify = mockData;
-
-const columns = [
-  {
-    fieldName: 'id',
-    isResizable: true,
-    key: 'column1',
-    maxWidth: 150,
-    minWidth: 100,
-    name: 'ID'
-  },
-  {
-    fieldName: 'cn',
-    isResizable: true,
-    key: 'column5',
-    maxWidth: 550,
-    minWidth: 500,
-    name: 'CN'
-  },
-  {
-    fieldName: 'revokedDate',
-    isResizable: true,
-    key: 'column7',
-    maxWidth: 300,
-    minWidth: 200,
-    name: 'Revoked'
-  },
-  {
-    fieldName: 'issuedDate',
-    isResizable: true,
-    key: 'column7',
-    maxWidth: 300,
-    minWidth: 200,
-    name: 'Opprettet'
-  }
-];
-
-const Table = () => {
-  const updatedItems = Stringify.items.map(it => {
-    return {
-      id: it.id,
-      cn: it.cn,
-      issuedDate: getLocalDate(it.issuedDate),
-      revokedDate: !!it.revokedDate ? it.revokedDate : '-'
-    };
-  });
-
-  return <DetailsList columns={columns} items={updatedItems} />;
+const Table = ({
+  items,
+  onColumnHeaderClick,
+  certificateService,
+  columnSortDirections,
+  selectedColumnIndex
+}: ITableProps) => {
+  return (
+    <DetailsList
+      columns={certificateService.createColumns(
+        selectedColumnIndex,
+        columnSortDirections[selectedColumnIndex]
+      )}
+      items={items}
+      onColumnHeaderClick={onColumnHeaderClick}
+    />
+  );
 };
 
 export default Table;
