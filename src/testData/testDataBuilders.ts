@@ -3,6 +3,11 @@ import {
   IApplicationDeployment,
   IApplicationDeploymentDetails
 } from 'models/ApplicationDeployment';
+import {
+  ICertificateResponse,
+  ICertificateResponseContent,
+  ICertificateView
+} from 'models/certificates';
 import { IDeploymentSpec, IMount } from 'models/DeploymentSpec';
 import { ImageTagType } from 'models/ImageTagType';
 import { IPodResource } from 'models/Pod';
@@ -296,4 +301,30 @@ export const createDatabaseSchemaResponse = Factory.Sync.makeFactory<
 >({
   id: '123',
   jdbcUser: jdbcUserFactory.build()
+});
+
+export const detailsListContentResponse = Factory.Sync.makeFactory<
+  ICertificateResponseContent
+>({
+  id: 123,
+  cn: 'test',
+  downloadLink: null,
+  issuedDate: 1553036400000,
+  mounted: null,
+  revokedDate: null
+});
+
+export const detailsListContentFactory = Factory.Sync.makeFactory<
+  ICertificateResponse
+>({
+  items: [detailsListContentResponse.build()]
+});
+
+export const certificateViewFactory = Factory.Sync.makeFactory<
+  ICertificateView
+>({
+  id: 123,
+  cn: 'test',
+  issuedDate: '2019-03-20',
+  revokedDate: '-'
 });

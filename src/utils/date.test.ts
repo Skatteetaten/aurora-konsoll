@@ -1,4 +1,10 @@
-import { getLocalDate, getLocalDatetime, getTimestamp } from './date';
+import {
+  createDate,
+  getLocalDate,
+  getLocalDatetime,
+  getTimestamp,
+  isDate
+} from './date';
 
 describe('date utility', () => {
   it('should return local date time string given date', () => {
@@ -29,5 +35,24 @@ describe('date utility', () => {
   it('should return timestamp given date', () => {
     const date = getTimestamp(new Date(2007, 0, 12, 2, 22, 33));
     expect(date).toContain('02:22:33');
+  });
+
+  it('should return date given legit date', () => {
+    const date = isDate('12.04.2018');
+    expect(date).toContain('12.04.2018');
+  });
+
+  it('should return null given wrong date format', () => {
+    const date = isDate('12.4.18');
+    expect(date).toBeNull();
+  });
+
+  it('should return given date in string format to return same date in date format', () => {
+    const date = createDate('12.01.2007');
+    expect(date).toEqual(new Date(2007, 0, 12, 0, 0));
+  });
+
+  it('should return NaN given a not legit time format as string', () => {
+    expect(isNaN(createDate('test').getTime())).toBe(true);
   });
 });

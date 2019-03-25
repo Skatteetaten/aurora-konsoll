@@ -1,7 +1,13 @@
-import { createDate, isDate } from 'utils/date';
+import {
+  ICertificateResponse,
+  ICertificateResponseContent,
+  ICertificateView,
+  IDetailsListContent
+} from 'models/certificates';
+import { createDate, getLocalDate, isDate } from 'utils/date';
 import { SortDirection } from './DatabaseSchemaService';
 
-export const certificateColumns = () => [
+export const certificateColumns = (): IDetailsListContent[] => [
   {
     fieldName: 'id',
     isResizable: true,
@@ -40,15 +46,8 @@ export const certificateColumns = () => [
   }
 ];
 
-export interface ICertificateView {
-  id: number;
-  cn: string;
-  issuedDate: string;
-  revokedDate: null | string;
-}
-
 export const filterCertificateView = (filter: string) => {
-  return (v: ICertificateView) =>
+  return (v: ICertificateView): boolean =>
     v.cn.includes(filter) ||
     v.id.toString().includes(filter) ||
     v.issuedDate.includes(filter) ||
@@ -57,19 +56,22 @@ export const filterCertificateView = (filter: string) => {
       : v.revokedDate.includes(filter));
 };
 
-export const defaultSortDirections = new Array<SortDirection>(
+export const defaultSortDirections: SortDirection[] = new Array<SortDirection>(
   certificateColumns().length
 ).fill(SortDirection.NONE);
 
 export default class CertificateService {
-  public sortNextAscending(sortDirection: SortDirection) {
+  public sortNextAscending(sortDirection: SortDirection): boolean {
     return (
       sortDirection === SortDirection.NONE ||
       sortDirection === SortDirection.DESC
     );
   }
 
-  public createColumns(index: number, sortDirection: SortDirection) {
+  public createColumns(
+    index: number,
+    sortDirection: SortDirection
+  ): IDetailsListContent[] {
     const columns = certificateColumns();
     if (index > -1) {
       const currentCol = columns[index];
@@ -89,7 +91,7 @@ export default class CertificateService {
     viewItems: ICertificateView[],
     prevSortDirection: SortDirection,
     name: string | number | symbol
-  ) {
+  ): ICertificateView[] {
     return viewItems.slice(0).sort((a: any, b: any) => {
       const valueA = this.lowerCaseIfString(a[name]);
       const valueB = this.lowerCaseIfString(b[name]);
@@ -111,7 +113,24 @@ export default class CertificateService {
     });
   }
 
-  private lowerCaseIfString(value: any) {
+  public updatedItems = (data: ICertificateResponse): ICertificateView[] =>
+    data.items.map((it: ICertificateResponseContent) => {
+      return {
+        id: it.id,
+        cn: it.cn,
+        issuedDate: getLocalDate(it.issuedDate),
+        revokedDate: !!it.revokedDate ? it.revokedDate : '-'
+      };
+    });
+
+  public filteredItems = (
+    filter: string,
+    viewItems: ICertificateView[]
+  ): ICertificateView[] => {
+    return viewItems.filter(filterCertificateView(filter));
+  };
+
+  private lowerCaseIfString(value: any): any {
     return typeof value === 'string' ? (value as string).toLowerCase() : value;
   }
 }

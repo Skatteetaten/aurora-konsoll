@@ -4,13 +4,11 @@ import styled from 'styled-components';
 import TextField from 'aurora-frontend-react-komponenter/TextField';
 
 import { IAuroraApiComponentProps, withAuroraApi } from 'components/AuroraApi';
+import { ICertificateView } from 'models/certificates';
 import CertificateService, {
-  defaultSortDirections,
-  filterCertificateView,
-  ICertificateView
+  defaultSortDirections
 } from 'services/CertificateService';
 import { SortDirection } from 'services/DatabaseSchemaService';
-import { getLocalDate } from 'utils/date';
 import { mockData } from './mockData';
 import Table from './Table';
 
@@ -42,11 +40,12 @@ export default class Certificate extends React.Component<
     this.handleFetchCertificates();
   }
 
-  public handleFetchCertificates = () => {
+  public handleFetchCertificates = (): void => {
+    const { updatedItems } = certificateService;
     let viewItems: ICertificateView[];
 
-    if (this.updatedItems().length > 0) {
-      viewItems = this.updatedItems();
+    if (updatedItems(mockData).length > 0) {
+      viewItems = updatedItems(mockData);
     } else {
       viewItems = [];
     }
@@ -61,7 +60,7 @@ export default class Certificate extends React.Component<
       key: number;
       fieldName: string;
     }
-  ) => {
+  ): void => {
     const { columnSortDirections } = this.state;
     const name = column.fieldName! as keyof any;
     const newSortDirections = defaultSortDirections;
@@ -85,24 +84,14 @@ export default class Certificate extends React.Component<
     });
   };
 
-  public updatedItems = (): ICertificateView[] =>
-    mockData.items.map(it => {
-      return {
-        id: it.id,
-        cn: it.cn,
-        issuedDate: getLocalDate(it.issuedDate),
-        revokedDate: !!it.revokedDate ? it.revokedDate : '-'
-      };
-    });
-
-  public filteredItems = () => {
-    const { filter, viewItems } = this.state;
-    return viewItems.filter(filterCertificateView(filter));
-  };
-
   public render() {
     const { className } = this.props;
-    const { filter, columnSortDirections, selectedColumnIndex } = this.state;
+    const {
+      filter,
+      columnSortDirections,
+      selectedColumnIndex,
+      viewItems
+    } = this.state;
     return (
       <div className={className}>
         <div className="body-wrapper">
@@ -117,7 +106,7 @@ export default class Certificate extends React.Component<
           <div className="certificate-grid">
             <div className="table-wrapper">
               <Table
-                items={this.filteredItems()}
+                items={certificateService.filteredItems(filter, viewItems)}
                 onColumnHeaderClick={this.sortByColumn}
                 certificateService={certificateService}
                 columnSortDirections={columnSortDirections}
@@ -130,7 +119,7 @@ export default class Certificate extends React.Component<
     );
   }
 
-  private onFilterChange = (text: string) => {
+  private onFilterChange = (text: string): void => {
     this.setState({
       filter: text
     });
