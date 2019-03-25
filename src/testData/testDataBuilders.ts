@@ -1,7 +1,8 @@
 import * as Factory from 'factory.ts';
 import {
   IApplicationDeployment,
-  IApplicationDeploymentDetails
+  IApplicationDeploymentDetails,
+  IUserAndAffiliations
 } from 'models/ApplicationDeployment';
 import { IDeploymentSpec, IMount } from 'models/DeploymentSpec';
 import { ImageTagType } from 'models/ImageTagType';
@@ -10,14 +11,18 @@ import {
   ICreateDatabaseSchemaResponse,
   IDatabaseSchema,
   IDatabaseSchemaInput,
+  IDatabaseSchemas,
   IDatabaseSchemaView,
+  IDeleteDatabaseSchemasResponse,
   IJdbcUser,
   IUpdateDatabaseSchemaInputWithCreatedBy
 } from 'models/schemas';
 import { StatusCode } from 'models/Status';
 import { ITagsPagedGroup } from 'models/Tag';
 import { IApplicationDeploymentFilters } from 'models/UserSettings';
+import { ISchemasState } from 'screens/AffiliationViews/DatabaseView/state/reducers';
 import { IFilter } from 'services/DeploymentFilterService';
+import { IStartupState } from 'state/reducers';
 
 const mountFactory = Factory.Sync.makeFactory<IMount>({
   exist: true,
@@ -291,9 +296,46 @@ export const jdbcUserFactory = Factory.Sync.makeFactory<IJdbcUser>({
   username: 'username'
 });
 
-export const createDatabaseSchemaResponse = Factory.Sync.makeFactory<
+export const createDatabaseSchemaResponseFactory = Factory.Sync.makeFactory<
   ICreateDatabaseSchemaResponse
 >({
   id: '123',
   jdbcUser: jdbcUserFactory.build()
+});
+
+export const schemasFactory = Factory.Sync.makeFactory<ISchemasState>({
+  isFetchingSchemas: false,
+  databaseSchemas: { databaseSchemas: [] },
+  updateSchemaResponse: false,
+  deleteSchemasResponse: { failed: [], succeeded: [] },
+  testJdbcConnectionResponse: false,
+  createDatabaseSchemaResponse: {
+    id: '',
+    jdbcUser: { jdbcUrl: '', username: '', password: '' }
+  }
+});
+
+export const databaseSchemasFactory = Factory.Sync.makeFactory<
+  IDatabaseSchemas
+>({
+  databaseSchemas: [databaseSchemaFactory.build()]
+});
+
+export const deleteDatabaseSchemasResponseFactory = Factory.Sync.makeFactory<
+  IDeleteDatabaseSchemasResponse
+>({
+  failed: [],
+  succeeded: []
+});
+
+export const userAndAffiliationsFactory = Factory.Sync.makeFactory<
+  IUserAndAffiliations
+>({
+  affiliations: ['paas'],
+  id: '123',
+  user: 'bob'
+});
+
+export const startupFactory = Factory.Sync.makeFactory<IStartupState>({
+  currentUser: userAndAffiliationsFactory.build()
 });

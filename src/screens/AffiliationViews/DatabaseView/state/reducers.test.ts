@@ -1,101 +1,164 @@
-import { IDatabaseSchema, IDatabaseSchemas } from 'models/schemas';
+import each from 'jest-each';
 import {
-  CREATE_DATABASE_SCHEMA_RESPONSE,
-  DELETE_SCHEMAS_RESPONSE,
-  FETCHED_SCHEMA_REQUEST,
-  FETCHED_SCHEMA_RESPONSE,
-  TEST_JDBC_CONNECTION_FOR_ID_RESPONSE,
-  TEST_JDBC_CONNECTION_FOR_JDBCUSER_RESPONSE,
-  UPDATE_SCHEMA_RESPONSE
-} from './actions';
-import { databaseReducer as reducer } from './reducers';
-
+  createDatabaseSchemaResponseFactory,
+  databaseSchemasFactory,
+  deleteDatabaseSchemasResponseFactory,
+  schemasFactory
+} from 'testData/testDataBuilders';
 import {
   createDatabaseSchemaResponse,
-  databaseSchemaFactory
-} from 'testData/testDataBuilders';
+  deleteSchemaResponse,
+  deleteSchemasResponse,
+  fetchSchemaRequest,
+  fetchSchemaResponse,
+  testJdbcConnectionForIdResponse,
+  testJdbcConnectionForJdbcUserResponse,
+  updateSchemaResponse
+} from './actions';
+import { databaseReducer } from './reducers';
 
-const emptyItems: IDatabaseSchemas = { databaseSchemas: [] };
-const schemaItems: IDatabaseSchema = databaseSchemaFactory.build();
-const items: IDatabaseSchemas = { databaseSchemas: [schemaItems] };
+describe('database schema actions', () => {
+  it('should return type of action fetchSchemaRequest and payload', () => {
+    expect(fetchSchemaRequest(true)).toEqual({
+      payload: true,
+      type: 'database/FETCHED_SCHEMA_REQUEST'
+    });
+  });
+
+  it('should return type of action fetchSchemaResponse and payload', () => {
+    expect(fetchSchemaResponse(databaseSchemasFactory.build())).toEqual({
+      payload: databaseSchemasFactory.build(),
+      type: 'database/FETCHED_SCHEMA_RESPONSE'
+    });
+  });
+
+  it('should return type of action updateSchemaResponse and payload', () => {
+    expect(updateSchemaResponse(true)).toEqual({
+      payload: true,
+      type: 'database/UPDATE_SCHEMA_RESPONSE'
+    });
+  });
+
+  it('should return type of action deleteSchemaResponse and payload', () => {
+    expect(
+      deleteSchemaResponse(deleteDatabaseSchemasResponseFactory.build())
+    ).toEqual({
+      payload: deleteDatabaseSchemasResponseFactory.build(),
+      type: 'database/DELETE_SCHEMA_RESPONSE'
+    });
+  });
+
+  it('should return type of action deleteSchemasResponse and payload', () => {
+    expect(
+      deleteSchemasResponse(deleteDatabaseSchemasResponseFactory.build())
+    ).toEqual({
+      payload: deleteDatabaseSchemasResponseFactory.build(),
+      type: 'database/DELETE_SCHEMAS_RESPONSE'
+    });
+  });
+
+  it('should return type of action testJdbcConnectionForIdResponse and payload', () => {
+    expect(testJdbcConnectionForIdResponse(true)).toEqual({
+      payload: true,
+      type: 'database/TEST_JDBC_CONNECTION_FOR_ID_RESPONSE'
+    });
+  });
+
+  it('should return type of action testJdbcConnectionForJdbcUserResponse and payload', () => {
+    expect(testJdbcConnectionForJdbcUserResponse(true)).toEqual({
+      payload: true,
+      type: 'database/TEST_JDBC_CONNECTION_FOR_JDBCUSER_RESPONSE'
+    });
+  });
+
+  it('should return type of action createDatabaseSchemaResponse and payload', () => {
+    expect(
+      createDatabaseSchemaResponse(createDatabaseSchemaResponseFactory.build())
+    ).toEqual({
+      payload: createDatabaseSchemaResponseFactory.build(),
+      type: 'database/CREATE_DATABASE_SCHEMA_RESPONSE'
+    });
+  });
+});
 
 describe('database schema reducer', () => {
-  it('should return isFetching as false and items as list in response', () => {
-    expect(
-      reducer(undefined, {
-        type: FETCHED_SCHEMA_RESPONSE,
-        payload: { databaseSchemas: items }
+  each([
+    [
+      { name: 'createDatabaseSchemaResponse', item: schemasFactory.build() },
+      {
+        name: 'createDatabaseSchemaResponse',
+        item: createDatabaseSchemaResponse(
+          createDatabaseSchemaResponseFactory.build()
+        )
+      },
+      schemasFactory.build({
+        createDatabaseSchemaResponse: createDatabaseSchemaResponseFactory.build()
       })
-    ).toMatchObject({
-      isFetchingSchemas: false,
-      databaseSchemas: items
-    });
-  });
-
-  it('should return isFetching as true and items as empty list', () => {
-    expect(
-      reducer(undefined, {
-        type: FETCHED_SCHEMA_REQUEST,
-        payload: { isFetchingSchemas: true }
+    ],
+    [
+      { name: 'fetchSchemaRequest', item: schemasFactory.build() },
+      {
+        name: 'isFetchingSchemas',
+        item: fetchSchemaRequest(true)
+      },
+      schemasFactory.build({
+        isFetchingSchemas: true
       })
-    ).toMatchObject({
-      isFetchingSchemas: true,
-      databaseSchemas: emptyItems
-    });
-  });
-
-  it('should return update schema as true given response', () => {
-    expect(
-      reducer(undefined, {
-        type: UPDATE_SCHEMA_RESPONSE,
-        payload: { response: true }
+    ],
+    [
+      { name: 'deleteSchemasResponse', item: schemasFactory.build() },
+      {
+        name: 'deleteSchemasResponse',
+        item: deleteSchemasResponse(
+          deleteDatabaseSchemasResponseFactory.build()
+        )
+      },
+      schemasFactory.build({
+        deleteSchemasResponse: deleteDatabaseSchemasResponseFactory.build()
       })
-    ).toMatchObject({
-      updateSchemaResponse: true
-    });
-  });
-
-  it('should return delete schema as true given response', () => {
-    expect(
-      reducer(undefined, {
-        type: DELETE_SCHEMAS_RESPONSE,
-        payload: { response: { succeeded: ['123'], failed: ['234'] } }
+    ],
+    [
+      { name: 'deleteSchemaResponse', item: schemasFactory.build() },
+      {
+        name: 'deleteSchemasResponse',
+        item: deleteSchemaResponse(deleteDatabaseSchemasResponseFactory.build())
+      },
+      schemasFactory.build({
+        deleteSchemasResponse: deleteDatabaseSchemasResponseFactory.build()
       })
-    ).toMatchObject({
-      deleteSchemasResponse: { succeeded: ['123'], failed: ['234'] }
-    });
-  });
-
-  it('should return jdbc connection result for id as true given response', () => {
-    expect(
-      reducer(undefined, {
-        type: TEST_JDBC_CONNECTION_FOR_ID_RESPONSE,
-        payload: { response: true }
-      })
-    ).toMatchObject({
-      testJdbcConnectionResponse: true
-    });
-  });
-
-  it('should return jdbc connection result for jdbc user as true given response', () => {
-    expect(
-      reducer(undefined, {
-        type: TEST_JDBC_CONNECTION_FOR_JDBCUSER_RESPONSE,
-        payload: { response: true }
-      })
-    ).toMatchObject({
-      testJdbcConnectionResponse: true
-    });
-  });
-
-  it('should return create database schema result as true given response', () => {
-    expect(
-      reducer(undefined, {
-        type: CREATE_DATABASE_SCHEMA_RESPONSE,
-        payload: { response: createDatabaseSchemaResponse.build() }
-      })
-    ).toMatchObject({
-      createDatabaseSchemaResponse: createDatabaseSchemaResponse.build()
+    ],
+    [
+      { name: 'updateSchemaResponse', item: schemasFactory.build() },
+      {
+        name: 'updateSchemaResponse',
+        item: updateSchemaResponse(true)
+      },
+      schemasFactory.build({ updateSchemaResponse: true })
+    ],
+    [
+      { name: 'testJdbcConnectionForIdResponse', item: schemasFactory.build() },
+      {
+        name: 'testJdbcConnectionResponse',
+        item: testJdbcConnectionForIdResponse(true)
+      },
+      schemasFactory.build({ testJdbcConnectionResponse: true })
+    ],
+    [
+      {
+        name: 'testJdbcConnectionForJdbcUserResponse',
+        item: schemasFactory.build()
+      },
+      {
+        name: 'testJdbcConnectionResponse',
+        item: testJdbcConnectionForIdResponse(true)
+      },
+      schemasFactory.build({ testJdbcConnectionResponse: true })
+    ]
+  ]).describe.only('', (a, b, expected) => {
+    test.only(`given defaultState and action ${
+      a.name
+    } with given value should change ${b.name} to given value`, () => {
+      expect(databaseReducer(a.item, b.item)).toEqual(expected);
     });
   });
 });

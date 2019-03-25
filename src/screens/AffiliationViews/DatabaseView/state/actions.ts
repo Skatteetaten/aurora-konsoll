@@ -1,6 +1,5 @@
 import { ActionCreator } from 'redux';
 import { ThunkAction } from 'redux-thunk';
-import { action } from 'typesafe-actions';
 
 import { IAuroraApiComponentProps } from 'components/AuroraApi';
 
@@ -15,43 +14,36 @@ import {
   IJdbcUser,
   IUpdateDatabaseSchemaInputWithCreatedBy
 } from 'models/schemas';
+import { createAction } from 'redux-ts-utils';
 
-export const FETCHED_SCHEMA_REQUEST = 'database/FETCHED_SCHEMA_REQUEST';
-export const FETCHED_SCHEMA_RESPONSE = 'database/FETCHED_SCHEMA_RESPONSE';
+const databaseAction = (action: string) => `database/${action}`;
 
-export const UPDATE_SCHEMA_RESPONSE = 'database/UPDATE_SCHEMA_RESPONSE';
+export const fetchSchemaRequest = createAction<boolean>(
+  databaseAction('FETCHED_SCHEMA_REQUEST')
+);
+export const fetchSchemaResponse = createAction<IDatabaseSchemas>(
+  databaseAction('FETCHED_SCHEMA_RESPONSE')
+);
+export const updateSchemaResponse = createAction<boolean>(
+  databaseAction('UPDATE_SCHEMA_RESPONSE')
+);
+export const deleteSchemaResponse = createAction<
+  IDeleteDatabaseSchemasResponse
+>(databaseAction('DELETE_SCHEMA_RESPONSE'));
 
-export const DELETE_SCHEMA_RESPONSE = 'database/DELETE_SCHEMA_RESPONSE';
-export const DELETE_SCHEMAS_RESPONSE = 'database/DELETE_SCHEMAS_RESPONSE';
+export const deleteSchemasResponse = createAction<
+  IDeleteDatabaseSchemasResponse
+>(databaseAction('DELETE_SCHEMAS_RESPONSE'));
 
-export const TEST_JDBC_CONNECTION_FOR_ID_RESPONSE =
-  'database/TEST_JDBC_CONNECTION_FOR_ID_RESPONSE';
-export const TEST_JDBC_CONNECTION_FOR_JDBCUSER_RESPONSE =
-  'database/TEST_JDBC_CONNECTION_FOR_JDBCUSER_RESPONSE';
-
-export const CREATE_DATABASE_SCHEMA_RESPONSE =
-  'database/CREATE_DATABASE_SCHEMA_RESPONSE';
-
-export const fetchSchemaRequest = (isFetchingSchemas: boolean) =>
-  action(FETCHED_SCHEMA_REQUEST, { isFetchingSchemas });
-export const fetchSchemaResponse = (databaseSchemas: IDatabaseSchemas) =>
-  action(FETCHED_SCHEMA_RESPONSE, { databaseSchemas });
-
-export const updateSchemaResponse = (response: boolean) =>
-  action(UPDATE_SCHEMA_RESPONSE, { response });
-
-export const deleteSchemasResponse = (
-  response: IDeleteDatabaseSchemasResponse
-) => action(DELETE_SCHEMAS_RESPONSE, { response });
-
-export const testJdbcConnectionForIdResponse = (response: boolean) =>
-  action(TEST_JDBC_CONNECTION_FOR_ID_RESPONSE, { response });
-export const testJdbcConnectionForJdbcUserResponse = (response: boolean) =>
-  action(TEST_JDBC_CONNECTION_FOR_JDBCUSER_RESPONSE, { response });
-
-export const createDatabaseSchemaResponse = (
-  response: ICreateDatabaseSchemaResponse
-) => action(CREATE_DATABASE_SCHEMA_RESPONSE, { response });
+export const testJdbcConnectionForIdResponse = createAction<boolean>(
+  databaseAction('TEST_JDBC_CONNECTION_FOR_ID_RESPONSE')
+);
+export const testJdbcConnectionForJdbcUserResponse = createAction<boolean>(
+  databaseAction('TEST_JDBC_CONNECTION_FOR_JDBCUSER_RESPONSE')
+);
+export const createDatabaseSchemaResponse = createAction<
+  ICreateDatabaseSchemaResponse
+>(databaseAction('CREATE_DATABASE_SCHEMA_RESPONSE'));
 
 export type Thunk = ActionCreator<
   ThunkAction<void, RootState, IAuroraApiComponentProps, RootAction>
