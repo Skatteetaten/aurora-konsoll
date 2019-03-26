@@ -1,16 +1,17 @@
 import { ActionCreator } from 'redux';
 import { ThunkAction } from 'redux-thunk';
-import { action } from 'typesafe-actions';
 
 import { IAuroraApiComponentProps } from 'components/AuroraApi';
 
 import { IUserAndAffiliations } from 'models/ApplicationDeployment';
+import { createAction } from 'redux-ts-utils';
 import { RootAction, RootState } from 'store/types';
 
-export const FETCHED_CURRENT_USER = 'currentUser/FETCHED_CURRENT_USER';
+const currentUserAction = (action: string) => `currentUser/${action}`;
 
-export const fetchCurrentUserResponse = (currentUser: IUserAndAffiliations) =>
-  action(FETCHED_CURRENT_USER, { currentUser });
+export const fetchCurrentUserResponse = createAction<IUserAndAffiliations>(
+  currentUserAction('FETCHED_CURRENT_USER')
+);
 
 export type Thunk = ActionCreator<
   ThunkAction<void, RootState, IAuroraApiComponentProps, RootAction>
