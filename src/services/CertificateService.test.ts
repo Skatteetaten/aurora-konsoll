@@ -1,6 +1,6 @@
 import {
-  certificateViewFactory,
-  detailsListContentFactory
+  certificateResultFactory,
+  certificateViewFactory
 } from 'testData/testDataBuilders';
 import CertificateService, { certificateColumns } from './CertificateService';
 import { SortDirection } from './DatabaseSchemaService';
@@ -27,7 +27,7 @@ describe('CertificateService', () => {
 
   it('should return list on certificate view form', () => {
     const updatedItems = certificateService.updatedItems(
-      detailsListContentFactory.build()
+      certificateResultFactory.build()
     );
     expect(updatedItems).toEqual(certificateViewFactory.buildList(1));
   });

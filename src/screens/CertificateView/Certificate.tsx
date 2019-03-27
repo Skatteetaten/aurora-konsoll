@@ -4,16 +4,19 @@ import styled from 'styled-components';
 import TextField from 'aurora-frontend-react-komponenter/TextField';
 
 import { IAuroraApiComponentProps, withAuroraApi } from 'components/AuroraApi';
-import { ICertificateView } from 'models/certificates';
+import Spinner from 'components/Spinner';
+import { ICertificateResult, ICertificateView } from 'models/certificates';
 import CertificateService, {
   defaultSortDirections
 } from 'services/CertificateService';
 import { SortDirection } from 'services/DatabaseSchemaService';
-import { mockData } from './mockData';
 import Table from './Table';
 
 export interface ICertificateProps extends IAuroraApiComponentProps {
   className?: string;
+  isFetching: boolean;
+  certificates: ICertificateResult;
+  onFetch: () => void;
 }
 
 export interface ICertificateState {
@@ -37,15 +40,24 @@ export default class Certificate extends React.Component<
   };
 
   public componentDidMount() {
-    this.handleFetchCertificates();
+    const { onFetch } = this.props;
+    onFetch();
+  }
+
+  public componentDidUpdate(prevProps: ICertificateProps) {
+    const { certificates } = this.props;
+    if (prevProps.certificates !== certificates) {
+      this.handleFetchCertificates();
+    }
   }
 
   public handleFetchCertificates = (): void => {
+    const { certificates } = this.props;
     const { updatedItems } = certificateService;
     let viewItems: ICertificateView[];
 
-    if (updatedItems(mockData).length > 0) {
-      viewItems = updatedItems(mockData);
+    if (updatedItems(certificates).length > 0) {
+      viewItems = updatedItems(certificates);
     } else {
       viewItems = [];
     }
@@ -85,7 +97,7 @@ export default class Certificate extends React.Component<
   };
 
   public render() {
-    const { className } = this.props;
+    const { className, isFetching } = this.props;
     const {
       filter,
       columnSortDirections,
@@ -105,13 +117,17 @@ export default class Certificate extends React.Component<
           </div>
           <div className="certificate-grid">
             <div className="table-wrapper">
-              <Table
-                items={certificateService.filteredItems(filter, viewItems)}
-                onColumnHeaderClick={this.sortByColumn}
-                certificateService={certificateService}
-                columnSortDirections={columnSortDirections}
-                selectedColumnIndex={selectedColumnIndex}
-              />
+              {isFetching ? (
+                <Spinner />
+              ) : (
+                <Table
+                  items={certificateService.filteredItems(filter, viewItems)}
+                  onColumnHeaderClick={this.sortByColumn}
+                  certificateService={certificateService}
+                  columnSortDirections={columnSortDirections}
+                  selectedColumnIndex={selectedColumnIndex}
+                />
+              )}
             </div>
           </div>
         </div>
@@ -139,7 +155,6 @@ const StyledCertificate = styled(Certificate)`
   }
 
   .table-wrapper {
-    grid-area: table;
     margin: 20px 0 0 0;
     grid-area: table;
     i {

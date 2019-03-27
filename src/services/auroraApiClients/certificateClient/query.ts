@@ -10,7 +10,7 @@ export interface ICertificatesQuery {
   };
 }
 
-interface ICertificate {
+export interface ICertificate {
   id: number;
   cn: string;
   issuedDate: number;
@@ -19,7 +19,7 @@ interface ICertificate {
 }
 
 export const CERTIFICATES_QUERY = gql`
-  {
+  query getCertificates {
     certificates {
       totalCount
       edges {

@@ -21,7 +21,7 @@ import { errorStateManager } from 'models/StateManager/ErrorStateManager';
 import AffiliationViewValidatorConnected, {
   AffiliationRouteProps
 } from './AffiliationViews/AffiliationViewValidator';
-import { CertificateWithApi } from './CertificateView/Certificate';
+import { CertificateConnected } from './CertificateView/CertificateConnected';
 import { NetdebugWithApi } from './NetdebugView/Netdebug';
 
 export enum MenuType {
@@ -135,7 +135,7 @@ class App extends React.Component<IAppProps, IAppState> {
                 <Route
                   exact={true}
                   path="/certificates"
-                  component={CertificateWithApi}
+                  component={CertificateConnected}
                 />
                 {displayDatabaseView && (
                   <Route

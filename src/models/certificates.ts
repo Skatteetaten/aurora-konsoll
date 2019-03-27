@@ -1,3 +1,5 @@
+import { ICertificate } from 'services/auroraApiClients/certificateClient/query';
+
 export interface IDetailsListContent {
   fieldName: string;
   isResizable: boolean;
@@ -12,7 +14,8 @@ export interface ICertificateView {
   id: number;
   cn: string;
   issuedDate: string;
-  revokedDate: null | string;
+  revokedDate: null | string | number;
+  expiresDate: null | string | number;
 }
 
 export interface ICertificateResponse {
@@ -26,4 +29,9 @@ export interface ICertificateResponseContent {
   revokedDate: null | string;
   downloadLink: null;
   mounted: null;
+}
+
+export interface ICertificateResult {
+  certificates: ICertificate[];
+  totalCount: number;
 }

@@ -1,6 +1,5 @@
 import {
-  ICertificateResponse,
-  ICertificateResponseContent,
+  ICertificateResult,
   ICertificateView,
   IDetailsListContent
 } from 'models/certificates';
@@ -21,8 +20,8 @@ export const certificateColumns = (): IDetailsListContent[] => [
     fieldName: 'cn',
     isResizable: true,
     key: 1,
-    maxWidth: 550,
-    minWidth: 500,
+    maxWidth: 400,
+    minWidth: 300,
     name: 'CN',
     iconName: ''
   },
@@ -31,7 +30,7 @@ export const certificateColumns = (): IDetailsListContent[] => [
     isResizable: true,
     key: 2,
     maxWidth: 300,
-    minWidth: 200,
+    minWidth: 150,
     name: 'Revoked',
     iconName: ''
   },
@@ -40,8 +39,17 @@ export const certificateColumns = (): IDetailsListContent[] => [
     isResizable: true,
     key: 3,
     maxWidth: 300,
-    minWidth: 200,
+    minWidth: 150,
     name: 'Opprettet',
+    iconName: ''
+  },
+  {
+    fieldName: 'expiresDate',
+    isResizable: true,
+    key: 4,
+    maxWidth: 300,
+    minWidth: 150,
+    name: 'Utløper',
     iconName: ''
   }
 ];
@@ -53,7 +61,10 @@ export const filterCertificateView = (filter: string) => {
     v.issuedDate.includes(filter) ||
     (!v.revokedDate || v.revokedDate === null
       ? false
-      : v.revokedDate.includes(filter));
+      : v.revokedDate.toString().includes(filter)) ||
+    (!v.expiresDate || v.expiresDate === null
+      ? false
+      : v.expiresDate.toString().includes(filter));
 };
 
 export const defaultSortDirections: SortDirection[] = new Array<SortDirection>(
@@ -113,15 +124,18 @@ export default class CertificateService {
     });
   }
 
-  public updatedItems = (data: ICertificateResponse): ICertificateView[] =>
-    data.items.map((it: ICertificateResponseContent) => {
-      return {
-        id: it.id,
-        cn: it.cn,
-        issuedDate: getLocalDate(it.issuedDate),
-        revokedDate: !!it.revokedDate ? it.revokedDate : '-'
-      };
-    });
+  public updatedItems = (data: ICertificateResult): ICertificateView[] =>
+    data.certificates.map(
+      (it): ICertificateView => {
+        return {
+          id: it.id,
+          cn: it.cn,
+          issuedDate: getLocalDate(it.issuedDate),
+          revokedDate: !!it.revokedDate ? getLocalDate(it.revokedDate) : '-',
+          expiresDate: !!it.revokedDate ? getLocalDate(it.revokedDate) : '-'
+        };
+      }
+    );
 
   public filteredItems = (
     filter: string,

@@ -4,11 +4,7 @@ import {
   IApplicationDeploymentDetails,
   IUserAndAffiliations
 } from 'models/ApplicationDeployment';
-import {
-  ICertificateResponse,
-  ICertificateResponseContent,
-  ICertificateView
-} from 'models/certificates';
+import { ICertificateResult, ICertificateView } from 'models/certificates';
 import { IDeploymentSpec, IMount } from 'models/DeploymentSpec';
 import { ImageTagType } from 'models/ImageTagType';
 import { IPodResource } from 'models/Pod';
@@ -26,6 +22,8 @@ import { StatusCode } from 'models/Status';
 import { ITagsPagedGroup } from 'models/Tag';
 import { IApplicationDeploymentFilters } from 'models/UserSettings';
 import { ISchemasState } from 'screens/AffiliationViews/DatabaseView/state/reducers';
+import { ICertificateState } from 'screens/CertificateView/state/reducers';
+import { ICertificate } from 'services/auroraApiClients/certificateClient/query';
 import { IFilter } from 'services/DeploymentFilterService';
 import { IStartupState } from 'state/reducers';
 
@@ -308,30 +306,29 @@ export const createDatabaseSchemaResponseFactory = Factory.Sync.makeFactory<
   jdbcUser: jdbcUserFactory.build()
 });
 
-export const detailsListContentResponse = Factory.Sync.makeFactory<
-  ICertificateResponseContent
->({
-  id: 123,
-  cn: 'test',
-  downloadLink: null,
-  issuedDate: 1553036400000,
-  mounted: null,
-  revokedDate: null
-});
-
-export const detailsListContentFactory = Factory.Sync.makeFactory<
-  ICertificateResponse
->({
-  items: [detailsListContentResponse.build()]
-});
-
 export const certificateViewFactory = Factory.Sync.makeFactory<
   ICertificateView
 >({
   id: 123,
   cn: 'test',
-  issuedDate: '2019-03-20',
-  revokedDate: '-'
+  issuedDate: '2012-11-16',
+  revokedDate: '2009-09-15',
+  expiresDate: '2009-09-15'
+});
+
+export const certificateFactory = Factory.Sync.makeFactory<ICertificate>({
+  id: 123,
+  cn: 'test',
+  issuedDate: 1353036400000,
+  revokedDate: 1253036400000,
+  expiresDate: 1553036400000
+});
+
+export const certificateResultFactory = Factory.Sync.makeFactory<
+  ICertificateResult
+>({
+  certificates: [certificateFactory.build()],
+  totalCount: 1
 });
 
 export const schemasFactory = Factory.Sync.makeFactory<ISchemasState>({
@@ -344,6 +341,16 @@ export const schemasFactory = Factory.Sync.makeFactory<ISchemasState>({
     id: '',
     jdbcUser: { jdbcUrl: '', username: '', password: '' }
   }
+});
+
+export const certificateInitialFactory = Factory.Sync.makeFactory<
+  ICertificateState
+>({
+  certificates: {
+    certificates: [],
+    totalCount: 0
+  },
+  isFetchingCertificates: false
 });
 
 export const databaseSchemasFactory = Factory.Sync.makeFactory<
