@@ -4,6 +4,7 @@ import styled from 'styled-components';
 import TextField from 'aurora-frontend-react-komponenter/TextField';
 
 import { IAuroraApiComponentProps, withAuroraApi } from 'components/AuroraApi';
+import LoadingButton from 'components/LoadingButton';
 import Spinner from 'components/Spinner';
 import { ICertificateResult, ICertificateView } from 'models/certificates';
 import CertificateService, {
@@ -96,6 +97,11 @@ export default class Certificate extends React.Component<
     });
   };
 
+  public refreshCertificates = () => {
+    const { onFetch } = this.props;
+    onFetch();
+  };
+
   public render() {
     const { className, isFetching } = this.props;
     const {
@@ -107,7 +113,17 @@ export default class Certificate extends React.Component<
     return (
       <div className={className}>
         <div className="body-wrapper">
-          <h2>Sertifikater</h2>
+          <div className="action-bar">
+            <h2>Sertifikater</h2>
+            <LoadingButton
+              style={{ minWidth: '141px' }}
+              loading={isFetching}
+              onClick={this.refreshCertificates}
+              icon="Update"
+            >
+              Oppdater
+            </LoadingButton>
+          </div>
           <div className="styled-input">
             <TextField
               placeholder="Søk etter sertifikat"
@@ -145,6 +161,15 @@ export default class Certificate extends React.Component<
 const StyledCertificate = styled(Certificate)`
   max-height: 100%;
   overflow-x: auto;
+
+  .action-bar {
+    display: flex;
+    justify-content: space-between;
+    margin: 20px 0 20px 0;
+    h2 {
+      margin: 0;
+    }
+  }
 
   .styled-input {
     width: 300px;
