@@ -1,6 +1,10 @@
-import { ICertificateResult } from 'models/certificates';
+import {
+  ICertificate,
+  ICertificateResult,
+  ICertificatesQuery
+} from 'models/certificates';
 import GoboClient from 'services/GoboClient';
-import { CERTIFICATES_QUERY, ICertificate, ICertificatesQuery } from './query';
+import { CERTIFICATES_QUERY } from './query';
 
 export class CertificateClient {
   public defaultCertificates: ICertificatesQuery = {
@@ -19,16 +23,16 @@ export class CertificateClient {
     const result = await this.client.query<ICertificatesQuery>({
       query: CERTIFICATES_QUERY
     });
-    if (!result) {
+
+    if (result && result.data && result.data.certificates.edges.length > 0) {
       return {
-        certificates: [],
-        totalCount: 0
+        certificates: this.normalizeScanStatus(result.data),
+        totalCount: result.data.certificates.totalCount
       };
     }
-
     return {
-      certificates: this.normalizeScanStatus(result.data),
-      totalCount: result.data.certificates.totalCount
+      certificates: [],
+      totalCount: 0
     };
   }
 

@@ -4,7 +4,11 @@ import {
   IApplicationDeploymentDetails,
   IUserAndAffiliations
 } from 'models/ApplicationDeployment';
-import { ICertificateResult, ICertificateView } from 'models/certificates';
+import {
+  ICertificate,
+  ICertificateResult,
+  ICertificateView
+} from 'models/certificates';
 import { IDeploymentSpec, IMount } from 'models/DeploymentSpec';
 import { ImageTagType } from 'models/ImageTagType';
 import { IPodResource } from 'models/Pod';
@@ -23,7 +27,6 @@ import { ITagsPagedGroup } from 'models/Tag';
 import { IApplicationDeploymentFilters } from 'models/UserSettings';
 import { ISchemasState } from 'screens/AffiliationViews/DatabaseView/state/reducers';
 import { ICertificateState } from 'screens/CertificateView/state/reducers';
-import { ICertificate } from 'services/auroraApiClients/certificateClient/query';
 import { IFilter } from 'services/DeploymentFilterService';
 import { IStartupState } from 'state/reducers';
 
@@ -313,7 +316,7 @@ export const certificateViewFactory = Factory.Sync.makeFactory<
   cn: 'test',
   issuedDate: '2012-11-16',
   revokedDate: '2009-09-15',
-  expiresDate: '2009-09-15'
+  expiresDate: '2019-03-20'
 });
 
 export const certificateFactory = Factory.Sync.makeFactory<ICertificate>({

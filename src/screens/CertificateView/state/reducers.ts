@@ -6,7 +6,7 @@ import actions, {
   fetchCertificatesResponse
 } from './actions';
 
-export type CertificatesAction = ActionType<typeof actions>;
+export type CertificateAction = ActionType<typeof actions>;
 
 export interface ICertificateState {
   readonly isFetchingCertificates: boolean;
@@ -24,7 +24,7 @@ const initialState = (): ICertificateState => {
 };
 
 function updateStateWithPayload(name: string) {
-  return (state: ICertificateState, { payload }: CertificatesAction) => {
+  return (state: ICertificateState, { payload }: CertificateAction) => {
     state[name] = payload;
   };
 }

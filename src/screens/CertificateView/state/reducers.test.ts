@@ -21,7 +21,6 @@ describe('certificate reducer', () => {
         isFetchingCertificates: true
       })
     ],
-
     [
       {
         name: 'fetchCertificatesResponse',

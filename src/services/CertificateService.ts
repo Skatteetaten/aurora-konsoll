@@ -58,7 +58,9 @@ export const filterCertificateView = (filter: string) => {
   return (v: ICertificateView): boolean =>
     v.cn.includes(filter) ||
     v.id.toString().includes(filter) ||
-    v.issuedDate.includes(filter) ||
+    (!v.issuedDate || v.issuedDate === null
+      ? false
+      : v.issuedDate.toString().includes(filter)) ||
     (!v.revokedDate || v.revokedDate === null
       ? false
       : v.revokedDate.toString().includes(filter)) ||
@@ -130,9 +132,9 @@ export default class CertificateService {
         return {
           id: it.id,
           cn: it.cn,
-          issuedDate: getLocalDate(it.issuedDate),
+          issuedDate: !!it.issuedDate ? getLocalDate(it.issuedDate) : '-',
           revokedDate: !!it.revokedDate ? getLocalDate(it.revokedDate) : '-',
-          expiresDate: !!it.revokedDate ? getLocalDate(it.revokedDate) : '-'
+          expiresDate: !!it.expiresDate ? getLocalDate(it.expiresDate) : '-'
         };
       }
     );
