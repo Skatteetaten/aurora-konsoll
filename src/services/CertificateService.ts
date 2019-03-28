@@ -17,12 +17,12 @@ export const certificateColumns = (): IDetailsListContent[] => [
     iconName: ''
   },
   {
-    fieldName: 'cn',
+    fieldName: 'dn',
     isResizable: true,
     key: 1,
-    maxWidth: 400,
-    minWidth: 300,
-    name: 'CN',
+    maxWidth: 500,
+    minWidth: 400,
+    name: 'DN',
     iconName: ''
   },
   {
@@ -56,17 +56,15 @@ export const certificateColumns = (): IDetailsListContent[] => [
 
 export const filterCertificateView = (filter: string) => {
   return (v: ICertificateView): boolean =>
-    v.cn.includes(filter) ||
+    v.dn.includes(filter) ||
     v.id.toString().includes(filter) ||
-    (!v.issuedDate || v.issuedDate === null
-      ? false
-      : v.issuedDate.toString().includes(filter)) ||
+    v.issuedDate.includes(filter) ||
     (!v.revokedDate || v.revokedDate === null
       ? false
-      : v.revokedDate.toString().includes(filter)) ||
+      : v.revokedDate.includes(filter)) ||
     (!v.expiresDate || v.expiresDate === null
       ? false
-      : v.expiresDate.toString().includes(filter));
+      : v.expiresDate.includes(filter));
 };
 
 export const defaultSortDirections: SortDirection[] = new Array<SortDirection>(
@@ -131,8 +129,8 @@ export default class CertificateService {
       (it): ICertificateView => {
         return {
           id: it.id,
-          cn: it.cn,
-          issuedDate: !!it.issuedDate ? getLocalDate(it.issuedDate) : '-',
+          dn: it.dn,
+          issuedDate: getLocalDate(it.issuedDate),
           revokedDate: !!it.revokedDate ? getLocalDate(it.revokedDate) : '-',
           expiresDate: !!it.expiresDate ? getLocalDate(it.expiresDate) : '-'
         };

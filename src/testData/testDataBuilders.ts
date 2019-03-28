@@ -313,18 +313,18 @@ export const certificateViewFactory = Factory.Sync.makeFactory<
   ICertificateView
 >({
   id: 123,
-  cn: 'test',
-  issuedDate: '2012-11-16',
-  revokedDate: '2009-09-15',
-  expiresDate: '2019-03-20'
+  dn: 'test',
+  issuedDate: '2018-01-12',
+  revokedDate: '2016-03-22',
+  expiresDate: '2019-01-12'
 });
 
 export const certificateFactory = Factory.Sync.makeFactory<ICertificate>({
   id: 123,
-  cn: 'test',
-  issuedDate: 1353036400000,
-  revokedDate: 1253036400000,
-  expiresDate: 1553036400000
+  dn: 'test',
+  issuedDate: new Date(2018, 0, 12),
+  revokedDate: new Date(2016, 2, 22),
+  expiresDate: new Date(2019, 0, 12)
 });
 
 export const certificateResultFactory = Factory.Sync.makeFactory<

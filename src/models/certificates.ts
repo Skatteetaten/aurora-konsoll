@@ -10,10 +10,10 @@ export interface IDetailsListContent {
 
 export interface ICertificateView {
   id: number;
-  cn: string;
+  dn: string;
   issuedDate: string;
-  revokedDate: null | string | number;
-  expiresDate: null | string | number;
+  revokedDate: string;
+  expiresDate: string;
 }
 
 export interface ICertificateResult {
@@ -33,8 +33,8 @@ export interface ICertificatesQuery {
 
 export interface ICertificate {
   id: number;
-  cn: string;
-  issuedDate: number | null;
-  revokedDate: number | null;
-  expiresDate: number | null;
+  dn: string;
+  issuedDate: Date;
+  revokedDate: Date | null;
+  expiresDate: Date | null;
 }

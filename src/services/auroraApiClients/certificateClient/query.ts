@@ -8,7 +8,7 @@ export const CERTIFICATES_QUERY = gql`
         cursor
         node {
           id
-          cn
+          dn
           issuedDate
           revokedDate
           expiresDate

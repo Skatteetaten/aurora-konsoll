@@ -37,15 +37,11 @@ export class CertificateClient {
   }
 
   private normalizeScanStatus(data: ICertificatesQuery): ICertificate[] {
-    if (!data) {
-      return [];
-    }
-
     return data.certificates.edges.map(edge => {
-      const { cn, expiresDate, id, issuedDate, revokedDate } = edge.node;
+      const { dn, expiresDate, id, issuedDate, revokedDate } = edge.node;
       return {
         issuedDate,
-        cn,
+        dn,
         expiresDate,
         id,
         revokedDate

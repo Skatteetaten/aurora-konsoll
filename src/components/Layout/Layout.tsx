@@ -70,7 +70,7 @@ const Layout = ({
   ];
 
   if (displayDatabaseView) {
-    menuLinks.splice(1, 0, databaseMenuLink);
+    menuLinks.splice(2, 0, databaseMenuLink);
   }
 
   menuLinks.map(item => ({
