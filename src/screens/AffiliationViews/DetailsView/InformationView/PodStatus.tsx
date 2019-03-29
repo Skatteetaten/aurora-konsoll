@@ -28,6 +28,33 @@ function handleIsActive(data: IIconLinkData) {
   return data.href.startsWith('http');
 }
 
+function getStatusColorForPod({ managementResponses }: IPodResource): string {
+  if (
+    managementResponses &&
+    managementResponses.health &&
+    managementResponses.health.textResponse
+  ) {
+    const status = JSON.parse(managementResponses.health.textResponse).status;
+    switch (status) {
+      case 'UP':
+      case 'HEALTHY':
+        return STATUS_COLORS.healthy;
+      case 'COMMENT':
+      case 'OBSERVE':
+        return STATUS_COLORS.observe;
+      case 'OUT_OF_SERVICE':
+      case 'DOWN':
+        return STATUS_COLORS.down;
+      case 'OFF':
+        return STATUS_COLORS.off;
+      default:
+        return STATUS_COLORS.unknown;
+    }
+  }
+
+  return STATUS_COLORS.unknown;
+}
+
 const PodStatus = ({
   pod,
   className,
@@ -108,7 +135,6 @@ const PodAction = ({
 const { skeColor } = palette;
 
 export default styled(PodStatus)`
-  max-width: 350px;
   box-shadow: 0px 3px 8px 0px rgba(0, 0, 0, 0.2);
   background: white;
 
@@ -118,7 +144,7 @@ export default styled(PodStatus)`
     align-items: flex-end;
     padding: 5px 10px;
     color: white;
-    background: ${STATUS_COLORS.healthy};
+    background: ${props => getStatusColorForPod(props.pod)};
 
     span {
       font-weight: bold;
@@ -134,7 +160,7 @@ export default styled(PodStatus)`
     display: grid;
     padding: 5px 10px;
     grid-template-areas: 'keys values';
-    grid-template-columns: 1fr 2fr;
+    grid-template-columns: 0fr 2fr;
   }
 
   .g-pod-keys {

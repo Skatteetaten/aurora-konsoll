@@ -67,7 +67,7 @@ export default styled(IconLink)`
         !isActiveResolver(data, isActiveHandler) &&
         css`
           cursor: default;
-          color: gray;
+          color: #353535;
           opacity: 0.6;
         `
       );

@@ -228,10 +228,12 @@ export default styled(InformationView)`
 
   .info-deployments {
     display: flex;
+    flex-wrap: wrap;
   }
   .info-pod {
-    flex: 1;
+    max-width: 400px;
     margin-right: 10px;
+    margin-bottom: 10px;
   }
   .info-grid {
     display: flex;
