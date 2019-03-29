@@ -9,7 +9,7 @@ export interface IDetailsListContent {
 }
 
 export interface ICertificateView {
-  id: number;
+  id: string;
   dn: string;
   issuedDate: string;
   revokedDate: string;
@@ -32,7 +32,7 @@ export interface ICertificatesQuery {
 }
 
 export interface ICertificate {
-  id: number;
+  id: string;
   dn: string;
   issuedDate: Date;
   revokedDate: Date | null;

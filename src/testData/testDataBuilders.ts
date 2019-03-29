@@ -312,7 +312,7 @@ export const createDatabaseSchemaResponseFactory = Factory.Sync.makeFactory<
 export const certificateViewFactory = Factory.Sync.makeFactory<
   ICertificateView
 >({
-  id: 123,
+  id: '123',
   dn: 'test',
   issuedDate: '2018-01-12',
   revokedDate: '2016-03-22',
@@ -320,7 +320,7 @@ export const certificateViewFactory = Factory.Sync.makeFactory<
 });
 
 export const certificateFactory = Factory.Sync.makeFactory<ICertificate>({
-  id: 123,
+  id: '123',
   dn: 'test',
   issuedDate: new Date(2018, 0, 12),
   revokedDate: new Date(2016, 2, 22),

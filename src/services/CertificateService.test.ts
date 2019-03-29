@@ -50,17 +50,17 @@ describe('CertificateService', () => {
 
   describe('sort items', () => {
     it('sort id column ascending', () => {
-      const viewItem1 = certificateViewFactory.build({ id: 2 });
-      const viewItem2 = certificateViewFactory.build({ id: 3 });
-      const viewItem3 = certificateViewFactory.build({ id: 1 });
+      const viewItem1 = certificateViewFactory.build({ id: '2' });
+      const viewItem2 = certificateViewFactory.build({ id: '3' });
+      const viewItem3 = certificateViewFactory.build({ id: '1' });
       const sortItems = certificateService.sortItems(
         [viewItem1, viewItem3, viewItem2],
         SortDirection.ASC,
         'id'
       );
-      expect(sortItems[0].id).toEqual(1);
-      expect(sortItems[1].id).toEqual(2);
-      expect(sortItems[2].id).toEqual(3);
+      expect(sortItems[0].id).toEqual('1');
+      expect(sortItems[1].id).toEqual('2');
+      expect(sortItems[2].id).toEqual('3');
     });
     it('sort dn column descending', () => {
       const viewItem1 = certificateViewFactory.build({
