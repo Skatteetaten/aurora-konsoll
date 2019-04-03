@@ -94,7 +94,7 @@ const Layout = ({
       </Header>
       <Menu className="g-menu">
         {menuLinks.map(props => (
-          <MenuNavLink key={props.name} {...props} />
+          <MenuNavLink key={props.name} showName={isMenuExpanded} {...props} />
         ))}
         <MenuCollapseButton
           isExpanded={isMenuExpanded}
