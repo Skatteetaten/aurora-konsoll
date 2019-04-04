@@ -61,6 +61,11 @@ const Layout = ({
       iconName: 'Code',
       name: 'Netdebug',
       to: '/netdebug'
+    },
+    {
+      iconName: 'Info',
+      name: 'Webseal',
+      to: `/w/${affiliation || '_'}/webseal`
     }
   ];
 

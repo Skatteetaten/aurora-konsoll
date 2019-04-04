@@ -17,7 +17,8 @@ import {
   DatabaseClient,
   ImageRepositoryClient,
   NetdebugClient,
-  UserSettingsClient
+  UserSettingsClient,
+  WebsealClient
 } from 'services/auroraApiClients';
 import GoboClient from 'services/GoboClient';
 import { StartupConnected } from 'Startup';
@@ -49,7 +50,8 @@ async function init() {
     imageRepositoryClient: new ImageRepositoryClient(goboClient),
     netdebugClient: new NetdebugClient(goboClient),
     userSettingsClient: new UserSettingsClient(goboClient),
-    databaseClient: new DatabaseClient(goboClient)
+    databaseClient: new DatabaseClient(goboClient),
+    websealClient: new WebsealClient(goboClient)
   };
 
   ReactDOM.render(

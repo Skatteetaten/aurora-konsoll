@@ -4,7 +4,8 @@ import {
   DatabaseClient,
   ImageRepositoryClient,
   NetdebugClient,
-  UserSettingsClient
+  UserSettingsClient,
+  WebsealClient
 } from 'services/auroraApiClients';
 interface IApiClients {
   applicationDeploymentClient: ApplicationDeploymentClient;
@@ -12,6 +13,7 @@ interface IApiClients {
   netdebugClient: NetdebugClient;
   userSettingsClient: UserSettingsClient;
   databaseClient: DatabaseClient;
+  websealClient: WebsealClient;
 }
 
 // AuroraApiContext

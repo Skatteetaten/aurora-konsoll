@@ -504,6 +504,10 @@ export default styled(Schema)`
   height: 100%;
   overflow-x: auto;
 
+  .ms-DetailsRow {
+    cursor: pointer;
+  }
+
   .styled-action-bar {
     display: flex;
     align-items: center;

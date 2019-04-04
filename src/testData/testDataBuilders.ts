@@ -20,7 +20,9 @@ import {
 import { StatusCode } from 'models/Status';
 import { ITagsPagedGroup } from 'models/Tag';
 import { IApplicationDeploymentFilters } from 'models/UserSettings';
+import { IAcl, IJunction, IWebsealViewState } from 'models/Webseal';
 import { ISchemasState } from 'screens/AffiliationViews/DatabaseView/state/reducers';
+import { IWebsealReduxState } from 'screens/AffiliationViews/WebsealView/state/reducers';
 import { IFilter } from 'services/DeploymentFilterService';
 import { IStartupState } from 'state/reducers';
 
@@ -338,4 +340,61 @@ export const userAndAffiliationsFactory = Factory.Sync.makeFactory<
 
 export const startupFactory = Factory.Sync.makeFactory<IStartupState>({
   currentUser: userAndAffiliationsFactory.build()
+});
+
+export const junctionFactory = Factory.Sync.makeFactory<IJunction>({
+  activeWorkerThreads: 'activeWorkerThreads',
+  allowWindowsStyleURLs: 'allowWindowsStyleURLs',
+  authenticationHTTPheader: 'authenticationHTTPheader',
+  basicAuthenticationMode: 'basicAuthenticationMode',
+  booleanRuleHeader: 'booleanRuleHeader',
+  caseInsensitiveURLs: 'caseInsensitiveURLs',
+  currentRequests: 'currentRequests',
+  delegationSupport: 'delegationSupport',
+  formsBasedSSO: 'formsBasedSSO',
+  hostname: 'hostname',
+  id: 'junction-id',
+  insertWebSEALSessionCookies: 'insertWebSEALSessionCookies',
+  insertWebSphereLTPACookies: 'insertWebSphereLTPACookies',
+  junctionHardLimit: 'junctionHardLimit',
+  junctionSoftLimit: 'junctionSoftLimit',
+  mutuallyAuthenticated: 'mutuallyAuthenticated',
+  operationalState: 'operationalState',
+  port: 'port',
+  queryContents: 'queryContents',
+  queryContentsURL: 'queryContentsURL',
+  remoteAddressHTTPHeader: 'remoteAddressHTTPHeader',
+  requestEncoding: 'requestEncoding',
+  server1: 'server1',
+  serverDN: 'serverDN',
+  serverState: 'serverState',
+  statefulJunction: 'statefulJunction',
+  tfimjunctionSSO: 'TFIMJunctionSSO',
+  totalRequests: 'totalRequests',
+  type: 'type',
+  virtualHostJunctionLabel: 'virtualHostJunctionLabel',
+  virtualHostname: 'virtualHostname',
+  localIPAddress: 'localIPAddress'
+});
+
+export const aclFactory = Factory.Sync.makeFactory<IAcl>({
+  aclName: 'acl-name',
+  anyOther: false,
+  open: true,
+  roles: []
+});
+
+export const websealStateFactory = Factory.Sync.makeFactory<IWebsealViewState>({
+  acl: aclFactory.build(),
+  name: 'state-name',
+  namespace: 'namespace',
+  routeName: 'route',
+  junctions: junctionFactory.buildList(2)
+});
+
+export const websealReduxStateFactory = Factory.Sync.makeFactory<
+  IWebsealReduxState
+>({
+  isFetchingWebsealStates: false,
+  websealStates: []
 });

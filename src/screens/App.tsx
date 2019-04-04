@@ -25,7 +25,8 @@ import { NetdebugWithApi } from './NetdebugView/Netdebug';
 
 export enum MenuType {
   DEPLOYMENTS,
-  DATABASE
+  DATABASE,
+  WEBSEAL
 }
 
 interface IAppProps extends IAuroraApiComponentProps, RouteComponentProps<{}> {
@@ -64,6 +65,11 @@ class App extends React.Component<IAppProps, IAppState> {
         /\/db\/(\b\w*[-]?\w*\b)\/(\w*)(\/.*)?/,
         `/db/${affiliation}/$2`
       );
+    } else if (location.pathname.startsWith('/w/')) {
+      newPath = location.pathname.replace(
+        /\/w\/(\b\w*[-]?\w*\b)\/(\w*)(\/.*)?/,
+        `/w/${affiliation}/$2`
+      );
     }
     history.push(newPath);
   };
@@ -88,6 +94,10 @@ class App extends React.Component<IAppProps, IAppState> {
       routeProps: AffiliationRouteProps
     ) => renderAffiliationViewValidator(routeProps, MenuType.DATABASE);
 
+    const renderAffiliationViewValidatorWebseal = (
+      routeProps: AffiliationRouteProps
+    ) => renderAffiliationViewValidator(routeProps, MenuType.WEBSEAL);
+
     const renderAffiliationViewValidator = (
       routeProps: AffiliationRouteProps,
       type: MenuType
@@ -109,7 +119,8 @@ class App extends React.Component<IAppProps, IAppState> {
             affiliation={affiliation}
             showAffiliationSelector={
               location.pathname.startsWith('/a/') ||
-              location.pathname.startsWith('/db/')
+              location.pathname.startsWith('/db/') ||
+              location.pathname.startsWith('/w/')
             }
             onAffiliationChange={this.onAffiliationChangeFromSelector}
             displayDatabaseView={displayDatabaseView}
@@ -137,6 +148,11 @@ class App extends React.Component<IAppProps, IAppState> {
                     render={renderAffiliationViewValidatorDatabase}
                   />
                 )}
+                <Route
+                  exact={true}
+                  path="/w/:affiliation/webseal"
+                  render={renderAffiliationViewValidatorWebseal}
+                />
               </Switch>
             )}
           </LayoutConnected>
