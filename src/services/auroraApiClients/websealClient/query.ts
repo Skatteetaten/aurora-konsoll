@@ -1,5 +1,5 @@
 import gql from 'graphql-tag';
-import { IWebsealViewState } from 'models/Webseal';
+import { IWebsealState } from 'models/Webseal';
 
 export interface IWebsealAffiliationQuery {
   affiliations: {
@@ -7,7 +7,7 @@ export interface IWebsealAffiliationQuery {
   };
 }
 export interface IWebsealStateEdge {
-  node: { websealStates: IWebsealViewState[] };
+  node: { websealStates: IWebsealState[] };
 }
 
 export const WEBSEAL_STATES_QUERY = gql`

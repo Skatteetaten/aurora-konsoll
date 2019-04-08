@@ -1,4 +1,4 @@
-import { IWebsealViewState } from 'models/Webseal';
+import { IWebsealState } from 'models/Webseal';
 import { handleAction, reduceReducers } from 'redux-ts-utils';
 import { ActionType } from 'typesafe-actions';
 import actions, {
@@ -10,7 +10,7 @@ export type WebsealAction = ActionType<typeof actions>;
 
 export interface IWebsealReduxState {
   readonly isFetchingWebsealStates: boolean;
-  readonly websealStates: IWebsealViewState[];
+  readonly websealStates: IWebsealState[];
 }
 
 const InitialState = (): IWebsealReduxState => {

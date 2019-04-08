@@ -1,6 +1,6 @@
 import GoboClient from 'services/GoboClient';
 
-import { IWebsealViewState } from 'models/Webseal';
+import { IWebsealState } from 'models/Webseal';
 import {
   IWebsealAffiliationQuery,
   IWebsealStateEdge,
@@ -14,9 +14,7 @@ export class WebsealClient {
     this.client = client;
   }
 
-  public async getWebsealStates(
-    affiliation: string
-  ): Promise<IWebsealViewState[]> {
+  public async getWebsealStates(affiliation: string): Promise<IWebsealState[]> {
     const result = await this.client.query<IWebsealAffiliationQuery>({
       query: WEBSEAL_STATES_QUERY,
       variables: { affiliation }
@@ -28,10 +26,8 @@ export class WebsealClient {
     return [];
   }
 
-  private normalizeWebsealState(
-    edges: IWebsealStateEdge[]
-  ): IWebsealViewState[] {
-    let states: IWebsealViewState[] = [];
+  private normalizeWebsealState(edges: IWebsealStateEdge[]): IWebsealState[] {
+    let states: IWebsealState[] = [];
 
     for (const edge of edges) {
       states = edge.node.websealStates.map(node => ({

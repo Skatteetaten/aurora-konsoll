@@ -7,32 +7,14 @@ import Grid from 'aurora-frontend-react-komponenter/Grid';
 import Tabs from 'aurora-frontend-react-komponenter/Tabs';
 import TabItem from 'aurora-frontend-react-komponenter/Tabs/TabItem';
 
-import { IJunction, IWebsealViewState } from 'models/Webseal';
-import WebsealService from 'services/WebsealService';
+import { IJunction, IWebsealState } from 'models/Webseal';
+import WebsealService, { websealDialogColumns } from 'services/WebsealService';
 import styled from 'styled-components';
 import { StyledPre } from '../DetailsView/InformationView/HealthResponseDialogSelector/utilComponents';
 
-export const websealDialogColumns = [
-  {
-    key: 0,
-    fieldName: 'key',
-    minWidth: 400,
-    maxWidth: 400,
-    onRender: (item: { key: string }) => {
-      return <b>{item.key}</b>;
-    }
-  },
-  {
-    key: 1,
-    fieldName: 'value',
-    minWidth: 200,
-    maxWidth: 200
-  }
-];
-
 interface IWebsealDialogProps {
   className?: string;
-  selectedWebsealState?: IWebsealViewState;
+  selectedWebsealState?: IWebsealState;
   deselectWebsealState: () => void;
 }
 
@@ -50,6 +32,10 @@ class WebsealDialog extends React.Component<
 
   private websealService = new WebsealService();
 
+  public onRenderFirstColumn = () => (item: { key: string }) => {
+    return <b>{item.key}</b>;
+  };
+
   public renderDetailsListWebsealStates = (items: IJunction) => {
     if (!items) {
       return <div />;
@@ -58,7 +44,7 @@ class WebsealDialog extends React.Component<
       <StyledPre>
         <DetailsList
           isHeaderVisible={false}
-          columns={websealDialogColumns}
+          columns={websealDialogColumns(this.onRenderFirstColumn())}
           items={this.websealService.addProperties(items)}
         />
       </StyledPre>

@@ -1,9 +1,42 @@
 import { IJunction } from 'models/Webseal';
-import { websealColumns } from 'screens/AffiliationViews/WebsealView/Webseal';
-import { websealDialogColumns } from 'screens/AffiliationViews/WebsealView/WebstealDialog';
 import { SortDirection } from './DatabaseSchemaService';
 
-export interface IWebsealColumns {
+export const websealTableColumns = () => [
+  {
+    key: 0,
+    name: 'Host',
+    fieldName: 'host',
+    minWidth: 500,
+    maxWidth: 600,
+    iconName: ''
+  },
+  {
+    key: 1,
+    name: 'Roller',
+    fieldName: 'roles',
+    minWidth: 800,
+    maxWidth: 1000,
+    iconName: ''
+  }
+];
+
+export const websealDialogColumns = (onRenderFirstColumn: any) => [
+  {
+    key: 0,
+    fieldName: 'key',
+    minWidth: 400,
+    maxWidth: 400,
+    onRenderFirstColumn
+  },
+  {
+    key: 1,
+    fieldName: 'value',
+    minWidth: 200,
+    maxWidth: 200
+  }
+];
+
+export interface IWebsealTableColumns {
   roles: string;
   host: string;
 }
@@ -13,7 +46,7 @@ export const defaultSortDirections = new Array<SortDirection>(
 ).fill(SortDirection.NONE);
 
 export const filterWebsealView = (filter: string) => {
-  return (v: IWebsealColumns): boolean =>
+  return (v: IWebsealTableColumns): boolean =>
     v.host.includes(filter) || v.roles.includes(filter);
 };
 
@@ -61,7 +94,7 @@ class WebsealService {
   }
 
   public sortItems(
-    viewItems: IWebsealColumns[],
+    viewItems: IWebsealTableColumns[],
     prevSortDirection: SortDirection,
     name: string | number | symbol
   ) {
@@ -102,8 +135,9 @@ class WebsealService {
     }
     return resArray;
   };
+
   public createColumns(index: number, sortDirection: SortDirection) {
-    const columns = websealColumns();
+    const columns = websealTableColumns();
     if (index > -1) {
       const currentCol = columns[index];
       if (

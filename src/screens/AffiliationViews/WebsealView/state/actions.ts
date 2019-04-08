@@ -1,4 +1,4 @@
-import { IWebsealViewState } from 'models/Webseal';
+import { IWebsealState } from 'models/Webseal';
 
 import { IAuroraApiComponentProps } from 'components/AuroraApi';
 import { ActionCreator } from 'redux';
@@ -11,7 +11,7 @@ const websealAction = (action: string) => `webseal/${action}`;
 export const fetchWebsealStatesRequest = createAction<boolean>(
   websealAction('FETCHED_WEBSEAL_STATES_REQUEST')
 );
-export const fetchWebsealStatesResponse = createAction<IWebsealViewState[]>(
+export const fetchWebsealStatesResponse = createAction<IWebsealState[]>(
   websealAction('FETCHED_WEBSEAL_STATES_RESPONSE')
 );
 

@@ -2,7 +2,7 @@ import { connect } from 'react-redux';
 import { RootState } from 'store/types';
 import { fetchWebsealStates } from './state/actions';
 import { IWebsealReduxState } from './state/reducers';
-import Webseal from './Webseal';
+import Webseal from './WebsealTable';
 
 const getFetchingStatus = (state: IWebsealReduxState) =>
   state.isFetchingWebsealStates;

@@ -5,7 +5,7 @@ import DetailsList from 'aurora-frontend-react-komponenter/DetailsList';
 import TextField from 'aurora-frontend-react-komponenter/TextField';
 
 import Spinner from 'components/Spinner';
-import { IWebsealViewState } from 'models/Webseal';
+import { IWebsealState } from 'models/Webseal';
 import {
   IObjectWithKey,
   Selection
@@ -14,48 +14,29 @@ import { SortDirection } from 'services/DatabaseSchemaService';
 import WebsealService, {
   defaultSortDirections,
   filterWebsealView,
-  IWebsealColumns
+  IWebsealTableColumns
 } from 'services/WebsealService';
 import WebsealDialog from './WebstealDialog';
 
-interface IWebsealProps {
+interface IWebsealTableProps {
   className?: string;
   affiliation: string;
   isFetchingWebsealStates: boolean;
-  websealStates: IWebsealViewState[];
+  websealStates: IWebsealState[];
   onFetch: (affiliation: string) => void;
 }
 
-interface IWebsealState {
-  selectedWebsealState?: IWebsealViewState;
+interface IWebsealTableState {
+  selectedWebsealState?: IWebsealState;
   filter: string;
-  viewItems: IWebsealViewState[];
+  viewItems: IWebsealState[];
   selectedColumnIndex: number;
   columnSortDirections: SortDirection[];
-  filteredColumns: IWebsealColumns[];
+  filteredColumns: IWebsealTableColumns[];
 }
 
-export const websealColumns = () => [
-  {
-    key: 0,
-    name: 'Host',
-    fieldName: 'host',
-    minWidth: 500,
-    maxWidth: 600,
-    iconName: ''
-  },
-  {
-    key: 1,
-    name: 'Roller',
-    fieldName: 'roles',
-    minWidth: 800,
-    maxWidth: 1000,
-    iconName: ''
-  }
-];
-
-class Webseal extends React.Component<IWebsealProps, IWebsealState> {
-  public state: IWebsealState = {
+class Webseal extends React.Component<IWebsealTableProps, IWebsealTableState> {
+  public state: IWebsealTableState = {
     columnSortDirections: defaultSortDirections,
     selectedColumnIndex: -1,
     selectedWebsealState: undefined,
@@ -72,14 +53,14 @@ class Webseal extends React.Component<IWebsealProps, IWebsealState> {
 
   private websealService = new WebsealService();
 
-  public websealStates = (): IWebsealColumns[] => {
+  public websealStates = (): IWebsealTableColumns[] => {
     return this.props.websealStates.map(it => ({
       host: it.name,
       roles: it.acl.roles.join(', ')
     }));
   };
 
-  public componentDidUpdate(prevProps: IWebsealProps) {
+  public componentDidUpdate(prevProps: IWebsealTableProps) {
     const { affiliation, websealStates, onFetch } = this.props;
 
     if (
@@ -119,7 +100,7 @@ class Webseal extends React.Component<IWebsealProps, IWebsealState> {
 
     let selectedWebsealState;
     if (selected.length > 0) {
-      const selectedName = (selected[0] as IWebsealColumns).host;
+      const selectedName = (selected[0] as IWebsealTableColumns).host;
       selectedWebsealState = this.state.viewItems.find(
         i => i.name === selectedName
       );

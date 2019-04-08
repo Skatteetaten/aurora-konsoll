@@ -20,7 +20,7 @@ import {
 import { StatusCode } from 'models/Status';
 import { ITagsPagedGroup } from 'models/Tag';
 import { IApplicationDeploymentFilters } from 'models/UserSettings';
-import { IAcl, IJunction, IWebsealViewState } from 'models/Webseal';
+import { IAcl, IJunction, IWebsealState } from 'models/Webseal';
 import { ISchemasState } from 'screens/AffiliationViews/DatabaseView/state/reducers';
 import { IWebsealReduxState } from 'screens/AffiliationViews/WebsealView/state/reducers';
 import { IFilter } from 'services/DeploymentFilterService';
@@ -384,7 +384,7 @@ export const aclFactory = Factory.Sync.makeFactory<IAcl>({
   roles: []
 });
 
-export const websealStateFactory = Factory.Sync.makeFactory<IWebsealViewState>({
+export const websealStateFactory = Factory.Sync.makeFactory<IWebsealState>({
   acl: aclFactory.build(),
   name: 'state-name',
   namespace: 'namespace',

@@ -3,7 +3,7 @@ export interface IWebsealView {
   name: string;
 }
 
-export interface IWebsealViewState {
+export interface IWebsealState {
   name: string;
   namespace: string;
   routeName: string;
