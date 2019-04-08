@@ -10,7 +10,12 @@ import {
   IObjectWithKey,
   Selection
 } from 'office-ui-fabric-react/lib/DetailsList';
-import { filterWebsealView } from 'services/WebsealService';
+import { SortDirection } from 'services/DatabaseSchemaService';
+import WebsealService, {
+  defaultSortDirections,
+  filterWebsealView,
+  IWebsealColumns
+} from 'services/WebsealService';
 import WebsealDialog from './WebstealDialog';
 
 interface IWebsealProps {
@@ -25,37 +30,38 @@ interface IWebsealState {
   selectedWebsealState?: IWebsealViewState;
   filter: string;
   viewItems: IWebsealViewState[];
+  selectedColumnIndex: number;
+  columnSortDirections: SortDirection[];
+  filteredColumns: IWebsealColumns[];
 }
 
-interface IWebsealColumns {
-  host: string;
-  roles: string;
-}
-
-const websealColumns = [
+export const websealColumns = () => [
   {
-    key: 'column1',
+    key: 0,
     name: 'Host',
     fieldName: 'host',
     minWidth: 500,
     maxWidth: 600,
-    isResizable: true
+    iconName: ''
   },
   {
-    key: 'column2',
+    key: 1,
     name: 'Roller',
     fieldName: 'roles',
-    minWidth: 500,
-    maxWidth: 600,
-    isResizable: true
+    minWidth: 800,
+    maxWidth: 1000,
+    iconName: ''
   }
 ];
 
 class Webseal extends React.Component<IWebsealProps, IWebsealState> {
   public state: IWebsealState = {
+    columnSortDirections: defaultSortDirections,
+    selectedColumnIndex: -1,
     selectedWebsealState: undefined,
     filter: '',
-    viewItems: []
+    viewItems: [],
+    filteredColumns: []
   };
 
   public selection = new Selection({
@@ -64,17 +70,10 @@ class Webseal extends React.Component<IWebsealProps, IWebsealState> {
     }
   });
 
-  public websealStates = (): IWebsealColumns[] => {
-    // if (!(this.state.viewItems.length > 0)) {
-    //   return [
-    //     {
-    //       host: '',
-    //       roles: ''
-    //     }
-    //   ];
-    // }
+  private websealService = new WebsealService();
 
-    return this.state.viewItems.map(it => ({
+  public websealStates = (): IWebsealColumns[] => {
+    return this.props.websealStates.map(it => ({
       host: it.name,
       roles: it.acl.roles.join(', ')
     }));
@@ -82,7 +81,6 @@ class Webseal extends React.Component<IWebsealProps, IWebsealState> {
 
   public componentDidUpdate(prevProps: IWebsealProps) {
     const { affiliation, websealStates, onFetch } = this.props;
-    const { viewItems, filter } = this.state;
 
     if (
       prevProps.affiliation !== affiliation ||
@@ -94,19 +92,11 @@ class Webseal extends React.Component<IWebsealProps, IWebsealState> {
       this.handleFetchWebsealStates();
     }
 
-    if (
-      viewItems.length > 0 &&
-      JSON.stringify(viewItems) !==
-        JSON.stringify(viewItems.filter(filterWebsealView(filter)))
-    ) {
-      this.setState({
-        viewItems: viewItems.filter(filterWebsealView(filter))
-      });
-    }
-
     if (prevProps.affiliation !== affiliation) {
       this.setState({
-        filter: ''
+        filter: '',
+        columnSortDirections: defaultSortDirections,
+        selectedColumnIndex: -1
       });
     }
   }
@@ -140,6 +130,37 @@ class Webseal extends React.Component<IWebsealProps, IWebsealState> {
     });
   };
 
+  public sortByColumn = (
+    ev: React.MouseEvent<HTMLElement>,
+    column: {
+      key: number;
+      fieldName: string;
+    }
+  ): void => {
+    const { columnSortDirections } = this.state;
+    const name = column.fieldName! as keyof any;
+
+    const newSortDirections = defaultSortDirections;
+    const prevSortDirection = columnSortDirections[column.key];
+
+    if (this.websealService.sortNextAscending(prevSortDirection)) {
+      newSortDirections[column.key] = SortDirection.ASC;
+    } else if (prevSortDirection === SortDirection.ASC) {
+      newSortDirections[column.key] = SortDirection.DESC;
+    }
+    const sortedItems = this.websealService.sortItems(
+      this.websealStates(),
+      prevSortDirection,
+      name
+    );
+
+    this.setState({
+      filteredColumns: sortedItems,
+      columnSortDirections: newSortDirections,
+      selectedColumnIndex: column.key
+    });
+  };
+
   public handleFetchWebsealStates = () => {
     const { websealStates } = this.props;
     const { viewItems } = this.state;
@@ -148,10 +169,14 @@ class Webseal extends React.Component<IWebsealProps, IWebsealState> {
       this.setState({
         viewItems: websealStates
       });
+      this.setState({
+        filteredColumns: this.websealStates()
+      });
     }
   };
 
   public renderDetailsList = () => {
+    const { selectedColumnIndex, columnSortDirections } = this.state;
     if (!(this.websealStates().length > 0)) {
       return <p>Finner ingen WebSEAL states</p>;
     }
@@ -160,13 +185,22 @@ class Webseal extends React.Component<IWebsealProps, IWebsealState> {
       <div className="webseal-grid">
         <div className="table-wrapper">
           <DetailsList
+            columns={this.websealService.createColumns(
+              selectedColumnIndex,
+              columnSortDirections[selectedColumnIndex]
+            )}
             selection={this.selection}
-            columns={websealColumns}
-            items={this.websealStates()}
+            onColumnHeaderClick={this.sortByColumn}
+            items={this.filteredItems()}
           />
         </div>
       </div>
     );
+  };
+
+  public filteredItems = () => {
+    const { filter } = this.state;
+    return this.state.filteredColumns.filter(filterWebsealView(filter));
   };
 
   public render() {

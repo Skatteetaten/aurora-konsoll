@@ -4,10 +4,10 @@ describe('WebsealService', () => {
   const websealService = new WebsealService();
 
   describe('addProperties', () => {
-    it('should convert object to have two properties', () => {
+    it('should convert object to have two properties and add spaces and capitalize words', () => {
       const object = [
-        { key: 'activeWorkerThreads', value: '1' },
-        { key: 'hostname', value: 'test.com' }
+        { key: 'Active Worker Threads', value: '1' },
+        { key: 'Hostname', value: 'test.com' }
       ];
 
       const newObject = websealService.addProperties({

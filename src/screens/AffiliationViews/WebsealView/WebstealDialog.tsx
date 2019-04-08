@@ -50,7 +50,7 @@ class WebsealDialog extends React.Component<
 
   private websealService = new WebsealService();
 
-  public renderDetailsListWebsealStates = (items: IJunction | undefined) => {
+  public renderDetailsListWebsealStates = (items: IJunction) => {
     if (!items) {
       return <div />;
     }
@@ -75,7 +75,6 @@ class WebsealDialog extends React.Component<
     if (!selectedWebsealState) {
       return <div />;
     }
-
     const tabs = () => {
       if (selectedWebsealState.junctions.length > 1) {
         return (
