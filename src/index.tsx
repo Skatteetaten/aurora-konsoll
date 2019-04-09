@@ -15,6 +15,7 @@ import App from 'screens/App';
 import {
   ApplicationDeploymentClient,
   DatabaseClient,
+  GoboUsageClient,
   ImageRepositoryClient,
   NetdebugClient,
   UserSettingsClient,
@@ -51,7 +52,8 @@ async function init() {
     netdebugClient: new NetdebugClient(goboClient),
     userSettingsClient: new UserSettingsClient(goboClient),
     databaseClient: new DatabaseClient(goboClient),
-    websealClient: new WebsealClient(goboClient)
+    websealClient: new WebsealClient(goboClient),
+    goboUsageClient: new GoboUsageClient(goboClient)
   };
 
   ReactDOM.render(

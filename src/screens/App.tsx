@@ -8,6 +8,8 @@ import {
 } from 'react-router-dom';
 import styled from 'styled-components';
 
+import Konami from 'react-konami-code';
+
 import SkeBasis from 'aurora-frontend-react-komponenter/SkeBasis';
 
 import { IAuroraApiComponentProps } from 'components/AuroraApi';
@@ -21,6 +23,7 @@ import { errorStateManager } from 'models/StateManager/ErrorStateManager';
 import AffiliationViewValidatorConnected, {
   AffiliationRouteProps
 } from './AffiliationViews/AffiliationViewValidator';
+import GoboUsageView from './GoboUsageView';
 import { NetdebugWithApi } from './NetdebugView/Netdebug';
 
 export enum MenuType {
@@ -112,6 +115,9 @@ class App extends React.Component<IAppProps, IAppState> {
 
     return (
       <StyledSkeBasis menuExpanded={isMenuExpanded}>
+        <Konami timeout={10000}>
+          <GoboUsageView clients={this.props.clients} />
+        </Konami>
         <ErrorBoundary errorSM={errorStateManager}>
           <LayoutConnected
             isMenuExpanded={isMenuExpanded}

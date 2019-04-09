@@ -63,7 +63,7 @@ const Layout = ({
       to: '/netdebug'
     },
     {
-      iconName: 'Info',
+      iconName: 'Company',
       name: 'Webseal',
       to: `/w/${affiliation || '_'}/webseal`
     }

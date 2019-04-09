@@ -2,6 +2,7 @@ import * as React from 'react';
 import {
   ApplicationDeploymentClient,
   DatabaseClient,
+  GoboUsageClient,
   ImageRepositoryClient,
   NetdebugClient,
   UserSettingsClient,
@@ -14,6 +15,7 @@ interface IApiClients {
   userSettingsClient: UserSettingsClient;
   databaseClient: DatabaseClient;
   websealClient: WebsealClient;
+  goboUsageClient: GoboUsageClient;
 }
 
 // AuroraApiContext
