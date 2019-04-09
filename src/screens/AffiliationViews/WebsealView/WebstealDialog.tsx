@@ -7,7 +7,7 @@ import Grid from 'aurora-frontend-react-komponenter/Grid';
 import Tabs from 'aurora-frontend-react-komponenter/Tabs';
 import TabItem from 'aurora-frontend-react-komponenter/Tabs/TabItem';
 
-import { IJunction, IWebsealState } from 'models/Webseal';
+import { IWebsealState } from 'models/Webseal';
 import WebsealService, { websealDialogColumns } from 'services/WebsealService';
 import styled from 'styled-components';
 import { StyledPre } from '../DetailsView/InformationView/HealthResponseDialogSelector/utilComponents';
@@ -19,7 +19,7 @@ interface IWebsealDialogProps {
 }
 
 interface IWebsealDialogState {
-  junctions: IJunction[];
+  junctions: string[];
 }
 
 class WebsealDialog extends React.Component<
@@ -36,7 +36,7 @@ class WebsealDialog extends React.Component<
     return <b>{item.key}</b>;
   };
 
-  public renderDetailsListWebsealStates = (items: IJunction) => {
+  public renderDetailsListWebsealStates = (items: string) => {
     if (!items) {
       return <div />;
     }

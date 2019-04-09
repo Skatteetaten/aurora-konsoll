@@ -25,40 +25,7 @@ export const WEBSEAL_STATES_QUERY = gql`
               open
               roles
             }
-            junctions {
-              basicAuthenticationMode
-              port
-              queryContentsURL
-              authenticationHTTPheader
-              serverDN
-              allowWindowsStyleURLs
-              caseInsensitiveURLs
-              insertWebSphereLTPACookies
-              insertWebSEALSessionCookies
-              remoteAddressHTTPHeader
-              delegationSupport
-              junctionSoftLimit
-              requestEncoding
-              formsBasedSSO
-              junctionHardLimit
-              id
-              operationalState
-              currentRequests
-              localIPAddress
-              statefulJunction
-              serverState
-              hostname
-              virtualHostname
-              activeWorkerThreads
-              type
-              tfimjunctionSSO
-              queryContents
-              server1
-              booleanRuleHeader
-              virtualHostJunctionLabel
-              mutuallyAuthenticated
-              totalRequests
-            }
+            junctions
           }
         }
       }

@@ -1,4 +1,3 @@
-import { IJunction } from 'models/Webseal';
 import { SortDirection } from './DatabaseSchemaService';
 
 export const websealTableColumns = () => [
@@ -20,13 +19,15 @@ export const websealTableColumns = () => [
   }
 ];
 
-export const websealDialogColumns = (onRenderFirstColumn: any) => [
+export const websealDialogColumns = (
+  onRender: (item: { key: string }) => JSX.Element
+) => [
   {
     key: 0,
     fieldName: 'key',
     minWidth: 400,
     maxWidth: 400,
-    onRenderFirstColumn
+    onRender
   },
   {
     key: 1,
@@ -47,45 +48,10 @@ export const defaultSortDirections = new Array<SortDirection>(
 
 export const filterWebsealView = (filter: string) => {
   return (v: IWebsealTableColumns): boolean =>
-    v.host.includes(filter) || v.roles.includes(filter);
+    v.host.includes(filter) || v.roles.toString().includes(filter);
 };
 
 class WebsealService {
-  public mapping = {
-    basicAuthenticationMode: 'Basic Authentication Mode',
-    port: 'Port',
-    queryContentsURL: 'Query Contents URL',
-    authenticationHTTPheader: 'Authentication HTTP Header',
-    serverDN: 'Server DN',
-    allowWindowsStyleURLs: 'Allow Windows Style URLs',
-    caseInsensitiveURLs: 'Case Insensitive URLs',
-    insertWebSphereLTPACookies: 'Insert WebSphere LTPA Cookies',
-    insertWebSEALSessionCookies: 'Insert WebSEAL Session Cookies',
-    remoteAddressHTTPHeader: 'Remote Address HTTP Header',
-    delegationSupport: 'Delegation Support',
-    junctionSoftLimit: 'Junction Soft Limit',
-    requestEncoding: 'Request Encoding',
-    formsBasedSSO: 'Forms Based SSO',
-    junctionHardLimit: 'Junction Hard Limit',
-    id: 'ID',
-    operationalState: 'Operational State',
-    currentRequests: 'Current Requests',
-    localIPAddress: 'Local IP Address',
-    statefulJunction: 'Stateful Junction',
-    serverState: 'Server State',
-    hostname: 'Hostname',
-    virtualHostname: 'Virtual Hostname',
-    activeWorkerThreads: 'Active Worker Threads',
-    type: 'Type',
-    tfimjunctionSSO: 'TFIM Junction SSO',
-    queryContents: 'Query Contents',
-    server1: 'Server 1',
-    booleanRuleHeader: 'Boolean Rule Header',
-    virtualHostJunctionLabel: 'Virtual Host Junction Label',
-    mutuallyAuthenticated: 'Mutually Authenticated',
-    totalRequests: 'Total Requests'
-  };
-
   public sortNextAscending(sortDirection: SortDirection) {
     return (
       sortDirection === SortDirection.NONE ||
@@ -119,18 +85,15 @@ class WebsealService {
     });
   }
 
-  public addProperties = (type: IJunction): any[] => {
-    const mapped = Object.keys(type).reduce((acc, key) => {
-      acc[this.mapping[key]] = type[key];
-      return acc;
-    }, {});
-    const ownProps = Object.keys(mapped);
+  public addProperties = (type: string): any[] => {
+    const parsedType = JSON.parse(type);
+    const ownProps = Object.keys(parsedType);
     let i = ownProps.length;
     const resArray = new Array(i);
     while (i--) {
       resArray[i] = {
-        value: mapped[ownProps[i]],
-        key: ownProps[i]
+        key: ownProps[i],
+        value: parsedType[ownProps[i]]
       };
     }
     return resArray;
