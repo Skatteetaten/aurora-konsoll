@@ -134,7 +134,6 @@ class Webseal extends React.Component<IWebsealTableProps, IWebsealTableState> {
       prevSortDirection,
       name
     );
-
     this.setState({
       filteredColumns: sortedItems,
       columnSortDirections: newSortDirections,

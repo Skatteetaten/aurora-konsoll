@@ -49,7 +49,7 @@ class GoboUsageView extends React.Component<
       <Dialog>
         <div>
           <Icon iconName="Favorite" style={{ fontSize: '32px' }} />
-          <h3>Gobo Champions</h3>
+          <h3>Aurora champions</h3>
           <Icon iconName="Favorite" style={{ fontSize: '32px' }} />
         </div>
         <table style={{ width: '100%' }}>

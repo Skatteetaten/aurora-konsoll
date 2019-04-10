@@ -42,13 +42,13 @@ export interface IWebsealTableColumns {
   host: string;
 }
 
-export const defaultSortDirections = new Array<SortDirection>(
-  websealDialogColumns.length
-).fill(SortDirection.NONE);
+export const defaultSortDirections = new Array<SortDirection>(2).fill(
+  SortDirection.NONE
+);
 
 export const filterWebsealView = (filter: string) => {
   return (v: IWebsealTableColumns): boolean =>
-    v.host.includes(filter) || v.roles.toString().includes(filter);
+    v.host.includes(filter) || v.roles.includes(filter);
 };
 
 class WebsealService {
