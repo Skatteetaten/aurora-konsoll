@@ -152,9 +152,7 @@ class Webseal extends React.Component<IWebsealTableProps, IWebsealTableState> {
 
     if (JSON.stringify(viewItems) !== JSON.stringify(websealStates)) {
       this.setState({
-        viewItems: websealStates
-      });
-      this.setState({
+        viewItems: websealStates,
         filteredColumns: this.websealStates()
       });
     }

@@ -101,7 +101,7 @@ class WebsealDialog extends React.Component<
           <Grid>
             <Grid.Row>
               <Grid.Col lg={4} className="bold">
-                <p>Navnerom: </p>
+                <p>Miljø: </p>
                 <p>Rutenavn: </p>
               </Grid.Col>
               <Grid.Col lg={8}>

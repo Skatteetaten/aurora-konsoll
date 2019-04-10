@@ -30,13 +30,7 @@ export class WebsealClient {
     let states: IWebsealState[] = [];
 
     for (const edge of edges) {
-      states = edge.node.websealStates.map(node => ({
-        routeName: node.routeName,
-        namespace: node.namespace,
-        name: node.name,
-        acl: node.acl,
-        junctions: node.junctions
-      }));
+      states = edge.node.websealStates;
     }
 
     return states;
