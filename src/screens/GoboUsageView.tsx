@@ -27,7 +27,10 @@ class GoboUsageView extends React.Component<
   public async getGoboUsers() {
     const usersGobo: IGoboUser[] = await this.props.clients.goboUsageClient.getGoboUsers();
 
-    const count = usersGobo.sort((a, b) => b.count - a.count).slice(0, 10);
+    const count = usersGobo
+      .filter(it => it.name !== 'anonymous')
+      .sort((a, b) => b.count - a.count)
+      .slice(0, 10);
     this.setState({ users: count });
   }
 
@@ -50,16 +53,18 @@ class GoboUsageView extends React.Component<
           <Icon iconName="Favorite" style={{ fontSize: '32px' }} />
         </div>
         <table style={{ width: '100%' }}>
-          <tr>
-            <th>BrukerId</th>
-            <th>Antall</th>
-          </tr>
-          {this.state.users.map(it => (
+          <tbody>
             <tr>
-              <td>{it.name}</td>
-              <td>{it.count}</td>
+              <th>BrukerId</th>
+              <th>Antall</th>
             </tr>
-          ))}
+            {this.state.users.map(it => (
+              <tr key={it.name}>
+                <td>{it.name}</td>
+                <td>{it.count}</td>
+              </tr>
+            ))}
+          </tbody>
         </table>
         <h4>Lukkes etter 10 sekunder</h4>
       </Dialog>
@@ -69,6 +74,7 @@ class GoboUsageView extends React.Component<
 
 const Dialog = styled.div`
   background-color: ${skeColor.whiteGrey};
+  z-index: 2000;
   height: 520px;
   width: 300px;
   position: fixed;
