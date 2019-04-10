@@ -1,9 +1,9 @@
 import {
   createDate,
+  dateValidation,
   getLocalDate,
   getLocalDatetime,
-  getTimestamp,
-  isDate
+  getTimestamp
 } from './date';
 
 describe('date utility', () => {
@@ -38,13 +38,13 @@ describe('date utility', () => {
   });
 
   it('should return date given legit date', () => {
-    const date = isDate('12.04.2018');
+    const date = dateValidation('12.04.2018');
     expect(date).toContain('12.04.2018');
   });
 
-  it('should return null given wrong date format', () => {
-    const date = isDate('12.4.18');
-    expect(date).toBeNull();
+  it('should return false given wrong date format', () => {
+    const date = dateValidation('12.4.18');
+    expect(date).toBeFalsy();
   });
 
   it('should return given date in string format to return same date in date format', () => {

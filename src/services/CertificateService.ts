@@ -3,7 +3,7 @@ import {
   ICertificateView,
   IDetailsListContent
 } from 'models/certificates';
-import { createDate, getLocalDate, isDate } from 'utils/date';
+import { createDate, dateValidation, getLocalDate } from 'utils/date';
 import { SortDirection } from './DatabaseSchemaService';
 
 export const certificateColumns = (): IDetailsListContent[] => [
@@ -108,7 +108,7 @@ export default class CertificateService {
       const valueB = this.lowerCaseIfString(b[name]);
       if (valueA === valueB) {
         return 0;
-      } else if (isDate(valueA) || isDate(valueB)) {
+      } else if (dateValidation(valueA) || dateValidation(valueB)) {
         const dateA = createDate(valueA).getTime();
         const dateB = createDate(valueB).getTime();
         return this.sortNextAscending(prevSortDirection)

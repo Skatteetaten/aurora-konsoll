@@ -1,8 +1,4 @@
-import {
-  ICertificate,
-  ICertificateResult,
-  ICertificatesQuery
-} from 'models/certificates';
+import { ICertificateResult, ICertificatesQuery } from 'models/certificates';
 import GoboClient from 'services/GoboClient';
 import { CERTIFICATES_QUERY } from './query';
 
@@ -26,7 +22,7 @@ export class CertificateClient {
 
     if (result && result.data && result.data.certificates.edges.length > 0) {
       return {
-        certificates: this.normalizeScanStatus(result.data),
+        certificates: result.data.certificates.edges.map(edge => edge.node),
         totalCount: result.data.certificates.totalCount
       };
     }
@@ -34,18 +30,5 @@ export class CertificateClient {
       certificates: [],
       totalCount: 0
     };
-  }
-
-  private normalizeScanStatus(data: ICertificatesQuery): ICertificate[] {
-    return data.certificates.edges.map(edge => {
-      const { dn, expiresDate, id, issuedDate, revokedDate } = edge.node;
-      return {
-        issuedDate,
-        dn,
-        expiresDate,
-        id,
-        revokedDate
-      };
-    });
   }
 }

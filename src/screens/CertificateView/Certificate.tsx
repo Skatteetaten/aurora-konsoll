@@ -41,8 +41,7 @@ export default class Certificate extends React.Component<
   };
 
   public componentDidMount() {
-    const { onFetch } = this.props;
-    onFetch();
+    this.refreshCertificates();
   }
 
   public componentDidUpdate(prevProps: ICertificateProps) {

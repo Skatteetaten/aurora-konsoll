@@ -7,7 +7,7 @@ import {
 } from 'models/schemas';
 
 import { Selection } from 'office-ui-fabric-react/lib/DetailsList';
-import { createDate, isDate } from 'utils/date';
+import { createDate, dateValidation } from 'utils/date';
 
 export enum SortDirection {
   ASC,
@@ -297,7 +297,7 @@ export default class DatabaseSchemaService {
       const valueB = this.lowerCaseIfString(b[name]);
       if (valueA === valueB) {
         return 0;
-      } else if (isDate(valueA) || isDate(valueB)) {
+      } else if (dateValidation(valueA) || dateValidation(valueB)) {
         const dateA = createDate(valueA).getTime();
         const dateB = createDate(valueB).getTime();
         return this.sortNextAscending(prevSortDirection)

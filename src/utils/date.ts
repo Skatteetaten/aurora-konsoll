@@ -40,12 +40,18 @@ export function getLocalDatetime(
   }
 }
 
-export function isDate(value: any) {
+export function dateValidation(value: any): false | RegExpMatchArray {
   const dateValidator = /^\d{2}[.]\d{2}[.]\d{4}$/;
-  return typeof value === 'string' && (value as string).match(dateValidator);
+  const matchValueWithDateValidator =
+    typeof value === 'string' && (value as string).match(dateValidator);
+
+  if (matchValueWithDateValidator === null) {
+    return false;
+  }
+  return matchValueWithDateValidator;
 }
 
-export function createDate(value: string | null) {
+export function createDate(value: string | null): Date {
   if (value === null) {
     return new Date(0);
   } else {

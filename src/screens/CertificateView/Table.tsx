@@ -1,11 +1,12 @@
 import * as React from 'react';
 
 import DetailsList from 'aurora-frontend-react-komponenter/DetailsList';
+import { ICertificateView } from 'models/certificates';
 import CertificateService from 'services/CertificateService';
 import { SortDirection } from 'services/DatabaseSchemaService';
 
 interface ITableProps {
-  items: any[];
+  items: ICertificateView[];
   onColumnHeaderClick: (
     ev: React.MouseEvent<HTMLElement, MouseEvent>,
     column: { key: number; fieldName: string }
