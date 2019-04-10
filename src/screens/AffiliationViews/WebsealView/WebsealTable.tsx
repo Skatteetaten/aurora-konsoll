@@ -4,6 +4,7 @@ import styled from 'styled-components';
 import DetailsList from 'aurora-frontend-react-komponenter/DetailsList';
 import TextField from 'aurora-frontend-react-komponenter/TextField';
 
+import LoadingButton from 'components/LoadingButton';
 import Spinner from 'components/Spinner';
 import { IWebsealState } from 'models/Webseal';
 import {
@@ -61,13 +62,13 @@ class Webseal extends React.Component<IWebsealTableProps, IWebsealTableState> {
   };
 
   public componentDidUpdate(prevProps: IWebsealTableProps) {
-    const { affiliation, websealStates, onFetch } = this.props;
+    const { affiliation, websealStates } = this.props;
 
     if (
       prevProps.affiliation !== affiliation ||
       (prevProps.websealStates.length === 0 && websealStates.length > 0)
     ) {
-      onFetch(affiliation);
+      this.refreshWebsealStates();
     }
     if (prevProps.websealStates !== websealStates) {
       this.handleFetchWebsealStates();
@@ -83,10 +84,14 @@ class Webseal extends React.Component<IWebsealTableProps, IWebsealTableState> {
   }
 
   public componentDidMount() {
-    const { onFetch, affiliation } = this.props;
-    onFetch(affiliation);
+    this.refreshWebsealStates();
     this.handleFetchWebsealStates();
   }
+
+  public refreshWebsealStates = () => {
+    const { onFetch, affiliation } = this.props;
+    onFetch(affiliation);
+  };
 
   public deselectWebsealState = () => {
     this.selection.setAllSelected(false);
@@ -189,7 +194,17 @@ class Webseal extends React.Component<IWebsealTableProps, IWebsealTableState> {
     return (
       <div className={className}>
         <div className="body-wrapper">
-          <h2>WealSEAL states for {affiliation}</h2>
+          <div className="action-bar">
+            <h2>WealSEAL states for {affiliation}</h2>
+            <LoadingButton
+              style={{ minWidth: '141px' }}
+              loading={isFetchingWebsealStates}
+              onClick={this.refreshWebsealStates}
+              icon="Update"
+            >
+              Oppdater
+            </LoadingButton>
+          </div>
           <div className="styled-input">
             <TextField
               placeholder="Søk etter host eller rolle"
@@ -226,8 +241,16 @@ export default styled(Webseal)`
     padding: 0 10px;
   }
 
+  .action-bar {
+    display: flex;
+    justify-content: space-between;
+    margin: 20px 0 20px 0;
+    h2 {
+      margin: 0;
+    }
+  }
+
   .styled-input {
-    padding-top: 10px;
     width: 300px;
   }
 
