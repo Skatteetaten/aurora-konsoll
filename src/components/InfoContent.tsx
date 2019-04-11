@@ -1,13 +1,13 @@
 import * as React from 'react';
 import styled from 'styled-components';
 
+import { InfoContentValues } from 'models/InfoContentValues';
+
 interface IInfoContentProps {
   style?: React.CSSProperties;
   className?: string;
   id?: string;
-  values: {
-    [key: string]: any;
-  };
+  infoContentValues: InfoContentValues;
 }
 
 const defaultStyle: React.CSSProperties = {
@@ -15,20 +15,23 @@ const defaultStyle: React.CSSProperties = {
 };
 
 const InfoContent = ({
-  values,
+  infoContentValues,
   className,
   id,
   style = defaultStyle
-}: IInfoContentProps) => (
-  <div className={className} style={style} id={id}>
-    {Object.keys(values).map(k => (
-      <dl key={k}>
-        <dt>{k}</dt>
-        <dd title={values[k]}>{values[k]}</dd>
-      </dl>
-    ))}
-  </div>
-);
+}: IInfoContentProps) => {
+  const values = infoContentValues.get();
+  return (
+    <div className={className} style={style} id={id}>
+      {Object.keys(values).map(k => (
+        <dl key={k}>
+          <dt>{k}</dt>
+          <dd title={values[k]}>{values[k]}</dd>
+        </dl>
+      ))}
+    </div>
+  );
+};
 
 export default styled(InfoContent)`
   box-shadow: 0px 3px 8px 0px rgba(0, 0, 0, 0.2);

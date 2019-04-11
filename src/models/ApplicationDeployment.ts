@@ -31,8 +31,15 @@ export interface IApplicationDeploymentStatus {
 }
 
 export interface IApplicationDeploymentDetails {
+  buildTime?: string;
+  gitInfo?: IGitInfo;
   deploymentSpec?: IDeploymentSpec;
   pods: IPodResource[];
+}
+
+export interface IGitInfo {
+  commitId?: string;
+  commitTime?: string;
 }
 
 export interface IUserAndAffiliations {
