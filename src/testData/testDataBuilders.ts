@@ -8,6 +8,7 @@ import { IDeploymentSpec, IMount } from 'models/DeploymentSpec';
 import { ImageTagType } from 'models/ImageTagType';
 import { IPodResource } from 'models/Pod';
 import {
+  ICreateDatabaseSchemaInput,
   ICreateDatabaseSchemaResponse,
   IDatabaseSchema,
   IDatabaseSchemaInput,
@@ -334,6 +335,22 @@ export const userAndAffiliationsFactory = Factory.Sync.makeFactory<
   affiliations: ['paas'],
   id: '123',
   user: 'bob'
+});
+
+export const createDatabaseSchemaInputFactory = Factory.Sync.makeFactory<
+  ICreateDatabaseSchemaInput
+>({
+  affiliation: 'paas',
+  application: 'app',
+  createdBy: 'd36754',
+  description: 'testing',
+  discriminator: 'my-db',
+  environment: 'env',
+  jdbcUser: {
+    jdbcUrl: 'jdbc:oracle:thin:@test.skead.no:1521/referanse',
+    password: 'password',
+    username: 'username'
+  }
 });
 
 export const startupFactory = Factory.Sync.makeFactory<IStartupState>({

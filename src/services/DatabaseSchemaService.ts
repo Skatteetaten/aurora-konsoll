@@ -1,4 +1,5 @@
 import {
+  ICreateDatabaseSchemaInput,
   IDatabaseSchema,
   IDatabaseSchemaInput,
   IDatabaseSchemaView,
@@ -151,6 +152,27 @@ export default class DatabaseSchemaService {
       sortDirection === SortDirection.NONE ||
       sortDirection === SortDirection.DESC
     );
+  }
+
+  public trimJdbcUser = (
+    databaseSchema: ICreateDatabaseSchemaInput
+  ): object => {
+    if (!!databaseSchema.jdbcUser) {
+      return Object.keys(databaseSchema.jdbcUser).reduce((acc, curr) => {
+        acc[curr] = databaseSchema.jdbcUser!![curr].trim();
+        return acc;
+      }, {});
+    }
+    return {};
+  };
+
+  public trimLabelsAndJdbcUser(databaseSchema: ICreateDatabaseSchemaInput) {
+    return Object.keys(databaseSchema).reduce((acc, curr) => {
+      curr !== 'jdbcUser'
+        ? (acc[curr] = databaseSchema[curr].trim())
+        : (acc[curr] = this.trimJdbcUser(databaseSchema));
+      return acc;
+    }, {});
   }
 
   public getSelectionDetails(deleteSelectionIds: string[]): string {
