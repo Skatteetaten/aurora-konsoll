@@ -314,9 +314,9 @@ export const certificateViewFactory = Factory.Sync.makeFactory<
 >({
   id: '123',
   dn: 'test',
-  issuedDate: '2018-01-12',
-  revokedDate: '2016-03-22',
-  expiresDate: '2019-01-12'
+  issuedDate: '12.01.2018',
+  revokedDate: '22.03.2016',
+  expiresDate: '12.01.2019'
 });
 
 export const certificateFactory = Factory.Sync.makeFactory<ICertificate>({
