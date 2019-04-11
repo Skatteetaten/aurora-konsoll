@@ -1,0 +1,29 @@
+{
+  "data": {
+    "certificates": {
+      "totalCount": 2,
+      "edges": [
+        {
+          "cursor": "MTIz",
+          "node": {
+            "id": "123",
+            "dn": "Test1",
+            "issuedDate": "2019-03-27T10:58:25.188859Z",
+            "revokedDate": "2019-03-27T10:58:25.188860Z",
+            "expiresDate": "2019-03-27T10:58:25.188860Z"
+          }
+        },
+        {
+          "cursor": "MjM0",
+          "node": {
+            "id": "234",
+            "dn": "Test2",
+            "issuedDate": "2019-03-27T10:58:25.188865Z",
+            "revokedDate": "2019-03-27T10:58:25.188865Z",
+            "expiresDate": "2019-03-27T10:58:25.188865Z"
+          }
+        }
+      ]
+    }
+  }
+}

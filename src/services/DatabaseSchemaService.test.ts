@@ -1,3 +1,4 @@
+import { SortDirection } from 'models/SortDirection';
 import {
   databaseSchemaFactory,
   databaseSchemaInputFactory,
@@ -7,8 +8,7 @@ import {
 } from 'testData/testDataBuilders';
 import DatabaseSchemaService, {
   defaultColumns,
-  filterDatabaseSchemaView,
-  SortDirection
+  filterDatabaseSchemaView
 } from './DatabaseSchemaService';
 
 describe('DatabaseSchemaService', () => {

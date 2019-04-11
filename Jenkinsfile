@@ -7,10 +7,10 @@ def overrides = [
     credentialsId: "github",
     jiraFiksetIKomponentversjon: true,
     chatRoom: "#aos-notifications",
+    nodeVersion: "10",
     versionStrategy: [
         [ branch: 'master', versionHint: '0']
     ]
-
 ]
 
 fileLoader.withGit(overrides.pipelineScript, overrides.scriptVersion) {

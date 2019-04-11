@@ -26,12 +26,12 @@ import {
   IJdbcUser,
   IUpdateDatabaseSchemaInputWithCreatedBy
 } from 'models/schemas';
+import { SortDirection } from 'models/SortDirection';
 import DatabaseSchemaService, {
   defaultSortDirections,
   deletionDialogColumns,
   filterDatabaseSchemaView,
-  selectedIndices,
-  SortDirection
+  selectedIndices
 } from 'services/DatabaseSchemaService';
 import { StyledPre } from '../DetailsView/InformationView/HealthResponseDialogSelector/utilComponents';
 import ConfirmDeletionDialog from './ConfirmDeletionDialog';

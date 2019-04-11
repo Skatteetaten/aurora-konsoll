@@ -4,6 +4,11 @@ import {
   IApplicationDeploymentDetails,
   IUserAndAffiliations
 } from 'models/ApplicationDeployment';
+import {
+  ICertificate,
+  ICertificateResult,
+  ICertificateView
+} from 'models/certificates';
 import { IDeploymentSpec, IMount } from 'models/DeploymentSpec';
 import { ImageTagType } from 'models/ImageTagType';
 import { IPodResource } from 'models/Pod';
@@ -21,6 +26,7 @@ import { StatusCode } from 'models/Status';
 import { ITagsPagedGroup } from 'models/Tag';
 import { IApplicationDeploymentFilters } from 'models/UserSettings';
 import { ISchemasState } from 'screens/AffiliationViews/DatabaseView/state/reducers';
+import { ICertificateState } from 'screens/CertificateView/state/reducers';
 import { IFilter } from 'services/DeploymentFilterService';
 import { IStartupState } from 'state/reducers';
 
@@ -303,6 +309,31 @@ export const createDatabaseSchemaResponseFactory = Factory.Sync.makeFactory<
   jdbcUser: jdbcUserFactory.build()
 });
 
+export const certificateViewFactory = Factory.Sync.makeFactory<
+  ICertificateView
+>({
+  id: '123',
+  dn: 'test',
+  issuedDate: '12.01.2018',
+  revokedDate: '22.03.2016',
+  expiresDate: '12.01.2019'
+});
+
+export const certificateFactory = Factory.Sync.makeFactory<ICertificate>({
+  id: '123',
+  dn: 'test',
+  issuedDate: new Date(2018, 0, 12),
+  revokedDate: new Date(2016, 2, 22),
+  expiresDate: new Date(2019, 0, 12)
+});
+
+export const certificateResultFactory = Factory.Sync.makeFactory<
+  ICertificateResult
+>({
+  certificates: [certificateFactory.build()],
+  totalCount: 1
+});
+
 export const schemasFactory = Factory.Sync.makeFactory<ISchemasState>({
   isFetchingSchemas: false,
   databaseSchemas: { databaseSchemas: [] },
@@ -313,6 +344,16 @@ export const schemasFactory = Factory.Sync.makeFactory<ISchemasState>({
     id: '',
     jdbcUser: { jdbcUrl: '', username: '', password: '' }
   }
+});
+
+export const certificateInitialFactory = Factory.Sync.makeFactory<
+  ICertificateState
+>({
+  certificates: {
+    certificates: [],
+    totalCount: 0
+  },
+  isFetchingCertificates: false
 });
 
 export const databaseSchemasFactory = Factory.Sync.makeFactory<

@@ -61,11 +61,16 @@ const Layout = ({
       iconName: 'Code',
       name: 'Netdebug',
       to: '/netdebug'
+    },
+    {
+      iconName: 'Lock',
+      name: 'Sertifikater',
+      to: '/certificates'
     }
   ];
 
   if (displayDatabaseView) {
-    menuLinks.push(databaseMenuLink);
+    menuLinks.splice(2, 0, databaseMenuLink);
   }
 
   menuLinks.map(item => ({
