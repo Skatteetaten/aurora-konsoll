@@ -63,6 +63,11 @@ const Layout = ({
       to: '/netdebug'
     },
     {
+      iconName: 'Lock',
+      name: 'Sertifikater',
+      to: '/certificates'
+    },
+    {
       iconName: 'LockOutline',
       name: 'Webseal',
       to: `/w/${affiliation || '_'}/webseal`
@@ -70,7 +75,7 @@ const Layout = ({
   ];
 
   if (displayDatabaseView) {
-    menuLinks.push(databaseMenuLink);
+    menuLinks.splice(2, 0, databaseMenuLink);
   }
 
   menuLinks.map(item => ({
@@ -99,7 +104,7 @@ const Layout = ({
       </Header>
       <Menu className="g-menu">
         {menuLinks.map(props => (
-          <MenuNavLink key={props.name} {...props} />
+          <MenuNavLink key={props.name} showName={isMenuExpanded} {...props} />
         ))}
         <MenuCollapseButton
           isExpanded={isMenuExpanded}

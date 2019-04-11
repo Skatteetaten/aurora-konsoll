@@ -23,6 +23,7 @@ import { errorStateManager } from 'models/StateManager/ErrorStateManager';
 import AffiliationViewValidatorConnected, {
   AffiliationRouteProps
 } from './AffiliationViews/AffiliationViewValidator';
+import { CertificateConnected } from './CertificateView/CertificateConnected';
 import GoboUsageView from './GoboUsageView';
 import { NetdebugWithApi } from './NetdebugView/Netdebug';
 
@@ -147,6 +148,11 @@ class App extends React.Component<IAppProps, IAppState> {
                   exact={true}
                   path="/netdebug"
                   component={NetdebugWithApi}
+                />
+                <Route
+                  exact={true}
+                  path="/certificates"
+                  component={CertificateConnected}
                 />
                 {displayDatabaseView && (
                   <Route

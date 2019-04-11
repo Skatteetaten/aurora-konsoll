@@ -6,12 +6,12 @@ import TextField from 'aurora-frontend-react-komponenter/TextField';
 
 import LoadingButton from 'components/LoadingButton';
 import Spinner from 'components/Spinner';
+import { SortDirection } from 'models/SortDirection';
 import { IWebsealState } from 'models/Webseal';
 import {
   IObjectWithKey,
   Selection
 } from 'office-ui-fabric-react/lib/DetailsList';
-import { SortDirection } from 'services/DatabaseSchemaService';
 import WebsealService, {
   defaultSortDirections,
   filterWebsealView,

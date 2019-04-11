@@ -1,0 +1,23 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`getCertificates should fetch certificates from GraphQL server 1`] = `
+Object {
+  "certificates": Array [
+    Object {
+      "dn": "Test1",
+      "expiresDate": "2019-03-27T10:58:25.188860Z",
+      "id": "123",
+      "issuedDate": "2019-03-27T10:58:25.188859Z",
+      "revokedDate": "2019-03-27T10:58:25.188860Z",
+    },
+    Object {
+      "dn": "Test2",
+      "expiresDate": "2019-03-27T10:58:25.188865Z",
+      "id": "234",
+      "issuedDate": "2019-03-27T10:58:25.188865Z",
+      "revokedDate": "2019-03-27T10:58:25.188865Z",
+    },
+  ],
+  "totalCount": 2,
+}
+`;

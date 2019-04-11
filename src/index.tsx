@@ -14,6 +14,7 @@ import { errorStateManager } from 'models/StateManager/ErrorStateManager';
 import App from 'screens/App';
 import {
   ApplicationDeploymentClient,
+  CertificateClient,
   DatabaseClient,
   GoboUsageClient,
   ImageRepositoryClient,
@@ -53,7 +54,8 @@ async function init() {
     userSettingsClient: new UserSettingsClient(goboClient),
     databaseClient: new DatabaseClient(goboClient),
     websealClient: new WebsealClient(goboClient),
-    goboUsageClient: new GoboUsageClient(goboClient)
+    goboUsageClient: new GoboUsageClient(goboClient),
+    certificateClient: new CertificateClient(goboClient)
   };
 
   ReactDOM.render(

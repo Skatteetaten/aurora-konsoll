@@ -1,6 +1,7 @@
 import * as React from 'react';
 import {
   ApplicationDeploymentClient,
+  CertificateClient,
   DatabaseClient,
   GoboUsageClient,
   ImageRepositoryClient,
@@ -16,6 +17,7 @@ interface IApiClients {
   databaseClient: DatabaseClient;
   websealClient: WebsealClient;
   goboUsageClient: GoboUsageClient;
+  certificateClient: CertificateClient;
 }
 
 // AuroraApiContext

@@ -1,4 +1,4 @@
-import { SortDirection } from './DatabaseSchemaService';
+import { SortDirection } from 'models/SortDirection';
 
 export const websealTableColumns = () => [
   {

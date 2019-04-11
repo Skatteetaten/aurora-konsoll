@@ -6,13 +6,9 @@ import {
   IUpdateDatabaseSchemaInputWithCreatedBy
 } from 'models/schemas';
 
+import { SortDirection } from 'models/SortDirection';
 import { Selection } from 'office-ui-fabric-react/lib/DetailsList';
-
-export enum SortDirection {
-  ASC,
-  DESC,
-  NONE
-}
+import { createDate, dateValidation } from 'utils/date';
 
 export let selectedIndices: number[] = [];
 
@@ -296,9 +292,9 @@ export default class DatabaseSchemaService {
       const valueB = this.lowerCaseIfString(b[name]);
       if (valueA === valueB) {
         return 0;
-      } else if (this.isDate(valueA) || this.isDate(valueB)) {
-        const dateA = this.createDate(valueA).getTime();
-        const dateB = this.createDate(valueB).getTime();
+      } else if (dateValidation(valueA) || dateValidation(valueB)) {
+        const dateA = createDate(valueA).getTime();
+        const dateB = createDate(valueB).getTime();
         return this.sortNextAscending(prevSortDirection)
           ? dateB - dateA
           : dateA - dateB;
@@ -314,23 +310,5 @@ export default class DatabaseSchemaService {
 
   private lowerCaseIfString(value: any) {
     return typeof value === 'string' ? (value as string).toLowerCase() : value;
-  }
-
-  private isDate(value: any) {
-    const dateValidator = /^\d{2}[.]\d{2}[.]\d{4}$/;
-    return typeof value === 'string' && (value as string).match(dateValidator);
-  }
-
-  private createDate(value: string | null) {
-    if (value === null) {
-      return new Date(0);
-    } else {
-      const values = value.split('.');
-      return new Date(
-        Number(values[2]),
-        Number(values[1]) - 1,
-        Number(values[0])
-      );
-    }
   }
 }
