@@ -1,4 +1,3 @@
-import { errorStateManager } from 'models/StateManager/ErrorStateManager';
 import { defaultTagsPagedGroup, ITagsPaged, ITagsPagedGroup } from 'models/Tag';
 import GoboClient from 'services/GoboClient';
 import {
