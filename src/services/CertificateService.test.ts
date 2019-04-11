@@ -1,9 +1,9 @@
+import { SortDirection } from 'models/SortDirection';
 import {
   certificateResultFactory,
   certificateViewFactory
 } from 'testData/testDataBuilders';
 import CertificateService, { certificateColumns } from './CertificateService';
-import { SortDirection } from './DatabaseSchemaService';
 
 describe('CertificateService', () => {
   const certificateService = new CertificateService();

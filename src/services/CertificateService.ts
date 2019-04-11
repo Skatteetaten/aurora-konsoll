@@ -3,8 +3,8 @@ import {
   ICertificateView,
   IDetailsListContent
 } from 'models/certificates';
+import { SortDirection } from 'models/SortDirection';
 import { createDate, dateValidation, getLocalDate } from 'utils/date';
-import { SortDirection } from './DatabaseSchemaService';
 
 export const certificateColumns = (): IDetailsListContent[] => [
   {

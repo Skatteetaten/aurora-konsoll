@@ -7,10 +7,10 @@ import { IAuroraApiComponentProps, withAuroraApi } from 'components/AuroraApi';
 import LoadingButton from 'components/LoadingButton';
 import Spinner from 'components/Spinner';
 import { ICertificateResult, ICertificateView } from 'models/certificates';
+import { SortDirection } from 'models/SortDirection';
 import CertificateService, {
   defaultSortDirections
 } from 'services/CertificateService';
-import { SortDirection } from 'services/DatabaseSchemaService';
 import Table from './Table';
 
 export interface ICertificateProps extends IAuroraApiComponentProps {

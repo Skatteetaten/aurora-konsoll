@@ -6,14 +6,9 @@ import {
   IUpdateDatabaseSchemaInputWithCreatedBy
 } from 'models/schemas';
 
+import { SortDirection } from 'models/SortDirection';
 import { Selection } from 'office-ui-fabric-react/lib/DetailsList';
 import { createDate, dateValidation } from 'utils/date';
-
-export enum SortDirection {
-  ASC,
-  DESC,
-  NONE
-}
 
 export let selectedIndices: number[] = [];
 
