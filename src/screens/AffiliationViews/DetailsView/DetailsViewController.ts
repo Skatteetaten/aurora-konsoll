@@ -186,17 +186,18 @@ export default class DetailsViewController {
       imageRepositoryClient
     } = this.component.props.clients;
 
-    if(repository) {
-      this.sm.loading.withLoading(['fetchTags', 'fetchDetails'], async () => {
-        const [deploymentDetails, tagsPagedGroup] = await Promise.all([
-          applicationDeploymentClient.findApplicationDeploymentDetails(id),
-          imageRepositoryClient.findGroupedTagsPaged(repository)
-        ]);
-
-        this.component.setState({ deploymentDetails });
+    this.sm.loading.withLoading(['fetchTags', 'fetchDetails'], async () => {
+      const deploymentDetailsResponse = applicationDeploymentClient.findApplicationDeploymentDetails(id);
+      if(repository) {
+        const tagsResponse = imageRepositoryClient.findGroupedTagsPaged(repository);
+        const [deploymentDetails, tagsPagedGroup] = await Promise.all([deploymentDetailsResponse, tagsResponse]);
         this.sm.tag.setTagsPagedGroup(tagsPagedGroup);
-      });
-    }
+        this.component.setState({ deploymentDetails });
+      } else {
+        const deploymentDetails = await deploymentDetailsResponse;
+        this.component.setState({ deploymentDetails });
+      }
+    });
   };
 
   public getVersionViewUnavailableMessage():
