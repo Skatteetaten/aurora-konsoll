@@ -43,7 +43,7 @@ export const DifferentVersionTooltip = ({
           fontSize: '18px'
         }}
       />
-      <div className="styledDeployTag" title={deploymentTag}>
+      <div style={{ paddingLeft: '25px' }} title={deploymentTag}>
         {deploymentTag}
       </div>
     </>

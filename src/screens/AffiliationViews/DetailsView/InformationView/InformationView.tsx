@@ -43,7 +43,7 @@ const InformationView = ({
             deploymentSpec={deploymentSpec}
           />
           <DeploymentSpecInformation deploymentSpec={deploymentSpec} />
-          <GitAndBuildInformation details={deploymentDetails} />
+          <GitAndBuildInformation deploymentDetails={deploymentDetails} />
         </div>
         <div>
           <h3>AuroraStatus for deployment</h3>
@@ -93,18 +93,17 @@ export default styled(InformationView)`
     display: flex;
     flex-wrap: wrap;
   }
+
   .info-pod {
     max-width: 400px;
     margin-right: 10px;
     margin-bottom: 10px;
   }
+
   .info-grid {
     display: flex;
     > div {
       margin-right: 40px;
     }
-  }
-  .styledDeployTag {
-    padding-left: 25px;
   }
 `;

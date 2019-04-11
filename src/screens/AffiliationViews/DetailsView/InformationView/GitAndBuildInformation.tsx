@@ -6,19 +6,24 @@ import { InfoContentValues } from 'models/InfoContentValues';
 import { getLocalDatetime } from 'utils/date';
 
 interface IGitAndBuildInformationProps {
-  details?: IApplicationDeploymentDetails;
+  deploymentDetails?: IApplicationDeploymentDetails;
 }
 
 export const GitAndBuildInformation = ({
-  details
+  deploymentDetails
 }: IGitAndBuildInformationProps) => {
-  if (!details || !(details.buildTime && details.gitInfo)) {
+  if (
+    !deploymentDetails ||
+    !(deploymentDetails.buildTime && deploymentDetails.gitInfo)
+  ) {
     return null;
   }
 
   const values = new InfoContentValues();
-  values.add(details, 'buildTime', 'Build Time', v => getLocalDatetime(v));
-  values.addFrom(details.gitInfo, add => {
+  values.add(deploymentDetails, 'buildTime', 'Build Time', v =>
+    getLocalDatetime(v)
+  );
+  values.addFrom(deploymentDetails.gitInfo, add => {
     add('commitId', 'CommitId');
     add('commitTime', 'CommitTime', v => getLocalDatetime(v));
   });
