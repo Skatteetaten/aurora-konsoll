@@ -1,4 +1,3 @@
-import { errorStateManager } from 'models/StateManager/ErrorStateManager';
 import { defaultTagsPagedGroup, ITagsPaged, ITagsPagedGroup } from 'models/Tag';
 import GoboClient from 'services/GoboClient';
 import {
@@ -39,9 +38,6 @@ export class ImageRepositoryClient {
     const { imageRepositories } = result.data;
 
     if (!(imageRepositories && imageRepositories.length > 0)) {
-      errorStateManager.addError(
-        new Error(`Kunne ikke finne repository for denne applikasjonen`)
-      );
       return defaultTagsPagedGroup()[type];
     }
 
@@ -65,9 +61,6 @@ export class ImageRepositoryClient {
     const { imageRepositories } = result.data;
 
     if (!(imageRepositories && imageRepositories.length > 0)) {
-      errorStateManager.addError(
-        new Error(`Kunne ikke finne repository for denne applikasjonen`)
-      );
       return defaultTagsPagedGroup();
     }
 
