@@ -14,20 +14,18 @@ export const GitAndBuildInformation = ({
 }: IGitAndBuildInformationProps) => {
   if (
     !deploymentDetails ||
-    !(deploymentDetails.buildTime && deploymentDetails.gitInfo)
+    (!exists(deploymentDetails, '/gitInfo/commitId') &&
+      !deploymentDetails.buildTime)
   ) {
     return null;
   }
 
   const values = new InfoContentValues();
-  values.add(deploymentDetails, 'buildTime', 'Build Time', v =>
-    getLocalDatetime(v)
-  );
-  values.addFrom(deploymentDetails.gitInfo, add => {
-    add('commitId', 'CommitId');
-    add('commitTime', 'CommitTime', v => getLocalDatetime(v));
+  values.addFrom(deploymentDetails, add => {
+    add('buildTime', 'Build Time', v => getLocalDatetime(v));
+    add('gitInfo', 'Commit Id', git => git.commitId);
+    add('gitInfo', 'Commit Time', git => git.commitTime);
   });
-
   return (
     <>
       <h3>Git og bygg informasjon</h3>
@@ -35,3 +33,9 @@ export const GitAndBuildInformation = ({
     </>
   );
 };
+
+function exists<T>(obj: T, path: string): boolean {
+  const basePaths = path.split('/');
+  const paths = path.startsWith('/') ? basePaths.splice(1) : basePaths;
+  return obj && !!paths.reduce((next, p) => next && next[p], obj);
+}

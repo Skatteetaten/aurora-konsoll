@@ -29,6 +29,9 @@ export class InfoContentValues {
     }
 
     const value = to ? to(obj[key] as NonNullable<T[K]>) : obj[key];
+    if (!value) {
+      return;
+    }
 
     if (as) {
       this.values[as] = value;
