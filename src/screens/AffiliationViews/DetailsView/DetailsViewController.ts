@@ -187,10 +187,17 @@ export default class DetailsViewController {
     } = this.component.props.clients;
 
     this.sm.loading.withLoading(['fetchTags', 'fetchDetails'], async () => {
-      const deploymentDetailsResponse = applicationDeploymentClient.findApplicationDeploymentDetails(id);
-      if(repository) {
-        const tagsResponse = imageRepositoryClient.findGroupedTagsPaged(repository);
-        const [deploymentDetails, tagsPagedGroup] = await Promise.all([deploymentDetailsResponse, tagsResponse]);
+      const deploymentDetailsResponse = applicationDeploymentClient.findApplicationDeploymentDetails(
+        id
+      );
+      if (repository) {
+        const tagsResponse = imageRepositoryClient.findGroupedTagsPaged(
+          repository
+        );
+        const [deploymentDetails, tagsPagedGroup] = await Promise.all([
+          deploymentDetailsResponse,
+          tagsResponse
+        ]);
         this.sm.tag.setTagsPagedGroup(tagsPagedGroup);
         this.component.setState({ deploymentDetails });
       } else {
