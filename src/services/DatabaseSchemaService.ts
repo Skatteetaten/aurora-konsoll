@@ -156,23 +156,45 @@ export default class DatabaseSchemaService {
 
   public trimJdbcUser = (
     databaseSchema: ICreateDatabaseSchemaInput
-  ): object => {
+  ): IJdbcUser | null => {
+    const defaultValues: IJdbcUser = {
+      username: '',
+      password: '',
+      jdbcUrl: ''
+    };
     if (!!databaseSchema.jdbcUser) {
       return Object.keys(databaseSchema.jdbcUser).reduce((acc, curr) => {
-        acc[curr] = databaseSchema.jdbcUser!![curr].trim();
+        if (!!databaseSchema.jdbcUser) {
+          acc[curr] = databaseSchema.jdbcUser[curr].trim();
+        }
         return acc;
-      }, {});
+      }, defaultValues);
     }
-    return {};
+    return null;
   };
 
-  public trimLabelsAndJdbcUser(databaseSchema: ICreateDatabaseSchemaInput) {
+  public trimLabelsAndJdbcUser(
+    databaseSchema: ICreateDatabaseSchemaInput
+  ): ICreateDatabaseSchemaInput {
+    const defaultValues: ICreateDatabaseSchemaInput = {
+      discriminator: '',
+      createdBy: '',
+      description: null,
+      environment: '',
+      application: '',
+      affiliation: ''
+    };
+
+    const trimLabels = (value: string): string => {
+      return !!value ? value.trim() : value;
+    };
+
     return Object.keys(databaseSchema).reduce((acc, curr) => {
       curr !== 'jdbcUser'
-        ? (acc[curr] = databaseSchema[curr].trim())
+        ? (acc[curr] = trimLabels(databaseSchema[curr]))
         : (acc[curr] = this.trimJdbcUser(databaseSchema));
       return acc;
-    }, {});
+    }, defaultValues);
   }
 
   public getSelectionDetails(deleteSelectionIds: string[]): string {

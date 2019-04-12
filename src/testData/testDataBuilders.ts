@@ -273,6 +273,7 @@ export const databaseSchemaInputFactory = Factory.Sync.makeFactory<
   IDatabaseSchemaInput
 >({
   application: 'application',
+  description: null,
   environment: 'environment',
   discriminator: 'db',
   createdBy: '12345',
@@ -343,7 +344,7 @@ export const createDatabaseSchemaInputFactory = Factory.Sync.makeFactory<
   affiliation: 'paas',
   application: 'app',
   createdBy: 'd36754',
-  description: 'testing',
+  description: null,
   discriminator: 'my-db',
   environment: 'env',
   jdbcUser: {

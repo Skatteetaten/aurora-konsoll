@@ -108,12 +108,10 @@ class DatabaseSchemaCreateDialog extends React.Component<
     this.setState({
       isLoading: true
     });
-    // tslint:disable-next-line:no-console
-    console.log(
+
+    await onCreate(
       this.databaseSchemaService.trimLabelsAndJdbcUser(databaseSchemaInput)
     );
-
-    await onCreate(databaseSchemaInput);
     this.setState({
       step: Step.SUMMARY
     });

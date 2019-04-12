@@ -142,6 +142,7 @@ describe('DatabaseSchemaService', () => {
       ).toEqual({
         affiliation: 'paas',
         application: 'application',
+        description: null,
         createdBy: '123',
         discriminator: 'db',
         environment: 'environment'
@@ -153,7 +154,6 @@ describe('DatabaseSchemaService', () => {
         application: ' app ',
         discriminator: ' db ',
         createdBy: ' ',
-        description: ' Dette er en test ',
         jdbcUser: {
           jdbcUrl: ' test.no',
           password: '123 '
@@ -166,11 +166,18 @@ describe('DatabaseSchemaService', () => {
         affiliation: 'paas',
         application: 'app',
         createdBy: '',
-        description: 'Dette er en test',
+        description: null,
         discriminator: 'db',
         environment: 'env',
         jdbcUser: { jdbcUrl: 'test.no', password: '123', username: 'username' }
       });
+    });
+
+    it('should given no spaces in front or behind any values, do nothing to the schema', () => {
+      const databseSchema = createDatabaseSchemaInputFactory.build();
+      expect(
+        databaseSchemaService.trimLabelsAndJdbcUser(databseSchema)
+      ).toEqual(databseSchema);
     });
   });
 
