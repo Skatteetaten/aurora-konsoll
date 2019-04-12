@@ -22,9 +22,13 @@ export const GitAndBuildInformation = ({
 
   const values = new InfoContentValues();
   values.addFrom(deploymentDetails, add => {
-    add('buildTime', 'Build Time', v => getLocalDatetime(v));
+    add('buildTime', 'Build Time (CI)', v => getLocalDatetime(v));
     add('gitInfo', 'Commit Id', git => git.commitId);
-    add('gitInfo', 'Commit Time', git => git.commitTime);
+    add(
+      'gitInfo',
+      'Commit Time',
+      ({ commitTime }) => commitTime && getLocalDatetime(commitTime)
+    );
   });
   return (
     <>
