@@ -1,8 +1,5 @@
-import {
-  ICertificateResult,
-  ICertificateView,
-  IDetailsListContent
-} from 'models/certificates';
+import { ICertificateResult, ICertificateView } from 'models/certificates';
+import { IDetailsListContent } from 'models/DetailsList';
 import { SortDirection } from 'models/SortDirection';
 import { createDate, dateValidation, getLocalDate } from 'utils/date';
 

@@ -1,6 +1,8 @@
+import { IDetailsListContent } from 'models/DetailsList';
 import { SortDirection } from 'models/SortDirection';
+import { createDate, dateValidation } from 'utils/date';
 
-export const websealTableColumns = () => [
+export const websealTableColumns = (): IDetailsListContent[] => [
   {
     key: 0,
     name: 'Host',
@@ -21,7 +23,7 @@ export const websealTableColumns = () => [
 
 export const websealDialogColumns = (
   onRender: (item: { key: string }) => JSX.Element
-) => [
+): IDetailsListContent[] => [
   {
     key: 0,
     fieldName: 'key',
@@ -52,7 +54,7 @@ export const filterWebsealView = (filter: string) => {
 };
 
 class WebsealService {
-  public sortNextAscending(sortDirection: SortDirection) {
+  public sortNextAscending(sortDirection: SortDirection): boolean {
     return (
       sortDirection === SortDirection.NONE ||
       sortDirection === SortDirection.DESC
@@ -63,15 +65,15 @@ class WebsealService {
     viewItems: IWebsealTableColumns[],
     prevSortDirection: SortDirection,
     name: string | number | symbol
-  ) {
+  ): IWebsealTableColumns[] {
     return viewItems.slice(0).sort((a: any, b: any) => {
       const valueA = this.lowerCaseIfString(a[name]);
       const valueB = this.lowerCaseIfString(b[name]);
       if (valueA === valueB) {
         return 0;
-      } else if (this.isDate(valueA) || this.isDate(valueB)) {
-        const dateA = this.createDate(valueA).getTime();
-        const dateB = this.createDate(valueB).getTime();
+      } else if (dateValidation(valueA) || dateValidation(valueB)) {
+        const dateA = createDate(valueA).getTime();
+        const dateB = createDate(valueB).getTime();
         return this.sortNextAscending(prevSortDirection)
           ? dateB - dateA
           : dateA - dateB;
@@ -99,7 +101,10 @@ class WebsealService {
     return resArray;
   };
 
-  public createColumns(index: number, sortDirection: SortDirection) {
+  public createColumns(
+    index: number,
+    sortDirection: SortDirection
+  ): IDetailsListContent[] {
     const columns = websealTableColumns();
     if (index > -1) {
       const currentCol = columns[index];
@@ -115,26 +120,8 @@ class WebsealService {
     return columns;
   }
 
-  private lowerCaseIfString(value: any) {
+  private lowerCaseIfString(value: any): any {
     return typeof value === 'string' ? (value as string).toLowerCase() : value;
-  }
-
-  private isDate(value: any) {
-    const dateValidator = /^\d{2}[.]\d{2}[.]\d{4}$/;
-    return typeof value === 'string' && (value as string).match(dateValidator);
-  }
-
-  private createDate(value: string | null) {
-    if (value === null) {
-      return new Date(0);
-    } else {
-      const values = value.split('.');
-      return new Date(
-        Number(values[2]),
-        Number(values[1]) - 1,
-        Number(values[0])
-      );
-    }
   }
 }
 

@@ -1,13 +1,3 @@
-export interface IDetailsListContent {
-  fieldName: string;
-  isResizable: boolean;
-  key: number;
-  maxWidth: number;
-  minWidth: number;
-  name: string;
-  iconName: string;
-}
-
 export interface ICertificateView {
   id: string;
   dn: string;

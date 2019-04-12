@@ -6,6 +6,7 @@ import {
   IUpdateDatabaseSchemaInputWithCreatedBy
 } from 'models/schemas';
 
+import { IDetailsListContent } from 'models/DetailsList';
 import { SortDirection } from 'models/SortDirection';
 import { Selection } from 'office-ui-fabric-react/lib/DetailsList';
 import { createDate, dateValidation } from 'utils/date';
@@ -226,7 +227,10 @@ export default class DatabaseSchemaService {
     }
   }
 
-  public createColumns(index: number, sortDirection: SortDirection) {
+  public createColumns(
+    index: number,
+    sortDirection: SortDirection
+  ): IDetailsListContent[] {
     const columns = defaultColumns();
     if (index > -1) {
       const currentCol = columns[index];
