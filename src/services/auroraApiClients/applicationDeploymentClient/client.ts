@@ -133,7 +133,8 @@ export class ApplicationDeploymentClient {
         deploymentSpecs,
         podResources,
         buildTime,
-        gitInfo
+        gitInfo,
+        serviceLinks
       } = result.data.applicationDeploymentDetails;
 
       let deploymentSpec;
@@ -149,12 +150,14 @@ export class ApplicationDeploymentClient {
         buildTime,
         gitInfo,
         pods: podResources,
-        deploymentSpec
+        deploymentSpec,
+        serviceLinks
       };
     }
 
     return {
-      pods: []
+      pods: [],
+      serviceLinks: []
     };
   }
 

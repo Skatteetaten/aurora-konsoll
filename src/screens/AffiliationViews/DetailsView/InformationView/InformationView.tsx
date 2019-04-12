@@ -48,6 +48,16 @@ const InformationView = ({
         <div>
           <h3>AuroraStatus for deployment</h3>
           <StatusCheckReportCard deployment={deployment} />
+          <h3>Links</h3>
+          <ul>
+            {deploymentDetails.serviceLinks.map(link => (
+              <li>
+                <a target="_blank" href={link.url}>
+                  {link.name}
+                </a>
+              </li>
+            ))}
+          </ul>
         </div>
       </div>
       <hr

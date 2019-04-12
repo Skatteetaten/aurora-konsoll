@@ -35,6 +35,7 @@ export interface IApplicationDeploymentDetails {
   gitInfo?: IGitInfo;
   deploymentSpec?: IDeploymentSpec;
   pods: IPodResource[];
+  serviceLinks: ILink[];
 }
 
 export interface IGitInfo {
@@ -46,4 +47,9 @@ export interface IUserAndAffiliations {
   affiliations: string[];
   user: string;
   id: string;
+}
+
+export interface ILink {
+  name: string;
+  url: string;
 }

@@ -1,3 +1,5 @@
+import { ILink } from './ApplicationDeployment';
+
 export interface IPodResource {
   name: string;
   phase: string;
@@ -8,10 +10,7 @@ export interface IPodResource {
   managementResponses?: {
     health?: IManagementEndpointResponse;
   };
-  links: Array<{
-    name: string;
-    url: string;
-  }>;
+  links: ILink[];
 }
 
 export interface IManagementEndpointResponse {

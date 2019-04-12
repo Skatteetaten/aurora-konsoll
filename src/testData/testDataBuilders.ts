@@ -135,7 +135,8 @@ export const deploymentDetailsFactory = Factory.Sync.makeFactory<
   IApplicationDeploymentDetails
 >({
   deploymentSpec: deploymentSpecFactory.build(),
-  pods: podFactory.buildList(3)
+  pods: podFactory.buildList(3),
+  serviceLinks: []
 });
 
 export const applicationDeploymentFilterFactory = Factory.Sync.makeFactory<
