@@ -8,7 +8,8 @@ import {
   CLIENT_ID,
   DBH_ENABLED,
   GOBO_URL,
-  PORT
+  PORT,
+  SKAP_ENABLED
 } from './config';
 
 const app = express();
@@ -30,7 +31,8 @@ app.get('/api/config', (req, res) => {
     AUTHORIZATION_URI,
     CLIENT_ID,
     APPLICATION_NAME,
-    DBH_ENABLED
+    DBH_ENABLED,
+    SKAP_ENABLED
   });
 });
 

@@ -36,6 +36,7 @@ export enum MenuType {
 interface IAppProps extends IAuroraApiComponentProps, RouteComponentProps<{}> {
   tokenStore: ITokenStore;
   displayDatabaseView: boolean;
+  displaySkapViews: boolean;
 }
 
 interface IAppState {
@@ -56,7 +57,12 @@ class App extends React.Component<IAppProps, IAppState> {
   };
 
   public onAffiliationChangeFromSelector = (affiliation: string) => {
-    const { location, history, displayDatabaseView } = this.props;
+    const {
+      location,
+      history,
+      displayDatabaseView,
+      displaySkapViews
+    } = this.props;
     let newPath = '';
 
     if (location.pathname.startsWith('/a/')) {
@@ -69,7 +75,7 @@ class App extends React.Component<IAppProps, IAppState> {
         /\/db\/(\b\w*[-]?\w*\b)\/(\w*)(\/.*)?/,
         `/db/${affiliation}/$2`
       );
-    } else if (location.pathname.startsWith('/w/')) {
+    } else if (location.pathname.startsWith('/w/') && displaySkapViews) {
       newPath = location.pathname.replace(
         /\/w\/(\b\w*[-]?\w*\b)\/(\w*)(\/.*)?/,
         `/w/${affiliation}/$2`
@@ -88,7 +94,7 @@ class App extends React.Component<IAppProps, IAppState> {
     const isAuthenticated = this.props.tokenStore.isTokenValid();
 
     const { affiliation, isMenuExpanded } = this.state;
-    const { location, displayDatabaseView } = this.props;
+    const { location, displayDatabaseView, displaySkapViews } = this.props;
 
     const renderAffiliationViewValidatorDeployments = (
       routeProps: AffiliationRouteProps
@@ -131,6 +137,7 @@ class App extends React.Component<IAppProps, IAppState> {
             }
             onAffiliationChange={this.onAffiliationChangeFromSelector}
             displayDatabaseView={displayDatabaseView}
+            displaySkapViews={displaySkapViews}
           >
             <AcceptTokenRoute onTokenUpdated={this.onTokenUpdated} />
             {isAuthenticated && (

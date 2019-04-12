@@ -25,6 +25,7 @@ interface ILayoutProps {
   children: React.ReactNode;
   onAffiliationChange: (affiliation: string) => void;
   displayDatabaseView: boolean;
+  displaySkapViews: boolean;
   currentUser: IUserAndAffiliations;
 }
 
@@ -37,6 +38,7 @@ const Layout = ({
   children,
   onAffiliationChange,
   displayDatabaseView,
+  displaySkapViews,
   currentUser
 }: ILayoutProps) => {
   const onAffiliationChanged = (item: IDropdownOption, index: number) => {
@@ -51,6 +53,19 @@ const Layout = ({
     to: `/db/${affiliation || '_'}/databaseSchemas`
   };
 
+  const skapMenuLinks: IMenuNavLinkData[] = [
+    {
+      iconName: 'LockOutline',
+      name: 'Webseal',
+      to: `/w/${affiliation || '_'}/webseal`
+    },
+    {
+      iconName: 'Lock',
+      name: 'Sertifikater',
+      to: '/certificates'
+    }
+  ];
+
   const menuLinks: IMenuNavLinkData[] = [
     {
       iconName: 'Menu',
@@ -61,21 +76,15 @@ const Layout = ({
       iconName: 'Code',
       name: 'Netdebug',
       to: '/netdebug'
-    },
-    {
-      iconName: 'Lock',
-      name: 'Sertifikater',
-      to: '/certificates'
-    },
-    {
-      iconName: 'LockOutline',
-      name: 'Webseal',
-      to: `/w/${affiliation || '_'}/webseal`
     }
   ];
 
   if (displayDatabaseView) {
-    menuLinks.splice(2, 0, databaseMenuLink);
+    menuLinks.push(databaseMenuLink);
+  }
+
+  if (displaySkapViews) {
+    menuLinks.push(...skapMenuLinks);
   }
 
   menuLinks.map(item => ({
