@@ -1,7 +1,7 @@
 import { ICertificateResult, ICertificateView } from 'models/certificates';
 import { IDetailsListContent } from 'models/DetailsList';
 import { SortDirection } from 'models/SortDirection';
-import { createDate, dateValidation, getLocalDate } from 'utils/date';
+import { getLocalDate } from 'utils/date';
 
 export const certificateColumns = (): IDetailsListContent[] => [
   {
@@ -69,58 +69,6 @@ export const defaultSortDirections: SortDirection[] = new Array<SortDirection>(
 ).fill(SortDirection.NONE);
 
 export default class CertificateService {
-  public sortNextAscending(sortDirection: SortDirection): boolean {
-    return (
-      sortDirection === SortDirection.NONE ||
-      sortDirection === SortDirection.DESC
-    );
-  }
-
-  public createColumns(
-    index: number,
-    sortDirection: SortDirection
-  ): IDetailsListContent[] {
-    const columns = certificateColumns();
-    if (index > -1) {
-      const currentCol = columns[index];
-      if (
-        sortDirection === SortDirection.NONE ||
-        sortDirection === SortDirection.DESC
-      ) {
-        currentCol.iconName = 'Down';
-      } else if (sortDirection === SortDirection.ASC) {
-        currentCol.iconName = 'Up';
-      }
-    }
-    return columns;
-  }
-
-  public sortItems(
-    viewItems: ICertificateView[],
-    prevSortDirection: SortDirection,
-    name: string | number | symbol
-  ): ICertificateView[] {
-    return viewItems.slice(0).sort((a: any, b: any) => {
-      const valueA = this.lowerCaseIfString(a[name]);
-      const valueB = this.lowerCaseIfString(b[name]);
-      if (valueA === valueB) {
-        return 0;
-      } else if (dateValidation(valueA) || dateValidation(valueB)) {
-        const dateA = createDate(valueA).getTime();
-        const dateB = createDate(valueB).getTime();
-        return this.sortNextAscending(prevSortDirection)
-          ? dateB - dateA
-          : dateA - dateB;
-      } else {
-        return (this.sortNextAscending(prevSortDirection)
-        ? valueA < valueB
-        : valueA > valueB)
-          ? 1
-          : -1;
-      }
-    });
-  }
-
   public updatedItems = (data: ICertificateResult): ICertificateView[] =>
     data.certificates.map(
       (it): ICertificateView => {
@@ -140,8 +88,4 @@ export default class CertificateService {
   ): ICertificateView[] => {
     return viewItems.filter(filterCertificateView(filter));
   };
-
-  private lowerCaseIfString(value: any): any {
-    return typeof value === 'string' ? (value as string).toLowerCase() : value;
-  }
 }

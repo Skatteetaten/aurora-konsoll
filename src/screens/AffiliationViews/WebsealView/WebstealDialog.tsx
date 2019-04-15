@@ -1,12 +1,12 @@
 import * as React from 'react';
 
 import ActionButton from 'aurora-frontend-react-komponenter/ActionButton';
-import DetailsList from 'aurora-frontend-react-komponenter/DetailsList';
 import Dialog from 'aurora-frontend-react-komponenter/Dialog';
 import Grid from 'aurora-frontend-react-komponenter/Grid';
 import Tabs from 'aurora-frontend-react-komponenter/Tabs';
 import TabItem from 'aurora-frontend-react-komponenter/Tabs/TabItem';
 
+import DetailsList from 'aurora-frontend-react-komponenter/DetailsList';
 import { IWebsealState } from 'models/Webseal';
 import WebsealService, { websealDialogColumns } from 'services/WebsealService';
 import styled from 'styled-components';

@@ -1,6 +1,5 @@
 import { IDetailsListContent } from 'models/DetailsList';
 import { SortDirection } from 'models/SortDirection';
-import { createDate, dateValidation } from 'utils/date';
 
 export const websealTableColumns = (): IDetailsListContent[] => [
   {
@@ -54,39 +53,6 @@ export const filterWebsealView = (filter: string) => {
 };
 
 class WebsealService {
-  public sortNextAscending(sortDirection: SortDirection): boolean {
-    return (
-      sortDirection === SortDirection.NONE ||
-      sortDirection === SortDirection.DESC
-    );
-  }
-
-  public sortItems(
-    viewItems: IWebsealTableColumns[],
-    prevSortDirection: SortDirection,
-    name: string | number | symbol
-  ): IWebsealTableColumns[] {
-    return viewItems.slice(0).sort((a: any, b: any) => {
-      const valueA = this.lowerCaseIfString(a[name]);
-      const valueB = this.lowerCaseIfString(b[name]);
-      if (valueA === valueB) {
-        return 0;
-      } else if (dateValidation(valueA) || dateValidation(valueB)) {
-        const dateA = createDate(valueA).getTime();
-        const dateB = createDate(valueB).getTime();
-        return this.sortNextAscending(prevSortDirection)
-          ? dateB - dateA
-          : dateA - dateB;
-      } else {
-        return (this.sortNextAscending(prevSortDirection)
-        ? valueA < valueB
-        : valueA > valueB)
-          ? 1
-          : -1;
-      }
-    });
-  }
-
   public addProperties = (type: string): any[] => {
     const parsedType = JSON.parse(type);
     const ownProps = Object.keys(parsedType);
@@ -100,29 +66,6 @@ class WebsealService {
     }
     return resArray;
   };
-
-  public createColumns(
-    index: number,
-    sortDirection: SortDirection
-  ): IDetailsListContent[] {
-    const columns = websealTableColumns();
-    if (index > -1) {
-      const currentCol = columns[index];
-      if (
-        sortDirection === SortDirection.NONE ||
-        sortDirection === SortDirection.DESC
-      ) {
-        currentCol.iconName = 'Down';
-      } else if (sortDirection === SortDirection.ASC) {
-        currentCol.iconName = 'Up';
-      }
-    }
-    return columns;
-  }
-
-  private lowerCaseIfString(value: any): any {
-    return typeof value === 'string' ? (value as string).toLowerCase() : value;
-  }
 }
 
 export default WebsealService;

@@ -1,10 +1,10 @@
 import * as React from 'react';
 import styled from 'styled-components';
 
-import DetailsList from 'aurora-frontend-react-komponenter/DetailsList';
 import TextField from 'aurora-frontend-react-komponenter/TextField';
 
 import LoadingButton from 'components/LoadingButton';
+import SortableDetailsList from 'components/SortableDetailsList';
 import Spinner from 'components/Spinner';
 import { SortDirection } from 'models/SortDirection';
 import { IWebsealState } from 'models/Webseal';
@@ -12,10 +12,11 @@ import {
   IObjectWithKey,
   Selection
 } from 'office-ui-fabric-react/lib/DetailsList';
-import WebsealService, {
+import {
   defaultSortDirections,
   filterWebsealView,
-  IWebsealTableColumns
+  IWebsealTableColumns,
+  websealTableColumns
 } from 'services/WebsealService';
 import WebsealDialog from './WebstealDialog';
 
@@ -52,8 +53,6 @@ class Webseal extends React.Component<IWebsealTableProps, IWebsealTableState> {
     }
   });
 
-  private websealService = new WebsealService();
-
   public websealStates = (): IWebsealTableColumns[] => {
     return this.props.websealStates.map(it => ({
       host: it.name,
@@ -64,10 +63,7 @@ class Webseal extends React.Component<IWebsealTableProps, IWebsealTableState> {
   public componentDidUpdate(prevProps: IWebsealTableProps) {
     const { affiliation, websealStates } = this.props;
 
-    if (
-      prevProps.affiliation !== affiliation ||
-      (prevProps.websealStates.length === 0 && websealStates.length > 0)
-    ) {
+    if (prevProps.affiliation !== affiliation) {
       this.refreshWebsealStates();
     }
     if (prevProps.websealStates !== websealStates) {
@@ -116,36 +112,6 @@ class Webseal extends React.Component<IWebsealTableProps, IWebsealTableState> {
     });
   };
 
-  public sortByColumn = (
-    ev: React.MouseEvent<HTMLElement>,
-    column: {
-      key: number;
-      fieldName: string;
-    }
-  ): void => {
-    const { columnSortDirections } = this.state;
-    const name = column.fieldName! as keyof any;
-
-    const newSortDirections = defaultSortDirections;
-    const prevSortDirection = columnSortDirections[column.key];
-
-    if (this.websealService.sortNextAscending(prevSortDirection)) {
-      newSortDirections[column.key] = SortDirection.ASC;
-    } else if (prevSortDirection === SortDirection.ASC) {
-      newSortDirections[column.key] = SortDirection.DESC;
-    }
-    const sortedItems = this.websealService.sortItems(
-      this.websealStates(),
-      prevSortDirection,
-      name
-    );
-    this.setState({
-      filteredColumns: sortedItems,
-      columnSortDirections: newSortDirections,
-      selectedColumnIndex: column.key
-    });
-  };
-
   public handleFetchWebsealStates = () => {
     const { websealStates } = this.props;
     const { viewItems } = this.state;
@@ -159,7 +125,7 @@ class Webseal extends React.Component<IWebsealTableProps, IWebsealTableState> {
   };
 
   public renderDetailsList = () => {
-    const { selectedColumnIndex, columnSortDirections } = this.state;
+    const { filter, filteredColumns } = this.state;
     if (!(this.websealStates().length > 0)) {
       return <p>Finner ingen WebSEAL states</p>;
     }
@@ -167,23 +133,19 @@ class Webseal extends React.Component<IWebsealTableProps, IWebsealTableState> {
     return (
       <div className="webseal-grid">
         <div className="table-wrapper">
-          <DetailsList
-            columns={this.websealService.createColumns(
-              selectedColumnIndex,
-              columnSortDirections[selectedColumnIndex]
-            )}
+          <SortableDetailsList
+            columns={websealTableColumns}
+            columnLength={websealTableColumns().length}
+            viewItems={filteredColumns}
             selection={this.selection}
-            onColumnHeaderClick={this.sortByColumn}
-            items={this.filteredItems()}
+            defaultSortDirections={defaultSortDirections}
+            filterView={filterWebsealView}
+            filter={filter}
+            isHeaderVisible={true}
           />
         </div>
       </div>
     );
-  };
-
-  public filteredItems = () => {
-    const { filter } = this.state;
-    return this.state.filteredColumns.filter(filterWebsealView(filter));
   };
 
   public render() {
