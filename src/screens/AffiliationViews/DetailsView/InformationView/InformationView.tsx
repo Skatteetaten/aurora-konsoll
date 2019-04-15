@@ -52,9 +52,9 @@ const InformationView = ({
           <ul>
             {deploymentDetails.serviceLinks.map(link => (
               <li>
-                <a target="_blank" href={link.url}>
+                <Link target="_blank" href={link.url}>
                   {link.name}
-                </a>
+                </Link>
               </li>
             ))}
           </ul>
@@ -81,6 +81,22 @@ const InformationView = ({
     </div>
   );
 };
+
+const Link = styled.a`
+  color: rgba(19, 98, 174, 1);
+  text-decoration: none;
+  padding-bottom: 1px;
+  border-bottom: 2px solid rgba(19, 98, 174, 0.25);
+  transition: border-color 0.5s;
+  margin-bottom: 5px;
+
+  :hover,
+  :focus {
+    outline: none;
+    border-color: rgba(19, 98, 174, 1);
+    transition: border-color 0.5s;
+  }
+`;
 
 export default styled(InformationView)`
   .health-status {
