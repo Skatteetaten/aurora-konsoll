@@ -6,7 +6,6 @@ export const ExternalLink = styled.a`
   padding-bottom: 1px;
   border-bottom: 2px solid rgba(19, 98, 174, 0.25);
   transition: border-color 0.5s;
-  margin-bottom: 5px;
 
   :hover,
   :focus {

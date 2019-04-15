@@ -52,7 +52,7 @@ const InformationView = ({
           <h3>Tjenestelenker</h3>
           <ul>
             {deploymentDetails.serviceLinks.map(link => (
-              <li>
+              <li style={{ marginBottom: '5px' }}>
                 <ExternalLink target="_blank" href={link.url}>
                   {link.name}
                 </ExternalLink>
