@@ -1,6 +1,7 @@
 import * as React from 'react';
 import styled from 'styled-components';
 
+import { ExternalLink } from 'components/ExternalLink';
 import Spinner from 'components/Spinner';
 import {
   IApplicationDeployment,
@@ -48,13 +49,13 @@ const InformationView = ({
         <div>
           <h3>AuroraStatus for deployment</h3>
           <StatusCheckReportCard deployment={deployment} />
-          <h3>Links</h3>
+          <h3>Tjenestelenker</h3>
           <ul>
             {deploymentDetails.serviceLinks.map(link => (
               <li>
-                <Link target="_blank" href={link.url}>
+                <ExternalLink target="_blank" href={link.url}>
                   {link.name}
-                </Link>
+                </ExternalLink>
               </li>
             ))}
           </ul>
@@ -81,22 +82,6 @@ const InformationView = ({
     </div>
   );
 };
-
-const Link = styled.a`
-  color: rgba(19, 98, 174, 1);
-  text-decoration: none;
-  padding-bottom: 1px;
-  border-bottom: 2px solid rgba(19, 98, 174, 0.25);
-  transition: border-color 0.5s;
-  margin-bottom: 5px;
-
-  :hover,
-  :focus {
-    outline: none;
-    border-color: rgba(19, 98, 174, 1);
-    transition: border-color 0.5s;
-  }
-`;
 
 export default styled(InformationView)`
   .health-status {
