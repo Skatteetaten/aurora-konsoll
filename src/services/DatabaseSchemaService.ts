@@ -155,18 +155,16 @@ export default class DatabaseSchemaService {
   }
 
   public trimJdbcUser = (
-    databaseSchema: ICreateDatabaseSchemaInput
+    jdbcUser: IJdbcUser | null | undefined
   ): IJdbcUser | null => {
     const defaultValues: IJdbcUser = {
       username: '',
       password: '',
       jdbcUrl: ''
     };
-    if (!!databaseSchema.jdbcUser) {
-      return Object.keys(databaseSchema.jdbcUser).reduce((acc, curr) => {
-        if (!!databaseSchema.jdbcUser) {
-          acc[curr] = databaseSchema.jdbcUser[curr].trim();
-        }
+    if (!!jdbcUser) {
+      return Object.keys(jdbcUser).reduce((acc, curr) => {
+        acc[curr] = jdbcUser[curr].trim();
         return acc;
       }, defaultValues);
     }
@@ -192,7 +190,7 @@ export default class DatabaseSchemaService {
     return Object.keys(databaseSchema).reduce((acc, curr) => {
       curr !== 'jdbcUser'
         ? (acc[curr] = trimLabels(databaseSchema[curr]))
-        : (acc[curr] = this.trimJdbcUser(databaseSchema));
+        : (acc[curr] = this.trimJdbcUser(databaseSchema.jdbcUser));
       return acc;
     }, defaultValues);
   }
