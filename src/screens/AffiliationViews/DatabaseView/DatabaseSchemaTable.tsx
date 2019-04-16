@@ -28,8 +28,6 @@ import {
   IUpdateDatabaseSchemaInputWithCreatedBy
 } from 'models/schemas';
 import DatabaseSchemaService, {
-  defaultColumns,
-  deletionDialogColumns,
   filterDatabaseSchemaView
 } from 'services/DatabaseSchemaService';
 import { StyledPre } from '../DetailsView/InformationView/HealthResponseDialogSelector/utilComponents';
@@ -41,7 +39,7 @@ import DeletionSummary from './DeletionSummary';
 export const renderDetailsListWithSchemaInfo = (schemas: IDatabaseSchema[]) => (
   <StyledPre>
     <DetailsList
-      columns={deletionDialogColumns}
+      columns={DatabaseSchemaService.DELETION_COLUMNS}
       items={schemas.map(it => ({
         application: it.application,
         environment: it.environment,
@@ -78,6 +76,7 @@ interface ISchemaState {
   deleteSelectionIds: string[];
   extendedInfo: IDatabaseSchema[];
   hasDeletionInformation: boolean;
+  shouldResetSort: boolean;
 }
 
 export class Schema extends React.Component<ISchemaProps, ISchemaState> {
@@ -88,7 +87,8 @@ export class Schema extends React.Component<ISchemaProps, ISchemaState> {
     deleteMode: false,
     deleteSelectionIds: [],
     extendedInfo: [],
-    hasDeletionInformation: false
+    hasDeletionInformation: false,
+    shouldResetSort: false
   };
   private databaseSchemaService = new DatabaseSchemaService();
 
@@ -117,6 +117,7 @@ export class Schema extends React.Component<ISchemaProps, ISchemaState> {
     if (prevProps.items !== items) {
       this.handleFetchDatabaseSchemas();
     }
+
     if (
       prevProps.affiliation !== affiliation ||
       (prevProps.items.databaseSchemas.length === 0 &&
@@ -124,10 +125,17 @@ export class Schema extends React.Component<ISchemaProps, ISchemaState> {
     ) {
       onFetch([affiliation]);
       this.setState({
-        filter: ''
+        filter: '',
+        shouldResetSort: true
       });
     }
   }
+
+  public onResetSort = () => {
+    this.setState({
+      shouldResetSort: false
+    });
+  };
 
   public handleFetchDatabaseSchemas = () => {
     const { items } = this.props;
@@ -196,7 +204,8 @@ export class Schema extends React.Component<ISchemaProps, ISchemaState> {
       deleteSelectionIds,
       extendedInfo,
       hasDeletionInformation: hasDeletionResponse,
-      viewItems
+      viewItems,
+      shouldResetSort
     } = this.state;
 
     const renderConfirmationOpenButton = (open: () => void) => {
@@ -360,20 +369,20 @@ export class Schema extends React.Component<ISchemaProps, ISchemaState> {
         ) : (
           <div className="styledTable">
             <SortableDetailsList
-              columns={defaultColumns}
+              columns={DatabaseSchemaService.DEFAULT_COLUMNS}
               filterView={filterDatabaseSchemaView}
               selectionMode={SelectionMode.multiple}
               filter={filter}
-              affiliation={affiliation}
               isHeaderVisible={true}
-              viewItems={viewItems}
+              items={viewItems}
               selection={this.selection}
+              shouldResetSort={shouldResetSort}
+              onResetSort={this.onResetSort}
               checkboxVisibility={
                 deleteMode
                   ? CheckboxVisibility.always
                   : CheckboxVisibility.hidden
               }
-              fetchedItems={items.databaseSchemas}
             />
           </div>
         )}

@@ -3,7 +3,6 @@ import * as React from 'react';
 import SortableDetailsList from 'components/SortableDetailsList';
 import { ICertificateView } from 'models/certificates';
 import CertificateService, {
-  certificateColumns,
   filterCertificateView
 } from 'services/CertificateService';
 
@@ -16,8 +15,8 @@ interface ITableProps {
 const Table = ({ viewItems, filter }: ITableProps) => {
   return (
     <SortableDetailsList
-      columns={certificateColumns}
-      viewItems={viewItems}
+      columns={CertificateService.DEFAULT_COLUMNS}
+      items={viewItems}
       isHeaderVisible={true}
       filterView={filterCertificateView}
       filter={filter}

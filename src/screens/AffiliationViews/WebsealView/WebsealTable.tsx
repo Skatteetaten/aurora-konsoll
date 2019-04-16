@@ -11,10 +11,9 @@ import {
   IObjectWithKey,
   Selection
 } from 'office-ui-fabric-react/lib/DetailsList';
-import {
+import WebsealService, {
   filterWebsealView,
-  IWebsealTableColumns,
-  websealTableColumns
+  IWebsealTableColumns
 } from 'services/WebsealService';
 import WebsealDialog from './WebstealDialog';
 
@@ -31,6 +30,7 @@ interface IWebsealTableState {
   filter: string;
   viewItems: IWebsealState[];
   filteredColumns: IWebsealTableColumns[];
+  shouldResetSort: boolean;
 }
 
 class Webseal extends React.Component<IWebsealTableProps, IWebsealTableState> {
@@ -38,7 +38,8 @@ class Webseal extends React.Component<IWebsealTableProps, IWebsealTableState> {
     selectedWebsealState: undefined,
     filter: '',
     viewItems: [],
-    filteredColumns: []
+    filteredColumns: [],
+    shouldResetSort: false
   };
 
   public selection = new Selection({
@@ -57,16 +58,15 @@ class Webseal extends React.Component<IWebsealTableProps, IWebsealTableState> {
   public componentDidUpdate(prevProps: IWebsealTableProps) {
     const { affiliation, websealStates } = this.props;
 
-    if (prevProps.affiliation !== affiliation) {
-      this.refreshWebsealStates();
-    }
     if (prevProps.websealStates !== websealStates) {
       this.handleFetchWebsealStates();
     }
 
     if (prevProps.affiliation !== affiliation) {
+      this.refreshWebsealStates();
       this.setState({
-        filter: ''
+        filter: '',
+        shouldResetSort: true
       });
     }
   }
@@ -104,6 +104,12 @@ class Webseal extends React.Component<IWebsealTableProps, IWebsealTableState> {
     });
   };
 
+  public onResetSort = () => {
+    this.setState({
+      shouldResetSort: false
+    });
+  };
+
   public handleFetchWebsealStates = () => {
     const { websealStates } = this.props;
     const { viewItems } = this.state;
@@ -117,8 +123,7 @@ class Webseal extends React.Component<IWebsealTableProps, IWebsealTableState> {
   };
 
   public renderDetailsList = () => {
-    const { affiliation } = this.props;
-    const { filter, filteredColumns } = this.state;
+    const { filter, filteredColumns, shouldResetSort } = this.state;
     if (!(this.websealStates().length > 0)) {
       return <p>Finner ingen WebSEAL states</p>;
     }
@@ -127,13 +132,14 @@ class Webseal extends React.Component<IWebsealTableProps, IWebsealTableState> {
       <div className="webseal-grid">
         <div className="table-wrapper">
           <SortableDetailsList
-            columns={websealTableColumns}
-            viewItems={filteredColumns}
+            columns={WebsealService.DEFAULT_COLUMNS}
+            items={filteredColumns}
             selection={this.selection}
             filterView={filterWebsealView}
             filter={filter}
             isHeaderVisible={true}
-            affiliation={affiliation}
+            shouldResetSort={shouldResetSort}
+            onResetSort={this.onResetSort}
           />
         </div>
       </div>

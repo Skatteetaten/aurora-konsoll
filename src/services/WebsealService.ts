@@ -1,8 +1,8 @@
-import { IDetailsListContent } from 'models/DetailsList';
+import { IColumn } from 'office-ui-fabric-react/lib/DetailsList';
 
-export const websealTableColumns = (): IDetailsListContent[] => [
+const websealTableColumns: IColumn[] = [
   {
-    key: 0,
+    key: '0',
     name: 'Host',
     fieldName: 'host',
     minWidth: 500,
@@ -10,7 +10,7 @@ export const websealTableColumns = (): IDetailsListContent[] => [
     iconName: ''
   },
   {
-    key: 1,
+    key: '1',
     name: 'Roller',
     fieldName: 'roles',
     minWidth: 800,
@@ -19,18 +19,20 @@ export const websealTableColumns = (): IDetailsListContent[] => [
   }
 ];
 
-export const websealDialogColumns = (
-  onRender: (item: { key: string }) => JSX.Element
-): IDetailsListContent[] => [
+type ColumnRenderFunc = (item: { key: string }) => JSX.Element;
+
+const websealDialogColumns = (onRender: ColumnRenderFunc): IColumn[] => [
   {
-    key: 0,
+    key: '0',
+    name: 'Key',
     fieldName: 'key',
     minWidth: 400,
     maxWidth: 400,
     onRender
   },
   {
-    key: 1,
+    key: '1',
+    name: 'Value',
     fieldName: 'value',
     minWidth: 200,
     maxWidth: 200
@@ -48,6 +50,11 @@ export const filterWebsealView = (filter: string) => {
 };
 
 class WebsealService {
+  public static DEFAULT_COLUMNS: IColumn[] = websealTableColumns;
+  public static JUNCTION_COLUMNS: (
+    onRender: ColumnRenderFunc
+  ) => IColumn[] = websealDialogColumns;
+
   public addProperties = (type: string): any[] => {
     const parsedType = JSON.parse(type);
     const ownProps = Object.keys(parsedType);

@@ -1,5 +1,5 @@
 export interface ICertificateView {
-  id: string;
+  id: number;
   dn: string;
   issuedDate: string;
   revokedDate: string;

@@ -6,30 +6,19 @@ import { createDate, dateValidation } from 'utils/date';
 
 import {
   CheckboxVisibility,
-  Selection,
+  IColumn,
+  IDetailsListProps,
+  ISelection,
   SelectionMode
 } from 'office-ui-fabric-react/lib/DetailsList';
 
 export let selectedIndices: number[] = [];
 
-export interface ISortableDetailsListProps {
-  columns: () => any[];
-  isHeaderVisible?: boolean;
-  onColumnHeaderClick?: (
-    ev: React.MouseEvent<HTMLElement, MouseEvent>,
-    column: {
-      key: number;
-      fieldName: string;
-    }
-  ) => void;
-  viewItems: any[];
+export interface ISortableDetailsListProps extends IDetailsListProps {
   filterView: (filter: string) => (v: any) => boolean;
   filter: string;
-  selection?: Selection;
-  selectionMode?: SelectionMode;
-  checkboxVisibility?: CheckboxVisibility;
-  affiliation?: string;
-  fetchedItems?: any[];
+  shouldResetSort?: boolean;
+  onResetSort?: () => void;
 }
 
 export interface ISortableDetailsListState {
@@ -50,31 +39,26 @@ class SortableDetailsList extends React.Component<
     prevIndices: []
   };
 
-  public defaultSortDirections: SortDirection[] = new Array<SortDirection>(
-    this.props.columns().length
-  ).fill(SortDirection.NONE);
+  public createDefaultSortDirections: () => SortDirection[] = () =>
+    new Array<SortDirection>(
+      this.props.columns ? this.props.columns.length : 0
+    ).fill(SortDirection.NONE);
 
   public componentDidMount() {
     this.setState({
-      columnSortDirections: this.defaultSortDirections
+      columnSortDirections: this.createDefaultSortDirections()
     });
   }
 
   public componentDidUpdate(prevProps: ISortableDetailsListProps) {
     const {
-      viewItems,
       selection,
       filter,
-      affiliation,
-      fetchedItems
+      items,
+      shouldResetSort,
+      onResetSort
     } = this.props;
     const { currentViewItems, prevIndices } = this.state;
-
-    const initialAffiliation = () =>
-      prevProps.fetchedItems &&
-      prevProps.fetchedItems.length === 0 &&
-      fetchedItems &&
-      fetchedItems.length > 0;
 
     if (selection) {
       this.updateCurrentSelection(
@@ -85,25 +69,42 @@ class SortableDetailsList extends React.Component<
     }
 
     if (
-      viewItems !== prevProps.viewItems ||
-      (!(currentViewItems.length > 0) && viewItems.length > 0)
+      items !== prevProps.items ||
+      (!(currentViewItems.length > 0) && items.length > 0)
     ) {
       this.setState({
-        currentViewItems: viewItems
+        currentViewItems: items
       });
     }
 
-    if (prevProps.affiliation !== affiliation || initialAffiliation()) {
+    if (shouldResetSort) {
+      if (onResetSort) {
+        onResetSort();
+      }
+      this.resetColumns();
       this.setState({
-        columnSortDirections: this.defaultSortDirections,
+        columnSortDirections: this.createDefaultSortDirections(),
         selectedColumnIndex: -1
       });
     }
   }
 
-  public createColumns<T>(index: number, sortDirection: SortDirection): T[] {
-    const columns = this.props.columns();
+  public resetColumns() {
+    const { columns } = this.props;
+    if (columns) {
+      columns.forEach(col => (col.iconName = ''));
+    }
+  }
+
+  public createColumns(index: number, sortDirection: SortDirection): IColumn[] {
+    const { columns } = this.props;
+    if (!columns) {
+      return [];
+    }
+
     if (index > -1) {
+      // Reset icons, only one column should be sortet at the time.
+      this.resetColumns();
       const currentCol = columns[index];
       if (
         sortDirection === SortDirection.NONE ||
@@ -126,7 +127,7 @@ class SortableDetailsList extends React.Component<
   ): void => {
     const { columnSortDirections } = this.state;
     const name = column.fieldName! as keyof any;
-    const newSortDirections = this.defaultSortDirections;
+    const newSortDirections = this.createDefaultSortDirections();
     const prevSortDirection = columnSortDirections[column.key];
 
     if (this.sortNextAscending(prevSortDirection)) {
@@ -136,7 +137,7 @@ class SortableDetailsList extends React.Component<
     }
 
     const sortedItems = this.sortItems(
-      this.props.viewItems,
+      this.props.items,
       prevSortDirection,
       name
     );
@@ -147,13 +148,13 @@ class SortableDetailsList extends React.Component<
       prevIndices: selectedIndices
     });
   };
-  public toViewIndex<T>(index: number, selection: Selection, items: T[]) {
+  public toViewIndex<T>(index: number, selection: ISelection, items: T[]) {
     const listItem = items[index];
     return selection.getItems().findIndex(viewItem => viewItem === listItem);
   }
 
   public updateCurrentSelection<T>(
-    selection: Selection,
+    selection: ISelection,
     prevIndices: number[],
     items: T[]
   ): void {
@@ -216,7 +217,7 @@ class SortableDetailsList extends React.Component<
 
   public toListIndex<T>(
     index: number,
-    selection: Selection,
+    selection: ISelection,
     items: T[]
   ): number {
     const viewItems = selection.getItems();
@@ -224,7 +225,7 @@ class SortableDetailsList extends React.Component<
     return items.findIndex(listItem => listItem === viewItem);
   }
 
-  public currentSelection<T>(selection: Selection, items: T[]) {
+  public currentSelection<T>(selection: ISelection, items: T[]) {
     const newIndices = selection
       .getSelectedIndices()
       .map(index => this.toListIndex(index, selection, items))

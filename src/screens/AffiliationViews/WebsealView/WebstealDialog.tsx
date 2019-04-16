@@ -8,7 +8,7 @@ import TabItem from 'aurora-frontend-react-komponenter/Tabs/TabItem';
 
 import DetailsList from 'aurora-frontend-react-komponenter/DetailsList';
 import { IWebsealState } from 'models/Webseal';
-import WebsealService, { websealDialogColumns } from 'services/WebsealService';
+import WebsealService from 'services/WebsealService';
 import styled from 'styled-components';
 import { StyledPre } from '../DetailsView/InformationView/HealthResponseDialogSelector/utilComponents';
 
@@ -44,7 +44,7 @@ class WebsealDialog extends React.Component<
       <StyledPre>
         <DetailsList
           isHeaderVisible={false}
-          columns={websealDialogColumns(this.onRenderFirstColumn())}
+          columns={WebsealService.JUNCTION_COLUMNS(this.onRenderFirstColumn())}
           items={this.websealService.addProperties(items)}
         />
       </StyledPre>

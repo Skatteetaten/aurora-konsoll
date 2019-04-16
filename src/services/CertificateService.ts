@@ -1,12 +1,12 @@
 import { ICertificateResult, ICertificateView } from 'models/certificates';
-import { IDetailsListContent } from 'models/DetailsList';
+import { IColumn } from 'office-ui-fabric-react/lib/DetailsList';
 import { getLocalDate } from 'utils/date';
 
-export const certificateColumns = (): IDetailsListContent[] => [
+const certificateColumns: IColumn[] = [
   {
     fieldName: 'id',
     isResizable: true,
-    key: 0,
+    key: '0',
     maxWidth: 150,
     minWidth: 100,
     name: 'ID',
@@ -15,7 +15,7 @@ export const certificateColumns = (): IDetailsListContent[] => [
   {
     fieldName: 'dn',
     isResizable: true,
-    key: 1,
+    key: '1',
     maxWidth: 500,
     minWidth: 400,
     name: 'DN',
@@ -24,7 +24,7 @@ export const certificateColumns = (): IDetailsListContent[] => [
   {
     fieldName: 'revokedDate',
     isResizable: true,
-    key: 2,
+    key: '2',
     maxWidth: 300,
     minWidth: 150,
     name: 'Revoked',
@@ -33,7 +33,7 @@ export const certificateColumns = (): IDetailsListContent[] => [
   {
     fieldName: 'issuedDate',
     isResizable: true,
-    key: 3,
+    key: '3',
     maxWidth: 300,
     minWidth: 150,
     name: 'Opprettet',
@@ -42,7 +42,7 @@ export const certificateColumns = (): IDetailsListContent[] => [
   {
     fieldName: 'expiresDate',
     isResizable: true,
-    key: 4,
+    key: '4',
     maxWidth: 300,
     minWidth: 150,
     name: 'Utløper',
@@ -64,11 +64,13 @@ export const filterCertificateView = (filter: string) => {
 };
 
 export default class CertificateService {
+  public static DEFAULT_COLUMNS: IColumn[] = certificateColumns;
+
   public updatedItems = (data: ICertificateResult): ICertificateView[] =>
     data.certificates.map(
       (it): ICertificateView => {
         return {
-          id: it.id,
+          id: Number(it.id),
           dn: it.dn,
           issuedDate: getLocalDate(it.issuedDate),
           revokedDate: !!it.revokedDate ? getLocalDate(it.revokedDate) : '-',
