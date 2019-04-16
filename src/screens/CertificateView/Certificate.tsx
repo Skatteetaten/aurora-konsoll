@@ -7,10 +7,7 @@ import { IAuroraApiComponentProps, withAuroraApi } from 'components/AuroraApi';
 import LoadingButton from 'components/LoadingButton';
 import Spinner from 'components/Spinner';
 import { ICertificateResult, ICertificateView } from 'models/certificates';
-import { SortDirection } from 'models/SortDirection';
-import CertificateService, {
-  defaultSortDirections
-} from 'services/CertificateService';
+import CertificateService from 'services/CertificateService';
 import Table from './Table';
 
 export interface ICertificateProps extends IAuroraApiComponentProps {
@@ -23,8 +20,6 @@ export interface ICertificateProps extends IAuroraApiComponentProps {
 export interface ICertificateState {
   filter: string;
   viewItems: ICertificateView[];
-  columnSortDirections: SortDirection[];
-  selectedColumnIndex: number;
 }
 
 const certificateService = new CertificateService();
@@ -35,9 +30,7 @@ export default class Certificate extends React.Component<
 > {
   public state = {
     filter: '',
-    columnSortDirections: defaultSortDirections,
-    viewItems: [],
-    selectedColumnIndex: -1
+    viewItems: []
   };
 
   public componentDidMount() {
@@ -73,12 +66,7 @@ export default class Certificate extends React.Component<
 
   public render() {
     const { className, isFetching } = this.props;
-    const {
-      filter,
-      columnSortDirections,
-      selectedColumnIndex,
-      viewItems
-    } = this.state;
+    const { filter, viewItems } = this.state;
     return (
       <div className={className}>
         <div className="body-wrapper">
@@ -107,10 +95,7 @@ export default class Certificate extends React.Component<
               ) : (
                 <Table
                   certificateService={certificateService}
-                  columnSortDirections={columnSortDirections}
-                  selectedColumnIndex={selectedColumnIndex}
                   viewItems={viewItems}
-                  defaultSortDirections={defaultSortDirections}
                   filter={filter}
                 />
               )}

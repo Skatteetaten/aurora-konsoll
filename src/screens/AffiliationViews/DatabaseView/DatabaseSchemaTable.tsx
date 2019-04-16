@@ -15,6 +15,7 @@ import {
 } from 'office-ui-fabric-react/lib/DetailsList';
 import { getLocalDate } from 'utils/date';
 
+import SortableDetailsList from 'components/SortableDetailsList';
 import { IUserAndAffiliations } from 'models/ApplicationDeployment';
 import {
   ICreateDatabaseSchemaInput,
@@ -26,12 +27,10 @@ import {
   IJdbcUser,
   IUpdateDatabaseSchemaInputWithCreatedBy
 } from 'models/schemas';
-import { SortDirection } from 'models/SortDirection';
 import DatabaseSchemaService, {
-  defaultSortDirections,
+  defaultColumns,
   deletionDialogColumns,
-  filterDatabaseSchemaView,
-  selectedIndices
+  filterDatabaseSchemaView
 } from 'services/DatabaseSchemaService';
 import { StyledPre } from '../DetailsView/InformationView/HealthResponseDialogSelector/utilComponents';
 import ConfirmDeletionDialog from './ConfirmDeletionDialog';
@@ -73,13 +72,10 @@ export interface ISchemaProps {
 
 interface ISchemaState {
   viewItems: IDatabaseSchemaView[];
-  columnSortDirections: SortDirection[];
-  selectedColumnIndex: number;
   filter: string;
   selectedSchema?: IDatabaseSchema;
   deleteMode: boolean;
   deleteSelectionIds: string[];
-  prevIndices: number[];
   extendedInfo: IDatabaseSchema[];
   hasDeletionInformation: boolean;
 }
@@ -87,13 +83,10 @@ interface ISchemaState {
 export class Schema extends React.Component<ISchemaProps, ISchemaState> {
   public state: ISchemaState = {
     viewItems: [],
-    columnSortDirections: defaultSortDirections,
-    selectedColumnIndex: -1,
     filter: '',
     selectedSchema: undefined,
     deleteMode: false,
     deleteSelectionIds: [],
-    prevIndices: [],
     extendedInfo: [],
     hasDeletionInformation: false
   };
@@ -107,43 +100,6 @@ export class Schema extends React.Component<ISchemaProps, ISchemaState> {
     }
   });
 
-  public filteredItems = () => {
-    const { viewItems, filter } = this.state;
-    return viewItems.filter(filterDatabaseSchemaView(filter));
-  };
-
-  public sortByColumn = (
-    ev: React.MouseEvent<HTMLElement>,
-    column: {
-      key: number;
-      fieldName: string;
-    }
-  ): void => {
-    const { viewItems, columnSortDirections } = this.state;
-    const name = column.fieldName! as keyof any;
-
-    const newSortDirections = defaultSortDirections;
-    const prevSortDirection = columnSortDirections[column.key];
-
-    if (this.databaseSchemaService.sortNextAscending(prevSortDirection)) {
-      newSortDirections[column.key] = SortDirection.ASC;
-    } else if (prevSortDirection === SortDirection.ASC) {
-      newSortDirections[column.key] = SortDirection.DESC;
-    }
-    const sortedItems = this.databaseSchemaService.sortItems(
-      viewItems,
-      prevSortDirection,
-      name
-    );
-
-    this.setState({
-      viewItems: sortedItems,
-      columnSortDirections: newSortDirections,
-      selectedColumnIndex: column.key,
-      prevIndices: selectedIndices
-    });
-  };
-
   public componentDidMount() {
     const { affiliation, onFetch } = this.props;
     this.handleFetchDatabaseSchemas();
@@ -152,17 +108,11 @@ export class Schema extends React.Component<ISchemaProps, ISchemaState> {
 
   public componentDidUpdate(prevProps: ISchemaProps, prevState: ISchemaState) {
     const { affiliation, items, onFetch } = this.props;
-    const { prevIndices, filter } = this.state;
+    const { filter } = this.state;
 
     if (prevState.filter !== filter) {
       this.deselect();
     }
-
-    this.databaseSchemaService.updateCurrentSelection(
-      this.selection,
-      prevIndices,
-      this.filteredItems()
-    );
 
     if (prevProps.items !== items) {
       this.handleFetchDatabaseSchemas();
@@ -174,9 +124,7 @@ export class Schema extends React.Component<ISchemaProps, ISchemaState> {
     ) {
       onFetch([affiliation]);
       this.setState({
-        filter: '',
-        columnSortDirections: defaultSortDirections,
-        selectedColumnIndex: -1
+        filter: ''
       });
     }
   }
@@ -242,20 +190,14 @@ export class Schema extends React.Component<ISchemaProps, ISchemaState> {
       items
     } = this.props;
     const {
-      selectedColumnIndex,
-      columnSortDirections,
       filter,
       selectedSchema,
       deleteMode,
       deleteSelectionIds,
       extendedInfo,
-      hasDeletionInformation: hasDeletionResponse
+      hasDeletionInformation: hasDeletionResponse,
+      viewItems
     } = this.state;
-
-    this.databaseSchemaService.currentSelection(
-      this.selection,
-      this.filteredItems()
-    );
 
     const renderConfirmationOpenButton = (open: () => void) => {
       const onClick = () => {
@@ -417,20 +359,21 @@ export class Schema extends React.Component<ISchemaProps, ISchemaState> {
           <Spinner />
         ) : (
           <div className="styledTable">
-            <DetailsList
-              columns={this.databaseSchemaService.createColumns(
-                selectedColumnIndex,
-                columnSortDirections[selectedColumnIndex]
-              )}
+            <SortableDetailsList
+              columns={defaultColumns}
+              filterView={filterDatabaseSchemaView}
               selectionMode={SelectionMode.multiple}
-              items={this.filteredItems()}
-              onColumnHeaderClick={this.sortByColumn}
+              filter={filter}
+              affiliation={affiliation}
+              isHeaderVisible={true}
+              viewItems={viewItems}
               selection={this.selection}
               checkboxVisibility={
                 deleteMode
                   ? CheckboxVisibility.always
                   : CheckboxVisibility.hidden
               }
+              fetchedItems={items.databaseSchemas}
             />
           </div>
         )}

@@ -1,6 +1,5 @@
 import { ICertificateResult, ICertificateView } from 'models/certificates';
 import { IDetailsListContent } from 'models/DetailsList';
-import { SortDirection } from 'models/SortDirection';
 import { getLocalDate } from 'utils/date';
 
 export const certificateColumns = (): IDetailsListContent[] => [
@@ -64,10 +63,6 @@ export const filterCertificateView = (filter: string) => {
       : v.expiresDate.includes(filter));
 };
 
-export const defaultSortDirections: SortDirection[] = new Array<SortDirection>(
-  certificateColumns().length
-).fill(SortDirection.NONE);
-
 export default class CertificateService {
   public updatedItems = (data: ICertificateResult): ICertificateView[] =>
     data.certificates.map(
@@ -81,11 +76,4 @@ export default class CertificateService {
         };
       }
     );
-
-  public filteredItems = (
-    filter: string,
-    viewItems: ICertificateView[]
-  ): ICertificateView[] => {
-    return viewItems.filter(filterCertificateView(filter));
-  };
 }

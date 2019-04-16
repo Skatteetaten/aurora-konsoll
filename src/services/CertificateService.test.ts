@@ -13,20 +13,4 @@ describe('CertificateService', () => {
     );
     expect(updatedItems).toEqual(certificateViewFactory.buildList(1));
   });
-
-  it('should only return filtered list element that contains test', () => {
-    const updatedItems = certificateService.filteredItems('test', [
-      certificateViewFactory.build(),
-      certificateViewFactory.build({ dn: 'hallo' })
-    ]);
-    expect(updatedItems).toEqual(certificateViewFactory.buildList(1));
-  });
-
-  it('should return empty list when filter text does not apply to any item', () => {
-    const updatedItems = certificateService.filteredItems('finnes ikke', [
-      certificateViewFactory.build(),
-      certificateViewFactory.build({ dn: 'hallo' })
-    ]);
-    expect(updatedItems).toEqual([]);
-  });
 });

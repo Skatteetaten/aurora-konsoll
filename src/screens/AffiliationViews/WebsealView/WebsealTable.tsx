@@ -6,14 +6,12 @@ import TextField from 'aurora-frontend-react-komponenter/TextField';
 import LoadingButton from 'components/LoadingButton';
 import SortableDetailsList from 'components/SortableDetailsList';
 import Spinner from 'components/Spinner';
-import { SortDirection } from 'models/SortDirection';
 import { IWebsealState } from 'models/Webseal';
 import {
   IObjectWithKey,
   Selection
 } from 'office-ui-fabric-react/lib/DetailsList';
 import {
-  defaultSortDirections,
   filterWebsealView,
   IWebsealTableColumns,
   websealTableColumns
@@ -32,15 +30,11 @@ interface IWebsealTableState {
   selectedWebsealState?: IWebsealState;
   filter: string;
   viewItems: IWebsealState[];
-  selectedColumnIndex: number;
-  columnSortDirections: SortDirection[];
   filteredColumns: IWebsealTableColumns[];
 }
 
 class Webseal extends React.Component<IWebsealTableProps, IWebsealTableState> {
   public state: IWebsealTableState = {
-    columnSortDirections: defaultSortDirections,
-    selectedColumnIndex: -1,
     selectedWebsealState: undefined,
     filter: '',
     viewItems: [],
@@ -72,9 +66,7 @@ class Webseal extends React.Component<IWebsealTableProps, IWebsealTableState> {
 
     if (prevProps.affiliation !== affiliation) {
       this.setState({
-        filter: '',
-        columnSortDirections: defaultSortDirections,
-        selectedColumnIndex: -1
+        filter: ''
       });
     }
   }
@@ -125,6 +117,7 @@ class Webseal extends React.Component<IWebsealTableProps, IWebsealTableState> {
   };
 
   public renderDetailsList = () => {
+    const { affiliation } = this.props;
     const { filter, filteredColumns } = this.state;
     if (!(this.websealStates().length > 0)) {
       return <p>Finner ingen WebSEAL states</p>;
@@ -135,13 +128,12 @@ class Webseal extends React.Component<IWebsealTableProps, IWebsealTableState> {
         <div className="table-wrapper">
           <SortableDetailsList
             columns={websealTableColumns}
-            columnLength={websealTableColumns().length}
             viewItems={filteredColumns}
             selection={this.selection}
-            defaultSortDirections={defaultSortDirections}
             filterView={filterWebsealView}
             filter={filter}
             isHeaderVisible={true}
+            affiliation={affiliation}
           />
         </div>
       </div>

@@ -1,5 +1,4 @@
 import { IDetailsListContent } from 'models/DetailsList';
-import { SortDirection } from 'models/SortDirection';
 
 export const websealTableColumns = (): IDetailsListContent[] => [
   {
@@ -42,10 +41,6 @@ export interface IWebsealTableColumns {
   roles: string;
   host: string;
 }
-
-export const defaultSortDirections = new Array<SortDirection>(2).fill(
-  SortDirection.NONE
-);
 
 export const filterWebsealView = (filter: string) => {
   return (v: IWebsealTableColumns): boolean =>

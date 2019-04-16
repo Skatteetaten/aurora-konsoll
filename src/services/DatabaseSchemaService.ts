@@ -6,11 +6,6 @@ import {
   IUpdateDatabaseSchemaInputWithCreatedBy
 } from 'models/schemas';
 
-import { IDetailsListContent } from 'models/DetailsList';
-import { SortDirection } from 'models/SortDirection';
-import { Selection } from 'office-ui-fabric-react/lib/DetailsList';
-import { createDate, dateValidation } from 'utils/date';
-
 export let selectedIndices: number[] = [];
 
 export const deletionDialogColumns = [
@@ -124,10 +119,6 @@ export const defaultColumns = () => [
   }
 ];
 
-export const defaultSortDirections = new Array<SortDirection>(
-  defaultColumns().length
-).fill(SortDirection.NONE);
-
 export const filterDatabaseSchemaView = (filter: string) => {
   return (v: IDatabaseSchemaView) =>
     v.createdBy.includes(filter) ||
@@ -143,13 +134,6 @@ export const filterDatabaseSchemaView = (filter: string) => {
 };
 
 export default class DatabaseSchemaService {
-  public sortNextAscending(sortDirection: SortDirection) {
-    return (
-      sortDirection === SortDirection.NONE ||
-      sortDirection === SortDirection.DESC
-    );
-  }
-
   public getSelectionDetails(deleteSelectionIds: string[]): string {
     switch (deleteSelectionIds.length) {
       case 1:
@@ -157,93 +141,6 @@ export default class DatabaseSchemaService {
       default:
         return `Vil du slette disse ${deleteSelectionIds.length} skjemaene?`;
     }
-  }
-
-  public toListIndex(
-    index: number,
-    selection: Selection,
-    items: IDatabaseSchemaView[]
-  ) {
-    const viewItems = selection.getItems();
-    const viewItem = viewItems[index];
-    return items.findIndex(listItem => listItem === viewItem);
-  }
-
-  public toViewIndex(
-    index: number,
-    selection: Selection,
-    items: IDatabaseSchemaView[]
-  ) {
-    const listItem = items[index];
-    return selection.getItems().findIndex(viewItem => viewItem === listItem);
-  }
-
-  public currentSelection = (
-    selection: Selection,
-    items: IDatabaseSchemaView[]
-  ) => {
-    const newIndices = selection
-      .getSelectedIndices()
-      .map(index => this.toListIndex(index, selection, items))
-      .filter(index => selectedIndices.indexOf(index) === -1);
-
-    const unselectedIndices = selection
-      .getItems()
-      .map((item, index) => index)
-      .filter(index => selection.isIndexSelected(index) === false)
-      .map(index => this.toListIndex(index, selection, items));
-
-    selectedIndices = selectedIndices.filter(
-      index => unselectedIndices.indexOf(index) === -1
-    );
-    selectedIndices = [...selectedIndices, ...newIndices];
-  };
-
-  public updateCurrentSelection(
-    selection: Selection,
-    prevIndices: number[],
-    items: IDatabaseSchemaView[]
-  ) {
-    const intersection = prevIndices.filter(element =>
-      selectedIndices.includes(element)
-    );
-
-    if (prevIndices.length > 0) {
-      for (const i of prevIndices) {
-        if (!intersection.includes(i) && selection.isIndexSelected(i)) {
-          selection.setIndexSelected(i, false, false);
-        }
-      }
-    }
-
-    const indices = selectedIndices
-      .map(index => this.toViewIndex(index, selection, items))
-      .filter(index => index !== -1);
-
-    for (const i of indices) {
-      if (!intersection.includes(i)) {
-        selection.setIndexSelected(i, true, false);
-      }
-    }
-  }
-
-  public createColumns(
-    index: number,
-    sortDirection: SortDirection
-  ): IDetailsListContent[] {
-    const columns = defaultColumns();
-    if (index > -1) {
-      const currentCol = columns[index];
-      if (
-        sortDirection === SortDirection.NONE ||
-        sortDirection === SortDirection.DESC
-      ) {
-        currentCol.iconName = 'Down';
-      } else if (sortDirection === SortDirection.ASC) {
-        currentCol.iconName = 'Up';
-      }
-    }
-    return columns;
   }
 
   public hasEmptyLabelValues(input: IDatabaseSchemaInput) {
@@ -284,35 +181,5 @@ export default class DatabaseSchemaService {
     const isEmpty = this.hasEmptyLabelValues(updatedSchemaValues);
 
     return isUnchangedValues || isEmpty;
-  }
-
-  public sortItems(
-    viewItems: IDatabaseSchemaView[],
-    prevSortDirection: SortDirection,
-    name: string | number | symbol
-  ) {
-    return viewItems.slice(0).sort((a: any, b: any) => {
-      const valueA = this.lowerCaseIfString(a[name]);
-      const valueB = this.lowerCaseIfString(b[name]);
-      if (valueA === valueB) {
-        return 0;
-      } else if (dateValidation(valueA) || dateValidation(valueB)) {
-        const dateA = createDate(valueA).getTime();
-        const dateB = createDate(valueB).getTime();
-        return this.sortNextAscending(prevSortDirection)
-          ? dateB - dateA
-          : dateA - dateB;
-      } else {
-        return (this.sortNextAscending(prevSortDirection)
-        ? valueA < valueB
-        : valueA > valueB)
-          ? 1
-          : -1;
-      }
-    });
-  }
-
-  private lowerCaseIfString(value: any) {
-    return typeof value === 'string' ? (value as string).toLowerCase() : value;
   }
 }
