@@ -237,6 +237,25 @@ export class Filter extends React.Component<IFilterProps, IFilterState> {
       }
     };
 
+    const createModeCheckbox = () => (
+      <Checkbox
+        disabled={!currentFilterName}
+        checked={!!isCurrentFilterDefault}
+        boxSide="start"
+        label="Standardvalg"
+      />
+    );
+
+    const editModeCheckbox = () => (
+      <Checkbox
+        disabled={!selectedFilterKey}
+        checked={!!isCurrentFilterDefault}
+        boxSide="start"
+        label="Standardvalg"
+        onChange={handleDefaultValueChange}
+      />
+    );
+
     return (
       <span className={className}>
         <FooterText
@@ -246,12 +265,9 @@ export class Filter extends React.Component<IFilterProps, IFilterState> {
           )}
         />
         <div className="styled-footer-buttons">
-          <Checkbox
-            checked={!!isCurrentFilterDefault}
-            boxSide="start"
-            label="Standardvalg"
-            onChange={handleDefaultValueChange}
-          />
+          {mode === FilterMode.Create
+            ? createModeCheckbox()
+            : editModeCheckbox()}
         </div>
         <ActionButton onClick={applyNewFilter}>Sett filter</ActionButton>
       </span>
@@ -358,6 +374,11 @@ export class Filter extends React.Component<IFilterProps, IFilterState> {
     );
 
     const setMode = (m: FilterMode) => {
+      if (m === FilterMode.Create) {
+        this.setState({
+          currentFilterName: ''
+        });
+      }
       this.setState({
         mode: m
       });
