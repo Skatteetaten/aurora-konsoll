@@ -43,6 +43,11 @@ export interface IGitInfo {
   commitTime?: string;
 }
 
+export interface IGitInfo {
+  commitId?: string;
+  commitTime?: string;
+}
+
 export interface IUserAndAffiliations {
   affiliations: string[];
   user: string;
