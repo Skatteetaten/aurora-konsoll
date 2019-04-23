@@ -5,7 +5,6 @@ import {
 } from 'models/ApplicationDeployment';
 import { normalizeRawDeploymentSpec } from 'models/DeploymentSpec';
 
-import { IPodResource } from 'models/Pod';
 import GoboClient from 'services/GoboClient';
 import {
   REDEPLOY_WITH_CURRENT_VERSION_MUTATION,
@@ -128,14 +127,16 @@ export class ApplicationDeploymentClient {
         id
       }
     });
-    let deploymentSpec;
-    let pods: IPodResource[] = [];
+
     if (result && result.data && result.data.applicationDeploymentDetails) {
       const {
         deploymentSpecs,
-        podResources
+        podResources,
+        buildTime,
+        gitInfo
       } = result.data.applicationDeploymentDetails;
 
+      let deploymentSpec;
       if (deploymentSpecs.current) {
         const spec = JSON.parse(deploymentSpecs.current.jsonRepresentation);
         deploymentSpec = Object.keys(spec).reduce(
@@ -143,12 +144,17 @@ export class ApplicationDeploymentClient {
           {}
         );
       }
-      pods = podResources;
+
+      return {
+        buildTime,
+        gitInfo,
+        pods: podResources,
+        deploymentSpec
+      };
     }
 
     return {
-      deploymentSpec,
-      pods
+      pods: []
     };
   }
 
