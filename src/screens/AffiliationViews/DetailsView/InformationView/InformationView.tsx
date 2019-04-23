@@ -10,6 +10,7 @@ import { ActiveDeploymentInformation } from './ActiveDeploymentInformation';
 import { DeploymentSpecInformation } from './DeploymentSpecInformation';
 import { GitAndBuildInformation } from './GitAndBuildInformation';
 import PodStatus from './PodStatus';
+import { ServiceLinks } from './ServiceLinks';
 import StatusCheckReportCard from './StatusCheckReportCard';
 
 interface IInformationViewProps {
@@ -48,6 +49,7 @@ const InformationView = ({
         <div>
           <h3>AuroraStatus for deployment</h3>
           <StatusCheckReportCard deployment={deployment} />
+          <ServiceLinks serviceLinks={deploymentDetails.serviceLinks} />
         </div>
       </div>
       <hr

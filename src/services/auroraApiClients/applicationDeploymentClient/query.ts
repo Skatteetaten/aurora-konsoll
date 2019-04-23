@@ -1,5 +1,5 @@
 import gql from 'graphql-tag';
-import { IGitInfo } from 'models/ApplicationDeployment';
+import { IGitInfo, ILink } from 'models/ApplicationDeployment';
 import { IPodResource } from 'models/Pod';
 import { StatusCode } from 'models/Status';
 import { IImageTag } from '../imageRepositoryClient/query';
@@ -127,6 +127,7 @@ export interface IApplicationDeploymentDetailsQuery {
   applicationDeploymentDetails?: {
     buildTime?: string;
     gitInfo?: IGitInfo;
+    serviceLinks: ILink[];
     podResources: IPodResource[];
     deploymentSpecs: {
       current?: {
@@ -143,6 +144,10 @@ export const APPLICATION_DEPLOYMENT_DETAILS_QUERY = gql`
       gitInfo {
         commitId
         commitTime
+      }
+      serviceLinks {
+        name
+        url
       }
       podResources {
         name

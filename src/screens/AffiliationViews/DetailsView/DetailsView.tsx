@@ -22,6 +22,7 @@ class DetailsView extends React.Component<
 > {
   public state: IDetailsViewState = {
     deploymentDetails: {
+      serviceLinks: [],
       pods: []
     },
     loading: {
