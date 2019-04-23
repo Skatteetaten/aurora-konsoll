@@ -2,6 +2,7 @@ interface IConfiguration {
   AUTHORIZATION_URI: string;
   CLIENT_ID: string;
   DBH_ENABLED: boolean;
+  SKAP_ENABLED: boolean;
   APPLICATION_NAME: string;
 }
 

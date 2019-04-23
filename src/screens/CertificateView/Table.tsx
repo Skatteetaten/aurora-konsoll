@@ -1,36 +1,25 @@
 import * as React from 'react';
 
-import DetailsList from 'aurora-frontend-react-komponenter/DetailsList';
+import SortableDetailsList from 'components/SortableDetailsList';
 import { ICertificateView } from 'models/certificates';
-import { SortDirection } from 'models/SortDirection';
-import CertificateService from 'services/CertificateService';
+import CertificateService, {
+  filterCertificateView
+} from 'services/CertificateService';
 
 interface ITableProps {
-  items: ICertificateView[];
-  onColumnHeaderClick: (
-    ev: React.MouseEvent<HTMLElement, MouseEvent>,
-    column: { key: number; fieldName: string }
-  ) => void;
   certificateService: CertificateService;
-  columnSortDirections: SortDirection[];
-  selectedColumnIndex: number;
+  viewItems: ICertificateView[];
+  filter: string;
 }
 
-const Table = ({
-  items,
-  onColumnHeaderClick,
-  certificateService,
-  columnSortDirections,
-  selectedColumnIndex
-}: ITableProps) => {
+const Table = ({ viewItems, filter }: ITableProps) => {
   return (
-    <DetailsList
-      columns={certificateService.createColumns(
-        selectedColumnIndex,
-        columnSortDirections[selectedColumnIndex]
-      )}
-      items={items}
-      onColumnHeaderClick={onColumnHeaderClick}
+    <SortableDetailsList
+      columns={CertificateService.DEFAULT_COLUMNS}
+      items={viewItems}
+      isHeaderVisible={true}
+      filterView={filterCertificateView}
+      filter={filter}
     />
   );
 };

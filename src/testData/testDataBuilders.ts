@@ -25,7 +25,9 @@ import {
 import { StatusCode } from 'models/Status';
 import { ITagsPagedGroup } from 'models/Tag';
 import { IApplicationDeploymentFilters } from 'models/UserSettings';
+import { IAcl, IWebsealState } from 'models/Webseal';
 import { ISchemasState } from 'screens/AffiliationViews/DatabaseView/state/reducers';
+import { IWebsealReduxState } from 'screens/AffiliationViews/WebsealView/state/reducers';
 import { ICertificateState } from 'screens/CertificateView/state/reducers';
 import { IFilter } from 'services/DeploymentFilterService';
 import { IStartupState } from 'state/reducers';
@@ -312,7 +314,7 @@ export const createDatabaseSchemaResponseFactory = Factory.Sync.makeFactory<
 export const certificateViewFactory = Factory.Sync.makeFactory<
   ICertificateView
 >({
-  id: '123',
+  id: 123,
   dn: 'test',
   issuedDate: '12.01.2018',
   revokedDate: '22.03.2016',
@@ -379,4 +381,26 @@ export const userAndAffiliationsFactory = Factory.Sync.makeFactory<
 
 export const startupFactory = Factory.Sync.makeFactory<IStartupState>({
   currentUser: userAndAffiliationsFactory.build()
+});
+
+export const aclFactory = Factory.Sync.makeFactory<IAcl>({
+  aclName: 'acl-name',
+  anyOther: false,
+  open: true,
+  roles: []
+});
+
+export const websealStateFactory = Factory.Sync.makeFactory<IWebsealState>({
+  acl: aclFactory.build(),
+  name: 'state-name',
+  namespace: 'namespace',
+  routeName: 'route',
+  junctions: ['{"totalRequests":"10"}', '{"totalRequests":"12"}']
+});
+
+export const websealReduxStateFactory = Factory.Sync.makeFactory<
+  IWebsealReduxState
+>({
+  isFetchingWebsealStates: false,
+  websealStates: []
 });

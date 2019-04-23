@@ -7,10 +7,7 @@ import { IAuroraApiComponentProps, withAuroraApi } from 'components/AuroraApi';
 import LoadingButton from 'components/LoadingButton';
 import Spinner from 'components/Spinner';
 import { ICertificateResult, ICertificateView } from 'models/certificates';
-import { SortDirection } from 'models/SortDirection';
-import CertificateService, {
-  defaultSortDirections
-} from 'services/CertificateService';
+import CertificateService from 'services/CertificateService';
 import Table from './Table';
 
 export interface ICertificateProps extends IAuroraApiComponentProps {
@@ -23,8 +20,6 @@ export interface ICertificateProps extends IAuroraApiComponentProps {
 export interface ICertificateState {
   filter: string;
   viewItems: ICertificateView[];
-  columnSortDirections: SortDirection[];
-  selectedColumnIndex: number;
 }
 
 const certificateService = new CertificateService();
@@ -35,9 +30,7 @@ export default class Certificate extends React.Component<
 > {
   public state = {
     filter: '',
-    columnSortDirections: defaultSortDirections,
-    viewItems: [],
-    selectedColumnIndex: -1
+    viewItems: []
   };
 
   public componentDidMount() {
@@ -66,36 +59,6 @@ export default class Certificate extends React.Component<
     });
   };
 
-  public sortByColumn = (
-    ev: React.MouseEvent<HTMLElement>,
-    column: {
-      key: number;
-      fieldName: string;
-    }
-  ): void => {
-    const { columnSortDirections } = this.state;
-    const name = column.fieldName! as keyof any;
-    const newSortDirections = defaultSortDirections;
-    const prevSortDirection = columnSortDirections[column.key];
-
-    if (certificateService.sortNextAscending(prevSortDirection)) {
-      newSortDirections[column.key] = SortDirection.ASC;
-    } else if (prevSortDirection === SortDirection.ASC) {
-      newSortDirections[column.key] = SortDirection.DESC;
-    }
-
-    const sortedItems = certificateService.sortItems(
-      this.state.viewItems,
-      prevSortDirection,
-      name
-    );
-    this.setState({
-      viewItems: sortedItems,
-      columnSortDirections: newSortDirections,
-      selectedColumnIndex: column.key
-    });
-  };
-
   public refreshCertificates = () => {
     const { onFetch } = this.props;
     onFetch();
@@ -103,12 +66,7 @@ export default class Certificate extends React.Component<
 
   public render() {
     const { className, isFetching } = this.props;
-    const {
-      filter,
-      columnSortDirections,
-      selectedColumnIndex,
-      viewItems
-    } = this.state;
+    const { filter, viewItems } = this.state;
     return (
       <div className={className}>
         <div className="body-wrapper">
@@ -136,11 +94,9 @@ export default class Certificate extends React.Component<
                 <Spinner />
               ) : (
                 <Table
-                  items={certificateService.filteredItems(filter, viewItems)}
-                  onColumnHeaderClick={this.sortByColumn}
                   certificateService={certificateService}
-                  columnSortDirections={columnSortDirections}
-                  selectedColumnIndex={selectedColumnIndex}
+                  viewItems={viewItems}
+                  filter={filter}
                 />
               )}
             </div>

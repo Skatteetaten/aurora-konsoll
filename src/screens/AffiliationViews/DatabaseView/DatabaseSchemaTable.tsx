@@ -15,6 +15,7 @@ import {
 } from 'office-ui-fabric-react/lib/DetailsList';
 import { getLocalDate } from 'utils/date';
 
+import SortableDetailsList from 'components/SortableDetailsList';
 import { IUserAndAffiliations } from 'models/ApplicationDeployment';
 import {
   ICreateDatabaseSchemaInput,
@@ -26,12 +27,8 @@ import {
   IJdbcUser,
   IUpdateDatabaseSchemaInputWithCreatedBy
 } from 'models/schemas';
-import { SortDirection } from 'models/SortDirection';
 import DatabaseSchemaService, {
-  defaultSortDirections,
-  deletionDialogColumns,
-  filterDatabaseSchemaView,
-  selectedIndices
+  filterDatabaseSchemaView
 } from 'services/DatabaseSchemaService';
 import { StyledPre } from '../DetailsView/InformationView/HealthResponseDialogSelector/utilComponents';
 import ConfirmDeletionDialog from './ConfirmDeletionDialog';
@@ -42,7 +39,7 @@ import DeletionSummary from './DeletionSummary';
 export const renderDetailsListWithSchemaInfo = (schemas: IDatabaseSchema[]) => (
   <StyledPre>
     <DetailsList
-      columns={deletionDialogColumns}
+      columns={DatabaseSchemaService.DELETION_COLUMNS}
       items={schemas.map(it => ({
         application: it.application,
         environment: it.environment,
@@ -73,29 +70,25 @@ export interface ISchemaProps {
 
 interface ISchemaState {
   viewItems: IDatabaseSchemaView[];
-  columnSortDirections: SortDirection[];
-  selectedColumnIndex: number;
   filter: string;
   selectedSchema?: IDatabaseSchema;
   deleteMode: boolean;
   deleteSelectionIds: string[];
-  prevIndices: number[];
   extendedInfo: IDatabaseSchema[];
   hasDeletionInformation: boolean;
+  shouldResetSort: boolean;
 }
 
 export class Schema extends React.Component<ISchemaProps, ISchemaState> {
   public state: ISchemaState = {
     viewItems: [],
-    columnSortDirections: defaultSortDirections,
-    selectedColumnIndex: -1,
     filter: '',
     selectedSchema: undefined,
     deleteMode: false,
     deleteSelectionIds: [],
-    prevIndices: [],
     extendedInfo: [],
-    hasDeletionInformation: false
+    hasDeletionInformation: false,
+    shouldResetSort: false
   };
   private databaseSchemaService = new DatabaseSchemaService();
 
@@ -107,43 +100,6 @@ export class Schema extends React.Component<ISchemaProps, ISchemaState> {
     }
   });
 
-  public filteredItems = () => {
-    const { viewItems, filter } = this.state;
-    return viewItems.filter(filterDatabaseSchemaView(filter));
-  };
-
-  public sortByColumn = (
-    ev: React.MouseEvent<HTMLElement>,
-    column: {
-      key: number;
-      fieldName: string;
-    }
-  ): void => {
-    const { viewItems, columnSortDirections } = this.state;
-    const name = column.fieldName! as keyof any;
-
-    const newSortDirections = defaultSortDirections;
-    const prevSortDirection = columnSortDirections[column.key];
-
-    if (this.databaseSchemaService.sortNextAscending(prevSortDirection)) {
-      newSortDirections[column.key] = SortDirection.ASC;
-    } else if (prevSortDirection === SortDirection.ASC) {
-      newSortDirections[column.key] = SortDirection.DESC;
-    }
-    const sortedItems = this.databaseSchemaService.sortItems(
-      viewItems,
-      prevSortDirection,
-      name
-    );
-
-    this.setState({
-      viewItems: sortedItems,
-      columnSortDirections: newSortDirections,
-      selectedColumnIndex: column.key,
-      prevIndices: selectedIndices
-    });
-  };
-
   public componentDidMount() {
     const { affiliation, onFetch } = this.props;
     this.handleFetchDatabaseSchemas();
@@ -152,21 +108,16 @@ export class Schema extends React.Component<ISchemaProps, ISchemaState> {
 
   public componentDidUpdate(prevProps: ISchemaProps, prevState: ISchemaState) {
     const { affiliation, items, onFetch } = this.props;
-    const { prevIndices, filter } = this.state;
+    const { filter } = this.state;
 
     if (prevState.filter !== filter) {
       this.deselect();
     }
 
-    this.databaseSchemaService.updateCurrentSelection(
-      this.selection,
-      prevIndices,
-      this.filteredItems()
-    );
-
     if (prevProps.items !== items) {
       this.handleFetchDatabaseSchemas();
     }
+
     if (
       prevProps.affiliation !== affiliation ||
       (prevProps.items.databaseSchemas.length === 0 &&
@@ -175,11 +126,16 @@ export class Schema extends React.Component<ISchemaProps, ISchemaState> {
       onFetch([affiliation]);
       this.setState({
         filter: '',
-        columnSortDirections: defaultSortDirections,
-        selectedColumnIndex: -1
+        shouldResetSort: true
       });
     }
   }
+
+  public onResetSort = () => {
+    this.setState({
+      shouldResetSort: false
+    });
+  };
 
   public handleFetchDatabaseSchemas = () => {
     const { items } = this.props;
@@ -242,20 +198,15 @@ export class Schema extends React.Component<ISchemaProps, ISchemaState> {
       items
     } = this.props;
     const {
-      selectedColumnIndex,
-      columnSortDirections,
       filter,
       selectedSchema,
       deleteMode,
       deleteSelectionIds,
       extendedInfo,
-      hasDeletionInformation: hasDeletionResponse
+      hasDeletionInformation: hasDeletionResponse,
+      viewItems,
+      shouldResetSort
     } = this.state;
-
-    this.databaseSchemaService.currentSelection(
-      this.selection,
-      this.filteredItems()
-    );
 
     const renderConfirmationOpenButton = (open: () => void) => {
       const onClick = () => {
@@ -417,15 +368,16 @@ export class Schema extends React.Component<ISchemaProps, ISchemaState> {
           <Spinner />
         ) : (
           <div className="styledTable">
-            <DetailsList
-              columns={this.databaseSchemaService.createColumns(
-                selectedColumnIndex,
-                columnSortDirections[selectedColumnIndex]
-              )}
+            <SortableDetailsList
+              columns={DatabaseSchemaService.DEFAULT_COLUMNS}
+              filterView={filterDatabaseSchemaView}
               selectionMode={SelectionMode.multiple}
-              items={this.filteredItems()}
-              onColumnHeaderClick={this.sortByColumn}
+              filter={filter}
+              isHeaderVisible={true}
+              items={viewItems}
               selection={this.selection}
+              shouldResetSort={shouldResetSort}
+              onResetSort={this.onResetSort}
               checkboxVisibility={
                 deleteMode
                   ? CheckboxVisibility.always
@@ -503,6 +455,10 @@ export class Schema extends React.Component<ISchemaProps, ISchemaState> {
 export default styled(Schema)`
   height: 100%;
   overflow-x: auto;
+
+  .ms-DetailsRow {
+    cursor: pointer;
+  }
 
   .styled-action-bar {
     display: flex;

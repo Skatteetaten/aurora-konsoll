@@ -16,9 +16,11 @@ import {
   ApplicationDeploymentClient,
   CertificateClient,
   DatabaseClient,
+  GoboUsageClient,
   ImageRepositoryClient,
   NetdebugClient,
-  UserSettingsClient
+  UserSettingsClient,
+  WebsealClient
 } from 'services/auroraApiClients';
 import GoboClient from 'services/GoboClient';
 import { StartupConnected } from 'Startup';
@@ -51,6 +53,8 @@ async function init() {
     netdebugClient: new NetdebugClient(goboClient),
     userSettingsClient: new UserSettingsClient(goboClient),
     databaseClient: new DatabaseClient(goboClient),
+    websealClient: new WebsealClient(goboClient),
+    goboUsageClient: new GoboUsageClient(goboClient),
     certificateClient: new CertificateClient(goboClient)
   };
 
@@ -62,6 +66,7 @@ async function init() {
             <App
               tokenStore={tokenStore}
               displayDatabaseView={config.DBH_ENABLED}
+              displaySkapViews={config.SKAP_ENABLED}
             />
           </BrowserRouter>
         </AuroraApiProvider>

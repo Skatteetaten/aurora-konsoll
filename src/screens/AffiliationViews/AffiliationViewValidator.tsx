@@ -9,6 +9,7 @@ import { RootState } from 'store/types';
 import AffiliationSelector from './AffiliationSelector';
 import { AffiliationViewControllerWithApi } from './AffiliationViewController';
 import DatabaseViewController from './DatabaseView/DatabaseViewController';
+import WebsealViewController from './WebsealView/WebsealViewController';
 
 export type AffiliationRouteProps = RouteComponentProps<{
   affiliation: string;
@@ -68,6 +69,9 @@ class AffiliationViewValidator extends React.Component<
       } else if (type === MenuType.DATABASE) {
         title = 'Velg tilhørighet';
         createLink = (a: string) => `/db/${a}/databaseSchemas`;
+      } else if (type === MenuType.WEBSEAL) {
+        title = 'Velg tilhørighet';
+        createLink = (a: string) => `/w/${a}/webseal`;
       }
 
       return (
@@ -91,8 +95,10 @@ class AffiliationViewValidator extends React.Component<
           updateUrlWithQuery={this.updateUrlWithQuery}
         />
       );
-    } else {
+    } else if (type === MenuType.DATABASE) {
       return <DatabaseViewController affiliation={affiliation} />;
+    } else {
+      return <WebsealViewController affiliation={affiliation} />;
     }
   }
 }

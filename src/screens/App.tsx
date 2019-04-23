@@ -8,6 +8,8 @@ import {
 } from 'react-router-dom';
 import styled from 'styled-components';
 
+import Konami from 'react-konami-code';
+
 import SkeBasis from 'aurora-frontend-react-komponenter/SkeBasis';
 
 import { IAuroraApiComponentProps } from 'components/AuroraApi';
@@ -22,16 +24,19 @@ import AffiliationViewValidatorConnected, {
   AffiliationRouteProps
 } from './AffiliationViews/AffiliationViewValidator';
 import { CertificateConnected } from './CertificateView/CertificateConnected';
+import GoboUsageView from './GoboUsageView';
 import { NetdebugWithApi } from './NetdebugView/Netdebug';
 
 export enum MenuType {
   DEPLOYMENTS,
-  DATABASE
+  DATABASE,
+  WEBSEAL
 }
 
 interface IAppProps extends IAuroraApiComponentProps, RouteComponentProps<{}> {
   tokenStore: ITokenStore;
   displayDatabaseView: boolean;
+  displaySkapViews: boolean;
 }
 
 interface IAppState {
@@ -52,7 +57,12 @@ class App extends React.Component<IAppProps, IAppState> {
   };
 
   public onAffiliationChangeFromSelector = (affiliation: string) => {
-    const { location, history, displayDatabaseView } = this.props;
+    const {
+      location,
+      history,
+      displayDatabaseView,
+      displaySkapViews
+    } = this.props;
     let newPath = '';
 
     if (location.pathname.startsWith('/a/')) {
@@ -64,6 +74,11 @@ class App extends React.Component<IAppProps, IAppState> {
       newPath = location.pathname.replace(
         /\/db\/(\b\w*[-]?\w*\b)\/(\w*)(\/.*)?/,
         `/db/${affiliation}/$2`
+      );
+    } else if (location.pathname.startsWith('/w/') && displaySkapViews) {
+      newPath = location.pathname.replace(
+        /\/w\/(\b\w*[-]?\w*\b)\/(\w*)(\/.*)?/,
+        `/w/${affiliation}/$2`
       );
     }
     history.push(newPath);
@@ -79,7 +94,7 @@ class App extends React.Component<IAppProps, IAppState> {
     const isAuthenticated = this.props.tokenStore.isTokenValid();
 
     const { affiliation, isMenuExpanded } = this.state;
-    const { location, displayDatabaseView } = this.props;
+    const { location, displayDatabaseView, displaySkapViews } = this.props;
 
     const renderAffiliationViewValidatorDeployments = (
       routeProps: AffiliationRouteProps
@@ -88,6 +103,10 @@ class App extends React.Component<IAppProps, IAppState> {
     const renderAffiliationViewValidatorDatabase = (
       routeProps: AffiliationRouteProps
     ) => renderAffiliationViewValidator(routeProps, MenuType.DATABASE);
+
+    const renderAffiliationViewValidatorWebseal = (
+      routeProps: AffiliationRouteProps
+    ) => renderAffiliationViewValidator(routeProps, MenuType.WEBSEAL);
 
     const renderAffiliationViewValidator = (
       routeProps: AffiliationRouteProps,
@@ -103,6 +122,9 @@ class App extends React.Component<IAppProps, IAppState> {
 
     return (
       <StyledSkeBasis menuExpanded={isMenuExpanded}>
+        <Konami timeout={10000}>
+          <GoboUsageView clients={this.props.clients} />
+        </Konami>
         <ErrorBoundary errorSM={errorStateManager}>
           <LayoutConnected
             isMenuExpanded={isMenuExpanded}
@@ -110,10 +132,12 @@ class App extends React.Component<IAppProps, IAppState> {
             affiliation={affiliation}
             showAffiliationSelector={
               location.pathname.startsWith('/a/') ||
-              location.pathname.startsWith('/db/')
+              location.pathname.startsWith('/db/') ||
+              location.pathname.startsWith('/w/')
             }
             onAffiliationChange={this.onAffiliationChangeFromSelector}
             displayDatabaseView={displayDatabaseView}
+            displaySkapViews={displaySkapViews}
           >
             <AcceptTokenRoute onTokenUpdated={this.onTokenUpdated} />
             {isAuthenticated && (
@@ -143,6 +167,11 @@ class App extends React.Component<IAppProps, IAppState> {
                     render={renderAffiliationViewValidatorDatabase}
                   />
                 )}
+                <Route
+                  exact={true}
+                  path="/w/:affiliation/webseal"
+                  render={renderAffiliationViewValidatorWebseal}
+                />
               </Switch>
             )}
           </LayoutConnected>
