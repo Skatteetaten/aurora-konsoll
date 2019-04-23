@@ -1,4 +1,5 @@
 import {
+  createDatabaseSchemaInputFactory,
   databaseSchemaFactory,
   databaseSchemaInputFactory,
   databaseSchemaInputWithCreatedByFactory,
@@ -26,6 +27,58 @@ describe('DatabaseSchemaService', () => {
 
       expect(filteredItems.length).toEqual(1);
       expect(filteredItems[0].createdBy).toEqual('my-super-duper-user');
+    });
+  });
+
+  describe('trimLabelsAndJdbcUser', () => {
+    it('should trim labels values', () => {
+      const databseSchema = databaseSchemaInputFactory.build({
+        environment: 'environment ',
+        discriminator: ' db ',
+        createdBy: ' 123'
+      });
+
+      expect(
+        databaseSchemaService.trimLabelsAndJdbcUser(databseSchema)
+      ).toEqual({
+        affiliation: 'paas',
+        application: 'application',
+        description: null,
+        createdBy: '123',
+        discriminator: 'db',
+        environment: 'environment'
+      });
+    });
+
+    it('should trim labels and jdbcUser values', () => {
+      const databseSchema = createDatabaseSchemaInputFactory.build({
+        application: ' app ',
+        discriminator: ' db ',
+        createdBy: ' ',
+        jdbcUser: {
+          jdbcUrl: ' test.no',
+          password: '123 '
+        }
+      });
+
+      expect(
+        databaseSchemaService.trimLabelsAndJdbcUser(databseSchema)
+      ).toEqual({
+        affiliation: 'paas',
+        application: 'app',
+        createdBy: '',
+        description: null,
+        discriminator: 'db',
+        environment: 'env',
+        jdbcUser: { jdbcUrl: 'test.no', password: '123', username: 'username' }
+      });
+    });
+
+    it('should given no spaces in front or behind any values, do nothing to the schema', () => {
+      const databseSchema = createDatabaseSchemaInputFactory.build();
+      expect(
+        databaseSchemaService.trimLabelsAndJdbcUser(databseSchema)
+      ).toEqual(databseSchema);
     });
   });
 

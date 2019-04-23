@@ -1,4 +1,5 @@
 import {
+  ICreateDatabaseSchemaInput,
   IDatabaseSchema,
   IDatabaseSchemaInput,
   IDatabaseSchemaView,
@@ -135,6 +136,47 @@ export const filterDatabaseSchemaView = (filter: string) => {
 export default class DatabaseSchemaService {
   public static DEFAULT_COLUMNS: IColumn[] = defaultColumns;
   public static DELETION_COLUMNS: IColumn[] = deletionDialogColumns;
+
+  public trimJdbcUser = (
+    jdbcUser: IJdbcUser | null | undefined
+  ): IJdbcUser | null => {
+    const defaultValues: IJdbcUser = {
+      username: '',
+      password: '',
+      jdbcUrl: ''
+    };
+    if (!!jdbcUser) {
+      return Object.keys(jdbcUser).reduce((acc, curr) => {
+        acc[curr] = jdbcUser[curr].trim();
+        return acc;
+      }, defaultValues);
+    }
+    return null;
+  };
+
+  public trimLabelsAndJdbcUser(
+    databaseSchema: ICreateDatabaseSchemaInput
+  ): ICreateDatabaseSchemaInput {
+    const defaultValues: ICreateDatabaseSchemaInput = {
+      discriminator: '',
+      createdBy: '',
+      description: null,
+      environment: '',
+      application: '',
+      affiliation: ''
+    };
+
+    const trimLabels = (value: string): string => {
+      return !!value ? value.trim() : value;
+    };
+
+    return Object.keys(databaseSchema).reduce((acc, curr) => {
+      curr !== 'jdbcUser'
+        ? (acc[curr] = trimLabels(databaseSchema[curr]))
+        : (acc[curr] = this.trimJdbcUser(databaseSchema.jdbcUser));
+      return acc;
+    }, defaultValues);
+  }
 
   public getSelectionDetails(deleteSelectionIds: string[]): string {
     switch (deleteSelectionIds.length) {

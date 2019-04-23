@@ -13,6 +13,7 @@ import { IDeploymentSpec, IMount } from 'models/DeploymentSpec';
 import { ImageTagType } from 'models/ImageTagType';
 import { IPodResource } from 'models/Pod';
 import {
+  ICreateDatabaseSchemaInput,
   ICreateDatabaseSchemaResponse,
   IDatabaseSchema,
   IDatabaseSchemaInput,
@@ -281,6 +282,7 @@ export const databaseSchemaInputFactory = Factory.Sync.makeFactory<
   IDatabaseSchemaInput
 >({
   application: 'application',
+  description: null,
   environment: 'environment',
   discriminator: 'db',
   createdBy: '12345',
@@ -378,6 +380,22 @@ export const userAndAffiliationsFactory = Factory.Sync.makeFactory<
   affiliations: ['paas'],
   id: '123',
   user: 'bob'
+});
+
+export const createDatabaseSchemaInputFactory = Factory.Sync.makeFactory<
+  ICreateDatabaseSchemaInput
+>({
+  affiliation: 'paas',
+  application: 'app',
+  createdBy: 'd36754',
+  description: null,
+  discriminator: 'my-db',
+  environment: 'env',
+  jdbcUser: {
+    jdbcUrl: 'jdbc:oracle:thin:@test.skead.no:1521/referanse',
+    password: 'password',
+    username: 'username'
+  }
 });
 
 export const startupFactory = Factory.Sync.makeFactory<IStartupState>({
