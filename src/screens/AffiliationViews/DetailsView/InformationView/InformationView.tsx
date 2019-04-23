@@ -1,7 +1,6 @@
 import * as React from 'react';
 import styled from 'styled-components';
 
-import { ExternalLink } from 'components/ExternalLink';
 import Spinner from 'components/Spinner';
 import {
   IApplicationDeployment,
@@ -11,6 +10,7 @@ import { ActiveDeploymentInformation } from './ActiveDeploymentInformation';
 import { DeploymentSpecInformation } from './DeploymentSpecInformation';
 import { GitAndBuildInformation } from './GitAndBuildInformation';
 import PodStatus from './PodStatus';
+import { ServiceLinks } from './ServiceLinks';
 import StatusCheckReportCard from './StatusCheckReportCard';
 
 interface IInformationViewProps {
@@ -49,16 +49,7 @@ const InformationView = ({
         <div>
           <h3>AuroraStatus for deployment</h3>
           <StatusCheckReportCard deployment={deployment} />
-          <h3>Tjenestelenker</h3>
-          <ul>
-            {deploymentDetails.serviceLinks.map(link => (
-              <li style={{ marginBottom: '5px' }}>
-                <ExternalLink target="_blank" href={link.url}>
-                  {link.name}
-                </ExternalLink>
-              </li>
-            ))}
-          </ul>
+          <ServiceLinks serviceLinks={deploymentDetails.serviceLinks} />
         </div>
       </div>
       <hr
