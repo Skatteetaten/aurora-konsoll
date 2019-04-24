@@ -42,6 +42,7 @@ interface IFilterState {
   selectedFilterKey?: string;
   currentFilterName?: string;
   mode: FilterMode;
+  isDefaultCheckedForCreate: boolean;
 }
 
 export interface IFilterChange {
@@ -54,7 +55,8 @@ export class Filter extends React.Component<IFilterProps, IFilterState> {
     applications: [],
     environments: [],
     mode: FilterMode.Create,
-    selectedFilterKey: undefined
+    selectedFilterKey: undefined,
+    isDefaultCheckedForCreate: false
   };
   private filterService = new FilterService();
 
@@ -193,7 +195,12 @@ export class Filter extends React.Component<IFilterProps, IFilterState> {
 
   public footerApplyButton = (close: () => void) => {
     const { allFilters, affiliation, className, updateFilter } = this.props;
-    const { selectedFilterKey, mode, currentFilterName } = this.state;
+    const {
+      selectedFilterKey,
+      mode,
+      currentFilterName,
+      isDefaultCheckedForCreate
+    } = this.state;
     const applyNewFilter = () => this.applyFilter(close);
     const defaultFilter = this.filterService.getDefaultFilter(
       allFilters,
@@ -218,10 +225,10 @@ export class Filter extends React.Component<IFilterProps, IFilterState> {
         );
       } else {
         const isDefault = defaultFilter && findDefaultFilter;
+        const isCreateMode = mode === FilterMode.Create;
         updateFilter({
-          name:
-            mode === FilterMode.Create ? currentFilterName : selectedFilterKey,
-          default: !!!isDefault,
+          name: isCreateMode ? currentFilterName : selectedFilterKey,
+          default: isCreateMode ? !isDefaultCheckedForCreate : !!!isDefault,
           applications:
             currentFilter && currentFilter.applications.length > 0
               ? currentFilter.applications
@@ -234,15 +241,21 @@ export class Filter extends React.Component<IFilterProps, IFilterState> {
         this.setState({
           selectedFilterKey: currentFilterName
         });
+        if (isCreateMode) {
+          this.setState(prevState => ({
+            isDefaultCheckedForCreate: !prevState.isDefaultCheckedForCreate
+          }));
+        }
       }
     };
 
     const createModeCheckbox = () => (
       <Checkbox
         disabled={!currentFilterName}
-        checked={!!isCurrentFilterDefault}
+        checked={isDefaultCheckedForCreate}
         boxSide="start"
         label="Standardvalg"
+        onChange={handleDefaultValueChange}
       />
     );
 
@@ -275,6 +288,11 @@ export class Filter extends React.Component<IFilterProps, IFilterState> {
   };
 
   public setCurrentFilterName = (filterName: string) => {
+    if (!filterName) {
+      this.setState({
+        isDefaultCheckedForCreate: false
+      });
+    }
     this.setState({
       currentFilterName: filterName
     });
@@ -376,7 +394,8 @@ export class Filter extends React.Component<IFilterProps, IFilterState> {
     const setMode = (m: FilterMode) => {
       if (m === FilterMode.Create) {
         this.setState({
-          currentFilterName: ''
+          currentFilterName: '',
+          isDefaultCheckedForCreate: false
         });
       }
       this.setState({
