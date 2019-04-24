@@ -34,6 +34,7 @@ interface IDatabaseSchemaCreateDialogState {
   isOpen: boolean;
   isLoading: boolean;
   step: Step;
+  previousStep: Step;
   databaseSchemaInput: ICreateDatabaseSchemaInput;
 }
 
@@ -55,6 +56,7 @@ class DatabaseSchemaCreateDialog extends React.Component<
     isOpen: false,
     isLoading: false,
     step: Step.TYPE,
+    previousStep: Step.TYPE,
     databaseSchemaInput: this.resetInput
   };
 
@@ -79,9 +81,11 @@ class DatabaseSchemaCreateDialog extends React.Component<
     return;
   };
 
-  public setStep = (step: Step) => {
+  public setStep = (newStep: Step) => {
+    const { step } = this.state;
     this.setState({
-      step
+      previousStep: step,
+      step: newStep
     });
   };
 
@@ -104,9 +108,10 @@ class DatabaseSchemaCreateDialog extends React.Component<
 
   public createDatabaseSchema = async () => {
     const { onCreate } = this.props;
-    const { databaseSchemaInput } = this.state;
+    const { databaseSchemaInput, step } = this.state;
     this.setState({
-      isLoading: true
+      isLoading: true,
+      previousStep: step
     });
 
     await onCreate(
@@ -141,10 +146,19 @@ class DatabaseSchemaCreateDialog extends React.Component<
     const { isOpen, isLoading, step, databaseSchemaInput } = this.state;
 
     const back = () => {
-      this.setState({
-        step: Step.TYPE,
-        databaseSchemaInput: this.resetInput
-      });
+      const { previousStep } = this.state;
+      if(isNew || isExternal) {
+        this.setState({
+          step: Step.TYPE,
+          databaseSchemaInput: this.resetInput
+        });
+      } else {
+        this.setState({
+          isLoading: false,
+          step: previousStep
+        });
+      }
+
     };
 
     const closeAndFetch = () => {
@@ -247,14 +261,25 @@ class DatabaseSchemaCreateDialog extends React.Component<
               </>
             )}
             {isSummary && (
-              <Button
-                onClick={closeAndFetch}
-                buttonType="primaryRoundedFilled"
-                style={{ width: '120px' }}
-                icon="Completed"
-              >
-                Fullfør
-              </Button>
+              <>
+                <Button
+                  onClick={back}
+                  buttonType="primaryRoundedFilled"
+                  style={{ width: '160px', marginRight: '10px' }}
+                  icon="Copy"
+                  title="Lag nytt databaseskjema med eksisterende verdier"
+                >
+                  Lag ny kopi
+                </Button>
+                <Button
+                  onClick={closeAndFetch}
+                  buttonType="primaryRoundedFilled"
+                  style={{ width: '120px' }}
+                  icon="Completed"
+                >
+                  Fullfør
+                </Button>
+              </>
             )}
             {isNew && (
               <LoadingButton

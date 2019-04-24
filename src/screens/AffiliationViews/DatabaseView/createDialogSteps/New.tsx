@@ -22,10 +22,21 @@ const New = ({
     });
   };
 
+  const {
+    environment,
+    application,
+    discriminator,
+    description
+  } = databaseSchemaInput;
+
   return (
     <div className={className}>
       <div className="styled-labels">
         <Labels
+          environment={environment}
+          application={application}
+          discriminator={discriminator}
+          description={description ? description : ''}
           handleLabelChange={handleLabelChange}
           displayCreatedByField={false}
         />

@@ -50,6 +50,13 @@ const External = ({
     };
   }
 
+  const {
+    environment,
+    application,
+    discriminator,
+    description
+  } = databaseSchemaInput;
+
   return (
     <Grid>
       <Grid.Row>
@@ -71,6 +78,10 @@ const External = ({
         <Grid.Col lg={1} />
         <Grid.Col lg={5}>
           <Labels
+            environment={environment}
+            application={application}
+            discriminator={discriminator}
+            description={description ? description : ''}
             handleLabelChange={handleLabelChange}
             displayCreatedByField={false}
           />
