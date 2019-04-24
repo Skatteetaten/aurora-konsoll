@@ -7,23 +7,30 @@ interface IAffiliationSelectorProps {
   title: string;
   createLink: (affiliation: string) => string;
   className?: string;
+  onSelectAffiliation: (affiliation: string) => void;
 }
 
 const AffiliationSelector = ({
   affiliations,
   className,
   title,
-  createLink
+  createLink,
+  onSelectAffiliation: onAffiliationSelected
 }: IAffiliationSelectorProps) => (
   <div className={className}>
     <div>
       <h1>{title}</h1>
       <div className="affiliation-list">
-        {affiliations.sort((a1, a2) => a1.localeCompare(a2)).map(a => (
-          <Link to={createLink(a)} key={a}>
-            <li>{a}</li>
-          </Link>
-        ))}
+        {affiliations
+          .sort((a1, a2) => a1.localeCompare(a2))
+          .map(a => {
+            const selectAffiliation = () => onAffiliationSelected(a);
+            return (
+              <Link to={createLink(a)} key={a} onClick={selectAffiliation}>
+                <li>{a}</li>
+              </Link>
+            );
+          })}
       </div>
     </div>
   </div>
