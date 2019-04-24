@@ -249,20 +249,10 @@ export class Filter extends React.Component<IFilterProps, IFilterState> {
       }
     };
 
-    const createModeCheckbox = () => (
+    const renderCheckbox = (disabled: boolean, checked: boolean) => (
       <Checkbox
-        disabled={!currentFilterName}
-        checked={isDefaultCheckedForCreate}
-        boxSide="start"
-        label="Standardvalg"
-        onChange={handleDefaultValueChange}
-      />
-    );
-
-    const editModeCheckbox = () => (
-      <Checkbox
-        disabled={!selectedFilterKey}
-        checked={!!isCurrentFilterDefault}
+        disabled={disabled}
+        checked={checked}
         boxSide="start"
         label="Standardvalg"
         onChange={handleDefaultValueChange}
@@ -279,8 +269,8 @@ export class Filter extends React.Component<IFilterProps, IFilterState> {
         />
         <div className="styled-footer-buttons">
           {mode === FilterMode.Create
-            ? createModeCheckbox()
-            : editModeCheckbox()}
+            ? renderCheckbox(!currentFilterName, isDefaultCheckedForCreate)
+            : renderCheckbox(!selectedFilterKey, !!isCurrentFilterDefault)}
         </div>
         <ActionButton onClick={applyNewFilter}>Sett filter</ActionButton>
       </span>
