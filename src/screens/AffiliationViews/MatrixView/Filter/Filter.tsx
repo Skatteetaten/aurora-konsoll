@@ -218,14 +218,15 @@ export class Filter extends React.Component<IFilterProps, IFilterState> {
       currentFilter &&
       defaultFilter.name === currentFilter.name;
 
-    const handleDefaultValueChange = () => {
+    const isCreateMode = mode === FilterMode.Create;
+
+    const handleDefaultValueChange = (): void => {
       if (this.hasCurrentFilterName() && this.noFilterOptionsSelected()) {
         errorStateManager.addError(
           new Error('Ingen applikasjoner og miljøer valgt')
         );
       } else {
         const isDefault = defaultFilter && findDefaultFilter;
-        const isCreateMode = mode === FilterMode.Create;
         updateFilter({
           name: isCreateMode ? currentFilterName : selectedFilterKey,
           default: isCreateMode ? !isDefaultCheckedForCreate : !!!isDefault,
@@ -249,7 +250,10 @@ export class Filter extends React.Component<IFilterProps, IFilterState> {
       }
     };
 
-    const renderCheckbox = (disabled: boolean, checked: boolean) => (
+    const renderCheckbox = (
+      disabled: boolean,
+      checked: boolean
+    ): JSX.Element => (
       <Checkbox
         disabled={disabled}
         checked={checked}
@@ -268,7 +272,7 @@ export class Filter extends React.Component<IFilterProps, IFilterState> {
           )}
         />
         <div className="styled-footer-buttons">
-          {mode === FilterMode.Create
+          {isCreateMode
             ? renderCheckbox(!currentFilterName, isDefaultCheckedForCreate)
             : renderCheckbox(!selectedFilterKey, !!isCurrentFilterDefault)}
         </div>
