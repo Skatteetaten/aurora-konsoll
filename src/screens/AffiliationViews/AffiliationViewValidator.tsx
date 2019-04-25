@@ -55,7 +55,13 @@ class AffiliationViewValidator extends React.Component<
   }
 
   public render() {
-    const { affiliation, currentUser, match, type } = this.props;
+    const {
+      affiliation,
+      currentUser,
+      match,
+      type,
+      onAffiliationValidated
+    } = this.props;
 
     if (currentUser.affiliations.length === 0) {
       return false;
@@ -79,6 +85,7 @@ class AffiliationViewValidator extends React.Component<
           title={title}
           createLink={createLink}
           affiliations={currentUser.affiliations}
+          onSelectAffiliation={onAffiliationValidated}
         />
       );
     }
