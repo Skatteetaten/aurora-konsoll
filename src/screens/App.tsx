@@ -17,7 +17,7 @@ import { ITokenStore } from 'services/TokenStore';
 import AcceptTokenRoute from './AcceptTokenView/AcceptTokenRoute';
 
 import { withAuroraApi } from 'components/AuroraApi';
-import ErrorBoundary from 'components/ErrorBoundary/ErrorBoundary';
+import { ErrorBoundaryConnected } from 'components/ErrorBoundary/ErrorBoundaryConnected';
 import LayoutConnected from 'components/Layout/Layout';
 import { errorStateManager } from 'models/StateManager/ErrorStateManager';
 import AffiliationViewValidatorConnected, {
@@ -125,7 +125,7 @@ class App extends React.Component<IAppProps, IAppState> {
         <Konami timeout={10000}>
           <GoboUsageView clients={this.props.clients} />
         </Konami>
-        <ErrorBoundary errorSM={errorStateManager}>
+        <ErrorBoundaryConnected errorSM={errorStateManager}>
           <LayoutConnected
             isMenuExpanded={isMenuExpanded}
             handleMenuExpand={this.handleMenuExpand}
@@ -175,7 +175,7 @@ class App extends React.Component<IAppProps, IAppState> {
               </Switch>
             )}
           </LayoutConnected>
-        </ErrorBoundary>
+        </ErrorBoundaryConnected>
       </StyledSkeBasis>
     );
   }

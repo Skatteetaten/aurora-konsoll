@@ -5,6 +5,12 @@ import rootReducer from './rootReducer';
 import { IApiClients } from 'components/AuroraApi';
 import thunkMiddleware from 'redux-thunk';
 
+// const composeEnhancers =
+//   (window as any).__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ &&
+//   (window as any).__REDUX_DEVTOOLS_EXTENSION_COMPOSE__({
+//     serializeAction: true
+//   });
+
 const createStoreWithApi = (clients: IApiClients, initialState?: {}) => {
   const middlewares = [
     thunkMiddleware.withExtraArgument({

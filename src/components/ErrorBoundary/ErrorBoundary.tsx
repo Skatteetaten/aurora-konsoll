@@ -2,63 +2,43 @@ import ErrorStateManager, {
   IAppError,
   IErrorState
 } from 'models/StateManager/ErrorStateManager';
+import ErrorStateManagerRedux from 'models/StateManager/ErrorStateManagerRedux';
 import * as React from 'react';
 import ErrorPopup from './ErrorPopup';
 
 interface IErrorBoundaryProps {
-  errorSM: ErrorStateManager;
-}
-
-interface IErrorBoundaryState {
-  currentError?: IAppError;
+  errorSM: ErrorStateManagerRedux;
+  onFetch: (errorQueue: IAppError[]) => void;
+  addErrors: (errors: IErrorState) => void;
+  addCurrentError: (currentError?: IAppError) => void;
   errors: IErrorState;
+  currentError?: IAppError;
 }
 
-class ErrorBoundary extends React.Component<
-  IErrorBoundaryProps,
-  IErrorBoundaryState
-> {
-  public state: IErrorBoundaryState = {
-    errors: {
-      allErrors: new Map(),
-      errorQueue: []
-    }
-  };
+class ErrorBoundary extends React.Component<IErrorBoundaryProps, {}> {
+  public componentDidMount() {
+    const { errorSM, errors, onFetch, addErrors } = this.props;
 
-  constructor(props: IErrorBoundaryProps) {
-    super(props);
-    props.errorSM.registerStateUpdater(({ allErrors, errorQueue }) => {
-      if (errorQueue.length > this.state.errors.errorQueue.length) {
-        fetch('/api/log', {
-          body: JSON.stringify({
-            location: window.location.pathname,
-            message: errorQueue[0].error.message
-          }),
-          headers: {
-            'Content-Type': 'application/json; charset=utf-8'
-          },
-          method: 'POST'
-        });
+    errorSM.incError(new Map(null))
+
+    errorSM.registerStateUpdater(({ allErrors, errorQueue }) => {
+      if (errorQueue.length > errors.errorQueue.length) {
+        onFetch(errorQueue);
       }
-      this.setState({
-        errors: {
-          allErrors: new Map(allErrors),
-          errorQueue: [...errorQueue]
-        }
+      addErrors({
+        allErrors: new Map(allErrors),
+        errorQueue: [...errorQueue]
       });
     });
   }
 
   public componentDidUpdate() {
-    const { errorSM } = this.props;
-    const { currentError } = this.state;
+    const { errorSM, currentError, addCurrentError } = this.props;
     if (
       (errorSM.hasError() && !currentError) ||
       (currentError && !currentError.isActive)
     ) {
-      this.setState({
-        currentError: errorSM.getNextError()
-      });
+      addCurrentError(errorSM.getNextError());
     }
   }
 
@@ -67,8 +47,7 @@ class ErrorBoundary extends React.Component<
   }
 
   public render() {
-    const { errorSM } = this.props;
-    const { currentError, errors } = this.state;
+    const { errorSM, errors, currentError, children } = this.props;
     return (
       <>
         {currentError && (
@@ -78,7 +57,7 @@ class ErrorBoundary extends React.Component<
             errorCount={errors.errorQueue.length}
           />
         )}
-        {this.props.children}
+        {children}
       </>
     );
   }
