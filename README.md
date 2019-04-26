@@ -2,8 +2,19 @@
 
 ## Getting started
 
-npm ci <br />
-env INTEGRATIONS_GOBO_URL=<'url'> INTEGRATIONS_DBH_URL=<'url'> npm start
+1. `npm ci`
+
+2. Add a local file `.env.local` and add configuration to it.
+
+   ```
+     INTEGRATIONS_GOBO_URL=http://gobo // Url to your gobo instance or remove to use default
+     INTEGRATIONS_DBH_URL=http://dbh // Will enable database screen
+     INTEGRATIONS_SKAP_URL=http://skap // Will enable certificate and Webseal screen
+   ```
+
+   This file will be sourced during npm start. Don't commit this file.
+
+3. `npm start`
 
 ## IntelliJ Setup
 
