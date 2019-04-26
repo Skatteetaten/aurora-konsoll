@@ -179,6 +179,12 @@ export class Schema extends React.Component<ISchemaProps, ISchemaState> {
     }
   };
 
+  public createNewCopy = () => {
+    const { selectedSchema } = this.state;
+    // tslint:disable-next-line:no-console
+    console.log(selectedSchema);
+  };
+
   public render() {
     const {
       isFetching,
@@ -395,6 +401,7 @@ export class Schema extends React.Component<ISchemaProps, ISchemaState> {
           databaseSchemaService={this.databaseSchemaService}
           onTestJdbcConnectionForId={onTestJdbcConnectionForId}
           testJdbcConnectionResponse={testJdbcConnectionResponse}
+          createNewCopy={this.createNewCopy}
         />
       </div>
     );
