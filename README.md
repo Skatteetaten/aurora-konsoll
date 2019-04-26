@@ -4,7 +4,7 @@
 
 1. `npm ci`
 
-2. Add a local file `.env.local` and add configuration to it.
+2. Add a local file `.env.local` and add configuration to it. If this file is not added, default configuration will be used.
 
    ```
      INTEGRATIONS_GOBO_URL=http://gobo // Url to your gobo instance or remove to use default
