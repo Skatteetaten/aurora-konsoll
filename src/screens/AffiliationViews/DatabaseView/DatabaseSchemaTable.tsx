@@ -209,6 +209,7 @@ export class Schema extends React.Component<ISchemaProps, ISchemaState> {
     const {
       filter,
       selectedSchema,
+      schemaToCopy,
       deleteMode,
       deleteSelectionIds,
       extendedInfo,
@@ -370,7 +371,7 @@ export class Schema extends React.Component<ISchemaProps, ISchemaState> {
               onFetch={onFetch}
               currentUser={currentUser}
               isFetching={isFetching}
-              initialDatabaseSchemaInput={selectedSchema}
+              initialDatabaseSchemaInput={schemaToCopy}
             />
           </div>
         </div>

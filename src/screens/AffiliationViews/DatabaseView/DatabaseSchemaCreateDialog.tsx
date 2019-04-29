@@ -64,9 +64,9 @@ class DatabaseSchemaCreateDialog extends React.Component<
 
   private databaseSchemaService = new DatabaseSchemaService();
 
-  public componentWillUpdate() {
+  public componentDidUpdate(prevProps: IDatabaseSchemaCreateDialogProps) {
     const { initialDatabaseSchemaInput } = this.props;
-    if(initialDatabaseSchemaInput) {
+    if(prevProps.initialDatabaseSchemaInput !== initialDatabaseSchemaInput && initialDatabaseSchemaInput) {
       const schema: ICreateDatabaseSchemaInput = {
         discriminator: initialDatabaseSchemaInput.discriminator,
         createdBy: this.props.currentUser.id,
@@ -88,6 +88,15 @@ class DatabaseSchemaCreateDialog extends React.Component<
         previousStep: Step.TYPE,
         databaseSchemaInput: schema
       });
+    }
+
+    if (this.props.affiliation !== prevProps.affiliation) {
+      this.setState(state => ({
+        databaseSchemaInput: {
+          ...state.databaseSchemaInput,
+          affiliation: this.props.affiliation
+        }
+      }));
     }
   }
 
@@ -150,17 +159,6 @@ class DatabaseSchemaCreateDialog extends React.Component<
       step: Step.SUMMARY
     });
   };
-
-  public componentDidUpdate(prevProps: IDatabaseSchemaCreateDialogProps) {
-    if (this.props.affiliation !== prevProps.affiliation) {
-      this.setState(state => ({
-        databaseSchemaInput: {
-          ...state.databaseSchemaInput,
-          affiliation: this.props.affiliation
-        }
-      }));
-    }
-  }
 
   public render() {
     const {
