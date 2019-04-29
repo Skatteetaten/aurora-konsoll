@@ -72,6 +72,7 @@ interface ISchemaState {
   viewItems: IDatabaseSchemaView[];
   filter: string;
   selectedSchema?: IDatabaseSchema;
+  schemaToCopy?: IDatabaseSchema;
   deleteMode: boolean;
   deleteSelectionIds: string[];
   extendedInfo: IDatabaseSchema[];
@@ -84,6 +85,7 @@ export class Schema extends React.Component<ISchemaProps, ISchemaState> {
     viewItems: [],
     filter: '',
     selectedSchema: undefined,
+    schemaToCopy: undefined,
     deleteMode: false,
     deleteSelectionIds: [],
     extendedInfo: [],
@@ -181,8 +183,9 @@ export class Schema extends React.Component<ISchemaProps, ISchemaState> {
 
   public createNewCopy = () => {
     const { selectedSchema } = this.state;
-    // tslint:disable-next-line:no-console
-    console.log(selectedSchema);
+    this.setState({
+      schemaToCopy: selectedSchema
+    })
   };
 
   public render() {
@@ -367,6 +370,7 @@ export class Schema extends React.Component<ISchemaProps, ISchemaState> {
               onFetch={onFetch}
               currentUser={currentUser}
               isFetching={isFetching}
+              initialDatabaseSchemaInput={selectedSchema}
             />
           </div>
         </div>

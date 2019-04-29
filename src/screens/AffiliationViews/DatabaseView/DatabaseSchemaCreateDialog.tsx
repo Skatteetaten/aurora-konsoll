@@ -9,6 +9,7 @@ import { IUserAndAffiliations } from 'models/ApplicationDeployment';
 import {
   ICreateDatabaseSchemaInput,
   ICreateDatabaseSchemaResponse,
+  IDatabaseSchema,
   IJdbcUser,
   Step
 } from 'models/schemas';
@@ -28,6 +29,7 @@ interface IDatabaseSchemaCreateDialogProps {
   testJdbcConnectionResponse: boolean;
   currentUser: IUserAndAffiliations;
   isFetching: boolean;
+  initialDatabaseSchemaInput?: IDatabaseSchema;
 }
 
 interface IDatabaseSchemaCreateDialogState {
@@ -61,6 +63,33 @@ class DatabaseSchemaCreateDialog extends React.Component<
   };
 
   private databaseSchemaService = new DatabaseSchemaService();
+
+  public componentWillUpdate() {
+    const { initialDatabaseSchemaInput } = this.props;
+    if(initialDatabaseSchemaInput) {
+      const schema: ICreateDatabaseSchemaInput = {
+        discriminator: initialDatabaseSchemaInput.discriminator,
+        createdBy: this.props.currentUser.id,
+        description: initialDatabaseSchemaInput.description,
+        environment: initialDatabaseSchemaInput.environment,
+        application: initialDatabaseSchemaInput.application,
+        affiliation: this.props.affiliation,
+        jdbcUser: {
+          jdbcUrl: initialDatabaseSchemaInput.jdbcUrl,
+          username: initialDatabaseSchemaInput.users[0].username,
+          password: ''
+        }
+      };
+
+      this.setState({
+        isOpen: true,
+        isLoading: false,
+        step: Step.EXTERNAL,
+        previousStep: Step.TYPE,
+        databaseSchemaInput: schema
+      });
+    }
+  }
 
   public toggleDialog = (isOpen: boolean) => () => {
     this.setState({
