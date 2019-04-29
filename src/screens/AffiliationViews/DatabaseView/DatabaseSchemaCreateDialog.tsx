@@ -9,6 +9,7 @@ import { IUserAndAffiliations } from 'models/ApplicationDeployment';
 import {
   ICreateDatabaseSchemaInput,
   ICreateDatabaseSchemaResponse,
+  IDatabaseSchema,
   IJdbcUser,
   Step
 } from 'models/schemas';
@@ -28,6 +29,7 @@ interface IDatabaseSchemaCreateDialogProps {
   testJdbcConnectionResponse: boolean;
   currentUser: IUserAndAffiliations;
   isFetching: boolean;
+  initialDatabaseSchemaInput?: IDatabaseSchema;
 }
 
 interface IDatabaseSchemaCreateDialogState {
@@ -61,6 +63,42 @@ class DatabaseSchemaCreateDialog extends React.Component<
   };
 
   private databaseSchemaService = new DatabaseSchemaService();
+
+  public componentDidUpdate(prevProps: IDatabaseSchemaCreateDialogProps) {
+    const { initialDatabaseSchemaInput } = this.props;
+    if(prevProps.initialDatabaseSchemaInput !== initialDatabaseSchemaInput && initialDatabaseSchemaInput) {
+      const schema: ICreateDatabaseSchemaInput = {
+        discriminator: initialDatabaseSchemaInput.discriminator,
+        createdBy: this.props.currentUser.id,
+        description: initialDatabaseSchemaInput.description ? initialDatabaseSchemaInput.description : '',
+        environment: initialDatabaseSchemaInput.environment,
+        application: initialDatabaseSchemaInput.application,
+        affiliation: this.props.affiliation,
+        jdbcUser: {
+          jdbcUrl: initialDatabaseSchemaInput.jdbcUrl,
+          username: initialDatabaseSchemaInput.users[0].username,
+          password: initialDatabaseSchemaInput.users[0].password ? initialDatabaseSchemaInput.users[0].password : ''
+        }
+      };
+
+      this.setState({
+        isOpen: true,
+        isLoading: false,
+        step: Step.EXTERNAL,
+        previousStep: Step.TYPE,
+        databaseSchemaInput: schema
+      });
+    }
+
+    if (this.props.affiliation !== prevProps.affiliation) {
+      this.setState(state => ({
+        databaseSchemaInput: {
+          ...state.databaseSchemaInput,
+          affiliation: this.props.affiliation
+        }
+      }));
+    }
+  }
 
   public toggleDialog = (isOpen: boolean) => () => {
     this.setState({
@@ -121,17 +159,6 @@ class DatabaseSchemaCreateDialog extends React.Component<
       step: Step.SUMMARY
     });
   };
-
-  public componentDidUpdate(prevProps: IDatabaseSchemaCreateDialogProps) {
-    if (this.props.affiliation !== prevProps.affiliation) {
-      this.setState(state => ({
-        databaseSchemaInput: {
-          ...state.databaseSchemaInput,
-          affiliation: this.props.affiliation
-        }
-      }));
-    }
-  }
 
   public render() {
     const {
