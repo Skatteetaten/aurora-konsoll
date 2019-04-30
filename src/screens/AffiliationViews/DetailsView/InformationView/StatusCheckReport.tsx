@@ -62,6 +62,8 @@ function getStatusIcon(hasFailed: boolean, level: StatusCode): string {
       return 'Info';
     case StatusCode.HEALTHY:
       return 'Done';
+    default:
+      return '';
   }
 }
 

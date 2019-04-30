@@ -188,6 +188,8 @@ class DatabaseSchemaCreateDialog extends React.Component<
           return 'Eksternt skjema';
         case Step.SUMMARY:
           return 'Oppsummering';
+        default:
+          return '';
       }
     };
 
