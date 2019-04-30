@@ -9,7 +9,7 @@ import {
   UserSettingsClient,
   WebsealClient
 } from 'services/auroraApiClients';
-interface IApiClients {
+export interface IApiClients {
   applicationDeploymentClient: ApplicationDeploymentClient;
   imageRepositoryClient: ImageRepositoryClient;
   netdebugClient: NetdebugClient;
@@ -114,14 +114,12 @@ class AuroraApiCall<P> extends React.Component<
   }
 }
 
-interface IAuroraApiComponentProps {
+export interface IAuroraApiComponentProps {
   clients: IApiClients;
 }
 
 export {
   AuroraApiContext,
   AuroraApiProvider,
-  AuroraApi,
-  IApiClients,
-  IAuroraApiComponentProps
+  AuroraApi
 };
