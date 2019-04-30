@@ -52,7 +52,7 @@ export const DifferentVersionTooltip = ({
 
 function areAnyPodsRunningWithLatestDeployTag(pods: IPodResource[]): boolean {
   return pods.reduce(
-    (a, pod) => a || (pod.phase === 'Running' && pod.latestDeployTag),
+    (a: boolean, pod: IPodResource) => a || (pod.phase === 'Running' && pod.latestDeployTag),
     false
   );
 }

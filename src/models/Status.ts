@@ -1,4 +1,4 @@
-export const STATUS_COLORS = {
+export const STATUS_COLORS: IStatusColors = {
   down: '#bb4f4f',
   downHover: '#c64040',
   healthy: '#4fbb82',
@@ -10,6 +10,10 @@ export const STATUS_COLORS = {
   unknown: '#4f8ebb',
   unknownHover: '#4086c6'
 };
+
+interface IStatusColors {
+  [key: string]: string;
+}
 
 export enum StatusCode {
   HEALTHY = 'HEALTHY',

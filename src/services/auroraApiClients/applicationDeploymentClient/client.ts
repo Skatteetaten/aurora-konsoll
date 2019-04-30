@@ -195,7 +195,7 @@ export class ApplicationDeploymentClient {
       return [];
     }
 
-    return result.data.applications.edges.reduce((acc, { node }) => {
+    return result.data.applications.edges.reduce((acc: IApplicationDeployment[], { node }) => {
       const { applicationDeployments, imageRepository } = node;
       const deployments = applicationDeployments.map(app => ({
         affiliation: app.affiliation.name,

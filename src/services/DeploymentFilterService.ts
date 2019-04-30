@@ -1,6 +1,6 @@
 import { IApplicationDeployment } from 'models/ApplicationDeployment';
 import { IApplicationDeploymentFilters } from 'models/UserSettings';
-import * as qs from 'qs';
+import qs from 'qs';
 
 export interface IFilter {
   name?: string;
@@ -15,8 +15,8 @@ export default class DeploymentFilterService {
       ignoreQueryPrefix: true
     });
 
-    let applications = [];
-    let environments = [];
+    let applications: any[] = [];
+    let environments: any[] = [];
     if (typeof queries.apps === 'string') {
       applications.push(queries.apps);
     } else {
