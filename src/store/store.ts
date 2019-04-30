@@ -11,7 +11,7 @@ import thunkMiddleware from 'redux-thunk';
 //     serializeAction: true
 //   });
 
-const createStoreWithApi = (clients: IApiClients, initialState?: {}) => {
+const createStoreWithApi = (clients?: IApiClients, initialState?: {}) => {
   const middlewares = [
     thunkMiddleware.withExtraArgument({
       clients

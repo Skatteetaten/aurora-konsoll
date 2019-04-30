@@ -2,24 +2,22 @@ import ErrorStateManager, {
   IAppError,
   IErrorState
 } from 'models/StateManager/ErrorStateManager';
-import ErrorStateManagerRedux from 'models/StateManager/ErrorStateManagerRedux';
 import * as React from 'react';
 import ErrorPopup from './ErrorPopup';
 
 interface IErrorBoundaryProps {
-  errorSM: ErrorStateManagerRedux;
+  errorManager: IErrorState;
+  addError: (errors: IErrorState, error: Error) => void;
+  errorSM: ErrorStateManager;
   onFetch: (errorQueue: IAppError[]) => void;
   addErrors: (errors: IErrorState) => void;
   addCurrentError: (currentError?: IAppError) => void;
   errors: IErrorState;
   currentError?: IAppError;
 }
-
 class ErrorBoundary extends React.Component<IErrorBoundaryProps, {}> {
   public componentDidMount() {
     const { errorSM, errors, onFetch, addErrors } = this.props;
-
-    errorSM.incError(new Map(null))
 
     errorSM.registerStateUpdater(({ allErrors, errorQueue }) => {
       if (errorQueue.length > errors.errorQueue.length) {
@@ -48,6 +46,8 @@ class ErrorBoundary extends React.Component<IErrorBoundaryProps, {}> {
 
   public render() {
     const { errorSM, errors, currentError, children } = this.props;
+    // tslint:disable-next-line:no-console
+    console.log(this.props.errors);
     return (
       <>
         {currentError && (

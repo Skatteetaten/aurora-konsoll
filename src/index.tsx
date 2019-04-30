@@ -10,7 +10,6 @@ import { AuroraApiProvider, IApiClients } from 'components/AuroraApi';
 import { tokenStore } from 'services/TokenStore';
 import { fetchConfiguration, IConfiguration } from 'utils/config';
 
-import { errorStateManager } from 'models/StateManager/ErrorStateManager';
 import App from 'screens/App';
 import {
   ApplicationDeploymentClient,
@@ -39,7 +38,6 @@ async function init() {
 
   const token = tokenStore.getToken();
   const goboClient = new GoboClient({
-    errorHandler: errorStateManager,
     url: '/api/graphql',
     headers: {
       Authorization: token ? `Bearer ${token}` : '',

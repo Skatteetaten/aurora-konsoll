@@ -3,7 +3,8 @@ import { DefinitionNode, DocumentNode, print } from 'graphql/language';
 
 import { v4 as uuid } from 'uuid';
 
-import ErrorStateManager from 'models/StateManager/ErrorStateManager';
+import { addError } from 'models/StateManager/state/actions';
+import createStoreWithApi from 'store';
 
 interface IVariables {
   [key: string]: any;
@@ -15,7 +16,6 @@ interface IGoboResult<T> {
 }
 
 interface IGoboClientOptions {
-  errorHandler: ErrorStateManager;
   headers?: Record<string, string>;
   url: string;
 }
@@ -85,7 +85,7 @@ export default class GoboClient {
         errors: data.errors
       };
     } catch (e) {
-      this.options.errorHandler.addError(e);
+      this.addError(e);
       return;
     }
   }
@@ -98,8 +98,11 @@ export default class GoboClient {
     return names.length > 0 ? names[0] : '';
   }
 
-  private addError(e: Error, documentName: string) {
-    const err = new Error(e.message + ' document: ' + documentName);
-    this.options.errorHandler.addError(err);
+  private addError(e: Error, documentName?: string) {
+    const err = !!documentName
+      ? new Error(e.message + ' document: ' + documentName)
+      : new Error(e.message);
+    const state = createStoreWithApi();
+    state.dispatch<any>(addError(err));
   }
 }

@@ -1,22 +1,10 @@
-import ErrorStateManager from 'models/StateManager/ErrorStateManager';
 import { CertificateClient } from 'services/auroraApiClients';
 import { goboClientMock, GraphQLSeverMock } from 'utils/GraphQLMock';
 
 import * as getCertificates from './__responses__/certificateClient/getCertificates.json';
 
-const errorStateManager = new ErrorStateManager(
-  {
-    allErrors: new Map(),
-    errorQueue: []
-  },
-  () => {
-    // Validate errors
-    return;
-  }
-);
-
 const serverMock = new GraphQLSeverMock();
-const clientMock = goboClientMock(serverMock.graphQLUrl, errorStateManager);
+const clientMock = goboClientMock(serverMock.graphQLUrl);
 const certificateClient = new CertificateClient(clientMock);
 
 afterAll(() => {
@@ -28,7 +16,7 @@ describe('getCertificates', () => {
     serverMock.putResponse('getCertificates', getCertificates);
 
     const result = await certificateClient.getCertificates();
-    expect(errorStateManager.errorCount).toEqual(0);
+    // expect(errorStateManager.errorCount).toEqual(0);
     expect(result).toMatchSnapshot();
   });
 });

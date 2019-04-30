@@ -4,7 +4,7 @@ import { Route } from 'react-router';
 
 import Spinner from 'components/Spinner';
 import { IApplicationDeployment } from 'models/ApplicationDeployment';
-import { errorStateManager } from 'models/StateManager/ErrorStateManager';
+import { IErrorState } from 'models/StateManager/ErrorStateManager';
 import { IApplicationDeploymentFilters } from 'models/UserSettings';
 import { Link } from 'react-router-dom';
 import DeploymentFilterService, {
@@ -26,6 +26,8 @@ interface IAffiliationViewControllerProps extends IAuroraApiComponentProps {
   matchPath: string;
   matchUrl: string;
   updateUrlWithQuery: (query: string) => void;
+  errors: IErrorState;
+  addError: (errors: IErrorState, error: Error) => void;
 }
 
 interface IAffiliationViewControllerState {
@@ -171,6 +173,8 @@ class AffiliationViewController extends React.Component<
 
   public componentDidMount() {
     const { affiliation } = this.props;
+    // tslint:disable-next-line:no-console
+    console.log(this.props.errors);
     const paramsExists = this.deploymentFilterService.isParamsDefined(
       window.location.search
     );
@@ -189,7 +193,7 @@ class AffiliationViewController extends React.Component<
   }
 
   public deleteFilter = async (filterName: string) => {
-    const { affiliation, clients } = this.props;
+    const { affiliation, clients, addError, errors } = this.props;
     const { allFilters } = this.state;
     const updatedFilters = this.deploymentFilterService.getOtherNonDefaultFilters(
       allFilters,
@@ -205,13 +209,19 @@ class AffiliationViewController extends React.Component<
           allFilters: updatedFilters
         });
       } else {
-        errorStateManager.addError(new Error('Feil ved sletting av filter'));
+        addError(errors, new Error('Feil ved sletting av filter'));
       }
     }
   };
 
   public updateFilter = async (filter: IFilter) => {
-    const { affiliation, clients, updateUrlWithQuery } = this.props;
+    const {
+      affiliation,
+      clients,
+      updateUrlWithQuery,
+      addError,
+      errors
+    } = this.props;
     const { allFilters } = this.state;
     const updatedFilters = this.deploymentFilterService.getOtherNonDefaultFilters(
       allFilters,
@@ -236,7 +246,7 @@ class AffiliationViewController extends React.Component<
           allFilters: updatedFilters
         });
       } else {
-        errorStateManager.addError(new Error('Feil ved lagring av filter'));
+        addError(errors, new Error('Feil ved sletting av filter'));
       }
     } else {
       this.setState({
@@ -328,5 +338,3 @@ class AffiliationViewController extends React.Component<
 export const AffiliationViewControllerWithApi = withAuroraApi(
   AffiliationViewController
 );
-
-export default AffiliationViewController;

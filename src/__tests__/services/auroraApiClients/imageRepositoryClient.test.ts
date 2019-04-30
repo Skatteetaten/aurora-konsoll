@@ -1,22 +1,10 @@
-import ErrorStateManager from 'models/StateManager/ErrorStateManager';
 import { ImageRepositoryClient } from 'services/auroraApiClients/imageRepositoryClient/client';
 import { goboClientMock, GraphQLSeverMock } from 'utils/GraphQLMock';
 
 import * as getTags from './__responses__/imageRepositoryClient/getTags.json';
 
-const errorStateManager = new ErrorStateManager(
-  {
-    allErrors: new Map(),
-    errorQueue: []
-  },
-  () => {
-    // Validate errors
-    return;
-  }
-);
-
 const serverMock = new GraphQLSeverMock();
-const clientMock = goboClientMock(serverMock.graphQLUrl, errorStateManager);
+const clientMock = goboClientMock(serverMock.graphQLUrl);
 const imageRepositoryClient = new ImageRepositoryClient(clientMock);
 
 afterAll(() => {

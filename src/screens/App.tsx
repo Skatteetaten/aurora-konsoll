@@ -17,7 +17,6 @@ import { ITokenStore } from 'services/TokenStore';
 import AcceptTokenRoute from './AcceptTokenView/AcceptTokenRoute';
 
 import { withAuroraApi } from 'components/AuroraApi';
-import { ErrorBoundaryConnected } from 'components/ErrorBoundary/ErrorBoundaryConnected';
 import LayoutConnected from 'components/Layout/Layout';
 import { errorStateManager } from 'models/StateManager/ErrorStateManager';
 import AffiliationViewValidatorConnected, {
@@ -26,6 +25,8 @@ import AffiliationViewValidatorConnected, {
 import { CertificateConnected } from './CertificateView/CertificateConnected';
 import GoboUsageView from './GoboUsageView';
 import { NetdebugWithApi } from './NetdebugView/Netdebug';
+
+import { ErrorBoundaryConnected } from 'components/ErrorBoundary/ErrorBoundaryConnected';
 
 export enum MenuType {
   DEPLOYMENTS,
