@@ -42,18 +42,12 @@
     "start:api": "npm run build:api -- --watch & nodemon --watch ./build-api --exec \"node ./build-api/server.js\"",
     "build": "npm-run-all -pl build:web build:api",
     "build:web": "GENERATE_SOURCEMAP=false react-scripts build",
-    "build:api": "webpack --config webpack.api.config.js",
+    "build:api": "webpack --config webpack.api.config.js --mode production",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
     "clean": "rimraf build build-api coverage pom *.tgz",
     "test:once": "CI=true npm test",
-    "test:coverage": "npm run test -- --coverage",
-    "lint": "npm-run-all lint:prettier lint:tslint",
-    "lint:fix": "npm-run-all lint:prettier-fix lint:tslint-fix",
-    "lint:tslint": "tslint '{api,src}/**/*{.ts,.tsx}'",
-    "lint:prettier": "prettier -l '{api,src}/**/*{.ts,.tsx,.css}'",
-    "lint:tslint-fix": "tslint --fix '{api,src}/**/*{.ts,.tsx}'",
-    "lint:prettier-fix": "prettier --write '{api,src}/**/*{.ts,.tsx,.css}'"
+    "test:coverage": "npm run test -- --coverage"
   },
   "prettier": {
     "singleQuote": true
