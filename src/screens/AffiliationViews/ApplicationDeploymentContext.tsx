@@ -37,7 +37,9 @@ export function withApplicationDeployments<
 >(
   Component: React.ComponentType<P>
 ): React.ComponentClass<Omit<P, keyof IApplicationDeploymentContext>> {
-  return class extends React.Component<Omit<P, keyof IApplicationDeploymentContext>> {
+  return class extends React.Component<
+    Omit<P, keyof IApplicationDeploymentContext>
+  > {
     public render() {
       return (
         <ApplicationDeploymentContext.Consumer>

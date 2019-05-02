@@ -118,8 +118,4 @@ export interface IAuroraApiComponentProps {
   clients: IApiClients;
 }
 
-export {
-  AuroraApiContext,
-  AuroraApiProvider,
-  AuroraApi
-};
+export { AuroraApiContext, AuroraApiProvider, AuroraApi };

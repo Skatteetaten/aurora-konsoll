@@ -17,8 +17,8 @@ const AcceptToken = ({
   }
 
   const params = new URLSearchParams(location.hash.substring(1));
-  const expiresIn = params.get("expires_in");
-  const accessToken = params.get("access_token");
+  const expiresIn = params.get('expires_in');
+  const accessToken = params.get('access_token');
 
   const authQueryString: IAuthQueryString = {
     expires_in: expiresIn ? expiresIn : '',

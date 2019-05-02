@@ -39,8 +39,8 @@ export const GitAndBuildInformation = ({
 };
 
 type Next = {
-  [key: string]: string
-}
+  [key: string]: string;
+};
 
 function exists<T>(obj: T, path: string): boolean {
   const basePaths = path.split('/');

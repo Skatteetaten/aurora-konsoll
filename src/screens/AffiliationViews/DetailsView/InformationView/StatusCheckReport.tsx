@@ -71,16 +71,18 @@ const StatusCheckReport = ({ reports, reasons }: IStatusCheckReportProps) => {
   const renderDeployList = (list: IStatusCheck[]) => (
     <DetailsList
       columns={columns}
-      items={list.sort((a, b) => a.name.localeCompare(b.name)).map(it => ({
-        ...it,
-        active: (
-          <Icon
-            iconName={getStatusIcon(it.hasFailed, it.failLevel)}
-            style={getIconStatusStyle(it.hasFailed, it.failLevel)}
-            title={it.hasFailed ? it.failLevel : StatusCode.HEALTHY}
-          />
-        )
-      }))}
+      items={list
+        .sort((a, b) => a.name.localeCompare(b.name))
+        .map(it => ({
+          ...it,
+          active: (
+            <Icon
+              iconName={getStatusIcon(it.hasFailed, it.failLevel)}
+              style={getIconStatusStyle(it.hasFailed, it.failLevel)}
+              title={it.hasFailed ? it.failLevel : StatusCode.HEALTHY}
+            />
+          )
+        }))}
     />
   );
 

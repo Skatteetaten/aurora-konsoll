@@ -1,9 +1,10 @@
 import * as React from 'react';
 import styled from 'styled-components';
 
-export type RenderLinkFunc = (
-  options: { href: string; name: string }
-) => React.ReactNode;
+export type RenderLinkFunc = (options: {
+  href: string;
+  name: string;
+}) => React.ReactNode;
 
 interface IBreadcrumbProps {
   path: string;

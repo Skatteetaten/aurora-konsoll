@@ -77,14 +77,12 @@ async function init() {
 
 function redirectToLoginPage(authorizationUri: string, clientId: string) {
   const params = new URLSearchParams();
-  params.append("client_id", clientId);
-  params.append("redirect_uri", window.location.origin + '/accept-token');
-  params.append("response_type", "token");
-  params.append("scope", "");
-  params.append("state", "");
-  const authorizationUrl =
-    authorizationUri +
-    '?' + params.toString()
+  params.append('client_id', clientId);
+  params.append('redirect_uri', window.location.origin + '/accept-token');
+  params.append('response_type', 'token');
+  params.append('scope', '');
+  params.append('state', '');
+  const authorizationUrl = authorizationUri + '?' + params.toString();
   window.location.replace(authorizationUrl);
 }
 

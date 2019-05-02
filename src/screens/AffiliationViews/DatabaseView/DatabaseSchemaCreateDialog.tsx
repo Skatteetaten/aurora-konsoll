@@ -147,7 +147,7 @@ class DatabaseSchemaCreateDialog extends React.Component<
 
     const back = () => {
       const { previousStep } = this.state;
-      if(isNew || isExternal) {
+      if (isNew || isExternal) {
         this.setState({
           step: Step.TYPE,
           databaseSchemaInput: this.resetInput
@@ -158,7 +158,6 @@ class DatabaseSchemaCreateDialog extends React.Component<
           step: previousStep
         });
       }
-
     };
 
     const closeAndFetch = () => {

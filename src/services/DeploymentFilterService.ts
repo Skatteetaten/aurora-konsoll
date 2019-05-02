@@ -13,12 +13,12 @@ export default class DeploymentFilterService {
     const params = new URLSearchParams(query);
     let applications: any[] = [];
     let environments: any[] = [];
-    if(params.has("apps")) {
-      applications = params.getAll("apps");
+    if (params.has('apps')) {
+      applications = params.getAll('apps');
     }
 
-    if(params.has("envs")) {
-      environments = params.getAll("envs");
+    if (params.has('envs')) {
+      environments = params.getAll('envs');
     }
 
     return {
@@ -29,7 +29,7 @@ export default class DeploymentFilterService {
 
   public isParamsDefined(query: string) {
     const params = new URLSearchParams(query);
-    return (params.has("apps") || params.has("envs"));
+    return params.has('apps') || params.has('envs');
   }
 
   public filterDeployments(
@@ -54,8 +54,8 @@ export default class DeploymentFilterService {
     const { applications, environments } = filters;
 
     const params = new URLSearchParams();
-    applications.forEach((app) => params.append("apps", app));
-    environments.forEach((env) => params.append("envs", env));
+    applications.forEach(app => params.append('apps', app));
+    environments.forEach(env => params.append('envs', env));
 
     return `?${params.toString()}`;
   }
