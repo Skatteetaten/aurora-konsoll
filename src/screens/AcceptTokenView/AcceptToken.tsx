@@ -21,8 +21,8 @@ const AcceptToken = ({
   const accessToken = params.get('access_token');
 
   const authQueryString: IAuthQueryString = {
-    expires_in: expiresIn ? expiresIn : '',
-    access_token: accessToken ? accessToken : ''
+    expires_in: expiresIn || '',
+    access_token: accessToken || ''
   };
 
   const token = authQueryString.access_token;
