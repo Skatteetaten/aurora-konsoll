@@ -38,10 +38,6 @@ export const GitAndBuildInformation = ({
   );
 };
 
-type Next = {
-  [key: string]: string;
-};
-
 function exists<T>(obj: T, path: string): boolean {
   const basePaths = path.split('/');
   const paths = path.startsWith('/') ? basePaths.splice(1) : basePaths;
