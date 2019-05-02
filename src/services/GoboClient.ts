@@ -102,7 +102,6 @@ export default class GoboClient {
     const err = !!documentName
       ? new Error(e.message + ' document: ' + documentName)
       : new Error(e.message);
-    const state = createStoreWithApi();
-    state.dispatch<any>(addError(err));
+    createStoreWithApi().dispatch<any>(addError(err));
   }
 }

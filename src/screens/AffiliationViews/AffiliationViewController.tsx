@@ -27,7 +27,8 @@ interface IAffiliationViewControllerProps extends IAuroraApiComponentProps {
   matchUrl: string;
   updateUrlWithQuery: (query: string) => void;
   errors: IErrorState;
-  addError: (errors: IErrorState, error: Error) => void;
+  addError: (error: Error) => void;
+  getNextError: () => void;
 }
 
 interface IAffiliationViewControllerState {
@@ -173,8 +174,8 @@ class AffiliationViewController extends React.Component<
 
   public componentDidMount() {
     const { affiliation } = this.props;
-    // tslint:disable-next-line:no-console
-    console.log(this.props.errors);
+    this.props.addError(new Error('Feil ved sletting av filter'));
+    this.props.getNextError();
     const paramsExists = this.deploymentFilterService.isParamsDefined(
       window.location.search
     );
@@ -193,7 +194,7 @@ class AffiliationViewController extends React.Component<
   }
 
   public deleteFilter = async (filterName: string) => {
-    const { affiliation, clients, addError, errors } = this.props;
+    const { affiliation, clients, addError } = this.props;
     const { allFilters } = this.state;
     const updatedFilters = this.deploymentFilterService.getOtherNonDefaultFilters(
       allFilters,
@@ -209,19 +210,13 @@ class AffiliationViewController extends React.Component<
           allFilters: updatedFilters
         });
       } else {
-        addError(errors, new Error('Feil ved sletting av filter'));
+        addError(new Error('Feil ved sletting av filter'));
       }
     }
   };
 
   public updateFilter = async (filter: IFilter) => {
-    const {
-      affiliation,
-      clients,
-      updateUrlWithQuery,
-      addError,
-      errors
-    } = this.props;
+    const { affiliation, clients, updateUrlWithQuery, addError } = this.props;
     const { allFilters } = this.state;
     const updatedFilters = this.deploymentFilterService.getOtherNonDefaultFilters(
       allFilters,
@@ -246,7 +241,7 @@ class AffiliationViewController extends React.Component<
           allFilters: updatedFilters
         });
       } else {
-        addError(errors, new Error('Feil ved sletting av filter'));
+        addError(new Error('Feil ved sletting av filter'));
       }
     } else {
       this.setState({

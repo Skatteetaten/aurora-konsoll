@@ -17,11 +17,11 @@ interface IErrorBoundaryProps {
 }
 class ErrorBoundary extends React.Component<IErrorBoundaryProps, {}> {
   public componentDidMount() {
-    const { errorSM, errors, onFetch, addErrors } = this.props;
+    const { errorSM, onFetch, addErrors } = this.props;
 
     errorSM.registerStateUpdater(({ allErrors, errorQueue }) => {
-      if (errorQueue.length > errors.errorQueue.length) {
-        onFetch(errorQueue);
+      if (errorQueue.length > this.props.errorManager.errorQueue.length) {
+        onFetch(this.props.errorManager.errorQueue);
       }
       addErrors({
         allErrors: new Map(allErrors),
@@ -30,8 +30,9 @@ class ErrorBoundary extends React.Component<IErrorBoundaryProps, {}> {
     });
   }
 
-  public componentDidUpdate() {
+  public componentDidUpdate(prevProps: IErrorBoundaryProps) {
     const { errorSM, currentError, addCurrentError } = this.props;
+
     if (
       (errorSM.hasError() && !currentError) ||
       (currentError && !currentError.isActive)
@@ -46,8 +47,6 @@ class ErrorBoundary extends React.Component<IErrorBoundaryProps, {}> {
 
   public render() {
     const { errorSM, errors, currentError, children } = this.props;
-    // tslint:disable-next-line:no-console
-    console.log(this.props.errors);
     return (
       <>
         {currentError && (

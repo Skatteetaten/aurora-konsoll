@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 
 import { IUserAndAffiliations } from 'models/ApplicationDeployment';
 import { IErrorState } from 'models/StateManager/ErrorStateManager';
-import { addError } from 'models/StateManager/state/actions';
+import { addError, getNextError } from 'models/StateManager/state/actions';
 import { RouteComponentProps } from 'react-router-dom';
 import { MenuType } from 'screens/App';
 import { RootState } from 'store/types';
@@ -23,7 +23,8 @@ interface IAffiliationViewValidatorProps extends AffiliationRouteProps {
   onAffiliationValidated: (affiliation: string) => void;
   currentUser: IUserAndAffiliations;
   errors: IErrorState;
-  addError: (errors: IErrorState, error: Error) => void;
+  addError: (error: Error) => void;
+  getNextError: () => void;
 }
 
 class AffiliationViewValidator extends React.Component<
@@ -99,6 +100,7 @@ class AffiliationViewValidator extends React.Component<
           updateUrlWithQuery={this.updateUrlWithQuery}
           errors={errors}
           addError={this.props.addError}
+          getNextError={this.props.getNextError}
         />
       );
     } else if (type === MenuType.DATABASE) {
@@ -117,7 +119,8 @@ const mapStateToProps = (state: RootState) => ({
 const AffiliationViewValidatorConnected = connect(
   mapStateToProps,
   {
-    addError: (errors: IErrorState, error: Error) => addError(errors, error)
+    addError: (error: Error) => addError(error),
+    getNextError: () => getNextError()
   }
 )(AffiliationViewValidator);
 
