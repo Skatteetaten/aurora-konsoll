@@ -1,4 +1,3 @@
-import * as qs from 'qs';
 import * as React from 'react';
 import { RouteComponentProps } from 'react-router-dom';
 
@@ -17,9 +16,14 @@ const AcceptToken = ({
     access_token: string;
   }
 
-  const authQueryString = qs.parse(
-    location.hash.substring(1)
-  ) as IAuthQueryString;
+  const params = new URLSearchParams(location.hash.substring(1));
+  const expiresIn = params.get("expires_in");
+  const accessToken = params.get("access_token");
+
+  const authQueryString: IAuthQueryString = {
+    expires_in: expiresIn ? expiresIn : '',
+    access_token: accessToken ? accessToken : ''
+  };
 
   const token = authQueryString.access_token;
   const expiresInSeconds = Number(authQueryString.expires_in);

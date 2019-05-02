@@ -1,4 +1,3 @@
-import * as qs from 'qs';
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
 import { BrowserRouter } from 'react-router-dom';
@@ -77,18 +76,15 @@ async function init() {
 }
 
 function redirectToLoginPage(authorizationUri: string, clientId: string) {
+  const params = new URLSearchParams();
+  params.append("client_id", clientId);
+  params.append("redirect_uri", window.location.origin + '/accept-token');
+  params.append("response_type", "token");
+  params.append("scope", "");
+  params.append("state", "");
   const authorizationUrl =
     authorizationUri +
-    '?' +
-    qs.stringify(
-      Object.assign({
-        client_id: clientId,
-        redirect_uri: window.location.origin + '/accept-token',
-        response_type: 'token',
-        scope: '',
-        state: ''
-      })
-    );
+    '?' + params.toString()
   window.location.replace(authorizationUrl);
 }
 
