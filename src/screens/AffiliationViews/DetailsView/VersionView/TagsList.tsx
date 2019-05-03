@@ -142,10 +142,12 @@ const ColumnItem = styled.p`
   padding: 11px 8px;
 `;
 
-const DetailsListWrapper = styled.div<{
+interface IDetailsListWrapper {
   deployedIndex: number;
   selectedIndex: number;
-}>`
+}
+
+const DetailsListWrapper = styled.div<IDetailsListWrapper>`
   [data-item-index] {
     &:hover, &:active, &:focus {
       color: black;
@@ -178,5 +180,4 @@ const DetailsListWrapper = styled.div<{
 
   .ms-DetailsRow-cell {
     padding: 0;
-  }
-`;
+  }`;

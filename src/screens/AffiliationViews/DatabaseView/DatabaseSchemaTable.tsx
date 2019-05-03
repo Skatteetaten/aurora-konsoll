@@ -54,7 +54,7 @@ export interface ISchemaProps {
   onUpdate: (databaseSchema: IUpdateDatabaseSchemaInputWithCreatedBy) => void;
   onDelete: (databaseSchema: IDatabaseSchema) => void;
   onCreate: (databaseSchema: ICreateDatabaseSchemaInput) => void;
-  onDeleteSchemas: (ids: string[]) => IDeleteDatabaseSchemasResponse;
+  onDeleteSchemas: (ids: string[]) => void;
   onTestJdbcConnectionForId: (id: string) => void;
   onTestJdbcConnectionForUser: (jdbcUser: IJdbcUser) => void;
   items: IDatabaseSchemas;

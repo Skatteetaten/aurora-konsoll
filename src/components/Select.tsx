@@ -43,17 +43,16 @@ const Select = ({
   const noOptionsMessage = () => 'Ingen';
 
   return (
-
-      <ReactSelect
-        options={options}
-        theme={theme}
-        placeholder={placeholder}
-        isClearable={isClearable}
-        noOptionsMessage={noOptionsMessage}
-        value={getValue(selectedKey)}
-        onChange={handleChange}
-        className={className}
-      />
+    <ReactSelect
+      options={options}
+      theme={theme}
+      placeholder={placeholder}
+      isClearable={isClearable}
+      noOptionsMessage={noOptionsMessage}
+      value={getValue(selectedKey)}
+      onChange={handleChange}
+      className={className}
+    />
   );
 };
 

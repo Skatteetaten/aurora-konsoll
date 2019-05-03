@@ -4,7 +4,7 @@ import { IApplicationDeploymentFilters } from 'models/UserSettings';
 export interface IUserSettingsQuery {
   userSettings: {
     applicationDeploymentFilters: IApplicationDeploymentFilters[];
-  }
+  };
 }
 
 export const USERSETTINGS_QUERY = gql`

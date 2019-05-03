@@ -119,7 +119,7 @@ describe('DatabaseSchemaService', () => {
       expect(isDisabled).toBeTruthy();
     });
 
-    it('Button is enabled given null description and empty input', () => {
+    it('Button is disabled given null description and empty input', () => {
       const databaseSchemaWithNullDescription = databaseSchemaFactory.build({
         description: null
       });
@@ -131,7 +131,7 @@ describe('DatabaseSchemaService', () => {
         updatedDatabaseSchema,
         databaseSchemaWithNullDescription
       );
-      expect(isDisabled).toBeFalsy();
+      expect(isDisabled).toBeTruthy();
     });
 
     it('hasEmptyLabelValues given affiliation with only spaces', () => {
