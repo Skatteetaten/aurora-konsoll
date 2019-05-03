@@ -124,7 +124,8 @@ const defaultColumns: IColumn[] = [
     maxWidth: 280,
     minWidth: 280,
     name: 'JDBC url',
-    iconName: ''
+    iconName: '',
+    className: 'jdbcurl-col'
   },
 ];
 

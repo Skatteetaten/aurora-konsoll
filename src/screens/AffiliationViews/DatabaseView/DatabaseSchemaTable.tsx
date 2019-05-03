@@ -508,4 +508,8 @@ export default styled(Schema)`
       float: right;
     }
   }
+
+  .jdbcurl-col {
+    font-size: 14px;
+  }
 `;
