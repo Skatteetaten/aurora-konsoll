@@ -3,7 +3,7 @@ import { ActionType } from 'typesafe-actions';
 import { IErrorState } from '../ErrorStateManager';
 import actions, {
   allErrorsAction,
-  decementErrorCount,
+  hasError,
   incrementErrorCount
 } from './actions';
 
@@ -12,6 +12,7 @@ export type ErrorStateManagerAction = ActionType<typeof actions>;
 export interface IErrorStateManagerState {
   readonly errors: IErrorState;
   readonly errorCount: number;
+  readonly hasError: boolean;
 }
 
 function updateStateWithPayload(name: string) {
@@ -29,25 +30,20 @@ function incrementState(name: string) {
   };
 }
 
-function decrementState(name: string) {
-  return (state: IErrorStateManagerState) => {
-    state[name] -= 1;
-  };
-}
-
 const initialState: IErrorStateManagerState = {
   errors: {
     allErrors: new Map(),
     errorQueue: [{ id: 0, error: Error(), isActive: false }]
   },
-  errorCount: 0
+  errorCount: 0,
+  hasError: false
 };
 
 export const errorStateManagerReducer = reduceReducers<IErrorStateManagerState>(
   [
     handleAction(allErrorsAction, updateStateWithPayload('errors')),
     handleAction(incrementErrorCount, incrementState('errorCount')),
-    handleAction(decementErrorCount, decrementState('errorCount'))
+    handleAction(hasError, updateStateWithPayload('hasError'))
   ],
   initialState
 );

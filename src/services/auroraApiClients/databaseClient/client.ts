@@ -8,7 +8,6 @@ import {
   IJdbcUser,
   IUpdateDatabaseSchemaInputWithCreatedBy
 } from 'models/schemas';
-import { errorStateManager } from 'models/StateManager/ErrorStateManager';
 import {
   CREATE_DATABASE_SCHEMA_MUTATION,
   DELETE_DATABASESCHEMAS_MUTATION,
@@ -35,7 +34,6 @@ export class DatabaseClient {
     if (result && result.data) {
       return result.data;
     }
-    errorStateManager.addError(new Error(`Kunne ikke finne database skjemaer`));
     return { databaseSchemas: [] };
   }
 

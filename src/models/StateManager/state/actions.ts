@@ -15,8 +15,8 @@ export const incrementErrorCount = createAction<number>(
   errorStateManagerAction('INCREMENT_ERROR_COUNT')
 );
 
-export const decementErrorCount = createAction<number>(
-  errorStateManagerAction('DECREMENT_ERROR_COUNT')
+export const hasError = createAction<boolean>(
+  errorStateManagerAction('HAS_ERROR')
 );
 
 export type Thunk = ActionCreator<ThunkAction<void, RootState, {}, RootAction>>;
@@ -33,20 +33,27 @@ export const addError: Thunk = (error: Error) => (dispatch, getState) => {
 };
 
 export const getNextError: Thunk = () => (dispatch, getState) => {
-  dispatch(decementErrorCount());
-
-  getState().errorStateManager.errors.errorQueue.shift();
+  getState().errorStateManager.errors.errorQueue.pop();
 
   dispatch(allErrorsAction(getState().errorStateManager.errors));
 };
 
-export const closeError: Thunk = (
-  errors: IErrorState,
-  error: Error,
-  id: number
-) => (dispatch, getState) => {
-  errors.errorQueue.pop();
-  dispatch(allErrorsAction(errors));
+export const closeError: Thunk = (id: number) => (dispatch, getState) => {
+  const errorId = getState().errorStateManager.errors.errorQueue.find(
+    it => it.id === id
+  );
+  if (errorId) {
+    errorId.isActive = false;
+  }
+  dispatch(allErrorsAction(getState().errorStateManager.errors));
 };
 
-export default { allErrorsAction, incrementErrorCount, decementErrorCount };
+export const containsErrors: Thunk = () => (dispatch, getState) => {
+  dispatch(hasError(getState().errorStateManager.errors.errorQueue.length > 0));
+};
+
+export default {
+  allErrorsAction,
+  incrementErrorCount,
+  hasError
+};

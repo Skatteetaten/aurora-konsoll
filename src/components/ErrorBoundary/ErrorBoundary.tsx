@@ -6,38 +6,48 @@ import * as React from 'react';
 import ErrorPopup from './ErrorPopup';
 
 interface IErrorBoundaryProps {
-  errorManager: IErrorState;
-  addError: (errors: IErrorState, error: Error) => void;
+  addError: (error: Error) => void;
   errorSM: ErrorStateManager;
-  onFetch: (errorQueue: IAppError[]) => void;
-  addErrors: (errors: IErrorState) => void;
   addCurrentError: (currentError?: IAppError) => void;
+  getNextError: () => void;
+  containsErrors: () => void;
   errors: IErrorState;
+  hasError: boolean;
+  currentErrors: IErrorState;
   currentError?: IAppError;
 }
+
 class ErrorBoundary extends React.Component<IErrorBoundaryProps, {}> {
-  public componentDidMount() {
-    const { errorSM, onFetch, addErrors } = this.props;
-
-    errorSM.registerStateUpdater(({ allErrors, errorQueue }) => {
-      if (errorQueue.length > this.props.errorManager.errorQueue.length) {
-        onFetch(this.props.errorManager.errorQueue);
-      }
-      addErrors({
-        allErrors: new Map(allErrors),
-        errorQueue: [...errorQueue]
+  public componentDidUpdate() {
+    const {
+      errors,
+      containsErrors,
+      currentError,
+      currentErrors,
+      addCurrentError,
+      getNextError,
+      hasError
+    } = this.props;
+    if (errors.errorQueue.length > currentErrors.errorQueue.length) {
+      fetch('/api/log', {
+        body: JSON.stringify({
+          location: window.location.pathname,
+          message: errors.errorQueue[0].error.message
+        }),
+        headers: {
+          'Content-Type': 'application/json; charset=utf-8'
+        },
+        method: 'POST'
       });
-    });
-  }
-
-  public componentDidUpdate(prevProps: IErrorBoundaryProps) {
-    const { errorSM, currentError, addCurrentError } = this.props;
-
+    }
+    getNextError();
+    containsErrors();
     if (
-      (errorSM.hasError() && !currentError) ||
-      (currentError && !currentError.isActive)
+      hasError &&
+      !currentError
+      // || ( && !currentError.isActive)
     ) {
-      addCurrentError(errorSM.getNextError());
+      addCurrentError(errors.errorQueue[errors.errorQueue.length - 1]);
     }
   }
 

@@ -127,7 +127,6 @@ export class ApplicationDeploymentClient {
         id
       }
     });
-
     if (result && result.data && result.data.applicationDeploymentDetails) {
       const {
         deploymentSpecs,

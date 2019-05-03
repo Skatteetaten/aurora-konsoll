@@ -4,7 +4,11 @@ import { connect } from 'react-redux';
 
 import { IUserAndAffiliations } from 'models/ApplicationDeployment';
 import { IErrorState } from 'models/StateManager/ErrorStateManager';
-import { addError, getNextError } from 'models/StateManager/state/actions';
+import {
+  addError,
+  closeError,
+  getNextError
+} from 'models/StateManager/state/actions';
 import { RouteComponentProps } from 'react-router-dom';
 import { MenuType } from 'screens/App';
 import { RootState } from 'store/types';
@@ -25,6 +29,7 @@ interface IAffiliationViewValidatorProps extends AffiliationRouteProps {
   errors: IErrorState;
   addError: (error: Error) => void;
   getNextError: () => void;
+  closeError: (id: number) => void;
 }
 
 class AffiliationViewValidator extends React.Component<
@@ -101,6 +106,7 @@ class AffiliationViewValidator extends React.Component<
           errors={errors}
           addError={this.props.addError}
           getNextError={this.props.getNextError}
+          closeError={this.props.closeError}
         />
       );
     } else if (type === MenuType.DATABASE) {
@@ -120,7 +126,8 @@ const AffiliationViewValidatorConnected = connect(
   mapStateToProps,
   {
     addError: (error: Error) => addError(error),
-    getNextError: () => getNextError()
+    getNextError: () => getNextError(),
+    closeError: (id: number) => closeError(id)
   }
 )(AffiliationViewValidator);
 

@@ -1,7 +1,7 @@
 import { ActionType } from 'typesafe-actions';
 import actions, {
   currentErrorAction,
-  errorsAction,
+  currentErrors,
   fetchErrorsResponse
 } from './actions';
 
@@ -11,7 +11,7 @@ import { handleAction, reduceReducers } from 'redux-ts-utils';
 export type ErrorBoundaryAction = ActionType<typeof actions>;
 
 export interface IErrorBoundaryState {
-  readonly errors: IErrorState;
+  readonly currentErrors: IErrorState;
   readonly currentError?: IAppError;
 }
 
@@ -22,7 +22,7 @@ function updateStateWithPayload(name: string) {
 }
 
 const initialState: IErrorBoundaryState = {
-  errors: {
+  currentErrors: {
     allErrors: new Map(),
     errorQueue: []
   }
@@ -31,7 +31,7 @@ const initialState: IErrorBoundaryState = {
 export const errorBoundaryReducer = reduceReducers<IErrorBoundaryState>(
   [
     handleAction(fetchErrorsResponse, updateStateWithPayload('response')),
-    handleAction(errorsAction, updateStateWithPayload('errors')),
+    handleAction(currentErrors, updateStateWithPayload('currentErrors')),
     handleAction(currentErrorAction, updateStateWithPayload('currentError'))
   ],
   initialState

@@ -1,27 +1,35 @@
-import { IAppError, IErrorState } from 'models/StateManager/ErrorStateManager';
-import { addError } from 'models/StateManager/state/actions';
+import { IAppError } from 'models/StateManager/ErrorStateManager';
+import {
+  addError,
+  containsErrors,
+  getNextError
+} from 'models/StateManager/state/actions';
+import { IErrorStateManagerState } from 'models/StateManager/state/reducer';
 import { connect } from 'react-redux';
 import { RootState } from 'store/types';
 import ErrorBoundary from './ErrorBoundary';
-import { currentErrorAction, errorsAction, fetchErrors } from './state/actions';
+import { currentErrorAction } from './state/actions';
 import { IErrorBoundaryState } from './state/reducers';
 
-const getErrors = (state: IErrorBoundaryState) => state.errors;
+const getCurrentErrors = (state: IErrorBoundaryState) => state.currentErrors;
+const getErrors = (state: IErrorStateManagerState) => state.errors;
 const getCurrentError = (state: IErrorBoundaryState) => state.currentError;
+const getHasErrors = (state: IErrorStateManagerState) => state.hasError;
 
 const mapStateToProps = (state: RootState) => ({
-  errors: getErrors(state.errorBoundary),
+  currentErrors: getCurrentErrors(state.errorBoundary),
+  errors: getErrors(state.errorStateManager),
   currentError: getCurrentError(state.errorBoundary),
-  errorManager: state.errorStateManager.errors
+  hasError: getHasErrors(state.errorStateManager)
 });
 
 export const ErrorBoundaryConnected = connect(
   mapStateToProps,
   {
-    onFetch: (errorQueue: IAppError[]) => fetchErrors(errorQueue),
-    addErrors: (errors: IErrorState) => errorsAction(errors),
     addCurrentError: (currentError?: IAppError) =>
       currentErrorAction(currentError),
-    addError: (errors: IErrorState, error: Error) => addError(errors, error)
+    addError: (error: Error) => addError(error),
+    getNextError: () => getNextError(),
+    containsErrors: () => containsErrors()
   }
 )(ErrorBoundary);

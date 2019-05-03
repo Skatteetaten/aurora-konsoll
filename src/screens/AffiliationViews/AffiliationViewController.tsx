@@ -29,6 +29,7 @@ interface IAffiliationViewControllerProps extends IAuroraApiComponentProps {
   errors: IErrorState;
   addError: (error: Error) => void;
   getNextError: () => void;
+  closeError: (id: number) => void;
 }
 
 interface IAffiliationViewControllerState {
@@ -175,7 +176,7 @@ class AffiliationViewController extends React.Component<
   public componentDidMount() {
     const { affiliation } = this.props;
     this.props.addError(new Error('Feil ved sletting av filter'));
-    this.props.getNextError();
+    this.props.closeError(0);
     const paramsExists = this.deploymentFilterService.isParamsDefined(
       window.location.search
     );
