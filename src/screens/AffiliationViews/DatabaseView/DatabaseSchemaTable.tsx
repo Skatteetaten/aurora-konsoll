@@ -145,6 +145,13 @@ export class Schema extends React.Component<ISchemaProps, ISchemaState> {
 
     if (items.databaseSchemas.length > 0) {
       viewItems = items.databaseSchemas.map(i => {
+        let jdbcUrl;
+        if(i.jdbcUrl.includes('@')) {
+          jdbcUrl = i.jdbcUrl.substring(i.jdbcUrl.indexOf('@') + 1)
+        } else {
+          jdbcUrl = i.jdbcUrl.substring(i.jdbcUrl.indexOf('://') + 3)
+        }
+
         return {
           id: i.id,
           environment: i.environment,
@@ -155,7 +162,8 @@ export class Schema extends React.Component<ISchemaProps, ISchemaState> {
           type: i.type,
           applicationDeploymentsUses: i.applicationDeployments.length,
           sizeInMb: i.sizeInMb,
-          createdBy: i.createdBy
+          createdBy: i.createdBy,
+          jdbcUrl: jdbcUrl
         };
       });
     } else {

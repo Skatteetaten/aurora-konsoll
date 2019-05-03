@@ -40,8 +40,8 @@ const defaultColumns: IColumn[] = [
     fieldName: 'type',
     isResizable: true,
     key: '0',
-    maxWidth: 120,
-    minWidth: 120,
+    maxWidth: 80,
+    minWidth: 80,
     name: 'Type',
     iconName: ''
   },
@@ -76,8 +76,8 @@ const defaultColumns: IColumn[] = [
     fieldName: 'createdDate',
     isResizable: true,
     key: '4',
-    maxWidth: 120,
-    minWidth: 120,
+    maxWidth: 90,
+    minWidth: 90,
     name: 'Opprettet',
     iconName: ''
   },
@@ -85,8 +85,8 @@ const defaultColumns: IColumn[] = [
     fieldName: 'lastUsedDate',
     isResizable: true,
     key: '5',
-    maxWidth: 120,
-    minWidth: 120,
+    maxWidth: 90,
+    minWidth: 90,
     name: 'Sist brukt',
     iconName: ''
   },
@@ -94,8 +94,8 @@ const defaultColumns: IColumn[] = [
     fieldName: 'sizeInMb',
     isResizable: true,
     key: '6',
-    maxWidth: 175,
-    minWidth: 175,
+    maxWidth: 110,
+    minWidth: 110,
     name: 'Størrelse (MB)',
     iconName: ''
   },
@@ -103,8 +103,8 @@ const defaultColumns: IColumn[] = [
     fieldName: 'createdBy',
     isResizable: true,
     key: '7',
-    maxWidth: 120,
-    minWidth: 120,
+    maxWidth: 80,
+    minWidth: 80,
     name: 'Bruker',
     iconName: ''
   },
@@ -112,11 +112,20 @@ const defaultColumns: IColumn[] = [
     fieldName: 'applicationDeploymentsUses',
     isResizable: true,
     key: '8',
-    maxWidth: 120,
-    minWidth: 120,
+    maxWidth: 70,
+    minWidth: 70,
     name: 'I bruk av',
     iconName: ''
-  }
+  },
+  {
+    fieldName: 'jdbcUrl',
+    isResizable: true,
+    key: '9',
+    maxWidth: 280,
+    minWidth: 280,
+    name: 'JDBC url',
+    iconName: ''
+  },
 ];
 
 export const filterDatabaseSchemaView = (filter: string) => {
