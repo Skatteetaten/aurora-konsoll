@@ -94,6 +94,9 @@
       "!src/services/registerServiceWorker.ts"
     ]
   },
+  "eslintConfig": {
+    "extends": "react-app"
+  },
   "browserslist": {
     "production": [
       ">0.2%",
