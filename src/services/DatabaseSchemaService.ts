@@ -40,8 +40,8 @@ const defaultColumns: IColumn[] = [
     fieldName: 'type',
     isResizable: true,
     key: '0',
-    maxWidth: 80,
-    minWidth: 80,
+    maxWidth: 85,
+    minWidth: 85,
     name: 'Type',
     iconName: ''
   },
