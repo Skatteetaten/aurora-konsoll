@@ -46,7 +46,7 @@
     "eject": "react-scripts eject",
     "clean": "rimraf build build-api coverage pom *.tgz",
     "test:once": "CI=true npm test",
-    "test:coverage": "npm run test -- --coverage",
+    "test:coverage": "CI=true npm run test -- --coverage",
     "prettier": "prettier -l '{api,src}/**/*{.ts,.tsx,.css}'",
     "prettier:fix": "prettier --write '{api,src}/**/*{.ts,.tsx,.css}'"
   },

@@ -145,6 +145,13 @@ export class Schema extends React.Component<ISchemaProps, ISchemaState> {
 
     if (items.databaseSchemas.length > 0) {
       viewItems = items.databaseSchemas.map(i => {
+        const getJdbcUrlText = (prefix: string) =>
+          i.jdbcUrl.substring(i.jdbcUrl.indexOf(prefix) + prefix.length);
+
+        const jdbcUrl = i.jdbcUrl.includes('@')
+          ? getJdbcUrlText('@')
+          : getJdbcUrlText('://');
+
         return {
           id: i.id,
           environment: i.environment,
@@ -155,7 +162,8 @@ export class Schema extends React.Component<ISchemaProps, ISchemaState> {
           type: i.type,
           applicationDeploymentsUses: i.applicationDeployments.length,
           sizeInMb: i.sizeInMb,
-          createdBy: i.createdBy
+          createdBy: i.createdBy,
+          jdbcUrl: jdbcUrl
         };
       });
     } else {
@@ -185,7 +193,7 @@ export class Schema extends React.Component<ISchemaProps, ISchemaState> {
     const { selectedSchema } = this.state;
     this.setState({
       schemaToCopy: selectedSchema
-    })
+    });
   };
 
   public render() {
@@ -499,5 +507,9 @@ export default styled(Schema)`
     i {
       float: right;
     }
+  }
+
+  .jdbcurl-col {
+    font-size: 14px;
   }
 `;
