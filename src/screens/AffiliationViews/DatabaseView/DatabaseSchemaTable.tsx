@@ -54,7 +54,7 @@ export interface ISchemaProps {
   onUpdate: (databaseSchema: IUpdateDatabaseSchemaInputWithCreatedBy) => void;
   onDelete: (databaseSchema: IDatabaseSchema) => void;
   onCreate: (databaseSchema: ICreateDatabaseSchemaInput) => void;
-  onDeleteSchemas: (ids: string[]) => IDeleteDatabaseSchemasResponse;
+  onDeleteSchemas: (ids: string[]) => void;
   onTestJdbcConnectionForId: (id: string) => void;
   onTestJdbcConnectionForUser: (jdbcUser: IJdbcUser) => void;
   items: IDatabaseSchemas;
@@ -72,6 +72,7 @@ interface ISchemaState {
   viewItems: IDatabaseSchemaView[];
   filter: string;
   selectedSchema?: IDatabaseSchema;
+  schemaToCopy?: IDatabaseSchema;
   deleteMode: boolean;
   deleteSelectionIds: string[];
   extendedInfo: IDatabaseSchema[];
@@ -84,6 +85,7 @@ export class Schema extends React.Component<ISchemaProps, ISchemaState> {
     viewItems: [],
     filter: '',
     selectedSchema: undefined,
+    schemaToCopy: undefined,
     deleteMode: false,
     deleteSelectionIds: [],
     extendedInfo: [],
@@ -143,6 +145,13 @@ export class Schema extends React.Component<ISchemaProps, ISchemaState> {
 
     if (items.databaseSchemas.length > 0) {
       viewItems = items.databaseSchemas.map(i => {
+        const getJdbcUrlText = (prefix: string) =>
+          i.jdbcUrl.substring(i.jdbcUrl.indexOf(prefix) + prefix.length);
+
+        const jdbcUrl = i.jdbcUrl.includes('@')
+          ? getJdbcUrlText('@')
+          : getJdbcUrlText('://');
+
         return {
           id: i.id,
           environment: i.environment,
@@ -153,7 +162,8 @@ export class Schema extends React.Component<ISchemaProps, ISchemaState> {
           type: i.type,
           applicationDeploymentsUses: i.applicationDeployments.length,
           sizeInMb: i.sizeInMb,
-          createdBy: i.createdBy
+          createdBy: i.createdBy,
+          jdbcUrl: jdbcUrl
         };
       });
     } else {
@@ -179,6 +189,13 @@ export class Schema extends React.Component<ISchemaProps, ISchemaState> {
     }
   };
 
+  public createNewCopy = () => {
+    const { selectedSchema } = this.state;
+    this.setState({
+      schemaToCopy: selectedSchema
+    });
+  };
+
   public render() {
     const {
       isFetching,
@@ -200,6 +217,7 @@ export class Schema extends React.Component<ISchemaProps, ISchemaState> {
     const {
       filter,
       selectedSchema,
+      schemaToCopy,
       deleteMode,
       deleteSelectionIds,
       extendedInfo,
@@ -361,6 +379,7 @@ export class Schema extends React.Component<ISchemaProps, ISchemaState> {
               onFetch={onFetch}
               currentUser={currentUser}
               isFetching={isFetching}
+              initialDatabaseSchemaInput={schemaToCopy}
             />
           </div>
         </div>
@@ -395,6 +414,7 @@ export class Schema extends React.Component<ISchemaProps, ISchemaState> {
           databaseSchemaService={this.databaseSchemaService}
           onTestJdbcConnectionForId={onTestJdbcConnectionForId}
           testJdbcConnectionResponse={testJdbcConnectionResponse}
+          createNewCopy={this.createNewCopy}
         />
       </div>
     );
@@ -487,5 +507,9 @@ export default styled(Schema)`
     i {
       float: right;
     }
+  }
+
+  .jdbcurl-col {
+    font-size: 14px;
   }
 `;

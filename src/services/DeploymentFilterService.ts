@@ -1,6 +1,5 @@
 import { IApplicationDeployment } from 'models/ApplicationDeployment';
 import { IApplicationDeploymentFilters } from 'models/UserSettings';
-import * as qs from 'qs';
 
 export interface IFilter {
   name?: string;
@@ -11,21 +10,15 @@ export interface IFilter {
 
 export default class DeploymentFilterService {
   public toFilter(query: string): IFilter {
-    const queries = qs.parse(query, {
-      ignoreQueryPrefix: true
-    });
-
-    let applications = [];
-    let environments = [];
-    if (typeof queries.apps === 'string') {
-      applications.push(queries.apps);
-    } else {
-      applications = queries.apps;
+    const params = new URLSearchParams(query);
+    let applications: any[] = [];
+    let environments: any[] = [];
+    if (params.has('apps')) {
+      applications = params.getAll('apps');
     }
-    if (typeof queries.envs === 'string') {
-      environments.push(queries.envs);
-    } else {
-      environments = queries.envs;
+
+    if (params.has('envs')) {
+      environments = params.getAll('envs');
     }
 
     return {
@@ -35,10 +28,8 @@ export default class DeploymentFilterService {
   }
 
   public isParamsDefined(query: string) {
-    const queries = qs.parse(query, {
-      ignoreQueryPrefix: true
-    });
-    return queries.apps || queries.envs;
+    const params = new URLSearchParams(query);
+    return params.has('apps') || params.has('envs');
   }
 
   public filterDeployments(
@@ -61,16 +52,12 @@ export default class DeploymentFilterService {
 
   public toQuery(filters: IFilter): string {
     const { applications, environments } = filters;
-    return qs.stringify(
-      {
-        apps: applications,
-        envs: environments
-      },
-      {
-        addQueryPrefix: true,
-        arrayFormat: 'repeat'
-      }
-    );
+
+    const params = new URLSearchParams();
+    applications.forEach(app => params.append('apps', app));
+    environments.forEach(env => params.append('envs', env));
+
+    return `?${params.toString()}`;
   }
 
   public findDefaultFilter(

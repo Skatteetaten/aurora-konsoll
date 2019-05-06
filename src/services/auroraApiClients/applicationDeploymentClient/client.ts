@@ -195,37 +195,40 @@ export class ApplicationDeploymentClient {
       return [];
     }
 
-    return result.data.applications.edges.reduce((acc, { node }) => {
-      const { applicationDeployments, imageRepository } = node;
-      const deployments = applicationDeployments.map(app => ({
-        affiliation: app.affiliation.name,
-        environment: app.environment,
-        id: app.id,
-        name: app.name,
-        permission: app.namespace.permission,
-        repository: imageRepository ? imageRepository.repository : '',
-        status: {
-          code: app.status.code,
-          reasons: app.status.reasons,
-          reports: app.status.reports
-        },
-        message: app.message,
-        time: app.time,
-        version: {
-          releaseTo: app.version.releaseTo,
-          auroraVersion: app.version.auroraVersion,
-          deployTag: {
-            lastModified: '',
-            name: findDeployTagForTemplate(
-              node.name,
-              app.version.deployTag.name
-            ),
-            type: app.version.deployTag.type
+    return result.data.applications.edges.reduce(
+      (acc: IApplicationDeployment[], { node }) => {
+        const { applicationDeployments, imageRepository } = node;
+        const deployments = applicationDeployments.map(app => ({
+          affiliation: app.affiliation.name,
+          environment: app.environment,
+          id: app.id,
+          name: app.name,
+          permission: app.namespace.permission,
+          repository: imageRepository ? imageRepository.repository : '',
+          status: {
+            code: app.status.code,
+            reasons: app.status.reasons,
+            reports: app.status.reports
+          },
+          message: app.message,
+          time: app.time,
+          version: {
+            releaseTo: app.version.releaseTo,
+            auroraVersion: app.version.auroraVersion,
+            deployTag: {
+              lastModified: '',
+              name: findDeployTagForTemplate(
+                node.name,
+                app.version.deployTag.name
+              ),
+              type: app.version.deployTag.type
+            }
           }
-        }
-      }));
-      return [...acc, ...deployments];
-    }, []);
+        }));
+        return [...acc, ...deployments];
+      },
+      []
+    );
   }
 }
 

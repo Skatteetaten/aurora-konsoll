@@ -30,6 +30,7 @@ export interface IDatabaseSchemaUpdateDialogProps {
   onTestJdbcConnectionForId: (id: string) => void;
   databaseSchemaService: DatabaseSchemaService;
   testJdbcConnectionResponse: boolean;
+  createNewCopy: () => void;
 }
 
 export interface IDatabaseSchemaUpdateDialogState {
@@ -82,6 +83,12 @@ class DatabaseSchemaUpdateDialog extends React.Component<
   public hideDialog = () => {
     const { clearSelectedSchema } = this.props;
     clearSelectedSchema();
+  };
+
+  public createNewCopy = () => {
+    const { createNewCopy } = this.props;
+    createNewCopy();
+    this.hideDialog();
   };
 
   public handleLabelChange = (field: string) => (value: string) => {
@@ -238,6 +245,14 @@ class DatabaseSchemaUpdateDialog extends React.Component<
               renderOpenDialogButton={this.renderConfirmationOpenButton}
               renderFooterButtons={this.renderConfirmationFooterButtons}
             />
+            <Button
+              buttonType="primaryRoundedFilled"
+              style={{ width: '160px', marginRight: '10px' }}
+              icon="Copy"
+              onClick={this.createNewCopy}
+            >
+              Lag ny kopi
+            </Button>
             <Button
               buttonType="primaryRoundedFilled"
               style={{ width: '120px', marginRight: '10px' }}

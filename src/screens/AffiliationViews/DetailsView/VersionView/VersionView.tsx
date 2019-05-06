@@ -32,7 +32,7 @@ interface IVersionViewProps {
   handleVersionSearch: (value: string) => void;
   redeployWithVersion: () => void;
   redeployWithCurrentVersion: () => void;
-  handleSelectNextTag: (item: ITag) => void;
+  handleSelectNextTag: (item?: ITag) => void;
 }
 
 const VersionView = ({

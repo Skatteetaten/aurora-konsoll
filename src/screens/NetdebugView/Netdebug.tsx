@@ -155,21 +155,19 @@ class Netdebug extends React.Component<INetdebugProps, INetdebugState> {
               </Button>
             </div>
             <div className="card-wrapper">
-              {this.state.showCard &&
-                this.state.parsedData && (
-                  <CardInfo
-                    parsedData={this.state.parsedData}
-                    netdebugStatus={this.state.netdebugStatus}
-                    lastScan={this.state.lastScan}
-                    displayTableOnClicked={this.displayTableOnClicked}
-                  />
-                )}
+              {this.state.showCard && this.state.parsedData && (
+                <CardInfo
+                  parsedData={this.state.parsedData}
+                  netdebugStatus={this.state.netdebugStatus}
+                  lastScan={this.state.lastScan}
+                  displayTableOnClicked={this.displayTableOnClicked}
+                />
+              )}
             </div>
             <div className="table-wrapper">
-              {this.state.showTable &&
-                this.state.parsedData && (
-                  <Table parsedData={this.state.parsedData} />
-                )}
+              {this.state.showTable && this.state.parsedData && (
+                <Table parsedData={this.state.parsedData} />
+              )}
             </div>
           </div>
         </div>

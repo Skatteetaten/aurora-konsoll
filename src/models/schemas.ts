@@ -49,6 +49,7 @@ export interface IDatabaseSchemaView {
   sizeInMb: number;
   applicationDeploymentsUses: number;
   id: string;
+  jdbcUrl: string;
 }
 
 export interface IDatabaseSchemaInput {
