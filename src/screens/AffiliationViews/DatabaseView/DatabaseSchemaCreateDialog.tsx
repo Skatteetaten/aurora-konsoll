@@ -66,18 +66,25 @@ class DatabaseSchemaCreateDialog extends React.Component<
 
   public componentDidUpdate(prevProps: IDatabaseSchemaCreateDialogProps) {
     const { initialDatabaseSchemaInput } = this.props;
-    if(prevProps.initialDatabaseSchemaInput !== initialDatabaseSchemaInput && initialDatabaseSchemaInput) {
+    if (
+      prevProps.initialDatabaseSchemaInput !== initialDatabaseSchemaInput &&
+      initialDatabaseSchemaInput
+    ) {
       const schema: ICreateDatabaseSchemaInput = {
         discriminator: initialDatabaseSchemaInput.discriminator,
         createdBy: this.props.currentUser.id,
-        description: initialDatabaseSchemaInput.description ? initialDatabaseSchemaInput.description : '',
+        description: initialDatabaseSchemaInput.description
+          ? initialDatabaseSchemaInput.description
+          : '',
         environment: initialDatabaseSchemaInput.environment,
         application: initialDatabaseSchemaInput.application,
         affiliation: this.props.affiliation,
         jdbcUser: {
           jdbcUrl: initialDatabaseSchemaInput.jdbcUrl,
           username: initialDatabaseSchemaInput.users[0].username,
-          password: initialDatabaseSchemaInput.users[0].password ? initialDatabaseSchemaInput.users[0].password : ''
+          password: initialDatabaseSchemaInput.users[0].password
+            ? initialDatabaseSchemaInput.users[0].password
+            : ''
         }
       };
 

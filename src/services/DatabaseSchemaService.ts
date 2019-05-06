@@ -126,7 +126,7 @@ const defaultColumns: IColumn[] = [
     name: 'JDBC url',
     iconName: '',
     className: 'jdbcurl-col'
-  },
+  }
 ];
 
 export const filterDatabaseSchemaView = (filter: string) => {

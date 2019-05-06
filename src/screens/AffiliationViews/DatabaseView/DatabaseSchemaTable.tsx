@@ -145,12 +145,12 @@ export class Schema extends React.Component<ISchemaProps, ISchemaState> {
 
     if (items.databaseSchemas.length > 0) {
       viewItems = items.databaseSchemas.map(i => {
-        let jdbcUrl;
-        if(i.jdbcUrl.includes('@')) {
-          jdbcUrl = i.jdbcUrl.substring(i.jdbcUrl.indexOf('@') + 1)
-        } else {
-          jdbcUrl = i.jdbcUrl.substring(i.jdbcUrl.indexOf('://') + 3)
-        }
+        const getJdbcUrlText = (prefix: string) =>
+          i.jdbcUrl.substring(i.jdbcUrl.indexOf(prefix) + prefix.length);
+
+        const jdbcUrl = i.jdbcUrl.includes('@')
+          ? getJdbcUrlText('@')
+          : getJdbcUrlText('://');
 
         return {
           id: i.id,
@@ -193,7 +193,7 @@ export class Schema extends React.Component<ISchemaProps, ISchemaState> {
     const { selectedSchema } = this.state;
     this.setState({
       schemaToCopy: selectedSchema
-    })
+    });
   };
 
   public render() {
