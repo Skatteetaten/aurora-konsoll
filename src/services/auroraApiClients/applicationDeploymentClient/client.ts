@@ -5,7 +5,7 @@ import {
 } from 'models/ApplicationDeployment';
 import { normalizeRawDeploymentSpec } from 'models/DeploymentSpec';
 
-import GoboClient from 'services/GoboClient';
+import GoboClient, { IGoboResult } from 'services/GoboClient';
 import {
   REDEPLOY_WITH_CURRENT_VERSION_MUTATION,
   REDEPLOY_WITH_VERSION_MUTATION,
@@ -99,8 +99,10 @@ export class ApplicationDeploymentClient {
     }
   }
 
-  public async refreshAffiliations(affiliations: string[]): Promise<boolean> {
-    const result = await this.client.mutate<{
+  public async refreshAffiliations(
+    affiliations: string[]
+  ): Promise<IGoboResult<{ affiliations: string[] }> | undefined> {
+    return await this.client.mutate<{
       affiliations: string[];
     }>({
       mutation: REFRESH_APPLICATION_DEPLOYMENTS_MUTATION,
@@ -110,12 +112,6 @@ export class ApplicationDeploymentClient {
         }
       }
     });
-
-    if (result && result.data) {
-      return true;
-    } else {
-      return false;
-    }
   }
 
   public async findApplicationDeploymentDetails(

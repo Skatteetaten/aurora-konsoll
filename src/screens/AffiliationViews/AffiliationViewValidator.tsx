@@ -1,17 +1,9 @@
 import * as React from 'react';
 
-import { connect } from 'react-redux';
-
 import { IUserAndAffiliations } from 'models/ApplicationDeployment';
 import { IErrorState } from 'models/StateManager/ErrorStateManager';
-import {
-  addError,
-  closeError,
-  getNextError
-} from 'models/StateManager/state/actions';
 import { RouteComponentProps } from 'react-router-dom';
 import { MenuType } from 'screens/App';
-import { RootState } from 'store/types';
 import AffiliationSelector from './AffiliationSelector';
 import { AffiliationViewControllerWithApi } from './AffiliationViewController';
 import DatabaseViewController from './DatabaseView/DatabaseViewController';
@@ -27,9 +19,11 @@ interface IAffiliationViewValidatorProps extends AffiliationRouteProps {
   onAffiliationValidated: (affiliation: string) => void;
   currentUser: IUserAndAffiliations;
   errors: IErrorState;
+  isFetchingAffiliations: boolean;
   addError: (error: Error) => void;
   getNextError: () => void;
   closeError: (id: number) => void;
+  refreshAffiliations: (affiliations: string[]) => void;
 }
 
 class AffiliationViewValidator extends React.Component<
@@ -107,6 +101,8 @@ class AffiliationViewValidator extends React.Component<
           addError={this.props.addError}
           getNextError={this.props.getNextError}
           closeError={this.props.closeError}
+          refreshAffiliations={this.props.refreshAffiliations}
+          isFetchingAffiliations={this.props.isFetchingAffiliations}
         />
       );
     } else if (type === MenuType.DATABASE) {
@@ -117,18 +113,4 @@ class AffiliationViewValidator extends React.Component<
   }
 }
 
-const mapStateToProps = (state: RootState) => ({
-  currentUser: state.startup.currentUser,
-  errors: state.errorStateManager.errors
-});
-
-const AffiliationViewValidatorConnected = connect(
-  mapStateToProps,
-  {
-    addError: (error: Error) => addError(error),
-    getNextError: () => getNextError(),
-    closeError: (id: number) => closeError(id)
-  }
-)(AffiliationViewValidator);
-
-export default AffiliationViewValidatorConnected;
+export default AffiliationViewValidator;

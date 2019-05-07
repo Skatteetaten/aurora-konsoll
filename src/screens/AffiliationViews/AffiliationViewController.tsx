@@ -30,6 +30,8 @@ interface IAffiliationViewControllerProps extends IAuroraApiComponentProps {
   addError: (error: Error) => void;
   getNextError: () => void;
   closeError: (id: number) => void;
+  refreshAffiliations: (affiliations: string[]) => void;
+  isFetchingAffiliations: boolean;
 }
 
 interface IAffiliationViewControllerState {
@@ -111,17 +113,9 @@ class AffiliationViewController extends React.Component<
   };
 
   public refreshApplicationDeployments = async () => {
-    const { affiliation, clients } = this.props;
-    this.setState({
-      isRefreshing: true
-    });
-    await clients.applicationDeploymentClient.refreshAffiliations([
-      affiliation
-    ]);
+    const { affiliation } = this.props;
+    this.props.refreshAffiliations([affiliation]);
     await this.fetchApplicationDeployments(affiliation);
-    this.setState({
-      isRefreshing: false
-    });
   };
 
   public clearFilterOnAffiliationChange(prevAffiliation: string) {
@@ -176,7 +170,6 @@ class AffiliationViewController extends React.Component<
   public componentDidMount() {
     const { affiliation } = this.props;
     this.props.addError(new Error('Feil ved sletting av filter'));
-    this.props.closeError(0);
     const paramsExists = this.deploymentFilterService.isParamsDefined(
       window.location.search
     );
@@ -271,7 +264,6 @@ class AffiliationViewController extends React.Component<
     const {
       deployments,
       loading,
-      isRefreshing,
       filterPathUrl,
       filter,
       allFilters,
@@ -306,7 +298,7 @@ class AffiliationViewController extends React.Component<
             match && (
               <MatrixView
                 time={time}
-                isRefreshing={isRefreshing}
+                isRefreshing={this.props.isFetchingAffiliations}
                 refreshApplicationDeployments={
                   this.refreshApplicationDeployments
                 }

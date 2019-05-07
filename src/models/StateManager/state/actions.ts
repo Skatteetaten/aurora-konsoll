@@ -1,4 +1,4 @@
-import { IErrorState } from 'models/StateManager/ErrorStateManager';
+import { IAppError, IErrorState } from 'models/StateManager/ErrorStateManager';
 import { ActionCreator } from 'redux';
 import { ThunkAction } from 'redux-thunk';
 import { createAction } from 'redux-ts-utils';
@@ -15,15 +15,10 @@ export const incrementErrorCount = createAction<number>(
   errorStateManagerAction('INCREMENT_ERROR_COUNT')
 );
 
-export const hasError = createAction<boolean>(
-  errorStateManagerAction('HAS_ERROR')
-);
-
 export type Thunk = ActionCreator<ThunkAction<void, RootState, {}, RootAction>>;
 
 export const addError: Thunk = (error: Error) => (dispatch, getState) => {
   dispatch(incrementErrorCount());
-
   getState().errorStateManager.errors.errorQueue.unshift({
     error,
     id: getState().errorStateManager.errorCount,
@@ -32,28 +27,36 @@ export const addError: Thunk = (error: Error) => (dispatch, getState) => {
   dispatch(allErrorsAction(getState().errorStateManager.errors));
 };
 
-export const getNextError: Thunk = () => (dispatch, getState) => {
-  getState().errorStateManager.errors.errorQueue.pop();
+export const getNextError: Thunk = () => (
+  dispatch,
+  getState
+): IAppError | undefined => {
+  const errors = getState().errorStateManager.errors;
+  const next = errors.errorQueue.pop();
 
-  dispatch(allErrorsAction(getState().errorStateManager.errors));
+  if (!next) {
+    return;
+  }
+  errors.allErrors.set(next.id, next);
+  dispatch(allErrorsAction(errors));
+  return next;
 };
 
 export const closeError: Thunk = (id: number) => (dispatch, getState) => {
-  const errorId = getState().errorStateManager.errors.errorQueue.find(
-    it => it.id === id
-  );
-  if (errorId) {
-    errorId.isActive = false;
+  const state = getState().errorStateManager.errors;
+  const err = state.allErrors.get(id);
+  if (!err) {
+    throw new Error(`No such error ${id}`);
   }
-  dispatch(allErrorsAction(getState().errorStateManager.errors));
+  err.isActive = false;
+  dispatch(allErrorsAction(state));
 };
 
-export const containsErrors: Thunk = () => (dispatch, getState) => {
-  dispatch(hasError(getState().errorStateManager.errors.errorQueue.length > 0));
+export const containsErrors: Thunk = () => (dispatch, getState): boolean => {
+  return getState().errorStateManager.errors.errorQueue.length > 0;
 };
 
 export default {
   allErrorsAction,
-  incrementErrorCount,
-  hasError
+  incrementErrorCount
 };

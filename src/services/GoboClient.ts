@@ -4,13 +4,12 @@ import { DefinitionNode, DocumentNode, print } from 'graphql/language';
 import { v4 as uuid } from 'uuid';
 
 import { addError } from 'models/StateManager/state/actions';
-// import createStoreWithApi from 'store';
 
 interface IVariables {
   [key: string]: any;
 }
 
-interface IGoboResult<T> {
+export interface IGoboResult<T> {
   data: T;
   errors?: GraphQLError[];
 }
@@ -103,6 +102,5 @@ export default class GoboClient {
       ? new Error(e.message + ' document: ' + documentName)
       : new Error(e.message);
     addError(err);
-    // createStoreWithApi().dispatch<any>(addError(err));
   }
 }

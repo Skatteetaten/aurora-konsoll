@@ -18,15 +18,13 @@ import AcceptTokenRoute from './AcceptTokenView/AcceptTokenRoute';
 
 import { withAuroraApi } from 'components/AuroraApi';
 import LayoutConnected from 'components/Layout/Layout';
-import { errorStateManager } from 'models/StateManager/ErrorStateManager';
-import AffiliationViewValidatorConnected, {
-  AffiliationRouteProps
-} from './AffiliationViews/AffiliationViewValidator';
+import { AffiliationRouteProps } from './AffiliationViews/AffiliationViewValidator';
 import { CertificateConnected } from './CertificateView/CertificateConnected';
 import GoboUsageView from './GoboUsageView';
 import { NetdebugWithApi } from './NetdebugView/Netdebug';
 
 import { ErrorBoundaryConnected } from 'components/ErrorBoundary/ErrorBoundaryConnected';
+import { AffiliationViewValidatorConnected } from './AffiliationViews/AffiliationViewControllerConnected';
 
 export enum MenuType {
   DEPLOYMENTS,
@@ -126,7 +124,7 @@ class App extends React.Component<IAppProps, IAppState> {
         <Konami timeout={10000}>
           <GoboUsageView clients={this.props.clients} />
         </Konami>
-        <ErrorBoundaryConnected errorSM={errorStateManager}>
+        <ErrorBoundaryConnected>
           <LayoutConnected
             isMenuExpanded={isMenuExpanded}
             handleMenuExpand={this.handleMenuExpand}

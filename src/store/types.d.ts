@@ -6,6 +6,7 @@ import { WebsealAction } from 'screens/AffiliationViews/WebsealView/state/reduce
 import { CertificateAction } from 'screens/CertificateView/state/reducers';
 import { ErrorBoundaryAction } from 'components/ErrorBoundary/state/reducers';
 import { ErrorStateManagerAction } from 'models/StateManager/state/reducer';
+import { AffiliationViewsAction } from 'screens/AffiliationViews/state/reducer';
 
 export type RootState = StateType<typeof rootReducer>;
 export type RootAction =
@@ -14,4 +15,5 @@ export type RootAction =
   | CertificateAction
   | WebsealAction
   | ErrorBoundaryAction
-  | ErrorStateManagerAction;
+  | ErrorStateManagerAction
+  | AffiliationViewsAction;

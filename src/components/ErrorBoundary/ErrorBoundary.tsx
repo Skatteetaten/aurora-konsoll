@@ -1,23 +1,30 @@
-import ErrorStateManager, {
-  IAppError,
-  IErrorState
-} from 'models/StateManager/ErrorStateManager';
+import { IAppError, IErrorState } from 'models/StateManager/ErrorStateManager';
 import * as React from 'react';
 import ErrorPopup from './ErrorPopup';
 
 interface IErrorBoundaryProps {
   addError: (error: Error) => void;
-  errorSM: ErrorStateManager;
   addCurrentError: (currentError?: IAppError) => void;
-  getNextError: () => void;
-  containsErrors: () => void;
+  getNextError: () => IAppError;
+  containsErrors: () => boolean;
+  closeError: (id: number) => void;
   errors: IErrorState;
-  hasError: boolean;
   currentErrors: IErrorState;
   currentError?: IAppError;
 }
 
-class ErrorBoundary extends React.Component<IErrorBoundaryProps, {}> {
+interface IErrorBoundaryState {
+  errorCount: number;
+}
+
+class ErrorBoundary extends React.Component<
+  IErrorBoundaryProps,
+  IErrorBoundaryState
+> {
+  public state: IErrorBoundaryState = {
+    errorCount: 0
+  };
+
   public componentDidUpdate() {
     const {
       errors,
@@ -25,9 +32,14 @@ class ErrorBoundary extends React.Component<IErrorBoundaryProps, {}> {
       currentError,
       currentErrors,
       addCurrentError,
-      getNextError,
-      hasError
+      getNextError
     } = this.props;
+
+    if (this.props.errors.errorQueue.length !== this.state.errorCount) {
+      this.setState({
+        errorCount: this.props.errors.errorQueue.length
+      });
+    }
     if (errors.errorQueue.length > currentErrors.errorQueue.length) {
       fetch('/api/log', {
         body: JSON.stringify({
@@ -40,30 +52,24 @@ class ErrorBoundary extends React.Component<IErrorBoundaryProps, {}> {
         method: 'POST'
       });
     }
-    getNextError();
-    containsErrors();
+
     if (
-      hasError &&
-      !currentError
-      // || ( && !currentError.isActive)
+      (containsErrors() && !currentError) ||
+      (currentError && !currentError.isActive)
     ) {
-      addCurrentError(errors.errorQueue[errors.errorQueue.length - 1]);
+      addCurrentError(getNextError());
     }
   }
 
-  public componentWillUnmount() {
-    this.props.errorSM.close();
-  }
-
   public render() {
-    const { errorSM, errors, currentError, children } = this.props;
+    const { children, closeError, currentError } = this.props;
     return (
       <>
         {currentError && (
           <ErrorPopup
             currentError={currentError}
-            closeError={errorSM.closeError}
-            errorCount={errors.errorQueue.length}
+            closeError={closeError}
+            errorCount={this.state.errorCount}
           />
         )}
         {children}

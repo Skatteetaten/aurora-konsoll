@@ -1,6 +1,7 @@
 import { IAppError } from 'models/StateManager/ErrorStateManager';
 import {
   addError,
+  closeError,
   containsErrors,
   getNextError
 } from 'models/StateManager/state/actions';
@@ -14,13 +15,11 @@ import { IErrorBoundaryState } from './state/reducers';
 const getCurrentErrors = (state: IErrorBoundaryState) => state.currentErrors;
 const getErrors = (state: IErrorStateManagerState) => state.errors;
 const getCurrentError = (state: IErrorBoundaryState) => state.currentError;
-const getHasErrors = (state: IErrorStateManagerState) => state.hasError;
 
 const mapStateToProps = (state: RootState) => ({
   currentErrors: getCurrentErrors(state.errorBoundary),
   errors: getErrors(state.errorStateManager),
-  currentError: getCurrentError(state.errorBoundary),
-  hasError: getHasErrors(state.errorStateManager)
+  currentError: getCurrentError(state.errorBoundary)
 });
 
 export const ErrorBoundaryConnected = connect(
@@ -30,6 +29,7 @@ export const ErrorBoundaryConnected = connect(
       currentErrorAction(currentError),
     addError: (error: Error) => addError(error),
     getNextError: () => getNextError(),
-    containsErrors: () => containsErrors()
+    containsErrors: () => containsErrors(),
+    closeError: (id: number) => closeError(id)
   }
 )(ErrorBoundary);

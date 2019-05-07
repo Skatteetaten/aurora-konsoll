@@ -1,9 +1,11 @@
 import { IWebsealState } from 'models/Webseal';
 
 import { IAuroraApiComponentProps } from 'components/AuroraApi';
+import { addError } from 'models/StateManager/state/actions';
 import { ActionCreator } from 'redux';
 import { ThunkAction } from 'redux-thunk';
 import { createAction } from 'redux-ts-utils';
+import { IWebsealStateEdge } from 'services/auroraApiClients/websealClient/query';
 import { RootAction, RootState } from 'store/types';
 
 const websealAction = (action: string) => `webseal/${action}`;
@@ -27,7 +29,30 @@ export const fetchWebsealStates: Thunk = (affiliation: string) => async (
   dispatch(fetchWebsealStatesRequest(true));
   const result = await clients.websealClient.getWebsealStates(affiliation);
   dispatch(fetchWebsealStatesRequest(false));
-  dispatch(fetchWebsealStatesResponse(result));
+
+  const normalizeWebsealState = (
+    edges: IWebsealStateEdge[]
+  ): IWebsealState[] => {
+    let states: IWebsealState[] = [];
+    for (const edge of edges) {
+      states = edge.node.websealStates;
+    }
+    return states;
+  };
+
+  if (result && result.errors) {
+    result.errors.forEach(e => {
+      const err = new Error(`${e.message} ${e.extensions}`);
+      dispatch(addError(err));
+    });
+  }
+
+  if (result && result.data && result.data.affiliations.edges.length > 0) {
+    const websealStates = normalizeWebsealState(result.data.affiliations.edges);
+    dispatch(fetchWebsealStatesResponse(websealStates));
+  } else {
+    dispatch(fetchWebsealStatesResponse([]));
+  }
 };
 
 export default {
