@@ -36,13 +36,20 @@ export const ActiveDeploymentInformation = ({
   values.addFrom(deployment, add => {
     add('version', 'Tag', v => tooltip(v.deployTag.name));
     add('version', 'Aurora version', version => version.auroraVersion);
-    add('repository', 'Image repository', repo => ({
-      value: removeFirstPath(repo),
-      link: `http://uil0paas-utv-registry01.skead.no:9090/tag/${removeFirstPath(
-        repo
-      )}/${deployment.version.deployTag.name}`
-    }));
     add('message', 'Message');
+  });
+
+  values.addFrom(deployment, add => {
+    const getImageRepository =
+      deploymentSpec && deploymentSpec.type === 'deploy'
+        ? (repo: string) => ({
+            value: removeFirstPath(repo),
+            link: `/api/docker-registry/${removeFirstPath(
+              repo
+            )}/${deployment.version.deployTag.name}`
+          })
+        : (repo: string) => removeFirstPath(repo);
+    add('repository', 'Image repository', getImageRepository);
   });
 
   return (

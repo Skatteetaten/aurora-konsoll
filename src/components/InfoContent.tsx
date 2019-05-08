@@ -31,7 +31,7 @@ const InfoContent = ({
             <dt>{k}</dt>
             {content.hasOwnProperty('link') ? (
               <dd title={content.value}>
-                <a href={content.link}>{content.value}</a>
+                <a href={content.link} target="_blank" rel="noopener noreferrer">{content.value}</a>
               </dd>
             ) : (
               <dd title={content}>{content}</dd>
