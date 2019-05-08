@@ -3,6 +3,11 @@ import styled from 'styled-components';
 
 import { InfoContentValues } from 'models/InfoContentValues';
 
+interface IInfoContentRow {
+  value: string;
+  link?: string;
+}
+
 interface IInfoContentProps {
   style?: React.CSSProperties;
   className?: string;
@@ -23,12 +28,24 @@ const InfoContent = ({
   const values = infoContentValues.get();
   return (
     <div className={className} style={style} id={id}>
-      {Object.keys(values).map(k => (
-        <dl key={k}>
-          <dt>{k}</dt>
-          <dd title={values[k]}>{values[k]}</dd>
-        </dl>
-      ))}
+      {Object.keys(values).map(k => {
+        const content = values[k];
+        if(typeof content === 'string') {
+          return (
+            <dl key={k}>
+              <dt>{k}</dt>
+              <dd title={content}>{content}</dd>
+            </dl>
+          )
+        } else {
+          return (
+            <dl key={k}>
+              <dt>{k}</dt>
+              <dd title={content.value}><a href={content.link}>{content.value}</a></dd>
+            </dl>
+          )
+        }
+        })}
     </div>
   );
 };
