@@ -23,6 +23,9 @@ export interface IDetailsViewProps
   deployment: IApplicationDeployment;
   fetchApplicationDeployments: () => void;
   filterPathUrl: string;
+  findApplicationDeploymentDetails: (
+    id: string
+  ) => IApplicationDeploymentDetails;
 }
 
 export interface IDetailsViewState {
@@ -48,14 +51,18 @@ interface IStateManagers {
   loading: LoadingStateManager<IDetailsViewLoading>;
 }
 
-type DetailsViewComponent = Component<IDetailsViewProps, IDetailsViewState>;
+export type DetailsViewComponent = Component<
+  IDetailsViewProps,
+  IDetailsViewState
+>;
 
-export default class DetailsViewController {
+export default class DetailsViewController extends Component {
   public sm: IStateManagers;
 
   private component: DetailsViewComponent;
 
   constructor(component: DetailsViewComponent) {
+    super(component);
     component.componentWillUnmount = () => {
       this.sm.tag.close();
       this.sm.loading.close();
@@ -89,7 +96,7 @@ export default class DetailsViewController {
       );
       if (success) {
         this.component.props.fetchApplicationDeployments();
-        const deploymentDetails = await clients.applicationDeploymentClient.findApplicationDeploymentDetails(
+        const deploymentDetails = await this.component.props.findApplicationDeploymentDetails(
           deployment.id
         );
         this.component.setState({
@@ -126,7 +133,7 @@ export default class DetailsViewController {
 
       if (success) {
         fetchApplicationDeployments();
-        const deploymentDetails = await clients.applicationDeploymentClient.findApplicationDeploymentDetails(
+        const deploymentDetails = await this.component.props.findApplicationDeploymentDetails(
           deployment.id
         );
         this.component.setState({
@@ -181,13 +188,10 @@ export default class DetailsViewController {
 
   public onMount = () => {
     const { id, repository } = this.component.props.deployment;
-    const {
-      applicationDeploymentClient,
-      imageRepositoryClient
-    } = this.component.props.clients;
+    const { imageRepositoryClient } = this.component.props.clients;
 
     this.sm.loading.withLoading(['fetchTags', 'fetchDetails'], async () => {
-      const deploymentDetailsResponse = applicationDeploymentClient.findApplicationDeploymentDetails(
+      const deploymentDetailsResponse = this.component.props.findApplicationDeploymentDetails(
         id
       );
       if (repository) {

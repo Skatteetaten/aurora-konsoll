@@ -3,9 +3,15 @@ import * as React from 'react';
 import { Route } from 'react-router';
 
 import Spinner from 'components/Spinner';
-import { IApplicationDeployment } from 'models/ApplicationDeployment';
+import {
+  IApplicationDeployment,
+  IApplicationDeploymentDetails
+} from 'models/ApplicationDeployment';
 import { IErrorState } from 'models/StateManager/ErrorStateManager';
-import { IApplicationDeploymentFilters } from 'models/UserSettings';
+import {
+  IApplicationDeploymentFilters,
+  IUserSettings
+} from 'models/UserSettings';
 import { Link } from 'react-router-dom';
 import DeploymentFilterService, {
   IFilter
@@ -31,13 +37,18 @@ interface IAffiliationViewControllerProps extends IAuroraApiComponentProps {
   getNextError: () => void;
   closeError: (id: number) => void;
   refreshAffiliations: (affiliations: string[]) => void;
+  findAllApplicationDeployments: (affiliations: string[]) => void;
   isFetchingAffiliations: boolean;
+  allApplicationDeployments: IApplicationDeployment[];
+  isFetchingAllApplicationDeployments: boolean;
+  getUserSettings: () => IUserSettings;
+  updateUserSettings: (userSettings: IUserSettings) => boolean;
+  findApplicationDeploymentDetails: (
+    id: string
+  ) => IApplicationDeploymentDetails;
 }
 
 interface IAffiliationViewControllerState {
-  loading: boolean;
-  isRefreshing: boolean;
-  deployments: IApplicationDeployment[];
   filter: IFilter;
   allFilters: IApplicationDeploymentFilters[];
   filterPathUrl: string;
@@ -49,9 +60,6 @@ class AffiliationViewController extends React.Component<
   IAffiliationViewControllerState
 > {
   public state: IAffiliationViewControllerState = {
-    deployments: [],
-    isRefreshing: false,
-    loading: false,
     filter: {
       applications: [],
       environments: []
@@ -75,24 +83,13 @@ class AffiliationViewController extends React.Component<
   };
 
   public fetchApplicationDeployments = async (affiliation: string) => {
-    const { clients } = this.props;
-    this.setState(() => ({
-      loading: true
-    }));
-
-    const deployments = await clients.applicationDeploymentClient.findAllApplicationDeployments(
-      [affiliation]
-    );
-
-    this.setState(() => ({
-      deployments,
-      loading: false
-    }));
+    const { findAllApplicationDeployments } = this.props;
+    findAllApplicationDeployments([affiliation]);
   };
 
   public fetchApplicationDeploymentFilters = async (paramsExists: any) => {
-    const { clients, affiliation } = this.props;
-    const filters = await clients.userSettingsClient.getUserSettings();
+    const { affiliation, getUserSettings } = this.props;
+    const filters = await getUserSettings();
     if (filters) {
       this.setState({
         allFilters: filters.applicationDeploymentFilters
@@ -113,8 +110,8 @@ class AffiliationViewController extends React.Component<
   };
 
   public refreshApplicationDeployments = async () => {
-    const { affiliation } = this.props;
-    this.props.refreshAffiliations([affiliation]);
+    const { affiliation, refreshAffiliations } = this.props;
+    refreshAffiliations([affiliation]);
     await this.fetchApplicationDeployments(affiliation);
   };
 
@@ -188,7 +185,7 @@ class AffiliationViewController extends React.Component<
   }
 
   public deleteFilter = async (filterName: string) => {
-    const { affiliation, clients, addError } = this.props;
+    const { affiliation, addError, updateUserSettings } = this.props;
     const { allFilters } = this.state;
     const updatedFilters = this.deploymentFilterService.getOtherNonDefaultFilters(
       allFilters,
@@ -196,7 +193,7 @@ class AffiliationViewController extends React.Component<
       { name: filterName, applications: [], environments: [], default: false }
     );
     if (filterName) {
-      const response = await clients.userSettingsClient.updateUserSettings({
+      const response = await updateUserSettings({
         applicationDeploymentFilters: updatedFilters
       });
       if (response) {
@@ -210,7 +207,12 @@ class AffiliationViewController extends React.Component<
   };
 
   public updateFilter = async (filter: IFilter) => {
-    const { affiliation, clients, updateUrlWithQuery, addError } = this.props;
+    const {
+      affiliation,
+      updateUserSettings,
+      updateUrlWithQuery,
+      addError
+    } = this.props;
     const { allFilters } = this.state;
     const updatedFilters = this.deploymentFilterService.getOtherNonDefaultFilters(
       allFilters,
@@ -225,7 +227,7 @@ class AffiliationViewController extends React.Component<
         applications: filter.applications,
         environments: filter.environments
       });
-      const response = await clients.userSettingsClient.updateUserSettings({
+      const response = await updateUserSettings({
         applicationDeploymentFilters: updatedFilters
       });
 
@@ -260,37 +262,48 @@ class AffiliationViewController extends React.Component<
   };
 
   public render() {
-    const { matchPath, affiliation } = this.props;
     const {
-      deployments,
-      loading,
+      matchPath,
+      affiliation,
+      isFetchingAllApplicationDeployments,
+      allApplicationDeployments,
+      findApplicationDeploymentDetails
+    } = this.props;
+    const {
       filterPathUrl,
       filter,
       allFilters,
       showSemanticVersion: showExactVersion
     } = this.state;
 
-    if (loading && deployments.length === 0) {
+    if (
+      isFetchingAllApplicationDeployments &&
+      allApplicationDeployments.length === 0
+    ) {
       return <Spinner />;
     }
 
     const filteredDeployments = this.deploymentFilterService.filterDeployments(
       filter,
-      deployments
+      allApplicationDeployments
     );
 
-    const time = deployments.length > 0 ? deployments[0].time : '';
+    const time =
+      allApplicationDeployments.length > 0
+        ? allApplicationDeployments[0].time
+        : '';
 
     return (
       <ApplicationDeploymentProvider
         value={{
           buildDeploymentLink: this.buildDeploymentLink,
-          allDeployments: deployments,
+          allDeployments: allApplicationDeployments,
           deployments: filteredDeployments,
           refreshDeployments: this.refreshApplicationDeployments,
           fetchApplicationDeployments: () =>
             this.fetchApplicationDeployments(affiliation),
-          filterPathUrl
+          filterPathUrl,
+          findApplicationDeploymentDetails
         }}
       >
         <Route exact={true} path={`${matchPath}/deployments`}>
@@ -305,7 +318,7 @@ class AffiliationViewController extends React.Component<
                 affiliation={affiliation}
                 updateFilter={this.updateFilter}
                 deleteFilter={this.deleteFilter}
-                allDeployments={deployments}
+                allDeployments={allApplicationDeployments}
                 filters={filter}
                 allFilters={allFilters}
                 showSemanticVersion={showExactVersion}

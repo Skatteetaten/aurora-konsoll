@@ -1,9 +1,4 @@
-import {
-  IApplicationDeployment,
-  IApplicationDeploymentDetails,
-  IUserAndAffiliations
-} from 'models/ApplicationDeployment';
-import { normalizeRawDeploymentSpec } from 'models/DeploymentSpec';
+import { IUserAndAffiliations } from 'models/ApplicationDeployment';
 
 import GoboClient, { IGoboResult } from 'services/GoboClient';
 import {
@@ -116,44 +111,13 @@ export class ApplicationDeploymentClient {
 
   public async findApplicationDeploymentDetails(
     id: string
-  ): Promise<IApplicationDeploymentDetails> {
-    const result = await this.client.query<IApplicationDeploymentDetailsQuery>({
+  ): Promise<IGoboResult<IApplicationDeploymentDetailsQuery> | undefined> {
+    return await this.client.query<IApplicationDeploymentDetailsQuery>({
       query: APPLICATION_DEPLOYMENT_DETAILS_QUERY,
       variables: {
         id
       }
     });
-    if (result && result.data && result.data.applicationDeploymentDetails) {
-      const {
-        deploymentSpecs,
-        podResources,
-        buildTime,
-        gitInfo,
-        serviceLinks
-      } = result.data.applicationDeploymentDetails;
-
-      let deploymentSpec;
-      if (deploymentSpecs.current) {
-        const spec = JSON.parse(deploymentSpecs.current.jsonRepresentation);
-        deploymentSpec = Object.keys(spec).reduce(
-          normalizeRawDeploymentSpec(spec),
-          {}
-        );
-      }
-
-      return {
-        buildTime,
-        gitInfo,
-        pods: podResources,
-        deploymentSpec,
-        serviceLinks
-      };
-    }
-
-    return {
-      pods: [],
-      serviceLinks: []
-    };
   }
 
   public async findUserAndAffiliations(): Promise<IUserAndAffiliations> {
@@ -178,55 +142,22 @@ export class ApplicationDeploymentClient {
 
   public async findAllApplicationDeployments(
     affiliations: string[]
-  ): Promise<IApplicationDeployment[]> {
-    const result = await this.client.query<IApplicationsConnectionQuery>({
+  ): Promise<IGoboResult<IApplicationsConnectionQuery> | undefined> {
+    return await this.client.query<IApplicationsConnectionQuery>({
       query: APPLICATIONS_QUERY,
       variables: {
         affiliations
       }
     });
-
-    if (!result) {
-      return [];
-    }
-
-    return result.data.applications.edges.reduce((acc, { node }) => {
-      const { applicationDeployments, imageRepository } = node;
-      const deployments = applicationDeployments.map(app => ({
-        affiliation: app.affiliation.name,
-        environment: app.environment,
-        id: app.id,
-        name: app.name,
-        permission: app.namespace.permission,
-        repository: imageRepository ? imageRepository.repository : '',
-        status: {
-          code: app.status.code,
-          reasons: app.status.reasons,
-          reports: app.status.reports
-        },
-        message: app.message,
-        time: app.time,
-        version: {
-          releaseTo: app.version.releaseTo,
-          auroraVersion: app.version.auroraVersion,
-          deployTag: {
-            lastModified: '',
-            name: findDeployTagForTemplate(
-              node.name,
-              app.version.deployTag.name
-            ),
-            type: app.version.deployTag.type
-          }
-        }
-      }));
-      return [...acc, ...deployments];
-    }, []);
   }
 }
 
 // ! Temp fix for template deployments with default version
 // TODO: FIX
-function findDeployTagForTemplate(applicationName: string, deployTag: string) {
+export function findDeployTagForTemplate(
+  applicationName: string,
+  deployTag: string
+) {
   const templates = {
     'aurora-activemq-1.0.0': '2',
     'aurora-redis-1.0.0': '3.2.3',

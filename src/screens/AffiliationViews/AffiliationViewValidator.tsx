@@ -1,7 +1,12 @@
 import * as React from 'react';
 
-import { IUserAndAffiliations } from 'models/ApplicationDeployment';
+import {
+  IApplicationDeployment,
+  IApplicationDeploymentDetails,
+  IUserAndAffiliations
+} from 'models/ApplicationDeployment';
 import { IErrorState } from 'models/StateManager/ErrorStateManager';
+import { IUserSettings } from 'models/UserSettings';
 import { RouteComponentProps } from 'react-router-dom';
 import { MenuType } from 'screens/App';
 import AffiliationSelector from './AffiliationSelector';
@@ -24,6 +29,14 @@ interface IAffiliationViewValidatorProps extends AffiliationRouteProps {
   getNextError: () => void;
   closeError: (id: number) => void;
   refreshAffiliations: (affiliations: string[]) => void;
+  findAllApplicationDeployments: (affiliations: string[]) => void;
+  getUserSettings: () => IUserSettings;
+  allApplicationDeployments: IApplicationDeployment[];
+  isFetchingAllApplicationDeployments: boolean;
+  updateUserSettings: (userSettings: IUserSettings) => boolean;
+  findApplicationDeploymentDetails: (
+    id: string
+  ) => IApplicationDeploymentDetails;
 }
 
 class AffiliationViewValidator extends React.Component<
@@ -86,7 +99,6 @@ class AffiliationViewValidator extends React.Component<
         />
       );
     }
-
     if (!affiliation) {
       return <p>{affiliation} er ikke en gyldig affiliation.</p>;
     }
@@ -103,6 +115,18 @@ class AffiliationViewValidator extends React.Component<
           closeError={this.props.closeError}
           refreshAffiliations={this.props.refreshAffiliations}
           isFetchingAffiliations={this.props.isFetchingAffiliations}
+          findAllApplicationDeployments={
+            this.props.findAllApplicationDeployments
+          }
+          allApplicationDeployments={this.props.allApplicationDeployments}
+          isFetchingAllApplicationDeployments={
+            this.props.isFetchingAllApplicationDeployments
+          }
+          getUserSettings={this.props.getUserSettings}
+          updateUserSettings={this.props.updateUserSettings}
+          findApplicationDeploymentDetails={
+            this.props.findApplicationDeploymentDetails
+          }
         />
       );
     } else if (type === MenuType.DATABASE) {

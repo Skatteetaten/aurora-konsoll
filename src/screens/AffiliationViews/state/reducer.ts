@@ -1,16 +1,26 @@
+import { IApplicationDeployment } from 'models/ApplicationDeployment';
 import { handleAction, reduceReducers } from 'redux-ts-utils';
+
 import { ActionType } from 'typesafe-actions';
-import actions, { refreshAffiliationsResponse } from './actions';
+import actions, {
+  findAllApplicationDeploymentsRequest,
+  findAllApplicationDeploymentsResponse,
+  refreshAffiliationsRequest
+} from './actions';
 
 export type AffiliationViewsAction = ActionType<typeof actions>;
 
 export interface IAffiliationViewsState {
   readonly isRefreshingAffiliations: boolean;
+  readonly allApplicationDeploymentsResult: IApplicationDeployment[];
+  readonly isFetchingAllApplicationDeployments: boolean;
 }
 
 const initialState = (): IAffiliationViewsState => {
   return {
-    isRefreshingAffiliations: false
+    isRefreshingAffiliations: false,
+    allApplicationDeploymentsResult: [],
+    isFetchingAllApplicationDeployments: false
   };
 };
 
@@ -26,8 +36,16 @@ function updateStateWithPayload(name: string) {
 export const affiliationViewsReducer = reduceReducers<IAffiliationViewsState>(
   [
     handleAction(
-      refreshAffiliationsResponse,
+      refreshAffiliationsRequest,
       updateStateWithPayload('isRefreshingAffiliations')
+    ),
+    handleAction(
+      findAllApplicationDeploymentsResponse,
+      updateStateWithPayload('allApplicationDeploymentsResult')
+    ),
+    handleAction(
+      findAllApplicationDeploymentsRequest,
+      updateStateWithPayload('isFetchingAllApplicationDeployments')
     )
   ],
   initialState()

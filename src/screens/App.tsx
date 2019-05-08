@@ -24,7 +24,7 @@ import GoboUsageView from './GoboUsageView';
 import { NetdebugWithApi } from './NetdebugView/Netdebug';
 
 import { ErrorBoundaryConnected } from 'components/ErrorBoundary/ErrorBoundaryConnected';
-import { AffiliationViewValidatorConnected } from './AffiliationViews/AffiliationViewControllerConnected';
+import { AffiliationViewValidatorConnected } from './AffiliationViews/AffiliationViewValidatorConnected';
 
 export enum MenuType {
   DEPLOYMENTS,
