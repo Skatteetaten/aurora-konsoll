@@ -267,7 +267,7 @@ export class Schema extends React.Component<ISchemaProps, ISchemaState> {
       const deleteSchemas = () => {
         if (deleteSelectionIds.length > 0) {
           onDeleteSchemas(deleteSelectionIds);
-          this.selection.setAllSelected(false);
+          this.deselect();
           this.setState({
             extendedInfo: [],
             hasDeletionInformation: true,
