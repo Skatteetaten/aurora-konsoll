@@ -2,6 +2,7 @@ import * as React from 'react';
 import styled from 'styled-components';
 
 import { InfoContentValues } from 'models/InfoContentValues';
+import { ExternalLink } from './ExternalLink';
 
 interface IInfoContentProps {
   style?: React.CSSProperties;
@@ -31,7 +32,7 @@ const InfoContent = ({
             <dt>{k}</dt>
             {content.hasOwnProperty('link') ? (
               <dd title={content.value}>
-                <a href={content.link} target="_blank" rel="noopener noreferrer">{content.value}</a>
+                <ExternalLink href={content.link} target="_blank" rel="noopener noreferrer">{content.value}</ExternalLink>
               </dd>
             ) : (
               <dd title={content}>{content}</dd>
