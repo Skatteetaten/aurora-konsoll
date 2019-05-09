@@ -7,6 +7,7 @@ import {
   CLIENT_ID,
   DBH_ENABLED,
   GOBO_URL,
+  DOCKER_REGISTRY_FRONTEND_URL,
   PORT,
   SKAP_ENABLED
 } from './config';
@@ -33,6 +34,10 @@ app.get('/api/config', (req, res) => {
     DBH_ENABLED,
     SKAP_ENABLED
   });
+});
+
+app.get('/api/docker-registry/*', (req, res) => {
+  res.redirect(`${DOCKER_REGISTRY_FRONTEND_URL}/tag/${req.params[0]}`);
 });
 
 app.post('/api/log', (req, res) => {
