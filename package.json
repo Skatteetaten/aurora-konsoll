@@ -36,7 +36,7 @@
     "uuid": "3.3.2"
   },
   "scripts": {
-    "start": "npm-run-all -pl start:web start:api",
+    "start": "node scripts/start.js",
     "start:web": "react-scripts start",
     "start:api": "npm run build:api -- --watch & nodemon --watch ./build-api --exec \"node ./build-api/server.js\"",
     "build": "npm-run-all -pl build:web build:api",
@@ -71,6 +71,7 @@
     "@types/styled-components": "4.1.14",
     "@types/uuid": "3.4.4",
     "aurora-openshift": "0.0.12",
+    "dotenv": "7.0.0",
     "enzyme": "3.9.0",
     "enzyme-adapter-react-16": "1.12.1",
     "factory.ts": "0.4.5",
