@@ -2,7 +2,7 @@
 def jenkinsfile
 
 def overrides = [
-    scriptVersion  : 'feature/AOS-3403-st-tte-npm-ci-for-webleveransepakke-pipeline',
+    scriptVersion  : 'v6',
     pipelineScript: 'https://git.aurora.skead.no/scm/ao/aurora-pipeline-scripts.git',
     credentialsId: "github",
     jiraFiksetIKomponentversjon: true,
