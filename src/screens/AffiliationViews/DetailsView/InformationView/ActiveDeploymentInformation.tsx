@@ -44,9 +44,9 @@ export const ActiveDeploymentInformation = ({
       deploymentSpec && deploymentSpec.type === 'deploy'
         ? (repo: string) => ({
             value: removeFirstPath(repo),
-            link: `/api/docker-registry/${removeFirstPath(repo)}/${
-              deployment.version.deployTag.name
-            }`
+            link: `/api/docker-registry/${removeFirstPath(
+              repo
+            )}/${deployment.version.deployTag.name}`
           })
         : (repo: string) => removeFirstPath(repo);
     add('repository', 'Image repository', getImageRepository);

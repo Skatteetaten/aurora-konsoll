@@ -2,7 +2,6 @@ import * as React from 'react';
 import styled from 'styled-components';
 
 import palette from 'aurora-frontend-react-komponenter/utils/palette';
-import Button from 'aurora-frontend-react-komponenter/Button';
 
 import { INetdebugResult } from 'services/auroraApiClients';
 
@@ -49,11 +48,12 @@ const CardInfo = ({
         noder
       </h4>
       <article>
-        {netdebugStatus === 'OPEN' && <>Kan nåes fra alle noder.</>}
-        <br />
-        <Button buttonType="secondary" onClick={displayTableOnClicked}>
-          Klikk her for mer informasjon
-        </Button>
+        {netdebugStatus === 'OPEN' && <>Kan nåes fra alle noder.</>} Klikk{' '}
+        <div className="datalink-styled">
+          {' '}
+          <a onClick={displayTableOnClicked}>her</a>
+        </div>{' '}
+        for mer informasjon.
       </article>
     </div>
   </div>

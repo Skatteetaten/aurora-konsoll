@@ -32,13 +32,7 @@ const InfoContent = ({
             <dt>{k}</dt>
             {content.hasOwnProperty('link') ? (
               <dd title={content.value}>
-                <ExternalLink
-                  href={content.link}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  {content.value}
-                </ExternalLink>
+                <ExternalLink href={content.link} target="_blank" rel="noopener noreferrer">{content.value}</ExternalLink>
               </dd>
             ) : (
               <dd title={content}>{content}</dd>
