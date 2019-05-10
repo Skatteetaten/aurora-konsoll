@@ -14,7 +14,7 @@ import {
   IJdbcUser,
   IUpdateDatabaseSchemaInputWithCreatedBy
 } from 'models/schemas';
-import { addError } from 'models/StateManager/state/actions';
+import { addErrors } from 'models/StateManager/state/actions';
 import { createAction } from 'redux-ts-utils';
 
 const databaseAction = (action: string) => `database/${action}`;
@@ -59,10 +59,7 @@ export const fetchSchemas: Thunk = (affiliations: string[]) => async (
   const result = await clients.databaseClient.getSchemas(affiliations);
   dispatch(fetchSchemaRequest(false));
   if (result && result.errors) {
-    result.errors.forEach(e => {
-      const err = new Error(`${e.message} ${e.extensions}`);
-      dispatch(addError(err));
-    });
+    dispatch(addErrors(result.errors));
   }
 
   if (result && result.data) {
@@ -78,10 +75,7 @@ export const updateSchema: Thunk = (
   const result = await clients.databaseClient.updateSchema(databaseSchema);
 
   if (result && result.errors) {
-    result.errors.forEach(e => {
-      const err = new Error(`${e.message} ${e.extensions}`);
-      dispatch(addError(err));
-    });
+    dispatch(addErrors(result.errors));
   }
   if (result && result.data && result.data.updateDatabaseSchema) {
     dispatch(updateSchemaResponse(true));
@@ -100,10 +94,7 @@ export const deleteSchema: Thunk = (databaseSchema: IDatabaseSchema) => async (
     databaseSchema.id
   ]);
   if (result && result.errors) {
-    result.errors.forEach(e => {
-      const err = new Error(`${e.message} ${e.extensions}`);
-      dispatch(addError(err));
-    });
+    dispatch(addErrors(result.errors));
   }
 
   if (result && result.data) {
@@ -127,10 +118,7 @@ export const deleteSchemas: Thunk = (ids: string[]) => async (
 ) => {
   const result = await clients.databaseClient.deleteSchemas(ids);
   if (result && result.errors) {
-    result.errors.forEach(e => {
-      const err = new Error(`${e.message} ${e.extensions}`);
-      dispatch(addError(err));
-    });
+    dispatch(addErrors(result.errors));
   }
 
   if (result && result.data) {
@@ -152,10 +140,7 @@ export const testJdbcConnectionForId: Thunk = (id: string) => async (
 ) => {
   const result = await clients.databaseClient.testJdbcConnectionForId(id);
   if (result && result.errors) {
-    result.errors.forEach(e => {
-      const err = new Error(`${e.message} ${e.extensions}`);
-      dispatch(addError(err));
-    });
+    dispatch(addErrors(result.errors));
   }
 
   if (result && result.data) {
@@ -174,10 +159,7 @@ export const testJdbcConnectionForJdbcUser: Thunk = (
     jdbcUser
   );
   if (result && result.errors) {
-    result.errors.forEach(e => {
-      const err = new Error(`${e.message} ${e.extensions}`);
-      dispatch(addError(err));
-    });
+    dispatch(addErrors(result.errors));
   }
 
   if (result && result.data) {
@@ -199,10 +181,7 @@ export const createDatabaseSchema: Thunk = (
   );
 
   if (result && result.errors) {
-    result.errors.forEach(e => {
-      const err = new Error(`${e.message} ${e.extensions}`);
-      dispatch(addError(err));
-    });
+    dispatch(addErrors(result.errors));
   }
 
   if (result && result.data && result.data.createDatabaseSchema) {

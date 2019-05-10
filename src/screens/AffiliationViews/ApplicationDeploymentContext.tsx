@@ -1,6 +1,9 @@
 import * as React from 'react';
 
-import { IApplicationDeployment } from 'models/ApplicationDeployment';
+import {
+  IApplicationDeployment,
+  IApplicationDeploymentDetails
+} from 'models/ApplicationDeployment';
 import { Omit } from 'types/utils';
 
 export interface IApplicationDeploymentContext {
@@ -12,6 +15,9 @@ export interface IApplicationDeploymentContext {
     deployment: IApplicationDeployment
   ) => React.ComponentType;
   filterPathUrl: string;
+  findApplicationDeploymentDetails: (
+    id: string
+  ) => IApplicationDeploymentDetails;
 }
 
 const ApplicationDeploymentContext = React.createContext<
@@ -26,7 +32,10 @@ const ApplicationDeploymentContext = React.createContext<
   fetchApplicationDeployments: () => {
     return;
   },
-  filterPathUrl: ''
+  filterPathUrl: '',
+  findApplicationDeploymentDetails: (id: string) => {
+    return { pods: [], serviceLinks: [] };
+  }
 });
 
 export const ApplicationDeploymentProvider =

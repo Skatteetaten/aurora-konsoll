@@ -4,17 +4,15 @@ import ErrorPopup from './ErrorPopup';
 
 interface IErrorBoundaryProps {
   addError: (error: Error) => void;
-  addCurrentError: (currentError?: IAppError) => void;
   getNextError: () => IAppError;
   containsErrors: () => boolean;
   closeError: (id: number) => void;
   errors: IErrorState;
-  currentErrors: IErrorState;
-  currentError?: IAppError;
 }
 
 interface IErrorBoundaryState {
-  errorCount: number;
+  currentError?: IAppError;
+  currentErrors: IErrorState;
 }
 
 class ErrorBoundary extends React.Component<
@@ -22,25 +20,18 @@ class ErrorBoundary extends React.Component<
   IErrorBoundaryState
 > {
   public state: IErrorBoundaryState = {
-    errorCount: 0
+    currentError: undefined,
+    currentErrors: {
+      allErrors: new Map(),
+      errorQueue: []
+    }
   };
 
   public componentDidUpdate() {
-    const {
-      errors,
-      containsErrors,
-      currentError,
-      currentErrors,
-      addCurrentError,
-      getNextError
-    } = this.props;
+    const { errors, getNextError } = this.props;
+    const { currentError, currentErrors } = this.state;
 
-    if (this.props.errors.errorQueue.length !== this.state.errorCount) {
-      this.setState({
-        errorCount: this.props.errors.errorQueue.length
-      });
-    }
-    if (errors.errorQueue.length > currentErrors.errorQueue.length) {
+    if (errors.errorQueue.length !== currentErrors.errorQueue.length) {
       fetch('/api/log', {
         body: JSON.stringify({
           location: window.location.pathname,
@@ -52,24 +43,28 @@ class ErrorBoundary extends React.Component<
         method: 'POST'
       });
     }
-
     if (
-      (containsErrors() && !currentError) ||
+      (errors.errorQueue.length > 0 && !currentError) ||
       (currentError && !currentError.isActive)
     ) {
-      addCurrentError(getNextError());
+      this.setState({
+        currentError: getNextError(),
+        currentErrors: errors
+      });
     }
   }
 
   public render() {
-    const { children, closeError, currentError } = this.props;
+    const { children, closeError, errors } = this.props;
+    const { currentError } = this.state;
+
     return (
       <>
         {currentError && (
           <ErrorPopup
             currentError={currentError}
             closeError={closeError}
-            errorCount={this.state.errorCount}
+            errorCount={errors.errorQueue.length}
           />
         )}
         {children}

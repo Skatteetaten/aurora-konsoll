@@ -1,7 +1,7 @@
 import { handleAction, reduceReducers } from 'redux-ts-utils';
 import { ActionType } from 'typesafe-actions';
 import { IErrorState } from '../ErrorStateManager';
-import actions, { allErrorsAction, incrementErrorCount } from './actions';
+import actions, { allErrorsAction, incrementId } from './actions';
 
 export type ErrorStateManagerAction = ActionType<typeof actions>;
 
@@ -28,7 +28,7 @@ function incrementState(name: string) {
 const initialState: IErrorStateManagerState = {
   errors: {
     allErrors: new Map(),
-    errorQueue: [{ id: 0, error: Error(), isActive: false }]
+    errorQueue: []
   },
   errorCount: 0
 };
@@ -36,7 +36,7 @@ const initialState: IErrorStateManagerState = {
 export const errorStateManagerReducer = reduceReducers<IErrorStateManagerState>(
   [
     handleAction(allErrorsAction, updateStateWithPayload('errors')),
-    handleAction(incrementErrorCount, incrementState('errorCount'))
+    handleAction(incrementId, incrementState('errorCount'))
   ],
   initialState
 );

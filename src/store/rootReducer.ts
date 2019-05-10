@@ -1,4 +1,3 @@
-import { errorBoundaryReducer } from 'components/ErrorBoundary/state/reducers';
 import { errorStateManagerReducer } from 'models/StateManager/state/reducer';
 import { combineReducers } from 'redux';
 import { databaseReducer } from 'screens/AffiliationViews/DatabaseView/state/reducers';
@@ -12,7 +11,6 @@ const rootReducer = combineReducers({
   startup: startupReducer,
   webseal: websealReducer,
   certificate: certificateReducer,
-  errorBoundary: errorBoundaryReducer,
   errorStateManager: errorStateManagerReducer,
   affiliationViews: affiliationViewsReducer
 });

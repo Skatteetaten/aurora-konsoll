@@ -72,7 +72,7 @@ export default class GoboClient {
     try {
       const data = await res.json();
       const errors: GraphQLError[] | undefined = data.errors;
-
+      // TODO: fjern og send med document
       if (errors) {
         errors.forEach(err => {
           this.addError(err, this.getDocumentName(document.definitions));

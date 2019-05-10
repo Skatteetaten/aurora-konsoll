@@ -166,7 +166,6 @@ class AffiliationViewController extends React.Component<
 
   public componentDidMount() {
     const { affiliation } = this.props;
-    this.props.addError(new Error('Feil ved sletting av filter'));
     const paramsExists = this.deploymentFilterService.isParamsDefined(
       window.location.search
     );

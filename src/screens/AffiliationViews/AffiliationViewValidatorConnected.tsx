@@ -9,6 +9,7 @@ import { RootState } from 'store/types';
 import AffiliationViewValidator from './AffiliationViewValidator';
 import {
   findAllApplicationDeployments,
+  findApplicationDeploymentDetails,
   getUserSettings,
   refreshAffiliations,
   updateUserSettings
@@ -48,6 +49,8 @@ export const AffiliationViewValidatorConnected = connect(
       findAllApplicationDeployments(affiliations),
     getUserSettings: () => getUserSettings(),
     updateUserSettings: (userSettings: IUserSettings) =>
-      updateUserSettings(userSettings)
+      updateUserSettings(userSettings),
+    findApplicationDeploymentDetails: (id: string) =>
+      findApplicationDeploymentDetails(id)
   }
 )(AffiliationViewValidator);

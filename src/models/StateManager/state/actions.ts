@@ -11,45 +11,61 @@ export const allErrorsAction = createAction<IErrorState>(
   errorStateManagerAction('ALL_ERRORS')
 );
 
-export const incrementErrorCount = createAction<number>(
+export const incrementId = createAction<number>(
   errorStateManagerAction('INCREMENT_ERROR_COUNT')
 );
 
 export type Thunk = ActionCreator<ThunkAction<void, RootState, {}, RootAction>>;
 
 export const addError: Thunk = (error: Error) => (dispatch, getState) => {
-  dispatch(incrementErrorCount());
-  getState().errorStateManager.errors.errorQueue.unshift({
+  const state = Object.assign({}, getState().errorStateManager.errors);
+  dispatch(incrementId());
+  state.errorQueue.unshift({
     error,
     id: getState().errorStateManager.errorCount,
     isActive: true
   });
-  dispatch(allErrorsAction(getState().errorStateManager.errors));
+  dispatch(allErrorsAction(state));
+};
+
+export const addErrors: Thunk = (errors: any[]) => (dispatch, getState) => {
+  const state = Object.assign({}, getState().errorStateManager.errors);
+  errors.forEach(e => {
+    const error = new Error(`${e.message} ${JSON.stringify(e.extensions)}`);
+    dispatch(incrementId());
+    state.errorQueue.push({
+      error,
+      id: getState().errorStateManager.errorCount,
+      isActive: true
+    });
+  });
+  dispatch(allErrorsAction(state));
 };
 
 export const getNextError: Thunk = () => (
   dispatch,
   getState
 ): IAppError | undefined => {
-  const errors = getState().errorStateManager.errors;
-  const next = errors.errorQueue.pop();
-
+  const state = Object.assign({}, getState().errorStateManager.errors);
+  const next = state.errorQueue.pop();
   if (!next) {
     return;
   }
-  errors.allErrors.set(next.id, next);
-  dispatch(allErrorsAction(errors));
+  state.allErrors.set(next.id, next);
+
+  dispatch(allErrorsAction(state));
   return next;
 };
 
 export const closeError: Thunk = (id: number) => (dispatch, getState) => {
-  const state = getState().errorStateManager.errors;
+  const state = Object.assign({}, getState().errorStateManager.errors);
   const err = state.allErrors.get(id);
   if (!err) {
     throw new Error(`No such error ${id}`);
   }
   err.isActive = false;
-  dispatch(allErrorsAction(state));
+  const errorState: IErrorState = state;
+  dispatch(allErrorsAction(errorState));
 };
 
 export const containsErrors: Thunk = () => (dispatch, getState): boolean => {
@@ -58,5 +74,5 @@ export const containsErrors: Thunk = () => (dispatch, getState): boolean => {
 
 export default {
   allErrorsAction,
-  incrementErrorCount
+  incrementId
 };

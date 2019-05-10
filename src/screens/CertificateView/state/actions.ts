@@ -1,6 +1,6 @@
 import { IAuroraApiComponentProps } from 'components/AuroraApi';
 import { ICertificateResult } from 'models/certificates';
-import { addError } from 'models/StateManager/state/actions';
+import { addErrors } from 'models/StateManager/state/actions';
 import { ActionCreator } from 'redux';
 import { ThunkAction } from 'redux-thunk';
 import { createAction } from 'redux-ts-utils';
@@ -30,10 +30,7 @@ export const fetchCertificates: Thunk = () => async (
   dispatch(fetchCertificatesRequest(false));
 
   if (result && result.errors) {
-    result.errors.forEach(e => {
-      const err = new Error(`${e.message} ${e.extensions}`);
-      dispatch(addError(err));
-    });
+    dispatch(addErrors(result.errors));
   }
 
   if (result && result.data && result.data.certificates.edges.length > 0) {

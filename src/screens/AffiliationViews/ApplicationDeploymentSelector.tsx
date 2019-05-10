@@ -15,7 +15,8 @@ const ApplicationDeploymentSelector = ({
   allDeployments,
   fetchApplicationDeployments,
   match,
-  filterPathUrl
+  filterPathUrl,
+  findApplicationDeploymentDetails
 }: ApplicationDeploymentSelectorProps) => {
   const deployment = allDeployments.find(
     d => d.id === match.params.applicationDeploymentId
@@ -31,6 +32,7 @@ const ApplicationDeploymentSelector = ({
       deployment={deployment}
       fetchApplicationDeployments={fetchApplicationDeployments}
       filterPathUrl={filterPathUrl}
+      findApplicationDeploymentDetails={findApplicationDeploymentDetails}
     />
   );
 

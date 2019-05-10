@@ -8,7 +8,7 @@ import {
   IApplicationDeploymentDetails
 } from 'models/ApplicationDeployment';
 import { normalizeRawDeploymentSpec } from 'models/DeploymentSpec';
-import { addError } from 'models/StateManager/state/actions';
+import { addErrors } from 'models/StateManager/state/actions';
 import { IUserSettings } from 'models/UserSettings';
 import { createAction } from 'redux-ts-utils';
 import { findDeployTagForTemplate } from 'services/auroraApiClients';
@@ -42,10 +42,7 @@ export const refreshAffiliations: Thunk = (affiliations: string[]) => async (
     affiliations
   );
   if (result && result.errors) {
-    result.errors.forEach(e => {
-      const err = new Error(`${e.message} ${e.extensions}`);
-      dispatch(addError(err));
-    });
+    dispatch(addErrors(result.errors));
   }
   dispatch(refreshAffiliationsRequest(false));
 };
@@ -58,10 +55,7 @@ export const findAllApplicationDeployments: Thunk = (
     affiliations
   );
   if (result && result.errors) {
-    result.errors.forEach(e => {
-      const err = new Error(`${e.message} ${e.extensions}`);
-      dispatch(addError(err));
-    });
+    dispatch(addErrors(result.errors));
   }
   if (!result) {
     dispatch(findAllApplicationDeploymentsResponse([]));
@@ -110,10 +104,7 @@ export const getUserSettings: Thunk = () => async (
   const result = await clients.userSettingsClient.getUserSettings();
 
   if (result && result.errors) {
-    result.errors.forEach(e => {
-      const err = new Error(`${e.message} ${e.extensions}`);
-      dispatch(addError(err));
-    });
+    dispatch(addErrors(result.errors));
   }
   if (result && result.data) {
     return result.data.userSettings;
@@ -130,10 +121,7 @@ export const updateUserSettings: Thunk = (
   );
 
   if (result && result.errors) {
-    result.errors.forEach(e => {
-      const err = new Error(`${e.message} ${e.extensions}`);
-      dispatch(addError(err));
-    });
+    dispatch(addErrors(result.errors));
   }
   if (result && result.data) {
     return result.data.updateUserSettings;
@@ -152,10 +140,7 @@ export const findApplicationDeploymentDetails: Thunk = (id: string) => async (
   );
 
   if (result && result.errors) {
-    result.errors.forEach(e => {
-      const err = new Error(`${e.message} ${e.extensions}`);
-      dispatch(addError(err));
-    });
+    dispatch(addErrors(result.errors));
   }
 
   if (result && result.data && result.data.applicationDeploymentDetails) {
