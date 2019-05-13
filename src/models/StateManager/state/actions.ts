@@ -31,10 +31,13 @@ export const addError: Thunk = (error: Error) => (dispatch, getState) => {
 export const addErrors: Thunk = (errors: any[]) => (dispatch, getState) => {
   const state = Object.assign({}, getState().errorStateManager.errors);
   errors.forEach(e => {
-    const error = new Error(`${e.message} ${JSON.stringify(e.extensions)}`);
     dispatch(incrementId());
     state.errorQueue.push({
-      error,
+      error: {
+        stack: JSON.stringify(e.extensions),
+        message: e.message,
+        name: e.extensions
+      },
       id: getState().errorStateManager.errorCount,
       isActive: true
     });
@@ -52,7 +55,6 @@ export const getNextError: Thunk = () => (
     return;
   }
   state.allErrors.set(next.id, next);
-
   dispatch(allErrorsAction(state));
   return next;
 };
@@ -64,8 +66,22 @@ export const closeError: Thunk = (id: number) => (dispatch, getState) => {
     throw new Error(`No such error ${id}`);
   }
   err.isActive = false;
-  const errorState: IErrorState = state;
-  dispatch(allErrorsAction(errorState));
+  dispatch(allErrorsAction(state));
+};
+
+export const closeErrors: Thunk = () => (dispatch, getState) => {
+  const state = Object.assign({}, getState().errorStateManager.errors);
+
+  const setIsActiveFalse = (err: IAppError) =>
+    err.isActive === true && (err.isActive = false);
+
+  state.allErrors.forEach(err => {
+    setIsActiveFalse(err);
+  });
+  state.errorQueue.forEach(err => {
+    setIsActiveFalse(err);
+  });
+  dispatch(allErrorsAction(state));
 };
 
 export const containsErrors: Thunk = () => (dispatch, getState): boolean => {

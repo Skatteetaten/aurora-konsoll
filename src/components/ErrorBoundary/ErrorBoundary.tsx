@@ -7,12 +7,14 @@ interface IErrorBoundaryProps {
   getNextError: () => IAppError;
   containsErrors: () => boolean;
   closeError: (id: number) => void;
+  closeErrors: () => void;
   errors: IErrorState;
 }
 
 interface IErrorBoundaryState {
   currentError?: IAppError;
   currentErrors: IErrorState;
+  isCalloutVisible: boolean;
 }
 
 class ErrorBoundary extends React.Component<
@@ -24,7 +26,8 @@ class ErrorBoundary extends React.Component<
     currentErrors: {
       allErrors: new Map(),
       errorQueue: []
-    }
+    },
+    isCalloutVisible: false
   };
 
   public componentDidUpdate() {
@@ -54,9 +57,15 @@ class ErrorBoundary extends React.Component<
     }
   }
 
+  public changeCalloutVisability = () => {
+    this.setState(prevState => ({
+      isCalloutVisible: !prevState.isCalloutVisible
+    }));
+  };
+
   public render() {
-    const { children, closeError, errors } = this.props;
-    const { currentError } = this.state;
+    const { children, closeError, closeErrors, errors } = this.props;
+    const { currentError, isCalloutVisible } = this.state;
 
     return (
       <>
@@ -64,7 +73,10 @@ class ErrorBoundary extends React.Component<
           <ErrorPopup
             currentError={currentError}
             closeError={closeError}
+            closeErrors={closeErrors}
             errorCount={errors.errorQueue.length}
+            isCalloutVisible={isCalloutVisible}
+            changeCalloutVisability={this.changeCalloutVisability}
           />
         )}
         {children}

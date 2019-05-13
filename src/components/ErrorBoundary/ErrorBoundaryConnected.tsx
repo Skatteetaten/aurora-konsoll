@@ -1,6 +1,7 @@
 import {
   addError,
   closeError,
+  closeErrors,
   containsErrors,
   getNextError
 } from 'models/StateManager/state/actions';
@@ -21,6 +22,7 @@ export const ErrorBoundaryConnected = connect(
     addError: (error: Error) => addError(error),
     getNextError: () => getNextError(),
     containsErrors: () => containsErrors(),
-    closeError: (id: number) => closeError(id)
+    closeError: (id: number) => closeError(id),
+    closeErrors: () => closeErrors()
   }
 )(ErrorBoundary);
