@@ -18,26 +18,17 @@ interface IErrorPopupProps {
 let buttonElement: HTMLElement | null;
 
 const addProperties = (type: string) => {
-  const parsedType = JSON.parse(type);
-  const ownProps = Object.keys(parsedType);
-  let i = ownProps.length;
-  const resArray = new Array(i);
-  while (i--) {
-    resArray[i] = {
-      key: ownProps[i],
-      value: parsedType[ownProps[i]]
-    };
-  }
   const tableContent = () => {
-    return resArray.forEach(it => (
-      <tr>
-        <th>{it}</th>
-        <td>{resArray[it]}</td>
-      </tr>
-    ));
+    return new Array(type).map(it => {
+      return (
+        <tr key={`${it}`}>
+          <th>{it}</th>
+          <td>{type[it]}</td>
+        </tr>
+      );
+    });
   };
-
-  return <table>{tableContent}</table>;
+  return <table>{tableContent()}</table>;
 };
 
 const ErrorPopup = ({
@@ -68,16 +59,18 @@ const ErrorPopup = ({
       {isCalloutVisible && (
         <Callout
           target={buttonElement}
-          gapSpace={5}
+          gapSpace={2}
           directionalHint={Callout.POS_TOP_CENTER}
           color={Callout.ERROR}
           doNotLayer={false}
           truncated={true}
           overflowButtonAriaLabel="See more"
+          calloutMaxWidth={600}
         >
           <>
             {currentError.error.stack &&
               addProperties(currentError.error.stack)}
+            {currentError.error.name}
           </>
         </Callout>
       )}
@@ -91,19 +84,19 @@ const ErrorPopup = ({
           type={MessageBar.Type.error}
           isMultiline={true}
           actions={
-            <div>
-              <MessageBar.Button onClick={close}>
-                {hasMoreErrors ? 'Neste' : 'Lukk'}
-              </MessageBar.Button>
+            <div style={{ display: 'flex', alignItems: 'inherit' }}>
+              {callout()}
               {hasMoreErrors && (
                 <MessageBar.Button onClick={closeAll}>
                   Lukk alle
                 </MessageBar.Button>
               )}
+              <MessageBar.Button onClick={close}>
+                {hasMoreErrors ? 'Neste' : 'Lukk'}
+              </MessageBar.Button>
             </div>
           }
         >
-          {callout()}
           {currentError.error.message}
           {hasMoreErrors && <p>Nye feil: {errorCount}</p>}
         </MessageBar>

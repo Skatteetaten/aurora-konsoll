@@ -21,10 +21,10 @@ import LayoutConnected from 'components/Layout/Layout';
 import { AffiliationRouteProps } from './AffiliationViews/AffiliationViewValidator';
 import { CertificateConnected } from './CertificateView/CertificateConnected';
 import GoboUsageView from './GoboUsageView';
-import { NetdebugWithApi } from './NetdebugView/Netdebug';
 
 import { ErrorBoundaryConnected } from 'components/ErrorBoundary/ErrorBoundaryConnected';
 import { AffiliationViewValidatorConnected } from './AffiliationViews/AffiliationViewValidatorConnected';
+import { NetdebugConnected } from './NetdebugView/NetdebugConnected';
 
 export enum MenuType {
   DEPLOYMENTS,
@@ -153,7 +153,7 @@ class App extends React.Component<IAppProps, IAppState> {
                 <Route
                   exact={true}
                   path="/netdebug"
-                  component={NetdebugWithApi}
+                  component={NetdebugConnected}
                 />
                 <Route
                   exact={true}

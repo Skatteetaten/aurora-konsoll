@@ -30,6 +30,7 @@ import { IAcl, IWebsealState } from 'models/Webseal';
 import { ISchemasState } from 'screens/AffiliationViews/DatabaseView/state/reducers';
 import { IWebsealReduxState } from 'screens/AffiliationViews/WebsealView/state/reducers';
 import { ICertificateState } from 'screens/CertificateView/state/reducers';
+import { INetdebugResult } from 'services/auroraApiClients';
 import { IFilter } from 'services/DeploymentFilterService';
 import { IStartupState } from 'state/reducers';
 
@@ -407,6 +408,12 @@ export const aclFactory = Factory.Sync.makeFactory<IAcl>({
   anyOther: false,
   open: true,
   roles: []
+});
+
+export const netdebugResultFactory = Factory.Sync.makeFactory<INetdebugResult>({
+  failed: [],
+  open: [],
+  status: 'CLOSED'
 });
 
 export const websealStateFactory = Factory.Sync.makeFactory<IWebsealState>({

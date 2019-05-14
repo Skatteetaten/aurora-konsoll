@@ -9,9 +9,13 @@ import {
 } from 'models/ApplicationDeployment';
 import { normalizeRawDeploymentSpec } from 'models/DeploymentSpec';
 import { addErrors } from 'models/StateManager/state/actions';
+import { defaultTagsPagedGroup, ITagsPagedGroup } from 'models/Tag';
 import { IUserSettings } from 'models/UserSettings';
 import { createAction } from 'redux-ts-utils';
-import { findDeployTagForTemplate } from 'services/auroraApiClients';
+import {
+  findDeployTagForTemplate,
+  toTagsPaged
+} from 'services/auroraApiClients';
 import { RootAction, RootState } from 'store/types';
 
 const affiliationViewAction = (action: string) => `affiliationView/${action}`;
@@ -28,6 +32,10 @@ export const findAllApplicationDeploymentsRequest = createAction<boolean>(
   affiliationViewAction('FIND_ALL_APPLICATION_DEPLOYMENTS_REQUEST')
 );
 
+export const refreshApplicationDeploymentRequest = createAction<boolean>(
+  affiliationViewAction('REFRESH_APPLICATION_DEPLOYMENT_REQUEST')
+);
+
 export type Thunk = ActionCreator<
   ThunkAction<void, RootState, IAuroraApiComponentProps, RootAction>
 >;
@@ -42,7 +50,7 @@ export const refreshAffiliations: Thunk = (affiliations: string[]) => async (
     affiliations
   );
   if (result && result.errors) {
-    dispatch(addErrors(result.errors));
+    dispatch(addErrors(result.errors, result.name));
   }
   dispatch(refreshAffiliationsRequest(false));
 };
@@ -55,7 +63,7 @@ export const findAllApplicationDeployments: Thunk = (
     affiliations
   );
   if (result && result.errors) {
-    dispatch(addErrors(result.errors));
+    dispatch(addErrors(result.errors, result.name));
   }
   if (!result) {
     dispatch(findAllApplicationDeploymentsResponse([]));
@@ -104,7 +112,7 @@ export const getUserSettings: Thunk = () => async (
   const result = await clients.userSettingsClient.getUserSettings();
 
   if (result && result.errors) {
-    dispatch(addErrors(result.errors));
+    dispatch(addErrors(result.errors, result.name));
   }
   if (result && result.data) {
     return result.data.userSettings;
@@ -121,13 +129,139 @@ export const updateUserSettings: Thunk = (
   );
 
   if (result && result.errors) {
-    dispatch(addErrors(result.errors));
+    dispatch(addErrors(result.errors, result.name));
   }
   if (result && result.data) {
     return result.data.updateUserSettings;
   } else {
     return false;
   }
+};
+
+export const refreshApplicationDeployment: Thunk = (
+  applicationDeploymentId: string
+) => async (dispatch, getState, { clients }): Promise<boolean> => {
+  const result = await clients.applicationDeploymentClient.refreshApplicationDeployment(
+    applicationDeploymentId
+  );
+
+  if (result && result.errors) {
+    dispatch(addErrors(result.errors, result.name));
+  }
+
+  if (result && result.data) {
+    return true;
+  } else {
+    return false;
+  }
+};
+
+export const redeployWithVersion: Thunk = (
+  applicationDeploymentId: string,
+  version: string
+) => async (dispatch, getState, { clients }): Promise<boolean> => {
+  const result = await clients.applicationDeploymentClient.redeployWithVersion(
+    applicationDeploymentId,
+    version
+  );
+
+  if (result && result.errors) {
+    dispatch(addErrors(result.errors, result.name));
+  }
+
+  if (result && result.data) {
+    return true;
+  } else {
+    return false;
+  }
+};
+
+export const redeployWithCurrentVersion: Thunk = (
+  applicationDeploymentId: string
+) => async (dispatch, getState, { clients }): Promise<boolean> => {
+  const result = await clients.applicationDeploymentClient.redeployWithCurrentVersion(
+    applicationDeploymentId
+  );
+
+  if (result && result.errors) {
+    dispatch(addErrors(result.errors, result.name));
+  }
+
+  if (result && result.data) {
+    return result.data.redeployWithCurrentVersion;
+  } else {
+    return false;
+  }
+};
+
+export const findTagsPaged: Thunk = (
+  repository: string,
+  type: string,
+  first?: number,
+  cursor?: string
+) => async (dispatch, getState, { clients }) => {
+  const result = await clients.imageRepositoryClient.findTagsPaged(
+    repository,
+    type,
+    first,
+    cursor
+  );
+
+  if (result && result.errors) {
+    dispatch(addErrors(result.errors, result.name));
+  }
+
+  if (!result) {
+    return defaultTagsPagedGroup()[type];
+  }
+
+  const { imageRepositories } = result.data;
+
+  if (!(imageRepositories && imageRepositories.length > 0)) {
+    return defaultTagsPagedGroup()[type];
+  }
+  if (result && result.data) {
+    return toTagsPaged(imageRepositories[0].tags);
+  }
+};
+
+export const findGroupedTagsPaged: Thunk = (repository: string) => async (
+  dispatch,
+  getState,
+  { clients }
+) => {
+  const result = await clients.imageRepositoryClient.findGroupedTagsPaged(
+    repository
+  );
+
+  if (result && result.errors) {
+    dispatch(addErrors(result.errors, result.name));
+  }
+
+  if (!result) {
+    return defaultTagsPagedGroup();
+  }
+
+  const { imageRepositories } = result.data;
+
+  if (!(imageRepositories && imageRepositories.length > 0)) {
+    return defaultTagsPagedGroup();
+  }
+
+  const [mainRepo] = imageRepositories;
+
+  const normalizedTags: ITagsPagedGroup = {
+    auroraSnapshotVersion: toTagsPaged(mainRepo.auroraSnapshotVersion),
+    auroraVersion: toTagsPaged(mainRepo.auroraVersion),
+    bugfix: toTagsPaged(mainRepo.bugfix),
+    commitHash: toTagsPaged(mainRepo.commitHash),
+    latest: toTagsPaged(mainRepo.latest),
+    major: toTagsPaged(mainRepo.major),
+    minor: toTagsPaged(mainRepo.minor),
+    snapshot: toTagsPaged(mainRepo.snapshot)
+  };
+
+  return normalizedTags;
 };
 
 export const findApplicationDeploymentDetails: Thunk = (id: string) => async (
@@ -140,7 +274,7 @@ export const findApplicationDeploymentDetails: Thunk = (id: string) => async (
   );
 
   if (result && result.errors) {
-    dispatch(addErrors(result.errors));
+    dispatch(addErrors(result.errors, result.name));
   }
 
   if (result && result.data && result.data.applicationDeploymentDetails) {

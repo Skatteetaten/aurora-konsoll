@@ -1,5 +1,4 @@
-import { IUserAndAffiliations } from 'models/ApplicationDeployment';
-
+import { DocumentNode } from 'graphql';
 import GoboClient, { IGoboResult } from 'services/GoboClient';
 import {
   REDEPLOY_WITH_CURRENT_VERSION_MUTATION,
@@ -16,7 +15,7 @@ import {
   USER_AFFILIATIONS_QUERY
 } from './query';
 
-function formatName(user: string) {
+export function formatName(user: string) {
   const names = user.split(', ');
   if (names.length !== 2) {
     return user;
@@ -31,11 +30,13 @@ export class ApplicationDeploymentClient {
     this.client = client;
   }
 
+  // this.getDocumentName(
+
   public async redeployWithVersion(
     applicationDeploymentId: string,
     version: string
-  ): Promise<boolean> {
-    const result = await this.client.mutate<{ redeployWithVersion: boolean }>({
+  ): Promise<IGoboResult<{ redeployWithVersion: boolean }> | undefined> {
+    return await this.client.mutate<{ redeployWithVersion: boolean }>({
       mutation: REDEPLOY_WITH_VERSION_MUTATION,
       variables: {
         input: {
@@ -44,18 +45,12 @@ export class ApplicationDeploymentClient {
         }
       }
     });
-
-    if (result && result.data) {
-      return result.data.redeployWithVersion;
-    }
-
-    return false;
   }
 
   public async redeployWithCurrentVersion(
     applicationDeploymentId: string
-  ): Promise<boolean> {
-    const result = await this.client.mutate<{
+  ): Promise<IGoboResult<{ redeployWithCurrentVersion: boolean }> | undefined> {
+    return await this.client.mutate<{
       redeployWithCurrentVersion: boolean;
     }>({
       mutation: REDEPLOY_WITH_CURRENT_VERSION_MUTATION,
@@ -65,18 +60,19 @@ export class ApplicationDeploymentClient {
         }
       }
     });
-
-    if (result && result.data) {
-      return result.data.redeployWithCurrentVersion;
-    }
-
-    return false;
   }
 
   public async refreshApplicationDeployment(
     applicationDeploymentId: string
-  ): Promise<boolean> {
-    const result = await this.client.mutate<{
+  ): Promise<
+    IGoboResult<{ refreshApplicationDeployment: string }> | undefined
+  > {
+    // tslint:disable-next-line:no-console
+    console.log(
+      (REFRESH_APPLICATION_DEPLOYMENT_MUTATION as DocumentNode).definitions
+    );
+
+    return await this.client.mutate<{
       refreshApplicationDeployment: string;
     }>({
       mutation: REFRESH_APPLICATION_DEPLOYMENT_MUTATION,
@@ -86,12 +82,6 @@ export class ApplicationDeploymentClient {
         }
       }
     });
-
-    if (result && result.data) {
-      return true;
-    } else {
-      return false;
-    }
   }
 
   public async refreshAffiliations(
@@ -120,24 +110,12 @@ export class ApplicationDeploymentClient {
     });
   }
 
-  public async findUserAndAffiliations(): Promise<IUserAndAffiliations> {
-    const result = await this.client.query<IUserAffiliationsQuery>({
+  public async findUserAndAffiliations(): Promise<
+    IGoboResult<IUserAffiliationsQuery> | undefined
+  > {
+    return await this.client.query<IUserAffiliationsQuery>({
       query: USER_AFFILIATIONS_QUERY
     });
-
-    if (!result) {
-      return {
-        affiliations: [],
-        user: '',
-        id: ''
-      };
-    }
-
-    return {
-      affiliations: result.data.affiliations.edges.map(edge => edge.node.name),
-      user: formatName(result.data.currentUser.name),
-      id: result.data.currentUser.id
-    };
   }
 
   public async findAllApplicationDeployments(

@@ -28,7 +28,13 @@ export const addError: Thunk = (error: Error) => (dispatch, getState) => {
   dispatch(allErrorsAction(state));
 };
 
-export const addErrors: Thunk = (errors: any[]) => (dispatch, getState) => {
+export const addErrors: Thunk = (errors: any[], name?: string) => (
+  dispatch,
+  getState
+) => {
+  // tslint:disable-next-line:no-console
+  console.log(name);
+
   const state = Object.assign({}, getState().errorStateManager.errors);
   errors.forEach(e => {
     dispatch(incrementId());
@@ -36,7 +42,7 @@ export const addErrors: Thunk = (errors: any[]) => (dispatch, getState) => {
       error: {
         stack: JSON.stringify(e.extensions),
         message: e.message,
-        name: e.extensions
+        name: !!name ? `document: ${name}` : ''
       },
       id: getState().errorStateManager.errorCount,
       isActive: true

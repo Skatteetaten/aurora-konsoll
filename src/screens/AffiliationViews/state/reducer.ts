@@ -5,13 +5,15 @@ import { ActionType } from 'typesafe-actions';
 import actions, {
   findAllApplicationDeploymentsRequest,
   findAllApplicationDeploymentsResponse,
-  refreshAffiliationsRequest
+  refreshAffiliationsRequest,
+  refreshApplicationDeploymentRequest
 } from './actions';
 
 export type AffiliationViewsAction = ActionType<typeof actions>;
 
 export interface IAffiliationViewsState {
   readonly isRefreshingAffiliations: boolean;
+  readonly isRefreshApplicationDeployment: boolean;
   readonly allApplicationDeploymentsResult: IApplicationDeployment[];
   readonly isFetchingAllApplicationDeployments: boolean;
 }
@@ -19,6 +21,7 @@ export interface IAffiliationViewsState {
 const initialState = (): IAffiliationViewsState => {
   return {
     isRefreshingAffiliations: false,
+    isRefreshApplicationDeployment: false,
     allApplicationDeploymentsResult: [],
     isFetchingAllApplicationDeployments: false
   };
@@ -38,6 +41,10 @@ export const affiliationViewsReducer = reduceReducers<IAffiliationViewsState>(
     handleAction(
       refreshAffiliationsRequest,
       updateStateWithPayload('isRefreshingAffiliations')
+    ),
+    handleAction(
+      refreshApplicationDeploymentRequest,
+      updateStateWithPayload('isRefreshApplicationDeployment')
     ),
     handleAction(
       findAllApplicationDeploymentsResponse,

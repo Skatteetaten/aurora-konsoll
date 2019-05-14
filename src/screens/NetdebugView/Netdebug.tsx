@@ -17,7 +17,6 @@ const portValidator = /^(6553[0-5]|655[0-2]\d|65[0-4]\d\d|6[0-4]\d{3}|[1-5]\d{4}
 
 interface INetdebugState {
   hostnameValue: string;
-  isLoading: boolean;
   lastScan: string;
   netdebugStatus: string;
   portValue: string;
@@ -33,12 +32,14 @@ interface INetdebugState {
 
 interface INetdebugProps extends IAuroraApiComponentProps {
   className?: string;
+  findNetdebugStatus: (host: string, port: string) => void;
+  isFetching: boolean;
+  netdebugStatus: INetdebugResult;
 }
 
 class Netdebug extends React.Component<INetdebugProps, INetdebugState> {
   public state: INetdebugState = {
     hostnameValue: '',
-    isLoading: false,
     lastScan: '',
     netdebugStatus: '',
     portValue: '',
@@ -52,23 +53,20 @@ class Netdebug extends React.Component<INetdebugProps, INetdebugState> {
   };
 
   public async scanCall() {
-    const scanResult = await this.props.clients.netdebugClient.findNetdebugStatus(
+    await this.props.findNetdebugStatus(
       this.state.hostnameValue,
       this.state.portValue
     );
+
     this.setState(state => ({
-      isLoading: false,
       lastScan: `${state.hostnameValue}:${state.portValue}`,
-      netdebugStatus: scanResult.status,
-      parsedData: scanResult,
+      netdebugStatus: this.props.netdebugStatus.status,
+      parsedData: this.props.netdebugStatus,
       showCard: true
     }));
   }
 
   public onScanClicked = () => {
-    this.setState(() => ({
-      isLoading: true
-    }));
     this.scanCall();
   };
 
@@ -151,25 +149,23 @@ class Netdebug extends React.Component<INetdebugProps, INetdebugState> {
                 onClick={this.onScanClicked}
                 disabled={!canScan}
               >
-                {this.state.isLoading ? <Spinner /> : 'Scan'}
+                {this.props.isFetching ? <Spinner /> : 'Scan'}
               </Button>
             </div>
             <div className="card-wrapper">
-              {this.state.showCard &&
-                this.state.parsedData && (
-                  <CardInfo
-                    parsedData={this.state.parsedData}
-                    netdebugStatus={this.state.netdebugStatus}
-                    lastScan={this.state.lastScan}
-                    displayTableOnClicked={this.displayTableOnClicked}
-                  />
-                )}
+              {this.state.showCard && this.state.parsedData && (
+                <CardInfo
+                  parsedData={this.state.parsedData}
+                  netdebugStatus={this.state.netdebugStatus}
+                  lastScan={this.state.lastScan}
+                  displayTableOnClicked={this.displayTableOnClicked}
+                />
+              )}
             </div>
             <div className="table-wrapper">
-              {this.state.showTable &&
-                this.state.parsedData && (
-                  <Table parsedData={this.state.parsedData} />
-                )}
+              {this.state.showTable && this.state.parsedData && (
+                <Table parsedData={this.state.parsedData} />
+              )}
             </div>
           </div>
         </div>

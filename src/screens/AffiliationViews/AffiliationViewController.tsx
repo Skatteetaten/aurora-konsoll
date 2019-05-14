@@ -20,11 +20,11 @@ import {
   ApplicationDeploymentProvider,
   withApplicationDeployments
 } from './ApplicationDeploymentContext';
-import { default as ApplicationDeploymentSelectorBase } from './ApplicationDeploymentSelector';
+import { ApplicationDeploymentSelectorConnected } from './ApplicationDeploymentSelector';
 import MatrixView from './MatrixView/MatrixView';
 
 const ApplicationDeploymentSelector = withApplicationDeployments(
-  ApplicationDeploymentSelectorBase
+  ApplicationDeploymentSelectorConnected
 );
 
 interface IAffiliationViewControllerProps extends IAuroraApiComponentProps {

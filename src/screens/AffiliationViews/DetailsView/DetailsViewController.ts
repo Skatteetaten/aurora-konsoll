@@ -26,6 +26,19 @@ export interface IDetailsViewProps
   findApplicationDeploymentDetails: (
     id: string
   ) => IApplicationDeploymentDetails;
+  refreshApplicationDeployment: (applicationDeploymentId: string) => boolean;
+  redeployWithVersion: (
+    applicationDeploymentId: string,
+    version: string
+  ) => boolean;
+  redeployWithCurrentVersion: (applicationDeploymentId: string) => boolean;
+  findGroupedTagsPaged: (repository: string) => ITagsPagedGroup;
+  findTagsPaged: (
+    repository: string,
+    type: string,
+    first?: number,
+    cursor?: string
+  ) => ITagsPaged;
 }
 
 export interface IDetailsViewState {
@@ -82,7 +95,11 @@ export default class DetailsViewController extends Component {
   }
 
   public redeployWithVersion = () => {
-    const { clients, deployment } = this.component.props;
+    const {
+      deployment,
+      findApplicationDeploymentDetails,
+      redeployWithVersion
+    } = this.component.props;
     const { selectedTag } = this.component.state;
     if (!selectedTag) {
       // TODO: Error message
@@ -90,13 +107,13 @@ export default class DetailsViewController extends Component {
     }
 
     this.sm.loading.withLoading(['redeploy'], async () => {
-      const success = await clients.applicationDeploymentClient.redeployWithVersion(
+      const success = await redeployWithVersion(
         deployment.id,
         selectedTag.name
       );
       if (success) {
         this.component.props.fetchApplicationDeployments();
-        const deploymentDetails = await this.component.props.findApplicationDeploymentDetails(
+        const deploymentDetails = await findApplicationDeploymentDetails(
           deployment.id
         );
         this.component.setState({
@@ -108,28 +125,28 @@ export default class DetailsViewController extends Component {
   };
 
   public redeployWithCurrentVersion = () => {
-    const { clients, deployment } = this.component.props;
+    const {
+      deployment,
+      redeployWithCurrentVersion,
+      fetchApplicationDeployments
+    } = this.component.props;
     this.sm.loading.withLoading(['redeploy'], async () => {
-      const success = await clients.applicationDeploymentClient.redeployWithCurrentVersion(
-        deployment.id
-      );
+      const success = await redeployWithCurrentVersion(deployment.id);
       if (success) {
-        this.component.props.fetchApplicationDeployments();
+        fetchApplicationDeployments();
       }
     });
   };
 
   public refreshApplicationDeployment = () => {
     const {
-      clients,
       deployment,
-      fetchApplicationDeployments
+      fetchApplicationDeployments,
+      refreshApplicationDeployment
     } = this.component.props;
 
     this.sm.loading.withLoading(['update'], async () => {
-      const success = await clients.applicationDeploymentClient.refreshApplicationDeployment(
-        deployment.id
-      );
+      const success = await refreshApplicationDeployment(deployment.id);
 
       if (success) {
         fetchApplicationDeployments();
@@ -144,14 +161,14 @@ export default class DetailsViewController extends Component {
   };
 
   public loadMoreTags = () => {
-    const { clients, deployment } = this.component.props;
+    const { deployment, findTagsPaged } = this.component.props;
     const { selectedTagType } = this.component.state;
 
     const current: ITagsPaged = this.sm.tag.getTagsPaged(selectedTagType);
     const cursor = current.endCursor;
 
     this.sm.loading.withLoading(['fetchTags'], async () => {
-      const tagsPaged = await clients.imageRepositoryClient.findTagsPaged(
+      const tagsPaged = await findTagsPaged(
         deployment.repository,
         selectedTagType,
         15,
@@ -188,14 +205,13 @@ export default class DetailsViewController extends Component {
 
   public onMount = () => {
     const { id, repository } = this.component.props.deployment;
-    const { imageRepositoryClient } = this.component.props.clients;
 
     this.sm.loading.withLoading(['fetchTags', 'fetchDetails'], async () => {
       const deploymentDetailsResponse = this.component.props.findApplicationDeploymentDetails(
         id
       );
       if (repository) {
-        const tagsResponse = imageRepositoryClient.findGroupedTagsPaged(
+        const tagsResponse = this.component.props.findGroupedTagsPaged(
           repository
         );
         const [deploymentDetails, tagsPagedGroup] = await Promise.all([

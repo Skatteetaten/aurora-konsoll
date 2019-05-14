@@ -30,7 +30,7 @@ export const fetchCertificates: Thunk = () => async (
   dispatch(fetchCertificatesRequest(false));
 
   if (result && result.errors) {
-    dispatch(addErrors(result.errors));
+    dispatch(addErrors(result.errors, result.name));
   }
 
   if (result && result.data && result.data.certificates.edges.length > 0) {

@@ -12,6 +12,7 @@ interface IVariables {
 export interface IGoboResult<T> {
   data: T;
   errors?: GraphQLError[];
+  name: string;
 }
 
 interface IGoboClientOptions {
@@ -71,17 +72,10 @@ export default class GoboClient {
 
     try {
       const data = await res.json();
-      const errors: GraphQLError[] | undefined = data.errors;
-      // TODO: fjern og send med document
-      if (errors) {
-        errors.forEach(err => {
-          this.addError(err, this.getDocumentName(document.definitions));
-        });
-      }
-
       return {
         data: data.data,
-        errors: data.errors
+        errors: data.errors,
+        name: this.getDocumentName(document.definitions)
       };
     } catch (e) {
       this.addError(e);

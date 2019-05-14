@@ -41,7 +41,7 @@ export const fetchWebsealStates: Thunk = (affiliation: string) => async (
   };
 
   if (result && result.errors) {
-    dispatch(addErrors(result.errors));
+    dispatch(addErrors(result.errors, result.name));
   }
 
   if (result && result.data && result.data.affiliations.edges.length > 0) {
