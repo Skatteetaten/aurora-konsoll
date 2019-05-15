@@ -1,9 +1,8 @@
 import { IAppError, IErrorState } from 'models/StateManager/ErrorStateManager';
 import * as React from 'react';
-import ErrorPopup from './ErrorPopup';
+import { StyledErrorPopup } from './ErrorPopup';
 
 interface IErrorBoundaryProps {
-  addError: (error: Error) => void;
   getNextError: () => IAppError;
   containsErrors: () => boolean;
   closeError: (id: number) => void;
@@ -14,7 +13,7 @@ interface IErrorBoundaryProps {
 interface IErrorBoundaryState {
   currentError?: IAppError;
   currentErrors: IErrorState;
-  isCalloutVisible: boolean;
+  isExtraInfoVisable: boolean;
 }
 
 class ErrorBoundary extends React.Component<
@@ -27,7 +26,7 @@ class ErrorBoundary extends React.Component<
       allErrors: new Map(),
       errorQueue: []
     },
-    isCalloutVisible: false
+    isExtraInfoVisable: false
   };
 
   public componentDidUpdate() {
@@ -57,26 +56,26 @@ class ErrorBoundary extends React.Component<
     }
   }
 
-  public changeCalloutVisability = () => {
+  public changeExtraInfoVisability = () => {
     this.setState(prevState => ({
-      isCalloutVisible: !prevState.isCalloutVisible
+      isExtraInfoVisable: !prevState.isExtraInfoVisable
     }));
   };
 
   public render() {
     const { children, closeError, closeErrors, errors } = this.props;
-    const { currentError, isCalloutVisible } = this.state;
+    const { currentError, isExtraInfoVisable } = this.state;
 
     return (
       <>
         {currentError && (
-          <ErrorPopup
+          <StyledErrorPopup
             currentError={currentError}
             closeError={closeError}
             closeErrors={closeErrors}
             errorCount={errors.errorQueue.length}
-            isCalloutVisible={isCalloutVisible}
-            changeCalloutVisability={this.changeCalloutVisability}
+            isExtraInfoVisable={isExtraInfoVisable}
+            changeExtraInfoVisability={this.changeExtraInfoVisability}
           />
         )}
         {children}

@@ -16,7 +16,6 @@ describe('getCertificates', () => {
     serverMock.putResponse('getCertificates', getCertificates);
 
     const result = await certificateClient.getCertificates();
-    // expect(errorStateManager.errorCount).toEqual(0);
     expect(result).toMatchSnapshot();
   });
 });

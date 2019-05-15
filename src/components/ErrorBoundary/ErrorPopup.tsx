@@ -2,7 +2,6 @@ import * as React from 'react';
 import styled from 'styled-components';
 
 import Button from 'aurora-frontend-react-komponenter/Button';
-import Callout from 'aurora-frontend-react-komponenter/Callout';
 import MessageBar from 'aurora-frontend-react-komponenter/MessageBar';
 
 import { IAppError } from 'models/StateManager/ErrorStateManager';
@@ -12,23 +11,22 @@ interface IErrorPopupProps {
   closeError: (id: number) => void;
   closeErrors: () => void;
   errorCount: number;
-  isCalloutVisible: boolean;
-  changeCalloutVisability: () => void;
+  isExtraInfoVisable: boolean;
+  changeExtraInfoVisability: () => void;
+  className?: string;
 }
-let buttonElement: HTMLElement | null;
 
-const addProperties = (type: string) => {
-  const tableContent = () => {
-    return new Array(type).map(it => {
-      return (
-        <tr key={`${it}`}>
-          <th>{it}</th>
-          <td>{type[it]}</td>
-        </tr>
-      );
-    });
-  };
-  return <table>{tableContent()}</table>;
+const renderTableContent = (type: string) => {
+  const parsedType = JSON.parse(type);
+  const tableContents = Object.keys(parsedType).map(it => {
+    return (
+      <tr style={{ display: 'block' }} key={`${it}`}>
+        <th style={{ textTransform: 'capitalize' }}>{`${it}:`}</th>
+        <td>{parsedType[it]}</td>
+      </tr>
+    );
+  });
+  return tableContents;
 };
 
 const ErrorPopup = ({
@@ -36,72 +34,64 @@ const ErrorPopup = ({
   closeError,
   closeErrors,
   errorCount,
-  changeCalloutVisability,
-  isCalloutVisible
+  changeExtraInfoVisability,
+  isExtraInfoVisable,
+  className
 }: IErrorPopupProps) => {
-  const close = () => closeError(currentError.id);
-  const closeAll = () => closeErrors();
+  const close = () => {
+    closeError(currentError.id);
+  };
+  const closeAll = () => {
+    closeErrors();
+    changeExtraInfoVisability();
+  };
+
   const hasMoreErrors = errorCount > 0;
-
-  const callout = () => (
-    <div>
-      <span ref={spanElement => (buttonElement = spanElement)}>
-        <Button
-          buttonType="secondary"
-          icon="HelpOutline"
-          onClick={changeCalloutVisability}
-          color="black"
-        >
-          Vis mer informasjon
-        </Button>
-      </span>
-
-      {isCalloutVisible && (
-        <Callout
-          target={buttonElement}
-          gapSpace={2}
-          directionalHint={Callout.POS_TOP_CENTER}
-          color={Callout.ERROR}
-          doNotLayer={false}
-          truncated={true}
-          overflowButtonAriaLabel="See more"
-          calloutMaxWidth={600}
-        >
-          <>
-            {currentError.error.stack &&
-              addProperties(currentError.error.stack)}
-            {currentError.error.name}
-          </>
-        </Callout>
-      )}
-    </div>
-  );
-
   return (
-    <>
+    <div className={className}>
       <ErrorModal>
         <MessageBar
+          className="fitContent"
           type={MessageBar.Type.error}
           isMultiline={true}
           actions={
-            <div style={{ display: 'flex', alignItems: 'inherit' }}>
-              {callout()}
-              {hasMoreErrors && (
-                <MessageBar.Button onClick={closeAll}>
-                  Lukk alle
+            <div style={{ alignItems: 'inherit', width: '100%' }}>
+              <Button
+                buttonType="secondary"
+                icon="helpFilled"
+                onClick={changeExtraInfoVisability}
+                color="black"
+                style={{ paddingLeft: '14px' }}
+              >
+                Vis mer informasjon
+              </Button>
+              <div style={{ float: 'right' }}>
+                {hasMoreErrors && (
+                  <MessageBar.Button onClick={closeAll}>
+                    Lukk alle
+                  </MessageBar.Button>
+                )}
+                <MessageBar.Button onClick={close}>
+                  {hasMoreErrors ? 'Neste' : 'Lukk'}
                 </MessageBar.Button>
-              )}
-              <MessageBar.Button onClick={close}>
-                {hasMoreErrors ? 'Neste' : 'Lukk'}
-              </MessageBar.Button>
+              </div>
             </div>
           }
         >
           {currentError.error.message}
+          {isExtraInfoVisable && (
+            <table>
+              <tbody>
+                {currentError.error.stack &&
+                  renderTableContent(currentError.error.stack)}
+                {renderTableContent(currentError.error.name)}
+              </tbody>
+            </table>
+          )}
           {hasMoreErrors && <p>Nye feil: {errorCount}</p>}
         </MessageBar>
       </ErrorModal>
-    </>
+    </div>
   );
 };
 
@@ -114,6 +104,12 @@ const ErrorModal = styled.div`
   max-height: 300px;
   right: 20px;
   bottom: 20px;
+`;
+
+export const StyledErrorPopup = styled(ErrorPopup)`
+  .fitContent {
+    width: 'fit-content';
+  }
 `;
 
 export default ErrorPopup;

@@ -7,48 +7,34 @@ import { RootAction, RootState } from 'store/types';
 const errorStateManagerAction = (action: string) =>
   `errorStateManager/${action}`;
 
-export const allErrorsAction = createAction<IErrorState>(
-  errorStateManagerAction('ALL_ERRORS')
+export const errorsAction = createAction<IErrorState>(
+  errorStateManagerAction('ERRORS')
 );
 
-export const incrementId = createAction<number>(
-  errorStateManagerAction('INCREMENT_ERROR_COUNT')
+export const incrementErrorId = createAction<number>(
+  errorStateManagerAction('INCREMENT_ERROR_ID_COUNT')
 );
 
 export type Thunk = ActionCreator<ThunkAction<void, RootState, {}, RootAction>>;
-
-export const addError: Thunk = (error: Error) => (dispatch, getState) => {
-  const state = Object.assign({}, getState().errorStateManager.errors);
-  dispatch(incrementId());
-  state.errorQueue.unshift({
-    error,
-    id: getState().errorStateManager.errorCount,
-    isActive: true
-  });
-  dispatch(allErrorsAction(state));
-};
 
 export const addErrors: Thunk = (errors: any[], name?: string) => (
   dispatch,
   getState
 ) => {
-  // tslint:disable-next-line:no-console
-  console.log(name);
-
   const state = Object.assign({}, getState().errorStateManager.errors);
   errors.forEach(e => {
-    dispatch(incrementId());
+    dispatch(incrementErrorId());
     state.errorQueue.push({
       error: {
         stack: JSON.stringify(e.extensions),
         message: e.message,
-        name: !!name ? `document: ${name}` : ''
+        name: !!name ? `{"document": "${name}"}` : ''
       },
       id: getState().errorStateManager.errorCount,
       isActive: true
     });
   });
-  dispatch(allErrorsAction(state));
+  dispatch(errorsAction(state));
 };
 
 export const getNextError: Thunk = () => (
@@ -61,7 +47,7 @@ export const getNextError: Thunk = () => (
     return;
   }
   state.allErrors.set(next.id, next);
-  dispatch(allErrorsAction(state));
+  dispatch(errorsAction(state));
   return next;
 };
 
@@ -72,7 +58,7 @@ export const closeError: Thunk = (id: number) => (dispatch, getState) => {
     throw new Error(`No such error ${id}`);
   }
   err.isActive = false;
-  dispatch(allErrorsAction(state));
+  dispatch(errorsAction(state));
 };
 
 export const closeErrors: Thunk = () => (dispatch, getState) => {
@@ -87,7 +73,7 @@ export const closeErrors: Thunk = () => (dispatch, getState) => {
   state.errorQueue.forEach(err => {
     setIsActiveFalse(err);
   });
-  dispatch(allErrorsAction(state));
+  dispatch(errorsAction(state));
 };
 
 export const containsErrors: Thunk = () => (dispatch, getState): boolean => {
@@ -95,6 +81,6 @@ export const containsErrors: Thunk = () => (dispatch, getState): boolean => {
 };
 
 export default {
-  allErrorsAction,
-  incrementId
+  allErrorsAction: errorsAction,
+  incrementId: incrementErrorId
 };

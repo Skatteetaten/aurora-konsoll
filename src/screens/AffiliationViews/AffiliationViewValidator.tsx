@@ -25,7 +25,7 @@ interface IAffiliationViewValidatorProps extends AffiliationRouteProps {
   currentUser: IUserAndAffiliations;
   errors: IErrorState;
   isFetchingAffiliations: boolean;
-  addError: (error: Error) => void;
+  addErrors: (errors: any[]) => void;
   getNextError: () => void;
   closeError: (id: number) => void;
   refreshAffiliations: (affiliations: string[]) => void;
@@ -72,7 +72,24 @@ class AffiliationViewValidator extends React.Component<
   }
 
   public render() {
-    const { affiliation, currentUser, match, type, errors } = this.props;
+    const {
+      affiliation,
+      currentUser,
+      match,
+      type,
+      errors,
+      addErrors,
+      getNextError,
+      closeError,
+      refreshAffiliations,
+      isFetchingAffiliations,
+      findAllApplicationDeployments,
+      allApplicationDeployments,
+      isFetchingAllApplicationDeployments,
+      getUserSettings,
+      updateUserSettings,
+      findApplicationDeploymentDetails
+    } = this.props;
 
     if (currentUser.affiliations.length === 0) {
       return false;
@@ -110,23 +127,19 @@ class AffiliationViewValidator extends React.Component<
           matchUrl={match.url}
           updateUrlWithQuery={this.updateUrlWithQuery}
           errors={errors}
-          addError={this.props.addError}
-          getNextError={this.props.getNextError}
-          closeError={this.props.closeError}
-          refreshAffiliations={this.props.refreshAffiliations}
-          isFetchingAffiliations={this.props.isFetchingAffiliations}
-          findAllApplicationDeployments={
-            this.props.findAllApplicationDeployments
-          }
-          allApplicationDeployments={this.props.allApplicationDeployments}
+          addErrors={addErrors}
+          getNextError={getNextError}
+          closeError={closeError}
+          refreshAffiliations={refreshAffiliations}
+          isFetchingAffiliations={isFetchingAffiliations}
+          findAllApplicationDeployments={findAllApplicationDeployments}
+          allApplicationDeployments={allApplicationDeployments}
           isFetchingAllApplicationDeployments={
-            this.props.isFetchingAllApplicationDeployments
+            isFetchingAllApplicationDeployments
           }
-          getUserSettings={this.props.getUserSettings}
-          updateUserSettings={this.props.updateUserSettings}
-          findApplicationDeploymentDetails={
-            this.props.findApplicationDeploymentDetails
-          }
+          getUserSettings={getUserSettings}
+          updateUserSettings={updateUserSettings}
+          findApplicationDeploymentDetails={findApplicationDeploymentDetails}
         />
       );
     } else if (type === MenuType.DATABASE) {

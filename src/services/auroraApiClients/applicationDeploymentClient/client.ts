@@ -1,4 +1,3 @@
-import { DocumentNode } from 'graphql';
 import GoboClient, { IGoboResult } from 'services/GoboClient';
 import {
   REDEPLOY_WITH_CURRENT_VERSION_MUTATION,
@@ -29,8 +28,6 @@ export class ApplicationDeploymentClient {
   constructor(client: GoboClient) {
     this.client = client;
   }
-
-  // this.getDocumentName(
 
   public async redeployWithVersion(
     applicationDeploymentId: string,
@@ -67,11 +64,6 @@ export class ApplicationDeploymentClient {
   ): Promise<
     IGoboResult<{ refreshApplicationDeployment: string }> | undefined
   > {
-    // tslint:disable-next-line:no-console
-    console.log(
-      (REFRESH_APPLICATION_DEPLOYMENT_MUTATION as DocumentNode).definitions
-    );
-
     return await this.client.mutate<{
       refreshApplicationDeployment: string;
     }>({

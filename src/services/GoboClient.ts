@@ -3,16 +3,14 @@ import { DefinitionNode, DocumentNode, print } from 'graphql/language';
 
 import { v4 as uuid } from 'uuid';
 
-import { addError } from 'models/StateManager/state/actions';
-
 interface IVariables {
   [key: string]: any;
 }
 
 export interface IGoboResult<T> {
+  name: string;
   data: T;
   errors?: GraphQLError[];
-  name: string;
 }
 
 interface IGoboClientOptions {
@@ -78,8 +76,11 @@ export default class GoboClient {
         name: this.getDocumentName(document.definitions)
       };
     } catch (e) {
-      this.addError(e);
       return;
+      // return {
+      //   data: {},
+      //   name: this.getDocumentName(document.definitions)
+      // };
     }
   }
 
@@ -89,12 +90,5 @@ export default class GoboClient {
     );
 
     return names.length > 0 ? names[0] : '';
-  }
-
-  private addError(e: Error, documentName?: string) {
-    const err = !!documentName
-      ? new Error(e.message + ' document: ' + documentName)
-      : new Error(e.message);
-    addError(err);
   }
 }

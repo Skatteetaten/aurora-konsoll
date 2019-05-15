@@ -1,5 +1,5 @@
 import {
-  addError,
+  addErrors,
   closeError,
   getNextError
 } from 'models/StateManager/state/actions';
@@ -40,7 +40,7 @@ const mapStateToProps = (state: RootState) => ({
 export const AffiliationViewValidatorConnected = connect(
   mapStateToProps,
   {
-    addError: (error: Error) => addError(error),
+    addErrors: (errors: any[]) => addErrors(errors),
     getNextError: () => getNextError(),
     closeError: (id: number) => closeError(id),
     refreshAffiliations: (affiliations: string[]) =>

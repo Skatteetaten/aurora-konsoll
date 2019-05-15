@@ -2,29 +2,33 @@
 
 exports[`getDatabaseSchemas should fetch database schemas from GraphQL server 1`] = `
 Object {
-  "databaseSchemas": Array [
-    Object {
-      "affiliation": Object {
-        "name": "paas",
-      },
-      "applicationDeployment": null,
-      "createdBy": "default",
-      "createdDate": "+49635-05-22T19:10:00Z",
-      "databaseEngine": "ORACLE",
-      "id": "d83cdd47-4bfe-41b5-9271-doijadOIASD",
-      "jdbcUrl": "jdbc:oracle:thin:@localhost:1521/db",
-      "lastUsedDate": "+49635-05-24T19:13:20Z",
-      "name": "AOIJDOISJDASDAF",
-      "sizeInMb": 0.25,
-      "type": "MANAGED",
-      "users": Array [
-        Object {
-          "password": "lkdsmadkmsaLKDMMKDSM",
-          "type": "SCHEMA",
-          "username": "AOIJDOISJDASDAF",
+  "data": Object {
+    "databaseSchemas": Array [
+      Object {
+        "affiliation": Object {
+          "name": "paas",
         },
-      ],
-    },
-  ],
+        "applicationDeployment": null,
+        "createdBy": "default",
+        "createdDate": "+49635-05-22T19:10:00Z",
+        "databaseEngine": "ORACLE",
+        "id": "d83cdd47-4bfe-41b5-9271-doijadOIASD",
+        "jdbcUrl": "jdbc:oracle:thin:@localhost:1521/db",
+        "lastUsedDate": "+49635-05-24T19:13:20Z",
+        "name": "AOIJDOISJDASDAF",
+        "sizeInMb": 0.25,
+        "type": "MANAGED",
+        "users": Array [
+          Object {
+            "password": "lkdsmadkmsaLKDMMKDSM",
+            "type": "SCHEMA",
+            "username": "AOIJDOISJDASDAF",
+          },
+        ],
+      },
+    ],
+  },
+  "errors": undefined,
+  "name": "getDatabaseSchemas",
 }
 `;

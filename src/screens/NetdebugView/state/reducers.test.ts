@@ -1,12 +1,9 @@
 import each from 'jest-each';
 import { netdebugResultFactory } from 'testData/testDataBuilders';
-import {
-  fetchNetdebugStatusRequest,
-  fetchNetdebugStatusResponse
-} from './actions';
+import { fetchNetdebugStatusResponse } from './actions';
 import { netdebugViewReducer } from './reducer';
 
-describe('certificate reducer', () => {
+describe('netdebug reducer', () => {
   each([
     [
       {

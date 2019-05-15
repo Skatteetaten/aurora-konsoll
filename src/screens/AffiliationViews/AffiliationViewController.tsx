@@ -33,7 +33,7 @@ interface IAffiliationViewControllerProps extends IAuroraApiComponentProps {
   matchUrl: string;
   updateUrlWithQuery: (query: string) => void;
   errors: IErrorState;
-  addError: (error: Error) => void;
+  addErrors: (errors: any[]) => void;
   getNextError: () => void;
   closeError: (id: number) => void;
   refreshAffiliations: (affiliations: string[]) => void;
@@ -184,7 +184,7 @@ class AffiliationViewController extends React.Component<
   }
 
   public deleteFilter = async (filterName: string) => {
-    const { affiliation, addError, updateUserSettings } = this.props;
+    const { affiliation, addErrors, updateUserSettings } = this.props;
     const { allFilters } = this.state;
     const updatedFilters = this.deploymentFilterService.getOtherNonDefaultFilters(
       allFilters,
@@ -200,7 +200,7 @@ class AffiliationViewController extends React.Component<
           allFilters: updatedFilters
         });
       } else {
-        addError(new Error('Feil ved sletting av filter'));
+        addErrors([new Error('Feil ved sletting av filter')]);
       }
     }
   };
@@ -210,7 +210,7 @@ class AffiliationViewController extends React.Component<
       affiliation,
       updateUserSettings,
       updateUrlWithQuery,
-      addError
+      addErrors
     } = this.props;
     const { allFilters } = this.state;
     const updatedFilters = this.deploymentFilterService.getOtherNonDefaultFilters(
@@ -236,7 +236,7 @@ class AffiliationViewController extends React.Component<
           allFilters: updatedFilters
         });
       } else {
-        addError(new Error('Feil ved sletting av filter'));
+        addErrors([new Error('Feil ved sletting av filter')]);
       }
     } else {
       this.setState({

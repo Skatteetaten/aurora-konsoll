@@ -3,7 +3,7 @@ import {
   fetchNetdebugStatusResponse
 } from './actions';
 
-describe('netdebugView schema actions', () => {
+describe('netdebug actions', () => {
   it('should return type of action fetchNetdebugStatusRequest and payload', () => {
     expect(fetchNetdebugStatusRequest(true)).toEqual({
       payload: true,

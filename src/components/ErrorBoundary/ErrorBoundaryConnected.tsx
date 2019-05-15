@@ -1,5 +1,4 @@
 import {
-  addError,
   closeError,
   closeErrors,
   containsErrors,
@@ -19,7 +18,6 @@ const mapStateToProps = (state: RootState) => ({
 export const ErrorBoundaryConnected = connect(
   mapStateToProps,
   {
-    addError: (error: Error) => addError(error),
     getNextError: () => getNextError(),
     containsErrors: () => containsErrors(),
     closeError: (id: number) => closeError(id),

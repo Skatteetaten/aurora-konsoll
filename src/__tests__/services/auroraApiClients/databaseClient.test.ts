@@ -16,7 +16,6 @@ describe('getDatabaseSchemas', () => {
     serverMock.putResponse('getDatabaseSchemas', getDatabaseSchemas);
 
     const result = await databaseClient.getSchemas(['paas']);
-    // expect(errorStateManager.errorCount).toEqual(0);
     expect(result).toMatchSnapshot();
   });
 });
