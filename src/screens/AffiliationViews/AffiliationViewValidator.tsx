@@ -77,6 +77,7 @@ class AffiliationViewValidator extends React.Component<
       currentUser,
       match,
       type,
+
       errors,
       addErrors,
       getNextError,
@@ -88,7 +89,8 @@ class AffiliationViewValidator extends React.Component<
       isFetchingAllApplicationDeployments,
       getUserSettings,
       updateUserSettings,
-      findApplicationDeploymentDetails
+      findApplicationDeploymentDetails,
+      onAffiliationValidated
     } = this.props;
 
     if (currentUser.affiliations.length === 0) {
@@ -113,6 +115,7 @@ class AffiliationViewValidator extends React.Component<
           title={title}
           createLink={createLink}
           affiliations={currentUser.affiliations}
+          onSelectAffiliation={onAffiliationValidated}
         />
       );
     }

@@ -44,6 +44,8 @@ function getOptionLabel(imageTagType: ImageTagType): string {
       return 'Deploy spesifikk snapshot versjon som alltid skal kjøres.';
     case COMMIT_HASH:
       return 'Deploy commit hash.';
+    default:
+      return '';
   }
 }
 

@@ -10,7 +10,7 @@ interface IExternalProps {
   setDatabaseSchemaInput: (
     databaseSchemaInput: ICreateDatabaseSchemaInput
   ) => void;
-  setJdbcUserInput: (jdbcUser: IJdbcUser | {}) => void;
+  setJdbcUserInput: (jdbcUser: IJdbcUser) => void;
   databaseSchemaInput: ICreateDatabaseSchemaInput;
   onTestJdbcConnectionForUser: (jdbcUser: IJdbcUser) => void;
   testJdbcConnectionResponse: boolean;
@@ -36,7 +36,7 @@ const External = ({
     setJdbcUserInput({
       ...databaseSchemaInput.jdbcUser,
       [field]: value
-    });
+    } as IJdbcUser);
   };
 
   let jdbcUser: IJdbcUser;

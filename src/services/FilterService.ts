@@ -42,31 +42,45 @@ export default class FilterService {
     }));
   };
 
-  public removeSelectionTypeDuplicateValues = (allDeployments:  IApplicationDeployment[], type: SelectionType) => {
+  public removeSelectionTypeDuplicateValues = (
+    allDeployments: IApplicationDeployment[],
+    type: SelectionType
+  ) => {
     return allDeployments
-      .map(
-        deployment =>
-          type === SelectionType.Applications
-            ? deployment.name
-            : deployment.environment
+      .map(deployment =>
+        type === SelectionType.Applications
+          ? deployment.name
+          : deployment.environment
       )
       .filter((item, index, self) => self.indexOf(item) === index)
       .sort();
   };
 
-  public createUniqueSelectionNames = (allDeployments: IApplicationDeployment[]) => {
+  public createUniqueSelectionNames = (
+    allDeployments: IApplicationDeployment[]
+  ) => {
     return {
-      applications: this.removeSelectionTypeDuplicateValues(allDeployments, SelectionType.Applications),
-      environments: this.removeSelectionTypeDuplicateValues(allDeployments, SelectionType.Environments)
-    }
-  }
+      applications: this.removeSelectionTypeDuplicateValues(
+        allDeployments,
+        SelectionType.Applications
+      ),
+      environments: this.removeSelectionTypeDuplicateValues(
+        allDeployments,
+        SelectionType.Environments
+      )
+    };
+  };
 
-
-  public getDefaultFilterName = (allFilters: IApplicationDeploymentFilters[], affiliation: string) => {
+  public getDefaultFilterName = (
+    allFilters: IApplicationDeploymentFilters[],
+    affiliation: string
+  ) => {
     const defaultFilter = this.getDefaultFilter(allFilters, affiliation);
     return !!defaultFilter ? defaultFilter.name : undefined;
   };
 
-  public getDefaultFilter = (allFilters: IApplicationDeploymentFilters[], affiliation: string) => 
-    allFilters.find(f => f.affiliation === affiliation && f.default);
+  public getDefaultFilter = (
+    allFilters: IApplicationDeploymentFilters[],
+    affiliation: string
+  ) => allFilters.find(f => f.affiliation === affiliation && f.default);
 }

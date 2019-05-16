@@ -1,7 +1,10 @@
 import FilterService from './FilterService';
 
 import { SelectionType } from 'screens/AffiliationViews/MatrixView/Filter/Filter';
-import { applicationDeploymentFilterFactory, deploymentFactory } from 'testData/testDataBuilders';
+import {
+  applicationDeploymentFilterFactory,
+  deploymentFactory
+} from 'testData/testDataBuilders';
 
 describe('FilterService', () => {
   const filterService = new FilterService();
@@ -51,23 +54,36 @@ describe('FilterService', () => {
 
   it('remove selection type duplicate values', () => {
     const deployments = deploymentFactory.buildList(3);
-    const noDuplicates = filterService.removeSelectionTypeDuplicateValues(deployments, SelectionType.Applications);
+    const noDuplicates = filterService.removeSelectionTypeDuplicateValues(
+      deployments,
+      SelectionType.Applications
+    );
     expect(noDuplicates).toHaveLength(1);
   });
 
   it('get default filter name', () => {
     const defaultFilter = applicationDeploymentFilterFactory.build();
-    const notDefaultFilter = applicationDeploymentFilterFactory.build({ default: false});
+    const notDefaultFilter = applicationDeploymentFilterFactory.build({
+      default: false
+    });
 
-    const filterName = filterService.getDefaultFilterName([defaultFilter, notDefaultFilter], 'paas');
+    const filterName = filterService.getDefaultFilterName(
+      [defaultFilter, notDefaultFilter],
+      'paas'
+    );
     expect(filterName).toEqual(defaultFilter.name);
   });
 
   it('get default filter', () => {
     const defaultFilter = applicationDeploymentFilterFactory.build();
-    const notDefaultFilter = applicationDeploymentFilterFactory.build({ default: false});
+    const notDefaultFilter = applicationDeploymentFilterFactory.build({
+      default: false
+    });
 
-    const filterName = filterService.getDefaultFilter([defaultFilter, notDefaultFilter], 'paas');
-    expect(filterName).toEqual(defaultFilter);  
-  })
+    const filterName = filterService.getDefaultFilter(
+      [defaultFilter, notDefaultFilter],
+      'paas'
+    );
+    expect(filterName).toEqual(defaultFilter);
+  });
 });

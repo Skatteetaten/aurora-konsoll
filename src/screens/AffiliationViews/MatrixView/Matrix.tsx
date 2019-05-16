@@ -14,12 +14,15 @@ const Matrix = ({
   className,
   showSemanticVersion: showExactVersion
 }: IApplicationDeploymentContext & IMatrixProps) => {
-  const environments = deployments.reduce((acc, app) => {
-    if (acc.indexOf(app.environment) === -1) {
-      return acc.concat(app.environment);
-    }
-    return acc;
-  }, [' ']);
+  const environments = deployments.reduce(
+    (acc, app) => {
+      if (acc.indexOf(app.environment) === -1) {
+        return acc.concat(app.environment);
+      }
+      return acc;
+    },
+    [' ']
+  );
 
   const apps: IApplicationMap = deployments.reduce((acc, app) => {
     if (acc[app.name]) {

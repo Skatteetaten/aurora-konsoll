@@ -88,6 +88,7 @@ const PodStatus = ({
       <div className="g-pod-values">
         <a
           target="_blank"
+          rel="noopener noreferrer"
           href={findLink(pod, 'ocp_console_details')}
           title={pod.name}
         >

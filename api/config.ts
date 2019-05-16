@@ -15,6 +15,10 @@ const CLIENT_ID = env.CLIENT_ID || 'aurora-openshift-console-dev';
 const GOBO_URL =
   env.INTEGRATIONS_GOBO_URL || 'http://gobo.aurora.utv.paas.skead.no';
 
+const DOCKER_REGISTRY_FRONTEND_URL =
+  env.DOCKER_REGISTRY_FRONTEND_URL ||
+  'http://uil0paas-utv-registry01.skead.no:9090';
+
 const APPLICATION_NAME = env.APPLICATION_NAME || 'konsoll';
 
 const DBH_ENABLED = !!env.INTEGRATIONS_DBH_URL;
@@ -27,6 +31,7 @@ export {
   AUTHORIZATION_URI,
   PORT,
   GOBO_URL,
+  DOCKER_REGISTRY_FRONTEND_URL,
   DBH_ENABLED,
   SKAP_ENABLED
 };

@@ -10,6 +10,7 @@ import separatorImg from 'aurora-frontend-react-komponenter/TopBanner/assets/sep
 import Logo from 'aurora-frontend-react-komponenter/TopBanner/assets/ske-logo.svg';
 import palette from 'aurora-frontend-react-komponenter/utils/palette';
 import { IUserAndAffiliations } from 'models/ApplicationDeployment';
+import { ButtonLink } from 'components/ButtonLink';
 
 interface IHeaderProps {
   title: string;
@@ -45,9 +46,9 @@ const Header = ({ title, currentUser, className, children }: IHeaderProps) => {
               </>
             }
             renderContent={[
-              <a key="logout" onClick={logOut}>
+              <ButtonLink key="logout" onClick={logOut}>
                 Logg ut{' '}
-              </a>
+              </ButtonLink>
             ]}
           />
         </div>
@@ -128,6 +129,16 @@ export default styled(Header)`
       color: #1362ae;
       font-size: 32px;
       margin-left: 10px;
+    }
+
+    button {
+      padding: 14px;
+      width: 100%;
+      text-align: left;
+    }
+
+    button:hover {
+      background-color: ${palette.skeColor.whiteGrey};
     }
   }
 `;

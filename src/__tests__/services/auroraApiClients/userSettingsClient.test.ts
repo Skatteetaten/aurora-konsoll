@@ -13,7 +13,10 @@ afterAll(() => {
 
 describe('getUserSettings', () => {
   it('should fetch user settings from GraphQL server and normalize data', async () => {
-    serverMock.putResponse('getUserSettingsForAllAffiliations', getUserSettings);
+    serverMock.putResponse(
+      'getUserSettingsForAllAffiliations',
+      getUserSettings
+    );
 
     const result = await userSettingsClient.getUserSettings();
     expect(result).toMatchSnapshot();
@@ -22,16 +25,20 @@ describe('getUserSettings', () => {
 
 describe('updateUserSettings', () => {
   it('should update user settings to GraphQL server', async () => {
-    serverMock.putResponse('updateUserSettings', { "data": {"updateUserSettings": true } });
+    serverMock.putResponse('updateUserSettings', {
+      data: { updateUserSettings: true }
+    });
 
     const result = await userSettingsClient.updateUserSettings({
-      applicationDeploymentFilters: [{
-        name: 'my-filter',
-        affiliation: 'aurora',
-        default: true,
-        applications: ['app'],
-        environments: ['env']
-      }]
+      applicationDeploymentFilters: [
+        {
+          name: 'my-filter',
+          affiliation: 'aurora',
+          default: true,
+          applications: ['app'],
+          environments: ['env']
+        }
+      ]
     });
     expect(result).toBeTruthy();
     expect(result).toMatchSnapshot();

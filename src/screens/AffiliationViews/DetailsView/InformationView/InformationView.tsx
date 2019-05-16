@@ -9,6 +9,7 @@ import {
 import { ActiveDeploymentInformation } from './ActiveDeploymentInformation';
 import { DeploymentSpecInformation } from './DeploymentSpecInformation';
 import { GitAndBuildInformation } from './GitAndBuildInformation';
+import { ManagementInterface } from './ManagementInterface';
 import PodStatus from './PodStatus';
 import { ServiceLinks } from './ServiceLinks';
 import StatusCheckReportCard from './StatusCheckReportCard';
@@ -34,6 +35,10 @@ const InformationView = ({
   if (isFetchingDetails) {
     return <Spinner />;
   }
+
+  const hasManagementInterface =
+    !!deploymentSpec && !!deploymentSpec.management;
+
   return (
     <div className={className}>
       <div className="info-grid">
@@ -50,6 +55,12 @@ const InformationView = ({
           <h3>AuroraStatus for deployment</h3>
           <StatusCheckReportCard deployment={deployment} />
           <ServiceLinks serviceLinks={deploymentDetails.serviceLinks} />
+        </div>
+        <div>
+          <ManagementInterface
+            hasManagementInterface={hasManagementInterface}
+            details={deploymentDetails}
+          />
         </div>
       </div>
       <hr

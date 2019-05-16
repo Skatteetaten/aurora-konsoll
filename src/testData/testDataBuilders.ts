@@ -172,7 +172,8 @@ export const databaseSchemaViewFactory = Factory.Sync.makeFactory<
   lastUsedDate: '23.01.2019',
   applicationDeploymentsUses: 1,
   sizeInMb: 0.75,
-  type: 'MANAGED'
+  type: 'MANAGED',
+  jdbcUrl: 'jdbc:oracle:thin:@localhost:1521:db'
 });
 
 export const databaseSchemaFactory = Factory.Sync.makeFactory<IDatabaseSchema>({

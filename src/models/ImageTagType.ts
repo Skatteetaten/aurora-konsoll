@@ -27,5 +27,7 @@ export function findImageTagTypeName(type: ImageTagType): string {
       return 'snapshot';
     case ImageTagType.COMMIT_HASH:
       return 'commitHash';
+    default:
+      return '';
   }
 }

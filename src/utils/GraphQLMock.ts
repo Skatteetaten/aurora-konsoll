@@ -1,5 +1,5 @@
-import * as cors from 'cors';
-import * as express from 'express';
+import cors from 'cors';
+import express from 'express';
 import { Server } from 'http';
 import GoboClient from 'services/GoboClient';
 

@@ -39,8 +39,9 @@ export default function Label<T>({
           <Icon iconName={iconName || getIconName(exists || !!data)} />
         )}
       </span>
-      {children &&
-        data && <div className="label-content">{children(data)}</div>}
+      {children && data && (
+        <div className="label-content">{children(data)}</div>
+      )}
     </LabelWrapper>
   );
 }

@@ -2,6 +2,7 @@ import * as React from 'react';
 import styled from 'styled-components';
 
 import { InfoContentValues } from 'models/InfoContentValues';
+import { ExternalLink } from './ExternalLink';
 
 interface IInfoContentProps {
   style?: React.CSSProperties;
@@ -23,12 +24,28 @@ const InfoContent = ({
   const values = infoContentValues.get();
   return (
     <div className={className} style={style} id={id}>
-      {Object.keys(values).map(k => (
-        <dl key={k}>
-          <dt>{k}</dt>
-          <dd title={values[k]}>{values[k]}</dd>
-        </dl>
-      ))}
+      {Object.keys(values).map(k => {
+        const content = values[k];
+
+        return (
+          <dl key={k}>
+            <dt>{k}</dt>
+            {content.hasOwnProperty('link') ? (
+              <dd title={content.value}>
+                <ExternalLink
+                  href={content.link}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  {content.value}
+                </ExternalLink>
+              </dd>
+            ) : (
+              <dd title={content}>{content}</dd>
+            )}
+          </dl>
+        );
+      })}
     </div>
   );
 };

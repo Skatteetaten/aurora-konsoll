@@ -85,9 +85,10 @@ export default class GoboClient {
   }
 
   private getDocumentName(definitions: ReadonlyArray<DefinitionNode>): string {
-    const names = definitions.map((def: OperationDefinitionNode) =>
-      def.name ? def.name.value : ''
-    );
+    const names = definitions.map((def: DefinitionNode) => {
+      const operDef = def as OperationDefinitionNode;
+      return operDef.name ? operDef.name.value : '';
+    });
 
     return names.length > 0 ? names[0] : '';
   }

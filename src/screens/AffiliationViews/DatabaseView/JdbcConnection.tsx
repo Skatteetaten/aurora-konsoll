@@ -87,12 +87,14 @@ class JdbcConnection extends React.Component<
     } = this.props;
     const { jdcbTestState } = this.state;
 
-    const displayLoadingOrNotStarted = 
+    const displayLoadingOrNotStarted =
       jdcbTestState === JdcbTestState.LOADING ||
       jdcbTestState === JdcbTestState.NOT_STARTED;
 
-    const displaySuccess = !displayLoadingOrNotStarted && testJdbcConnectionResponse;
-    const displayFailure = !displayLoadingOrNotStarted && !testJdbcConnectionResponse;
+    const displaySuccess =
+      !displayLoadingOrNotStarted && testJdbcConnectionResponse;
+    const displayFailure =
+      !displayLoadingOrNotStarted && !testJdbcConnectionResponse;
 
     return (
       <div className={className}>
