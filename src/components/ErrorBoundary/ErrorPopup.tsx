@@ -43,7 +43,6 @@ const ErrorPopup = ({
   };
   const closeAll = () => {
     closeErrors();
-    changeExtraInfoVisability();
   };
 
   const hasMoreErrors = errorCount > 0;

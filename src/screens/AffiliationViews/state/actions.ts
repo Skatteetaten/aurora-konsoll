@@ -9,7 +9,7 @@ import {
 } from 'models/ApplicationDeployment';
 import { normalizeRawDeploymentSpec } from 'models/DeploymentSpec';
 import { addErrors } from 'models/StateManager/state/actions';
-import { defaultTagsPagedGroup, ITagsPagedGroup } from 'models/Tag';
+import { defaultTagsPagedGroup, ITagsPagedGroup, ITagsPaged } from 'models/Tag';
 import { IUserSettings } from 'models/UserSettings';
 import { createAction } from 'redux-ts-utils';
 import {
@@ -34,6 +34,38 @@ export const findAllApplicationDeploymentsRequest = createAction<boolean>(
 
 export const refreshApplicationDeploymentRequest = createAction<boolean>(
   affiliationViewAction('REFRESH_APPLICATION_DEPLOYMENT_REQUEST')
+);
+
+export const userSettingsResponse = createAction<IUserSettings>(
+  affiliationViewAction('USER_SETTINGS_RESPONSE')
+);
+
+export const updateUserSettingsRequest = createAction<boolean>(
+  affiliationViewAction('UPDATE_USER_SETTINGS_REQUEST')
+);
+
+export const refreshApplicationDeploymentResponse = createAction<boolean>(
+  affiliationViewAction('REFRESH_APPLICATION_DEPLOYMENT_RESPONSE')
+);
+
+export const redeployWithVersionResponse = createAction<boolean>(
+  affiliationViewAction('REDEPLOY_WITH_VERSION_RESPONSE')
+);
+
+export const redeployWithCurrentVersionResponse = createAction<boolean>(
+  affiliationViewAction('REDEPLOY_WITH_CURRENT_VERSION_RESPONSE')
+);
+
+export const applicationDeploymentDetailsResponse = createAction<
+  IApplicationDeploymentDetails
+>(affiliationViewAction('APPLICATION_DEPLOYMENT_DETAILS'));
+
+export const findTagsPagedResponse = createAction<ITagsPaged>(
+  affiliationViewAction('FIND_TAGS_PAGED_RESPONSE')
+);
+
+export const findGroupedTagsPagedResponse = createAction<ITagsPagedGroup>(
+  affiliationViewAction('FIND_GROUPED_TAGS_PAGED_RESPONSE')
 );
 
 export type Thunk = ActionCreator<
@@ -68,37 +100,40 @@ export const findAllApplicationDeployments: Thunk = (
   if (!result) {
     dispatch(findAllApplicationDeploymentsResponse([]));
   } else {
-    const r = result.data.applications.edges.reduce((acc, { node }) => {
-      const { applicationDeployments, imageRepository } = node;
-      const deployments = applicationDeployments.map(app => ({
-        affiliation: app.affiliation.name,
-        environment: app.environment,
-        id: app.id,
-        name: app.name,
-        permission: app.namespace.permission,
-        repository: imageRepository ? imageRepository.repository : '',
-        status: {
-          code: app.status.code,
-          reasons: app.status.reasons,
-          reports: app.status.reports
-        },
-        message: app.message,
-        time: app.time,
-        version: {
-          releaseTo: app.version.releaseTo,
-          auroraVersion: app.version.auroraVersion,
-          deployTag: {
-            lastModified: '',
-            name: findDeployTagForTemplate(
-              node.name,
-              app.version.deployTag.name
-            ),
-            type: app.version.deployTag.type
+    const r = result.data.applications.edges.reduce(
+      (acc: IApplicationDeployment[], { node }) => {
+        const { applicationDeployments, imageRepository } = node;
+        const deployments = applicationDeployments.map(app => ({
+          affiliation: app.affiliation.name,
+          environment: app.environment,
+          id: app.id,
+          name: app.name,
+          permission: app.namespace.permission,
+          repository: imageRepository ? imageRepository.repository : '',
+          status: {
+            code: app.status.code,
+            reasons: app.status.reasons,
+            reports: app.status.reports
+          },
+          message: app.message,
+          time: app.time,
+          version: {
+            releaseTo: app.version.releaseTo,
+            auroraVersion: app.version.auroraVersion,
+            deployTag: {
+              lastModified: '',
+              name: findDeployTagForTemplate(
+                node.name,
+                app.version.deployTag.name
+              ),
+              type: app.version.deployTag.type
+            }
           }
-        }
-      }));
-      return [...acc, ...deployments];
-    }, []);
+        }));
+        return [...acc, ...deployments];
+      },
+      []
+    );
     dispatch(findAllApplicationDeploymentsResponse(r));
   }
   dispatch(findAllApplicationDeploymentsRequest(false));
@@ -108,22 +143,22 @@ export const getUserSettings: Thunk = () => async (
   dispatch,
   getState,
   { clients }
-): Promise<IUserSettings> => {
+) => {
   const result = await clients.userSettingsClient.getUserSettings();
 
   if (result && result.errors) {
     dispatch(addErrors(result.errors, result.name));
   }
   if (result && result.data) {
-    return result.data.userSettings;
+    dispatch(userSettingsResponse(result.data.userSettings));
   } else {
-    return { applicationDeploymentFilters: [] };
+    dispatch(userSettingsResponse({ applicationDeploymentFilters: [] }));
   }
 };
 
 export const updateUserSettings: Thunk = (
   userSettings: IUserSettings
-) => async (dispatch, getState, { clients }): Promise<boolean> => {
+) => async (dispatch, getState, { clients }) => {
   const result = await clients.userSettingsClient.updateUserSettings(
     userSettings
   );
@@ -132,15 +167,15 @@ export const updateUserSettings: Thunk = (
     dispatch(addErrors(result.errors, result.name));
   }
   if (result && result.data) {
-    return result.data.updateUserSettings;
+    dispatch(updateUserSettingsRequest(result.data.updateUserSettings));
   } else {
-    return false;
+    dispatch(updateUserSettingsRequest(false));
   }
 };
 
 export const refreshApplicationDeployment: Thunk = (
   applicationDeploymentId: string
-) => async (dispatch, getState, { clients }): Promise<boolean> => {
+) => async (dispatch, getState, { clients }) => {
   const result = await clients.applicationDeploymentClient.refreshApplicationDeployment(
     applicationDeploymentId
   );
@@ -150,16 +185,16 @@ export const refreshApplicationDeployment: Thunk = (
   }
 
   if (result && result.data) {
-    return true;
+    dispatch(refreshApplicationDeploymentResponse(true));
   } else {
-    return false;
+    dispatch(refreshApplicationDeploymentResponse(false));
   }
 };
 
 export const redeployWithVersion: Thunk = (
   applicationDeploymentId: string,
   version: string
-) => async (dispatch, getState, { clients }): Promise<boolean> => {
+) => async (dispatch, getState, { clients }) => {
   const result = await clients.applicationDeploymentClient.redeployWithVersion(
     applicationDeploymentId,
     version
@@ -170,15 +205,15 @@ export const redeployWithVersion: Thunk = (
   }
 
   if (result && result.data) {
-    return true;
+    dispatch(redeployWithVersionResponse(true));
   } else {
-    return false;
+    dispatch(redeployWithVersionResponse(false));
   }
 };
 
 export const redeployWithCurrentVersion: Thunk = (
   applicationDeploymentId: string
-) => async (dispatch, getState, { clients }): Promise<boolean> => {
+) => async (dispatch, getState, { clients }) => {
   const result = await clients.applicationDeploymentClient.redeployWithCurrentVersion(
     applicationDeploymentId
   );
@@ -188,9 +223,11 @@ export const redeployWithCurrentVersion: Thunk = (
   }
 
   if (result && result.data) {
-    return result.data.redeployWithCurrentVersion;
+    dispatch(
+      redeployWithCurrentVersionResponse(result.data.redeployWithCurrentVersion)
+    );
   } else {
-    return false;
+    dispatch(redeployWithCurrentVersionResponse(false));
   }
 };
 
@@ -212,16 +249,16 @@ export const findTagsPaged: Thunk = (
   }
 
   if (!result) {
-    return defaultTagsPagedGroup()[type];
-  }
+    dispatch(findTagsPagedResponse(defaultTagsPagedGroup()[type]));
+  } else {
+    const { imageRepositories } = result.data;
 
-  const { imageRepositories } = result.data;
-
-  if (!(imageRepositories && imageRepositories.length > 0)) {
-    return defaultTagsPagedGroup()[type];
-  }
-  if (result && result.data) {
-    return toTagsPaged(imageRepositories[0].tags);
+    if (!(imageRepositories && imageRepositories.length > 0)) {
+      dispatch(findTagsPagedResponse(defaultTagsPagedGroup()[type]));
+    }
+    if (result && result.data) {
+      dispatch(findTagsPagedResponse(toTagsPaged(imageRepositories[0].tags)));
+    }
   }
 };
 
@@ -239,36 +276,36 @@ export const findGroupedTagsPaged: Thunk = (repository: string) => async (
   }
 
   if (!result) {
-    return defaultTagsPagedGroup();
+    dispatch(findGroupedTagsPagedResponse(defaultTagsPagedGroup()));
+  } else {
+    const { imageRepositories } = result.data;
+
+    if (!(imageRepositories && imageRepositories.length > 0)) {
+      dispatch(findGroupedTagsPagedResponse(defaultTagsPagedGroup()));
+    }
+
+    const [mainRepo] = imageRepositories;
+
+    const normalizedTags: ITagsPagedGroup = {
+      auroraSnapshotVersion: toTagsPaged(mainRepo.auroraSnapshotVersion),
+      auroraVersion: toTagsPaged(mainRepo.auroraVersion),
+      bugfix: toTagsPaged(mainRepo.bugfix),
+      commitHash: toTagsPaged(mainRepo.commitHash),
+      latest: toTagsPaged(mainRepo.latest),
+      major: toTagsPaged(mainRepo.major),
+      minor: toTagsPaged(mainRepo.minor),
+      snapshot: toTagsPaged(mainRepo.snapshot)
+    };
+
+    dispatch(findGroupedTagsPagedResponse(normalizedTags));
   }
-
-  const { imageRepositories } = result.data;
-
-  if (!(imageRepositories && imageRepositories.length > 0)) {
-    return defaultTagsPagedGroup();
-  }
-
-  const [mainRepo] = imageRepositories;
-
-  const normalizedTags: ITagsPagedGroup = {
-    auroraSnapshotVersion: toTagsPaged(mainRepo.auroraSnapshotVersion),
-    auroraVersion: toTagsPaged(mainRepo.auroraVersion),
-    bugfix: toTagsPaged(mainRepo.bugfix),
-    commitHash: toTagsPaged(mainRepo.commitHash),
-    latest: toTagsPaged(mainRepo.latest),
-    major: toTagsPaged(mainRepo.major),
-    minor: toTagsPaged(mainRepo.minor),
-    snapshot: toTagsPaged(mainRepo.snapshot)
-  };
-
-  return normalizedTags;
 };
 
 export const findApplicationDeploymentDetails: Thunk = (id: string) => async (
   dispatch,
   getState,
   { clients }
-): Promise<IApplicationDeploymentDetails> => {
+) => {
   const result = await clients.applicationDeploymentClient.findApplicationDeploymentDetails(
     id
   );
@@ -294,23 +331,35 @@ export const findApplicationDeploymentDetails: Thunk = (id: string) => async (
         {}
       );
     }
-
-    return {
-      buildTime,
-      gitInfo,
-      pods: podResources,
-      deploymentSpec,
-      serviceLinks
-    };
+    dispatch(
+      applicationDeploymentDetailsResponse({
+        buildTime,
+        gitInfo,
+        pods: podResources,
+        deploymentSpec,
+        serviceLinks
+      })
+    );
   } else {
-    return {
-      pods: [],
-      serviceLinks: []
-    };
+    dispatch(
+      applicationDeploymentDetailsResponse({
+        pods: [],
+        serviceLinks: []
+      })
+    );
   }
 };
 
 export default {
   refreshAffiliationsRequest,
-  findAllApplicationDeploymentsResponse
+  findAllApplicationDeploymentsResponse,
+  findAllApplicationDeploymentsRequest,
+  refreshApplicationDeploymentRequest,
+  userSettingsResponse,
+  updateUserSettingsRequest,
+  refreshApplicationDeploymentResponse,
+  redeployWithVersionResponse,
+  applicationDeploymentDetailsResponse,
+  findTagsPagedResponse,
+  findGroupedTagsPagedResponse
 };

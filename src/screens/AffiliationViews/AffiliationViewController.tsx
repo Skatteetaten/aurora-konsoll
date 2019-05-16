@@ -7,7 +7,7 @@ import {
   IApplicationDeployment,
   IApplicationDeploymentDetails
 } from 'models/ApplicationDeployment';
-import { IErrorState } from 'models/StateManager/ErrorStateManager';
+import { IErrorState, IAppError } from 'models/StateManager/ErrorStateManager';
 import {
   IApplicationDeploymentFilters,
   IUserSettings
@@ -34,18 +34,17 @@ interface IAffiliationViewControllerProps extends IAuroraApiComponentProps {
   updateUrlWithQuery: (query: string) => void;
   errors: IErrorState;
   addErrors: (errors: any[]) => void;
-  getNextError: () => void;
   closeError: (id: number) => void;
   refreshAffiliations: (affiliations: string[]) => void;
   findAllApplicationDeployments: (affiliations: string[]) => void;
   isFetchingAffiliations: boolean;
   allApplicationDeployments: IApplicationDeployment[];
   isFetchingAllApplicationDeployments: boolean;
-  getUserSettings: () => IUserSettings;
-  updateUserSettings: (userSettings: IUserSettings) => boolean;
-  findApplicationDeploymentDetails: (
-    id: string
-  ) => IApplicationDeploymentDetails;
+  getUserSettings: () => void;
+  userSettings: IUserSettings;
+  updateUserSettings: (userSettings: IUserSettings) => void;
+  isUpdatingUserSettings: boolean;
+  isRefreshingApplicationDeployment: boolean;
 }
 
 interface IAffiliationViewControllerState {
@@ -88,14 +87,14 @@ class AffiliationViewController extends React.Component<
   };
 
   public fetchApplicationDeploymentFilters = async (paramsExists: any) => {
-    const { affiliation, getUserSettings } = this.props;
-    const filters = await getUserSettings();
-    if (filters) {
+    const { affiliation, getUserSettings, userSettings } = this.props;
+    await getUserSettings();
+    if (userSettings) {
       this.setState({
-        allFilters: filters.applicationDeploymentFilters
+        allFilters: userSettings.applicationDeploymentFilters
       });
 
-      const filter = filters.applicationDeploymentFilters.find(
+      const filter = userSettings.applicationDeploymentFilters.find(
         f => f.affiliation === affiliation && f.default === true
       );
       if (filter && !paramsExists) {
@@ -184,7 +183,12 @@ class AffiliationViewController extends React.Component<
   }
 
   public deleteFilter = async (filterName: string) => {
-    const { affiliation, addErrors, updateUserSettings } = this.props;
+    const {
+      affiliation,
+      addErrors,
+      updateUserSettings,
+      isUpdatingUserSettings
+    } = this.props;
     const { allFilters } = this.state;
     const updatedFilters = this.deploymentFilterService.getOtherNonDefaultFilters(
       allFilters,
@@ -192,10 +196,10 @@ class AffiliationViewController extends React.Component<
       { name: filterName, applications: [], environments: [], default: false }
     );
     if (filterName) {
-      const response = await updateUserSettings({
+      await updateUserSettings({
         applicationDeploymentFilters: updatedFilters
       });
-      if (response) {
+      if (isUpdatingUserSettings) {
         this.setState({
           allFilters: updatedFilters
         });
@@ -210,7 +214,8 @@ class AffiliationViewController extends React.Component<
       affiliation,
       updateUserSettings,
       updateUrlWithQuery,
-      addErrors
+      addErrors,
+      isUpdatingUserSettings
     } = this.props;
     const { allFilters } = this.state;
     const updatedFilters = this.deploymentFilterService.getOtherNonDefaultFilters(
@@ -230,7 +235,7 @@ class AffiliationViewController extends React.Component<
         applicationDeploymentFilters: updatedFilters
       });
 
-      if (response) {
+      if (isUpdatingUserSettings) {
         this.setState({
           filter,
           allFilters: updatedFilters
@@ -265,8 +270,7 @@ class AffiliationViewController extends React.Component<
       matchPath,
       affiliation,
       isFetchingAllApplicationDeployments,
-      allApplicationDeployments,
-      findApplicationDeploymentDetails
+      allApplicationDeployments
     } = this.props;
     const {
       filterPathUrl,
@@ -301,8 +305,7 @@ class AffiliationViewController extends React.Component<
           refreshDeployments: this.refreshApplicationDeployments,
           fetchApplicationDeployments: () =>
             this.fetchApplicationDeployments(affiliation),
-          filterPathUrl,
-          findApplicationDeploymentDetails
+          filterPathUrl
         }}
       >
         <Route exact={true} path={`${matchPath}/deployments`}>

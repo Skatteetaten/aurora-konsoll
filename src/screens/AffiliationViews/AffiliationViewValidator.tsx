@@ -2,10 +2,9 @@ import * as React from 'react';
 
 import {
   IApplicationDeployment,
-  IApplicationDeploymentDetails,
   IUserAndAffiliations
 } from 'models/ApplicationDeployment';
-import { IErrorState } from 'models/StateManager/ErrorStateManager';
+import { IErrorState, IAppError } from 'models/StateManager/ErrorStateManager';
 import { IUserSettings } from 'models/UserSettings';
 import { RouteComponentProps } from 'react-router-dom';
 import { MenuType } from 'screens/App';
@@ -26,17 +25,16 @@ interface IAffiliationViewValidatorProps extends AffiliationRouteProps {
   errors: IErrorState;
   isFetchingAffiliations: boolean;
   addErrors: (errors: any[]) => void;
-  getNextError: () => void;
   closeError: (id: number) => void;
   refreshAffiliations: (affiliations: string[]) => void;
   findAllApplicationDeployments: (affiliations: string[]) => void;
-  getUserSettings: () => IUserSettings;
+  getUserSettings: () => void;
   allApplicationDeployments: IApplicationDeployment[];
   isFetchingAllApplicationDeployments: boolean;
-  updateUserSettings: (userSettings: IUserSettings) => boolean;
-  findApplicationDeploymentDetails: (
-    id: string
-  ) => IApplicationDeploymentDetails;
+  updateUserSettings: (userSettings: IUserSettings) => void;
+  isUpdatingUserSettings: boolean;
+  userSettings: IUserSettings;
+  isRefreshingApplicationDeployment: boolean;
 }
 
 class AffiliationViewValidator extends React.Component<
@@ -77,10 +75,8 @@ class AffiliationViewValidator extends React.Component<
       currentUser,
       match,
       type,
-
       errors,
       addErrors,
-      getNextError,
       closeError,
       refreshAffiliations,
       isFetchingAffiliations,
@@ -89,8 +85,10 @@ class AffiliationViewValidator extends React.Component<
       isFetchingAllApplicationDeployments,
       getUserSettings,
       updateUserSettings,
-      findApplicationDeploymentDetails,
-      onAffiliationValidated
+      onAffiliationValidated,
+      isUpdatingUserSettings,
+      userSettings,
+      isRefreshingApplicationDeployment
     } = this.props;
 
     if (currentUser.affiliations.length === 0) {
@@ -131,7 +129,6 @@ class AffiliationViewValidator extends React.Component<
           updateUrlWithQuery={this.updateUrlWithQuery}
           errors={errors}
           addErrors={addErrors}
-          getNextError={getNextError}
           closeError={closeError}
           refreshAffiliations={refreshAffiliations}
           isFetchingAffiliations={isFetchingAffiliations}
@@ -142,7 +139,9 @@ class AffiliationViewValidator extends React.Component<
           }
           getUserSettings={getUserSettings}
           updateUserSettings={updateUserSettings}
-          findApplicationDeploymentDetails={findApplicationDeploymentDetails}
+          isUpdatingUserSettings={isUpdatingUserSettings}
+          userSettings={userSettings}
+          isRefreshingApplicationDeployment={isRefreshingApplicationDeployment}
         />
       );
     } else if (type === MenuType.DATABASE) {

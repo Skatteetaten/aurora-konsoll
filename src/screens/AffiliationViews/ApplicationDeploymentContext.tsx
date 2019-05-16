@@ -15,9 +15,6 @@ export interface IApplicationDeploymentContext {
     deployment: IApplicationDeployment
   ) => React.ComponentType;
   filterPathUrl: string;
-  findApplicationDeploymentDetails: (
-    id: string
-  ) => IApplicationDeploymentDetails;
 }
 
 const ApplicationDeploymentContext = React.createContext<
@@ -32,10 +29,7 @@ const ApplicationDeploymentContext = React.createContext<
   fetchApplicationDeployments: () => {
     return;
   },
-  filterPathUrl: '',
-  findApplicationDeploymentDetails: (id: string) => {
-    return { pods: [], serviceLinks: [] };
-  }
+  filterPathUrl: ''
 });
 
 export const ApplicationDeploymentProvider =

@@ -3,6 +3,7 @@ import { ActionCreator } from 'redux';
 import { ThunkAction } from 'redux-thunk';
 import { createAction } from 'redux-ts-utils';
 import { RootAction, RootState } from 'store/types';
+import { IAuroraApiComponentProps } from 'components/AuroraApi';
 
 const errorStateManagerAction = (action: string) =>
   `errorStateManager/${action}`;
@@ -15,7 +16,13 @@ export const incrementErrorId = createAction<number>(
   errorStateManagerAction('INCREMENT_ERROR_ID_COUNT')
 );
 
-export type Thunk = ActionCreator<ThunkAction<void, RootState, {}, RootAction>>;
+export const nextErrorAction = createAction<IAppError | undefined>(
+  errorStateManagerAction('NEXT_ERROR')
+);
+
+export type Thunk = ActionCreator<
+  ThunkAction<void, RootState, IAuroraApiComponentProps, RootAction>
+>;
 
 export const addErrors: Thunk = (errors: any[], name?: string) => (
   dispatch,
@@ -37,18 +44,14 @@ export const addErrors: Thunk = (errors: any[], name?: string) => (
   dispatch(errorsAction(state));
 };
 
-export const getNextError: Thunk = () => (
-  dispatch,
-  getState
-): IAppError | undefined => {
+export const getNextError: Thunk = () => (dispatch, getState) => {
   const state = Object.assign({}, getState().errorStateManager.errors);
   const next = state.errorQueue.pop();
-  if (!next) {
-    return;
+  if (next) {
+    state.allErrors.set(next.id, next);
+    dispatch(errorsAction(state));
+    dispatch(nextErrorAction(next));
   }
-  state.allErrors.set(next.id, next);
-  dispatch(errorsAction(state));
-  return next;
 };
 
 export const closeError: Thunk = (id: number) => (dispatch, getState) => {
@@ -63,7 +66,7 @@ export const closeError: Thunk = (id: number) => (dispatch, getState) => {
 
 export const closeErrors: Thunk = () => (dispatch, getState) => {
   const state = Object.assign({}, getState().errorStateManager.errors);
-
+  console.log(state);
   const setIsActiveFalse = (err: IAppError) =>
     err.isActive === true && (err.isActive = false);
 
@@ -76,11 +79,8 @@ export const closeErrors: Thunk = () => (dispatch, getState) => {
   dispatch(errorsAction(state));
 };
 
-export const containsErrors: Thunk = () => (dispatch, getState): boolean => {
-  return getState().errorStateManager.errors.errorQueue.length > 0;
-};
-
 export default {
-  allErrorsAction: errorsAction,
-  incrementId: incrementErrorId
+  errorsAction,
+  incrementErrorId,
+  nextErrorAction
 };

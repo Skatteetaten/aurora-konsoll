@@ -10,25 +10,34 @@ import {
   findTagsPaged,
   redeployWithCurrentVersion,
   redeployWithVersion,
-  refreshApplicationDeployment
+  refreshApplicationDeployment,
+  findApplicationDeploymentDetails
 } from './state/actions';
+import { IApplicationDeploymentDetails } from 'models/ApplicationDeployment';
 
 interface IApplicationDeploymentSelectorConnectedProps {
   redeployWithNewVersion: (
     applicationDeploymentId: string,
     version: string
-  ) => boolean;
+  ) => void;
   refreshCurrentApplicationDeployment: (
     applicationDeploymentId: string
-  ) => boolean;
-  redeployWithCurrent: (applicationDeploymentId: string) => boolean;
-  getGroupedTagsPaged: (repository: string) => ITagsPagedGroup;
+  ) => void;
+  redeployWithCurrent: (applicationDeploymentId: string) => void;
+  getGroupedTagsPaged: (repository: string) => void;
   getTagsPaged: (
     repository: string,
     type: string,
     first?: number,
     cursor?: string
-  ) => ITagsPaged;
+  ) => void;
+  getApplicationDeploymentDetails: (id: string) => void;
+  findTagsPagedResponse: ITagsPaged;
+  findGroupedTagsPagedResult: ITagsPagedGroup;
+  isRefreshingApplicationDeployment: boolean;
+  redeployWithVersionResult: boolean;
+  redeployWithCurrentVersionResult: boolean;
+  applicationDeploymentDetails: IApplicationDeploymentDetails;
 }
 export type ApplicationDeploymentDetailsRoute = RouteComponentProps<{
   affiliation: string;
@@ -44,12 +53,18 @@ const ApplicationDeploymentSelector = ({
   fetchApplicationDeployments,
   match,
   filterPathUrl,
-  findApplicationDeploymentDetails,
+  getApplicationDeploymentDetails,
+  applicationDeploymentDetails,
   refreshCurrentApplicationDeployment,
   redeployWithNewVersion,
+  redeployWithVersionResult,
   redeployWithCurrent,
+  redeployWithCurrentVersionResult,
   getGroupedTagsPaged,
-  getTagsPaged
+  getTagsPaged,
+  findTagsPagedResponse,
+  findGroupedTagsPagedResult,
+  isRefreshingApplicationDeployment
 }: ApplicationDeploymentSelectorProps) => {
   const deployment = allDeployments.find(
     d => d.id === match.params.applicationDeploymentId
@@ -65,12 +80,18 @@ const ApplicationDeploymentSelector = ({
       deployment={deployment}
       fetchApplicationDeployments={fetchApplicationDeployments}
       filterPathUrl={filterPathUrl}
-      findApplicationDeploymentDetails={findApplicationDeploymentDetails}
+      findApplicationDeploymentDetails={getApplicationDeploymentDetails}
+      applicationDeploymentDetails={applicationDeploymentDetails}
       refreshApplicationDeployment={refreshCurrentApplicationDeployment}
+      isRefreshingApplicationDeployment={isRefreshingApplicationDeployment}
       redeployWithVersion={redeployWithNewVersion}
       redeployWithCurrentVersion={redeployWithCurrent}
+      redeployWithCurrentVersionResult={redeployWithCurrentVersionResult}
       findGroupedTagsPaged={getGroupedTagsPaged}
+      findGroupedTagsPagedResult={findGroupedTagsPagedResult}
       findTagsPaged={getTagsPaged}
+      findTagsPagedResponse={findTagsPagedResponse}
+      redeployWithVersionResult={redeployWithVersionResult}
     />
   );
 
@@ -79,7 +100,14 @@ const ApplicationDeploymentSelector = ({
 
 export default ApplicationDeploymentSelector;
 
-const mapStateToProps = (state: RootState) => ({});
+const mapStateToProps = (state: RootState) => ({
+  isRefreshingApplicationDeployment:
+    state.affiliationViews.isRefreshingApplicationDeployment,
+  redeployWithVersionResult: state.affiliationViews.redeployWithVersionResult,
+  findGroupedTagsPagedResult: state.affiliationViews.findGroupedTagsPagedResult,
+  applicationDeploymentDetails:
+    state.affiliationViews.applicationDeploymentDetails
+});
 
 export const ApplicationDeploymentSelectorConnected = connect(
   mapStateToProps,
@@ -99,6 +127,8 @@ export const ApplicationDeploymentSelectorConnected = connect(
       type: string,
       first?: number,
       cursor?: string
-    ) => findTagsPaged(repository, type, first, cursor)
+    ) => findTagsPaged(repository, type, first, cursor),
+    getApplicationDeploymentDetails: (id: string) =>
+      findApplicationDeploymentDetails(id)
   }
 )(ApplicationDeploymentSelector);

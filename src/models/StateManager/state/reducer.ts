@@ -1,13 +1,18 @@
 import { handleAction, reduceReducers } from 'redux-ts-utils';
 import { ActionType } from 'typesafe-actions';
-import { IErrorState } from '../ErrorStateManager';
-import actions, { errorsAction, incrementErrorId } from './actions';
+import { IErrorState, IAppError } from '../ErrorStateManager';
+import actions, {
+  errorsAction,
+  incrementErrorId,
+  nextErrorAction
+} from './actions';
 
 export type ErrorStateManagerAction = ActionType<typeof actions>;
 
 export interface IErrorStateManagerState {
   readonly errors: IErrorState;
   readonly errorCount: number;
+  readonly nextError?: IAppError;
 }
 
 function updateStateWithPayload(name: string) {
@@ -36,6 +41,7 @@ const initialState: IErrorStateManagerState = {
 export const errorStateManagerReducer = reduceReducers<IErrorStateManagerState>(
   [
     handleAction(errorsAction, updateStateWithPayload('errors')),
+    handleAction(nextErrorAction, updateStateWithPayload('nextError')),
     handleAction(incrementErrorId, incrementState('errorCount'))
   ],
   initialState

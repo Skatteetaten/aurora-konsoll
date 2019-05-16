@@ -3,11 +3,11 @@ import * as React from 'react';
 import { StyledErrorPopup } from './ErrorPopup';
 
 interface IErrorBoundaryProps {
-  getNextError: () => IAppError;
-  containsErrors: () => boolean;
+  getNextError: () => void;
   closeError: (id: number) => void;
   closeErrors: () => void;
   errors: IErrorState;
+  nextError?: IAppError;
 }
 
 interface IErrorBoundaryState {
@@ -21,7 +21,6 @@ class ErrorBoundary extends React.Component<
   IErrorBoundaryState
 > {
   public state: IErrorBoundaryState = {
-    currentError: undefined,
     currentErrors: {
       allErrors: new Map(),
       errorQueue: []
@@ -29,9 +28,9 @@ class ErrorBoundary extends React.Component<
     isExtraInfoVisable: false
   };
 
-  public componentDidUpdate() {
-    const { errors, getNextError } = this.props;
-    const { currentError, currentErrors } = this.state;
+  public async componentDidUpdate() {
+    const { errors, getNextError, nextError } = this.props;
+    const { currentErrors, currentError } = this.state;
 
     if (errors.errorQueue.length !== currentErrors.errorQueue.length) {
       fetch('/api/log', {
@@ -49,9 +48,10 @@ class ErrorBoundary extends React.Component<
       (errors.errorQueue.length > 0 && !currentError) ||
       (currentError && !currentError.isActive)
     ) {
+      getNextError();
       this.setState({
-        currentError: getNextError(),
-        currentErrors: errors
+        currentErrors: errors,
+        currentError: nextError
       });
     }
   }
@@ -64,8 +64,7 @@ class ErrorBoundary extends React.Component<
 
   public render() {
     const { children, closeError, closeErrors, errors } = this.props;
-    const { currentError, isExtraInfoVisable } = this.state;
-
+    const { isExtraInfoVisable, currentError } = this.state;
     return (
       <>
         {currentError && (

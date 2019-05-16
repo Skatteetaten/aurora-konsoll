@@ -10,12 +10,17 @@ export type NetdebugViewAction = ActionType<typeof actions>;
 
 export interface INetdebugViewState {
   readonly isFetching: boolean;
-  readonly netdebugStatus?: INetdebugResult;
+  readonly netdebugStatus: INetdebugResult;
 }
 
 const initialState = (): INetdebugViewState => {
   return {
-    isFetching: false
+    isFetching: false,
+    netdebugStatus: {
+      failed: [],
+      open: [],
+      status: ''
+    }
   };
 };
 

@@ -23,22 +23,26 @@ export interface IDetailsViewProps
   deployment: IApplicationDeployment;
   fetchApplicationDeployments: () => void;
   filterPathUrl: string;
-  findApplicationDeploymentDetails: (
-    id: string
-  ) => IApplicationDeploymentDetails;
-  refreshApplicationDeployment: (applicationDeploymentId: string) => boolean;
+  findApplicationDeploymentDetails: (id: string) => void;
+  applicationDeploymentDetails: IApplicationDeploymentDetails;
+  refreshApplicationDeployment: (applicationDeploymentId: string) => void;
   redeployWithVersion: (
     applicationDeploymentId: string,
     version: string
-  ) => boolean;
-  redeployWithCurrentVersion: (applicationDeploymentId: string) => boolean;
-  findGroupedTagsPaged: (repository: string) => ITagsPagedGroup;
+  ) => void;
+  redeployWithCurrentVersion: (applicationDeploymentId: string) => void;
+  findGroupedTagsPaged: (repository: string) => void;
   findTagsPaged: (
     repository: string,
     type: string,
     first?: number,
     cursor?: string
-  ) => ITagsPaged;
+  ) => void;
+  findTagsPagedResponse: ITagsPaged;
+  findGroupedTagsPagedResult: ITagsPagedGroup;
+  isRefreshingApplicationDeployment: boolean;
+  redeployWithVersionResult: boolean;
+  redeployWithCurrentVersionResult: boolean;
 }
 
 export interface IDetailsViewState {
@@ -69,13 +73,12 @@ export type DetailsViewComponent = Component<
   IDetailsViewState
 >;
 
-export default class DetailsViewController extends Component {
+export default class DetailsViewController {
   public sm: IStateManagers;
 
   private component: DetailsViewComponent;
 
   constructor(component: DetailsViewComponent) {
-    super(component);
     component.componentWillUnmount = () => {
       this.sm.tag.close();
       this.sm.loading.close();
@@ -98,7 +101,9 @@ export default class DetailsViewController extends Component {
     const {
       deployment,
       findApplicationDeploymentDetails,
-      redeployWithVersion
+      redeployWithVersion,
+      applicationDeploymentDetails,
+      redeployWithVersionResult
     } = this.component.props;
     const { selectedTag } = this.component.state;
     if (!selectedTag) {
@@ -107,17 +112,12 @@ export default class DetailsViewController extends Component {
     }
 
     this.sm.loading.withLoading(['redeploy'], async () => {
-      const success = await redeployWithVersion(
-        deployment.id,
-        selectedTag.name
-      );
-      if (success) {
+      await redeployWithVersion(deployment.id, selectedTag.name);
+      if (redeployWithVersionResult) {
         this.component.props.fetchApplicationDeployments();
-        const deploymentDetails = await findApplicationDeploymentDetails(
-          deployment.id
-        );
+        await findApplicationDeploymentDetails(deployment.id);
         this.component.setState({
-          deploymentDetails,
+          deploymentDetails: applicationDeploymentDetails,
           isInitialTagType: true
         });
       }
@@ -128,11 +128,12 @@ export default class DetailsViewController extends Component {
     const {
       deployment,
       redeployWithCurrentVersion,
-      fetchApplicationDeployments
+      fetchApplicationDeployments,
+      redeployWithCurrentVersionResult
     } = this.component.props;
     this.sm.loading.withLoading(['redeploy'], async () => {
-      const success = await redeployWithCurrentVersion(deployment.id);
-      if (success) {
+      await redeployWithCurrentVersion(deployment.id);
+      if (redeployWithCurrentVersionResult) {
         fetchApplicationDeployments();
       }
     });
@@ -142,40 +143,41 @@ export default class DetailsViewController extends Component {
     const {
       deployment,
       fetchApplicationDeployments,
-      refreshApplicationDeployment
+      refreshApplicationDeployment,
+      isRefreshingApplicationDeployment,
+      applicationDeploymentDetails
     } = this.component.props;
 
     this.sm.loading.withLoading(['update'], async () => {
-      const success = await refreshApplicationDeployment(deployment.id);
+      await refreshApplicationDeployment(deployment.id);
 
-      if (success) {
+      if (isRefreshingApplicationDeployment) {
         fetchApplicationDeployments();
-        const deploymentDetails = await this.component.props.findApplicationDeploymentDetails(
+        await this.component.props.findApplicationDeploymentDetails(
           deployment.id
         );
         this.component.setState({
-          deploymentDetails
+          deploymentDetails: applicationDeploymentDetails
         });
       }
     });
   };
 
   public loadMoreTags = () => {
-    const { deployment, findTagsPaged } = this.component.props;
+    const {
+      deployment,
+      findTagsPaged,
+      findTagsPagedResponse
+    } = this.component.props;
     const { selectedTagType } = this.component.state;
 
     const current: ITagsPaged = this.sm.tag.getTagsPaged(selectedTagType);
     const cursor = current.endCursor;
 
     this.sm.loading.withLoading(['fetchTags'], async () => {
-      const tagsPaged = await findTagsPaged(
-        deployment.repository,
-        selectedTagType,
-        15,
-        cursor
-      );
+      await findTagsPaged(deployment.repository, selectedTagType, 15, cursor);
 
-      this.sm.tag.updateTagsPaged(selectedTagType, tagsPaged);
+      this.sm.tag.updateTagsPaged(selectedTagType, findTagsPagedResponse);
     });
   };
 
@@ -206,22 +208,23 @@ export default class DetailsViewController extends Component {
   public onMount = () => {
     const { id, repository } = this.component.props.deployment;
 
+    const {
+      applicationDeploymentDetails,
+      findGroupedTagsPagedResult
+    } = this.component.props;
+
     this.sm.loading.withLoading(['fetchTags', 'fetchDetails'], async () => {
-      const deploymentDetailsResponse = this.component.props.findApplicationDeploymentDetails(
-        id
-      );
+      await this.component.props.findApplicationDeploymentDetails(id);
       if (repository) {
-        const tagsResponse = this.component.props.findGroupedTagsPaged(
-          repository
-        );
+        this.component.props.findGroupedTagsPaged(repository);
         const [deploymentDetails, tagsPagedGroup] = await Promise.all([
-          deploymentDetailsResponse,
-          tagsResponse
+          applicationDeploymentDetails,
+          findGroupedTagsPagedResult
         ]);
         this.sm.tag.setTagsPagedGroup(tagsPagedGroup);
         this.component.setState({ deploymentDetails });
       } else {
-        const deploymentDetails = await deploymentDetailsResponse;
+        const deploymentDetails = await applicationDeploymentDetails;
         this.component.setState({ deploymentDetails });
       }
     });

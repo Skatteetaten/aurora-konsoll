@@ -1,8 +1,4 @@
-import {
-  addErrors,
-  closeError,
-  getNextError
-} from 'models/StateManager/state/actions';
+import { addErrors, closeError } from 'models/StateManager/state/actions';
 import { IUserSettings } from 'models/UserSettings';
 import { connect } from 'react-redux';
 import { RootState } from 'store/types';
@@ -25,6 +21,8 @@ const getAllApplicationDeployments = (state: IAffiliationViewsState) =>
 const getAllApplicationDeploymentsStatus = (state: IAffiliationViewsState) =>
   state.isFetchingAllApplicationDeployments;
 
+const fetchUserSettings = (state: IAffiliationViewsState) => state.userSettings;
+
 const mapStateToProps = (state: RootState) => ({
   isFetchingAffiliations: getAffiliationsFetchingStatus(state.affiliationViews),
   allApplicationDeployments: getAllApplicationDeployments(
@@ -34,14 +32,19 @@ const mapStateToProps = (state: RootState) => ({
     state.affiliationViews
   ),
   currentUser: state.startup.currentUser,
-  errors: state.errorStateManager.errors
+  errors: state.errorStateManager.errors,
+  userSettings: fetchUserSettings(state.affiliationViews),
+  applicationDeploymentDetails:
+    state.affiliationViews.applicationDeploymentDetails,
+  isUpdatingUserSettings: state.affiliationViews.isUpdatingUserSettings,
+  isRefreshingApplicationDeployment:
+    state.affiliationViews.isRefreshingApplicationDeployment
 });
 
 export const AffiliationViewValidatorConnected = connect(
   mapStateToProps,
   {
     addErrors: (errors: any[]) => addErrors(errors),
-    getNextError: () => getNextError(),
     closeError: (id: number) => closeError(id),
     refreshAffiliations: (affiliations: string[]) =>
       refreshAffiliations(affiliations),
