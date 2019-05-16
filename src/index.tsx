@@ -76,14 +76,17 @@ async function init() {
 }
 
 function redirectToLoginPage(authorizationUri: string, clientId: string) {
+  console.log("test");
+  console.log(window.location.origin + '/api/accept-token');
   const params = new URLSearchParams();
   params.append('client_id', clientId);
-  params.append('redirect_uri', window.location.origin + '/accept-token');
+  params.append('redirect_uri', 'http://localhost:9090/api/accept-token');
   params.append('response_type', 'token');
   params.append('scope', '');
   params.append('state', '');
   const authorizationUrl = authorizationUri + '?' + params.toString();
-  window.location.replace(authorizationUrl);
+  console.log(authorizationUrl);
+  //window.location.replace(authorizationUrl);
 }
 
 init();

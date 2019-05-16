@@ -12,6 +12,10 @@ import {
   SKAP_ENABLED
 } from './config';
 
+const crypto = require('crypto'), 
+      algorithm = 'aes-256-ctr',
+      password = 'whatEverWorks';
+
 const app = express();
 app.use(
   '/api/graphql',
@@ -45,6 +49,30 @@ app.post('/api/log', (req, res) => {
   return res.sendStatus(200);
 });
 
+app.get('/api/accept-token', (req, res) => {
+  const accessToken = res.location.arguments.access_token;
+  const expires_in = res.location.arguments.expires_in;
+  console.log(accessToken);
+  console.log(encrypt(accessToken));
+  
+  res.redirect('/accept-token?expires_in=' + expires_in +'&access_token=' + encrypt(accessToken));
+});
+
 app.listen(PORT, () => {
   console.log(`started on port ${PORT}`);
 });
+
+function encrypt(text){
+  var cipher = crypto.createCipher(algorithm, password)
+  var crypted = cipher.update(text,'utf8','hex')
+  crypted += cipher.final('hex');
+  return crypted;
+}
+ 
+function decrypt(text){
+  var decipher = crypto.createDecipher(algorithm, password)
+  var dec = decipher.update(text,'hex','utf8')
+  dec += decipher.final('utf8');
+  return dec;
+}
+
