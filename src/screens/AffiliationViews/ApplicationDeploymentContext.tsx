@@ -1,9 +1,6 @@
 import * as React from 'react';
 
-import {
-  IApplicationDeployment,
-  IApplicationDeploymentDetails
-} from 'models/ApplicationDeployment';
+import { IApplicationDeployment } from 'models/ApplicationDeployment';
 import { Omit } from 'types/utils';
 
 export interface IApplicationDeploymentContext {

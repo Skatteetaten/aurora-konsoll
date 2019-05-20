@@ -47,7 +47,9 @@ export const addErrors: Thunk = (errors: any[], name?: string) => (
 export const getNextError: Thunk = () => (dispatch, getState) => {
   const state = Object.assign({}, getState().errorStateManager.errors);
   const next = state.errorQueue.pop();
-  if (next) {
+  if (!next) {
+    dispatch(nextErrorAction(undefined));
+  } else {
     state.allErrors.set(next.id, next);
     dispatch(errorsAction(state));
     dispatch(nextErrorAction(next));

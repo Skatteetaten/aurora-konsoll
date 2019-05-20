@@ -35,7 +35,8 @@ const initialState: IErrorStateManagerState = {
     allErrors: new Map(),
     errorQueue: []
   },
-  errorCount: 0
+  errorCount: 0,
+  nextError: undefined
 };
 
 export const errorStateManagerReducer = reduceReducers<IErrorStateManagerState>(

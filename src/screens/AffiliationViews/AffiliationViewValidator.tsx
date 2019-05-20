@@ -4,7 +4,7 @@ import {
   IApplicationDeployment,
   IUserAndAffiliations
 } from 'models/ApplicationDeployment';
-import { IErrorState, IAppError } from 'models/StateManager/ErrorStateManager';
+import { IErrorState } from 'models/StateManager/ErrorStateManager';
 import { IUserSettings } from 'models/UserSettings';
 import { RouteComponentProps } from 'react-router-dom';
 import { MenuType } from 'screens/App';

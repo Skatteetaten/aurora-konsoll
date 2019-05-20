@@ -7,8 +7,16 @@ import palette from 'aurora-frontend-react-komponenter/utils/palette';
 import { IAuroraApiComponentProps } from 'components/AuroraApi';
 
 import { IGoboUser } from 'services/auroraApiClients/goboUsageClient/query';
+import { getGoboUsers } from 'state/actions';
+import { connect } from 'react-redux';
+import { RootState } from 'store/types';
 
 const { skeColor } = palette;
+
+interface IGoboUsageViewProps extends IAuroraApiComponentProps {
+  goboUsers: IGoboUser[];
+  getGoboUsers: () => void;
+}
 
 interface IGoboUsageViewState {
   users: IGoboUser[];
@@ -16,7 +24,7 @@ interface IGoboUsageViewState {
 }
 
 class GoboUsageView extends React.Component<
-  IAuroraApiComponentProps,
+  IGoboUsageViewProps,
   IGoboUsageViewState
 > {
   public state: IGoboUsageViewState = {
@@ -25,9 +33,10 @@ class GoboUsageView extends React.Component<
   };
 
   public async getGoboUsers() {
-    const usersGobo: IGoboUser[] = await this.props.clients.goboUsageClient.getGoboUsers();
+    const { goboUsers, getGoboUsers } = this.props;
+    await getGoboUsers();
 
-    const count = usersGobo
+    const count = goboUsers
       .filter(it => it.name !== 'anonymous')
       .sort((a, b) => b.count - a.count)
       .slice(0, 10);
@@ -96,4 +105,13 @@ const Dialog = styled.div`
   }
 `;
 
-export default GoboUsageView;
+const mapStateToProps = (state: RootState) => ({
+  goboUsers: state.startup.goboUsers
+});
+
+export const GoboUsageViewConnected = connect(
+  mapStateToProps,
+  {
+    getGoboUsers: () => getGoboUsers()
+  }
+)(GoboUsageView);

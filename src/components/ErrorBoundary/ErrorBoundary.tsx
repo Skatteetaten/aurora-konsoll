@@ -11,8 +11,6 @@ interface IErrorBoundaryProps {
 }
 
 interface IErrorBoundaryState {
-  currentError?: IAppError;
-  currentErrors: IErrorState;
   isExtraInfoVisable: boolean;
 }
 
@@ -21,18 +19,13 @@ class ErrorBoundary extends React.Component<
   IErrorBoundaryState
 > {
   public state: IErrorBoundaryState = {
-    currentErrors: {
-      allErrors: new Map(),
-      errorQueue: []
-    },
     isExtraInfoVisable: false
   };
 
-  public async componentDidUpdate() {
+  public async componentDidUpdate(prevProps: IErrorBoundaryProps) {
     const { errors, getNextError, nextError } = this.props;
-    const { currentErrors, currentError } = this.state;
 
-    if (errors.errorQueue.length !== currentErrors.errorQueue.length) {
+    if (errors.errorQueue.length !== prevProps.errors.errorQueue.length) {
       fetch('/api/log', {
         body: JSON.stringify({
           location: window.location.pathname,
@@ -45,14 +38,10 @@ class ErrorBoundary extends React.Component<
       });
     }
     if (
-      (errors.errorQueue.length > 0 && !currentError) ||
-      (currentError && !currentError.isActive)
+      (errors.errorQueue.length > 0 && !nextError) ||
+      (nextError && !nextError.isActive)
     ) {
-      getNextError();
-      this.setState({
-        currentErrors: errors,
-        currentError: nextError
-      });
+      await getNextError();
     }
   }
 
@@ -63,13 +52,13 @@ class ErrorBoundary extends React.Component<
   };
 
   public render() {
-    const { children, closeError, closeErrors, errors } = this.props;
-    const { isExtraInfoVisable, currentError } = this.state;
+    const { children, closeError, closeErrors, errors, nextError } = this.props;
+    const { isExtraInfoVisable } = this.state;
     return (
       <>
-        {currentError && (
+        {nextError && (
           <StyledErrorPopup
-            currentError={currentError}
+            currentError={nextError}
             closeError={closeError}
             closeErrors={closeErrors}
             errorCount={errors.errorQueue.length}

@@ -20,7 +20,7 @@ import { withAuroraApi } from 'components/AuroraApi';
 import LayoutConnected from 'components/Layout/Layout';
 import { AffiliationRouteProps } from './AffiliationViews/AffiliationViewValidator';
 import { CertificateConnected } from './CertificateView/CertificateConnected';
-import GoboUsageView from './GoboUsageView';
+import { GoboUsageViewConnected } from './GoboUsageView';
 
 import { ErrorBoundaryConnected } from 'components/ErrorBoundary/ErrorBoundaryConnected';
 import { AffiliationViewValidatorConnected } from './AffiliationViews/AffiliationViewValidatorConnected';
@@ -122,7 +122,7 @@ class App extends React.Component<IAppProps, IAppState> {
     return (
       <StyledSkeBasis menuExpanded={isMenuExpanded}>
         <Konami timeout={10000}>
-          <GoboUsageView clients={this.props.clients} />
+          <GoboUsageViewConnected clients={this.props.clients} />
         </Konami>
         <ErrorBoundaryConnected>
           <LayoutConnected

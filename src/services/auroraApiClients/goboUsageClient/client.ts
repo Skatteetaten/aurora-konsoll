@@ -1,6 +1,5 @@
-import { errorStateManager } from 'models/StateManager/ErrorStateManager';
-import GoboClient from 'services/GoboClient';
-import { GOBO_USERS_USAGE_QUERY, IGoboUsage, IGoboUser } from './query';
+import GoboClient, { IGoboResult } from 'services/GoboClient';
+import { GOBO_USERS_USAGE_QUERY, IGoboUsage } from './query';
 
 export class GoboUsageClient {
   private client: GoboClient;
@@ -9,14 +8,9 @@ export class GoboUsageClient {
     this.client = client;
   }
 
-  public async getGoboUsers(): Promise<IGoboUser[]> {
-    const result = await this.client.query<IGoboUsage>({
+  public async getGoboUsers(): Promise<IGoboResult<IGoboUsage> | undefined> {
+    return await this.client.query<IGoboUsage>({
       query: GOBO_USERS_USAGE_QUERY
     });
-    if (result && result.data) {
-      return result.data.gobo.usage.users;
-    }
-    errorStateManager.addError(new Error(`Kunne ikke finne brukere`));
-    return [];
   }
 }

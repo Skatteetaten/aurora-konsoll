@@ -24,8 +24,11 @@ import {
   IUpdateDatabaseSchemaInputWithCreatedBy
 } from 'models/schemas';
 import { StatusCode } from 'models/Status';
-import { ITagsPagedGroup } from 'models/Tag';
-import { IApplicationDeploymentFilters } from 'models/UserSettings';
+import { ITagsPagedGroup, ITagsPaged } from 'models/Tag';
+import {
+  IApplicationDeploymentFilters,
+  IUserSettings
+} from 'models/UserSettings';
 import { IAcl, IWebsealState } from 'models/Webseal';
 import { ISchemasState } from 'screens/AffiliationViews/DatabaseView/state/reducers';
 import { IWebsealReduxState } from 'screens/AffiliationViews/WebsealView/state/reducers';
@@ -36,6 +39,8 @@ import { IStartupState } from 'state/reducers';
 import { INetdebugViewState } from 'screens/NetdebugView/state/reducer';
 import { IErrorState, IAppError } from 'models/StateManager/ErrorStateManager';
 import { IErrorStateManagerState } from 'models/StateManager/state/reducer';
+import { IAffiliationViewsState } from 'screens/AffiliationViews/state/reducer';
+import { IGoboUser } from 'services/auroraApiClients/goboUsageClient/query';
 
 const mountFactory = Factory.Sync.makeFactory<IMount>({
   exist: true,
@@ -283,6 +288,12 @@ export const tagsPagedGroupFactory = Factory.Sync.makeFactory<ITagsPagedGroup>({
   }
 });
 
+export const tagsPagedFactory = Factory.Sync.makeFactory<ITagsPaged>({
+  endCursor: 'test',
+  hasNextPage: false,
+  tags: []
+});
+
 export const databaseSchemaInputFactory = Factory.Sync.makeFactory<
   IDatabaseSchemaInput
 >({
@@ -422,8 +433,14 @@ export const errorStateManagerStateFactory = Factory.Sync.makeFactory<
   nextError: undefined
 });
 
+export const goboUsersFactory = Factory.Sync.makeFactory<IGoboUser>({
+  count: 1,
+  name: 'Bob'
+});
+
 export const startupFactory = Factory.Sync.makeFactory<IStartupState>({
-  currentUser: userAndAffiliationsFactory.build()
+  currentUser: userAndAffiliationsFactory.build(),
+  goboUsers: [goboUsersFactory.build()]
 });
 
 export const aclFactory = Factory.Sync.makeFactory<IAcl>({
@@ -459,4 +476,30 @@ export const websealReduxStateFactory = Factory.Sync.makeFactory<
 >({
   isFetchingWebsealStates: false,
   websealStates: []
+});
+
+export const goboUserFactory = Factory.Sync.makeFactory<IGoboUser>({
+  count: 1,
+  name: 'Bob'
+});
+
+export const userSettingsFactory = Factory.Sync.makeFactory<IUserSettings>({
+  applicationDeploymentFilters: [applicationDeploymentFilterFactory.build()]
+});
+
+export const affiliationViewsStateFactory = Factory.Sync.makeFactory<
+  IAffiliationViewsState
+>({
+  allApplicationDeploymentsResult: [deploymentFactory.build()],
+  applicationDeploymentDetails: deploymentDetailsFactory.build(),
+  findGroupedTagsPagedResult: tagsPagedGroupFactory.build(),
+  findTagsPagedResult: tagsPagedFactory.build(),
+  isFetchingAllApplicationDeployments: false,
+  isRefreshApplicationDeployment: false,
+  isRefreshingAffiliations: false,
+  isRefreshingApplicationDeployment: false,
+  isUpdatingUserSettings: false,
+  redeployWithCurrentVersionResult: false,
+  redeployWithVersionResult: false,
+  userSettings: userSettingsFactory.build()
 });

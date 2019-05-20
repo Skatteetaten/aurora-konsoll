@@ -12,13 +12,11 @@ describe('errorStateManager reducer', () => {
     [
       {
         name: 'errorsAction',
-
         item: errorStateManagerStateFactory.build()
       },
 
       {
         name: 'errors',
-
         item: errorsAction(errorStateFactory.build())
       },
 
@@ -30,13 +28,11 @@ describe('errorStateManager reducer', () => {
     [
       {
         name: 'incrementErrorId',
-
         item: errorStateManagerStateFactory.build()
       },
 
       {
         name: 'errorCount',
-
         item: incrementErrorId(1)
       },
 
@@ -47,7 +43,6 @@ describe('errorStateManager reducer', () => {
     [
       {
         name: 'nextErrorAction',
-
         item: errorStateManagerStateFactory.build()
       },
       {

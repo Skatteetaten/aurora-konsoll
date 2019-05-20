@@ -81,9 +81,10 @@ const ErrorPopup = ({
           {isExtraInfoVisable && (
             <table>
               <tbody>
-                {currentError.error.stack &&
+                {!!currentError.error.stack &&
                   renderTableContent(currentError.error.stack)}
-                {renderTableContent(currentError.error.name)}
+                {!!currentError.error.name &&
+                  renderTableContent(currentError.error.name)}
               </tbody>
             </table>
           )}

@@ -3,11 +3,8 @@ import * as React from 'react';
 import { Route } from 'react-router';
 
 import Spinner from 'components/Spinner';
-import {
-  IApplicationDeployment,
-  IApplicationDeploymentDetails
-} from 'models/ApplicationDeployment';
-import { IErrorState, IAppError } from 'models/StateManager/ErrorStateManager';
+import { IApplicationDeployment } from 'models/ApplicationDeployment';
+import { IErrorState } from 'models/StateManager/ErrorStateManager';
 import {
   IApplicationDeploymentFilters,
   IUserSettings
@@ -110,7 +107,7 @@ class AffiliationViewController extends React.Component<
 
   public refreshApplicationDeployments = async () => {
     const { affiliation, refreshAffiliations } = this.props;
-    refreshAffiliations([affiliation]);
+    await refreshAffiliations([affiliation]);
     await this.fetchApplicationDeployments(affiliation);
   };
 
@@ -231,7 +228,7 @@ class AffiliationViewController extends React.Component<
         applications: filter.applications,
         environments: filter.environments
       });
-      const response = await updateUserSettings({
+      await updateUserSettings({
         applicationDeploymentFilters: updatedFilters
       });
 

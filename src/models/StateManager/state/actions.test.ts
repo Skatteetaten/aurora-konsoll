@@ -18,9 +18,19 @@ describe('errorStateManager actions', () => {
 
   it('should return type of action nextErrorAction and payload', () => {
     expect(
-      nextErrorAction(appErrorFactory.build({ id: 5, isActive: false }))
+      nextErrorAction(
+        appErrorFactory.build({
+          id: 5,
+          error: new Error('test'),
+          isActive: false
+        })
+      )
     ).toEqual({
-      payload: appErrorFactory.build({ id: 5, isActive: false }),
+      payload: appErrorFactory.build({
+        id: 5,
+        error: new Error('test'),
+        isActive: false
+      }),
       type: 'errorStateManager/NEXT_ERROR'
     });
   });
