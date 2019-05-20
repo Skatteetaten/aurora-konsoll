@@ -34,6 +34,8 @@ import { INetdebugResult } from 'services/auroraApiClients';
 import { IFilter } from 'services/DeploymentFilterService';
 import { IStartupState } from 'state/reducers';
 import { INetdebugViewState } from 'screens/NetdebugView/state/reducer';
+import { IErrorState, IAppError } from 'models/StateManager/ErrorStateManager';
+import { IErrorStateManagerState } from 'models/StateManager/state/reducer';
 
 const mountFactory = Factory.Sync.makeFactory<IMount>({
   exist: true,
@@ -399,6 +401,25 @@ export const createDatabaseSchemaInputFactory = Factory.Sync.makeFactory<
     password: 'password',
     username: 'username'
   }
+});
+
+export const appErrorFactory = Factory.Sync.makeFactory<IAppError>({
+  error: new Error('error'),
+  id: 1,
+  isActive: false
+});
+
+export const errorStateFactory = Factory.Sync.makeFactory<IErrorState>({
+  errorQueue: [appErrorFactory.build()],
+  allErrors: new Map()
+});
+
+export const errorStateManagerStateFactory = Factory.Sync.makeFactory<
+  IErrorStateManagerState
+>({
+  errorCount: 0,
+  errors: errorStateFactory.build(),
+  nextError: undefined
 });
 
 export const startupFactory = Factory.Sync.makeFactory<IStartupState>({
