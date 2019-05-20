@@ -33,6 +33,7 @@ import { ICertificateState } from 'screens/CertificateView/state/reducers';
 import { INetdebugResult } from 'services/auroraApiClients';
 import { IFilter } from 'services/DeploymentFilterService';
 import { IStartupState } from 'state/reducers';
+import { INetdebugViewState } from 'screens/NetdebugView/state/reducer';
 
 const mountFactory = Factory.Sync.makeFactory<IMount>({
   exist: true,
@@ -415,6 +416,13 @@ export const netdebugResultFactory = Factory.Sync.makeFactory<INetdebugResult>({
   failed: [],
   open: [],
   status: 'CLOSED'
+});
+
+export const netdebugViewStateInitialState = Factory.Sync.makeFactory<
+  INetdebugViewState
+>({
+  isFetching: false,
+  netdebugStatus: netdebugResultFactory.build()
 });
 
 export const websealStateFactory = Factory.Sync.makeFactory<IWebsealState>({

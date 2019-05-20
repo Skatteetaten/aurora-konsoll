@@ -1,29 +1,50 @@
 import each from 'jest-each';
-import { netdebugResultFactory } from 'testData/testDataBuilders';
-import { fetchNetdebugStatusResponse } from './actions';
+import {
+  netdebugResultFactory,
+  netdebugViewStateInitialState
+} from 'testData/testDataBuilders';
+import {
+  fetchNetdebugStatusResponse,
+  fetchNetdebugStatusRequest
+} from './actions';
 import { netdebugViewReducer } from './reducer';
 
 describe('netdebug reducer', () => {
   each([
     [
       {
+        name: 'fetchNetdebugStatusRequest',
+        item: netdebugViewStateInitialState.build()
+      },
+      {
+        name: 'isFetching',
+        item: fetchNetdebugStatusRequest(true)
+      },
+      netdebugViewStateInitialState.build({
+        isFetching: true
+      })
+    ],
+    [
+      {
         name: 'fetchNetdebugStatusResponse',
-        item: netdebugResultFactory.build()
+        item: netdebugViewStateInitialState.build()
       },
       {
         name: 'netdebugStatus',
         item: fetchNetdebugStatusResponse(
           netdebugResultFactory.build({
             failed: [],
-            open: [{ message: 'message' }],
+            open: [{ message: 'beskjed' }],
             status: 'OPEN'
           })
         )
       },
-      netdebugResultFactory.build({
-        failed: [],
-        open: [{ message: 'message' }],
-        status: 'OPEN'
+      netdebugViewStateInitialState.build({
+        netdebugStatus: netdebugResultFactory.build({
+          failed: [],
+          open: [{ message: 'beskjed' }],
+          status: 'OPEN'
+        })
       })
     ]
   ]).describe.only('', (a, b, expected) => {
