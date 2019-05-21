@@ -49,6 +49,7 @@ interface IAffiliationViewControllerState {
   allFilters: IApplicationDeploymentFilters[];
   filterPathUrl: string;
   showSemanticVersion: boolean;
+  updatedFilters: IApplicationDeploymentFilters[];
 }
 
 class AffiliationViewController extends React.Component<
@@ -62,7 +63,8 @@ class AffiliationViewController extends React.Component<
     },
     allFilters: [],
     filterPathUrl: '',
-    showSemanticVersion: false
+    showSemanticVersion: false,
+    updatedFilters: []
   };
 
   private deploymentFilterService = new DeploymentFilterService();
@@ -80,12 +82,11 @@ class AffiliationViewController extends React.Component<
 
   public fetchApplicationDeployments = async (affiliation: string) => {
     const { findAllApplicationDeployments } = this.props;
-    findAllApplicationDeployments([affiliation]);
+    await findAllApplicationDeployments([affiliation]);
   };
 
-  public fetchApplicationDeploymentFilters = async (paramsExists: any) => {
-    const { affiliation, getUserSettings, userSettings } = this.props;
-    await getUserSettings();
+  public fetchApplicationDeploymentFilters = (paramsExists: any) => {
+    const { affiliation, userSettings } = this.props;
     if (userSettings) {
       this.setState({
         allFilters: userSettings.applicationDeploymentFilters
@@ -156,18 +157,20 @@ class AffiliationViewController extends React.Component<
     prevProps: IAffiliationViewControllerProps,
     prevState: IAffiliationViewControllerState
   ) {
-    this.clearFilterOnAffiliationChange(prevProps.affiliation);
-    this.updateQueryOnNewParams(prevState.filter);
-  }
-
-  public componentDidMount() {
-    const { affiliation } = this.props;
     const paramsExists = this.deploymentFilterService.isParamsDefined(
       window.location.search
     );
-    this.fetchApplicationDeployments(affiliation);
-    this.fetchApplicationDeploymentFilters(paramsExists);
+    this.clearFilterOnAffiliationChange(prevProps.affiliation);
+    this.updateQueryOnNewParams(prevState.filter);
+    if (prevProps.userSettings !== this.props.userSettings) {
+      this.fetchApplicationDeploymentFilters(paramsExists);
+    }
+  }
 
+  public async componentDidMount() {
+    const { affiliation, getUserSettings } = this.props;
+    await getUserSettings();
+    this.fetchApplicationDeployments(affiliation);
     const newFilters = this.deploymentFilterService.toFilter(
       window.location.search
     );
@@ -180,12 +183,7 @@ class AffiliationViewController extends React.Component<
   }
 
   public deleteFilter = async (filterName: string) => {
-    const {
-      affiliation,
-      addErrors,
-      updateUserSettings,
-      isUpdatingUserSettings
-    } = this.props;
+    const { affiliation, updateUserSettings } = this.props;
     const { allFilters } = this.state;
     const updatedFilters = this.deploymentFilterService.getOtherNonDefaultFilters(
       allFilters,
@@ -196,24 +194,11 @@ class AffiliationViewController extends React.Component<
       await updateUserSettings({
         applicationDeploymentFilters: updatedFilters
       });
-      if (isUpdatingUserSettings) {
-        this.setState({
-          allFilters: updatedFilters
-        });
-      } else {
-        addErrors([new Error('Feil ved sletting av filter')]);
-      }
     }
   };
 
   public updateFilter = async (filter: IFilter) => {
-    const {
-      affiliation,
-      updateUserSettings,
-      updateUrlWithQuery,
-      addErrors,
-      isUpdatingUserSettings
-    } = this.props;
+    const { affiliation, updateUserSettings, updateUrlWithQuery } = this.props;
     const { allFilters } = this.state;
     const updatedFilters = this.deploymentFilterService.getOtherNonDefaultFilters(
       allFilters,
@@ -231,15 +216,9 @@ class AffiliationViewController extends React.Component<
       await updateUserSettings({
         applicationDeploymentFilters: updatedFilters
       });
-
-      if (isUpdatingUserSettings) {
-        this.setState({
-          filter,
-          allFilters: updatedFilters
-        });
-      } else {
-        addErrors([new Error('Feil ved sletting av filter')]);
-      }
+      this.setState({
+        filter
+      });
     } else {
       this.setState({
         filter
@@ -267,7 +246,8 @@ class AffiliationViewController extends React.Component<
       matchPath,
       affiliation,
       isFetchingAllApplicationDeployments,
-      allApplicationDeployments
+      allApplicationDeployments,
+      isFetchingAffiliations
     } = this.props;
     const {
       filterPathUrl,
@@ -292,7 +272,6 @@ class AffiliationViewController extends React.Component<
       allApplicationDeployments.length > 0
         ? allApplicationDeployments[0].time
         : '';
-
     return (
       <ApplicationDeploymentProvider
         value={{
@@ -310,7 +289,7 @@ class AffiliationViewController extends React.Component<
             match && (
               <MatrixView
                 time={time}
-                isRefreshing={this.props.isFetchingAffiliations}
+                isRefreshing={isFetchingAffiliations}
                 refreshApplicationDeployments={
                   this.refreshApplicationDeployments
                 }

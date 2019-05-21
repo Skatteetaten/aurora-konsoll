@@ -167,8 +167,10 @@ export const updateUserSettings: Thunk = (
     dispatch(addErrors(result.errors, result.name));
   }
   if (result && result.data) {
+    dispatch(userSettingsResponse(userSettings));
     dispatch(updateUserSettingsRequest(result.data.updateUserSettings));
   } else {
+    dispatch(addErrors([new Error('Feil ved sletting av filter')]));
     dispatch(updateUserSettingsRequest(false));
   }
 };
