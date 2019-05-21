@@ -1,6 +1,6 @@
 import { IAppError, IErrorState } from 'models/StateManager/ErrorStateManager';
 import * as React from 'react';
-import { StyledErrorPopup } from './ErrorPopup';
+import ErrorPopup from './ErrorPopup';
 
 interface IErrorBoundaryProps {
   getNextError: () => void;
@@ -57,7 +57,7 @@ class ErrorBoundary extends React.Component<
     return (
       <>
         {nextError && (
-          <StyledErrorPopup
+          <ErrorPopup
             currentError={nextError}
             closeError={closeError}
             closeErrors={closeErrors}

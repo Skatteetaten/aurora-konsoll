@@ -9,7 +9,8 @@ const composeEnhancers =
   (window as any).__REDUX_DEVTOOLS_EXTENSION_COMPOSE__
     ? (window as any).__REDUX_DEVTOOLS_EXTENSION_COMPOSE__({
         serialize: true,
-        latency: 0
+        latency: 0,
+        features: { persist: false }
       })
     : compose;
 

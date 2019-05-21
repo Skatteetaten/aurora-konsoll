@@ -47,51 +47,48 @@ const ErrorPopup = ({
 
   const hasMoreErrors = errorCount > 0;
   return (
-    <div className={className}>
-      <ErrorModal>
-        <MessageBar
-          className="fitContent"
-          type={MessageBar.Type.error}
-          isMultiline={true}
-          actions={
-            <div style={{ alignItems: 'inherit', width: '100%' }}>
-              <Button
-                buttonType="secondary"
-                icon="helpFilled"
-                onClick={changeExtraInfoVisability}
-                color="black"
-                style={{ paddingLeft: '14px' }}
-              >
-                Vis mer informasjon
-              </Button>
-              <div style={{ float: 'right' }}>
-                {hasMoreErrors && (
-                  <MessageBar.Button onClick={closeAll}>
-                    Lukk alle
-                  </MessageBar.Button>
-                )}
-                <MessageBar.Button onClick={close}>
-                  {hasMoreErrors ? 'Neste' : 'Lukk'}
+    <ErrorModal>
+      <MessageBar
+        type={MessageBar.Type.error}
+        isMultiline={true}
+        actions={
+          <div style={{ alignItems: 'inherit', width: '100%' }}>
+            <Button
+              buttonType="secondary"
+              icon="helpFilled"
+              onClick={changeExtraInfoVisability}
+              color="black"
+              style={{ paddingLeft: '14px' }}
+            >
+              Vis mer informasjon
+            </Button>
+            <div style={{ float: 'right' }}>
+              {hasMoreErrors && (
+                <MessageBar.Button onClick={closeAll}>
+                  Lukk alle
                 </MessageBar.Button>
-              </div>
+              )}
+              <MessageBar.Button onClick={close}>
+                {hasMoreErrors ? 'Neste' : 'Lukk'}
+              </MessageBar.Button>
             </div>
-          }
-        >
-          {currentError.error.message}
-          {isExtraInfoVisable && (
-            <table>
-              <tbody>
-                {!!currentError.error.stack &&
-                  renderTableContent(currentError.error.stack)}
-                {!!currentError.error.name &&
-                  renderTableContent(currentError.error.name)}
-              </tbody>
-            </table>
-          )}
-          {hasMoreErrors && <p>Nye feil: {errorCount}</p>}
-        </MessageBar>
-      </ErrorModal>
-    </div>
+          </div>
+        }
+      >
+        {currentError.error.message}
+        {isExtraInfoVisable && (
+          <table>
+            <tbody>
+              {!!currentError.error.stack &&
+                renderTableContent(currentError.error.stack)}
+              {!!currentError.error.name &&
+                renderTableContent(currentError.error.name)}
+            </tbody>
+          </table>
+        )}
+        {hasMoreErrors && <p>Nye feil: {errorCount}</p>}
+      </MessageBar>
+    </ErrorModal>
   );
 };
 
@@ -104,12 +101,6 @@ const ErrorModal = styled.div`
   max-height: 300px;
   right: 20px;
   bottom: 20px;
-`;
-
-export const StyledErrorPopup = styled(ErrorPopup)`
-  .fitContent {
-    width: 'fit-content';
-  }
 `;
 
 export default ErrorPopup;
