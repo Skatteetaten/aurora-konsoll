@@ -22,9 +22,9 @@ import actions, {
 import { IUserSettings } from 'models/UserSettings';
 import { ITagsPaged, ITagsPagedGroup, defaultTagsPagedGroup } from 'models/Tag';
 
-export type AffiliationViewsAction = ActionType<typeof actions>;
+export type AffiliationViewAction = ActionType<typeof actions>;
 
-export interface IAffiliationViewsState {
+export interface IAffiliationViewState {
   readonly isRefreshingAffiliations: boolean;
   readonly isRefreshApplicationDeployment: boolean;
   readonly allApplicationDeploymentsResult: IApplicationDeployment[];
@@ -39,7 +39,7 @@ export interface IAffiliationViewsState {
   readonly findGroupedTagsPagedResult: ITagsPagedGroup;
 }
 
-const initialState = (): IAffiliationViewsState => {
+const initialState = (): IAffiliationViewState => {
   return {
     isRefreshingAffiliations: false,
     isRefreshApplicationDeployment: false,
@@ -60,15 +60,12 @@ const initialState = (): IAffiliationViewsState => {
 };
 
 function updateStateWithPayload(name: string) {
-  return (
-    state: IAffiliationViewsState,
-    { payload }: AffiliationViewsAction
-  ) => {
+  return (state: IAffiliationViewState, { payload }: AffiliationViewAction) => {
     state[name] = payload;
   };
 }
 
-export const affiliationViewsReducer = reduceReducers<IAffiliationViewsState>(
+export const affiliationViewReducer = reduceReducers<IAffiliationViewState>(
   [
     handleAction(
       refreshAffiliationsRequest,

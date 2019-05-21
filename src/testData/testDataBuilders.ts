@@ -39,7 +39,7 @@ import { IStartupState } from 'state/reducers';
 import { INetdebugViewState } from 'screens/NetdebugView/state/reducer';
 import { IErrorState, IAppError } from 'models/StateManager/ErrorStateManager';
 import { IErrorStateManagerState } from 'models/StateManager/state/reducer';
-import { IAffiliationViewsState } from 'screens/AffiliationViews/state/reducer';
+import { IAffiliationViewState } from 'screens/AffiliationViews/state/reducer';
 import { IGoboUser } from 'services/auroraApiClients/goboUsageClient/query';
 
 const mountFactory = Factory.Sync.makeFactory<IMount>({
@@ -487,8 +487,8 @@ export const userSettingsFactory = Factory.Sync.makeFactory<IUserSettings>({
   applicationDeploymentFilters: [applicationDeploymentFilterFactory.build()]
 });
 
-export const affiliationViewsStateFactory = Factory.Sync.makeFactory<
-  IAffiliationViewsState
+export const affiliationViewStateFactory = Factory.Sync.makeFactory<
+  IAffiliationViewState
 >({
   allApplicationDeploymentsResult: [deploymentFactory.build()],
   applicationDeploymentDetails: deploymentDetailsFactory.build(),

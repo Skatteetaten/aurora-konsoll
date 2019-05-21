@@ -10,35 +10,35 @@ import {
   refreshAffiliations,
   updateUserSettings
 } from './state/actions';
-import { IAffiliationViewsState } from './state/reducer';
+import { IAffiliationViewState } from './state/reducer';
 
-const getAffiliationsFetchingStatus = (state: IAffiliationViewsState) =>
+const getAffiliationsFetchingStatus = (state: IAffiliationViewState) =>
   state.isRefreshingAffiliations;
 
-const getAllApplicationDeployments = (state: IAffiliationViewsState) =>
+const getAllApplicationDeployments = (state: IAffiliationViewState) =>
   state.allApplicationDeploymentsResult;
 
-const getAllApplicationDeploymentsStatus = (state: IAffiliationViewsState) =>
+const getAllApplicationDeploymentsStatus = (state: IAffiliationViewState) =>
   state.isFetchingAllApplicationDeployments;
 
-const fetchUserSettings = (state: IAffiliationViewsState) => state.userSettings;
+const fetchUserSettings = (state: IAffiliationViewState) => state.userSettings;
 
 const mapStateToProps = (state: RootState) => ({
-  isFetchingAffiliations: getAffiliationsFetchingStatus(state.affiliationViews),
+  isFetchingAffiliations: getAffiliationsFetchingStatus(state.affiliationView),
   allApplicationDeployments: getAllApplicationDeployments(
-    state.affiliationViews
+    state.affiliationView
   ),
   isFetchingAllApplicationDeployments: getAllApplicationDeploymentsStatus(
-    state.affiliationViews
+    state.affiliationView
   ),
   currentUser: state.startup.currentUser,
   errors: state.errorStateManager.errors,
-  userSettings: fetchUserSettings(state.affiliationViews),
+  userSettings: fetchUserSettings(state.affiliationView),
   applicationDeploymentDetails:
-    state.affiliationViews.applicationDeploymentDetails,
-  isUpdatingUserSettings: state.affiliationViews.isUpdatingUserSettings,
+    state.affiliationView.applicationDeploymentDetails,
+  isUpdatingUserSettings: state.affiliationView.isUpdatingUserSettings,
   isRefreshingApplicationDeployment:
-    state.affiliationViews.isRefreshingApplicationDeployment
+    state.affiliationView.isRefreshingApplicationDeployment
 });
 
 export const AffiliationViewValidatorConnected = connect(

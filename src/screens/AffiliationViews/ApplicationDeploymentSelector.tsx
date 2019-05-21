@@ -102,11 +102,11 @@ export default ApplicationDeploymentSelector;
 
 const mapStateToProps = (state: RootState) => ({
   isRefreshingApplicationDeployment:
-    state.affiliationViews.isRefreshingApplicationDeployment,
-  redeployWithVersionResult: state.affiliationViews.redeployWithVersionResult,
-  findGroupedTagsPagedResult: state.affiliationViews.findGroupedTagsPagedResult,
+    state.affiliationView.isRefreshingApplicationDeployment,
+  redeployWithVersionResult: state.affiliationView.redeployWithVersionResult,
+  findGroupedTagsPagedResult: state.affiliationView.findGroupedTagsPagedResult,
   applicationDeploymentDetails:
-    state.affiliationViews.applicationDeploymentDetails
+    state.affiliationView.applicationDeploymentDetails
 });
 
 export const ApplicationDeploymentSelectorConnected = connect(

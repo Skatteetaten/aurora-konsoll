@@ -1,6 +1,6 @@
 import each from 'jest-each';
 import {
-  affiliationViewsStateFactory,
+  affiliationViewStateFactory,
   userSettingsFactory,
   deploymentDetailsFactory,
   tagsPagedFactory,
@@ -20,92 +20,92 @@ import {
   findGroupedTagsPagedResponse,
   findAllApplicationDeploymentsResponse
 } from './actions';
-import { affiliationViewsReducer } from './reducer';
+import { affiliationViewReducer } from './reducer';
 
-describe('AffiliationViews reducer', () => {
+describe('AffiliationView reducer', () => {
   each([
     [
       {
         name: 'refreshAffiliationsRequest',
-        item: affiliationViewsStateFactory.build()
+        item: affiliationViewStateFactory.build()
       },
       {
         name: 'isRefreshingAffiliations',
         item: refreshAffiliationsRequest(true)
       },
-      affiliationViewsStateFactory.build({
+      affiliationViewStateFactory.build({
         isRefreshingAffiliations: true
       })
     ],
     [
       {
         name: 'refreshApplicationDeploymentRequest',
-        item: affiliationViewsStateFactory.build()
+        item: affiliationViewStateFactory.build()
       },
       {
         name: 'isRefreshApplicationDeployment',
         item: refreshApplicationDeploymentRequest(true)
       },
-      affiliationViewsStateFactory.build({
+      affiliationViewStateFactory.build({
         isRefreshApplicationDeployment: true
       })
     ],
     [
       {
         name: 'userSettingsResponse',
-        item: affiliationViewsStateFactory.build()
+        item: affiliationViewStateFactory.build()
       },
       {
         name: 'userSettings',
         item: userSettingsResponse(userSettingsFactory.build())
       },
-      affiliationViewsStateFactory.build({
+      affiliationViewStateFactory.build({
         userSettings: userSettingsFactory.build()
       })
     ],
     [
       {
         name: 'updateUserSettingsRequest',
-        item: affiliationViewsStateFactory.build()
+        item: affiliationViewStateFactory.build()
       },
       {
         name: 'isUpdatingUserSettings',
         item: updateUserSettingsRequest(true)
       },
-      affiliationViewsStateFactory.build({
+      affiliationViewStateFactory.build({
         isUpdatingUserSettings: true
       })
     ],
     [
       {
         name: 'refreshApplicationDeploymentResponse',
-        item: affiliationViewsStateFactory.build()
+        item: affiliationViewStateFactory.build()
       },
       {
         name: 'isRefreshingApplicationDeployment',
         item: refreshApplicationDeploymentResponse(true)
       },
-      affiliationViewsStateFactory.build({
+      affiliationViewStateFactory.build({
         isRefreshingApplicationDeployment: true
       })
     ],
     [
       {
         name: 'redeployWithVersionResponse',
-        item: affiliationViewsStateFactory.build()
+        item: affiliationViewStateFactory.build()
       },
       {
         name: 'redeployWithVersionResult',
         item: redeployWithVersionResponse(true)
       },
-      affiliationViewsStateFactory.build({
+      affiliationViewStateFactory.build({
         redeployWithVersionResult: true
       })
     ],
     [
       {
         name: 'applicationDeploymentDetailsResponse',
-        item: affiliationViewsStateFactory.build()
+        item: affiliationViewStateFactory.build()
       },
       {
         name: 'applicationDeploymentDetails',
@@ -113,59 +113,59 @@ describe('AffiliationViews reducer', () => {
           deploymentDetailsFactory.build()
         )
       },
-      affiliationViewsStateFactory.build({
+      affiliationViewStateFactory.build({
         applicationDeploymentDetails: deploymentDetailsFactory.build()
       })
     ],
     [
       {
         name: 'redeployWithCurrentVersionResponse',
-        item: affiliationViewsStateFactory.build()
+        item: affiliationViewStateFactory.build()
       },
       {
         name: 'redeployWithCurrentVersionResult',
         item: redeployWithCurrentVersionResponse(true)
       },
-      affiliationViewsStateFactory.build({
+      affiliationViewStateFactory.build({
         redeployWithCurrentVersionResult: true
       })
     ],
     [
       {
         name: 'findTagsPagedResponse',
-        item: affiliationViewsStateFactory.build()
+        item: affiliationViewStateFactory.build()
       },
       {
         name: 'findTagsPagedResult',
         item: findTagsPagedResponse(tagsPagedFactory.build())
       },
-      affiliationViewsStateFactory.build({
+      affiliationViewStateFactory.build({
         findTagsPagedResult: tagsPagedFactory.build()
       })
     ],
     [
       {
         name: 'findGroupedTagsPagedResponse',
-        item: affiliationViewsStateFactory.build()
+        item: affiliationViewStateFactory.build()
       },
       {
         name: 'findGroupedTagsPagedResult',
         item: findGroupedTagsPagedResponse(tagsPagedGroupFactory.build())
       },
-      affiliationViewsStateFactory.build({
+      affiliationViewStateFactory.build({
         findGroupedTagsPagedResult: tagsPagedGroupFactory.build()
       })
     ],
     [
       {
         name: 'findAllApplicationDeploymentsResponse',
-        item: affiliationViewsStateFactory.build()
+        item: affiliationViewStateFactory.build()
       },
       {
         name: 'allApplicationDeploymentsResult',
         item: findAllApplicationDeploymentsResponse([deploymentFactory.build()])
       },
-      affiliationViewsStateFactory.build({
+      affiliationViewStateFactory.build({
         allApplicationDeploymentsResult: [deploymentFactory.build()]
       })
     ]
@@ -173,7 +173,7 @@ describe('AffiliationViews reducer', () => {
     test.only(`given defaultState and action ${
       a.name
     } with given value should change ${b.name} to given value`, () => {
-      expect(affiliationViewsReducer(a.item, b.item)).toEqual(expected);
+      expect(affiliationViewReducer(a.item, b.item)).toEqual(expected);
     });
   });
 });
