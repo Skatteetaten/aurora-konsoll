@@ -49,7 +49,6 @@ interface IAffiliationViewControllerState {
   allFilters: IApplicationDeploymentFilters[];
   filterPathUrl: string;
   showSemanticVersion: boolean;
-  updatedFilters: IApplicationDeploymentFilters[];
 }
 
 class AffiliationViewController extends React.Component<
@@ -63,8 +62,7 @@ class AffiliationViewController extends React.Component<
     },
     allFilters: [],
     filterPathUrl: '',
-    showSemanticVersion: false,
-    updatedFilters: []
+    showSemanticVersion: false
   };
 
   private deploymentFilterService = new DeploymentFilterService();
