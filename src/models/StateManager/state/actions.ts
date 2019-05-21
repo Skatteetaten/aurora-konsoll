@@ -68,7 +68,6 @@ export const closeError: Thunk = (id: number) => (dispatch, getState) => {
 
 export const closeErrors: Thunk = () => (dispatch, getState) => {
   const state = Object.assign({}, getState().errorStateManager.errors);
-  console.log(state);
   const setIsActiveFalse = (err: IAppError) =>
     err.isActive === true && (err.isActive = false);
 
