@@ -4,7 +4,6 @@ import { Route } from 'react-router';
 
 import Spinner from 'components/Spinner';
 import { IApplicationDeployment } from 'models/ApplicationDeployment';
-import { IErrorState } from 'models/StateManager/ErrorStateManager';
 import {
   IApplicationDeploymentFilters,
   IUserSettings
@@ -29,9 +28,6 @@ interface IAffiliationViewControllerProps extends IAuroraApiComponentProps {
   matchPath: string;
   matchUrl: string;
   updateUrlWithQuery: (query: string) => void;
-  errors: IErrorState;
-  addErrors: (errors: any[]) => void;
-  closeError: (id: number) => void;
   refreshAffiliations: (affiliations: string[]) => void;
   findAllApplicationDeployments: (affiliations: string[]) => void;
   isFetchingAffiliations: boolean;
@@ -40,8 +36,6 @@ interface IAffiliationViewControllerProps extends IAuroraApiComponentProps {
   getUserSettings: () => void;
   userSettings: IUserSettings;
   updateUserSettings: (userSettings: IUserSettings) => void;
-  isUpdatingUserSettings: boolean;
-  isRefreshingApplicationDeployment: boolean;
 }
 
 interface IAffiliationViewControllerState {
@@ -107,7 +101,6 @@ class AffiliationViewController extends React.Component<
   public refreshApplicationDeployments = async () => {
     const { affiliation, refreshAffiliations } = this.props;
     await refreshAffiliations([affiliation]);
-    await this.fetchApplicationDeployments(affiliation);
   };
 
   public clearFilterOnAffiliationChange(prevAffiliation: string) {

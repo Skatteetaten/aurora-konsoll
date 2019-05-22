@@ -122,6 +122,12 @@ export class Filter extends React.Component<IFilterProps, IFilterState> {
   public componentDidUpdate(prevProps: IFilterProps) {
     this.setExistingFilter();
     this.clearOnAffiliationChange(prevProps.affiliation);
+    if (prevProps.filters !== this.props.filters) {
+      this.setState({
+        applications: this.props.filters.applications,
+        environments: this.props.filters.environments
+      });
+    }
   }
 
   public updateFilterState = (value: ICheckboxValue) => () => {

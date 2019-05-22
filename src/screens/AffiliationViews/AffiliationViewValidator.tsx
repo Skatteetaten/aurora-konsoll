@@ -4,7 +4,6 @@ import {
   IApplicationDeployment,
   IUserAndAffiliations
 } from 'models/ApplicationDeployment';
-import { IErrorState } from 'models/StateManager/ErrorStateManager';
 import { IUserSettings } from 'models/UserSettings';
 import { RouteComponentProps } from 'react-router-dom';
 import { MenuType } from 'screens/App';
@@ -22,10 +21,7 @@ interface IAffiliationViewValidatorProps extends AffiliationRouteProps {
   type: MenuType;
   onAffiliationValidated: (affiliation: string) => void;
   currentUser: IUserAndAffiliations;
-  errors: IErrorState;
   isFetchingAffiliations: boolean;
-  addErrors: (errors: any[]) => void;
-  closeError: (id: number) => void;
   refreshAffiliations: (affiliations: string[]) => void;
   findAllApplicationDeployments: (affiliations: string[]) => void;
   getUserSettings: () => void;
@@ -75,9 +71,6 @@ class AffiliationViewValidator extends React.Component<
       currentUser,
       match,
       type,
-      errors,
-      addErrors,
-      closeError,
       refreshAffiliations,
       isFetchingAffiliations,
       findAllApplicationDeployments,
@@ -86,9 +79,7 @@ class AffiliationViewValidator extends React.Component<
       getUserSettings,
       updateUserSettings,
       onAffiliationValidated,
-      isUpdatingUserSettings,
-      userSettings,
-      isRefreshingApplicationDeployment
+      userSettings
     } = this.props;
 
     if (currentUser.affiliations.length === 0) {
@@ -127,9 +118,6 @@ class AffiliationViewValidator extends React.Component<
           matchPath={match.path}
           matchUrl={match.url}
           updateUrlWithQuery={this.updateUrlWithQuery}
-          errors={errors}
-          addErrors={addErrors}
-          closeError={closeError}
           refreshAffiliations={refreshAffiliations}
           isFetchingAffiliations={isFetchingAffiliations}
           findAllApplicationDeployments={findAllApplicationDeployments}
@@ -139,9 +127,7 @@ class AffiliationViewValidator extends React.Component<
           }
           getUserSettings={getUserSettings}
           updateUserSettings={updateUserSettings}
-          isUpdatingUserSettings={isUpdatingUserSettings}
           userSettings={userSettings}
-          isRefreshingApplicationDeployment={isRefreshingApplicationDeployment}
         />
       );
     } else if (type === MenuType.DATABASE) {
