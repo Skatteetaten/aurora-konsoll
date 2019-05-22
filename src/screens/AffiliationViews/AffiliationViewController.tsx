@@ -101,6 +101,7 @@ class AffiliationViewController extends React.Component<
   public refreshApplicationDeployments = async () => {
     const { affiliation, refreshAffiliations } = this.props;
     await refreshAffiliations([affiliation]);
+    await this.fetchApplicationDeployments(affiliation);
   };
 
   public clearFilterOnAffiliationChange(prevAffiliation: string) {

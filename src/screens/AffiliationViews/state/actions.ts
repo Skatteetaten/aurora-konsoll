@@ -78,7 +78,6 @@ export const refreshAffiliations: Thunk = (affiliations: string[]) => async (
   { clients }
 ) => {
   dispatch(refreshAffiliationsRequest(true));
-  dispatch(findAllApplicationDeployments(affiliations));
   const result = await clients.applicationDeploymentClient.refreshAffiliations(
     affiliations
   );
