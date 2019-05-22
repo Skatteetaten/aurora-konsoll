@@ -120,9 +120,14 @@ export class Filter extends React.Component<IFilterProps, IFilterState> {
   }
 
   public componentDidUpdate(prevProps: IFilterProps) {
+    const { applications, environments } = this.state;
+    const { filters } = this.props;
     this.setExistingFilter();
     this.clearOnAffiliationChange(prevProps.affiliation);
-    if (prevProps.filters !== this.props.filters) {
+    if (
+      prevProps.filters !== filters &&
+      (applications.length === 0 && environments.length === 0)
+    ) {
       this.setState({
         applications: this.props.filters.applications,
         environments: this.props.filters.environments
