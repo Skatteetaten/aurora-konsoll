@@ -1,3 +1,4 @@
+import * as qs from 'qs';
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
 import { BrowserRouter } from 'react-router-dom';
@@ -32,16 +33,30 @@ async function init() {
   }
   const config = configOrError as IConfiguration;
 
-  if (!tokenStore.isTokenValid()) {
+  if (!tokenStore.isTokenValid() && window.location.pathname !== '/secret') {
     redirectToLoginPage(config.AUTHORIZATION_URI, config.CLIENT_ID);
   }
 
-  const token = tokenStore.getToken();
+  interface IAuthQueryString {
+    expires_in: string;
+    access_token: string;
+  }
+
+  const authQueryString = qs.parse(
+    window.location.hash.substring(1)
+  ) as IAuthQueryString;
+
+  const token = authQueryString.access_token ? authQueryString.access_token : tokenStore.getToken();
+  const expiresInSeconds = Number(authQueryString.expires_in);
+  if (authQueryString.access_token !== null && authQueryString.access_token !== undefined) {
+    tokenStore.updateToken(authQueryString.access_token, expiresInSeconds);
+  }
+  
   const goboClient = new GoboClient({
     errorHandler: errorStateManager,
     url: '/api/graphql',
     headers: {
-      Authorization: token ? `Bearer ${token}` : '',
+      Authorization: token ? token : '',
       KlientID: config.APPLICATION_NAME
     }
   });
@@ -76,17 +91,14 @@ async function init() {
 }
 
 function redirectToLoginPage(authorizationUri: string, clientId: string) {
-  console.log("test");
-  console.log(window.location.origin + '/api/accept-token');
   const params = new URLSearchParams();
   params.append('client_id', clientId);
-  params.append('redirect_uri', 'http://localhost:9090/api/accept-token');
+  params.append('redirect_uri', window.location.origin + '/secret');
   params.append('response_type', 'token');
   params.append('scope', '');
   params.append('state', '');
   const authorizationUrl = authorizationUri + '?' + params.toString();
-  console.log(authorizationUrl);
-  //window.location.replace(authorizationUrl);
+  window.location.replace(authorizationUrl);
 }
 
 init();

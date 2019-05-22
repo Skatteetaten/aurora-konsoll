@@ -29,6 +29,11 @@ class TokenStore implements ITokenStore {
   }
 
   public updateToken(token: string, expiresInSeconds: number) {
+    console.log('Update token - Start');
+    console.log(token);
+    console.log(expiresInSeconds);
+    console.log('Update token - End');
+    debugger;
     const expiresInMillis = expiresInSeconds * 1000;
     const time = new Date().getTime();
     const expiresAt = new Date(time + expiresInMillis).getTime();
@@ -41,3 +46,4 @@ class TokenStore implements ITokenStore {
 const tokenStore = new TokenStore();
 
 export { tokenStore, TokenStore };
+

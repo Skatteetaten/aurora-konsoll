@@ -17,11 +17,25 @@ const crypto = require('crypto'),
       password = 'whatEverWorks';
 
 const app = express();
+
 app.use(
   '/api/graphql',
   proxy({
     changeOrigin: true,
-    target: GOBO_URL,
+    target: GOBO_URL,    
+    onProxyReq(proxyReq, req, res) {
+      const token = req.headers['authorization'];
+      if (token !== '' && token !== undefined) {
+        try {
+          const authToken = decrypt(token);
+          proxyReq.setHeader('authorization', 'Bearer ' + authToken);
+          req.headers.authorization = 'Bearer ' + authToken;
+        } catch (err) {
+          proxyReq.setHeader('authorization', 'Bearer ' + token);
+          req.headers.authorization = 'Bearer ' + token;
+        }        
+      }
+    },  
     pathRewrite: {
       '/api/graphql': '/graphql'
     }
@@ -50,12 +64,10 @@ app.post('/api/log', (req, res) => {
 });
 
 app.get('/api/accept-token', (req, res) => {
-  const accessToken = res.location.arguments.access_token;
-  const expires_in = res.location.arguments.expires_in;
-  console.log(accessToken);
-  console.log(encrypt(accessToken));
-  
-  res.redirect('/accept-token?expires_in=' + expires_in +'&access_token=' + encrypt(accessToken));
+  const accessToken = req.query.access_token; 
+  const expires_in = req.query.expires_in;  
+  const encryptedToken = encrypt(accessToken);
+  return res.send(req.protocol + '://' + req.get('x-forwarded-host') + '/accept-token#access_token=' + encryptedToken + '&expires_in=' + expires_in);
 });
 
 app.listen(PORT, () => {
