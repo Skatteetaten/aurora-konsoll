@@ -14,7 +14,7 @@ import {
   IJdbcUser,
   IUpdateDatabaseSchemaInputWithCreatedBy
 } from 'models/schemas';
-import { addErrors } from 'models/StateManager/state/actions';
+import { addErrors } from 'screens/ErrorHandler/state/actions';
 import { createAction } from 'redux-ts-utils';
 
 const databaseAction = (action: string) => `database/${action}`;

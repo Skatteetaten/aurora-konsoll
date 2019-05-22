@@ -3,8 +3,7 @@ import styled from 'styled-components';
 
 import Button from 'aurora-frontend-react-komponenter/Button';
 import MessageBar from 'aurora-frontend-react-komponenter/MessageBar';
-
-import { IAppError } from 'models/StateManager/ErrorStateManager';
+import { IAppError } from 'models/errors';
 
 interface IErrorPopupProps {
   currentError: IAppError;
@@ -35,8 +34,7 @@ const ErrorPopup = ({
   closeErrors,
   errorCount,
   changeExtraInfoVisability,
-  isExtraInfoVisable,
-  className
+  isExtraInfoVisable
 }: IErrorPopupProps) => {
   const close = () => {
     closeError(currentError.id);

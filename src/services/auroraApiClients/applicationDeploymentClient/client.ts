@@ -14,14 +14,6 @@ import {
   USER_AFFILIATIONS_QUERY
 } from './query';
 
-export function formatName(user: string) {
-  const names = user.split(', ');
-  if (names.length !== 2) {
-    return user;
-  }
-  return names[1] + ' ' + names[0];
-}
-
 export class ApplicationDeploymentClient {
   private client: GoboClient;
 
@@ -120,25 +112,4 @@ export class ApplicationDeploymentClient {
       }
     });
   }
-}
-
-// ! Temp fix for template deployments with default version
-// TODO: FIX
-export function findDeployTagForTemplate(
-  applicationName: string,
-  deployTag: string
-) {
-  const templates = {
-    'aurora-activemq-1.0.0': '2',
-    'aurora-redis-1.0.0': '3.2.3',
-    'aurora-wiremock-1.0.0': '1.3.0',
-    redis: '3.2.3',
-    wiremock: '1.3.0'
-  };
-
-  if (deployTag) {
-    return deployTag;
-  }
-
-  return templates[applicationName] || deployTag;
 }

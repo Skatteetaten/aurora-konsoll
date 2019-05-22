@@ -22,7 +22,7 @@ import { AffiliationRouteProps } from './AffiliationViews/AffiliationViewValidat
 import { CertificateConnected } from './CertificateView/CertificateConnected';
 import { GoboUsageViewConnected } from './GoboUsageView';
 
-import { ErrorBoundaryConnected } from 'components/ErrorBoundary/ErrorBoundaryConnected';
+import { ErrorBoundaryConnected } from 'screens/ErrorHandler/ErrorBoundaryConnected';
 import { AffiliationViewValidatorConnected } from './AffiliationViews/AffiliationViewValidatorConnected';
 import { NetdebugConnected } from './NetdebugView/NetdebugConnected';
 

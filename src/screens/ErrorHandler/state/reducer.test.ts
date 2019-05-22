@@ -1,26 +1,26 @@
 import each from 'jest-each';
 import {
-  errorStateManagerStateFactory,
+  errorsStateFactory,
   errorStateFactory,
   appErrorFactory
 } from 'testData/testDataBuilders';
-import { errorsAction, incrementErrorId, nextErrorAction } from './actions';
-import { errorStateManagerReducer } from './reducer';
+import { errorsResponse, incrementErrorId, nextErrorResponse } from './actions';
+import { errorsReducer } from './reducer';
 
-describe('errorStateManager reducer', () => {
+describe('errors reducer', () => {
   each([
     [
       {
-        name: 'errorsAction',
-        item: errorStateManagerStateFactory.build()
+        name: 'errorsResponse',
+        item: errorsStateFactory.build()
       },
 
       {
         name: 'errors',
-        item: errorsAction(errorStateFactory.build())
+        item: errorsResponse(errorStateFactory.build())
       },
 
-      errorStateManagerStateFactory.build({
+      errorsStateFactory.build({
         errors: errorStateFactory.build()
       })
     ],
@@ -28,7 +28,7 @@ describe('errorStateManager reducer', () => {
     [
       {
         name: 'incrementErrorId',
-        item: errorStateManagerStateFactory.build()
+        item: errorsStateFactory.build()
       },
 
       {
@@ -36,18 +36,18 @@ describe('errorStateManager reducer', () => {
         item: incrementErrorId(1)
       },
 
-      errorStateManagerStateFactory.build({
+      errorsStateFactory.build({
         errorCount: 1
       })
     ],
     [
       {
-        name: 'nextErrorAction',
-        item: errorStateManagerStateFactory.build()
+        name: 'nextErrorResponse',
+        item: errorsStateFactory.build()
       },
       {
         name: 'nextError',
-        item: nextErrorAction(
+        item: nextErrorResponse(
           appErrorFactory.build({
             id: 9,
             isActive: true,
@@ -55,7 +55,7 @@ describe('errorStateManager reducer', () => {
           })
         )
       },
-      errorStateManagerStateFactory.build({
+      errorsStateFactory.build({
         nextError: appErrorFactory.build({
           id: 9,
           isActive: true,
@@ -67,7 +67,7 @@ describe('errorStateManager reducer', () => {
     test.only(`given defaultState and action ${
       a.name
     } with given value should change ${b.name} to given value`, () => {
-      expect(errorStateManagerReducer(a.item, b.item)).toEqual(expected);
+      expect(errorsReducer(a.item, b.item)).toEqual(expected);
     });
   });
 });

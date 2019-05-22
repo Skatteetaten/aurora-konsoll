@@ -4,7 +4,7 @@ import { StartupAction } from 'state/reducers';
 import rootReducer from './rootReducer';
 import { WebsealAction } from 'screens/AffiliationViews/WebsealView/state/reducers';
 import { CertificateAction } from 'screens/CertificateView/state/reducers';
-import { ErrorStateManagerAction } from 'models/StateManager/state/reducer';
+import { ErrorsAction } from 'screens/ErrorHandler/state/reducer';
 import { AffiliationViewAction } from 'screens/AffiliationViews/state/reducer';
 import { NetdebugViewAction } from 'screens/NetdebugView/state/reducer';
 
@@ -14,6 +14,6 @@ export type RootAction =
   | StartupAction
   | CertificateAction
   | WebsealAction
-  | ErrorStateManagerAction
+  | ErrorsAction
   | AffiliationViewAction
   | NetdebugViewAction;

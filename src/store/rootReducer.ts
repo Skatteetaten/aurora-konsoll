@@ -1,4 +1,4 @@
-import { errorStateManagerReducer } from 'models/StateManager/state/reducer';
+import { errorsReducer } from 'screens/ErrorHandler/state/reducer';
 import { combineReducers } from 'redux';
 import { databaseReducer } from 'screens/AffiliationViews/DatabaseView/state/reducers';
 import { affiliationViewReducer } from 'screens/AffiliationViews/state/reducer';
@@ -12,7 +12,7 @@ const rootReducer = combineReducers({
   startup: startupReducer,
   webseal: websealReducer,
   certificate: certificateReducer,
-  errorStateManager: errorStateManagerReducer,
+  errors: errorsReducer,
   affiliationView: affiliationViewReducer,
   netdebug: netdebugViewReducer
 });

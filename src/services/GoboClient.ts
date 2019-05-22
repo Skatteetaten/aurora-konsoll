@@ -77,10 +77,6 @@ export default class GoboClient {
       };
     } catch (e) {
       return;
-      // return {
-      //   data: {},
-      //   name: this.getDocumentName(document.definitions)
-      // };
     }
   }
 

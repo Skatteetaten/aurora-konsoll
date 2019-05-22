@@ -37,10 +37,10 @@ import { INetdebugResult } from 'services/auroraApiClients';
 import { IFilter } from 'services/DeploymentFilterService';
 import { IStartupState } from 'state/reducers';
 import { INetdebugViewState } from 'screens/NetdebugView/state/reducer';
-import { IErrorState, IAppError } from 'models/StateManager/ErrorStateManager';
-import { IErrorStateManagerState } from 'models/StateManager/state/reducer';
+import { IErrorsState } from 'screens/ErrorHandler/state/reducer';
 import { IAffiliationViewState } from 'screens/AffiliationViews/state/reducer';
 import { IGoboUser } from 'services/auroraApiClients/goboUsageClient/query';
+import { IErrors, IAppError } from 'models/errors';
 
 const mountFactory = Factory.Sync.makeFactory<IMount>({
   exist: true,
@@ -420,14 +420,12 @@ export const appErrorFactory = Factory.Sync.makeFactory<IAppError>({
   isActive: false
 });
 
-export const errorStateFactory = Factory.Sync.makeFactory<IErrorState>({
+export const errorStateFactory = Factory.Sync.makeFactory<IErrors>({
   errorQueue: [appErrorFactory.build()],
   allErrors: new Map()
 });
 
-export const errorStateManagerStateFactory = Factory.Sync.makeFactory<
-  IErrorStateManagerState
->({
+export const errorsStateFactory = Factory.Sync.makeFactory<IErrorsState>({
   errorCount: 0,
   errors: errorStateFactory.build(),
   nextError: undefined

@@ -3,7 +3,7 @@ import { ThunkAction } from 'redux-thunk';
 
 import { IAuroraApiComponentProps } from 'components/AuroraApi';
 
-import { addErrors } from 'models/StateManager/state/actions';
+import { addErrors } from 'screens/ErrorHandler/state/actions';
 import { createAction } from 'redux-ts-utils';
 import { INetdebugResult, IScanStatus } from 'services/auroraApiClients';
 import {

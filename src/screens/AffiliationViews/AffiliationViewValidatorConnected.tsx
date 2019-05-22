@@ -1,4 +1,4 @@
-import { addErrors, closeError } from 'models/StateManager/state/actions';
+import { addErrors, closeError } from 'screens/ErrorHandler/state/actions';
 import { IUserSettings } from 'models/UserSettings';
 import { connect } from 'react-redux';
 import { RootState } from 'store/types';
@@ -32,7 +32,7 @@ const mapStateToProps = (state: RootState) => ({
     state.affiliationView
   ),
   currentUser: state.startup.currentUser,
-  errors: state.errorStateManager.errors,
+  errors: state.errors.errors,
   userSettings: fetchUserSettings(state.affiliationView),
   applicationDeploymentDetails:
     state.affiliationView.applicationDeploymentDetails,

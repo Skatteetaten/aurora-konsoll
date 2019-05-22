@@ -1,12 +1,12 @@
-import { IAppError, IErrorState } from 'models/StateManager/ErrorStateManager';
 import * as React from 'react';
 import ErrorPopup from './ErrorPopup';
+import { IErrors, IAppError } from 'models/errors';
 
 interface IErrorBoundaryProps {
   getNextError: () => void;
   closeError: (id: number) => void;
   closeErrors: () => void;
-  errors: IErrorState;
+  errors: IErrors;
   nextError?: IAppError;
 }
 

@@ -1,6 +1,6 @@
 import { IAuroraApiComponentProps } from 'components/AuroraApi';
 import { ICertificateResult } from 'models/certificates';
-import { addErrors } from 'models/StateManager/state/actions';
+import { addErrors } from 'screens/ErrorHandler/state/actions';
 import { ActionCreator } from 'redux';
 import { ThunkAction } from 'redux-thunk';
 import { createAction } from 'redux-ts-utils';

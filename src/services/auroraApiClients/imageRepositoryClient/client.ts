@@ -1,7 +1,5 @@
-import { ITagsPaged } from 'models/Tag';
 import GoboClient, { IGoboResult } from 'services/GoboClient';
 import {
-  IImageTagsConnection,
   ITagsGroupedQuery,
   ITagsQuery,
   TAGS_GROUPED_QUERY,
@@ -43,18 +41,3 @@ export class ImageRepositoryClient {
     });
   }
 }
-
-export const toTagsPaged = (
-  imageTagsConnection: IImageTagsConnection
-): ITagsPaged => {
-  const { edges, pageInfo } = imageTagsConnection;
-  return {
-    endCursor: pageInfo.endCursor,
-    hasNextPage: pageInfo.hasNextPage,
-    tags: edges.map(edge => ({
-      lastModified: edge.node.lastModified,
-      name: edge.node.name,
-      type: edge.node.type
-    }))
-  };
-};

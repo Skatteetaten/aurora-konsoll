@@ -4,9 +4,8 @@ import { ThunkAction } from 'redux-thunk';
 import { IAuroraApiComponentProps } from 'components/AuroraApi';
 
 import { IUserAndAffiliations } from 'models/ApplicationDeployment';
-import { addErrors } from 'models/StateManager/state/actions';
+import { addErrors } from 'screens/ErrorHandler/state/actions';
 import { createAction } from 'redux-ts-utils';
-import { formatName } from 'services/auroraApiClients';
 import { RootAction, RootState } from 'store/types';
 import { IGoboUser } from 'services/auroraApiClients/goboUsageClient/query';
 
@@ -71,6 +70,14 @@ export const getGoboUsers: Thunk = () => async (
     dispatch(fetchGoboUsersResponse(result.data.gobo.usage.users));
   }
 };
+
+function formatName(user: string) {
+  const names = user.split(', ');
+  if (names.length !== 2) {
+    return user;
+  }
+  return names[1] + ' ' + names[0];
+}
 
 export default {
   fetchCurrentUserResponse,

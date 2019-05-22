@@ -4,7 +4,7 @@ export interface IAppError {
   isActive: boolean;
 }
 
-export interface IErrorState {
+export interface IErrors {
   errorQueue: IAppError[];
   allErrors: Map<number, IAppError>;
 }

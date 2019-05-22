@@ -15,7 +15,7 @@ import FilterModeSelect, { FilterMode } from './FilterModeSelect';
 import FooterText from './FooterText';
 import SelectionButtons from './SelectionButtons';
 import { connect } from 'react-redux';
-import { addErrors } from 'models/StateManager/state/actions';
+import { addErrors } from 'screens/ErrorHandler/state/actions';
 
 export enum SelectionType {
   Applications,

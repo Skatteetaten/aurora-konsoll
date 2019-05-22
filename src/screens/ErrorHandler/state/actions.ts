@@ -1,23 +1,20 @@
-import { IAppError, IErrorState } from 'models/StateManager/ErrorStateManager';
 import { ActionCreator } from 'redux';
 import { ThunkAction } from 'redux-thunk';
 import { createAction } from 'redux-ts-utils';
 import { RootAction, RootState } from 'store/types';
 import { IAuroraApiComponentProps } from 'components/AuroraApi';
+import { IAppError, IErrors } from 'models/errors';
 
-const errorStateManagerAction = (action: string) =>
-  `errorStateManager/${action}`;
+const errors = (action: string) => `errors/${action}`;
 
-export const errorsAction = createAction<IErrorState>(
-  errorStateManagerAction('ERRORS')
-);
+export const errorsResponse = createAction<IErrors>(errors('ERRORS'));
 
 export const incrementErrorId = createAction<number>(
-  errorStateManagerAction('INCREMENT_ERROR_ID_COUNT')
+  errors('INCREMENT_ERROR_ID_COUNT')
 );
 
-export const nextErrorAction = createAction<IAppError | undefined>(
-  errorStateManagerAction('NEXT_ERROR')
+export const nextErrorResponse = createAction<IAppError | undefined>(
+  errors('NEXT_ERROR')
 );
 
 export type Thunk = ActionCreator<
@@ -28,7 +25,7 @@ export const addErrors: Thunk = (errors: any[], name?: string) => (
   dispatch,
   getState
 ) => {
-  const state = Object.assign({}, getState().errorStateManager.errors);
+  const state = Object.assign({}, getState().errors.errors);
   errors.forEach(e => {
     dispatch(incrementErrorId());
     state.errorQueue.push({
@@ -37,37 +34,37 @@ export const addErrors: Thunk = (errors: any[], name?: string) => (
         message: e.message,
         name: !!name ? `{"document": "${name}"}` : ''
       },
-      id: getState().errorStateManager.errorCount,
+      id: getState().errors.errorCount,
       isActive: true
     });
   });
-  dispatch(errorsAction(state));
+  dispatch(errorsResponse(state));
 };
 
 export const getNextError: Thunk = () => (dispatch, getState) => {
-  const state = Object.assign({}, getState().errorStateManager.errors);
+  const state = Object.assign({}, getState().errors.errors);
   const next = state.errorQueue.pop();
   if (!next) {
-    dispatch(nextErrorAction(undefined));
+    dispatch(nextErrorResponse(undefined));
   } else {
     state.allErrors.set(next.id, next);
-    dispatch(errorsAction(state));
-    dispatch(nextErrorAction(next));
+    dispatch(errorsResponse(state));
+    dispatch(nextErrorResponse(next));
   }
 };
 
 export const closeError: Thunk = (id: number) => (dispatch, getState) => {
-  const state = Object.assign({}, getState().errorStateManager.errors);
+  const state = Object.assign({}, getState().errors.errors);
   const err = state.allErrors.get(id);
   if (!err) {
     throw new Error(`No such error ${id}`);
   }
   err.isActive = false;
-  dispatch(errorsAction(state));
+  dispatch(errorsResponse(state));
 };
 
 export const closeErrors: Thunk = () => (dispatch, getState) => {
-  const state = Object.assign({}, getState().errorStateManager.errors);
+  const state = Object.assign({}, getState().errors.errors);
   const setIsActiveFalse = (err: IAppError) =>
     err.isActive === true && (err.isActive = false);
 
@@ -77,11 +74,11 @@ export const closeErrors: Thunk = () => (dispatch, getState) => {
   state.errorQueue.forEach(err => {
     setIsActiveFalse(err);
   });
-  dispatch(errorsAction(state));
+  dispatch(errorsResponse(state));
 };
 
 export default {
-  errorsAction,
+  errorsResponse,
   incrementErrorId,
-  nextErrorAction
+  nextErrorResponse
 };

@@ -8,15 +8,12 @@ import {
   IApplicationDeploymentDetails
 } from 'models/ApplicationDeployment';
 import { normalizeRawDeploymentSpec } from 'models/DeploymentSpec';
-import { addErrors } from 'models/StateManager/state/actions';
+import { addErrors } from 'screens/ErrorHandler/state/actions';
 import { defaultTagsPagedGroup, ITagsPagedGroup, ITagsPaged } from 'models/Tag';
 import { IUserSettings } from 'models/UserSettings';
 import { createAction } from 'redux-ts-utils';
-import {
-  findDeployTagForTemplate,
-  toTagsPaged
-} from 'services/auroraApiClients';
 import { RootAction, RootState } from 'store/types';
+import { IImageTagsConnection } from 'services/auroraApiClients/imageRepositoryClient/query';
 
 const affiliationViewAction = (action: string) => `affiliationView/${action}`;
 
@@ -351,6 +348,42 @@ export const findApplicationDeploymentDetails: Thunk = (id: string) => async (
     );
   }
 };
+
+export const toTagsPaged = (
+  imageTagsConnection: IImageTagsConnection
+): ITagsPaged => {
+  const { edges, pageInfo } = imageTagsConnection;
+  return {
+    endCursor: pageInfo.endCursor,
+    hasNextPage: pageInfo.hasNextPage,
+    tags: edges.map(edge => ({
+      lastModified: edge.node.lastModified,
+      name: edge.node.name,
+      type: edge.node.type
+    }))
+  };
+};
+
+// ! Temp fix for template deployments with default version
+// TODO: FIX
+export function findDeployTagForTemplate(
+  applicationName: string,
+  deployTag: string
+) {
+  const templates = {
+    'aurora-activemq-1.0.0': '2',
+    'aurora-redis-1.0.0': '3.2.3',
+    'aurora-wiremock-1.0.0': '1.3.0',
+    redis: '3.2.3',
+    wiremock: '1.3.0'
+  };
+
+  if (deployTag) {
+    return deployTag;
+  }
+
+  return templates[applicationName] || deployTag;
+}
 
 export default {
   refreshAffiliationsRequest,

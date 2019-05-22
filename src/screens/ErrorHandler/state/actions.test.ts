@@ -1,24 +1,24 @@
-import { nextErrorAction, incrementErrorId, errorsAction } from './actions';
+import { nextErrorResponse, incrementErrorId, errorsResponse } from './actions';
 import { errorStateFactory, appErrorFactory } from 'testData/testDataBuilders';
 
-describe('errorStateManager actions', () => {
-  it('should return type of action errorsAction and payload', () => {
-    expect(errorsAction(errorStateFactory.build())).toEqual({
+describe('errors actions', () => {
+  it('should return type of action errorsResponse and payload', () => {
+    expect(errorsResponse(errorStateFactory.build())).toEqual({
       payload: errorStateFactory.build(),
-      type: 'errorStateManager/ERRORS'
+      type: 'errors/ERRORS'
     });
   });
 
   it('should return type of action incrementErrorId and payload', () => {
     expect(incrementErrorId(3)).toEqual({
       payload: 3,
-      type: 'errorStateManager/INCREMENT_ERROR_ID_COUNT'
+      type: 'errors/INCREMENT_ERROR_ID_COUNT'
     });
   });
 
-  it('should return type of action nextErrorAction and payload', () => {
+  it('should return type of action nextErrorResponse and payload', () => {
     expect(
-      nextErrorAction(
+      nextErrorResponse(
         appErrorFactory.build({
           id: 5,
           error: new Error('test'),
@@ -31,7 +31,7 @@ describe('errorStateManager actions', () => {
         error: new Error('test'),
         isActive: false
       }),
-      type: 'errorStateManager/NEXT_ERROR'
+      type: 'errors/NEXT_ERROR'
     });
   });
 });
