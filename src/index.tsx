@@ -1,4 +1,3 @@
-import * as qs from 'qs';
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
 import { BrowserRouter } from 'react-router-dom';
@@ -37,19 +36,11 @@ async function init() {
     redirectToLoginPage(config.AUTHORIZATION_URI, config.CLIENT_ID);
   }
 
-  interface IAuthQueryString {
-    expires_in: string;
-    access_token: string;
-  }
-
-  const authQueryString = qs.parse(
-    window.location.hash.substring(1)
-  ) as IAuthQueryString;
-
-  const token = authQueryString.access_token ? authQueryString.access_token : tokenStore.getToken();
-  const expiresInSeconds = Number(authQueryString.expires_in);
-  if (authQueryString.access_token !== null && authQueryString.access_token !== undefined) {
-    tokenStore.updateToken(authQueryString.access_token, expiresInSeconds);
+  const urlParams = new URLSearchParams(window.location.hash.replace("#","?"));
+  const token = urlParams.get('access_token') ? urlParams.get('access_token') : tokenStore.getToken();
+  const expiresInSeconds = Number(urlParams.get('expires_in'));
+  if (urlParams.get('access_token')) {
+    tokenStore.updateToken(token as string, expiresInSeconds);
   }
   
   const goboClient = new GoboClient({

@@ -9,12 +9,13 @@ import {
   GOBO_URL,
   DOCKER_REGISTRY_FRONTEND_URL,
   PORT,
-  SKAP_ENABLED
+  SKAP_ENABLED,
+  TOKEN_ENCRYPTION_FRASE
 } from './config';
 
 const crypto = require('crypto'), 
       algorithm = 'aes-256-ctr',
-      password = 'whatEverWorks';
+      password = TOKEN_ENCRYPTION_FRASE;
 
 const app = express();
 
@@ -25,7 +26,8 @@ app.use(
     target: GOBO_URL,    
     onProxyReq(proxyReq, req, res) {
       const token = req.headers['authorization'];
-      if (token !== '' && token !== undefined) {
+      // The first time GOBO is called, the token may not have been encrypted yet.
+      if (token) {
         try {
           const authToken = decrypt(token);
           proxyReq.setHeader('authorization', 'Bearer ' + authToken);
@@ -67,7 +69,7 @@ app.get('/api/accept-token', (req, res) => {
   const accessToken = req.query.access_token; 
   const expires_in = req.query.expires_in;  
   const encryptedToken = encrypt(accessToken);
-  return res.send(req.protocol + '://' + req.get('x-forwarded-host') + '/accept-token#access_token=' + encryptedToken + '&expires_in=' + expires_in);
+  res.send(`${req.protocol}://${req.get('x-forwarded-host')}/accept-token#access_token=${encryptedToken}&expires_in=${expires_in}`);
 });
 
 app.listen(PORT, () => {
