@@ -8,7 +8,6 @@ import {
 import { ImageTagType } from 'models/ImageTagType';
 import { ITag, ITagsPaged, ITagsPagedGroup } from 'models/Tag';
 
-import LoadingStateManager from 'models/StateManager/LoadingStateManager';
 import {
   IUnavailableServiceMessage,
   unavailableServiceMessageCreator
@@ -21,51 +20,57 @@ export interface IDetailsViewProps
   extends ApplicationDeploymentDetailsRoute,
     IAuroraApiComponentProps {
   deployment: IApplicationDeployment;
-  fetchApplicationDeployments: () => void;
+  getAllApplicationDeployments: (affiliation: string) => void;
   filterPathUrl: string;
   findApplicationDeploymentDetails: (id: string) => void;
-  applicationDeploymentDetails: IApplicationDeploymentDetails;
-  refreshApplicationDeployment: (applicationDeploymentId: string) => void;
+  deploymentDetails: IApplicationDeploymentDetails;
+  refreshApplicationDeployment: (
+    applicationDeploymentId: string,
+    affiliation: string
+  ) => void;
   redeployWithVersion: (
     applicationDeploymentId: string,
-    version: string
+    version: string,
+    affiliation: string,
+    id: string,
+    setInitialTagTypeTrue: () => void
   ) => void;
-  redeployWithCurrentVersion: (applicationDeploymentId: string) => void;
-  findGroupedTagsPaged: (repository: string) => void;
+  redeployWithCurrentVersion: (
+    applicationDeploymentId: string,
+    affiliation: string,
+    id: string
+  ) => void;
+  findGroupedTagsPaged: (
+    repository: string,
+    setTagsPagedGroup: (tagsPagedGroup: ITagsPagedGroup) => void
+  ) => void;
   findTagsPaged: (
     repository: string,
-    type: string,
+    type: ImageTagType,
+    updateTagsPaged: (type: ImageTagType, next: ITagsPaged) => void,
     first?: number,
     cursor?: string
   ) => void;
   findTagsPagedResponse: ITagsPaged;
   findGroupedTagsPagedResult: ITagsPagedGroup;
   isRefreshingApplicationDeployment: boolean;
-  redeployWithVersionResult: boolean;
-  redeployWithCurrentVersionResult: boolean;
+  isRedeploying: boolean;
+  isFetchingDetails: boolean;
+  isFetchingTags: boolean;
+  affiliation: string;
 }
 
 export interface IDetailsViewState {
   tagsPagedGroup: ITagsPagedGroup;
-  deploymentDetails: IApplicationDeploymentDetails;
   releaseToDeployTag: ITag;
   selectedTag?: ITag;
   selectedTagType: ImageTagType;
-  loading: IDetailsViewLoading;
   versionSearchText: string;
   isInitialTagType: boolean;
 }
 
-interface IDetailsViewLoading {
-  fetchTags: boolean;
-  fetchDetails: boolean;
-  redeploy: boolean;
-  update: boolean;
-}
-
 interface IStateManagers {
   tag: TagStateManager;
-  loading: LoadingStateManager<IDetailsViewLoading>;
 }
 
 export type DetailsViewComponent = Component<
@@ -81,7 +86,6 @@ export default class DetailsViewController {
   constructor(component: DetailsViewComponent) {
     component.componentWillUnmount = () => {
       this.sm.tag.close();
-      this.sm.loading.close();
     };
 
     this.component = component;
@@ -89,96 +93,70 @@ export default class DetailsViewController {
     this.sm = {
       tag: new TagStateManager(component.state.tagsPagedGroup, tagsPagedGroup =>
         component.setState({ tagsPagedGroup })
-      ),
-      loading: new LoadingStateManager<IDetailsViewLoading>(
-        component.state.loading,
-        loading => component.setState({ loading })
       )
     };
   }
 
-  public redeployWithVersion = () => {
+  public redeployWithVersion = async () => {
     const {
       deployment,
-      findApplicationDeploymentDetails,
       redeployWithVersion,
-      applicationDeploymentDetails,
-      redeployWithVersionResult
+      affiliation
     } = this.component.props;
     const { selectedTag } = this.component.state;
     if (!selectedTag) {
       // TODO: Error message
       return;
     }
+    const setInitialTagTypeTrue = () => {
+      this.component.setState({
+        isInitialTagType: true
+      });
+    };
 
-    this.sm.loading.withLoading(['redeploy'], async () => {
-      await redeployWithVersion(deployment.id, selectedTag.name);
-      if (redeployWithVersionResult) {
-        this.component.props.fetchApplicationDeployments();
-        await findApplicationDeploymentDetails(deployment.id);
-        this.component.setState({
-          deploymentDetails: applicationDeploymentDetails,
-          isInitialTagType: true
-        });
-      }
-    });
+    await redeployWithVersion(
+      deployment.id,
+      selectedTag.name,
+      affiliation,
+      deployment.id,
+      setInitialTagTypeTrue
+    );
   };
 
-  public redeployWithCurrentVersion = () => {
+  public redeployWithCurrentVersion = async () => {
     const {
       deployment,
       redeployWithCurrentVersion,
-      fetchApplicationDeployments,
-      redeployWithCurrentVersionResult
+      affiliation
     } = this.component.props;
-    this.sm.loading.withLoading(['redeploy'], async () => {
-      await redeployWithCurrentVersion(deployment.id);
-      if (redeployWithCurrentVersionResult) {
-        fetchApplicationDeployments();
-      }
-    });
+    await redeployWithCurrentVersion(deployment.id, affiliation, deployment.id);
   };
 
-  public refreshApplicationDeployment = () => {
+  public refreshApplicationDeployment = async () => {
     const {
       deployment,
-      fetchApplicationDeployments,
       refreshApplicationDeployment,
-      isRefreshingApplicationDeployment,
-      applicationDeploymentDetails
+      affiliation
     } = this.component.props;
-
-    this.sm.loading.withLoading(['update'], async () => {
-      await refreshApplicationDeployment(deployment.id);
-
-      if (isRefreshingApplicationDeployment) {
-        fetchApplicationDeployments();
-        await this.component.props.findApplicationDeploymentDetails(
-          deployment.id
-        );
-        this.component.setState({
-          deploymentDetails: applicationDeploymentDetails
-        });
-      }
-    });
+    await refreshApplicationDeployment(deployment.id, affiliation);
   };
 
-  public loadMoreTags = () => {
-    const {
-      deployment,
-      findTagsPaged,
-      findTagsPagedResponse
-    } = this.component.props;
+  public loadMoreTags = async () => {
+    const { deployment, findTagsPaged } = this.component.props;
     const { selectedTagType } = this.component.state;
 
     const current: ITagsPaged = this.sm.tag.getTagsPaged(selectedTagType);
     const cursor = current.endCursor;
 
-    this.sm.loading.withLoading(['fetchTags'], async () => {
-      await findTagsPaged(deployment.repository, selectedTagType, 15, cursor);
-
-      this.sm.tag.updateTagsPaged(selectedTagType, findTagsPagedResponse);
-    });
+    const updateTagsPaged = (type: ImageTagType, next: ITagsPaged) =>
+      this.sm.tag.updateTagsPaged(type, next);
+    await findTagsPaged(
+      deployment.repository,
+      selectedTagType,
+      updateTagsPaged,
+      15,
+      cursor
+    );
   };
 
   public handleSelectStrategy = (e: Event, option: IImageTagTypeOption) => {
@@ -207,33 +185,23 @@ export default class DetailsViewController {
 
   public onMount = () => {
     const { id, repository } = this.component.props.deployment;
-
     const {
-      applicationDeploymentDetails,
-      findGroupedTagsPagedResult
+      findApplicationDeploymentDetails,
+      findGroupedTagsPaged
     } = this.component.props;
 
-    this.sm.loading.withLoading(['fetchTags', 'fetchDetails'], async () => {
-      await this.component.props.findApplicationDeploymentDetails(id);
-      if (repository) {
-        this.component.props.findGroupedTagsPaged(repository);
-        const [deploymentDetails, tagsPagedGroup] = await Promise.all([
-          applicationDeploymentDetails,
-          findGroupedTagsPagedResult
-        ]);
+    findApplicationDeploymentDetails(id);
+    if (repository) {
+      const setTagsPagedGroup = (tagsPagedGroup: ITagsPagedGroup) =>
         this.sm.tag.setTagsPagedGroup(tagsPagedGroup);
-        this.component.setState({ deploymentDetails });
-      } else {
-        const deploymentDetails = await applicationDeploymentDetails;
-        this.component.setState({ deploymentDetails });
-      }
-    });
+      findGroupedTagsPaged(repository, setTagsPagedGroup);
+    }
   };
 
   public getVersionViewUnavailableMessage():
     | IUnavailableServiceMessage
     | undefined {
-    const { deploymentSpec } = this.component.state.deploymentDetails;
+    const { deploymentSpec } = this.component.props.deploymentDetails;
     const serviceUnavailableBecause = unavailableServiceMessageCreator(
       'Det er ikke mulig å endre versjonen på denne applikasjonen'
     );
@@ -244,10 +212,7 @@ export default class DetailsViewController {
       );
     }
 
-    if (
-      !this.sm.tag.containsTags() &&
-      !this.component.state.loading.fetchTags
-    ) {
+    if (!this.sm.tag.containsTags() && !this.component.props.isFetchingTags) {
       return serviceUnavailableBecause('Det finnes ingen tilgjengelig tags');
     }
 
@@ -255,21 +220,23 @@ export default class DetailsViewController {
   }
 
   public canUpgrade = () => {
-    const { deployment } = this.component.props;
-    const { selectedTag, loading } = this.component.state;
+    const {
+      deployment,
+      isRedeploying,
+      deploymentDetails
+    } = this.component.props;
+    const { selectedTag } = this.component.state;
 
     const isAuroraVersionSelectedTag = () =>
-      this.component.state.deploymentDetails.deploymentSpec &&
+      deploymentDetails.deploymentSpec &&
       selectedTag &&
-      selectedTag.name ===
-        this.component.state.deploymentDetails.deploymentSpec.version;
+      selectedTag.name === deploymentDetails.deploymentSpec.version;
 
-    if (!selectedTag || loading.redeploy || isAuroraVersionSelectedTag()) {
+    if (!selectedTag || isRedeploying || isAuroraVersionSelectedTag()) {
       return false;
     }
     return (
-      !loading.redeploy &&
-      selectedTag.name !== deployment.version.deployTag.name
+      !isRedeploying && selectedTag.name !== deployment.version.deployTag.name
     );
   };
 }

@@ -12,13 +12,14 @@ import {
   refreshApplicationDeploymentRequest,
   userSettingsResponse,
   refreshApplicationDeploymentResponse,
-  redeployWithVersionResponse,
   updateUserSettingsRequest,
   applicationDeploymentDetailsResponse,
-  redeployWithCurrentVersionResponse,
   findTagsPagedResponse,
   findGroupedTagsPagedResponse,
-  findAllApplicationDeploymentsResponse
+  findAllApplicationDeploymentsResponse,
+  redeployRequest,
+  fetchTagsRequest,
+  fetchDetailsRequest
 } from './actions';
 import { affiliationViewReducer } from './reducer';
 
@@ -39,15 +40,54 @@ describe('AffiliationView reducer', () => {
     ],
     [
       {
+        name: 'redeployRequest',
+        item: affiliationViewStateFactory.build()
+      },
+      {
+        name: 'isRedeploying',
+        item: redeployRequest(true)
+      },
+      affiliationViewStateFactory.build({
+        isRedeploying: true
+      })
+    ],
+    [
+      {
         name: 'refreshApplicationDeploymentRequest',
         item: affiliationViewStateFactory.build()
       },
       {
-        name: 'isRefreshApplicationDeployment',
+        name: 'isRefreshingApplicationDeployment',
         item: refreshApplicationDeploymentRequest(true)
       },
       affiliationViewStateFactory.build({
-        isRefreshApplicationDeployment: true
+        isRefreshingApplicationDeployment: true
+      })
+    ],
+    [
+      {
+        name: 'fetchTagsRequest',
+        item: affiliationViewStateFactory.build()
+      },
+      {
+        name: 'isFetchingTags',
+        item: fetchTagsRequest(true)
+      },
+      affiliationViewStateFactory.build({
+        isFetchingTags: true
+      })
+    ],
+    [
+      {
+        name: 'fetchDetailsRequest',
+        item: affiliationViewStateFactory.build()
+      },
+      {
+        name: 'isFetchingDetails',
+        item: fetchDetailsRequest(true)
+      },
+      affiliationViewStateFactory.build({
+        isFetchingDetails: true
       })
     ],
     [
@@ -91,19 +131,6 @@ describe('AffiliationView reducer', () => {
     ],
     [
       {
-        name: 'redeployWithVersionResponse',
-        item: affiliationViewStateFactory.build()
-      },
-      {
-        name: 'redeployWithVersionResult',
-        item: redeployWithVersionResponse(true)
-      },
-      affiliationViewStateFactory.build({
-        redeployWithVersionResult: true
-      })
-    ],
-    [
-      {
         name: 'applicationDeploymentDetailsResponse',
         item: affiliationViewStateFactory.build()
       },
@@ -115,19 +142,6 @@ describe('AffiliationView reducer', () => {
       },
       affiliationViewStateFactory.build({
         applicationDeploymentDetails: deploymentDetailsFactory.build()
-      })
-    ],
-    [
-      {
-        name: 'redeployWithCurrentVersionResponse',
-        item: affiliationViewStateFactory.build()
-      },
-      {
-        name: 'redeployWithCurrentVersionResult',
-        item: redeployWithCurrentVersionResponse(true)
-      },
-      affiliationViewStateFactory.build({
-        redeployWithCurrentVersionResult: true
       })
     ],
     [

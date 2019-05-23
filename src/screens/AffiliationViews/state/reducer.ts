@@ -13,11 +13,12 @@ import actions, {
   userSettingsResponse,
   updateUserSettingsRequest,
   refreshApplicationDeploymentResponse,
-  redeployWithVersionResponse,
   applicationDeploymentDetailsResponse,
-  redeployWithCurrentVersionResponse,
   findTagsPagedResponse,
-  findGroupedTagsPagedResponse
+  findGroupedTagsPagedResponse,
+  redeployRequest,
+  fetchDetailsRequest,
+  fetchTagsRequest
 } from './actions';
 import { IUserSettings } from 'models/UserSettings';
 import { ITagsPaged, ITagsPagedGroup, defaultTagsPagedGroup } from 'models/Tag';
@@ -26,15 +27,15 @@ export type AffiliationViewAction = ActionType<typeof actions>;
 
 export interface IAffiliationViewState {
   readonly isRefreshingAffiliations: boolean;
-  readonly isRefreshApplicationDeployment: boolean;
   readonly allApplicationDeploymentsResult: IApplicationDeployment[];
   readonly isFetchingAllApplicationDeployments: boolean;
+  readonly isFetchingTags: boolean;
   readonly userSettings: IUserSettings;
   readonly isUpdatingUserSettings: boolean;
   readonly isRefreshingApplicationDeployment: boolean;
-  readonly redeployWithVersionResult: boolean;
-  readonly redeployWithCurrentVersionResult: boolean;
+  readonly isRedeploying: boolean;
   readonly applicationDeploymentDetails: IApplicationDeploymentDetails;
+  readonly isFetchingDetails: boolean;
   readonly findTagsPagedResult: ITagsPaged;
   readonly findGroupedTagsPagedResult: ITagsPagedGroup;
 }
@@ -42,16 +43,16 @@ export interface IAffiliationViewState {
 const initialState = (): IAffiliationViewState => {
   return {
     isRefreshingAffiliations: false,
-    isRefreshApplicationDeployment: false,
+    isFetchingTags: false,
     allApplicationDeploymentsResult: [],
     isFetchingAllApplicationDeployments: false,
     userSettings: { applicationDeploymentFilters: [] },
     isUpdatingUserSettings: false,
     isRefreshingApplicationDeployment: false,
-    redeployWithVersionResult: false,
-    redeployWithCurrentVersionResult: false,
+    isRedeploying: false,
     findGroupedTagsPagedResult: defaultTagsPagedGroup(),
     findTagsPagedResult: defaultTagsPagedGroup()[''],
+    isFetchingDetails: false,
     applicationDeploymentDetails: {
       pods: [],
       serviceLinks: []
@@ -73,7 +74,7 @@ export const affiliationViewReducer = reduceReducers<IAffiliationViewState>(
     ),
     handleAction(
       refreshApplicationDeploymentRequest,
-      updateStateWithPayload('isRefreshApplicationDeployment')
+      updateStateWithPayload('isRefreshingApplicationDeployment')
     ),
     handleAction(
       findAllApplicationDeploymentsResponse,
@@ -93,17 +94,10 @@ export const affiliationViewReducer = reduceReducers<IAffiliationViewState>(
       updateStateWithPayload('isRefreshingApplicationDeployment')
     ),
     handleAction(
-      redeployWithVersionResponse,
-      updateStateWithPayload('redeployWithVersionResult')
-    ),
-    handleAction(
       applicationDeploymentDetailsResponse,
       updateStateWithPayload('applicationDeploymentDetails')
     ),
-    handleAction(
-      redeployWithCurrentVersionResponse,
-      updateStateWithPayload('redeployWithCurrentVersionResult')
-    ),
+    handleAction(redeployRequest, updateStateWithPayload('isRedeploying')),
     handleAction(
       findTagsPagedResponse,
       updateStateWithPayload('findTagsPagedResult')
@@ -111,6 +105,11 @@ export const affiliationViewReducer = reduceReducers<IAffiliationViewState>(
     handleAction(
       findGroupedTagsPagedResponse,
       updateStateWithPayload('findGroupedTagsPagedResult')
+    ),
+    handleAction(fetchTagsRequest, updateStateWithPayload('isFetchingTags')),
+    handleAction(
+      fetchDetailsRequest,
+      updateStateWithPayload('isFetchingDetails')
     )
   ],
   initialState()

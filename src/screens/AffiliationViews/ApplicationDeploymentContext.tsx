@@ -6,12 +6,11 @@ import { Omit } from 'types/utils';
 export interface IApplicationDeploymentContext {
   deployments: IApplicationDeployment[];
   allDeployments: IApplicationDeployment[];
-  fetchApplicationDeployments: () => void;
-  refreshDeployments: () => void;
   buildDeploymentLink: (
     deployment: IApplicationDeployment
   ) => React.ComponentType;
   filterPathUrl: string;
+  affiliation: string;
 }
 
 const ApplicationDeploymentContext = React.createContext<
@@ -20,13 +19,8 @@ const ApplicationDeploymentContext = React.createContext<
   buildDeploymentLink: (_: IApplicationDeployment) => () => <div />,
   allDeployments: [],
   deployments: [],
-  refreshDeployments: () => {
-    return;
-  },
-  fetchApplicationDeployments: () => {
-    return;
-  },
-  filterPathUrl: ''
+  filterPathUrl: '',
+  affiliation: ''
 });
 
 export const ApplicationDeploymentProvider =

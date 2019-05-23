@@ -4,13 +4,14 @@ import {
   userSettingsResponse,
   updateUserSettingsRequest,
   refreshApplicationDeploymentResponse,
-  redeployWithVersionResponse,
-  redeployWithCurrentVersionResponse,
   applicationDeploymentDetailsResponse,
   findTagsPagedResponse,
   findGroupedTagsPagedResponse,
   findAllApplicationDeploymentsResponse,
-  findAllApplicationDeploymentsRequest
+  findAllApplicationDeploymentsRequest,
+  redeployRequest,
+  fetchTagsRequest,
+  fetchDetailsRequest
 } from './actions';
 import {
   deploymentFactory,
@@ -58,6 +59,20 @@ describe('affiliation views actions', () => {
     });
   });
 
+  it('should return type of action fetchRequest and payload', () => {
+    expect(fetchTagsRequest(true)).toEqual({
+      payload: true,
+      type: 'affiliationView/FETCH_TAGS_REQUEST'
+    });
+  });
+
+  it('should return type of action fetchRequest and payload', () => {
+    expect(fetchDetailsRequest(true)).toEqual({
+      payload: true,
+      type: 'affiliationView/FETCH_DETAILS_REQUEST'
+    });
+  });
+
   it('should return type of action updateUserSettingsRequest and payload', () => {
     expect(updateUserSettingsRequest(true)).toEqual({
       payload: true,
@@ -72,17 +87,10 @@ describe('affiliation views actions', () => {
     });
   });
 
-  it('should return type of action redeployWithVersionResponse and payload', () => {
-    expect(redeployWithVersionResponse(true)).toEqual({
+  it('should return type of action redeployRequest and payload', () => {
+    expect(redeployRequest(true)).toEqual({
       payload: true,
-      type: 'affiliationView/REDEPLOY_WITH_VERSION_RESPONSE'
-    });
-  });
-
-  it('should return type of action redeployWithCurrentVersionResponse and payload', () => {
-    expect(redeployWithCurrentVersionResponse(true)).toEqual({
-      payload: true,
-      type: 'affiliationView/REDEPLOY_WITH_CURRENT_VERSION_RESPONSE'
+      type: 'affiliationView/REDEPLOY_REQUEST'
     });
   });
 
@@ -94,7 +102,6 @@ describe('affiliation views actions', () => {
       type: 'affiliationView/APPLICATION_DEPLOYMENT_DETAILS'
     });
   });
-
   it('should return type of action findTagsPagedResponse and payload', () => {
     expect(findTagsPagedResponse(tagsPagedFactory.build())).toEqual({
       payload: tagsPagedFactory.build(),

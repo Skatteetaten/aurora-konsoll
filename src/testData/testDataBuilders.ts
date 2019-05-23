@@ -493,11 +493,11 @@ export const affiliationViewStateFactory = Factory.Sync.makeFactory<
   findGroupedTagsPagedResult: tagsPagedGroupFactory.build(),
   findTagsPagedResult: tagsPagedFactory.build(),
   isFetchingAllApplicationDeployments: false,
-  isRefreshApplicationDeployment: false,
   isRefreshingAffiliations: false,
   isRefreshingApplicationDeployment: false,
   isUpdatingUserSettings: false,
-  redeployWithCurrentVersionResult: false,
-  redeployWithVersionResult: false,
-  userSettings: userSettingsFactory.build()
+  userSettings: userSettingsFactory.build(),
+  isRedeploying: false,
+  isFetchingTags: false,
+  isFetchingDetails: false
 });

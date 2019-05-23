@@ -11,32 +11,48 @@ import {
   redeployWithCurrentVersion,
   redeployWithVersion,
   refreshApplicationDeployment,
-  findApplicationDeploymentDetails
+  findApplicationDeploymentDetails,
+  findAllApplicationDeployments
 } from './state/actions';
 import { IApplicationDeploymentDetails } from 'models/ApplicationDeployment';
+import { ImageTagType } from 'models/ImageTagType';
 
 interface IApplicationDeploymentSelectorConnectedProps {
   redeployWithNewVersion: (
     applicationDeploymentId: string,
-    version: string
+    version: string,
+    affiliation: string,
+    id: string,
+    setInitialTagTypeTrue: () => void
   ) => void;
   refreshCurrentApplicationDeployment: (
-    applicationDeploymentId: string
+    applicationDeploymentId: string,
+    affiliation: string
   ) => void;
-  redeployWithCurrent: (applicationDeploymentId: string) => void;
-  getGroupedTagsPaged: (repository: string) => void;
+  redeployWithCurrent: (
+    applicationDeploymentId: string,
+    affiliation: string,
+    id: string
+  ) => void;
+  getGroupedTagsPaged: (
+    repository: string,
+    setTagsPagedGroup: (tagsPagedGroup: ITagsPagedGroup) => void
+  ) => void;
   getTagsPaged: (
     repository: string,
-    type: string,
+    type: ImageTagType,
+    updateTagsPaged: (type: ImageTagType, next: ITagsPaged) => void,
     first?: number,
     cursor?: string
   ) => void;
+  getAllApplicationDeployments: (affiliation: string) => void;
   getApplicationDeploymentDetails: (id: string) => void;
   findTagsPagedResponse: ITagsPaged;
   findGroupedTagsPagedResult: ITagsPagedGroup;
+  isFetchingTags: boolean;
   isRefreshingApplicationDeployment: boolean;
-  redeployWithVersionResult: boolean;
-  redeployWithCurrentVersionResult: boolean;
+  isRedeploying: boolean;
+  isFetchingDetails: boolean;
   applicationDeploymentDetails: IApplicationDeploymentDetails;
 }
 export type ApplicationDeploymentDetailsRoute = RouteComponentProps<{
@@ -50,21 +66,23 @@ type ApplicationDeploymentSelectorProps = IApplicationDeploymentContext &
 
 const ApplicationDeploymentSelector = ({
   allDeployments,
-  fetchApplicationDeployments,
+  getAllApplicationDeployments,
   match,
   filterPathUrl,
   getApplicationDeploymentDetails,
   applicationDeploymentDetails,
   refreshCurrentApplicationDeployment,
   redeployWithNewVersion,
-  redeployWithVersionResult,
   redeployWithCurrent,
-  redeployWithCurrentVersionResult,
+  isRedeploying,
   getGroupedTagsPaged,
   getTagsPaged,
   findTagsPagedResponse,
+  isFetchingTags,
+  isFetchingDetails,
   findGroupedTagsPagedResult,
-  isRefreshingApplicationDeployment
+  isRefreshingApplicationDeployment,
+  affiliation
 }: ApplicationDeploymentSelectorProps) => {
   const deployment = allDeployments.find(
     d => d.id === match.params.applicationDeploymentId
@@ -78,20 +96,22 @@ const ApplicationDeploymentSelector = ({
     <DetailsViewBaseWithApi
       {...props}
       deployment={deployment}
-      fetchApplicationDeployments={fetchApplicationDeployments}
+      getAllApplicationDeployments={getAllApplicationDeployments}
       filterPathUrl={filterPathUrl}
       findApplicationDeploymentDetails={getApplicationDeploymentDetails}
-      applicationDeploymentDetails={applicationDeploymentDetails}
+      deploymentDetails={applicationDeploymentDetails}
       refreshApplicationDeployment={refreshCurrentApplicationDeployment}
       isRefreshingApplicationDeployment={isRefreshingApplicationDeployment}
       redeployWithVersion={redeployWithNewVersion}
       redeployWithCurrentVersion={redeployWithCurrent}
-      redeployWithCurrentVersionResult={redeployWithCurrentVersionResult}
+      isRedeploying={isRedeploying}
       findGroupedTagsPaged={getGroupedTagsPaged}
       findGroupedTagsPagedResult={findGroupedTagsPagedResult}
       findTagsPaged={getTagsPaged}
       findTagsPagedResponse={findTagsPagedResponse}
-      redeployWithVersionResult={redeployWithVersionResult}
+      affiliation={affiliation}
+      isFetchingTags={isFetchingTags}
+      isFetchingDetails={isFetchingDetails}
     />
   );
 
@@ -103,10 +123,12 @@ export default ApplicationDeploymentSelector;
 const mapStateToProps = (state: RootState) => ({
   isRefreshingApplicationDeployment:
     state.affiliationView.isRefreshingApplicationDeployment,
-  redeployWithVersionResult: state.affiliationView.redeployWithVersionResult,
   findGroupedTagsPagedResult: state.affiliationView.findGroupedTagsPagedResult,
   applicationDeploymentDetails:
-    state.affiliationView.applicationDeploymentDetails
+    state.affiliationView.applicationDeploymentDetails,
+  isRedeploying: state.affiliationView.isRedeploying,
+  isFetchingTags: state.affiliationView.isFetchingTags,
+  isFetchingDetails: state.affiliationView.isFetchingDetails
 });
 
 export const ApplicationDeploymentSelectorConnected = connect(
@@ -114,21 +136,41 @@ export const ApplicationDeploymentSelectorConnected = connect(
   {
     redeployWithNewVersion: (
       applicationDeploymentId: string,
-      version: string
-    ) => redeployWithVersion(applicationDeploymentId, version),
-    refreshCurrentApplicationDeployment: (applicationDeploymentId: string) =>
-      refreshApplicationDeployment(applicationDeploymentId),
-    redeployWithCurrentVersion: (applicationDeploymentId: string) =>
-      redeployWithCurrentVersion(applicationDeploymentId),
-    getGroupedTagsPaged: (repository: string) =>
-      findGroupedTagsPaged(repository),
+      version: string,
+      affiliation: string,
+      id: string,
+      setInitialTagTypeTrue: () => void
+    ) =>
+      redeployWithVersion(
+        applicationDeploymentId,
+        version,
+        affiliation,
+        id,
+        setInitialTagTypeTrue
+      ),
+    refreshCurrentApplicationDeployment: (
+      applicationDeploymentId: string,
+      affiliation: string
+    ) => refreshApplicationDeployment(applicationDeploymentId, affiliation),
+    redeployWithCurrent: (
+      applicationDeploymentId: string,
+      affiliation: string,
+      id: string
+    ) => redeployWithCurrentVersion(applicationDeploymentId, affiliation, id),
+    getGroupedTagsPaged: (
+      repository: string,
+      setTagsPagedGroup: (tagsPagedGroup: ITagsPagedGroup) => void
+    ) => findGroupedTagsPaged(repository, setTagsPagedGroup),
     getTagsPaged: (
       repository: string,
-      type: string,
+      type: ImageTagType,
+      updateTagsPaged: (type: ImageTagType, next: ITagsPaged) => void,
       first?: number,
       cursor?: string
-    ) => findTagsPaged(repository, type, first, cursor),
+    ) => findTagsPaged(repository, type, updateTagsPaged, first, cursor),
     getApplicationDeploymentDetails: (id: string) =>
-      findApplicationDeploymentDetails(id)
+      findApplicationDeploymentDetails(id),
+    getAllApplicationDeployments: (affiliation: string) =>
+      findAllApplicationDeployments(affiliation)
   }
 )(ApplicationDeploymentSelector);

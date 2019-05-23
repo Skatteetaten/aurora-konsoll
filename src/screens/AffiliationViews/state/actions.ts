@@ -14,6 +14,7 @@ import { IUserSettings } from 'models/UserSettings';
 import { createAction } from 'redux-ts-utils';
 import { RootAction, RootState } from 'store/types';
 import { IImageTagsConnection } from 'services/auroraApiClients/imageRepositoryClient/query';
+import { ImageTagType } from 'models/ImageTagType';
 
 const affiliationViewAction = (action: string) => `affiliationView/${action}`;
 
@@ -45,17 +46,17 @@ export const refreshApplicationDeploymentResponse = createAction<boolean>(
   affiliationViewAction('REFRESH_APPLICATION_DEPLOYMENT_RESPONSE')
 );
 
-export const redeployWithVersionResponse = createAction<boolean>(
-  affiliationViewAction('REDEPLOY_WITH_VERSION_RESPONSE')
-);
-
-export const redeployWithCurrentVersionResponse = createAction<boolean>(
-  affiliationViewAction('REDEPLOY_WITH_CURRENT_VERSION_RESPONSE')
+export const redeployRequest = createAction<boolean>(
+  affiliationViewAction('REDEPLOY_REQUEST')
 );
 
 export const applicationDeploymentDetailsResponse = createAction<
   IApplicationDeploymentDetails
 >(affiliationViewAction('APPLICATION_DEPLOYMENT_DETAILS'));
+
+export const fetchDetailsRequest = createAction<boolean>(
+  affiliationViewAction('FETCH_DETAILS_REQUEST')
+);
 
 export const findTagsPagedResponse = createAction<ITagsPaged>(
   affiliationViewAction('FIND_TAGS_PAGED_RESPONSE')
@@ -63,6 +64,10 @@ export const findTagsPagedResponse = createAction<ITagsPaged>(
 
 export const findGroupedTagsPagedResponse = createAction<ITagsPagedGroup>(
   affiliationViewAction('FIND_GROUPED_TAGS_PAGED_RESPONSE')
+);
+
+export const fetchTagsRequest = createAction<boolean>(
+  affiliationViewAction('FETCH_TAGS_REQUEST')
 );
 
 export type Thunk = ActionCreator<
@@ -173,8 +178,10 @@ export const updateUserSettings: Thunk = (
 };
 
 export const refreshApplicationDeployment: Thunk = (
-  applicationDeploymentId: string
+  applicationDeploymentId: string,
+  affiliation: string
 ) => async (dispatch, getState, { clients }) => {
+  dispatch(refreshApplicationDeploymentRequest(true));
   const result = await clients.applicationDeploymentClient.refreshApplicationDeployment(
     applicationDeploymentId
   );
@@ -185,15 +192,22 @@ export const refreshApplicationDeployment: Thunk = (
 
   if (result && result.data) {
     dispatch(refreshApplicationDeploymentResponse(true));
+    dispatch(findAllApplicationDeployments(affiliation));
+    dispatch(findApplicationDeploymentDetails(applicationDeploymentId));
   } else {
     dispatch(refreshApplicationDeploymentResponse(false));
   }
+  dispatch(refreshApplicationDeploymentRequest(false));
 };
 
 export const redeployWithVersion: Thunk = (
   applicationDeploymentId: string,
-  version: string
+  version: string,
+  affiliation: string,
+  id: string,
+  setInitialTagTypeTrue: () => void
 ) => async (dispatch, getState, { clients }) => {
+  dispatch(redeployRequest(true));
   const result = await clients.applicationDeploymentClient.redeployWithVersion(
     applicationDeploymentId,
     version
@@ -204,15 +218,18 @@ export const redeployWithVersion: Thunk = (
   }
 
   if (result && result.data) {
-    dispatch(redeployWithVersionResponse(true));
-  } else {
-    dispatch(redeployWithVersionResponse(false));
+    dispatch(refreshApplicationDeployment(id, affiliation));
+    setInitialTagTypeTrue();
   }
+  dispatch(redeployRequest(false));
 };
 
 export const redeployWithCurrentVersion: Thunk = (
-  applicationDeploymentId: string
+  applicationDeploymentId: string,
+  affiliation: string,
+  id: string
 ) => async (dispatch, getState, { clients }) => {
+  dispatch(redeployRequest(true));
   const result = await clients.applicationDeploymentClient.redeployWithCurrentVersion(
     applicationDeploymentId
   );
@@ -222,20 +239,19 @@ export const redeployWithCurrentVersion: Thunk = (
   }
 
   if (result && result.data) {
-    dispatch(
-      redeployWithCurrentVersionResponse(result.data.redeployWithCurrentVersion)
-    );
-  } else {
-    dispatch(redeployWithCurrentVersionResponse(false));
+    dispatch(refreshApplicationDeployment(id, affiliation));
   }
+  dispatch(redeployRequest(false));
 };
 
 export const findTagsPaged: Thunk = (
   repository: string,
-  type: string,
+  type: ImageTagType,
+  updateTagsPaged: (type: ImageTagType, next: ITagsPaged) => void,
   first?: number,
   cursor?: string
 ) => async (dispatch, getState, { clients }) => {
+  dispatch(fetchTagsRequest(true));
   const result = await clients.imageRepositoryClient.findTagsPaged(
     repository,
     type,
@@ -256,16 +272,17 @@ export const findTagsPaged: Thunk = (
       dispatch(findTagsPagedResponse(defaultTagsPagedGroup()[type]));
     }
     if (result && result.data) {
+      updateTagsPaged(type, toTagsPaged(imageRepositories[0].tags));
       dispatch(findTagsPagedResponse(toTagsPaged(imageRepositories[0].tags)));
     }
   }
+  dispatch(fetchTagsRequest(false));
 };
 
-export const findGroupedTagsPaged: Thunk = (repository: string) => async (
-  dispatch,
-  getState,
-  { clients }
-) => {
+export const findGroupedTagsPaged: Thunk = (
+  repository: string,
+  setTagsPagedGroup: (tagsPagedGroup: ITagsPagedGroup) => void
+) => async (dispatch, getState, { clients }) => {
   const result = await clients.imageRepositoryClient.findGroupedTagsPaged(
     repository
   );
@@ -296,6 +313,7 @@ export const findGroupedTagsPaged: Thunk = (repository: string) => async (
       snapshot: toTagsPaged(mainRepo.snapshot)
     };
 
+    setTagsPagedGroup(normalizedTags);
     dispatch(findGroupedTagsPagedResponse(normalizedTags));
   }
 };
@@ -305,6 +323,7 @@ export const findApplicationDeploymentDetails: Thunk = (id: string) => async (
   getState,
   { clients }
 ) => {
+  dispatch(fetchDetailsRequest(true));
   const result = await clients.applicationDeploymentClient.findApplicationDeploymentDetails(
     id
   );
@@ -347,6 +366,7 @@ export const findApplicationDeploymentDetails: Thunk = (id: string) => async (
       })
     );
   }
+  dispatch(fetchDetailsRequest(false));
 };
 
 export const toTagsPaged = (
@@ -393,8 +413,8 @@ export default {
   userSettingsResponse,
   updateUserSettingsRequest,
   refreshApplicationDeploymentResponse,
-  redeployWithVersionResponse,
   applicationDeploymentDetailsResponse,
   findTagsPagedResponse,
-  findGroupedTagsPagedResponse
+  findGroupedTagsPagedResponse,
+  redeployRequest
 };
