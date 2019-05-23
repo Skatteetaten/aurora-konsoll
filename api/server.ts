@@ -28,11 +28,11 @@ app.use(
       const token = req.headers['authorization'];
       // The first time GOBO is called, the token may not have been encrypted yet.
       if (token) {
-        try {
+        if (isEncrypted(token)) {
           const authToken = decrypt(token);
           proxyReq.setHeader('authorization', 'Bearer ' + authToken);
           req.headers.authorization = 'Bearer ' + authToken;
-        } catch (err) {
+        } else {
           proxyReq.setHeader('authorization', 'Bearer ' + token);
           req.headers.authorization = 'Bearer ' + token;
         }        
@@ -75,6 +75,15 @@ app.get('/api/accept-token', (req, res) => {
 app.listen(PORT, () => {
   console.log(`started on port ${PORT}`);
 });
+
+function isEncrypted(value) {
+  try {
+    decrypt(value);
+    return true;
+  } catch (err) {
+    return false;
+  }
+}
 
 function encrypt(text){
   var cipher = crypto.createCipher(algorithm, password)
