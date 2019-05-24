@@ -122,7 +122,9 @@ export class Schema extends React.Component<ISchemaProps, ISchemaState> {
 
     if (
       prevProps.affiliation !== affiliation ||
-      (prevProps.items.databaseSchemas.length === 0 &&
+      (prevProps.items.databaseSchemas &&
+        prevProps.items.databaseSchemas.length === 0 &&
+        items.databaseSchemas &&
         items.databaseSchemas.length > 0)
     ) {
       onFetch([affiliation]);
@@ -143,7 +145,7 @@ export class Schema extends React.Component<ISchemaProps, ISchemaState> {
     const { items } = this.props;
     let viewItems: IDatabaseSchemaView[];
 
-    if (items.databaseSchemas.length > 0) {
+    if (items.databaseSchemas && items.databaseSchemas.length > 0) {
       viewItems = items.databaseSchemas.map(i => {
         const getJdbcUrlText = (prefix: string) =>
           i.jdbcUrl.substring(i.jdbcUrl.indexOf(prefix) + prefix.length);
@@ -178,9 +180,9 @@ export class Schema extends React.Component<ISchemaProps, ISchemaState> {
     const { items } = this.props;
     const { deleteSelectionIds } = this.state;
     for (const id of deleteSelectionIds) {
-      const foundId = items.databaseSchemas.find(
-        (it: IDatabaseSchema) => it.id === id
-      );
+      const foundId =
+        items.databaseSchemas &&
+        items.databaseSchemas.find((it: IDatabaseSchema) => it.id === id);
       if (foundId) {
         this.setState(prevState => ({
           extendedInfo: [...prevState.extendedInfo, foundId]
@@ -456,11 +458,11 @@ export class Schema extends React.Component<ISchemaProps, ISchemaState> {
     const { items } = this.props;
     const selected: IObjectWithKey[] = this.selection.getSelection();
     let selectedSchema;
-    if (selected.length > 0) {
+    if (selected && selected.length > 0) {
       const selectedId = (selected[0] as IDatabaseSchema).id;
-      selectedSchema = items.databaseSchemas.find(
-        (i: IDatabaseSchema) => i.id === selectedId
-      );
+      selectedSchema =
+        items.databaseSchemas &&
+        items.databaseSchemas.find((i: IDatabaseSchema) => i.id === selectedId);
     }
     this.setState({
       selectedSchema

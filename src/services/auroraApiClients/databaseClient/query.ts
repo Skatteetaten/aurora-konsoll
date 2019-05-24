@@ -2,7 +2,7 @@ import gql from 'graphql-tag';
 import { IDatabaseSchema } from 'models/schemas';
 
 export interface IDatabaseSchemasQuery {
-  databaseSchemas: IDatabaseSchema[];
+  databaseSchemas?: IDatabaseSchema[];
 }
 
 export const DATABASE_SCHEMAS_QUERY = gql`

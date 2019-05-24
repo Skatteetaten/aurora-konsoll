@@ -21,10 +21,12 @@ const DeletionSummary = ({
   items
 }: IDeletionSummaryProps) => {
   const getDatabaseSchemaInfoById = (ids: string[]) => {
-    const extendedInfoList = items.databaseSchemas.filter(
-      it => -1 !== ids.indexOf(it.id)
-    );
-    return renderDetailsListWithSchemaInfo(extendedInfoList);
+    if (items.databaseSchemas) {
+      const extendedInfoList = items.databaseSchemas.filter(
+        it => -1 !== ids.indexOf(it.id)
+      );
+      return renderDetailsListWithSchemaInfo(extendedInfoList);
+    }
   };
 
   const createRows = (label: string, ids: string[]) => (
