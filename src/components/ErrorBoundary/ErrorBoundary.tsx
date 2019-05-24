@@ -1,6 +1,7 @@
 import * as React from 'react';
 import ErrorPopup from './ErrorPopup';
 import { IErrors, IAppError } from 'models/errors';
+import { logger } from 'services/LoggerService';
 
 interface IErrorBoundaryProps {
   getNextError: () => void;
@@ -12,6 +13,7 @@ interface IErrorBoundaryProps {
 
 interface IErrorBoundaryState {
   isExtraInfoVisible: boolean;
+  errorQueue: IAppError[];
 }
 
 class ErrorBoundary extends React.Component<
@@ -19,22 +21,16 @@ class ErrorBoundary extends React.Component<
   IErrorBoundaryState
 > {
   public state: IErrorBoundaryState = {
-    isExtraInfoVisible: false
+    isExtraInfoVisible: false,
+    errorQueue: []
   };
-
-  public async componentDidUpdate(prevProps: IErrorBoundaryProps) {
+  public async componentDidUpdate() {
     const { errors, getNextError, nextError } = this.props;
-
-    if (errors.errorQueue.length !== prevProps.errors.errorQueue.length) {
-      fetch('/api/log', {
-        body: JSON.stringify({
-          location: window.location.pathname,
-          message: errors.errorQueue[0].error.message
-        }),
-        headers: {
-          'Content-Type': 'application/json; charset=utf-8'
-        },
-        method: 'POST'
+    const { errorQueue } = this.state;
+    if (errors.errorQueue > errorQueue) {
+      logger(errors.errorQueue[0].error.message);
+      this.setState({
+        errorQueue: errors.errorQueue
       });
     }
     if (
