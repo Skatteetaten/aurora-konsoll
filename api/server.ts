@@ -78,11 +78,7 @@ app.listen(PORT, () => {
 
 function isEncrypted(value) {
   const result = decrypt(value);
-  if (result !== value) {
-    return true;
-  } else {
-    return false;
-  }
+  return result !== value ? true : false;
 }
 
 function encrypt(text){
