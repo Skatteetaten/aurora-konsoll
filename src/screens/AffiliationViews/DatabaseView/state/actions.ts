@@ -14,7 +14,7 @@ import {
   IJdbcUser,
   IUpdateDatabaseSchemaInputWithCreatedBy
 } from 'models/schemas';
-import { addErrors } from 'screens/ErrorHandler/state/actions';
+import { addCurrentErrors } from 'screens/ErrorHandler/state/actions';
 import { createAction } from 'redux-ts-utils';
 
 const databaseAction = (action: string) => `database/${action}`;
@@ -58,9 +58,7 @@ export const fetchSchemas: Thunk = (affiliations: string[]) => async (
   dispatch(fetchSchemaRequest(true));
   const result = await clients.databaseClient.getSchemas(affiliations);
   dispatch(fetchSchemaRequest(false));
-  if (result && result.errors) {
-    dispatch(addErrors(result.errors, result.name));
-  }
+  dispatch(addCurrentErrors(result));
 
   if (result && result.data) {
     dispatch(fetchSchemaResponse(result.data));
@@ -74,11 +72,14 @@ export const updateSchema: Thunk = (
 ) => async (dispatch, getState, { clients }) => {
   const result = await clients.databaseClient.updateSchema(databaseSchema);
 
-  if (result && result.errors) {
-    dispatch(addErrors(result.errors, result.name));
-  }
+  dispatch(addCurrentErrors(result));
   if (result && result.data && result.data.updateDatabaseSchema) {
-    dispatch(updateSchemaResponse(true));
+    const update = !!(
+      result &&
+      result.data &&
+      result.data.updateDatabaseSchema
+    );
+    dispatch(updateSchemaResponse(update));
   } else {
     dispatch(updateSchemaResponse(false));
   }
@@ -93,9 +94,7 @@ export const deleteSchema: Thunk = (databaseSchema: IDatabaseSchema) => async (
   const result = await clients.databaseClient.deleteSchemas([
     databaseSchema.id
   ]);
-  if (result && result.errors) {
-    dispatch(addErrors(result.errors, result.name));
-  }
+  dispatch(addCurrentErrors(result));
 
   if (result && result.data) {
     dispatch(deleteSchemasResponse(result.data.deleteDatabaseSchemas));
@@ -117,9 +116,7 @@ export const deleteSchemas: Thunk = (ids: string[]) => async (
   { clients }
 ) => {
   const result = await clients.databaseClient.deleteSchemas(ids);
-  if (result && result.errors) {
-    dispatch(addErrors(result.errors, result.name));
-  }
+  dispatch(addCurrentErrors(result));
 
   if (result && result.data) {
     dispatch(deleteSchemasResponse(result.data.deleteDatabaseSchemas));
@@ -139,9 +136,7 @@ export const testJdbcConnectionForId: Thunk = (id: string) => async (
   { clients }
 ) => {
   const result = await clients.databaseClient.testJdbcConnectionForId(id);
-  if (result && result.errors) {
-    dispatch(addErrors(result.errors, result.name));
-  }
+  dispatch(addCurrentErrors(result));
 
   if (result && result.data) {
     dispatch(
@@ -158,9 +153,7 @@ export const testJdbcConnectionForJdbcUser: Thunk = (
   const result = await clients.databaseClient.testJdbcConnectionForJdbcUser(
     jdbcUser
   );
-  if (result && result.errors) {
-    dispatch(addErrors(result.errors, result.name));
-  }
+  dispatch(addCurrentErrors(result));
 
   if (result && result.data) {
     dispatch(
@@ -179,10 +172,7 @@ export const createDatabaseSchema: Thunk = (
   const result = await clients.databaseClient.createDatabaseSchema(
     databaseSchema
   );
-
-  if (result && result.errors) {
-    dispatch(addErrors(result.errors, result.name));
-  }
+  dispatch(addCurrentErrors(result));
 
   if (result && result.data && result.data.createDatabaseSchema) {
     const graphqlResult = result.data.createDatabaseSchema;

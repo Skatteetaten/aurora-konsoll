@@ -4,6 +4,7 @@ import { createAction } from 'redux-ts-utils';
 import { RootAction, RootState } from 'store/types';
 import { IAuroraApiComponentProps } from 'components/AuroraApi';
 import { IAppError, IErrors } from 'models/errors';
+import { IGoboResult } from 'services/GoboClient';
 
 const errors = (action: string) => `errors/${action}`;
 
@@ -20,6 +21,14 @@ export const nextErrorResponse = createAction<IAppError | undefined>(
 export type Thunk = ActionCreator<
   ThunkAction<void, RootState, IAuroraApiComponentProps, RootAction>
 >;
+
+export const addCurrentErrors: Thunk = (
+  result: IGoboResult<any> | undefined
+) => async dispatch => {
+  if (result && result.errors) {
+    dispatch(addErrors(result.errors, result.name));
+  }
+};
 
 export const addErrors: Thunk = (errors: any[], name?: string) => (
   dispatch,

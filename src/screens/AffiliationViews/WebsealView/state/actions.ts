@@ -1,7 +1,9 @@
 import { IWebsealState } from 'models/Webseal';
 
 import { IAuroraApiComponentProps } from 'components/AuroraApi';
-import { addErrors } from 'screens/ErrorHandler/state/actions';
+import {
+  addCurrentErrors
+} from 'screens/ErrorHandler/state/actions';
 import { ActionCreator } from 'redux';
 import { ThunkAction } from 'redux-thunk';
 import { createAction } from 'redux-ts-utils';
@@ -39,10 +41,7 @@ export const fetchWebsealStates: Thunk = (affiliation: string) => async (
     }
     return states;
   };
-
-  if (result && result.errors) {
-    dispatch(addErrors(result.errors, result.name));
-  }
+  dispatch(addCurrentErrors(result));
 
   if (result && result.data && result.data.affiliations.edges.length > 0) {
     const websealStates = normalizeWebsealState(result.data.affiliations.edges);

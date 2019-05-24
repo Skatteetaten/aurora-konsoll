@@ -8,7 +8,10 @@ import {
   IApplicationDeploymentDetails
 } from 'models/ApplicationDeployment';
 import { normalizeRawDeploymentSpec } from 'models/DeploymentSpec';
-import { addErrors } from 'screens/ErrorHandler/state/actions';
+import {
+  addErrors,
+  addCurrentErrors
+} from 'screens/ErrorHandler/state/actions';
 import { defaultTagsPagedGroup, ITagsPagedGroup, ITagsPaged } from 'models/Tag';
 import { IUserSettings } from 'models/UserSettings';
 import { createAction } from 'redux-ts-utils';
@@ -83,9 +86,7 @@ export const refreshAffiliations: Thunk = (affiliations: string[]) => async (
   const result = await clients.applicationDeploymentClient.refreshAffiliations(
     affiliations
   );
-  if (result && result.errors) {
-    dispatch(addErrors(result.errors, result.name));
-  }
+  dispatch(addCurrentErrors(result));
   dispatch(refreshAffiliationsRequest(false));
 };
 
@@ -96,9 +97,7 @@ export const findAllApplicationDeployments: Thunk = (
   const result = await clients.applicationDeploymentClient.findAllApplicationDeployments(
     affiliations
   );
-  if (result && result.errors) {
-    dispatch(addErrors(result.errors, result.name));
-  }
+  dispatch(addCurrentErrors(result));
   if (!result) {
     dispatch(findAllApplicationDeploymentsResponse([]));
   } else {
@@ -148,9 +147,7 @@ export const getUserSettings: Thunk = () => async (
 ) => {
   const result = await clients.userSettingsClient.getUserSettings();
 
-  if (result && result.errors) {
-    dispatch(addErrors(result.errors, result.name));
-  }
+  dispatch(addCurrentErrors(result));
   if (result && result.data) {
     dispatch(userSettingsResponse(result.data.userSettings));
   } else {
@@ -164,10 +161,8 @@ export const updateUserSettings: Thunk = (
   const result = await clients.userSettingsClient.updateUserSettings(
     userSettings
   );
+  dispatch(addCurrentErrors(result));
 
-  if (result && result.errors) {
-    dispatch(addErrors(result.errors, result.name));
-  }
   if (result && result.data) {
     dispatch(userSettingsResponse(userSettings));
     dispatch(updateUserSettingsRequest(result.data.updateUserSettings));
@@ -185,10 +180,7 @@ export const refreshApplicationDeployment: Thunk = (
   const result = await clients.applicationDeploymentClient.refreshApplicationDeployment(
     applicationDeploymentId
   );
-
-  if (result && result.errors) {
-    dispatch(addErrors(result.errors, result.name));
-  }
+  dispatch(addCurrentErrors(result));
 
   if (result && result.data) {
     dispatch(refreshApplicationDeploymentResponse(true));
@@ -212,10 +204,7 @@ export const redeployWithVersion: Thunk = (
     applicationDeploymentId,
     version
   );
-
-  if (result && result.errors) {
-    dispatch(addErrors(result.errors, result.name));
-  }
+  dispatch(addCurrentErrors(result));
 
   if (result && result.data) {
     dispatch(refreshApplicationDeployment(id, affiliation));
@@ -233,10 +222,7 @@ export const redeployWithCurrentVersion: Thunk = (
   const result = await clients.applicationDeploymentClient.redeployWithCurrentVersion(
     applicationDeploymentId
   );
-
-  if (result && result.errors) {
-    dispatch(addErrors(result.errors, result.name));
-  }
+  dispatch(addCurrentErrors(result));
 
   if (result && result.data) {
     dispatch(refreshApplicationDeployment(id, affiliation));
@@ -258,10 +244,7 @@ export const findTagsPaged: Thunk = (
     first,
     cursor
   );
-
-  if (result && result.errors) {
-    dispatch(addErrors(result.errors, result.name));
-  }
+  dispatch(addCurrentErrors(result));
 
   if (!result) {
     dispatch(findTagsPagedResponse(defaultTagsPagedGroup()[type]));
@@ -286,10 +269,7 @@ export const findGroupedTagsPaged: Thunk = (
   const result = await clients.imageRepositoryClient.findGroupedTagsPaged(
     repository
   );
-
-  if (result && result.errors) {
-    dispatch(addErrors(result.errors, result.name));
-  }
+  dispatch(addCurrentErrors(result));
 
   if (!result) {
     dispatch(findGroupedTagsPagedResponse(defaultTagsPagedGroup()));
@@ -327,10 +307,7 @@ export const findApplicationDeploymentDetails: Thunk = (id: string) => async (
   const result = await clients.applicationDeploymentClient.findApplicationDeploymentDetails(
     id
   );
-
-  if (result && result.errors) {
-    dispatch(addErrors(result.errors, result.name));
-  }
+  dispatch(addCurrentErrors(result));
 
   if (result && result.data && result.data.applicationDeploymentDetails) {
     const {

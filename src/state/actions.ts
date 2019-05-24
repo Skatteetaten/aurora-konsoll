@@ -4,7 +4,7 @@ import { ThunkAction } from 'redux-thunk';
 import { IAuroraApiComponentProps } from 'components/AuroraApi';
 
 import { IUserAndAffiliations } from 'models/ApplicationDeployment';
-import { addErrors } from 'screens/ErrorHandler/state/actions';
+import { addCurrentErrors } from 'screens/ErrorHandler/state/actions';
 import { createAction } from 'redux-ts-utils';
 import { RootAction, RootState } from 'store/types';
 import { IGoboUser } from 'services/auroraApiClients/goboUsageClient/query';
@@ -29,9 +29,7 @@ export const getCurrentUser: Thunk = () => async (
   { clients }
 ): Promise<void> => {
   const result = await clients.applicationDeploymentClient.findUserAndAffiliations();
-  if (result && result.errors) {
-    dispatch(addErrors(result.errors, result.name));
-  }
+  dispatch(addCurrentErrors(result));
 
   if (!result) {
     dispatch(
@@ -60,9 +58,7 @@ export const getGoboUsers: Thunk = () => async (
   { clients }
 ): Promise<void> => {
   const result = await clients.goboUsageClient.getGoboUsers();
-  if (result && result.errors) {
-    dispatch(addErrors(result.errors, result.name));
-  }
+  dispatch(addCurrentErrors(result));
 
   if (!result) {
     dispatch(fetchGoboUsersResponse([]));

@@ -3,7 +3,7 @@ import { ThunkAction } from 'redux-thunk';
 
 import { IAuroraApiComponentProps } from 'components/AuroraApi';
 
-import { addErrors } from 'screens/ErrorHandler/state/actions';
+import { addCurrentErrors } from 'screens/ErrorHandler/state/actions';
 import { createAction } from 'redux-ts-utils';
 import { INetdebugResult, IScanStatus } from 'services/auroraApiClients';
 import {
@@ -39,9 +39,7 @@ export const findNetdebugStatus: Thunk = (host: string, port: string) => async (
 ) => {
   dispatch(fetchNetdebugStatusRequest(true));
   const result = await clients.netdebugClient.findNetdebugStatus(host, port);
-  if (result && result.errors) {
-    dispatch(addErrors(result.errors, result.name));
-  }
+  dispatch(addCurrentErrors(result));
   if (!result) {
     dispatch(fetchNetdebugStatusResponse(errorMessage));
   } else {

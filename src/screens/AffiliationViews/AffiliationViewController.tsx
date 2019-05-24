@@ -149,9 +149,7 @@ class AffiliationViewController extends React.Component<
     prevProps: IAffiliationViewControllerProps,
     prevState: IAffiliationViewControllerState
   ) {
-    const paramsExists = this.deploymentFilterService.isParamsDefined(
-      window.location.search
-    );
+    const paramsExists = this.deploymentFilterService.isParamsDefined();
     this.clearFilterOnAffiliationChange(prevProps.affiliation);
     this.updateQueryOnNewParams(prevState.filter);
     if (prevProps.userSettings !== this.props.userSettings) {
