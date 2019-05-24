@@ -77,10 +77,10 @@ app.listen(PORT, () => {
 });
 
 function isEncrypted(value) {
-  try {
-    decrypt(value);
+  const result = decrypt(value);
+  if (result !== value) {
     return true;
-  } catch (err) {
+  } else {
     return false;
   }
 }
@@ -93,9 +93,13 @@ function encrypt(text){
 }
  
 function decrypt(text){
-  var decipher = crypto.createDecipher(algorithm, password)
-  var dec = decipher.update(text,'hex','utf8')
-  dec += decipher.final('utf8');
-  return dec;
+  try {
+    var decipher = crypto.createDecipher(algorithm, password)
+    var dec = decipher.update(text,'hex','utf8')
+    dec += decipher.final('utf8');
+    return dec;
+  } catch (err) {
+    return text
+  }
 }
 
