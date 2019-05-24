@@ -10,8 +10,8 @@ interface IErrorPopupProps {
   closeError: (id: number) => void;
   closeErrors: () => void;
   errorCount: number;
-  isExtraInfoVisable: boolean;
-  changeExtraInfoVisability: () => void;
+  isExtraInfoVisible: boolean;
+  changeExtraInfoVisibility: () => void;
   className?: string;
 }
 
@@ -33,8 +33,8 @@ const ErrorPopup = ({
   closeError,
   closeErrors,
   errorCount,
-  changeExtraInfoVisability,
-  isExtraInfoVisable
+  changeExtraInfoVisibility,
+  isExtraInfoVisible
 }: IErrorPopupProps) => {
   const close = () => {
     closeError(currentError.id);
@@ -54,7 +54,7 @@ const ErrorPopup = ({
             <Button
               buttonType="secondary"
               icon="helpFilled"
-              onClick={changeExtraInfoVisability}
+              onClick={changeExtraInfoVisibility}
               color="black"
               style={{ paddingLeft: '14px' }}
             >
@@ -74,7 +74,7 @@ const ErrorPopup = ({
         }
       >
         {currentError.error.message}
-        {isExtraInfoVisable && (
+        {isExtraInfoVisible && (
           <table>
             <tbody>
               {!!currentError.error.stack &&
