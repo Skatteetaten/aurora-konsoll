@@ -23,3 +23,7 @@ function parseAndStringify(value: string | object): string {
 function stringify(value: any): string {
   return JSON.stringify(value, undefined, '  ');
 }
+
+export function StringifyAndObjectAssign(value: any[]) {
+  return JSON.stringify(Object.assign({}, value));
+}
