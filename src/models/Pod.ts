@@ -8,6 +8,9 @@ export interface IPodResource {
   startTime: string;
   latestDeployTag: boolean;
   managementResponses?: {
+    links?: {
+      error?: IManagementEndpointError;
+    };
     health?: IManagementEndpointResponse;
   };
   links: ILink[];

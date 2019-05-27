@@ -9,6 +9,8 @@ import { IPodResource } from 'models/Pod';
 import { STATUS_COLORS } from 'models/Status';
 import { getLocalDatetime } from 'utils/date';
 import HealthResponseDialogSelector from './HealthResponseDialogSelector/HealthResponseDialogSelector';
+import { addErrors } from 'screens/ErrorHandler/state/actions';
+import { connect } from 'react-redux';
 
 interface IPodStatusProps {
   pod: IPodResource;
@@ -17,6 +19,7 @@ interface IPodStatusProps {
   className?: string;
   isUpdating: boolean;
   refreshApplicationDeployment: () => void;
+  addErrors: (errors: any[]) => void;
 }
 
 function findLink(pod: IPodResource, name: string): string {
@@ -59,52 +62,77 @@ const PodStatus = ({
   pod,
   className,
   isUpdating,
-  refreshApplicationDeployment
-}: IPodStatusProps) => (
-  <div className={className}>
-    <div className="pod-status">
-      <span>{pod.phase}</span>
-      <div className="pod-icons">
-        <IconLink
-          name="Timeline"
-          isActiveHandler={handleIsActive}
-          href={findLink(pod, 'metrics')}
-          title="Grafana"
-        />
-        <IconLink
-          name="FormatAlignLeft"
-          isActiveHandler={handleIsActive}
-          href={findLink(pod, 'splunk')}
-          title="Splunk"
-        />
+  refreshApplicationDeployment,
+  addErrors
+}: IPodStatusProps) => {
+  const message =
+    pod.managementResponses &&
+    pod.managementResponses.links &&
+    pod.managementResponses.links.error &&
+    pod.managementResponses.links.error.code &&
+    pod.managementResponses.links.error.message;
+
+  console.log(
+    pod.managementResponses &&
+      pod.managementResponses.links &&
+      pod.managementResponses.links.error &&
+      pod.managementResponses.links.error.code
+  );
+
+  if (
+    pod.managementResponses &&
+    pod.managementResponses.links &&
+    pod.managementResponses.links.error
+  ) {
+    addErrors([new Error(message && message)]);
+  }
+
+  return (
+    <div className={className}>
+      <div className="pod-status">
+        <span>{pod.phase}</span>
+        <div className="pod-icons">
+          <IconLink
+            name="Timeline"
+            isActiveHandler={handleIsActive}
+            href={findLink(pod, 'metrics')}
+            title="Grafana"
+          />
+          <IconLink
+            name="FormatAlignLeft"
+            isActiveHandler={handleIsActive}
+            href={findLink(pod, 'splunk')}
+            title="Splunk"
+          />
+        </div>
       </div>
+      <div className="g-pod-content">
+        <div className="g-pod-keys">
+          <p>Navn</p>
+          <p>Startet</p>
+          <p>Antall omstart</p>
+        </div>
+        <div className="g-pod-values">
+          <a
+            target="_blank"
+            rel="noopener noreferrer"
+            href={findLink(pod, 'ocp_console_details')}
+            title={pod.name}
+          >
+            {pod.name}
+          </a>
+          <p>{getLocalDatetime(pod.startTime)}</p>
+          <p>{pod.restartCount}</p>
+        </div>
+      </div>
+      <PodAction
+        pod={pod}
+        isUpdating={isUpdating}
+        refreshApplicationDeployment={refreshApplicationDeployment}
+      />
     </div>
-    <div className="g-pod-content">
-      <div className="g-pod-keys">
-        <p>Navn</p>
-        <p>Startet</p>
-        <p>Antall omstart</p>
-      </div>
-      <div className="g-pod-values">
-        <a
-          target="_blank"
-          rel="noopener noreferrer"
-          href={findLink(pod, 'ocp_console_details')}
-          title={pod.name}
-        >
-          {pod.name}
-        </a>
-        <p>{getLocalDatetime(pod.startTime)}</p>
-        <p>{pod.restartCount}</p>
-      </div>
-    </div>
-    <PodAction
-      pod={pod}
-      isUpdating={isUpdating}
-      refreshApplicationDeployment={refreshApplicationDeployment}
-    />
-  </div>
-);
+  );
+};
 
 interface IPodAction {
   pod: IPodResource;
@@ -135,7 +163,7 @@ const PodAction = ({
 
 const { skeColor } = palette;
 
-export default styled(PodStatus)`
+export const StyledPodStatus = styled(PodStatus)`
   box-shadow: 0px 3px 8px 0px rgba(0, 0, 0, 0.2);
   background: white;
 
@@ -200,3 +228,10 @@ export default styled(PodStatus)`
     }
   }
 `;
+
+export const ApplicationDeploymentSelectorConnected = connect(
+  null,
+  {
+    addErrors: (errors: any[]) => addErrors(errors)
+  }
+)(StyledPodStatus);
