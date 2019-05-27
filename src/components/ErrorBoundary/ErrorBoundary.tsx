@@ -2,7 +2,6 @@ import * as React from 'react';
 import ErrorPopup from './ErrorPopup';
 import { IErrors, IAppError } from 'models/errors';
 import { logger } from 'services/LoggerService';
-import { StringifyAndObjectAssign } from 'utils/string';
 
 interface IErrorBoundaryProps {
   getNextError: () => void;
@@ -28,11 +27,14 @@ class ErrorBoundary extends React.Component<
   public async componentDidUpdate() {
     const { errors, getNextError, nextError } = this.props;
     const { errorQueue } = this.state;
-    if (
-      StringifyAndObjectAssign(errors.errorQueue) !==
-        StringifyAndObjectAssign(errorQueue) &&
-      errors.errorQueue.length > 0
-    ) {
+
+    const isEqualErrorQueues = () => {
+      return (
+        JSON.stringify(Object.assign({}, errors.errorQueue)) ===
+        JSON.stringify(Object.assign({}, errorQueue))
+      );
+    };
+    if (!isEqualErrorQueues() && errors.errorQueue.length > 0) {
       logger(errors.errorQueue[0].error.message);
       this.setState({
         errorQueue: Object.assign({}, this.props.errors.errorQueue)
