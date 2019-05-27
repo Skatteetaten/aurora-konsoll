@@ -1,5 +1,6 @@
 import express from 'express';
 import proxy from 'http-proxy-middleware';
+import crypto from 'crypto';
 
 import {
   APPLICATION_NAME,
@@ -13,9 +14,7 @@ import {
   TOKEN_ENCRYPTION_FRASE
 } from './config';
 
-const crypto = require('crypto'), 
-      algorithm = 'aes-256-ctr',
-      password = TOKEN_ENCRYPTION_FRASE;
+const algorithm = 'aes-256-ctr', password = TOKEN_ENCRYPTION_FRASE;
 
 const app = express();
 
@@ -76,19 +75,19 @@ app.listen(PORT, () => {
   console.log(`started on port ${PORT}`);
 });
 
-function isEncrypted(text : String) : Boolean {
+function isEncrypted(text : string) : boolean {
   const result = decrypt(text);
   return result !== text ? true : false;
 }
 
-function encrypt(text : String) : String {
+function encrypt(text : string) : string {
   const cipher = crypto.createCipher(algorithm, password)
   let crypted = cipher.update(text,'utf8','hex')
   crypted += cipher.final('hex');
   return crypted;
 }
  
-function decrypt(text : String) : String {
+function decrypt(text : string) : string {
   try {
     const decipher = crypto.createDecipher(algorithm, password)
     let dec = decipher.update(text,'hex','utf8')
