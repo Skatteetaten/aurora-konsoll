@@ -76,22 +76,22 @@ app.listen(PORT, () => {
   console.log(`started on port ${PORT}`);
 });
 
-function isEncrypted(value) {
-  const result = decrypt(value);
-  return result !== value ? true : false;
+function isEncrypted(text : String) : Boolean {
+  const result = decrypt(text);
+  return result !== text ? true : false;
 }
 
-function encrypt(text){
-  var cipher = crypto.createCipher(algorithm, password)
-  var crypted = cipher.update(text,'utf8','hex')
+function encrypt(text : String) : String {
+  const cipher = crypto.createCipher(algorithm, password)
+  let crypted = cipher.update(text,'utf8','hex')
   crypted += cipher.final('hex');
   return crypted;
 }
  
-function decrypt(text){
+function decrypt(text : String) : String {
   try {
-    var decipher = crypto.createDecipher(algorithm, password)
-    var dec = decipher.update(text,'hex','utf8')
+    const decipher = crypto.createDecipher(algorithm, password)
+    let dec = decipher.update(text,'hex','utf8')
     dec += decipher.final('utf8');
     return dec;
   } catch (err) {
