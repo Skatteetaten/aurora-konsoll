@@ -246,14 +246,14 @@ export const findTagsPaged: Thunk = (
   );
   dispatch(addCurrentErrors(result));
 
-  if (!result) {
+  if (
+    !result ||
+    !(result.data.imageRepositories && result.data.imageRepositories.length > 0)
+  ) {
     dispatch(findTagsPagedResponse(defaultTagsPagedGroup()[type]));
   } else {
     const { imageRepositories } = result.data;
 
-    if (!(imageRepositories && imageRepositories.length > 0)) {
-      dispatch(findTagsPagedResponse(defaultTagsPagedGroup()[type]));
-    }
     if (result && result.data) {
       updateTagsPaged(type, toTagsPaged(imageRepositories[0].tags));
       dispatch(findTagsPagedResponse(toTagsPaged(imageRepositories[0].tags)));
@@ -271,14 +271,13 @@ export const findGroupedTagsPaged: Thunk = (
   );
   dispatch(addCurrentErrors(result));
 
-  if (!result) {
+  if (
+    !result ||
+    !(result.data.imageRepositories && result.data.imageRepositories.length > 0)
+  ) {
     dispatch(findGroupedTagsPagedResponse(defaultTagsPagedGroup()));
   } else {
     const { imageRepositories } = result.data;
-
-    if (!(imageRepositories && imageRepositories.length > 0)) {
-      dispatch(findGroupedTagsPagedResponse(defaultTagsPagedGroup()));
-    }
 
     const [mainRepo] = imageRepositories;
 
