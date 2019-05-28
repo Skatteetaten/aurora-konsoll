@@ -9,8 +9,6 @@ import { IPodResource } from 'models/Pod';
 import { STATUS_COLORS } from 'models/Status';
 import { getLocalDatetime } from 'utils/date';
 import HealthResponseDialogSelector from './HealthResponseDialogSelector/HealthResponseDialogSelector';
-import { addErrors } from 'screens/ErrorHandler/state/actions';
-import { connect } from 'react-redux';
 
 interface IPodStatusProps {
   pod: IPodResource;
@@ -19,7 +17,6 @@ interface IPodStatusProps {
   className?: string;
   isUpdating: boolean;
   refreshApplicationDeployment: () => void;
-  addErrors: (errors: any[]) => void;
 }
 
 function findLink(pod: IPodResource, name: string): string {
@@ -62,31 +59,8 @@ const PodStatus = ({
   pod,
   className,
   isUpdating,
-  refreshApplicationDeployment,
-  addErrors
+  refreshApplicationDeployment
 }: IPodStatusProps) => {
-  const message =
-    pod.managementResponses &&
-    pod.managementResponses.links &&
-    pod.managementResponses.links.error &&
-    pod.managementResponses.links.error.code &&
-    pod.managementResponses.links.error.message;
-
-  console.log(
-    pod.managementResponses &&
-      pod.managementResponses.links &&
-      pod.managementResponses.links.error &&
-      pod.managementResponses.links.error.code
-  );
-
-  if (
-    pod.managementResponses &&
-    pod.managementResponses.links &&
-    pod.managementResponses.links.error
-  ) {
-    addErrors([new Error(message && message)]);
-  }
-
   return (
     <div className={className}>
       <div className="pod-status">
@@ -163,7 +137,7 @@ const PodAction = ({
 
 const { skeColor } = palette;
 
-export const StyledPodStatus = styled(PodStatus)`
+export default styled(PodStatus)`
   box-shadow: 0px 3px 8px 0px rgba(0, 0, 0, 0.2);
   background: white;
 
@@ -228,10 +202,3 @@ export const StyledPodStatus = styled(PodStatus)`
     }
   }
 `;
-
-export const ApplicationDeploymentSelectorConnected = connect(
-  null,
-  {
-    addErrors: (errors: any[]) => addErrors(errors)
-  }
-)(StyledPodStatus);

@@ -13,6 +13,7 @@ import { ManagementInterface } from './ManagementInterface';
 import PodStatus from './PodStatus';
 import { ServiceLinks } from './ServiceLinks';
 import StatusCheckReportCard from './StatusCheckReportCard';
+import { ManagementLinksErrors } from './ManagementLinksErrors';
 
 interface IInformationViewProps {
   isFetchingDetails: boolean;
@@ -39,6 +40,25 @@ const InformationView = ({
   const hasManagementInterface =
     !!deploymentSpec && !!deploymentSpec.management;
 
+  const managementLinksErrors = pods.map(
+    pod =>
+      pod.managementResponses &&
+      pod.managementResponses.links &&
+      pod.managementResponses.links.error
+  );
+  if (managementLinksErrors) {
+    const result = Object.values(
+      managementLinksErrors.reduce((c, v) => {
+        if (v) {
+          c[v.code] = c[v.code] || [v, 0];
+          c[v.code] = c[v.code][1]++;
+        }
+        return c;
+      }, {})
+    );
+    console.log(result);
+  }
+
   return (
     <div className={className}>
       <div className="info-grid">
@@ -61,6 +81,12 @@ const InformationView = ({
             hasManagementInterface={hasManagementInterface}
             details={deploymentDetails}
           />
+          {managementLinksErrors.length > 0 && <h3>Feil</h3>}
+          {managementLinksErrors.map(error => {
+            if (error) {
+              return <ManagementLinksErrors error={error} />;
+            }
+          })}
         </div>
       </div>
       <hr
