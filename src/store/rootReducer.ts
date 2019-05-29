@@ -6,15 +6,15 @@ import { websealReducer } from 'screens/AffiliationViews/WebsealView/state/reduc
 import { certificateReducer } from 'screens/CertificateView/state/reducers';
 import { netdebugViewReducer } from 'screens/NetdebugView/state/reducer';
 import { startupReducer } from 'state/reducers';
+import { versionViewReducer } from 'screens/AffiliationViews/DetailsView/VersionView/state/reducer';
 
-const rootReducer = combineReducers({
+export const rootReducer = combineReducers({
   database: databaseReducer,
   startup: startupReducer,
   webseal: websealReducer,
   certificate: certificateReducer,
   errors: errorsReducer,
+  versionView: versionViewReducer,
   affiliationView: affiliationViewReducer,
   netdebug: netdebugViewReducer
 });
-
-export default rootReducer;

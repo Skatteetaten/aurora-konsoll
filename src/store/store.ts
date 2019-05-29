@@ -1,5 +1,5 @@
 import { applyMiddleware, compose, createStore } from 'redux';
-import rootReducer from './rootReducer';
+import { rootReducer } from './rootReducer';
 
 import { IApiClients } from 'components/AuroraApi';
 import thunkMiddleware from 'redux-thunk';
