@@ -148,32 +148,33 @@ interface IDetailsListWrapper {
 }
 
 const DetailsListWrapper = styled.div<IDetailsListWrapper>`
-  [data-item-index] {
-    &:hover, &:active, &:focus {
+  .ms-FocusZone.ms-DetailsRow {
+    &[data-item-index] {
+      &:hover, &:active, &:focus {
+        color: black;
+        background: #cde1f9;
+      }
+    }
+
+    &[data-item-index="${props => props.selectedIndex}"] {
       color: black;
-      background: #cde1f9;
+      background: #8accff ;
+
+      &:hover, &:active, &:focus {
+        background: #8accff;
+      }
+    }
+
+    &[data-item-index="${props => props.deployedIndex}"] {
+      color: black;
+      background: ${({ deployedIndex, selectedIndex }) =>
+        deployedIndex === selectedIndex ? '#e7b78a' : '#f9ede2'};
+
+      &:hover, &:active, &:focus {
+        background: #e7b78a;
+      }
     }
   }
-
-  [data-item-index="${props => props.selectedIndex}"] {
-    color: black;
-    background: #8accff;
-
-    &:hover, &:active, &:focus {
-      background: #8accff;
-    }
-  }
-
-  [data-item-index="${props => props.deployedIndex}"] {
-    color: black;
-    background: ${({ deployedIndex, selectedIndex }) =>
-      deployedIndex === selectedIndex ? '#e7b78a' : '#f9ede2'};
-
-    &:hover, &:active, &:focus {
-      background: #e7b78a;
-    }
-  }
-
   .ms-List-cell {
     cursor: pointer
   }
