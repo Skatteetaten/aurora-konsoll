@@ -1,5 +1,5 @@
 import { IDeploymentSpec } from 'models/DeploymentSpec';
-import { IPodResource } from 'models/Pod';
+import { IPodResource, IManagementEndpointError } from 'models/Pod';
 import { ITag } from 'models/Tag';
 import {
   IPermission,
@@ -57,4 +57,12 @@ export interface IUserAndAffiliations {
 export interface ILink {
   name: string;
   url: string;
+}
+
+export interface IInformationView {
+  healthStatus: JSX.Element;
+  name: string;
+  startedDate: string;
+  numberOfRestarts: number;
+  externalLinks: string;
 }

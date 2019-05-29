@@ -4,7 +4,8 @@ import styled from 'styled-components';
 import Spinner from 'components/Spinner';
 import {
   IApplicationDeployment,
-  IApplicationDeploymentDetails
+  IApplicationDeploymentDetails,
+  IInformationView
 } from 'models/ApplicationDeployment';
 import { ActiveDeploymentInformation } from './ActiveDeploymentInformation';
 import { DeploymentSpecInformation } from './DeploymentSpecInformation';
@@ -13,7 +14,12 @@ import { ManagementInterface } from './ManagementInterface';
 import PodStatus from './PodStatus';
 import { ServiceLinks } from './ServiceLinks';
 import StatusCheckReportCard from './StatusCheckReportCard';
-import { ManagementLinksErrors } from './ManagementLinksErrors';
+import SortableDetailsList from 'components/SortableDetailsList';
+import InformationViewService, {
+  filterInformationView
+} from 'services/InformationViewService';
+import { getLocalDatetime } from 'utils/date';
+import ActionButton from 'aurora-frontend-react-komponenter/ActionButton';
 
 interface IInformationViewProps {
   isFetchingDetails: boolean;
@@ -40,24 +46,29 @@ const InformationView = ({
   const hasManagementInterface =
     !!deploymentSpec && !!deploymentSpec.management;
 
-  const managementLinksErrors = pods.map(
-    pod =>
-      pod.managementResponses &&
-      pod.managementResponses.links &&
-      pod.managementResponses.links.error
-  );
-  if (managementLinksErrors) {
-    const result = Object.values(
-      managementLinksErrors.reduce((c, v) => {
-        if (v) {
-          c[v.code] = c[v.code] || [v, 0];
-          c[v.code] = c[v.code][1]++;
-        }
-        return c;
-      }, {})
-    );
-    console.log(result);
-  }
+  const hasManagementLinksErrors =
+    pods.map(
+      pod =>
+        pod.managementResponses &&
+        pod.managementResponses.links &&
+        pod.managementResponses.links.error
+    ).length > 0;
+
+  const applicationDeploymentPods = (): IInformationView[] => {
+    return deploymentDetails.pods.map(pod => ({
+      healthStatus: (
+        <ActionButton
+          icon="Error"
+          // color={getStatusColorForPod(pod)}
+          iconSize={ActionButton.LARGE}
+        />
+      ),
+      name: pod.name,
+      startedDate: getLocalDatetime(pod.startTime),
+      numberOfRestarts: pod.restartCount,
+      externalLinks: 'test'
+    }));
+  };
 
   return (
     <div className={className}>
@@ -81,12 +92,6 @@ const InformationView = ({
             hasManagementInterface={hasManagementInterface}
             details={deploymentDetails}
           />
-          {managementLinksErrors.length > 0 && <h3>Feil</h3>}
-          {managementLinksErrors.map(error => {
-            if (error) {
-              return <ManagementLinksErrors error={error} />;
-            }
-          })}
         </div>
       </div>
       <hr
@@ -106,6 +111,15 @@ const InformationView = ({
             refreshApplicationDeployment={refreshApplicationDeployment}
           />
         ))}
+        {hasManagementLinksErrors && (
+          <SortableDetailsList
+            filter=""
+            items={applicationDeploymentPods()}
+            filterView={filterInformationView}
+            columns={InformationViewService.DEFAULT_COLUMNS}
+            isHeaderVisible={true}
+          />
+        )}
       </div>
     </div>
   );
@@ -144,5 +158,9 @@ export default styled(InformationView)`
     > div {
       margin-right: 40px;
     }
+  }
+  .ms-Button-flexContainer {
+    align-items: baseline;
+    margin: 0;
   }
 `;
