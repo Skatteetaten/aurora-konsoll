@@ -274,7 +274,6 @@ export const findGroupedTagsPaged: Thunk = (
     const [mainRepo] = imageRepositories;
 
     const normalizedTags: ITagsPagedGroup = {
-      all: toTagsPaged(mainRepo.all),
       auroraSnapshotVersion: toTagsPaged(mainRepo.auroraSnapshotVersion),
       auroraVersion: toTagsPaged(mainRepo.auroraVersion),
       bugfix: toTagsPaged(mainRepo.bugfix),
@@ -346,7 +345,7 @@ export const toTagsPaged = (
     endCursor: pageInfo.endCursor,
     hasNextPage: pageInfo.hasNextPage,
     tags: edges.map(edge => ({
-      lastModified: edge.node.lastModified || '',
+      lastModified: edge.node.lastModified,
       name: edge.node.name,
       type: edge.node.type
     }))
