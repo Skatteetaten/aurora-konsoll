@@ -1,8 +1,5 @@
-import { ActionCreator } from 'redux';
-import { ThunkAction } from 'redux-thunk';
 import { createAction } from 'redux-ts-utils';
-import { RootAction, RootState } from 'store/types';
-import { IAuroraApiComponentProps } from 'components/AuroraApi';
+import { Thunk } from 'store/types';
 import { IAppError, IErrors } from 'models/errors';
 import { IGoboResult } from 'services/GoboClient';
 
@@ -17,10 +14,6 @@ export const incrementErrorId = createAction<number>(
 export const nextErrorResponse = createAction<IAppError | undefined>(
   errors('NEXT_ERROR')
 );
-
-export type Thunk = ActionCreator<
-  ThunkAction<void, RootState, IAuroraApiComponentProps, RootAction>
->;
 
 export const addCurrentErrors: Thunk = (
   result: IGoboResult<any> | undefined

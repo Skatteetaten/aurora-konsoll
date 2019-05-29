@@ -1,10 +1,7 @@
-import { IAuroraApiComponentProps } from 'components/AuroraApi';
 import { ICertificateResult } from 'models/certificates';
 import { addCurrentErrors } from 'screens/ErrorHandler/state/actions';
-import { ActionCreator } from 'redux';
-import { ThunkAction } from 'redux-thunk';
 import { createAction } from 'redux-ts-utils';
-import { RootAction, RootState } from 'store/types';
+import { Thunk } from 'store/types';
 
 const certificateAction = (action: string) => `certificate/${action}`;
 
@@ -15,10 +12,6 @@ export const fetchCertificatesRequest = createAction<boolean>(
 export const fetchCertificatesResponse = createAction<ICertificateResult>(
   certificateAction('FETCHED_CERTIFICATIONS_RESPONSE')
 );
-
-export type Thunk = ActionCreator<
-  ThunkAction<void, RootState, IAuroraApiComponentProps, RootAction>
->;
 
 export const fetchCertificates: Thunk = () => async (
   dispatch,

@@ -1,8 +1,3 @@
-import { ActionCreator } from 'redux';
-import { ThunkAction } from 'redux-thunk';
-
-import { IAuroraApiComponentProps } from 'components/AuroraApi';
-
 import {
   IApplicationDeployment,
   IApplicationDeploymentDetails
@@ -15,7 +10,7 @@ import {
 import { defaultTagsPagedGroup, ITagsPagedGroup, ITagsPaged } from 'models/Tag';
 import { IUserSettings } from 'models/UserSettings';
 import { createAction } from 'redux-ts-utils';
-import { RootAction, RootState } from 'store/types';
+import { Thunk } from 'store/types';
 import { IImageTagsConnection } from 'services/auroraApiClients/imageRepositoryClient/query';
 import { ImageTagType } from 'models/ImageTagType';
 
@@ -72,10 +67,6 @@ export const findGroupedTagsPagedResponse = createAction<ITagsPagedGroup>(
 export const fetchTagsRequest = createAction<boolean>(
   affiliationViewAction('FETCH_TAGS_REQUEST')
 );
-
-export type Thunk = ActionCreator<
-  ThunkAction<void, RootState, IAuroraApiComponentProps, RootAction>
->;
 
 export const refreshAffiliations: Thunk = (affiliations: string[]) => async (
   dispatch,
@@ -283,6 +274,7 @@ export const findGroupedTagsPaged: Thunk = (
     const [mainRepo] = imageRepositories;
 
     const normalizedTags: ITagsPagedGroup = {
+      all: toTagsPaged(mainRepo.all),
       auroraSnapshotVersion: toTagsPaged(mainRepo.auroraSnapshotVersion),
       auroraVersion: toTagsPaged(mainRepo.auroraVersion),
       bugfix: toTagsPaged(mainRepo.bugfix),
@@ -354,7 +346,7 @@ export const toTagsPaged = (
     endCursor: pageInfo.endCursor,
     hasNextPage: pageInfo.hasNextPage,
     tags: edges.map(edge => ({
-      lastModified: edge.node.lastModified,
+      lastModified: edge.node.lastModified || '',
       name: edge.node.name,
       type: edge.node.type
     }))
