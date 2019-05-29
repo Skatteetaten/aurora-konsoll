@@ -247,7 +247,7 @@ class DatabaseSchemaUpdateDialog extends React.Component<
             />
             <Button
               buttonType="primaryRoundedFilled"
-              style={{ width: '160px', marginRight: '10px' }}
+              style={{ width: '162px', marginRight: '10px' }}
               icon="Copy"
               onClick={this.createNewCopy}
             >
