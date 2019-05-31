@@ -6,8 +6,8 @@ const informationViewColumns: IColumn[] = [
     fieldName: 'healthStatus',
     isResizable: true,
     key: '0',
-    maxWidth: 150,
-    minWidth: 100,
+    maxWidth: 50,
+    minWidth: 50,
     name: '',
     iconName: ''
   },
@@ -51,7 +51,6 @@ const informationViewColumns: IColumn[] = [
 
 export const filterInformationView = (filter: string) => {
   return (v: IInformationView): boolean =>
-    v.name.includes(filter) ||
     v.numberOfRestarts.toString().includes(filter) ||
     v.startedDate.includes(filter);
 };

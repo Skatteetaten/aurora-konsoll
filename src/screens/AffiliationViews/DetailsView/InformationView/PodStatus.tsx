@@ -19,16 +19,18 @@ interface IPodStatusProps {
   refreshApplicationDeployment: () => void;
 }
 
-function findLink(pod: IPodResource, name: string): string {
+export function findLink(pod: IPodResource, name: string): string {
   const podLink = pod.links.find(l => l.name === name);
   return podLink ? podLink.url : '#';
 }
 
-function handleIsActive(data: IIconLinkData) {
+export function handleIsActive(data: IIconLinkData) {
   return data.href.startsWith('http');
 }
 
-function getStatusColorForPod({ managementResponses }: IPodResource): string {
+export function getStatusColorForPod({
+  managementResponses
+}: IPodResource): string {
   if (
     managementResponses &&
     managementResponses.health &&
@@ -53,6 +55,34 @@ function getStatusColorForPod({ managementResponses }: IPodResource): string {
   }
 
   return STATUS_COLORS.unknown;
+}
+
+export function getStatusIconForPod({
+  managementResponses
+}: IPodResource): string {
+  if (
+    managementResponses &&
+    managementResponses.health &&
+    managementResponses.health.textResponse
+  ) {
+    const status = JSON.parse(managementResponses.health.textResponse).status;
+    switch (status) {
+      case 'UP':
+      case 'HEALTHY':
+        return 'Completed';
+      case 'COMMENT':
+      case 'OBSERVE':
+        return 'Info';
+      case 'OUT_OF_SERVICE':
+      case 'DOWN':
+        return 'Error';
+      case 'OFF':
+      default:
+        return 'Info';
+    }
+  }
+
+  return 'Info';
 }
 
 const PodStatus = ({
