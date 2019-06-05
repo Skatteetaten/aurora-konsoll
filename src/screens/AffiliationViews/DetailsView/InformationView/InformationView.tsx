@@ -4,28 +4,15 @@ import styled from 'styled-components';
 import Spinner from 'components/Spinner';
 import {
   IApplicationDeployment,
-  IApplicationDeploymentDetails,
-  IInformationView
+  IApplicationDeploymentDetails
 } from 'models/ApplicationDeployment';
 import { ActiveDeploymentInformation } from './ActiveDeploymentInformation';
 import { DeploymentSpecInformation } from './DeploymentSpecInformation';
 import { GitAndBuildInformation } from './GitAndBuildInformation';
 import { ManagementInterface } from './ManagementInterface';
-import PodStatus, {
-  getStatusColorForPod,
-  getStatusIconForPod,
-  findLink,
-  handleIsActive
-} from './PodStatus';
 import { ServiceLinks } from './ServiceLinks';
 import StatusCheckReportCard from './StatusCheckReportCard';
-import SortableDetailsList from 'components/SortableDetailsList';
-import InformationViewService, {
-  filterInformationView
-} from 'services/InformationViewService';
-import { getLocalDatetime } from 'utils/date';
-import Icon from 'aurora-frontend-react-komponenter/Icon';
-import IconLink from 'components/IconLink';
+import ManagementLinksErrors from './ManagementLinksErrors';
 
 interface IInformationViewProps {
   isFetchingDetails: boolean;
@@ -40,7 +27,9 @@ const InformationView = ({
   isFetchingDetails,
   deploymentDetails,
   deployment,
-  className
+  className,
+  refreshApplicationDeployment,
+  isUpdating
 }: IInformationViewProps) => {
   const { deploymentSpec, pods } = deploymentDetails;
   if (isFetchingDetails) {
@@ -57,46 +46,6 @@ const InformationView = ({
         pod.managementResponses.links &&
         pod.managementResponses.links.error
     ).length > 0;
-
-  const consoleLog = (name: string) => {
-    console.log(name);
-  };
-
-  const applicationDeploymentPods = (): IInformationView[] => {
-    return deploymentDetails.pods.map(pod => ({
-      healthStatus: (
-        <Icon
-          iconName={getStatusIconForPod(pod)}
-          onClick={consoleLog(getStatusIconForPod(pod))}
-          style={{
-            fontSize: '25px',
-            color: getStatusColorForPod(pod),
-            cursor: 'pointer'
-          }}
-        />
-      ),
-      name: (
-        <a
-          target="_blank"
-          rel="noopener noreferrer"
-          href={findLink(pod, 'ocp_console_details')}
-          title={pod.name}
-        >
-          {pod.name}
-        </a>
-      ),
-      startedDate: getLocalDatetime(pod.startTime),
-      numberOfRestarts: pod.restartCount,
-      externalLinks: (
-        <IconLink
-          name="Timeline"
-          isActiveHandler={handleIsActive}
-          href={findLink(pod, 'metrics')}
-          title="Grafana"
-        />
-      )
-    }));
-  };
 
   return (
     <div className={className}>
@@ -130,22 +79,11 @@ const InformationView = ({
       />
       <h3>Pods fra OpenShift</h3>
       <div className="info-deployments">
-        {/* {pods.map(pod => (
-          <PodStatus
-            key={pod.name}
-            pod={pod}
-            className="info-pod"
+        {hasManagementLinksErrors && (
+          <ManagementLinksErrors
             isUpdating={isUpdating}
             refreshApplicationDeployment={refreshApplicationDeployment}
-          />
-        ))} */}
-        {hasManagementLinksErrors && (
-          <SortableDetailsList
-            filter=""
-            items={applicationDeploymentPods()}
-            filterView={filterInformationView}
-            columns={InformationViewService.DEFAULT_COLUMNS}
-            isHeaderVisible={true}
+            details={deploymentDetails}
           />
         )}
       </div>
@@ -186,9 +124,5 @@ export default styled(InformationView)`
     > div {
       margin-right: 40px;
     }
-  }
-  .ms-Button-flexContainer {
-    align-items: baseline;
-    margin: 0;
   }
 `;

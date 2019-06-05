@@ -15,8 +15,8 @@ const informationViewColumns: IColumn[] = [
     fieldName: 'name',
     isResizable: true,
     key: '1',
-    maxWidth: 300,
-    minWidth: 200,
+    maxWidth: 400,
+    minWidth: 300,
     name: 'Navn',
     iconName: ''
   },

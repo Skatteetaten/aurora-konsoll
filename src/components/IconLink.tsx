@@ -2,6 +2,9 @@ import * as React from 'react';
 
 import Icon from 'aurora-frontend-react-komponenter/Icon';
 import styled, { css } from 'styled-components';
+import palette from 'aurora-frontend-react-komponenter/utils/palette';
+
+const { skeColor } = palette;
 
 type IsActiveFunc = (data: IIconLinkData) => boolean;
 
@@ -56,7 +59,7 @@ const IconLink: React.StatelessComponent<IIconLinkProps> = ({
 export default styled(IconLink)`
   display: inherit;
   text-decoration: none;
-  color: white;
+  color: ${skeColor.blue};
 
   &:hover {
     color: #1362ae;
@@ -72,7 +75,7 @@ export default styled(IconLink)`
         !isActiveResolver(data, isActiveHandler) &&
         css`
           cursor: default;
-          color: #353535;
+          color: ${skeColor.lightGrey};
           opacity: 0.6;
         `
       );
