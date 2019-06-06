@@ -1,4 +1,5 @@
 import * as React from 'react';
+import styled from 'styled-components';
 
 import { IPodResource } from 'models/Pod';
 import SortableDetailsList from 'components/SortableDetailsList';
@@ -15,34 +16,48 @@ import { getLocalDatetime } from 'utils/date';
 import IconLink, { IIconLinkData } from 'components/IconLink';
 import Callout from 'aurora-frontend-react-komponenter/Callout';
 import HealthResponseDialogSelector from './HealthResponseDialogSelector/HealthResponseDialogSelector';
+import DetailsList from 'aurora-frontend-react-komponenter/DetailsList';
+import { IObjectWithKey } from 'office-ui-fabric-react/lib/DetailsList';
+import ActionButton from 'aurora-frontend-react-komponenter/ActionButton';
 
-interface IManagementLinksErrorsProps {
+interface IPodsStatusProps {
   details: IApplicationDeploymentDetails;
   isUpdating: boolean;
   refreshApplicationDeployment: () => void;
+  className?: string;
 }
 
-interface IManagementLinksErrorsState {
+interface IPodsStatusState {
   isCalloutVisibleList: boolean[];
+  currentPods: IInformationView[];
+  currentPod: string;
 }
 
-class ManagementLinksErrors extends React.Component<
-  IManagementLinksErrorsProps,
-  IManagementLinksErrorsState
-> {
+class PodsStatus extends React.Component<IPodsStatusProps, IPodsStatusState> {
   private menuButtonElements = Array(this.props.details.pods.length)
     .fill(0)
     .map(() => React.createRef<HTMLDivElement>());
 
   private resetInput = () => Array(this.props.details.pods.length).fill(false);
 
-  public state: IManagementLinksErrorsState = {
-    isCalloutVisibleList: this.resetInput()
+  private selection = new DetailsList.Selection();
+
+  public state: IPodsStatusState = {
+    isCalloutVisibleList: this.resetInput(),
+    currentPods: [],
+    currentPod: ''
   };
+
+  public componentDidMount() {
+    this.setState({
+      currentPods: this.applicationDeploymentPods()
+    });
+  }
 
   public handleIsActive(data: IIconLinkData) {
     return data.href.startsWith('http');
   }
+
   public findLink(pod: IPodResource, name: string): string {
     const podLink = pod.links.find(l => l.name === name);
     return podLink ? podLink.url : '#';
@@ -132,16 +147,30 @@ class ManagementLinksErrors extends React.Component<
 
   public applicationDeploymentPods = (): IInformationView[] => {
     const { details } = this.props;
+    const { isCalloutVisibleList } = this.state;
+
     return details.pods.map((pod: IPodResource, index: number) => {
       const showCallout = () => {
-        if (this.state.isCalloutVisibleList[index]) {
+        this.setState({
+          currentPods: this.selection.getItems()
+        });
+        console.log(index);
+        const selected: IObjectWithKey[] = this.selection.getSelection();
+
+        const selectedId = (selected[0] as IInformationView).name.key;
+
+        if (typeof selectedId === 'string') {
+          this.setState({
+            currentPod: selectedId
+          });
+        }
+        if (isCalloutVisibleList[index]) {
           this.setState({
             isCalloutVisibleList: this.resetInput()
           });
         } else {
           const newItems = this.resetInput();
           newItems[index] = true;
-
           this.setState({
             isCalloutVisibleList: newItems
           });
@@ -182,14 +211,15 @@ class ManagementLinksErrors extends React.Component<
           </>
         ),
         name: (
-          <a
+          <ActionButton
             target="_blank"
             rel="noopener noreferrer"
             href={this.findLink(pod, 'ocp_console_details')}
             title={pod.name}
+            key={pod.name}
           >
             {pod.name}
-          </a>
+          </ActionButton>
         ),
         startedDate: getLocalDatetime(pod.startTime),
         numberOfRestarts: pod.restartCount,
@@ -218,18 +248,40 @@ class ManagementLinksErrors extends React.Component<
       };
     });
   };
+  public forceUpdate = () => {
+    // this.forceUpdate();
+  };
 
   public render() {
+    const { className } = this.props;
     return (
-      <SortableDetailsList
-        filter=""
-        items={this.applicationDeploymentPods()}
-        filterView={filterInformationView}
-        columns={InformationViewService.DEFAULT_COLUMNS}
-        isHeaderVisible={true}
-      />
+      <div className={className}>
+        <div className="styledTable">
+          <SortableDetailsList
+            filter=""
+            items={this.applicationDeploymentPods()}
+            selection={this.selection}
+            filterView={filterInformationView}
+            columns={InformationViewService.DEFAULT_COLUMNS}
+            isHeaderVisible={true}
+            forceUpdate={this.forceUpdate}
+          />
+        </div>
+      </div>
     );
   }
 }
 
-export default ManagementLinksErrors;
+export default styled(PodsStatus)`
+  .styledTable {
+    display: flex;
+    grid-area: table;
+    i {
+      float: right;
+    }
+  }
+  button {
+    border-top: 1px solid #e8e8e8;
+    padding: 20px;
+  }
+`;

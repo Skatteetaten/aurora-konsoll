@@ -1,4 +1,7 @@
-import { IColumn } from 'office-ui-fabric-react/lib/DetailsList';
+import {
+  IColumn,
+  ColumnActionsMode
+} from 'office-ui-fabric-react/lib/DetailsList';
 import { IInformationView } from 'models/ApplicationDeployment';
 
 const informationViewColumns: IColumn[] = [
@@ -6,6 +9,7 @@ const informationViewColumns: IColumn[] = [
     fieldName: 'healthStatus',
     isResizable: true,
     key: '0',
+    columnActionsMode: ColumnActionsMode.disabled,
     maxWidth: 50,
     minWidth: 50,
     name: '',
@@ -15,6 +19,7 @@ const informationViewColumns: IColumn[] = [
     fieldName: 'name',
     isResizable: true,
     key: '1',
+    columnActionsMode: ColumnActionsMode.disabled,
     maxWidth: 400,
     minWidth: 300,
     name: 'Navn',
@@ -24,8 +29,8 @@ const informationViewColumns: IColumn[] = [
     fieldName: 'startedDate',
     isResizable: true,
     key: '2',
-    maxWidth: 300,
-    minWidth: 200,
+    maxWidth: 400,
+    minWidth: 300,
     name: 'Startet',
     iconName: ''
   },
@@ -42,6 +47,7 @@ const informationViewColumns: IColumn[] = [
     fieldName: 'externalLinks',
     isResizable: true,
     key: '4',
+    columnActionsMode: ColumnActionsMode.disabled,
     maxWidth: 150,
     minWidth: 100,
     name: '',

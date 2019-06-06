@@ -19,6 +19,7 @@ export interface ISortableDetailsListProps extends IDetailsListProps {
   filter: string;
   shouldResetSort?: boolean;
   onResetSort?: () => void;
+  forceUpdate?: () => void;
 }
 
 export interface ISortableDetailsListState {
@@ -147,6 +148,9 @@ class SortableDetailsList extends React.Component<
       selectedColumnIndex: column.key,
       prevIndices: selectedIndices
     });
+    if (this.props.forceUpdate) {
+      this.props.forceUpdate();
+    }
   };
   public toViewIndex<T>(index: number, selection: ISelection, items: T[]) {
     const listItem = items[index];

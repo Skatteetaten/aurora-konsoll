@@ -12,7 +12,7 @@ import { GitAndBuildInformation } from './GitAndBuildInformation';
 import { ManagementInterface } from './ManagementInterface';
 import { ServiceLinks } from './ServiceLinks';
 import StatusCheckReportCard from './StatusCheckReportCard';
-import ManagementLinksErrors from './ManagementLinksErrors';
+import PodsStatus from './PodsStatus';
 
 interface IInformationViewProps {
   isFetchingDetails: boolean;
@@ -80,7 +80,7 @@ const InformationView = ({
       <h3>Pods fra OpenShift</h3>
       <div className="info-deployments">
         {hasManagementLinksErrors && (
-          <ManagementLinksErrors
+          <PodsStatus
             isUpdating={isUpdating}
             refreshApplicationDeployment={refreshApplicationDeployment}
             details={deploymentDetails}
