@@ -185,7 +185,7 @@ export const refreshApplicationDeployment: Thunk = (
   if (result && result.data) {
     dispatch(refreshApplicationDeploymentResponse(true));
     dispatch(findAllApplicationDeployments(affiliation));
-    dispatch(findApplicationDeploymentDetails(applicationDeploymentId));
+    dispatch(findApplicationDeploymentDetails(applicationDeploymentId, true));
   } else {
     dispatch(refreshApplicationDeploymentResponse(false));
   }
@@ -297,12 +297,13 @@ export const findGroupedTagsPaged: Thunk = (
   }
 };
 
-export const findApplicationDeploymentDetails: Thunk = (id: string) => async (
-  dispatch,
-  getState,
-  { clients }
-) => {
-  dispatch(fetchDetailsRequest(true));
+export const findApplicationDeploymentDetails: Thunk = (
+  id: string,
+  withoutLoading?: boolean
+) => async (dispatch, getState, { clients }) => {
+  if (!!!withoutLoading) {
+    dispatch(fetchDetailsRequest(true));
+  }
   const result = await clients.applicationDeploymentClient.findApplicationDeploymentDetails(
     id
   );
