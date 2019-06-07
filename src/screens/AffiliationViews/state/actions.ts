@@ -266,6 +266,7 @@ export const findGroupedTagsPaged: Thunk = (
   repository: string,
   setTagsPagedGroup: (tagsPagedGroup: ITagsPagedGroup) => void
 ) => async (dispatch, getState, { clients }) => {
+  dispatch(fetchTagsRequest(true));
   const result = await clients.imageRepositoryClient.findGroupedTagsPaged(
     repository
   );
@@ -295,6 +296,7 @@ export const findGroupedTagsPaged: Thunk = (
     setTagsPagedGroup(normalizedTags);
     dispatch(findGroupedTagsPagedResponse(normalizedTags));
   }
+  dispatch(fetchTagsRequest(false));
 };
 
 export const findApplicationDeploymentDetails: Thunk = (
