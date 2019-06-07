@@ -26,7 +26,6 @@ export interface ISchemasState {
   readonly deleteSchemasResponse: IDeleteDatabaseSchemasResponse;
   readonly testJdbcConnectionResponse: boolean;
   readonly createDatabaseSchemaResponse: ICreateDatabaseSchemaResponse;
-  [key: string]: any;
 }
 
 const initialState = (): ISchemasState => {

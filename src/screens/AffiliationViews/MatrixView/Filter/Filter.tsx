@@ -5,7 +5,6 @@ import InfoDialog from 'components/InfoDialog';
 import ReactSelect from 'components/Select';
 
 import { IApplicationDeployment } from 'models/ApplicationDeployment';
-import { errorStateManager } from 'models/StateManager/ErrorStateManager';
 
 import ActionButton from 'aurora-frontend-react-komponenter/ActionButton';
 import Checkbox from 'aurora-frontend-react-komponenter/Checkbox';
@@ -15,6 +14,8 @@ import FilterService from 'services/FilterService';
 import FilterModeSelect, { FilterMode } from './FilterModeSelect';
 import FooterText from './FooterText';
 import SelectionButtons from './SelectionButtons';
+import { connect } from 'react-redux';
+import { addErrors } from 'screens/ErrorHandler/state/actions';
 
 export enum SelectionType {
   Applications,
@@ -34,6 +35,7 @@ interface IFilterProps {
   allDeployments: IApplicationDeployment[];
   filters: IFilter;
   allFilters: IApplicationDeploymentFilters[];
+  addErrors: (errors: any[]) => void;
 }
 
 interface IFilterState {
@@ -118,8 +120,19 @@ export class Filter extends React.Component<IFilterProps, IFilterState> {
   }
 
   public componentDidUpdate(prevProps: IFilterProps) {
+    const { applications, environments } = this.state;
+    const { filters } = this.props;
     this.setExistingFilter();
     this.clearOnAffiliationChange(prevProps.affiliation);
+    if (
+      prevProps.filters !== filters &&
+      (applications.length === 0 && environments.length === 0)
+    ) {
+      this.setState({
+        applications: this.props.filters.applications,
+        environments: this.props.filters.environments
+      });
+    }
   }
 
   public updateFilterState = (value: ICheckboxValue) => () => {
@@ -162,7 +175,7 @@ export class Filter extends React.Component<IFilterProps, IFilterState> {
   };
 
   public applyFilter = (close: () => void) => {
-    const { updateFilter, allFilters, affiliation } = this.props;
+    const { updateFilter, allFilters, affiliation, addErrors } = this.props;
     const {
       applications,
       environments,
@@ -171,9 +184,7 @@ export class Filter extends React.Component<IFilterProps, IFilterState> {
       currentFilterName
     } = this.state;
     if (this.hasCurrentFilterName() && this.noFilterOptionsSelected()) {
-      errorStateManager.addError(
-        new Error('Ingen applikasjoner og miljøer valgt')
-      );
+      addErrors([new Error('Ingen applikasjoner og miljøer valgt')]);
     } else {
       const getDefaultFilterName = this.filterService.getDefaultFilterName(
         allFilters,
@@ -194,7 +205,13 @@ export class Filter extends React.Component<IFilterProps, IFilterState> {
   };
 
   public footerApplyButton = (close: () => void) => {
-    const { allFilters, affiliation, className, updateFilter } = this.props;
+    const {
+      allFilters,
+      affiliation,
+      className,
+      updateFilter,
+      addErrors
+    } = this.props;
     const {
       selectedFilterKey,
       mode,
@@ -222,9 +239,7 @@ export class Filter extends React.Component<IFilterProps, IFilterState> {
 
     const handleDefaultValueChange = (): void => {
       if (this.hasCurrentFilterName() && this.noFilterOptionsSelected()) {
-        errorStateManager.addError(
-          new Error('Ingen applikasjoner og miljøer valgt')
-        );
+        addErrors([new Error('Ingen applikasjoner og miljøer valgt')]);
       } else {
         const isDefault = defaultFilter && findDefaultFilter;
         updateFilter({
@@ -523,3 +538,10 @@ const styledFilter = styled(Filter)`
 `;
 
 export default styledFilter;
+
+export const styledFilterConnected = connect(
+  null,
+  {
+    addErrors: (errors: any[]) => addErrors(errors)
+  }
+)(styledFilter);

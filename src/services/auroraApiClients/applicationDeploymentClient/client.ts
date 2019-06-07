@@ -1,11 +1,4 @@
-import {
-  IApplicationDeployment,
-  IApplicationDeploymentDetails,
-  IUserAndAffiliations
-} from 'models/ApplicationDeployment';
-import { normalizeRawDeploymentSpec } from 'models/DeploymentSpec';
-
-import GoboClient from 'services/GoboClient';
+import GoboClient, { IGoboResult } from 'services/GoboClient';
 import {
   REDEPLOY_WITH_CURRENT_VERSION_MUTATION,
   REDEPLOY_WITH_VERSION_MUTATION,
@@ -21,14 +14,6 @@ import {
   USER_AFFILIATIONS_QUERY
 } from './query';
 
-function formatName(user: string) {
-  const names = user.split(', ');
-  if (names.length !== 2) {
-    return user;
-  }
-  return names[1] + ' ' + names[0];
-}
-
 export class ApplicationDeploymentClient {
   private client: GoboClient;
 
@@ -39,8 +24,8 @@ export class ApplicationDeploymentClient {
   public async redeployWithVersion(
     applicationDeploymentId: string,
     version: string
-  ): Promise<boolean> {
-    const result = await this.client.mutate<{ redeployWithVersion: boolean }>({
+  ): Promise<IGoboResult<{ redeployWithVersion: boolean }> | undefined> {
+    return await this.client.mutate<{ redeployWithVersion: boolean }>({
       mutation: REDEPLOY_WITH_VERSION_MUTATION,
       variables: {
         input: {
@@ -49,18 +34,12 @@ export class ApplicationDeploymentClient {
         }
       }
     });
-
-    if (result && result.data) {
-      return result.data.redeployWithVersion;
-    }
-
-    return false;
   }
 
   public async redeployWithCurrentVersion(
     applicationDeploymentId: string
-  ): Promise<boolean> {
-    const result = await this.client.mutate<{
+  ): Promise<IGoboResult<{ redeployWithCurrentVersion: boolean }> | undefined> {
+    return await this.client.mutate<{
       redeployWithCurrentVersion: boolean;
     }>({
       mutation: REDEPLOY_WITH_CURRENT_VERSION_MUTATION,
@@ -70,18 +49,14 @@ export class ApplicationDeploymentClient {
         }
       }
     });
-
-    if (result && result.data) {
-      return result.data.redeployWithCurrentVersion;
-    }
-
-    return false;
   }
 
   public async refreshApplicationDeployment(
     applicationDeploymentId: string
-  ): Promise<boolean> {
-    const result = await this.client.mutate<{
+  ): Promise<
+    IGoboResult<{ refreshApplicationDeployment: string }> | undefined
+  > {
+    return await this.client.mutate<{
       refreshApplicationDeployment: string;
     }>({
       mutation: REFRESH_APPLICATION_DEPLOYMENT_MUTATION,
@@ -91,16 +66,12 @@ export class ApplicationDeploymentClient {
         }
       }
     });
-
-    if (result && result.data) {
-      return true;
-    } else {
-      return false;
-    }
   }
 
-  public async refreshAffiliations(affiliations: string[]): Promise<boolean> {
-    const result = await this.client.mutate<{
+  public async refreshAffiliations(
+    affiliations: string[]
+  ): Promise<IGoboResult<{ affiliations: string[] }> | undefined> {
+    return await this.client.mutate<{
       affiliations: string[];
     }>({
       mutation: REFRESH_APPLICATION_DEPLOYMENTS_MUTATION,
@@ -110,142 +81,35 @@ export class ApplicationDeploymentClient {
         }
       }
     });
-
-    if (result && result.data) {
-      return true;
-    } else {
-      return false;
-    }
   }
 
   public async findApplicationDeploymentDetails(
     id: string
-  ): Promise<IApplicationDeploymentDetails> {
-    const result = await this.client.query<IApplicationDeploymentDetailsQuery>({
+  ): Promise<IGoboResult<IApplicationDeploymentDetailsQuery> | undefined> {
+    return await this.client.query<IApplicationDeploymentDetailsQuery>({
       query: APPLICATION_DEPLOYMENT_DETAILS_QUERY,
       variables: {
         id
       }
     });
-
-    if (result && result.data && result.data.applicationDeploymentDetails) {
-      const {
-        deploymentSpecs,
-        podResources,
-        buildTime,
-        gitInfo,
-        serviceLinks
-      } = result.data.applicationDeploymentDetails;
-
-      let deploymentSpec;
-      if (deploymentSpecs.current) {
-        const spec = JSON.parse(deploymentSpecs.current.jsonRepresentation);
-        deploymentSpec = Object.keys(spec).reduce(
-          normalizeRawDeploymentSpec(spec),
-          {}
-        );
-      }
-
-      return {
-        buildTime,
-        gitInfo,
-        pods: podResources,
-        deploymentSpec,
-        serviceLinks
-      };
-    }
-
-    return {
-      pods: [],
-      serviceLinks: []
-    };
   }
 
-  public async findUserAndAffiliations(): Promise<IUserAndAffiliations> {
-    const result = await this.client.query<IUserAffiliationsQuery>({
+  public async findUserAndAffiliations(): Promise<
+    IGoboResult<IUserAffiliationsQuery> | undefined
+  > {
+    return await this.client.query<IUserAffiliationsQuery>({
       query: USER_AFFILIATIONS_QUERY
     });
-
-    if (!result) {
-      return {
-        affiliations: [],
-        user: '',
-        id: ''
-      };
-    }
-
-    return {
-      affiliations: result.data.affiliations.edges.map(edge => edge.node.name),
-      user: formatName(result.data.currentUser.name),
-      id: result.data.currentUser.id
-    };
   }
 
   public async findAllApplicationDeployments(
     affiliations: string[]
-  ): Promise<IApplicationDeployment[]> {
-    const result = await this.client.query<IApplicationsConnectionQuery>({
+  ): Promise<IGoboResult<IApplicationsConnectionQuery> | undefined> {
+    return await this.client.query<IApplicationsConnectionQuery>({
       query: APPLICATIONS_QUERY,
       variables: {
         affiliations
       }
     });
-
-    if (!result) {
-      return [];
-    }
-
-    return result.data.applications.edges.reduce(
-      (acc: IApplicationDeployment[], { node }) => {
-        const { applicationDeployments, imageRepository } = node;
-        const deployments = applicationDeployments.map(app => ({
-          affiliation: app.affiliation.name,
-          environment: app.environment,
-          id: app.id,
-          name: app.name,
-          permission: app.namespace.permission,
-          repository: imageRepository ? imageRepository.repository : '',
-          status: {
-            code: app.status.code,
-            reasons: app.status.reasons,
-            reports: app.status.reports
-          },
-          message: app.message,
-          time: app.time,
-          version: {
-            releaseTo: app.version.releaseTo,
-            auroraVersion: app.version.auroraVersion,
-            deployTag: {
-              lastModified: '',
-              name: findDeployTagForTemplate(
-                node.name,
-                app.version.deployTag.name
-              ),
-              type: app.version.deployTag.type
-            }
-          }
-        }));
-        return [...acc, ...deployments];
-      },
-      []
-    );
   }
-}
-
-// ! Temp fix for template deployments with default version
-// TODO: FIX
-function findDeployTagForTemplate(applicationName: string, deployTag: string) {
-  const templates = {
-    'aurora-activemq-1.0.0': '2',
-    'aurora-redis-1.0.0': '3.2.3',
-    'aurora-wiremock-1.0.0': '1.3.0',
-    redis: '3.2.3',
-    wiremock: '1.3.0'
-  };
-
-  if (deployTag) {
-    return deployTag;
-  }
-
-  return templates[applicationName] || deployTag;
 }

@@ -27,8 +27,8 @@ export default class DeploymentFilterService {
     };
   }
 
-  public isParamsDefined(query: string) {
-    const params = new URLSearchParams(query);
+  public isParamsDefined() {
+    const params = new URLSearchParams(window.location.search);
     return params.has('apps') || params.has('envs');
   }
 

@@ -21,16 +21,6 @@ class DetailsView extends React.Component<
   IDetailsViewState
 > {
   public state: IDetailsViewState = {
-    deploymentDetails: {
-      serviceLinks: [],
-      pods: []
-    },
-    loading: {
-      fetchDetails: false,
-      fetchTags: false,
-      redeploy: false,
-      update: false
-    },
     releaseToDeployTag: this.props.deployment.version.deployTag,
     selectedTagType: this.props.deployment.version.deployTag.type,
     tagsPagedGroup: defaultTagsPagedGroup(),
@@ -47,8 +37,8 @@ class DetailsView extends React.Component<
   }
 
   public async componentDidUpdate() {
-    const { tagsPagedGroup, deploymentDetails, isInitialTagType } = this.state;
-    const { deployment } = this.props;
+    const { tagsPagedGroup, isInitialTagType } = this.state;
+    const { deployment, deploymentDetails } = this.props;
     if (
       !!deployment.version.releaseTo &&
       isInitialTagType &&
@@ -80,20 +70,21 @@ class DetailsView extends React.Component<
   };
 
   public render() {
-    const { deployment, match } = this.props;
     const {
+      deployment,
+      match,
       deploymentDetails,
-      loading,
-      selectedTagType,
-      selectedTag,
-      versionSearchText
-    } = this.state;
-
+      isFetchingDetails,
+      isFetchingTags,
+      isRedeploying,
+      isRefreshingApplicationDeployment
+    } = this.props;
+    const { selectedTagType, selectedTag, versionSearchText } = this.state;
     return (
       <DetailsViewGrid>
         <DetailsActionBar
           title={`${deployment.environment}/${deployment.name}`}
-          isRefreshing={loading.update}
+          isRefreshing={isRefreshingApplicationDeployment}
           updatedTime={deployment.time}
           goToDeploymentsPage={this.controller.goToDeploymentsPage}
           refreshApplicationDeployment={
@@ -108,9 +99,9 @@ class DetailsView extends React.Component<
           <Switch>
             <Route path={`${match.path}/info`}>
               <InformationView
-                isUpdating={loading.update}
+                isUpdating={isRefreshingApplicationDeployment}
                 deployment={deployment}
-                isFetchingDetails={loading.fetchDetails}
+                isFetchingDetails={isFetchingDetails}
                 deploymentDetails={deploymentDetails}
                 refreshApplicationDeployment={
                   this.controller.refreshApplicationDeployment
@@ -128,8 +119,8 @@ class DetailsView extends React.Component<
                   selectedTagType,
                   versionSearchText
                 )}
-                isFetchingTags={loading.fetchTags}
-                isRedeploying={loading.redeploy}
+                isFetchingTags={isFetchingTags}
+                isRedeploying={isRedeploying}
                 canUpgrade={!!this.controller.canUpgrade()}
                 handleSelectNextTag={this.controller.handleSelectNextTag}
                 handlefetchTags={this.controller.loadMoreTags}

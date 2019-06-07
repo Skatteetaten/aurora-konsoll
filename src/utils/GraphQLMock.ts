@@ -1,7 +1,6 @@
 import cors from 'cors';
 import express from 'express';
 import { Server } from 'http';
-import ErrorStateManager from 'models/StateManager/ErrorStateManager';
 import GoboClient from 'services/GoboClient';
 
 type ResponseMock = any;
@@ -10,12 +9,8 @@ interface IGraphQLResponseMock {
   [queryName: string]: ResponseMock;
 }
 
-export function goboClientMock(
-  url: string,
-  errorHandler: ErrorStateManager
-): GoboClient {
+export function goboClientMock(url: string): GoboClient {
   return new GoboClient({
-    errorHandler,
     url
   });
 }

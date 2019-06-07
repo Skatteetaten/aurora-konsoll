@@ -1,5 +1,5 @@
-import GoboClient from 'services/GoboClient';
-import { IScanQuery, IScanStatusQuery, NETDEBUG_QUERY } from './query';
+import GoboClient, { IGoboResult } from 'services/GoboClient';
+import { IScanQuery, NETDEBUG_QUERY } from './query';
 
 export interface INetdebugResult {
   status: string;
@@ -15,11 +15,6 @@ export interface IScanStatus {
 
 export class NetdebugClient {
   private client: GoboClient;
-  private errorMessage = {
-    failed: [],
-    open: [],
-    status: 'Noe gikk galt'
-  };
 
   constructor(client: GoboClient) {
     this.client = client;
@@ -28,46 +23,13 @@ export class NetdebugClient {
   public async findNetdebugStatus(
     host: string,
     port: string
-  ): Promise<INetdebugResult> {
-    const result = await this.client.query<IScanQuery>({
+  ): Promise<IGoboResult<IScanQuery> | undefined> {
+    return await this.client.query<IScanQuery>({
       query: NETDEBUG_QUERY,
       variables: {
         host,
         port
       }
-    });
-
-    if (result && result.data) {
-      return this.showNetdebugStatus(result.data);
-    }
-    return this.errorMessage;
-  }
-
-  private showNetdebugStatus(item: IScanQuery): INetdebugResult {
-    if (item && item.scan) {
-      return {
-        failed: this.normalizeScanStatus(item.scan.failed),
-        open: this.normalizeScanStatus(item.scan.open),
-        status: item.scan.status
-      };
-    } else {
-      return this.errorMessage;
-    }
-  }
-
-  private normalizeScanStatus(scanStatus?: IScanStatusQuery): IScanStatus[] {
-    if (!scanStatus) {
-      return [];
-    }
-
-    return scanStatus.edges.map(edge => {
-      const { clusterNode, message, status, resolvedIp } = edge.node;
-      return {
-        clusterNodeIp: clusterNode && clusterNode.ip,
-        message,
-        resolvedIp,
-        status
-      };
     });
   }
 }

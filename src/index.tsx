@@ -3,13 +3,11 @@ import * as ReactDOM from 'react-dom';
 import { BrowserRouter } from 'react-router-dom';
 
 import { Provider } from 'react-redux';
-import createStoreWithClients from './store';
 
 import { AuroraApiProvider, IApiClients } from 'components/AuroraApi';
 import { tokenStore } from 'services/TokenStore';
 import { fetchConfiguration, IConfiguration } from 'utils/config';
 
-import { errorStateManager } from 'models/StateManager/ErrorStateManager';
 import App from 'screens/App';
 import {
   ApplicationDeploymentClient,
@@ -23,6 +21,7 @@ import {
 } from 'services/auroraApiClients';
 import GoboClient from 'services/GoboClient';
 import { StartupConnected } from 'Startup';
+import createStoreWithApi from 'store';
 import './index.css';
 
 async function init() {
@@ -38,7 +37,6 @@ async function init() {
 
   const token = tokenStore.getToken();
   const goboClient = new GoboClient({
-    errorHandler: errorStateManager,
     url: '/api/graphql',
     headers: {
       Authorization: token ? `Bearer ${token}` : '',
@@ -58,7 +56,7 @@ async function init() {
   };
 
   ReactDOM.render(
-    <Provider store={createStoreWithClients(clients)}>
+    <Provider store={createStoreWithApi(clients)}>
       <StartupConnected>
         <AuroraApiProvider clients={clients}>
           <BrowserRouter>

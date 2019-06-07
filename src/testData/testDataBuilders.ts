@@ -24,14 +24,23 @@ import {
   IUpdateDatabaseSchemaInputWithCreatedBy
 } from 'models/schemas';
 import { StatusCode } from 'models/Status';
-import { ITagsPagedGroup } from 'models/Tag';
-import { IApplicationDeploymentFilters } from 'models/UserSettings';
+import { ITagsPagedGroup, ITagsPaged } from 'models/Tag';
+import {
+  IApplicationDeploymentFilters,
+  IUserSettings
+} from 'models/UserSettings';
 import { IAcl, IWebsealState } from 'models/Webseal';
 import { ISchemasState } from 'screens/AffiliationViews/DatabaseView/state/reducers';
 import { IWebsealReduxState } from 'screens/AffiliationViews/WebsealView/state/reducers';
 import { ICertificateState } from 'screens/CertificateView/state/reducers';
+import { INetdebugResult } from 'services/auroraApiClients';
 import { IFilter } from 'services/DeploymentFilterService';
 import { IStartupState } from 'state/reducers';
+import { INetdebugViewState } from 'screens/NetdebugView/state/reducer';
+import { IErrorsState } from 'screens/ErrorHandler/state/reducer';
+import { IAffiliationViewState } from 'screens/AffiliationViews/state/reducer';
+import { IGoboUser } from 'services/auroraApiClients/goboUsageClient/query';
+import { IErrors, IAppError } from 'models/errors';
 
 const mountFactory = Factory.Sync.makeFactory<IMount>({
   exist: true,
@@ -279,6 +288,12 @@ export const tagsPagedGroupFactory = Factory.Sync.makeFactory<ITagsPagedGroup>({
   }
 });
 
+export const tagsPagedFactory = Factory.Sync.makeFactory<ITagsPaged>({
+  endCursor: 'test',
+  hasNextPage: false,
+  tags: []
+});
+
 export const databaseSchemaInputFactory = Factory.Sync.makeFactory<
   IDatabaseSchemaInput
 >({
@@ -399,8 +414,31 @@ export const createDatabaseSchemaInputFactory = Factory.Sync.makeFactory<
   }
 });
 
+export const appErrorFactory = Factory.Sync.makeFactory<IAppError>({
+  error: new Error('error'),
+  id: 1,
+  isActive: false
+});
+
+export const errorStateFactory = Factory.Sync.makeFactory<IErrors>({
+  errorQueue: [appErrorFactory.build()],
+  allErrors: new Map()
+});
+
+export const errorsStateFactory = Factory.Sync.makeFactory<IErrorsState>({
+  errorCount: 0,
+  errors: errorStateFactory.build(),
+  nextError: undefined
+});
+
+export const goboUsersFactory = Factory.Sync.makeFactory<IGoboUser>({
+  count: 1,
+  name: 'Bob'
+});
+
 export const startupFactory = Factory.Sync.makeFactory<IStartupState>({
-  currentUser: userAndAffiliationsFactory.build()
+  currentUser: userAndAffiliationsFactory.build(),
+  goboUsers: [goboUsersFactory.build()]
 });
 
 export const aclFactory = Factory.Sync.makeFactory<IAcl>({
@@ -408,6 +446,19 @@ export const aclFactory = Factory.Sync.makeFactory<IAcl>({
   anyOther: false,
   open: true,
   roles: []
+});
+
+export const netdebugResultFactory = Factory.Sync.makeFactory<INetdebugResult>({
+  failed: [],
+  open: [],
+  status: 'CLOSED'
+});
+
+export const netdebugViewStateInitialState = Factory.Sync.makeFactory<
+  INetdebugViewState
+>({
+  isFetching: false,
+  netdebugStatus: netdebugResultFactory.build()
 });
 
 export const websealStateFactory = Factory.Sync.makeFactory<IWebsealState>({
@@ -423,4 +474,30 @@ export const websealReduxStateFactory = Factory.Sync.makeFactory<
 >({
   isFetchingWebsealStates: false,
   websealStates: []
+});
+
+export const goboUserFactory = Factory.Sync.makeFactory<IGoboUser>({
+  count: 1,
+  name: 'Bob'
+});
+
+export const userSettingsFactory = Factory.Sync.makeFactory<IUserSettings>({
+  applicationDeploymentFilters: [applicationDeploymentFilterFactory.build()]
+});
+
+export const affiliationViewStateFactory = Factory.Sync.makeFactory<
+  IAffiliationViewState
+>({
+  allApplicationDeploymentsResult: [deploymentFactory.build()],
+  applicationDeploymentDetails: deploymentDetailsFactory.build(),
+  findGroupedTagsPagedResult: tagsPagedGroupFactory.build(),
+  findTagsPagedResult: tagsPagedFactory.build(),
+  isFetchingAllApplicationDeployments: false,
+  isRefreshingAffiliations: false,
+  isRefreshingApplicationDeployment: false,
+  isUpdatingUserSettings: false,
+  userSettings: userSettingsFactory.build(),
+  isRedeploying: false,
+  isFetchingTags: false,
+  isFetchingDetails: false
 });

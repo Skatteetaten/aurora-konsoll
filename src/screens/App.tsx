@@ -17,15 +17,14 @@ import { ITokenStore } from 'services/TokenStore';
 import AcceptTokenRoute from './AcceptTokenView/AcceptTokenRoute';
 
 import { withAuroraApi } from 'components/AuroraApi';
-import ErrorBoundary from 'components/ErrorBoundary/ErrorBoundary';
 import LayoutConnected from 'components/Layout/Layout';
-import { errorStateManager } from 'models/StateManager/ErrorStateManager';
-import AffiliationViewValidatorConnected, {
-  AffiliationRouteProps
-} from './AffiliationViews/AffiliationViewValidator';
+import { AffiliationRouteProps } from './AffiliationViews/AffiliationViewValidator';
 import { CertificateConnected } from './CertificateView/CertificateConnected';
-import GoboUsageView from './GoboUsageView';
-import { NetdebugWithApi } from './NetdebugView/Netdebug';
+import { GoboUsageViewConnected } from './GoboUsageView';
+
+import { ErrorBoundaryConnected } from 'screens/ErrorHandler/ErrorBoundaryConnected';
+import { AffiliationViewValidatorConnected } from './AffiliationViews/AffiliationViewValidatorConnected';
+import { NetdebugConnected } from './NetdebugView/NetdebugConnected';
 
 export enum MenuType {
   DEPLOYMENTS,
@@ -123,9 +122,9 @@ class App extends React.Component<IAppProps, IAppState> {
     return (
       <StyledSkeBasis menuExpanded={isMenuExpanded}>
         <Konami timeout={10000}>
-          <GoboUsageView clients={this.props.clients} />
+          <GoboUsageViewConnected clients={this.props.clients} />
         </Konami>
-        <ErrorBoundary errorSM={errorStateManager}>
+        <ErrorBoundaryConnected>
           <LayoutConnected
             isMenuExpanded={isMenuExpanded}
             handleMenuExpand={this.handleMenuExpand}
@@ -154,7 +153,7 @@ class App extends React.Component<IAppProps, IAppState> {
                 <Route
                   exact={true}
                   path="/netdebug"
-                  component={NetdebugWithApi}
+                  component={NetdebugConnected}
                 />
                 <Route
                   exact={true}
@@ -175,7 +174,7 @@ class App extends React.Component<IAppProps, IAppState> {
               </Switch>
             )}
           </LayoutConnected>
-        </ErrorBoundary>
+        </ErrorBoundaryConnected>
       </StyledSkeBasis>
     );
   }

@@ -3,19 +3,17 @@ import { DefinitionNode, DocumentNode, print } from 'graphql/language';
 
 import { v4 as uuid } from 'uuid';
 
-import ErrorStateManager from 'models/StateManager/ErrorStateManager';
-
 interface IVariables {
   [key: string]: any;
 }
 
-interface IGoboResult<T> {
+export interface IGoboResult<T> {
+  name: string;
   data: T;
   errors?: GraphQLError[];
 }
 
 interface IGoboClientOptions {
-  errorHandler: ErrorStateManager;
   headers?: Record<string, string>;
   url: string;
 }
@@ -72,20 +70,12 @@ export default class GoboClient {
 
     try {
       const data = await res.json();
-      const errors: GraphQLError[] | undefined = data.errors;
-
-      if (errors) {
-        errors.forEach(err => {
-          this.addError(err, this.getDocumentName(document.definitions));
-        });
-      }
-
       return {
         data: data.data,
-        errors: data.errors
+        errors: data.errors,
+        name: this.getDocumentName(document.definitions)
       };
     } catch (e) {
-      this.options.errorHandler.addError(e);
       return;
     }
   }
@@ -97,10 +87,5 @@ export default class GoboClient {
     });
 
     return names.length > 0 ? names[0] : '';
-  }
-
-  private addError(e: Error, documentName: string) {
-    const err = new Error(e.message + ' document: ' + documentName);
-    this.options.errorHandler.addError(err);
   }
 }

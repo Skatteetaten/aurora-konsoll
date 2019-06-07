@@ -14,6 +14,7 @@ import {
   IJdbcUser,
   IUpdateDatabaseSchemaInputWithCreatedBy
 } from 'models/schemas';
+import { addCurrentErrors } from 'screens/ErrorHandler/state/actions';
 import { createAction } from 'redux-ts-utils';
 
 const databaseAction = (action: string) => `database/${action}`;
@@ -57,14 +58,31 @@ export const fetchSchemas: Thunk = (affiliations: string[]) => async (
   dispatch(fetchSchemaRequest(true));
   const result = await clients.databaseClient.getSchemas(affiliations);
   dispatch(fetchSchemaRequest(false));
-  dispatch(fetchSchemaResponse(result));
+  dispatch(addCurrentErrors(result));
+
+  if (result && result.data) {
+    dispatch(fetchSchemaResponse(result.data));
+  } else {
+    dispatch(fetchSchemaResponse({ databaseSchemas: [] }));
+  }
 };
 
 export const updateSchema: Thunk = (
   databaseSchema: IUpdateDatabaseSchemaInputWithCreatedBy
 ) => async (dispatch, getState, { clients }) => {
   const result = await clients.databaseClient.updateSchema(databaseSchema);
-  dispatch(updateSchemaResponse(result));
+
+  dispatch(addCurrentErrors(result));
+  if (result && result.data && result.data.updateDatabaseSchema) {
+    const update = !!(
+      result &&
+      result.data &&
+      result.data.updateDatabaseSchema
+    );
+    dispatch(updateSchemaResponse(update));
+  } else {
+    dispatch(updateSchemaResponse(false));
+  }
   dispatch(fetchSchemas([databaseSchema.affiliation]));
 };
 
@@ -76,8 +94,20 @@ export const deleteSchema: Thunk = (databaseSchema: IDatabaseSchema) => async (
   const result = await clients.databaseClient.deleteSchemas([
     databaseSchema.id
   ]);
-  dispatch(deleteSchemasResponse(result));
-  dispatch(fetchSchemas([databaseSchema.affiliation.name]));
+  dispatch(addCurrentErrors(result));
+
+  if (result && result.data) {
+    dispatch(deleteSchemasResponse(result.data.deleteDatabaseSchemas));
+    dispatch(fetchSchemas([databaseSchema.affiliation.name]));
+  } else {
+    dispatch(
+      deleteSchemasResponse({
+        failed: [],
+        succeeded: []
+      })
+    );
+    dispatch(fetchSchemas([databaseSchema.affiliation.name]));
+  }
 };
 
 export const deleteSchemas: Thunk = (ids: string[]) => async (
@@ -86,7 +116,18 @@ export const deleteSchemas: Thunk = (ids: string[]) => async (
   { clients }
 ) => {
   const result = await clients.databaseClient.deleteSchemas(ids);
-  dispatch(deleteSchemasResponse(result));
+  dispatch(addCurrentErrors(result));
+
+  if (result && result.data) {
+    dispatch(deleteSchemasResponse(result.data.deleteDatabaseSchemas));
+  } else {
+    dispatch(
+      deleteSchemasResponse({
+        failed: [],
+        succeeded: []
+      })
+    );
+  }
 };
 
 export const testJdbcConnectionForId: Thunk = (id: string) => async (
@@ -95,7 +136,15 @@ export const testJdbcConnectionForId: Thunk = (id: string) => async (
   { clients }
 ) => {
   const result = await clients.databaseClient.testJdbcConnectionForId(id);
-  dispatch(testJdbcConnectionForIdResponse(result));
+  dispatch(addCurrentErrors(result));
+
+  if (result && result.data) {
+    dispatch(
+      testJdbcConnectionForIdResponse(result.data.testJdbcConnectionForId)
+    );
+  } else {
+    dispatch(testJdbcConnectionForIdResponse(false));
+  }
 };
 
 export const testJdbcConnectionForJdbcUser: Thunk = (
@@ -104,7 +153,17 @@ export const testJdbcConnectionForJdbcUser: Thunk = (
   const result = await clients.databaseClient.testJdbcConnectionForJdbcUser(
     jdbcUser
   );
-  dispatch(testJdbcConnectionForJdbcUserResponse(result));
+  dispatch(addCurrentErrors(result));
+
+  if (result && result.data) {
+    dispatch(
+      testJdbcConnectionForJdbcUserResponse(
+        result.data.testJdbcConnectionForJdbcUser
+      )
+    );
+  } else {
+    dispatch(testJdbcConnectionForJdbcUserResponse(false));
+  }
 };
 
 export const createDatabaseSchema: Thunk = (
@@ -113,7 +172,26 @@ export const createDatabaseSchema: Thunk = (
   const result = await clients.databaseClient.createDatabaseSchema(
     databaseSchema
   );
-  dispatch(createDatabaseSchemaResponse(result));
+  dispatch(addCurrentErrors(result));
+
+  if (result && result.data && result.data.createDatabaseSchema) {
+    const graphqlResult = result.data.createDatabaseSchema;
+    const response: ICreateDatabaseSchemaResponse = {
+      id: graphqlResult.id,
+      jdbcUser: {
+        jdbcUrl: graphqlResult.jdbcUrl,
+        password: graphqlResult.users[0].password,
+        username: graphqlResult.users[0].username
+      }
+    };
+    dispatch(createDatabaseSchemaResponse(response));
+  } else {
+    const response = {
+      id: '',
+      jdbcUser: { jdbcUrl: '', username: '', password: '' }
+    };
+    dispatch(createDatabaseSchemaResponse(response));
+  }
 };
 
 export default {

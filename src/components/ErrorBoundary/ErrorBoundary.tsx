@@ -1,17 +1,19 @@
-import ErrorStateManager, {
-  IAppError,
-  IErrorState
-} from 'models/StateManager/ErrorStateManager';
 import * as React from 'react';
 import ErrorPopup from './ErrorPopup';
+import { IErrors, IAppError } from 'models/errors';
+import { logger } from 'services/LoggerService';
 
 interface IErrorBoundaryProps {
-  errorSM: ErrorStateManager;
+  getNextError: () => void;
+  closeError: (id: number) => void;
+  closeErrors: () => void;
+  errors: IErrors;
+  nextError?: IAppError;
 }
 
 interface IErrorBoundaryState {
-  currentError?: IAppError;
-  errors: IErrorState;
+  isExtraInfoVisible: boolean;
+  errorQueue: IAppError[];
 }
 
 class ErrorBoundary extends React.Component<
@@ -19,66 +21,55 @@ class ErrorBoundary extends React.Component<
   IErrorBoundaryState
 > {
   public state: IErrorBoundaryState = {
-    errors: {
-      allErrors: new Map(),
-      errorQueue: []
+    isExtraInfoVisible: false,
+    errorQueue: []
+  };
+  public async componentDidUpdate() {
+    const { errors, getNextError, nextError } = this.props;
+    const { errorQueue } = this.state;
+
+    const isEqualErrorQueues = () => {
+      return (
+        JSON.stringify(Object.assign({}, errors.errorQueue)) ===
+        JSON.stringify(Object.assign({}, errorQueue))
+      );
+    };
+    if (!isEqualErrorQueues() && errors.errorQueue.length > 0) {
+      logger(errors.errorQueue[0].error.message);
+      this.setState({
+        errorQueue: Object.assign({}, this.props.errors.errorQueue)
+      });
     }
+    if (
+      (errors.errorQueue.length > 0 && !nextError) ||
+      (nextError && !nextError.isActive)
+    ) {
+      await getNextError();
+    }
+  }
+
+  public changeExtraInfoVisibility = () => {
+    this.setState(prevState => ({
+      isExtraInfoVisible: !prevState.isExtraInfoVisible
+    }));
   };
 
-  constructor(props: IErrorBoundaryProps) {
-    super(props);
-    props.errorSM.registerStateUpdater(({ allErrors, errorQueue }) => {
-      if (errorQueue.length > this.state.errors.errorQueue.length) {
-        fetch('/api/log', {
-          body: JSON.stringify({
-            location: window.location.pathname,
-            message: errorQueue[0].error.message
-          }),
-          headers: {
-            'Content-Type': 'application/json; charset=utf-8'
-          },
-          method: 'POST'
-        });
-      }
-      this.setState({
-        errors: {
-          allErrors: new Map(allErrors),
-          errorQueue: [...errorQueue]
-        }
-      });
-    });
-  }
-
-  public componentDidUpdate() {
-    const { errorSM } = this.props;
-    const { currentError } = this.state;
-    if (
-      (errorSM.hasError() && !currentError) ||
-      (currentError && !currentError.isActive)
-    ) {
-      this.setState({
-        currentError: errorSM.getNextError()
-      });
-    }
-  }
-
-  public componentWillUnmount() {
-    this.props.errorSM.close();
-  }
-
   public render() {
-    const { errorSM } = this.props;
-    const { currentError, errors } = this.state;
+    const { children, closeError, closeErrors, errors, nextError } = this.props;
+    const { isExtraInfoVisible } = this.state;
     return (
       <>
-        {currentError && (
+        {nextError && (
           <ErrorPopup
-            currentError={currentError}
-            closeError={errorSM.closeError}
+            currentError={nextError}
+            closeError={closeError}
+            closeErrors={closeErrors}
             errorCount={errors.errorQueue.length}
+            isExtraInfoVisible={isExtraInfoVisible}
+            changeExtraInfoVisibility={this.changeExtraInfoVisibility}
           />
         )}
-        {this.props.children}
+        {children}
       </>
     );
   }

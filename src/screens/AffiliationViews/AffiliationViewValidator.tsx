@@ -1,11 +1,12 @@
 import * as React from 'react';
 
-import { connect } from 'react-redux';
-
-import { IUserAndAffiliations } from 'models/ApplicationDeployment';
+import {
+  IApplicationDeployment,
+  IUserAndAffiliations
+} from 'models/ApplicationDeployment';
+import { IUserSettings } from 'models/UserSettings';
 import { RouteComponentProps } from 'react-router-dom';
 import { MenuType } from 'screens/App';
-import { RootState } from 'store/types';
 import AffiliationSelector from './AffiliationSelector';
 import { AffiliationViewControllerWithApi } from './AffiliationViewController';
 import DatabaseViewController from './DatabaseView/DatabaseViewController';
@@ -20,6 +21,16 @@ interface IAffiliationViewValidatorProps extends AffiliationRouteProps {
   type: MenuType;
   onAffiliationValidated: (affiliation: string) => void;
   currentUser: IUserAndAffiliations;
+  isFetchingAffiliations: boolean;
+  refreshAffiliations: (affiliations: string[]) => void;
+  findAllApplicationDeployments: (affiliations: string[]) => void;
+  getUserSettings: () => void;
+  allApplicationDeployments: IApplicationDeployment[];
+  isFetchingAllApplicationDeployments: boolean;
+  updateUserSettings: (userSettings: IUserSettings) => void;
+  isUpdatingUserSettings: boolean;
+  userSettings: IUserSettings;
+  isRefreshingApplicationDeployment: boolean;
 }
 
 class AffiliationViewValidator extends React.Component<
@@ -60,7 +71,15 @@ class AffiliationViewValidator extends React.Component<
       currentUser,
       match,
       type,
-      onAffiliationValidated
+      refreshAffiliations,
+      isFetchingAffiliations,
+      findAllApplicationDeployments,
+      allApplicationDeployments,
+      isFetchingAllApplicationDeployments,
+      getUserSettings,
+      updateUserSettings,
+      onAffiliationValidated,
+      userSettings
     } = this.props;
 
     if (currentUser.affiliations.length === 0) {
@@ -89,7 +108,6 @@ class AffiliationViewValidator extends React.Component<
         />
       );
     }
-
     if (!affiliation) {
       return <p>{affiliation} er ikke en gyldig affiliation.</p>;
     }
@@ -100,6 +118,16 @@ class AffiliationViewValidator extends React.Component<
           matchPath={match.path}
           matchUrl={match.url}
           updateUrlWithQuery={this.updateUrlWithQuery}
+          refreshAffiliations={refreshAffiliations}
+          isFetchingAffiliations={isFetchingAffiliations}
+          findAllApplicationDeployments={findAllApplicationDeployments}
+          allApplicationDeployments={allApplicationDeployments}
+          isFetchingAllApplicationDeployments={
+            isFetchingAllApplicationDeployments
+          }
+          getUserSettings={getUserSettings}
+          updateUserSettings={updateUserSettings}
+          userSettings={userSettings}
         />
       );
     } else if (type === MenuType.DATABASE) {
@@ -110,13 +138,4 @@ class AffiliationViewValidator extends React.Component<
   }
 }
 
-const mapStateToProps = (state: RootState) => ({
-  currentUser: state.startup.currentUser
-});
-
-const AffiliationViewValidatorConnected = connect(
-  mapStateToProps,
-  null
-)(AffiliationViewValidator);
-
-export default AffiliationViewValidatorConnected;
+export default AffiliationViewValidator;

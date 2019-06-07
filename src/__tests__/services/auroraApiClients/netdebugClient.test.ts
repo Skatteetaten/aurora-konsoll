@@ -1,23 +1,11 @@
-import ErrorStateManager from 'models/StateManager/ErrorStateManager';
 import { NetdebugClient } from 'services/auroraApiClients/netdebugClient/client';
 import { goboClientMock, GraphQLSeverMock } from 'utils/GraphQLMock';
 
 import * as getNetdebugStatus from './__responses__/netdebugClient/getNetdebugStatus.json';
 import * as getNetdebugStatusWhenScanIsNull from './__responses__/netdebugClient/getNetdebugStatusWhenScanIsNull.json';
 
-const errorStateManager = new ErrorStateManager(
-  {
-    allErrors: new Map(),
-    errorQueue: []
-  },
-  () => {
-    // Validate errors
-    return;
-  }
-);
-
 const serverMock = new GraphQLSeverMock();
-const clientMock = goboClientMock(serverMock.graphQLUrl, errorStateManager);
+const clientMock = goboClientMock(serverMock.graphQLUrl);
 const netdebugClient = new NetdebugClient(clientMock);
 
 afterAll(() => {
