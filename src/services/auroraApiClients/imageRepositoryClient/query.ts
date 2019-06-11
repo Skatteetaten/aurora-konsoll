@@ -101,8 +101,10 @@ export const TAGS_GROUPED_QUERY = gql`
     edges {
       node {
         name
-        lastModified
         type
+        image {
+          buildTime
+        }
       }
     }
   }
