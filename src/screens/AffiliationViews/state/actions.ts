@@ -356,7 +356,7 @@ export const toTagsPaged = (
     endCursor: pageInfo.endCursor,
     hasNextPage: pageInfo.hasNextPage,
     tags: edges.map(edge => ({
-      lastModified: edge.node.lastModified,
+      lastModified: edge.node.image.buildTime,
       name: edge.node.name,
       type: edge.node.type
     }))
