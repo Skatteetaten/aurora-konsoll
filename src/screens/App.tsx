@@ -26,7 +26,7 @@ import { ErrorBoundaryConnected } from 'screens/ErrorHandler/ErrorBoundaryConnec
 import { AffiliationViewValidatorConnected } from './AffiliationViews/AffiliationViewValidatorConnected';
 import { NetdebugConnected } from './NetdebugView/NetdebugConnected';
 
-import { SecretTokenRoute } from './SecretTokenView/SecretTokenRoute'
+import { SecretTokenRoute } from './SecretTokenView/SecretTokenRoute';
 
 export enum MenuType {
   DEPLOYMENTS,
@@ -140,8 +140,7 @@ class App extends React.Component<IAppProps, IAppState> {
             displayDatabaseView={displayDatabaseView}
             displaySkapViews={displaySkapViews}
           >
-            
-            <SecretTokenRoute />                        
+            <SecretTokenRoute />
             <AcceptTokenRoute onTokenUpdated={this.onTokenUpdated} />
             {isAuthenticated && (
               <Switch>
@@ -163,7 +162,7 @@ class App extends React.Component<IAppProps, IAppState> {
                   exact={true}
                   path="/certificates"
                   component={CertificateConnected}
-                />                 
+                />
                 {displayDatabaseView && (
                   <Route
                     path="/db/:affiliation"
