@@ -31,15 +31,21 @@ async function init() {
   }
   const config = configOrError as IConfiguration;
 
-  if (!tokenStore.isTokenValid()) {
+  if (!tokenStore.isTokenValid() && window.location.pathname !== '/secret') {
     redirectToLoginPage(config.AUTHORIZATION_URI, config.CLIENT_ID);
   }
 
-  const token = tokenStore.getToken();
+  const urlParams = new URLSearchParams(window.location.hash.replace("#","?"));
+  const token = urlParams.get('access_token') ? urlParams.get('access_token') : tokenStore.getToken();
+  const expiresInSeconds = Number(urlParams.get('expires_in'));
+  if (urlParams.get('access_token')) {
+    tokenStore.updateToken(token as string, expiresInSeconds);
+  }
+  
   const goboClient = new GoboClient({
     url: '/api/graphql',
     headers: {
-      Authorization: token ? `Bearer ${token}` : '',
+      Authorization: token ? token : '',
       KlientID: config.APPLICATION_NAME
     }
   });
@@ -76,7 +82,7 @@ async function init() {
 function redirectToLoginPage(authorizationUri: string, clientId: string) {
   const params = new URLSearchParams();
   params.append('client_id', clientId);
-  params.append('redirect_uri', window.location.origin + '/accept-token');
+  params.append('redirect_uri', window.location.origin + '/secret');
   params.append('response_type', 'token');
   params.append('scope', '');
   params.append('state', '');

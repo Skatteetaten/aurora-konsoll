@@ -11,22 +11,9 @@ const AcceptToken = ({
   location,
   onTokenUpdated
 }: IAcceptTokenProps & RouteComponentProps<{}>) => {
-  interface IAuthQueryString {
-    expires_in: string;
-    access_token: string;
-  }
-
-  const params = new URLSearchParams(location.hash.substring(1));
-  const expiresIn = params.get('expires_in');
-  const accessToken = params.get('access_token');
-
-  const authQueryString: IAuthQueryString = {
-    expires_in: expiresIn || '',
-    access_token: accessToken || ''
-  };
-
-  const token = authQueryString.access_token;
-  const expiresInSeconds = Number(authQueryString.expires_in);
+  const urlParams = new URLSearchParams(window.location.hash.replace("#","?"));  
+  const token = urlParams.get('access_token') as string;
+  const expiresInSeconds = Number(urlParams.get('expires_in'));
   tokenStore.updateToken(token, expiresInSeconds);
 
   onTokenUpdated();

@@ -1,5 +1,6 @@
 import express from 'express';
 import proxy from 'http-proxy-middleware';
+import crypto from 'crypto';
 
 import {
   APPLICATION_NAME,
@@ -9,15 +10,33 @@ import {
   GOBO_URL,
   DOCKER_REGISTRY_FRONTEND_URL,
   PORT,
-  SKAP_ENABLED
+  SKAP_ENABLED,
+  TOKEN_ENCRYPTION_FRASE
 } from './config';
 
+const algorithm = 'aes-256-ctr', password = TOKEN_ENCRYPTION_FRASE;
+
 const app = express();
+
 app.use(
   '/api/graphql',
   proxy({
     changeOrigin: true,
-    target: GOBO_URL,
+    target: GOBO_URL,    
+    onProxyReq(proxyReq, req, res) {
+      const token = req.headers['authorization'];
+      // The first time GOBO is called, the token may not have been encrypted yet.
+      if (token) {
+        if (isEncrypted(token)) {
+          const authToken = decrypt(token);
+          proxyReq.setHeader('authorization', 'Bearer ' + authToken);
+          req.headers.authorization = 'Bearer ' + authToken;
+        } else {
+          proxyReq.setHeader('authorization', 'Bearer ' + token);
+          req.headers.authorization = 'Bearer ' + token;
+        }        
+      }
+    },  
     pathRewrite: {
       '/api/graphql': '/graphql'
     }
@@ -45,6 +64,37 @@ app.post('/api/log', (req, res) => {
   return res.sendStatus(200);
 });
 
+app.get('/api/accept-token', (req, res) => {
+  const accessToken = req.query.access_token; 
+  const expires_in = req.query.expires_in;  
+  const encryptedToken = encrypt(accessToken);
+  res.send(`${req.protocol}://${req.get('x-forwarded-host')}/accept-token#access_token=${encryptedToken}&expires_in=${expires_in}`);
+});
+
 app.listen(PORT, () => {
   console.log(`started on port ${PORT}`);
 });
+
+function isEncrypted(text : string) : boolean {
+  const result = decrypt(text);
+  return result !== text ? true : false;
+}
+
+function encrypt(text : string) : string {
+  const cipher = crypto.createCipher(algorithm, password)
+  let crypted = cipher.update(text,'utf8','hex')
+  crypted += cipher.final('hex');
+  return crypted;
+}
+ 
+function decrypt(text : string) : string {
+  try {
+    const decipher = crypto.createDecipher(algorithm, password)
+    let dec = decipher.update(text,'hex','utf8')
+    dec += decipher.final('utf8');
+    return dec;
+  } catch (err) {
+    return text
+  }
+}
+
