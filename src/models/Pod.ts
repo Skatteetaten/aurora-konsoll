@@ -29,3 +29,11 @@ export interface IManagementEndpointError {
   code: string;
   message?: string;
 }
+
+export interface IPodsStatus {
+  healthStatus: JSX.Element;
+  name: JSX.Element;
+  startedDate: string;
+  numberOfRestarts: number;
+  externalLinks: JSX.Element;
+}

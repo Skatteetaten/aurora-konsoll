@@ -19,7 +19,7 @@ export interface ISortableDetailsListProps extends IDetailsListProps {
   filter: string;
   shouldResetSort?: boolean;
   onResetSort?: () => void;
-  forceUpdate?: () => void;
+  passItemsToParent?: (items: any[]) => void;
 }
 
 export interface ISortableDetailsListState {
@@ -57,10 +57,10 @@ class SortableDetailsList extends React.Component<
       filter,
       items,
       shouldResetSort,
-      onResetSort
+      onResetSort,
+      passItemsToParent: passItemsToParentComp
     } = this.props;
     const { currentViewItems, prevIndices } = this.state;
-
     if (selection) {
       this.updateCurrentSelection(
         selection,
@@ -88,6 +88,10 @@ class SortableDetailsList extends React.Component<
         selectedColumnIndex: -1
       });
     }
+
+    if (passItemsToParentComp) {
+      passItemsToParentComp(currentViewItems);
+    }
   }
 
   public resetColumns() {
@@ -95,6 +99,10 @@ class SortableDetailsList extends React.Component<
     if (columns) {
       columns.forEach(col => (col.iconName = ''));
     }
+  }
+
+  public componentWillUnmount() {
+    this.resetColumns();
   }
 
   public createColumns(index: number, sortDirection: SortDirection): IColumn[] {
@@ -148,9 +156,6 @@ class SortableDetailsList extends React.Component<
       selectedColumnIndex: column.key,
       prevIndices: selectedIndices
     });
-    if (this.props.forceUpdate) {
-      this.props.forceUpdate();
-    }
   };
   public toViewIndex<T>(index: number, selection: ISelection, items: T[]) {
     const listItem = items[index];

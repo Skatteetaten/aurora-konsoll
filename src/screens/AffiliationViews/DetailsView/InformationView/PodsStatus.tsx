@@ -1,15 +1,12 @@
 import * as React from 'react';
 import styled from 'styled-components';
 
-import { IPodResource } from 'models/Pod';
+import { IPodResource, IPodsStatus } from 'models/Pod';
 import SortableDetailsList from 'components/SortableDetailsList';
-import InformationViewService, {
-  filterInformationView
-} from 'services/InformationViewService';
-import {
-  IInformationView,
-  IApplicationDeploymentDetails
-} from 'models/ApplicationDeployment';
+import PodsStatusService, {
+  filterPodsStatus
+} from 'services/PodsStatusService';
+import { IApplicationDeploymentDetails } from 'models/ApplicationDeployment';
 import Icon from 'aurora-frontend-react-komponenter/Icon';
 import { STATUS_COLORS } from 'models/Status';
 import { getLocalDatetime } from 'utils/date';
@@ -17,9 +14,7 @@ import IconLink, { IIconLinkData } from 'components/IconLink';
 import Callout from 'aurora-frontend-react-komponenter/Callout';
 import HealthResponseDialogSelector from './HealthResponseDialogSelector/HealthResponseDialogSelector';
 import DetailsList from 'aurora-frontend-react-komponenter/DetailsList';
-import { IObjectWithKey } from 'office-ui-fabric-react/lib/DetailsList';
 import ActionButton from 'aurora-frontend-react-komponenter/ActionButton';
-
 interface IPodsStatusProps {
   details: IApplicationDeploymentDetails;
   isUpdating: boolean;
@@ -29,8 +24,7 @@ interface IPodsStatusProps {
 
 interface IPodsStatusState {
   isCalloutVisibleList: boolean[];
-  currentPods: IInformationView[];
-  currentPod: string;
+  podResources: IPodResource[];
 }
 
 class PodsStatus extends React.Component<IPodsStatusProps, IPodsStatusState> {
@@ -44,15 +38,8 @@ class PodsStatus extends React.Component<IPodsStatusProps, IPodsStatusState> {
 
   public state: IPodsStatusState = {
     isCalloutVisibleList: this.resetInput(),
-    currentPods: [],
-    currentPod: ''
+    podResources: []
   };
-
-  public componentDidMount() {
-    this.setState({
-      currentPods: this.applicationDeploymentPods()
-    });
-  }
 
   public handleIsActive(data: IIconLinkData) {
     return data.href.startsWith('http');
@@ -145,111 +132,123 @@ class PodsStatus extends React.Component<IPodsStatusProps, IPodsStatusState> {
     }
   };
 
-  public applicationDeploymentPods = (): IInformationView[] => {
-    const { details } = this.props;
-    const { isCalloutVisibleList } = this.state;
-
-    return details.pods.map((pod: IPodResource, index: number) => {
-      const showCallout = () => {
-        this.setState({
-          currentPods: this.selection.getItems()
+  public getItemsFromChildComp = (currentViewItems: any) => {
+    const { podResources } = this.state;
+    const pods = currentViewItems.map((it: IPodsStatus) => it.name.key);
+    if (pods.length > 0) {
+      const getPod = (pod: string) =>
+        this.props.details.pods.find(it => it.name === pod);
+      console.log(pods.map(it => getPod(it)));
+      const podsWithoutNull: IPodResource[] = pods
+        .map(it => getPod(it))
+        .filter((element: IPodResource) => {
+          return element !== undefined;
         });
-        console.log(index);
-        const selected: IObjectWithKey[] = this.selection.getSelection();
 
-        const selectedId = (selected[0] as IInformationView).name.key;
-
-        if (typeof selectedId === 'string') {
-          this.setState({
-            currentPod: selectedId
-          });
-        }
-        if (isCalloutVisibleList[index]) {
-          this.setState({
-            isCalloutVisibleList: this.resetInput()
-          });
-        } else {
-          const newItems = this.resetInput();
-          newItems[index] = true;
-          this.setState({
-            isCalloutVisibleList: newItems
-          });
-        }
-      };
-      return {
-        healthStatus: (
-          <>
-            <span ref={this.menuButtonElements[index]}>
-              <Icon
-                iconName={this.getStatusColorAndIconForPod(pod).icon}
-                onClick={showCallout}
-                style={{
-                  fontSize: '25px',
-                  color: this.getStatusColorAndIconForPod(pod).color,
-                  cursor: 'pointer'
-                }}
-              />
-            </span>
-            {this.state.isCalloutVisibleList[index] && (
-              <Callout
-                target={this.menuButtonElements[index].current}
-                gapSpace={0}
-                directionalHint={Callout.POS_BOTTOM_LEFT}
-                color={
-                  pod.managementResponses &&
-                  pod.managementResponses.links &&
-                  pod.managementResponses.links.error
-                    ? Callout.ERROR
-                    : Callout.BASIC
-                }
-                onClose={showCallout}
-                doNotLayer={false}
-              >
-                {this.renderErrorsForPod(pod)}
-              </Callout>
-            )}
-          </>
-        ),
-        name: (
-          <ActionButton
-            target="_blank"
-            rel="noopener noreferrer"
-            href={this.findLink(pod, 'ocp_console_details')}
-            title={pod.name}
-            key={pod.name}
-          >
-            {pod.name}
-          </ActionButton>
-        ),
-        startedDate: getLocalDatetime(pod.startTime),
-        numberOfRestarts: pod.restartCount,
-        externalLinks: (
-          <div
-            style={{
-              display: 'flex',
-              alignItems: 'flex-end'
-            }}
-          >
-            {this.podAction(pod)}
-            <IconLink
-              name="Timeline"
-              isActiveHandler={this.handleIsActive}
-              href={this.findLink(pod, 'metrics')}
-              title="Grafana"
-            />
-            <IconLink
-              name="FormatAlignLeft"
-              isActiveHandler={this.handleIsActive}
-              href={this.findLink(pod, 'splunk')}
-              title="Splunk"
-            />
-          </div>
-        )
-      };
-    });
+      if (JSON.stringify(podsWithoutNull) !== JSON.stringify(podResources)) {
+        this.setState({
+          podResources: podsWithoutNull,
+          isCalloutVisibleList: this.resetInput()
+        });
+      }
+    }
   };
-  public forceUpdate = () => {
-    // this.forceUpdate();
+
+  public applicationDeploymentPods = (): IPodsStatus[] => {
+    const { details } = this.props;
+    const { isCalloutVisibleList, podResources } = this.state;
+
+    const onIndexChange = (index: number) => () => {
+      if (isCalloutVisibleList[index]) {
+        this.setState({
+          isCalloutVisibleList: this.resetInput()
+        });
+      } else {
+        const newItems = this.resetInput();
+        newItems[index] = true;
+        this.setState({
+          isCalloutVisibleList: newItems
+        });
+      }
+    };
+
+    return (podResources.length > 0 ? podResources : details.pods).map(
+      (pod: IPodResource, index: number) => {
+        return {
+          key: pod.name,
+          healthStatus: (
+            <>
+              <span ref={this.menuButtonElements[index]}>
+                <Icon
+                  iconName={this.getStatusColorAndIconForPod(pod).icon}
+                  onClick={onIndexChange(index)}
+                  style={{
+                    fontSize: '25px',
+                    color: this.getStatusColorAndIconForPod(pod).color,
+                    cursor: 'pointer',
+                    float: 'none'
+                  }}
+                />
+              </span>
+              {this.state.isCalloutVisibleList[index] && (
+                <Callout
+                  target={this.menuButtonElements[index].current}
+                  gapSpace={0}
+                  directionalHint={Callout.POS_BOTTOM_LEFT}
+                  color={
+                    pod.managementResponses &&
+                    pod.managementResponses.links &&
+                    pod.managementResponses.links.error
+                      ? Callout.ERROR
+                      : Callout.BASIC
+                  }
+                  onClose={onIndexChange(index)}
+                  doNotLayer={false}
+                >
+                  {this.renderErrorsForPod(pod)}
+                </Callout>
+              )}
+            </>
+          ),
+          name: (
+            <ActionButton
+              target="_blank"
+              rel="noopener noreferrer"
+              href={this.findLink(pod, 'ocp_console_details')}
+              title={pod.name}
+              key={pod.name}
+              style={{ margin: 0 }}
+            >
+              {pod.name}
+            </ActionButton>
+          ),
+          startedDate: getLocalDatetime(pod.startTime),
+          numberOfRestarts: pod.restartCount,
+          externalLinks: (
+            <div
+              style={{
+                display: 'flex',
+                alignItems: 'flex-end'
+              }}
+            >
+              {this.podAction(pod)}
+              <IconLink
+                name="Timeline"
+                isActiveHandler={this.handleIsActive}
+                href={this.findLink(pod, 'metrics')}
+                title="Grafana"
+              />
+              <IconLink
+                name="FormatAlignLeft"
+                isActiveHandler={this.handleIsActive}
+                href={this.findLink(pod, 'splunk')}
+                title="Splunk"
+              />
+            </div>
+          )
+        };
+      }
+    );
   };
 
   public render() {
@@ -258,13 +257,13 @@ class PodsStatus extends React.Component<IPodsStatusProps, IPodsStatusState> {
       <div className={className}>
         <div className="styledTable">
           <SortableDetailsList
+            passItemsToParent={this.getItemsFromChildComp}
             filter=""
             items={this.applicationDeploymentPods()}
             selection={this.selection}
-            filterView={filterInformationView}
-            columns={InformationViewService.DEFAULT_COLUMNS}
+            filterView={filterPodsStatus}
+            columns={PodsStatusService.DEFAULT_COLUMNS}
             isHeaderVisible={true}
-            forceUpdate={this.forceUpdate}
           />
         </div>
       </div>
@@ -279,9 +278,17 @@ export default styled(PodsStatus)`
     i {
       float: right;
     }
-  }
-  button {
-    border-top: 1px solid #e8e8e8;
-    padding: 20px;
+    .ms-Button-flexContainer {
+      align-items: baseline;
+    }
+    .ms-Button {
+      height: auto;
+    }
+    .ms-Button-label {
+      margin: 0;
+    }
+    .ms-Button-icon {
+      margin: 0;
+    }
   }
 `;

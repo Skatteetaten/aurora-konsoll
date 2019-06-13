@@ -2,9 +2,9 @@ import {
   IColumn,
   ColumnActionsMode
 } from 'office-ui-fabric-react/lib/DetailsList';
-import { IInformationView } from 'models/ApplicationDeployment';
+import { IPodsStatus } from 'models/Pod';
 
-const informationViewColumns: IColumn[] = [
+const podsStatusColumns: IColumn[] = [
   {
     fieldName: 'healthStatus',
     isResizable: true,
@@ -19,7 +19,6 @@ const informationViewColumns: IColumn[] = [
     fieldName: 'name',
     isResizable: true,
     key: '1',
-    columnActionsMode: ColumnActionsMode.disabled,
     maxWidth: 400,
     minWidth: 300,
     name: 'Navn',
@@ -55,12 +54,13 @@ const informationViewColumns: IColumn[] = [
   }
 ];
 
-export const filterInformationView = (filter: string) => {
-  return (v: IInformationView): boolean =>
+export const filterPodsStatus = (filter: string) => {
+  return (v: IPodsStatus): boolean =>
     v.numberOfRestarts.toString().includes(filter) ||
-    v.startedDate.includes(filter);
+    v.startedDate.includes(filter) ||
+    (!!v.name.key && v.name.key.toString().includes(filter));
 };
 
-export default class InformationViewService {
-  public static DEFAULT_COLUMNS: IColumn[] = informationViewColumns;
+export default class PodsStatusService {
+  public static DEFAULT_COLUMNS: IColumn[] = podsStatusColumns;
 }

@@ -58,11 +58,3 @@ export interface ILink {
   name: string;
   url: string;
 }
-
-export interface IInformationView {
-  healthStatus: JSX.Element;
-  name: JSX.Element;
-  startedDate: string;
-  numberOfRestarts: number;
-  externalLinks: JSX.Element;
-}
