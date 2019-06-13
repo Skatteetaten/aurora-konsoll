@@ -7,6 +7,7 @@ def overrides = [
     credentialsId: "github",
     jiraFiksetIKomponentversjon: true,
     chatRoom: "#aos-notifications",
+    npmInstallCommand: 'ci',
     nodeVersion: "10",
     versionStrategy: [
         [ branch: 'master', versionHint: '0']

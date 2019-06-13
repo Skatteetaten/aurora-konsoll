@@ -27,10 +27,17 @@ class ErrorBoundary extends React.Component<
   public async componentDidUpdate() {
     const { errors, getNextError, nextError } = this.props;
     const { errorQueue } = this.state;
-    if (errors.errorQueue > errorQueue) {
+
+    const isEqualErrorQueues = () => {
+      return (
+        JSON.stringify(Object.assign({}, errors.errorQueue)) ===
+        JSON.stringify(Object.assign({}, errorQueue))
+      );
+    };
+    if (!isEqualErrorQueues() && errors.errorQueue.length > 0) {
       logger(errors.errorQueue[0].error.message);
       this.setState({
-        errorQueue: errors.errorQueue
+        errorQueue: Object.assign({}, this.props.errors.errorQueue)
       });
     }
     if (

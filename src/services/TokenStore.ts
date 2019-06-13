@@ -41,3 +41,4 @@ class TokenStore implements ITokenStore {
 const tokenStore = new TokenStore();
 
 export { tokenStore, TokenStore };
+
