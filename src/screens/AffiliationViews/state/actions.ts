@@ -185,7 +185,7 @@ export const refreshApplicationDeployment: Thunk = (
   if (result && result.data) {
     dispatch(refreshApplicationDeploymentResponse(true));
     dispatch(findAllApplicationDeployments(affiliation));
-    dispatch(findApplicationDeploymentDetails(applicationDeploymentId));
+    dispatch(findApplicationDeploymentDetails(applicationDeploymentId, true));
   } else {
     dispatch(refreshApplicationDeploymentResponse(false));
   }
@@ -246,14 +246,14 @@ export const findTagsPaged: Thunk = (
   );
   dispatch(addCurrentErrors(result));
 
-  if (!result) {
+  if (
+    !result ||
+    !(result.data.imageRepositories && result.data.imageRepositories.length > 0)
+  ) {
     dispatch(findTagsPagedResponse(defaultTagsPagedGroup()[type]));
   } else {
     const { imageRepositories } = result.data;
 
-    if (!(imageRepositories && imageRepositories.length > 0)) {
-      dispatch(findTagsPagedResponse(defaultTagsPagedGroup()[type]));
-    }
     if (result && result.data) {
       updateTagsPaged(type, toTagsPaged(imageRepositories[0].tags));
       dispatch(findTagsPagedResponse(toTagsPaged(imageRepositories[0].tags)));
@@ -266,19 +266,19 @@ export const findGroupedTagsPaged: Thunk = (
   repository: string,
   setTagsPagedGroup: (tagsPagedGroup: ITagsPagedGroup) => void
 ) => async (dispatch, getState, { clients }) => {
+  dispatch(fetchTagsRequest(true));
   const result = await clients.imageRepositoryClient.findGroupedTagsPaged(
     repository
   );
   dispatch(addCurrentErrors(result));
 
-  if (!result) {
+  if (
+    !result ||
+    !(result.data.imageRepositories && result.data.imageRepositories.length > 0)
+  ) {
     dispatch(findGroupedTagsPagedResponse(defaultTagsPagedGroup()));
   } else {
     const { imageRepositories } = result.data;
-
-    if (!(imageRepositories && imageRepositories.length > 0)) {
-      dispatch(findGroupedTagsPagedResponse(defaultTagsPagedGroup()));
-    }
 
     const [mainRepo] = imageRepositories;
 
@@ -296,14 +296,16 @@ export const findGroupedTagsPaged: Thunk = (
     setTagsPagedGroup(normalizedTags);
     dispatch(findGroupedTagsPagedResponse(normalizedTags));
   }
+  dispatch(fetchTagsRequest(false));
 };
 
-export const findApplicationDeploymentDetails: Thunk = (id: string) => async (
-  dispatch,
-  getState,
-  { clients }
-) => {
-  dispatch(fetchDetailsRequest(true));
+export const findApplicationDeploymentDetails: Thunk = (
+  id: string,
+  withoutLoading?: boolean
+) => async (dispatch, getState, { clients }) => {
+  if (!!!withoutLoading) {
+    dispatch(fetchDetailsRequest(true));
+  }
   const result = await clients.applicationDeploymentClient.findApplicationDeploymentDetails(
     id
   );
@@ -354,7 +356,7 @@ export const toTagsPaged = (
     endCursor: pageInfo.endCursor,
     hasNextPage: pageInfo.hasNextPage,
     tags: edges.map(edge => ({
-      lastModified: edge.node.lastModified,
+      lastModified: edge.node.image.buildTime,
       name: edge.node.name,
       type: edge.node.type
     }))

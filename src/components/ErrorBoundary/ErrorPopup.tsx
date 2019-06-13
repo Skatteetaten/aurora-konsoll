@@ -51,15 +51,17 @@ const ErrorPopup = ({
         isMultiline={true}
         actions={
           <div style={{ alignItems: 'inherit', width: '100%' }}>
-            <Button
-              buttonType="secondary"
-              icon="helpFilled"
-              onClick={changeExtraInfoVisibility}
-              color="black"
-              style={{ paddingLeft: '14px' }}
-            >
-              Vis mer informasjon
-            </Button>
+            {(currentError.error.stack || currentError.error.name) && (
+              <Button
+                buttonType="secondary"
+                icon="helpFilled"
+                onClick={changeExtraInfoVisibility}
+                color="black"
+                style={{ paddingLeft: '14px' }}
+              >
+                Vis mer informasjon
+              </Button>
+            )}
             <div style={{ float: 'right' }}>
               {hasMoreErrors && (
                 <MessageBar.Button onClick={closeAll}>

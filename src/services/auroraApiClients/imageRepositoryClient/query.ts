@@ -35,7 +35,9 @@ export interface IImageTagsConnection {
 export interface IImageTag {
   name: string;
   type: ImageTagType;
-  lastModified: string;
+  image: {
+    buildTime: string;
+  }
 }
 
 export const TAGS_QUERY = gql`
@@ -55,7 +57,9 @@ export const TAGS_QUERY = gql`
           node {
             name
             type
-            lastModified
+            image {
+              buildTime
+            }
           }
         }
       }
@@ -101,8 +105,10 @@ export const TAGS_GROUPED_QUERY = gql`
     edges {
       node {
         name
-        lastModified
         type
+        image {
+          buildTime
+        }
       }
     }
   }
