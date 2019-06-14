@@ -20,7 +20,12 @@ const renderOpenDialogButton = (open: () => void) => {
     <Icon
       onClick={open}
       iconName="Favorite"
-      style={{ cursor: 'pointer', color: `${skeColor.blue}` }}
+      style={{
+        fontSize: '21px',
+        cursor: 'pointer',
+        color: `${skeColor.blue}`,
+        float: 'none'
+      }}
     />
   );
 };

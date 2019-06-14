@@ -8,13 +8,13 @@ import PodsStatusService, {
 } from 'services/PodsStatusService';
 import { IApplicationDeploymentDetails } from 'models/ApplicationDeployment';
 import Icon from 'aurora-frontend-react-komponenter/Icon';
-import { STATUS_COLORS } from 'models/Status';
 import { getLocalDatetime } from 'utils/date';
-import IconLink, { IIconLinkData } from 'components/IconLink';
+import IconLink from 'components/IconLink';
 import Callout from 'aurora-frontend-react-komponenter/Callout';
 import HealthResponseDialogSelector from './HealthResponseDialogSelector/HealthResponseDialogSelector';
 import DetailsList from 'aurora-frontend-react-komponenter/DetailsList';
 import ActionButton from 'aurora-frontend-react-komponenter/ActionButton';
+
 interface IPodsStatusProps {
   details: IApplicationDeploymentDetails;
   isUpdating: boolean;
@@ -32,68 +32,26 @@ class PodsStatus extends React.Component<IPodsStatusProps, IPodsStatusState> {
     .fill(0)
     .map(() => React.createRef<HTMLDivElement>());
 
+  private PodsStatusService = new PodsStatusService();
+
   private resetInput = () => Array(this.props.details.pods.length).fill(false);
 
   private selection = new DetailsList.Selection();
 
   public state: IPodsStatusState = {
     isCalloutVisibleList: this.resetInput(),
-    podResources: []
+    podResources: this.props.details.pods
   };
 
-  public handleIsActive(data: IIconLinkData) {
-    return data.href.startsWith('http');
-  }
-
-  public findLink(pod: IPodResource, name: string): string {
-    const podLink = pod.links.find(l => l.name === name);
-    return podLink ? podLink.url : '#';
-  }
-
-  public getStatusColorAndIconForPod({
-    managementResponses
-  }: IPodResource): { icon: string; color: string } {
+  public componentDidUpdate(prevProps: IPodsStatusProps) {
+    const { details } = this.props;
     if (
-      managementResponses &&
-      managementResponses.health &&
-      managementResponses.health.textResponse
+      JSON.stringify(prevProps.details.pods) !== JSON.stringify(details.pods)
     ) {
-      const status = JSON.parse(managementResponses.health.textResponse).status;
-      switch (status) {
-        case 'UP':
-        case 'HEALTHY':
-          return {
-            icon: 'Completed',
-            color: STATUS_COLORS.healthy
-          };
-        case 'COMMENT':
-        case 'OBSERVE':
-          return {
-            icon: 'Info',
-            color: STATUS_COLORS.observe
-          };
-        case 'OUT_OF_SERVICE':
-        case 'DOWN':
-          return {
-            icon: 'Error',
-            color: STATUS_COLORS.down
-          };
-        case 'OFF':
-          return {
-            icon: 'Blocked',
-            color: STATUS_COLORS.off
-          };
-        default:
-          return {
-            icon: 'Info',
-            color: STATUS_COLORS.unknown
-          };
-      }
+      this.setState({
+        podResources: details.pods
+      });
     }
-    return {
-      icon: 'Info',
-      color: STATUS_COLORS.unknown
-    };
   }
 
   public podAction = (pod: IPodResource) => {
@@ -114,40 +72,22 @@ class PodsStatus extends React.Component<IPodsStatusProps, IPodsStatusState> {
     );
   };
 
-  public renderErrorsForPod = (pod: IPodResource) => {
-    if (
-      pod.managementResponses &&
-      pod.managementResponses.links &&
-      pod.managementResponses.links.error
-    ) {
-      return (
-        <p>
-          Feilkode: {pod.managementResponses.links.error.code}
-          <br />
-          MELDING: {pod.managementResponses.links.error.message}
-        </p>
-      );
-    } else {
-      return <p>Tipp topp tommel opp</p>;
-    }
-  };
-
   public getItemsFromChildComp = (currentViewItems: any) => {
     const { podResources } = this.state;
+    const { details } = this.props;
     const pods = currentViewItems.map((it: IPodsStatus) => it.name.key);
     if (pods.length > 0) {
-      const getPod = (pod: string) =>
-        this.props.details.pods.find(it => it.name === pod);
-      console.log(pods.map(it => getPod(it)));
-      const podsWithoutNull: IPodResource[] = pods
+      const getPod = (pod: string) => details.pods.find(it => it.name === pod);
+
+      const sortedPods: IPodResource[] = pods
         .map(it => getPod(it))
         .filter((element: IPodResource) => {
           return element !== undefined;
         });
 
-      if (JSON.stringify(podsWithoutNull) !== JSON.stringify(podResources)) {
+      if (JSON.stringify(sortedPods) !== JSON.stringify(podResources)) {
         this.setState({
-          podResources: podsWithoutNull,
+          podResources: sortedPods,
           isCalloutVisibleList: this.resetInput()
         });
       }
@@ -155,7 +95,6 @@ class PodsStatus extends React.Component<IPodsStatusProps, IPodsStatusState> {
   };
 
   public applicationDeploymentPods = (): IPodsStatus[] => {
-    const { details } = this.props;
     const { isCalloutVisibleList, podResources } = this.state;
 
     const onIndexChange = (index: number) => () => {
@@ -172,83 +111,80 @@ class PodsStatus extends React.Component<IPodsStatusProps, IPodsStatusState> {
       }
     };
 
-    return (podResources.length > 0 ? podResources : details.pods).map(
-      (pod: IPodResource, index: number) => {
-        return {
-          key: pod.name,
-          healthStatus: (
-            <>
-              <span ref={this.menuButtonElements[index]}>
-                <Icon
-                  iconName={this.getStatusColorAndIconForPod(pod).icon}
-                  onClick={onIndexChange(index)}
-                  style={{
-                    fontSize: '25px',
-                    color: this.getStatusColorAndIconForPod(pod).color,
-                    cursor: 'pointer',
-                    float: 'none'
-                  }}
-                />
-              </span>
-              {this.state.isCalloutVisibleList[index] && (
+    return podResources.map((pod: IPodResource, index: number) => {
+      return {
+        healthStatus: (
+          <>
+            <span ref={this.menuButtonElements[index]}>
+              <Icon
+                iconName={
+                  this.PodsStatusService.getStatusColorAndIconForPod(pod).icon
+                }
+                onClick={onIndexChange(index)}
+                style={{
+                  fontSize: '25px',
+                  cursor: 'pointer',
+                  float: 'none',
+                  color: this.PodsStatusService.getStatusColorAndIconForPod(pod)
+                    .color
+                }}
+              />
+            </span>
+            {isCalloutVisibleList[index] &&
+              pod.managementResponses &&
+              pod.managementResponses.links &&
+              pod.managementResponses.links.error && (
                 <Callout
                   target={this.menuButtonElements[index].current}
                   gapSpace={0}
                   directionalHint={Callout.POS_BOTTOM_LEFT}
-                  color={
-                    pod.managementResponses &&
-                    pod.managementResponses.links &&
-                    pod.managementResponses.links.error
-                      ? Callout.ERROR
-                      : Callout.BASIC
-                  }
+                  color={Callout.ERROR}
                   onClose={onIndexChange(index)}
                   doNotLayer={false}
                 >
-                  {this.renderErrorsForPod(pod)}
+                  <p>
+                    Feilkode: {pod.managementResponses.links.error.code}
+                    <br />
+                    Melding: {pod.managementResponses.links.error.message}
+                  </p>
                 </Callout>
               )}
-            </>
-          ),
-          name: (
-            <ActionButton
-              target="_blank"
-              rel="noopener noreferrer"
-              href={this.findLink(pod, 'ocp_console_details')}
-              title={pod.name}
-              key={pod.name}
-              style={{ margin: 0 }}
-            >
-              {pod.name}
-            </ActionButton>
-          ),
-          startedDate: getLocalDatetime(pod.startTime),
-          numberOfRestarts: pod.restartCount,
-          externalLinks: (
-            <div
-              style={{
-                display: 'flex',
-                alignItems: 'flex-end'
-              }}
-            >
-              {this.podAction(pod)}
-              <IconLink
-                name="Timeline"
-                isActiveHandler={this.handleIsActive}
-                href={this.findLink(pod, 'metrics')}
-                title="Grafana"
-              />
-              <IconLink
-                name="FormatAlignLeft"
-                isActiveHandler={this.handleIsActive}
-                href={this.findLink(pod, 'splunk')}
-                title="Splunk"
-              />
-            </div>
-          )
-        };
-      }
-    );
+          </>
+        ),
+        name: (
+          <ActionButton
+            target="_blank"
+            rel="noopener noreferrer"
+            href={this.PodsStatusService.findLink(pod, 'ocp_console_details')}
+            title={pod.name}
+            key={pod.name}
+          >
+            {pod.name}
+          </ActionButton>
+        ),
+        startedDate: getLocalDatetime(pod.startTime),
+        numberOfRestarts: pod.restartCount,
+        externalLinks: (
+          <div style={{ display: 'flex', alignItems: 'flex-end' }}>
+            {this.podAction(pod)}
+            <IconLink
+              name="Timeline"
+              iconStyle={{ fontSize: '25px' }}
+              isActiveHandler={this.PodsStatusService.handleIsActive}
+              href={this.PodsStatusService.findLink(pod, 'metrics')}
+              title="Grafana"
+            />
+            <IconLink
+              name="FormatAlignLeft"
+              iconStyle={{ fontSize: '25px' }}
+              isActiveHandler={this.PodsStatusService.handleIsActive}
+              href={this.PodsStatusService.findLink(pod, 'splunk')}
+              title="Splunk"
+            />
+          </div>
+        )
+      };
+    });
   };
 
   public render() {
@@ -257,7 +193,7 @@ class PodsStatus extends React.Component<IPodsStatusProps, IPodsStatusState> {
       <div className={className}>
         <div className="styledTable">
           <SortableDetailsList
-            passItemsToParent={this.getItemsFromChildComp}
+            passItemsToParentComp={this.getItemsFromChildComp}
             filter=""
             items={this.applicationDeploymentPods()}
             selection={this.selection}
@@ -277,9 +213,6 @@ export default styled(PodsStatus)`
     grid-area: table;
     i {
       float: right;
-    }
-    .ms-Button-flexContainer {
-      align-items: baseline;
     }
     .ms-Button {
       height: auto;

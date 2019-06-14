@@ -2,7 +2,9 @@ import {
   IColumn,
   ColumnActionsMode
 } from 'office-ui-fabric-react/lib/DetailsList';
-import { IPodsStatus } from 'models/Pod';
+import { IPodsStatus, IPodResource } from 'models/Pod';
+import { STATUS_COLORS } from 'models/Status';
+import { IIconLinkData } from 'components/IconLink';
 
 const podsStatusColumns: IColumn[] = [
   {
@@ -37,8 +39,8 @@ const podsStatusColumns: IColumn[] = [
     fieldName: 'numberOfRestarts',
     isResizable: true,
     key: '3',
-    maxWidth: 300,
-    minWidth: 200,
+    maxWidth: 250,
+    minWidth: 150,
     name: 'Antall omstart',
     iconName: ''
   },
@@ -47,8 +49,8 @@ const podsStatusColumns: IColumn[] = [
     isResizable: true,
     key: '4',
     columnActionsMode: ColumnActionsMode.disabled,
-    maxWidth: 150,
-    minWidth: 100,
+    maxWidth: 80,
+    minWidth: 80,
     name: '',
     iconName: ''
   }
@@ -63,4 +65,59 @@ export const filterPodsStatus = (filter: string) => {
 
 export default class PodsStatusService {
   public static DEFAULT_COLUMNS: IColumn[] = podsStatusColumns;
+
+  public handleIsActive(data: IIconLinkData): boolean {
+    return data.href.startsWith('http');
+  }
+
+  public findLink(pod: IPodResource, name: string): string {
+    const podLink = pod.links.find(l => l.name === name);
+    return podLink ? podLink.url : '#';
+  }
+
+  public getStatusColorAndIconForPod({
+    managementResponses
+  }: IPodResource): { icon: string; color: string } {
+    if (
+      managementResponses &&
+      managementResponses.health &&
+      managementResponses.health.textResponse
+    ) {
+      const status = JSON.parse(managementResponses.health.textResponse).status;
+      switch (status) {
+        case 'UP':
+        case 'HEALTHY':
+          return {
+            icon: 'Completed',
+            color: STATUS_COLORS.healthy
+          };
+        case 'COMMENT':
+        case 'OBSERVE':
+          return {
+            icon: 'Info',
+            color: STATUS_COLORS.observe
+          };
+        case 'OUT_OF_SERVICE':
+        case 'DOWN':
+          return {
+            icon: 'Error',
+            color: STATUS_COLORS.down
+          };
+        case 'OFF':
+          return {
+            icon: 'Blocked',
+            color: STATUS_COLORS.off
+          };
+        default:
+          return {
+            icon: 'Info',
+            color: STATUS_COLORS.unknown
+          };
+      }
+    }
+    return {
+      icon: 'Info',
+      color: STATUS_COLORS.unknown
+    };
+  }
 }

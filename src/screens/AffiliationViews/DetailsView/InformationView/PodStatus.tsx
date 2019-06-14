@@ -98,12 +98,14 @@ const PodStatus = ({
         <div className="pod-icons">
           <IconLink
             name="Timeline"
+            iconStyle={{ fontSize: '25px' }}
             isActiveHandler={handleIsActive}
             href={findLink(pod, 'metrics')}
             title="Grafana"
           />
           <IconLink
             name="FormatAlignLeft"
+            iconStyle={{ fontSize: '25px' }}
             isActiveHandler={handleIsActive}
             href={findLink(pod, 'splunk')}
             title="Splunk"

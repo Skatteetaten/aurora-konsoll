@@ -26,6 +26,7 @@ export interface IIconLinkData {
 interface IIconLinkProps extends IIconLinkData {
   isActiveHandler: IsActiveFunc;
   className?: string;
+  iconStyle: React.CSSProperties;
 }
 
 const IconLink: React.StatelessComponent<IIconLinkProps> = ({
@@ -33,11 +34,12 @@ const IconLink: React.StatelessComponent<IIconLinkProps> = ({
   href,
   title,
   isActiveHandler,
-  className
+  className,
+  iconStyle
 }) => {
   const icon = (
     <span className={className} title={title}>
-      <Icon iconName={name} />
+      <Icon iconName={name} style={iconStyle} />
     </span>
   );
 

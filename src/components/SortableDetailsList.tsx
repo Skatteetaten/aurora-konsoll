@@ -19,7 +19,7 @@ export interface ISortableDetailsListProps extends IDetailsListProps {
   filter: string;
   shouldResetSort?: boolean;
   onResetSort?: () => void;
-  passItemsToParent?: (items: any[]) => void;
+  passItemsToParentComp?: (items: any[]) => void;
 }
 
 export interface ISortableDetailsListState {
@@ -58,7 +58,7 @@ class SortableDetailsList extends React.Component<
       items,
       shouldResetSort,
       onResetSort,
-      passItemsToParent: passItemsToParentComp
+      passItemsToParentComp
     } = this.props;
     const { currentViewItems, prevIndices } = this.state;
     if (selection) {
@@ -90,7 +90,11 @@ class SortableDetailsList extends React.Component<
     }
 
     if (passItemsToParentComp) {
-      passItemsToParentComp(currentViewItems);
+      if (items.length !== currentViewItems.length) {
+        passItemsToParentComp(items);
+      } else {
+        passItemsToParentComp(currentViewItems);
+      }
     }
   }
 
@@ -135,6 +139,8 @@ class SortableDetailsList extends React.Component<
     }
   ): void => {
     const { columnSortDirections } = this.state;
+    const { items } = this.props;
+
     const name = column.fieldName! as keyof any;
     const newSortDirections = this.createDefaultSortDirections();
     const prevSortDirection = columnSortDirections[column.key];
@@ -145,11 +151,7 @@ class SortableDetailsList extends React.Component<
       newSortDirections[column.key] = SortDirection.DESC;
     }
 
-    const sortedItems = this.sortItems(
-      this.props.items,
-      prevSortDirection,
-      name
-    );
+    const sortedItems = this.sortItems(items, prevSortDirection, name);
     this.setState({
       currentViewItems: sortedItems,
       columnSortDirections: newSortDirections,
@@ -191,8 +193,9 @@ class SortableDetailsList extends React.Component<
   }
 
   public filteredItems<T>(filter: string, viewItems: T[]): T[] {
-    if (this.props.filterView) {
-      return viewItems.filter(this.props.filterView(filter));
+    const { filterView } = this.props;
+    if (filterView) {
+      return viewItems.filter(filterView(filter));
     } else {
       return viewItems;
     }
