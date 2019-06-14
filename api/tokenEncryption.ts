@@ -16,10 +16,8 @@ export function decrypt(text: string): string {
     const decipher = crypto.createDecipher(algorithm, password);
     let dec = decipher.update(text, 'hex', 'utf8');
     dec += decipher.final('utf8');
-    console.log('decrypted', dec);
     return dec;
   } catch (err) {
-    console.log('error', text);
     return text;
   }
 }
