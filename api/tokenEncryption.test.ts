@@ -1,6 +1,11 @@
-describe('bladibladi', () => {
+import { encrypt } from './tokenEncryption';
 
-  it('should blabla', () => {
+describe('token encryption', () => {
+
+  it('should encrypt token', () => {
+    const encrypted = encrypt('testing testing');
+    console.log(encrypted);
+
     expect(true).toBeTruthy();
   });
 });
