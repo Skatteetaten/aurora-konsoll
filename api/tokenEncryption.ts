@@ -1,8 +1,8 @@
 import crypto from 'crypto';
-import { TOKEN_ENCRYPTION_FRASE } from './config';
+import * as config from './config';
 
 const algorithm = 'aes-256-ctr';
-const password = TOKEN_ENCRYPTION_FRASE;
+const password = config.TOKEN_ENCRYPTION_FRASE;
 
 export function encrypt(text: string): string {
   const cipher = crypto.createCipher(algorithm, password);
@@ -16,8 +16,10 @@ export function decrypt(text: string): string {
     const decipher = crypto.createDecipher(algorithm, password);
     let dec = decipher.update(text, 'hex', 'utf8');
     dec += decipher.final('utf8');
+    console.log('decrypted', dec);
     return dec;
   } catch (err) {
+    console.log('error', text);
     return text;
   }
 }
