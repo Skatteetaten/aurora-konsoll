@@ -25,31 +25,37 @@ interface IPodsStatusProps {
 interface IPodsStatusState {
   isCalloutVisibleList: boolean[];
   podResources: IPodResource[];
+  menuButtonElements: React.RefObject<HTMLDivElement>[];
 }
 
 class PodsStatus extends React.Component<IPodsStatusProps, IPodsStatusState> {
-  private menuButtonElements = Array(this.props.details.pods.length)
-    .fill(0)
-    .map(() => React.createRef<HTMLDivElement>());
-
   private PodsStatusService = new PodsStatusService();
 
   private resetInput = () => Array(this.props.details.pods.length).fill(false);
+
+  private createMenuButtonElements = () =>
+    Array(this.props.details.pods.length)
+      .fill(0)
+      .map(() => React.createRef<HTMLDivElement>());
 
   private selection = new DetailsList.Selection();
 
   public state: IPodsStatusState = {
     isCalloutVisibleList: this.resetInput(),
-    podResources: this.props.details.pods
+    podResources: this.props.details.pods,
+    menuButtonElements: this.createMenuButtonElements()
   };
 
   public componentDidUpdate(prevProps: IPodsStatusProps) {
     const { details } = this.props;
+
     if (
       JSON.stringify(prevProps.details.pods) !== JSON.stringify(details.pods)
     ) {
       this.setState({
-        podResources: details.pods
+        podResources: details.pods,
+        menuButtonElements: this.createMenuButtonElements(),
+        isCalloutVisibleList: this.resetInput()
       });
     }
   }
@@ -95,7 +101,11 @@ class PodsStatus extends React.Component<IPodsStatusProps, IPodsStatusState> {
   };
 
   public applicationDeploymentPods = (): IPodsStatus[] => {
-    const { isCalloutVisibleList, podResources } = this.state;
+    const {
+      isCalloutVisibleList,
+      podResources,
+      menuButtonElements
+    } = this.state;
 
     const onIndexChange = (index: number) => () => {
       if (isCalloutVisibleList[index]) {
@@ -115,7 +125,7 @@ class PodsStatus extends React.Component<IPodsStatusProps, IPodsStatusState> {
       return {
         healthStatus: (
           <>
-            <span ref={this.menuButtonElements[index]}>
+            <span ref={menuButtonElements[index]}>
               <Icon
                 iconName={
                   this.PodsStatusService.getStatusColorAndIconForPod(pod).icon
@@ -135,7 +145,7 @@ class PodsStatus extends React.Component<IPodsStatusProps, IPodsStatusState> {
               pod.managementResponses.links &&
               pod.managementResponses.links.error && (
                 <Callout
-                  target={this.menuButtonElements[index].current}
+                  target={menuButtonElements[index].current}
                   gapSpace={0}
                   directionalHint={Callout.POS_BOTTOM_LEFT}
                   color={Callout.ERROR}
@@ -216,12 +226,6 @@ export default styled(PodsStatus)`
     }
     .ms-Button {
       height: auto;
-    }
-    .ms-Button-label {
-      margin: 0;
-    }
-    .ms-Button-icon {
-      margin: 0;
     }
   }
 `;
