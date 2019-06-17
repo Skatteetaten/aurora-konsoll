@@ -41,6 +41,7 @@ import { IErrorsState } from 'screens/ErrorHandler/state/reducer';
 import { IAffiliationViewState } from 'screens/AffiliationViews/state/reducer';
 import { IGoboUser } from 'services/auroraApiClients/goboUsageClient/query';
 import { IErrors, IAppError } from 'models/errors';
+import { IIconLinkData } from 'components/IconLink';
 
 const mountFactory = Factory.Sync.makeFactory<IMount>({
   exist: true,
@@ -500,4 +501,10 @@ export const affiliationViewStateFactory = Factory.Sync.makeFactory<
   isRedeploying: false,
   isFetchingTags: false,
   isFetchingDetails: false
+});
+
+export const iconLinkDataFactory = Factory.Sync.makeFactory<IIconLinkData>({
+  name: 'test',
+  title: 'title',
+  href: 'http://test.no'
 });
