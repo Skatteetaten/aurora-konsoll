@@ -227,5 +227,11 @@ export default styled(PodsStatus)`
     .ms-Button {
       height: auto;
     }
+    .ms-Button-label {
+      margin: 0;
+    }
+    .ms-Button-icon {
+      margin: 0;
+    }
   }
 `;
