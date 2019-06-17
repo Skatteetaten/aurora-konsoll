@@ -1,5 +1,5 @@
 import { IDeploymentSpec } from 'models/DeploymentSpec';
-import { IPodResource } from 'models/Pod';
+import { IPodResource, IManagementEndpointError } from 'models/Pod';
 import { ITag } from 'models/Tag';
 import {
   IPermission,

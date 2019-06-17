@@ -42,7 +42,7 @@
     "build": "npm-run-all -pl build:web build:api",
     "build:web": "GENERATE_SOURCEMAP=false react-scripts build",
     "build:api": "webpack --config webpack.api.config.js --mode production",
-    "test": "react-scripts test",
+    "test": "react-scripts test --transformIgnorePatterns \"<rootDir>/node_modules/(?!office-ui-fabric-react)/\"",
     "eject": "react-scripts eject",
     "clean": "rimraf build build-api coverage pom *.tgz",
     "test:once": "CI=true npm test",

@@ -19,16 +19,18 @@ interface IPodStatusProps {
   refreshApplicationDeployment: () => void;
 }
 
-function findLink(pod: IPodResource, name: string): string {
+export function findLink(pod: IPodResource, name: string): string {
   const podLink = pod.links.find(l => l.name === name);
   return podLink ? podLink.url : '#';
 }
 
-function handleIsActive(data: IIconLinkData) {
+export function handleIsActive(data: IIconLinkData) {
   return data.href.startsWith('http');
 }
 
-function getStatusColorForPod({ managementResponses }: IPodResource): string {
+export function getStatusColorForPod({
+  managementResponses
+}: IPodResource): string {
   if (
     managementResponses &&
     managementResponses.health &&
@@ -55,56 +57,88 @@ function getStatusColorForPod({ managementResponses }: IPodResource): string {
   return STATUS_COLORS.unknown;
 }
 
+export function getStatusIconForPod({
+  managementResponses
+}: IPodResource): string {
+  if (
+    managementResponses &&
+    managementResponses.health &&
+    managementResponses.health.textResponse
+  ) {
+    const status = JSON.parse(managementResponses.health.textResponse).status;
+    switch (status) {
+      case 'UP':
+      case 'HEALTHY':
+        return 'Completed';
+      case 'COMMENT':
+      case 'OBSERVE':
+        return 'Info';
+      case 'OUT_OF_SERVICE':
+      case 'DOWN':
+        return 'Error';
+      case 'OFF':
+      default:
+        return 'Info';
+    }
+  }
+
+  return 'Info';
+}
+
 const PodStatus = ({
   pod,
   className,
   isUpdating,
   refreshApplicationDeployment
-}: IPodStatusProps) => (
-  <div className={className}>
-    <div className="pod-status">
-      <span>{pod.phase}</span>
-      <div className="pod-icons">
-        <IconLink
-          name="Timeline"
-          isActiveHandler={handleIsActive}
-          href={findLink(pod, 'metrics')}
-          title="Grafana"
-        />
-        <IconLink
-          name="FormatAlignLeft"
-          isActiveHandler={handleIsActive}
-          href={findLink(pod, 'splunk')}
-          title="Splunk"
-        />
+}: IPodStatusProps) => {
+  return (
+    <div className={className}>
+      <div className="pod-status">
+        <span>{pod.phase}</span>
+        <div className="pod-icons">
+          <IconLink
+            name="Timeline"
+            iconStyle={{ fontSize: '25px' }}
+            isActiveHandler={handleIsActive}
+            href={findLink(pod, 'metrics')}
+            title="Grafana"
+          />
+          <IconLink
+            name="FormatAlignLeft"
+            iconStyle={{ fontSize: '25px' }}
+            isActiveHandler={handleIsActive}
+            href={findLink(pod, 'splunk')}
+            title="Splunk"
+          />
+        </div>
       </div>
+      <div className="g-pod-content">
+        <div className="g-pod-keys">
+          <p>Navn</p>
+          <p>Startet</p>
+          <p>Antall omstart</p>
+        </div>
+        <div className="g-pod-values">
+          <a
+            target="_blank"
+            rel="noopener noreferrer"
+            href={findLink(pod, 'ocp_console_details')}
+            title={pod.name}
+          >
+            {pod.name}
+          </a>
+          <p>{getLocalDatetime(pod.startTime)}</p>
+          <p>{pod.restartCount}</p>
+        </div>
+      </div>
+      <PodAction
+        pod={pod}
+        isUpdating={isUpdating}
+        refreshApplicationDeployment={refreshApplicationDeployment}
+      />
     </div>
-    <div className="g-pod-content">
-      <div className="g-pod-keys">
-        <p>Navn</p>
-        <p>Startet</p>
-        <p>Antall omstart</p>
-      </div>
-      <div className="g-pod-values">
-        <a
-          target="_blank"
-          rel="noopener noreferrer"
-          href={findLink(pod, 'ocp_console_details')}
-          title={pod.name}
-        >
-          {pod.name}
-        </a>
-        <p>{getLocalDatetime(pod.startTime)}</p>
-        <p>{pod.restartCount}</p>
-      </div>
-    </div>
-    <PodAction
-      pod={pod}
-      isUpdating={isUpdating}
-      refreshApplicationDeployment={refreshApplicationDeployment}
-    />
-  </div>
-);
+  );
+};
 
 interface IPodAction {
   pod: IPodResource;
