@@ -131,6 +131,13 @@ class PodsStatus extends React.Component<IPodsStatusProps, IPodsStatusState> {
                   this.PodsStatusService.getStatusColorAndIconForPod(pod).icon
                 }
                 onClick={onIndexChange(index)}
+                title={
+                  pod.managementResponses &&
+                  pod.managementResponses.links &&
+                  pod.managementResponses.links.error
+                    ? 'Vis feilmelding'
+                    : ''
+                }
                 style={{
                   fontSize: '25px',
                   cursor: 'pointer',
