@@ -116,7 +116,7 @@ const PodStatus = ({
         <div className="g-pod-keys">
           <p>Navn</p>
           <p>Startet</p>
-          <p>Antall omstart</p>
+          <p>Restartet</p>
         </div>
         <div className="g-pod-values">
           <a

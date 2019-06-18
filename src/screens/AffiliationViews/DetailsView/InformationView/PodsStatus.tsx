@@ -234,4 +234,10 @@ export default styled(PodsStatus)`
       margin: 0;
     }
   }
+
+  .ms-DetailsRow-cell:nth-child(2),
+  .ms-DetailsRow-cell:nth-child(3),
+  .ms-DetailsRow-cell:nth-child(4) {
+    margin-top: 4px;
+  }
 `;

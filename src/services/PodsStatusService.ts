@@ -41,7 +41,7 @@ const podsStatusColumns: IColumn[] = [
     key: '3',
     maxWidth: 250,
     minWidth: 150,
-    name: 'Antall omstart',
+    name: 'Restartet',
     iconName: ''
   },
   {
