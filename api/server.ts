@@ -20,7 +20,7 @@ app.use(
   proxy({
     changeOrigin: true,
     target: GOBO_URL,
-    onProxyReq(proxyReq, req, res) {
+    onProxyReq(proxyReq, req) {
       const token = req.headers['authorization'];
       // The first time GOBO is called, the token may not have been encrypted yet.
       if (token) {
