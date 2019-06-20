@@ -122,6 +122,11 @@ class PodsStatus extends React.Component<IPodsStatusProps, IPodsStatusState> {
     };
 
     return podResources.map((pod: IPodResource, index: number) => {
+      const hasManagementInterfaceError =
+        pod.managementResponses &&
+        pod.managementResponses.links &&
+        pod.managementResponses.links.error;
+
       return {
         healthStatus: (
           <>
@@ -131,13 +136,7 @@ class PodsStatus extends React.Component<IPodsStatusProps, IPodsStatusState> {
                   this.PodsStatusService.getStatusColorAndIconForPod(pod).icon
                 }
                 onClick={onIndexChange(index)}
-                title={
-                  pod.managementResponses &&
-                  pod.managementResponses.links &&
-                  pod.managementResponses.links.error
-                    ? 'Vis feilmelding'
-                    : ''
-                }
+                title={hasManagementInterfaceError ? 'Vis feilmelding' : ''}
                 style={{
                   fontSize: '25px',
                   cursor: 'pointer',
@@ -147,25 +146,22 @@ class PodsStatus extends React.Component<IPodsStatusProps, IPodsStatusState> {
                 }}
               />
             </span>
-            {isCalloutVisibleList[index] &&
-              pod.managementResponses &&
-              pod.managementResponses.links &&
-              pod.managementResponses.links.error && (
-                <Callout
-                  target={menuButtonElements[index].current}
-                  gapSpace={0}
-                  directionalHint={Callout.POS_BOTTOM_LEFT}
-                  color={Callout.ERROR}
-                  onClose={onIndexChange(index)}
-                  doNotLayer={false}
-                >
-                  <p>
-                    Feilkode: {pod.managementResponses.links.error.code}
-                    <br />
-                    Melding: {pod.managementResponses.links.error.message}
-                  </p>
-                </Callout>
-              )}
+            {isCalloutVisibleList[index] && hasManagementInterfaceError && (
+              <Callout
+                target={menuButtonElements[index].current}
+                gapSpace={0}
+                directionalHint={Callout.POS_BOTTOM_LEFT}
+                color={Callout.ERROR}
+                onClose={onIndexChange(index)}
+                doNotLayer={false}
+              >
+                <p>
+                  Feilkode: {hasManagementInterfaceError.code}
+                  <br />
+                  Melding: {hasManagementInterfaceError.message}
+                </p>
+              </Callout>
+            )}
           </>
         ),
         name: (
