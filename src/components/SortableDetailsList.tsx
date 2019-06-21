@@ -11,6 +11,7 @@ import {
   ISelection,
   SelectionMode
 } from 'office-ui-fabric-react/lib/DetailsList';
+import * as util from 'util';
 
 export let selectedIndices: number[] = [];
 
@@ -89,7 +90,10 @@ class SortableDetailsList extends React.Component<
       });
     }
 
-    if (passItemsToParentComp) {
+    if (
+      passItemsToParentComp &&
+      util.inspect(items) === util.inspect(prevProps.items)
+    ) {
       if (items.length !== currentViewItems.length) {
         passItemsToParentComp(items);
       } else {
