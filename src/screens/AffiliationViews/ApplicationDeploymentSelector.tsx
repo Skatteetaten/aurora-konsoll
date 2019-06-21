@@ -42,7 +42,7 @@ interface IApplicationDeploymentSelectorConnectedProps {
     repository: string,
     type: ImageTagType,
     updateTagsPaged: (type: ImageTagType, next: ITagsPaged) => void,
-    first?: number,
+    first: number,
     cursor?: string
   ) => void;
   getAllApplicationDeployments: (affiliation: string) => void;
@@ -165,7 +165,7 @@ export const ApplicationDeploymentSelectorConnected = connect(
       repository: string,
       type: ImageTagType,
       updateTagsPaged: (type: ImageTagType, next: ITagsPaged) => void,
-      first?: number,
+      first: number,
       cursor?: string
     ) => findTagsPaged(repository, type, updateTagsPaged, first, cursor),
     getApplicationDeploymentDetails: (id: string) =>

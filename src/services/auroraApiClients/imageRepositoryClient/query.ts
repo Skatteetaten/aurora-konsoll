@@ -37,15 +37,15 @@ export interface IImageTag {
   type: ImageTagType;
   image: {
     buildTime: string;
-  }
+  };
 }
 
 export const TAGS_QUERY = gql`
   query getTags(
     $repositories: [String!]!
     $cursor: String!
-    $types: [ImageTagType!]
-    $first: Int
+    $types: [ImageTagType!]!
+    $first: Int!
   ) {
     imageRepositories(repositories: $repositories) {
       tags(types: $types, first: $first, after: $cursor) {

@@ -1,5 +1,5 @@
 export interface IDatabaseSchemas {
-  databaseSchemas: IDatabaseSchema[];
+  databaseSchemas?: IDatabaseSchema[];
 }
 
 export interface IDatabaseSchema {

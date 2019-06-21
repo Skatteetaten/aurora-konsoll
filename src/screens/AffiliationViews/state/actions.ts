@@ -225,7 +225,7 @@ export const findTagsPaged: Thunk = (
   repository: string,
   type: ImageTagType,
   updateTagsPaged: (type: ImageTagType, next: ITagsPaged) => void,
-  first?: number,
+  first: number,
   cursor?: string
 ) => async (dispatch, getState, { clients }) => {
   dispatch(fetchTagsRequest(true));
@@ -239,7 +239,11 @@ export const findTagsPaged: Thunk = (
 
   if (
     !result ||
-    !(result.data.imageRepositories && result.data.imageRepositories.length > 0)
+    !(
+      result.data &&
+      result.data.imageRepositories &&
+      result.data.imageRepositories.length > 0
+    )
   ) {
     dispatch(findTagsPagedResponse(defaultTagsPagedGroup()[type]));
   } else {
