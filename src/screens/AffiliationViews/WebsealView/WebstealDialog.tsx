@@ -64,7 +64,7 @@ class WebsealDialog extends React.Component<
     const tabs = () => {
       if (selectedWebsealState.junctions.length > 1) {
         return (
-          <Tabs selectedKey="itemKey-1">
+          <Tabs defaultSelectedKey="itemKey-1">
             <TabItem itemIcon="Info" linkText="Instance 1" itemKey="itemKey-1">
               {this.renderDetailsListWebsealStates(
                 selectedWebsealState.junctions[0]
@@ -79,7 +79,7 @@ class WebsealDialog extends React.Component<
         );
       }
       return (
-        <Tabs selectedKey="itemKey-1">
+        <Tabs defaultSelectedKey="itemKey-1">
           <TabItem itemIcon="Info" linkText="Instance 1" itemKey="itemKey-1">
             {this.renderDetailsListWebsealStates(
               selectedWebsealState.junctions[0]
