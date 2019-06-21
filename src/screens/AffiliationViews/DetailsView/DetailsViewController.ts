@@ -48,7 +48,7 @@ export interface IDetailsViewProps
     repository: string,
     type: ImageTagType,
     updateTagsPaged: (type: ImageTagType, next: ITagsPaged) => void,
-    first?: number,
+    first: number,
     cursor?: string
   ) => void;
   findTagsPagedResponse: ITagsPaged;
