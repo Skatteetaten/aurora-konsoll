@@ -42,10 +42,12 @@
     "build:web": "GENERATE_SOURCEMAP=false react-scripts build",
     "build:api": "webpack --config webpack.api.config.js --mode production",
     "test": "react-scripts test --transformIgnorePatterns \"<rootDir>/node_modules/(?!office-ui-fabric-react)/\"",
+    "test:api": "jest api/*.ts",
     "eject": "react-scripts eject",
     "clean": "rimraf build build-api coverage pom *.tgz",
     "test:once": "CI=true npm test",
-    "test:coverage": "CI=true npm run test -- --coverage",
+    "test:web:coverage": "CI=true npm run test -- --coverage",
+    "test:coverage": "CI=true npm-run-all test:web:coverage test:api",
     "prettier": "prettier -l '{api,src}/**/*{.ts,.tsx,.css}'",
     "prettier:fix": "prettier --write '{api,src}/**/*{.ts,.tsx,.css}'"
   },
@@ -53,6 +55,9 @@
     "singleQuote": true
   },
   "devDependencies": {
+    "@babel/core": "7.4.5",
+    "@babel/preset-env": "7.4.5",
+    "@babel/preset-typescript": "7.3.3",
     "@types/cors": "2.8.5",
     "@types/enzyme": "3.9.1",
     "@types/enzyme-adapter-react-16": "1.0.5",
@@ -83,6 +88,19 @@
     "typescript": "3.4.5",
     "typescript-styled-plugin": "0.14.0",
     "webpack-cli": "3.3.1"
+  },
+  "babel": {
+    "presets": [
+      [
+        "@babel/preset-env",
+        {
+          "targets": {
+            "node": "current"
+          }
+        }
+      ],
+      "@babel/preset-typescript"
+    ]
   },
   "proxy": "http://localhost:9090",
   "jest": {

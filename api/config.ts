@@ -25,7 +25,8 @@ const DBH_ENABLED = !!env.INTEGRATIONS_DBH_URL;
 
 const SKAP_ENABLED = !!env.INTEGRATIONS_SKAP_URL;
 
-const TOKEN_ENCRYPTION_FRASE = env.TOKEN_ENCRYPTION_FRASE || 'YoudONoTMessW1TH0leGunnarS0lSkjaer';
+// Must be 256 bits (32 characters)
+const TOKEN_ENCRYPTION_FRASE = env.TOKEN_ENCRYPTION_FRASE || 'UdONoTMessW1TH0leGunnarS0lSkjaer';
 
 export {
   CLIENT_ID,
