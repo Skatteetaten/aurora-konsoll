@@ -11,6 +11,7 @@ import {
   ISelection,
   SelectionMode
 } from 'office-ui-fabric-react/lib/DetailsList';
+import * as util from 'util';
 
 export let selectedIndices: number[] = [];
 
@@ -19,6 +20,7 @@ export interface ISortableDetailsListProps extends IDetailsListProps {
   filter: string;
   shouldResetSort?: boolean;
   onResetSort?: () => void;
+  passItemsToParentComp?: (items: any[]) => void;
 }
 
 export interface ISortableDetailsListState {
@@ -56,10 +58,10 @@ class SortableDetailsList extends React.Component<
       filter,
       items,
       shouldResetSort,
-      onResetSort
+      onResetSort,
+      passItemsToParentComp
     } = this.props;
     const { currentViewItems, prevIndices } = this.state;
-
     if (selection) {
       this.updateCurrentSelection(
         selection,
@@ -87,6 +89,17 @@ class SortableDetailsList extends React.Component<
         selectedColumnIndex: -1
       });
     }
+
+    if (
+      passItemsToParentComp &&
+      util.inspect(items) === util.inspect(prevProps.items)
+    ) {
+      if (items.length !== currentViewItems.length) {
+        passItemsToParentComp(items);
+      } else {
+        passItemsToParentComp(currentViewItems);
+      }
+    }
   }
 
   public resetColumns() {
@@ -94,6 +107,10 @@ class SortableDetailsList extends React.Component<
     if (columns) {
       columns.forEach(col => (col.iconName = ''));
     }
+  }
+
+  public componentWillUnmount() {
+    this.resetColumns();
   }
 
   public createColumns(index: number, sortDirection: SortDirection): IColumn[] {
@@ -126,6 +143,8 @@ class SortableDetailsList extends React.Component<
     }
   ): void => {
     const { columnSortDirections } = this.state;
+    const { items } = this.props;
+
     const name = column.fieldName! as keyof any;
     const newSortDirections = this.createDefaultSortDirections();
     const prevSortDirection = columnSortDirections[column.key];
@@ -136,11 +155,7 @@ class SortableDetailsList extends React.Component<
       newSortDirections[column.key] = SortDirection.DESC;
     }
 
-    const sortedItems = this.sortItems(
-      this.props.items,
-      prevSortDirection,
-      name
-    );
+    const sortedItems = this.sortItems(items, prevSortDirection, name);
     this.setState({
       currentViewItems: sortedItems,
       columnSortDirections: newSortDirections,
@@ -182,8 +197,9 @@ class SortableDetailsList extends React.Component<
   }
 
   public filteredItems<T>(filter: string, viewItems: T[]): T[] {
-    if (this.props.filterView) {
-      return viewItems.filter(this.props.filterView(filter));
+    const { filterView } = this.props;
+    if (filterView) {
+      return viewItems.filter(filterView(filter));
     } else {
       return viewItems;
     }
