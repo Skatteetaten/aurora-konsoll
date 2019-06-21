@@ -16,7 +16,7 @@ export class ImageRepositoryClient {
   public async findTagsPaged(
     repository: string,
     type: string,
-    first?: number,
+    first: number,
     cursor?: string
   ): Promise<IGoboResult<ITagsQuery> | undefined> {
     return await this.client.query<ITagsQuery>({
