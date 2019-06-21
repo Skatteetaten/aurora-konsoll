@@ -300,7 +300,7 @@ class DatabaseSchemaCreateDialog extends React.Component<
                 <Button
                   onClick={back}
                   buttonType="primaryRoundedFilled"
-                  style={{ width: '160px', marginRight: '10px' }}
+                  style={{ width: '162px', marginRight: '10px' }}
                   icon="Copy"
                   title="Lag nytt databaseskjema med eksisterende verdier"
                 >

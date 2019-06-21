@@ -1,8 +1,3 @@
-import { ActionCreator } from 'redux';
-import { ThunkAction } from 'redux-thunk';
-
-import { IAuroraApiComponentProps } from 'components/AuroraApi';
-
 import { addCurrentErrors } from 'screens/ErrorHandler/state/actions';
 import { createAction } from 'redux-ts-utils';
 import { INetdebugResult, IScanStatus } from 'services/auroraApiClients';
@@ -10,7 +5,7 @@ import {
   IScanQuery,
   IScanStatusQuery
 } from 'services/auroraApiClients/netdebugClient/query';
-import { RootAction, RootState } from 'store/types';
+import { Thunk } from 'store/types';
 
 const netdebugViewAction = (action: string) => `netdebugView/${action}`;
 
@@ -21,10 +16,6 @@ export const fetchNetdebugStatusResponse = createAction<INetdebugResult>(
 export const fetchNetdebugStatusRequest = createAction<boolean>(
   netdebugViewAction('FETCH_NETDEBUG_REQUEST')
 );
-
-export type Thunk = ActionCreator<
-  ThunkAction<void, RootState, IAuroraApiComponentProps, RootAction>
->;
 
 const errorMessage = {
   failed: [],

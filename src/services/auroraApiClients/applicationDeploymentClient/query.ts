@@ -157,6 +157,12 @@ export const APPLICATION_DEPLOYMENT_DETAILS_QUERY = gql`
         startTime
         latestDeployTag
         managementResponses {
+          links {
+            error {
+              code
+              message
+            }
+          }
           health {
             hasResponse
             textResponse

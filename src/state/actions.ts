@@ -1,13 +1,8 @@
-import { ActionCreator } from 'redux';
-import { ThunkAction } from 'redux-thunk';
-
-import { IAuroraApiComponentProps } from 'components/AuroraApi';
-
 import { IUserAndAffiliations } from 'models/ApplicationDeployment';
 import { addCurrentErrors } from 'screens/ErrorHandler/state/actions';
 import { createAction } from 'redux-ts-utils';
-import { RootAction, RootState } from 'store/types';
 import { IGoboUser } from 'services/auroraApiClients/goboUsageClient/query';
+import { Thunk } from 'store/types';
 
 const currentUserAction = (action: string) => `currentUser/${action}`;
 
@@ -18,10 +13,6 @@ export const fetchCurrentUserResponse = createAction<IUserAndAffiliations>(
 export const fetchGoboUsersResponse = createAction<IGoboUser[]>(
   currentUserAction('FETCHED_GOBO_USERS')
 );
-
-export type Thunk = ActionCreator<
-  ThunkAction<void, RootState, IAuroraApiComponentProps, RootAction>
->;
 
 export const getCurrentUser: Thunk = () => async (
   dispatch,

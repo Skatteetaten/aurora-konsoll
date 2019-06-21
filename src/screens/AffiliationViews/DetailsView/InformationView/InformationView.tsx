@@ -10,9 +10,9 @@ import { ActiveDeploymentInformation } from './ActiveDeploymentInformation';
 import { DeploymentSpecInformation } from './DeploymentSpecInformation';
 import { GitAndBuildInformation } from './GitAndBuildInformation';
 import { ManagementInterface } from './ManagementInterface';
-import PodStatus from './PodStatus';
 import { ServiceLinks } from './ServiceLinks';
 import StatusCheckReportCard from './StatusCheckReportCard';
+import PodsStatus from './PodsStatus';
 
 interface IInformationViewProps {
   isFetchingDetails: boolean;
@@ -28,8 +28,8 @@ const InformationView = ({
   deploymentDetails,
   deployment,
   className,
-  isUpdating,
-  refreshApplicationDeployment
+  refreshApplicationDeployment,
+  isUpdating
 }: IInformationViewProps) => {
   const { deploymentSpec, pods } = deploymentDetails;
   if (isFetchingDetails) {
@@ -38,6 +38,14 @@ const InformationView = ({
 
   const hasManagementInterface =
     !!deploymentSpec && !!deploymentSpec.management;
+
+  const hasManagementLinksErrors =
+    pods.map(
+      pod =>
+        pod.managementResponses &&
+        pod.managementResponses.links &&
+        pod.managementResponses.links.error
+    ).length > 0;
 
   return (
     <div className={className}>
@@ -71,15 +79,13 @@ const InformationView = ({
       />
       <h3>Pods fra OpenShift</h3>
       <div className="info-deployments">
-        {pods.map(pod => (
-          <PodStatus
-            key={pod.name}
-            pod={pod}
-            className="info-pod"
+        {hasManagementLinksErrors && (
+          <PodsStatus
             isUpdating={isUpdating}
             refreshApplicationDeployment={refreshApplicationDeployment}
+            details={deploymentDetails}
           />
-        ))}
+        )}
       </div>
     </div>
   );

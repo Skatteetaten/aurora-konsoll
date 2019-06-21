@@ -1,9 +1,4 @@
-import { ActionCreator } from 'redux';
-import { ThunkAction } from 'redux-thunk';
-
-import { IAuroraApiComponentProps } from 'components/AuroraApi';
-
-import { RootAction, RootState } from 'store/types';
+import { Thunk } from 'store/types';
 
 import {
   ICreateDatabaseSchemaInput,
@@ -45,10 +40,6 @@ export const testJdbcConnectionForJdbcUserResponse = createAction<boolean>(
 export const createDatabaseSchemaResponse = createAction<
   ICreateDatabaseSchemaResponse
 >(databaseAction('CREATE_DATABASE_SCHEMA_RESPONSE'));
-
-export type Thunk = ActionCreator<
-  ThunkAction<void, RootState, IAuroraApiComponentProps, RootAction>
->;
 
 export const fetchSchemas: Thunk = (affiliations: string[]) => async (
   dispatch,

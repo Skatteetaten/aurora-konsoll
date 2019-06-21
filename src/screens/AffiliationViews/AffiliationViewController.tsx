@@ -268,9 +268,6 @@ class AffiliationViewController extends React.Component<
           buildDeploymentLink: this.buildDeploymentLink,
           allDeployments: allApplicationDeployments,
           deployments: filteredDeployments,
-          refreshDeployments: this.refreshApplicationDeployments,
-          fetchApplicationDeployments: () =>
-            this.fetchApplicationDeployments(affiliation),
           filterPathUrl,
           affiliation
         }}
