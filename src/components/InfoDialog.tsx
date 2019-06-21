@@ -72,23 +72,26 @@ class InfoDialog extends React.Component<InfoDialogProps, InfoDialogState> {
               buttonStyle,
               open
             )}
-        <Dialog
-          hidden={!isOpen}
-          onDismiss={close}
-          title={title}
-          helpText={subText}
-          dialogMinWidth="500px"
-          dialogMaxWidth="90%"
-          isBlocking={!!isBlocking}
-        >
-          {children}
-          <Dialog.Footer>
-            {renderFooterButtons && renderFooterButtons(close)}
-            {!hideCloseButton && (
-              <ActionButton onClick={close}>Lukk</ActionButton>
-            )}
-          </Dialog.Footer>
-        </Dialog>
+        {/* Using isOpen because Dialog renders a div-element when it's not open. */}
+        {isOpen && (
+          <Dialog
+            hidden={!isOpen}
+            onDismiss={close}
+            title={title}
+            helpText={subText}
+            dialogMinWidth="500px"
+            dialogMaxWidth="90%"
+            isBlocking={!!isBlocking}
+          >
+            {children}
+            <Dialog.Footer>
+              {renderFooterButtons && renderFooterButtons(close)}
+              {!hideCloseButton && (
+                <ActionButton onClick={close}>Lukk</ActionButton>
+              )}
+            </Dialog.Footer>
+          </Dialog>
+        )}
       </>
     );
   }
