@@ -534,6 +534,16 @@ const styledFilter = styled(Filter)`
     padding-right: 10px;
     position: relative;
     top: 5px;
+
+    /* 
+      TODO: Fix in Designsystem
+      After ugrading to Designsystem 1.6.0 the checkmark icon were placed too far down.
+      This makes the icon centred again.
+    */
+    i {
+      position: relative;
+      bottom: 3px;
+    }
   }
 `;
 
