@@ -20,11 +20,13 @@ const renderOpenDialogButton = (open: () => void) => {
     <Icon
       onClick={open}
       iconName="Favorite"
+      title="Pod helsestatus"
       style={{
         fontSize: '21px',
         cursor: 'pointer',
         color: `${skeColor.blue}`,
-        float: 'none'
+        float: 'none',
+        marginBottom: '2px'
       }}
     />
   );
