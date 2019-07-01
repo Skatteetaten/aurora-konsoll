@@ -25,7 +25,8 @@ const renderOpenDialogButton = (open: () => void) => {
         fontSize: '21px',
         cursor: 'pointer',
         color: `${skeColor.blue}`,
-        float: 'none'
+        float: 'none',
+        marginBottom: '2px'
       }}
     />
   );
