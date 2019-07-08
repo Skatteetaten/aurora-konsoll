@@ -175,7 +175,7 @@ class PodsStatus extends React.Component<IPodsStatusProps, IPodsStatusState> {
             {pod.name}
           </ActionButton>
         ),
-        startedDate: getLocalDatetime(pod.startTime),
+        startedDate: !!pod.startTime ? getLocalDatetime(pod.startTime) : '',
         numberOfRestarts: pod.restartCount,
         externalLinks: (
           <div style={{ display: 'flex', alignItems: 'flex-end' }}>
