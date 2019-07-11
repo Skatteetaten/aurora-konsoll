@@ -43,7 +43,7 @@ export interface IImageTag {
 export const TAGS_QUERY = gql`
   query getTags(
     $repositories: [String!]!
-    $cursor: String!
+    $cursor: String
     $types: [ImageTagType!]!
     $first: Int!
   ) {
