@@ -47,9 +47,13 @@ export interface IDetailsViewProps
   findTagsPaged: (
     repository: string,
     type: ImageTagType,
-    updateTagsPaged: (type: ImageTagType, next: ITagsPaged) => void,
+    updateTagsPaged: (
+      type: ImageTagType,
+      next: ITagsPaged,
+      newTags: ITag[]
+    ) => void,
     first: number,
-    cursor?: string
+    current: ITagsPaged
   ) => void;
   findTagsPagedResponse: ITagsPaged;
   findGroupedTagsPagedResult: ITagsPagedGroup;
@@ -146,16 +150,21 @@ export default class DetailsViewController {
     const { selectedTagType } = this.component.state;
 
     const current: ITagsPaged = this.sm.tag.getTagsPaged(selectedTagType);
-    const cursor = current.endCursor;
 
-    const updateTagsPaged = (type: ImageTagType, next: ITagsPaged) =>
-      this.sm.tag.updateTagsPaged(type, next);
+    const updateTagsPaged = (
+      type: ImageTagType,
+      next: ITagsPaged,
+      newTags?: ITag[]
+    ) => {
+      this.sm.tag.updateTagsPaged(type, next, newTags);
+    };
+
     await findTagsPaged(
       deployment.repository,
       selectedTagType,
       updateTagsPaged,
       15,
-      cursor
+      current
     );
   };
 

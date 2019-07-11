@@ -7,7 +7,12 @@ import {
   addErrors,
   addCurrentErrors
 } from 'screens/ErrorHandler/state/actions';
-import { defaultTagsPagedGroup, ITagsPagedGroup, ITagsPaged } from 'models/Tag';
+import {
+  defaultTagsPagedGroup,
+  ITagsPagedGroup,
+  ITagsPaged,
+  ITag
+} from 'models/Tag';
 import { IUserSettings } from 'models/UserSettings';
 import { createAction } from 'redux-ts-utils';
 import { Thunk } from 'store/types';
@@ -224,17 +229,28 @@ export const redeployWithCurrentVersion: Thunk = (
 export const findTagsPaged: Thunk = (
   repository: string,
   type: ImageTagType,
-  updateTagsPaged: (type: ImageTagType, next: ITagsPaged) => void,
+  updateTagsPaged: (
+    type: ImageTagType,
+    next: ITagsPaged,
+    newTags: ITag[]
+  ) => void,
   first: number,
-  cursor?: string
+  current: ITagsPaged
 ) => async (dispatch, getState, { clients }) => {
   dispatch(fetchTagsRequest(true));
+  const fiveNewestTags = await clients.imageRepositoryClient.findTagsPaged(
+    repository,
+    type,
+    5
+  );
   const result = await clients.imageRepositoryClient.findTagsPaged(
     repository,
     type,
     first,
-    cursor
+    current.endCursor
   );
+
+  dispatch(addCurrentErrors(fiveNewestTags));
   dispatch(addCurrentErrors(result));
 
   if (
@@ -248,9 +264,14 @@ export const findTagsPaged: Thunk = (
     dispatch(findTagsPagedResponse(defaultTagsPagedGroup()[type]));
   } else {
     const { imageRepositories } = result.data;
+    if (result && result.data && fiveNewestTags && fiveNewestTags.data) {
+      const newTags = toTagsPaged(
+        fiveNewestTags.data.imageRepositories[0].tags
+      ).tags.filter(
+        item1 => !current.tags.some(item2 => item2.name === item1.name)
+      );
 
-    if (result && result.data) {
-      updateTagsPaged(type, toTagsPaged(imageRepositories[0].tags));
+      updateTagsPaged(type, toTagsPaged(imageRepositories[0].tags), newTags);
       dispatch(findTagsPagedResponse(toTagsPaged(imageRepositories[0].tags)));
     }
   }
