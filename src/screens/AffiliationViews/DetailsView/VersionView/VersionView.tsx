@@ -91,12 +91,12 @@ const VersionView = ({
         <Button
           buttonType="primaryRounded"
           onClick={handlefetchTags}
-          disabled={!tagsPaged.hasNextPage}
+          disabled={!tagsPaged.hasNextPage || isFetchingTags}
           style={{
             minWidth: '160px'
           }}
         >
-          {isFetchingTags ? <Spinner /> : 'Hent flere tags'}
+          {isFetchingTags ? <Spinner /> : 'Hent 15 flere tags'}
         </Button>
       </div>
       <div className="g-details-list">
