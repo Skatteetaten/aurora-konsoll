@@ -5,7 +5,7 @@ export interface IPodResource {
   phase: string;
   restartCount: number;
   ready: boolean;
-  startTime: string;
+  startTime?: string;
   latestDeployTag: boolean;
   managementResponses?: {
     links?: {
