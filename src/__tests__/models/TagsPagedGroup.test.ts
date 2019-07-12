@@ -28,7 +28,18 @@ const tagsPagedGroup = new TagStateManager(
         type: ImageTagType.MAJOR
       }
     ]),
-    minor: createTagsPaged(),
+    minor: createTagsPaged('minor', false, [
+      {
+        lastModified: '28.03.2018',
+        name: '1.2',
+        type: ImageTagType.MINOR
+      },
+      {
+        lastModified: '20.03.2018',
+        name: '1.1',
+        type: ImageTagType.MINOR
+      }
+    ]),
     snapshot: createTagsPaged()
   },
   () => {
@@ -92,6 +103,89 @@ it('should update tags for a given ImageTagType', () => {
         lastModified: '23.03.2018',
         name: '4',
         type: ImageTagType.MAJOR
+      }
+    ]
+  });
+});
+
+it('should update tags and insert new tags in the start of the array for a given ImageTagType', () => {
+  expect(tagsPagedGroup.getTagsPaged(ImageTagType.MINOR)).toEqual({
+    endCursor: 'minor',
+    hasNextPage: false,
+    tags: [
+      {
+        lastModified: '28.03.2018',
+        name: '1.2',
+        type: ImageTagType.MINOR
+      },
+      {
+        lastModified: '20.03.2018',
+        name: '1.1',
+        type: ImageTagType.MINOR
+      }
+    ]
+  });
+
+  tagsPagedGroup.updateTagsPaged(
+    ImageTagType.MINOR,
+    createTagsPaged('minor2', true, [
+      {
+        lastModified: '15.01.2018',
+        name: '1.0',
+        type: ImageTagType.MINOR
+      },
+      {
+        lastModified: '10.01.2018',
+        name: '0.9',
+        type: ImageTagType.MINOR
+      }
+    ]),
+    [
+      {
+        lastModified: '28.05.2018',
+        name: '1.4',
+        type: ImageTagType.MINOR
+      },
+      {
+        lastModified: '01.05.2018',
+        name: '1.3',
+        type: ImageTagType.MINOR
+      }
+    ]
+  );
+  expect(tagsPagedGroup.getTagsPaged(ImageTagType.MINOR)).toEqual({
+    endCursor: 'minor2',
+    hasNextPage: true,
+    tags: [
+      {
+        lastModified: '28.05.2018',
+        name: '1.4',
+        type: ImageTagType.MINOR
+      },
+      {
+        lastModified: '01.05.2018',
+        name: '1.3',
+        type: ImageTagType.MINOR
+      },
+      {
+        lastModified: '28.03.2018',
+        name: '1.2',
+        type: ImageTagType.MINOR
+      },
+      {
+        lastModified: '20.03.2018',
+        name: '1.1',
+        type: ImageTagType.MINOR
+      },
+      {
+        lastModified: '15.01.2018',
+        name: '1.0',
+        type: ImageTagType.MINOR
+      },
+      {
+        lastModified: '10.01.2018',
+        name: '0.9',
+        type: ImageTagType.MINOR
       }
     ]
   });
