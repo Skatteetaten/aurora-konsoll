@@ -214,7 +214,8 @@ export const tagsPagedGroupFactory = Factory.Sync.makeFactory<ITagsPagedGroup>({
       }
     ],
     endCursor: '',
-    hasNextPage: false
+    hasNextPage: false,
+    totalCount: 0
   },
   auroraVersion: {
     tags: [
@@ -225,7 +226,8 @@ export const tagsPagedGroupFactory = Factory.Sync.makeFactory<ITagsPagedGroup>({
       }
     ],
     endCursor: '',
-    hasNextPage: false
+    hasNextPage: false,
+    totalCount: 0
   },
   bugfix: {
     tags: [
@@ -236,12 +238,14 @@ export const tagsPagedGroupFactory = Factory.Sync.makeFactory<ITagsPagedGroup>({
       }
     ],
     endCursor: '',
-    hasNextPage: false
+    hasNextPage: false,
+    totalCount: 0
   },
   commitHash: {
     tags: [],
     endCursor: '',
-    hasNextPage: false
+    hasNextPage: false,
+    totalCount: 0
   },
   latest: {
     tags: [
@@ -252,7 +256,8 @@ export const tagsPagedGroupFactory = Factory.Sync.makeFactory<ITagsPagedGroup>({
       }
     ],
     endCursor: '',
-    hasNextPage: false
+    hasNextPage: false,
+    totalCount: 0
   },
   major: {
     tags: [
@@ -263,7 +268,8 @@ export const tagsPagedGroupFactory = Factory.Sync.makeFactory<ITagsPagedGroup>({
       }
     ],
     endCursor: '',
-    hasNextPage: false
+    hasNextPage: false,
+    totalCount: 0
   },
   minor: {
     tags: [
@@ -274,7 +280,8 @@ export const tagsPagedGroupFactory = Factory.Sync.makeFactory<ITagsPagedGroup>({
       }
     ],
     endCursor: '',
-    hasNextPage: false
+    hasNextPage: false,
+    totalCount: 0
   },
   snapshot: {
     tags: [
@@ -285,14 +292,16 @@ export const tagsPagedGroupFactory = Factory.Sync.makeFactory<ITagsPagedGroup>({
       }
     ],
     endCursor: '',
-    hasNextPage: false
+    hasNextPage: false,
+    totalCount: 0
   }
 });
 
 export const tagsPagedFactory = Factory.Sync.makeFactory<ITagsPaged>({
   endCursor: 'test',
   hasNextPage: false,
-  tags: []
+  tags: [],
+  totalCount: 0
 });
 
 export const databaseSchemaInputFactory = Factory.Sync.makeFactory<

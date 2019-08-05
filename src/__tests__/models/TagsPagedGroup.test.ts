@@ -5,12 +5,14 @@ import { TagStateManager } from 'screens/AffiliationViews/DetailsView/TagStateMa
 export function createTagsPaged(
   endCursor: string = '',
   hasNextPage: boolean = false,
-  tags: ITag[] = []
+  tags: ITag[] = [],
+  totalCount = 0
 ): ITagsPaged {
   return {
     endCursor,
     hasNextPage,
-    tags
+    tags,
+    totalCount
   };
 }
 
@@ -21,25 +23,35 @@ const tagsPagedGroup = new TagStateManager(
     bugfix: createTagsPaged(),
     commitHash: createTagsPaged(),
     latest: createTagsPaged(),
-    major: createTagsPaged('test', false, [
-      {
-        lastModified: '20.03.2018',
-        name: '3',
-        type: ImageTagType.MAJOR
-      }
-    ]),
-    minor: createTagsPaged('minor', false, [
-      {
-        lastModified: '28.03.2018',
-        name: '1.2',
-        type: ImageTagType.MINOR
-      },
-      {
-        lastModified: '20.03.2018',
-        name: '1.1',
-        type: ImageTagType.MINOR
-      }
-    ]),
+    major: createTagsPaged(
+      'test',
+      false,
+      [
+        {
+          lastModified: '20.03.2018',
+          name: '3',
+          type: ImageTagType.MAJOR
+        }
+      ],
+      0
+    ),
+    minor: createTagsPaged(
+      'minor',
+      false,
+      [
+        {
+          lastModified: '28.03.2018',
+          name: '1.2',
+          type: ImageTagType.MINOR
+        },
+        {
+          lastModified: '20.03.2018',
+          name: '1.1',
+          type: ImageTagType.MINOR
+        }
+      ],
+      0
+    ),
     snapshot: createTagsPaged()
   },
   () => {
@@ -51,6 +63,7 @@ it('should get tags for a given ImageTagType', () => {
   expect(tagsPagedGroup.getTagsPaged(ImageTagType.MAJOR)).toEqual({
     endCursor: 'test',
     hasNextPage: false,
+    totalCount: 0,
     tags: [
       {
         lastModified: '20.03.2018',
@@ -62,6 +75,7 @@ it('should get tags for a given ImageTagType', () => {
   expect(tagsPagedGroup.getTagsPaged(ImageTagType.AURORA_VERSION)).toEqual({
     endCursor: '',
     hasNextPage: false,
+    totalCount: 0,
     tags: []
   });
 });
@@ -70,6 +84,7 @@ it('should update tags for a given ImageTagType', () => {
   expect(tagsPagedGroup.getTagsPaged(ImageTagType.MAJOR)).toEqual({
     endCursor: 'test',
     hasNextPage: false,
+    totalCount: 0,
     tags: [
       {
         lastModified: '20.03.2018',
@@ -81,18 +96,24 @@ it('should update tags for a given ImageTagType', () => {
 
   tagsPagedGroup.updateTagsPaged(
     ImageTagType.MAJOR,
-    createTagsPaged('test2', true, [
-      {
-        lastModified: '23.03.2018',
-        name: '4',
-        type: ImageTagType.MAJOR
-      }
-    ])
+    createTagsPaged(
+      'test2',
+      true,
+      [
+        {
+          lastModified: '23.03.2018',
+          name: '4',
+          type: ImageTagType.MAJOR
+        }
+      ],
+      0
+    )
   );
 
   expect(tagsPagedGroup.getTagsPaged(ImageTagType.MAJOR)).toEqual({
     endCursor: 'test2',
     hasNextPage: true,
+    totalCount: 0,
     tags: [
       {
         lastModified: '20.03.2018',
@@ -112,6 +133,7 @@ it('should update tags and insert new tags in the start of the array for a given
   expect(tagsPagedGroup.getTagsPaged(ImageTagType.MINOR)).toEqual({
     endCursor: 'minor',
     hasNextPage: false,
+    totalCount: 0,
     tags: [
       {
         lastModified: '28.03.2018',
@@ -128,18 +150,23 @@ it('should update tags and insert new tags in the start of the array for a given
 
   tagsPagedGroup.updateTagsPaged(
     ImageTagType.MINOR,
-    createTagsPaged('minor2', true, [
-      {
-        lastModified: '15.01.2018',
-        name: '1.0',
-        type: ImageTagType.MINOR
-      },
-      {
-        lastModified: '10.01.2018',
-        name: '0.9',
-        type: ImageTagType.MINOR
-      }
-    ]),
+    createTagsPaged(
+      'minor2',
+      true,
+      [
+        {
+          lastModified: '15.01.2018',
+          name: '1.0',
+          type: ImageTagType.MINOR
+        },
+        {
+          lastModified: '10.01.2018',
+          name: '0.9',
+          type: ImageTagType.MINOR
+        }
+      ],
+      0
+    ),
     [
       {
         lastModified: '28.05.2018',
@@ -156,6 +183,7 @@ it('should update tags and insert new tags in the start of the array for a given
   expect(tagsPagedGroup.getTagsPaged(ImageTagType.MINOR)).toEqual({
     endCursor: 'minor2',
     hasNextPage: true,
+    totalCount: 0,
     tags: [
       {
         lastModified: '28.05.2018',

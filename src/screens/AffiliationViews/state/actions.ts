@@ -367,8 +367,9 @@ export const findApplicationDeploymentDetails: Thunk = (
 export const toTagsPaged = (
   imageTagsConnection: IImageTagsConnection
 ): ITagsPaged => {
-  const { edges, pageInfo } = imageTagsConnection;
+  const { edges, pageInfo, totalCount } = imageTagsConnection;
   return {
+    totalCount,
     endCursor: pageInfo.endCursor,
     hasNextPage: pageInfo.hasNextPage,
     tags: edges.map(edge => ({
