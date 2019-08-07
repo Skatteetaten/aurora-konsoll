@@ -29,6 +29,8 @@ interface ITagsListProps {
   imageTagType: ImageTagType;
   deployedTag: ITag;
   selectedTag?: ITag;
+  initialTagType: string;
+  handlefetchTags: () => void;
   handleSelectNextTag: (item?: ITag) => void;
 }
 
@@ -53,7 +55,14 @@ export default class TagsList extends React.Component<
   };
 
   public updateSelection = () => {
-    const { tags, deployedTag, selectedTag } = this.props;
+    const {
+      tags,
+      deployedTag,
+      selectedTag,
+      initialTagType,
+      imageTagType,
+      handlefetchTags
+    } = this.props;
 
     const deployedTagIndex = tags.findIndex(t => t.name === deployedTag.name);
     const selectedTagIndex = tags.findIndex(
@@ -67,6 +76,8 @@ export default class TagsList extends React.Component<
 
     if (deployedTagIndex !== -1) {
       this.selection.setIndexSelected(deployedTagIndex, true, true);
+    } else if (imageTagType === initialTagType) {
+      handlefetchTags();
     }
   };
 

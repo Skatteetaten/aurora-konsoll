@@ -25,6 +25,7 @@ class DetailsView extends React.Component<
     selectedTagType: this.props.deployment.version.deployTag.type,
     tagsPagedGroup: defaultTagsPagedGroup(),
     versionSearchText: '',
+    initialTagType: '',
     isInitialTagType: true
   };
 
@@ -130,6 +131,7 @@ class DetailsView extends React.Component<
                 redeployWithCurrentVersion={
                   this.controller.redeployWithCurrentVersion
                 }
+                initialTagType={this.state.initialTagType}
               />
             </Route>
           </Switch>

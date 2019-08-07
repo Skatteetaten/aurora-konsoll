@@ -71,6 +71,7 @@ export interface IDetailsViewState {
   selectedTagType: ImageTagType;
   versionSearchText: string;
   isInitialTagType: boolean;
+  initialTagType: string;
 }
 
 interface IStateManagers {
@@ -114,7 +115,8 @@ export default class DetailsViewController {
     }
     const setInitialTagTypeTrue = () => {
       this.component.setState({
-        isInitialTagType: true
+        isInitialTagType: true,
+        initialTagType: selectedTag.type
       });
     };
 
@@ -196,7 +198,8 @@ export default class DetailsViewController {
     const { id, repository } = this.component.props.deployment;
     const {
       findApplicationDeploymentDetails,
-      findGroupedTagsPaged
+      findGroupedTagsPaged,
+      deployment
     } = this.component.props;
 
     findApplicationDeploymentDetails(id);
@@ -205,6 +208,9 @@ export default class DetailsViewController {
         this.sm.tag.setTagsPagedGroup(tagsPagedGroup);
       findGroupedTagsPaged(repository, setTagsPagedGroup);
     }
+    this.component.setState(() => ({
+      initialTagType: deployment.version.deployTag.type
+    }));
   };
 
   public getVersionViewUnavailableMessage():

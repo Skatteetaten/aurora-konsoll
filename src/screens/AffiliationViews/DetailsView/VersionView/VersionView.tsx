@@ -21,6 +21,7 @@ interface IVersionViewProps {
   isFetchingTags: boolean;
   isRedeploying: boolean;
   canUpgrade: boolean;
+  initialTagType: string;
   unavailableMessage?: IUnavailableServiceMessage;
   selectedTagType: ImageTagType;
   tagsPaged: ITagsPaged;
@@ -41,6 +42,7 @@ const VersionView = ({
   isRedeploying,
   unavailableMessage,
   canUpgrade,
+  initialTagType,
   hasPermissionToUpgrade,
   selectedTagType,
   handlefetchTags,
@@ -93,10 +95,10 @@ const VersionView = ({
           onClick={handlefetchTags}
           disabled={!tagsPaged.hasNextPage || isFetchingTags}
           style={{
-            minWidth: '160px'
+            minWidth: '178px'
           }}
         >
-          {isFetchingTags ? <Spinner /> : 'Hent 15 flere tags'}
+          {isFetchingTags ? <Spinner /> : 'Last inn 15 nye'}
         </Button>
       </div>
       <div className="g-details-list">
@@ -105,6 +107,8 @@ const VersionView = ({
           imageTagType={selectedTagType}
           selectedTag={selectedTag}
           deployedTag={deployedTag}
+          initialTagType={initialTagType}
+          handlefetchTags={handlefetchTags}
           handleSelectNextTag={handleSelectNextTag}
         />
       </div>
