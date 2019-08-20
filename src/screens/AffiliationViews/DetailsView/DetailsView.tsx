@@ -122,7 +122,7 @@ class DetailsView extends React.Component<
                 )}
                 isFetchingTags={isFetchingTags}
                 isRedeploying={isRedeploying}
-                canUpgrade={!!this.controller.canUpgrade()}
+                canUpgrade={this.controller.canUpgrade}
                 handleSelectNextTag={this.controller.handleSelectNextTag}
                 handlefetchTags={this.controller.loadMoreTags}
                 handleSelectStrategy={this.controller.handleSelectStrategy}
@@ -132,6 +132,9 @@ class DetailsView extends React.Component<
                   this.controller.redeployWithCurrentVersion
                 }
                 initialTagType={this.state.initialTagType}
+                findGroupedTagsPagedResult={
+                  this.props.findGroupedTagsPagedResult
+                }
               />
             </Route>
           </Switch>
