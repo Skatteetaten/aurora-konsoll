@@ -135,6 +135,7 @@ class DetailsView extends React.Component<
                 findGroupedTagsPagedResult={
                   this.props.findGroupedTagsPagedResult
                 }
+                versionSearchText={this.state.versionSearchText}
               />
             </Route>
           </Switch>

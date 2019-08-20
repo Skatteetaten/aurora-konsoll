@@ -26,7 +26,7 @@ const TagOption = ({ tag, text, className }: IOptionProps) => (
   </span>
 );
 
-function getOptionLabel(imageTagType: ImageTagType): string {
+export function getOptionLabel(imageTagType: ImageTagType): string {
   switch (imageTagType) {
     case MAJOR:
       return 'Deploy ved os og java-patcher.';

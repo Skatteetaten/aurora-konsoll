@@ -1,10 +1,13 @@
 import * as React from 'react';
 
-import RadioButtonGroup from 'aurora-frontend-react-komponenter/RadioButtonGroup';
+import ComboBox from 'aurora-frontend-react-komponenter/ComboBox';
 
-import { ImageTagType } from 'models/ImageTagType';
+import { IComboBoxOption } from 'office-ui-fabric-react/lib/index';
+
+import { ImageTagType, findImageTagTypeName } from 'models/ImageTagType';
 import styled from 'styled-components';
-import TagOption from './TagOption';
+import { getOptionLabel } from './TagOption';
+import { ITagsPagedGroup, ITagsPaged } from 'models/Tag';
 
 export interface IImageTagTypeOption {
   key: ImageTagType;
@@ -16,44 +19,82 @@ export interface IImageTagTypeOption {
 interface ITagTypeSelector {
   imageTagType: ImageTagType;
   handleSelectStrategy: (e: Event, option: IImageTagTypeOption) => void;
+  findGroupedTagsPagedResult: ITagsPagedGroup;
+  className?: string;
 }
 
 const TagTypeSelector = ({
   imageTagType,
-  handleSelectStrategy
-}: ITagTypeSelector) => (
-  <RadioButtonWrapper>
-    <RadioButtonGroup
-      selectedKey={imageTagType}
-      options={versionStategyOptions}
-      onChange={handleSelectStrategy}
-    />
-  </RadioButtonWrapper>
-);
-
-function createOption(type: ImageTagType, text: string): IImageTagTypeOption {
-  return {
-    key: type,
-    onRenderLabel: renderTagOption,
-    tag: type,
-    text
+  handleSelectStrategy,
+  findGroupedTagsPagedResult,
+  className
+}: ITagTypeSelector) => {
+  const onTagTypeChanged = (e: Event, option: IImageTagTypeOption) => {
+    handleSelectStrategy(e, option);
   };
-}
 
-function renderTagOption({ tag, text }: IImageTagTypeOption): JSX.Element {
-  return <TagOption tag={tag} text={text} />;
-}
+  function groupedTagsTotalCount(type: ImageTagType) {
+    const imageTagTypeName = findImageTagTypeName(type);
+    if (findGroupedTagsPagedResult.auroraSnapshotVersion.totalCount > 0) {
+      const tagsCount = Object.entries(findGroupedTagsPagedResult).reduce(
+        (acc, k) => {
+          if (k[0] === imageTagTypeName) {
+            return acc + (k[1] as ITagsPaged).totalCount;
+          } else {
+            return acc;
+          }
+        },
+        0
+      );
+      return tagsCount;
+    }
+  }
 
-const versionStategyOptions: IImageTagTypeOption[] = [
-  createOption(ImageTagType.MAJOR, 'Major'),
-  createOption(ImageTagType.MINOR, 'Minor'),
-  createOption(ImageTagType.BUGFIX, 'Bugfix'),
-  createOption(ImageTagType.LATEST, 'Latest'),
-  createOption(ImageTagType.SNAPSHOT, 'Snapshot'),
-  createOption(ImageTagType.AURORA_SNAPSHOT_VERSION, 'Unik snapshot version'),
-  createOption(ImageTagType.COMMIT_HASH, 'Commit hash'),
-  createOption(ImageTagType.AURORA_VERSION, 'Aurora version')
-];
+  function createOption(type: ImageTagType, text: string): IImageTagTypeOption {
+    return {
+      key: type,
+      tag: type,
+      text: `(${groupedTagsTotalCount(type)}) ${text} - ${getOptionLabel(type)}`
+    };
+  }
+
+  const versionStategyOptions: IImageTagTypeOption[] = [
+    createOption(ImageTagType.MAJOR, 'Major'),
+    createOption(ImageTagType.MINOR, 'Minor'),
+    createOption(ImageTagType.BUGFIX, 'Bugfix'),
+    createOption(ImageTagType.LATEST, 'Latest'),
+    createOption(ImageTagType.SNAPSHOT, 'Snapshot'),
+    createOption(ImageTagType.AURORA_SNAPSHOT_VERSION, 'Unik snapshot version'),
+    createOption(ImageTagType.COMMIT_HASH, 'Commit hash'),
+    createOption(ImageTagType.AURORA_VERSION, 'Aurora version')
+  ];
+  return (
+    <div className={className}>
+      <RadioButtonWrapper>
+        <div className="comboBox">
+          <ComboBox
+            options={versionStategyOptions}
+            selectedKey={imageTagType}
+            onChange={onTagTypeChanged}
+            label="Velg type deploy"
+            info="Her vises de forskjellige deploy kategroiene og antall tags for finnes for hver av dem"
+            onRenderOption={onRenderOption}
+          />
+        </div>
+      </RadioButtonWrapper>
+    </div>
+  );
+};
+
+const onRenderOption = (item: IComboBoxOption): JSX.Element => {
+  const option = item.text;
+  return (
+    <p>
+      <b>{option.split('-').slice(0, 1)}</b>
+      {option.split(/(?=-)/g).slice(1, 2)}
+    </p>
+  );
+};
 
 const RadioButtonWrapper = styled.div`
   .ms-ChoiceField-wrapper {
@@ -61,6 +102,21 @@ const RadioButtonWrapper = styled.div`
   }
   .ms-ChoiceField-field {
     width: 100%;
+  }
+  .ms-Button-flexContainer {
+    span {
+      margin: 0;
+    }
+  }
+  .ms-ComboBox-Input,
+  .ms-ComboBox {
+    cursor: pointer;
+  }
+  .comboBox {
+    min-width: 500px;
+    input {
+      font-weight: bold;
+    }
   }
 `;
 

@@ -2,15 +2,25 @@ import * as React from 'react';
 import styled from 'styled-components';
 
 import DetailsList from 'aurora-frontend-react-komponenter/DetailsList';
-import { ImageTagType } from 'models/ImageTagType';
-import { ITag } from 'models/Tag';
+import Table from 'aurora-frontend-react-komponenter/Table';
+import { ImageTagType, findImageTagTypeName } from 'models/ImageTagType';
+import { ITag, ITagWithDeployButton } from 'models/Tag';
+import UpgradeButton from './UpgradeButton';
 
 const detailListColumns = [
+  {
+    fieldName: 'type',
+    isResizable: true,
+    key: 'type',
+    maxWidth: 150,
+    minWidth: 100,
+    name: 'Type deploy'
+  },
   {
     fieldName: 'name',
     isResizable: true,
     key: 'name',
-    maxWidth: 400,
+    maxWidth: 550,
     minWidth: 100,
     name: 'Navn'
   },
@@ -18,9 +28,17 @@ const detailListColumns = [
     fieldName: 'lastModified',
     isResizable: true,
     key: 'lastModified',
+    maxWidth: 250,
+    minWidth: 150,
+    name: 'Sist endret'
+  },
+  {
+    fieldName: 'deploy',
+    isResizable: true,
+    key: 'deploy',
     maxWidth: 200,
     minWidth: 100,
-    name: 'Sist endret'
+    name: ''
   }
 ];
 
@@ -30,8 +48,14 @@ interface ITagsListProps {
   deployedTag: ITag;
   selectedTag?: ITag;
   initialTagType: string;
+  isRedeploying: boolean;
+  versionSearchText: string;
+  hasPermissionToUpgrade: boolean;
   handlefetchTags: () => void;
   handleSelectNextTag: (item?: ITag) => void;
+  canUpgrade: (selectedTag?: ITag) => boolean;
+  redeployWithCurrentVersion: () => void;
+  redeployWithVersion: (version?: ITag) => void;
 }
 
 interface ITagsListState {
@@ -61,7 +85,8 @@ export default class TagsList extends React.Component<
       selectedTag,
       initialTagType,
       imageTagType,
-      handlefetchTags
+      handlefetchTags,
+      versionSearchText
     } = this.props;
 
     const deployedTagIndex = tags.findIndex(t => t.name === deployedTag.name);
@@ -76,7 +101,7 @@ export default class TagsList extends React.Component<
 
     if (deployedTagIndex !== -1) {
       this.selection.setIndexSelected(deployedTagIndex, true, true);
-    } else if (imageTagType === initialTagType) {
+    } else if (imageTagType === initialTagType && !!!versionSearchText) {
       handlefetchTags();
     }
   };
@@ -124,23 +149,47 @@ export default class TagsList extends React.Component<
 
   public render() {
     const { deployedTagIndex, selectedTagIndex } = this.state;
-    const { tags, handleSelectNextTag } = this.props;
+    const {
+      tags,
+      handleSelectNextTag,
+      canUpgrade,
+      redeployWithCurrentVersion,
+      redeployWithVersion,
+      isRedeploying,
+      deployedTag,
+      hasPermissionToUpgrade
+    } = this.props;
+
+    const deployButton = (version: ITag) => (
+      <UpgradeButton
+        previousVersion={deployedTag.name}
+        newVersion={version}
+        handleSelectNextTag={handleSelectNextTag}
+        isRedeploying={isRedeploying}
+        redeployWithVersion={redeployWithVersion}
+        redeployWithCurrentVersion={redeployWithCurrentVersion}
+        canUpgrade={canUpgrade}
+        hasPermissionToUpgrade={hasPermissionToUpgrade}
+      />
+    );
+
+    const tagsWithDeployButton = (): ITagWithDeployButton[] =>
+      tags.map(it => {
+        return {
+          type: findImageTagTypeName(it.type),
+          name: it.name,
+          lastModified: it.lastModified,
+          deploy: deployButton(it)
+        };
+      });
 
     return (
       <DetailsListWrapper
         deployedIndex={deployedTagIndex}
         selectedIndex={selectedTagIndex}
+        style={{ backgroundColor: 'white' }}
       >
-        <DetailsList
-          columns={detailListColumns}
-          items={tags}
-          setKey="name"
-          selection={this.selection}
-          onActiveItemChanged={handleSelectNextTag}
-          selectionPreservedOnEmptyClick={true}
-          selectionMode={DetailsList.SelectionMode.single}
-          onRenderItemColumn={this.renderItemColoumn}
-        />
+        <Table data={tagsWithDeployButton()} columns={detailListColumns} />
       </DetailsListWrapper>
     );
   }
@@ -159,6 +208,19 @@ interface IDetailsListWrapper {
 }
 
 const DetailsListWrapper = styled.div<IDetailsListWrapper>`
+  table {
+    th:nth-child(1){
+      width: 200px
+    }
+    th:nth-child(2){
+      width: 800px
+    }
+    th:nth-child(3){
+      width: 300px
+    }
+  }
+
+
   .ms-FocusZone.ms-DetailsRow {
     &[data-item-index] {
       &:hover, &:active, &:focus {
