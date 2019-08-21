@@ -31,3 +31,26 @@ export function findImageTagTypeName(type: ImageTagType): string {
       return '';
   }
 }
+
+export function findImageTagTypeLabel(type: ImageTagType): string {
+  switch (type) {
+    case ImageTagType.AURORA_VERSION:
+      return 'Aurora Version';
+    case ImageTagType.AURORA_SNAPSHOT_VERSION:
+      return 'Unik snapshot version';
+    case ImageTagType.BUGFIX:
+      return 'Bugfix';
+    case ImageTagType.LATEST:
+      return 'Latest';
+    case ImageTagType.MAJOR:
+      return 'Major';
+    case ImageTagType.MINOR:
+      return 'Minor';
+    case ImageTagType.SNAPSHOT:
+      return 'Snapshot';
+    case ImageTagType.COMMIT_HASH:
+      return 'Commit hash';
+    default:
+      return '';
+  }
+}

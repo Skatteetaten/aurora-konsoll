@@ -9,7 +9,8 @@ import { ITag } from 'models/Tag';
 
 export interface IUpgradeButtonProps {
   previousVersion: string;
-  newVersion: ITag;
+  tag: ITag;
+  selectedTag?: ITag;
   isRedeploying: boolean;
   hasPermissionToUpgrade: boolean;
   canUpgrade: (selectedTag?: ITag) => boolean;
@@ -20,31 +21,34 @@ export interface IUpgradeButtonProps {
 
 const UpgradeButton = ({
   previousVersion,
-  newVersion,
+  tag,
   isRedeploying,
   hasPermissionToUpgrade,
   redeployWithVersion,
   redeployWithCurrentVersion,
-  canUpgrade
+  canUpgrade,
+  handleSelectNextTag,
+  selectedTag
 }: IUpgradeButtonProps) => {
   const renderFooterButtons = (close: () => void) => {
     const onClose = () => {
-      redeployWithVersion(newVersion);
+      handleSelectNextTag(tag);
+      redeployWithVersion(tag);
       close();
     };
     return <ActionButton onClick={onClose}>Utfør</ActionButton>;
   };
 
-  const handleVersionChange = (newVersion: ITag) => {
-    return canUpgrade(newVersion) ? 'Deploy' : 'Redeploy';
+  const handleVersionChange = (tags: ITag) => {
+    return canUpgrade(tags) || isRedeploying ? 'Deploy' : 'Redeploy';
   };
 
   const redeployType = (open: () => void) => {
-    return canUpgrade(newVersion) ? open : redeployWithCurrentVersion;
+    return canUpgrade(tag) ? open : redeployWithCurrentVersion;
   };
 
   const displayTooltip = () => {
-    if (!canUpgrade(newVersion) && !isRedeploying) {
+    if (!canUpgrade(tag) && !isRedeploying) {
       return `Versjon: ${previousVersion}`;
     }
     return '';
@@ -52,18 +56,21 @@ const UpgradeButton = ({
 
   const renderOpenDialogButton = (open: () => void) => {
     return (
-      <ActionButton
-        buttonType="primary"
-        onClick={redeployType(open)}
-        title={displayTooltip()}
-        disabled={isRedeploying || !hasPermissionToUpgrade}
-      >
-        {isRedeploying && newVersion.name === previousVersion ? (
+      <>
+        {isRedeploying &&
+        JSON.stringify(selectedTag) === JSON.stringify(tag) ? (
           <Spinner />
         ) : (
-          handleVersionChange(newVersion)
+          <ActionButton
+            buttonType="primary"
+            onClick={redeployType(open)}
+            title={displayTooltip()}
+            disabled={isRedeploying || !hasPermissionToUpgrade}
+          >
+            {handleVersionChange(tag)}
+          </ActionButton>
         )}
-      </ActionButton>
+      </>
     );
   };
 
@@ -80,7 +87,7 @@ const UpgradeButton = ({
         </VersionInfo>
         <VersionInfo>
           <p>Til:</p>
-          {newVersion.name}
+          {tag.name}
         </VersionInfo>
       </>
     </InfoDialog>

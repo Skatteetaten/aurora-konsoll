@@ -3,7 +3,7 @@ import styled from 'styled-components';
 
 import DetailsList from 'aurora-frontend-react-komponenter/DetailsList';
 import Table from 'aurora-frontend-react-komponenter/Table';
-import { ImageTagType, findImageTagTypeName } from 'models/ImageTagType';
+import { ImageTagType, findImageTagTypeLabel } from 'models/ImageTagType';
 import { ITag, ITagWithDeployButton } from 'models/Tag';
 import UpgradeButton from './UpgradeButton';
 
@@ -157,13 +157,15 @@ export default class TagsList extends React.Component<
       redeployWithVersion,
       isRedeploying,
       deployedTag,
+      selectedTag,
       hasPermissionToUpgrade
     } = this.props;
 
-    const deployButton = (version: ITag) => (
+    const deployButton = (tag: ITag) => (
       <UpgradeButton
         previousVersion={deployedTag.name}
-        newVersion={version}
+        tag={tag}
+        selectedTag={selectedTag}
         handleSelectNextTag={handleSelectNextTag}
         isRedeploying={isRedeploying}
         redeployWithVersion={redeployWithVersion}
@@ -176,7 +178,7 @@ export default class TagsList extends React.Component<
     const tagsWithDeployButton = (): ITagWithDeployButton[] =>
       tags.map(it => {
         return {
-          type: findImageTagTypeName(it.type),
+          type: findImageTagTypeLabel(it.type),
           name: it.name,
           lastModified: it.lastModified,
           deploy: deployButton(it)
