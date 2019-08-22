@@ -107,6 +107,6 @@ describe('UpgradeVersionDialog', () => {
     const button = wrapper.find(ActionButton);
     expect(button).toHaveLength(1);
     expect(button.prop('disabled')).toBeTruthy();
-    expect(button.text()).toEqual('Redeploy');
+    expect(button.text()).toEqual('Deploy');
   });
 });

@@ -166,20 +166,22 @@ it('should update tags and insert new tags in the start of the array for a given
         }
       ],
       0
-    ),
-    [
-      {
-        lastModified: '28.05.2018',
-        name: '1.4',
-        type: ImageTagType.MINOR
-      },
-      {
-        lastModified: '01.05.2018',
-        name: '1.3',
-        type: ImageTagType.MINOR
-      }
-    ]
+    )
   );
+
+  tagsPagedGroup.addNewTagsPaged(ImageTagType.MINOR, [
+    {
+      lastModified: '28.05.2018',
+      name: '1.4',
+      type: ImageTagType.MINOR
+    },
+    {
+      lastModified: '01.05.2018',
+      name: '1.3',
+      type: ImageTagType.MINOR
+    }
+  ]);
+
   expect(tagsPagedGroup.getTagsPaged(ImageTagType.MINOR)).toEqual({
     endCursor: 'minor2',
     hasNextPage: true,
