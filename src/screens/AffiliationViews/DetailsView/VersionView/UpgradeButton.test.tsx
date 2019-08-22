@@ -37,13 +37,11 @@ describe('UpgradeVersionDialog', () => {
       />
     );
 
-    console.log(wrapper.html());
-
     const spinner = wrapper.find(Spinner);
     expect(spinner).toHaveLength(1);
 
     const button = wrapper.find(ActionButton);
-    expect(button).toHaveLength;
+    expect(button).toHaveLength(0);
   });
   it('should show a button and should not show a spinner when isRedeploying=true and tag!==selectedTag', () => {
     const wrapper = mount(
@@ -64,10 +62,11 @@ describe('UpgradeVersionDialog', () => {
     expect(spinner).toHaveLength(0);
 
     const button = wrapper.find(ActionButton);
-    expect(button.prop('disabled')).toBeTruthy();
     expect(button).toHaveLength(1);
+    expect(button.prop('disabled')).toBeTruthy();
+    expect(button.text()).toEqual('Deploy');
   });
-  it('should enable button and the button should display "Redeploy" when canUpgrade=false', () => {
+  it('should enable button and the button should display "Redeploy" when canUpgrade=false and tag===selectedTag', () => {
     const wrapper = mount(
       <UpgradeButton
         previousVersion="latest"
@@ -84,27 +83,30 @@ describe('UpgradeVersionDialog', () => {
     expect(spinner).toHaveLength(0);
 
     const button = wrapper.find(ActionButton);
+    expect(button).toHaveLength(1);
     expect(button.prop('disabled')).toBeFalsy();
     expect(button.text()).toEqual('Redeploy');
   });
-  it('should enable button and the button should display "Deploy" when canUpgrade=true', () => {
+  it('should disable button and the button should display "Deploy" when hasPermissionToUpgrade=false', () => {
     const wrapper = mount(
       <UpgradeButton
         previousVersion="latest"
         tag={tagFactory.build()}
+        selectedTag={tagFactory.build()}
         isRedeploying={false}
         redeployWithVersion={redeploy}
         redeployWithCurrentVersion={redeploy}
         canUpgrade={upgrade(true)}
         handleSelectNextTag={handleSelectNextTag}
-        hasPermissionToUpgrade={true}
+        hasPermissionToUpgrade={false}
       />
     );
     const spinner = wrapper.find(Spinner);
     expect(spinner).toHaveLength(0);
 
     const button = wrapper.find(ActionButton);
-    expect(button.prop('disabled')).toBeFalsy();
-    expect(button.text()).toEqual('Deploy');
+    expect(button).toHaveLength(1);
+    expect(button.prop('disabled')).toBeTruthy();
+    expect(button.text()).toEqual('Redeploy');
   });
 });
