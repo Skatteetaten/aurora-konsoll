@@ -47,22 +47,14 @@ export interface IDetailsViewProps
   findTagsPaged: (
     repository: string,
     type: ImageTagType,
-    updateTagsPaged: (
-      type: ImageTagType,
-      next: ITagsPaged,
-      newTags?: ITag[]
-    ) => void,
+    updateTagsPaged: (type: ImageTagType, next: ITagsPaged) => void,
     first: number,
     current: ITagsPaged
   ) => void;
   findNewTagsPaged: (
     repository: string,
     type: ImageTagType,
-    updateTagsPaged: (
-      type: ImageTagType,
-      next: ITagsPaged,
-      newTags?: ITag[]
-    ) => void,
+    updateTagsPaged: (type: ImageTagType, newTags: ITag[]) => void,
     current: ITagsPaged
   ) => void;
   findTagsPagedResponse: ITagsPaged;
@@ -166,19 +158,19 @@ export default class DetailsViewController {
 
     const current: ITagsPaged = this.sm.tag.getTagsPaged(selectedTagType);
 
-    const updateTagsPaged = (
-      type: ImageTagType,
-      next: ITagsPaged,
-      newTags?: ITag[]
-    ) => {
-      this.sm.tag.updateTagsPaged(type, next, newTags);
+    const updateTagsPaged = (type: ImageTagType, next: ITagsPaged) => {
+      this.sm.tag.updateTagsPaged(type, next);
+    };
+
+    const addNewTagsPaged = (type: ImageTagType, newTags: ITag[]) => {
+      this.sm.tag.addNewTagsPaged(type, newTags);
     };
 
     const fetchNewTags = async () =>
       await findNewTagsPaged(
         deployment.repository,
         selectedTagType,
-        updateTagsPaged,
+        addNewTagsPaged,
         current
       );
 

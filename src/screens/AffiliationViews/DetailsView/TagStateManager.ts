@@ -9,14 +9,25 @@ export class TagStateManager extends StateManager<ITagsPagedGroup> {
 
   public updateTagsPaged(
     type: ImageTagType,
-    next: ITagsPaged,
-    newTags?: ITag[]
+    next: ITagsPaged
   ) {
     const name = findImageTagTypeName(type);
 
     this.updateState(state => ({
       ...state,
-      [name]: this.updateTags(state[name], next, newTags)
+      [name]: this.updateTags(state[name], next)
+    }));
+  }
+
+  public addNewTagsPaged(
+    type: ImageTagType,
+    newTags: ITag[] 
+  ) {
+    const name = findImageTagTypeName(type);
+
+    this.updateState(state => ({
+      ...state,
+      [name]: this.addNewTags(type, newTags)
     }));
   }
 
@@ -62,20 +73,18 @@ export class TagStateManager extends StateManager<ITagsPagedGroup> {
     return tagsCount > 0;
   }
 
-  private updateTags(
-    old: ITagsPaged,
-    next: ITagsPaged,
-    newTags?: ITag[]
-  ): ITagsPaged {
-    if (newTags && newTags.length > 0) {
-      return {
-        ...next,
-        tags: [...newTags, ...old.tags, ...next.tags]
-      };
-    }
+  private updateTags(old: ITagsPaged, next: ITagsPaged): ITagsPaged {
     return {
       ...next,
       tags: [...old.tags, ...next.tags]
+    };
+  }
+
+  public addNewTags(type: ImageTagType, newTags: ITag[]): ITagsPaged {
+    const currentTags = this.getTagsPaged(type);
+    return {
+      ...currentTags,
+      tags: [...newTags, ...currentTags.tags]
     };
   }
 }

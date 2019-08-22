@@ -42,22 +42,14 @@ interface IApplicationDeploymentSelectorConnectedProps {
   getTagsPaged: (
     repository: string,
     type: ImageTagType,
-    updateTagsPaged: (
-      type: ImageTagType,
-      next: ITagsPaged,
-      newTags?: ITag[]
-    ) => void,
+    updateTagsPaged: (type: ImageTagType, next: ITagsPaged) => void,
     first: number,
     current: ITagsPaged
   ) => void;
   getNewTagsPaged: (
     repository: string,
     type: ImageTagType,
-    updateTagsPaged: (
-      type: ImageTagType,
-      next: ITagsPaged,
-      newTags?: ITag[]
-    ) => void,
+    updateTagsPaged: (type: ImageTagType, newTags: ITag[]) => void,
     current: ITagsPaged
   ) => void;
   getAllApplicationDeployments: (affiliation: string) => void;
@@ -181,22 +173,14 @@ export const ApplicationDeploymentSelectorConnected = connect(
     getTagsPaged: (
       repository: string,
       type: ImageTagType,
-      updateTagsPaged: (
-        type: ImageTagType,
-        next: ITagsPaged,
-        newTags?: ITag[]
-      ) => void,
+      updateTagsPaged: (type: ImageTagType, next: ITagsPaged) => void,
       first: number,
       current: ITagsPaged
     ) => findTagsPaged(repository, type, updateTagsPaged, first, current),
     getNewTagsPaged: (
       repository: string,
       type: ImageTagType,
-      updateTagsPaged: (
-        type: ImageTagType,
-        next: ITagsPaged,
-        newTags?: ITag[]
-      ) => void,
+      updateTagsPaged: (type: ImageTagType, newTags: ITag[]) => void,
       current: ITagsPaged
     ) => findNewTagsPaged(repository, type, updateTagsPaged, current),
     getApplicationDeploymentDetails: (id: string) =>

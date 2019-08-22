@@ -47,13 +47,6 @@ const UpgradeButton = ({
     return canUpgrade(tag) ? open : redeployWithCurrentVersion;
   };
 
-  const displayTooltip = () => {
-    if (!canUpgrade(tag) && !isRedeploying) {
-      return `Versjon: ${previousVersion}`;
-    }
-    return '';
-  };
-
   const renderOpenDialogButton = (open: () => void) => {
     return (
       <>
@@ -64,7 +57,6 @@ const UpgradeButton = ({
           <ActionButton
             buttonType="primary"
             onClick={redeployType(open)}
-            title={displayTooltip()}
             disabled={isRedeploying || !hasPermissionToUpgrade}
           >
             {handleVersionChange(tag)}

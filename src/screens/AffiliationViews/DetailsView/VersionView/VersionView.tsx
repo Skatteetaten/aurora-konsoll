@@ -72,14 +72,12 @@ const VersionView = ({
 
   return (
     <div className={className}>
-      <div className="g-control-group">
-        {hasPermissionToUpgrade ? null : (
-          <MessageBar>
-            Ikke mulig å deploye nåværende eller annen versjon. Årsak: Mangler
-            admin rettigheter.
-          </MessageBar>
-        )}
-      </div>
+      {hasPermissionToUpgrade ? null : (
+        <MessageBar>
+          Ikke mulig å deploye nåværende eller annen versjon. Årsak: Mangler
+          admin rettigheter.
+        </MessageBar>
+      )}
       <div className="g-action-bar">
         <TagTypeSelector
           imageTagType={selectedTagType}
