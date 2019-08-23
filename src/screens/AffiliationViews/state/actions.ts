@@ -94,15 +94,14 @@ export const findAllApplicationDeployments: Thunk = (
   } else {
     const r = result.data.applications.edges.reduce(
       (acc: IApplicationDeployment[], { node }) => {
-        const { applicationDeployments, imageRepository } = node;
+        const { applicationDeployments } = node;
         const deployments = applicationDeployments.map(app => ({
           affiliation: app.affiliation.name,
           environment: app.environment,
           id: app.id,
           name: app.name,
           permission: app.namespace.permission,
-          repository: app.imageRepository.repository,
-          guiUrl: app.imageRepository.guiUrl ? app.imageRepository.guiUrl + app.version.deployTag.name : '',
+          imageRepository: app.imageRepository,
           status: {
             code: app.status.code,
             reasons: app.status.reasons,

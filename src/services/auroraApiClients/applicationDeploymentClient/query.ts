@@ -19,7 +19,7 @@ interface IApplication {
   applicationDeployments: IApplicationDeployment[];
 }
 
-interface IImageRepository {
+export interface IImageRepository {
   repository: string;
   guiUrl?: string;
 }
@@ -43,7 +43,7 @@ export interface IStatusCheck {
 interface IApplicationDeployment {
   id: string;
   name: string;
-  imageRepository?: IImageRepository;
+  imageRepository: IImageRepository;
   affiliation: {
     name: string;
   };
@@ -74,8 +74,8 @@ export const APPLICATIONS_QUERY = gql`
           name
           applicationDeployments {
             imageRepository {
-                repository
-                guiUrl
+              repository
+              guiUrl
             }
             id
             name

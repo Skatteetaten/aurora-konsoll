@@ -151,7 +151,7 @@ export default class DetailsViewController {
     const updateTagsPaged = (type: ImageTagType, next: ITagsPaged) =>
       this.sm.tag.updateTagsPaged(type, next);
     await findTagsPaged(
-      deployment.repository,
+      deployment.imageRepository.repository,
       selectedTagType,
       updateTagsPaged,
       15,
@@ -184,17 +184,17 @@ export default class DetailsViewController {
   };
 
   public onMount = () => {
-    const { id, repository } = this.component.props.deployment;
+    const { id, imageRepository } = this.component.props.deployment;
     const {
       findApplicationDeploymentDetails,
       findGroupedTagsPaged
     } = this.component.props;
 
     findApplicationDeploymentDetails(id);
-    if (repository) {
+    if (imageRepository.repository) {
       const setTagsPagedGroup = (tagsPagedGroup: ITagsPagedGroup) =>
         this.sm.tag.setTagsPagedGroup(tagsPagedGroup);
-      findGroupedTagsPaged(repository, setTagsPagedGroup);
+      findGroupedTagsPaged(imageRepository.repository, setTagsPagedGroup);
     }
   };
 
