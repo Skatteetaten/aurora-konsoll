@@ -77,6 +77,7 @@ class DetailsView extends React.Component<
       deploymentDetails,
       isFetchingDetails,
       isFetchingTags,
+      isFetchingGroupedTags,
       isRedeploying,
       isRefreshingApplicationDeployment
     } = this.props;
@@ -121,6 +122,7 @@ class DetailsView extends React.Component<
                   versionSearchText
                 )}
                 isFetchingTags={isFetchingTags}
+                isFetchingGroupedTags={isFetchingGroupedTags}
                 isRedeploying={isRedeploying}
                 canUpgrade={this.controller.canUpgrade}
                 handleSelectNextTag={this.controller.handleSelectNextTag}

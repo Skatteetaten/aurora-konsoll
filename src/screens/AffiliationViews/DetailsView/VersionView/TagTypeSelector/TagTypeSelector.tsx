@@ -13,7 +13,6 @@ export interface IImageTagTypeOption {
   key: ImageTagType;
   tag: ImageTagType;
   text: string;
-  onRenderLabel?: (options: IImageTagTypeOption) => JSX.Element;
 }
 
 interface ITagTypeSelector {
@@ -37,9 +36,9 @@ const TagTypeSelector = ({
     const imageTagTypeName = findImageTagTypeName(type);
     if (findGroupedTagsPagedResult.auroraSnapshotVersion.totalCount > 0) {
       const tagsCount = Object.entries(findGroupedTagsPagedResult).reduce(
-        (acc, k) => {
+        (acc, k: [string, ITagsPaged]) => {
           if (k[0] === imageTagTypeName) {
-            return acc + (k[1] as ITagsPaged).totalCount;
+            return acc + k[1].totalCount;
           } else {
             return acc;
           }
@@ -89,12 +88,21 @@ const TagTypeSelector = ({
 const onRenderOption = (item: IComboBoxOption): JSX.Element => {
   const option = item.text;
   return (
-    <p>
-      <b>{option.split('-').slice(0, 1)}</b>
+    <StyledOptions>
+      <div className="bold-options">{option.split('-').slice(0, 1)}</div>
       {option.split(/(?=-)/g).slice(1, 2)}
-    </p>
+    </StyledOptions>
   );
 };
+
+const StyledOptions = styled.div`
+  display: inline-flex;
+  white-space: pre-wrap;
+  margin: 10px 0 10px 0;
+  .bold-options {
+    font-weight: bold;
+  }
+`;
 
 const RadioButtonWrapper = styled.div`
   .ms-ChoiceField-wrapper {

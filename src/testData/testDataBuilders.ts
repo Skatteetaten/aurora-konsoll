@@ -515,6 +515,7 @@ export const affiliationViewStateFactory = Factory.Sync.makeFactory<
   userSettings: userSettingsFactory.build(),
   isRedeploying: false,
   isFetchingTags: false,
+  isFetchingGroupedTags: false,
   isFetchingDetails: false
 });
 

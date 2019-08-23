@@ -57,6 +57,7 @@ interface IApplicationDeploymentSelectorConnectedProps {
   findTagsPagedResponse: ITagsPaged;
   findGroupedTagsPagedResult: ITagsPagedGroup;
   isFetchingTags: boolean;
+  isFetchingGroupedTags: boolean;
   isRefreshingApplicationDeployment: boolean;
   isRedeploying: boolean;
   isFetchingDetails: boolean;
@@ -87,6 +88,7 @@ const ApplicationDeploymentSelector = ({
   getNewTagsPaged,
   findTagsPagedResponse,
   isFetchingTags,
+  isFetchingGroupedTags,
   isFetchingDetails,
   findGroupedTagsPagedResult,
   isRefreshingApplicationDeployment,
@@ -120,6 +122,7 @@ const ApplicationDeploymentSelector = ({
       findTagsPagedResponse={findTagsPagedResponse}
       affiliation={affiliation}
       isFetchingTags={isFetchingTags}
+      isFetchingGroupedTags={isFetchingGroupedTags}
       isFetchingDetails={isFetchingDetails}
     />
   );
@@ -137,6 +140,7 @@ const mapStateToProps = (state: RootState) => ({
     state.affiliationView.applicationDeploymentDetails,
   isRedeploying: state.affiliationView.isRedeploying,
   isFetchingTags: state.affiliationView.isFetchingTags,
+  isFetchingGroupedTags: state.affiliationView.isFetchingGroupedTags,
   isFetchingDetails: state.affiliationView.isFetchingDetails
 });
 

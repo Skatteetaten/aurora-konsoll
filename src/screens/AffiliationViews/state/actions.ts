@@ -77,6 +77,10 @@ export const fetchTagsRequest = createAction<boolean>(
   affiliationViewAction('FETCH_TAGS_REQUEST')
 );
 
+export const fetchGroupedTagsRequest = createAction<boolean>(
+  affiliationViewAction('FETCH_GROUPED_TAGS_REQUEST')
+);
+
 export const refreshAffiliations: Thunk = (affiliations: string[]) => async (
   dispatch,
   getState,
@@ -325,7 +329,7 @@ export const findGroupedTagsPaged: Thunk = (
   repository: string,
   setTagsPagedGroup: (tagsPagedGroup: ITagsPagedGroup) => void
 ) => async (dispatch, getState, { clients }) => {
-  dispatch(fetchTagsRequest(true));
+  dispatch(fetchGroupedTagsRequest(true));
   const result = await clients.imageRepositoryClient.findGroupedTagsPaged(
     repository
   );
@@ -355,7 +359,7 @@ export const findGroupedTagsPaged: Thunk = (
     setTagsPagedGroup(normalizedTags);
     dispatch(findGroupedTagsPagedResponse(normalizedTags));
   }
-  dispatch(fetchTagsRequest(false));
+  dispatch(fetchGroupedTagsRequest(false));
 };
 
 export const findApplicationDeploymentDetails: Thunk = (

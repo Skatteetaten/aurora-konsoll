@@ -3,6 +3,8 @@ import styled from 'styled-components';
 
 import DetailsList from 'aurora-frontend-react-komponenter/DetailsList';
 import Table from 'aurora-frontend-react-komponenter/Table';
+import Spinner from 'components/Spinner';
+
 import { ImageTagType, findImageTagTypeLabel } from 'models/ImageTagType';
 import { ITag, ITagWithDeployButton } from 'models/Tag';
 import UpgradeButton from './UpgradeButton';

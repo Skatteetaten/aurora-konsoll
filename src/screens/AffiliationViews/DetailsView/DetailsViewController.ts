@@ -63,6 +63,7 @@ export interface IDetailsViewProps
   isRedeploying: boolean;
   isFetchingDetails: boolean;
   isFetchingTags: boolean;
+  isFetchingGroupedTags: boolean;
   affiliation: string;
 }
 
@@ -233,7 +234,13 @@ export default class DetailsViewController {
   public getVersionViewUnavailableMessage():
     | IUnavailableServiceMessage
     | undefined {
-    const { deploymentSpec } = this.component.props.deploymentDetails;
+    const {
+      isFetchingTags,
+      isFetchingGroupedTags,
+      deploymentDetails
+    } = this.component.props;
+    const { deploymentSpec } = deploymentDetails;
+
     const serviceUnavailableBecause = unavailableServiceMessageCreator(
       'Det er ikke mulig å endre versjonen på denne applikasjonen'
     );
@@ -244,7 +251,11 @@ export default class DetailsViewController {
       );
     }
 
-    if (!this.sm.tag.containsTags() && !this.component.props.isFetchingTags) {
+    if (
+      !this.sm.tag.containsTags() &&
+      !isFetchingTags &&
+      !isFetchingGroupedTags
+    ) {
       return serviceUnavailableBecause('Det finnes ingen tilgjengelig tags');
     }
 
