@@ -101,7 +101,8 @@ export const findAllApplicationDeployments: Thunk = (
           id: app.id,
           name: app.name,
           permission: app.namespace.permission,
-          repository: imageRepository ? imageRepository.repository : '',
+          repository: app.imageRepository.repository,
+          guiUrl: app.imageRepository.guiUrl ? app.imageRepository.guiUrl + app.version.deployTag.name : '',
           status: {
             code: app.status.code,
             reasons: app.status.reasons,
