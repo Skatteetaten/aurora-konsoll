@@ -4,7 +4,10 @@ import ComboBox from 'aurora-frontend-react-komponenter/ComboBox';
 
 import { IComboBoxOption } from 'office-ui-fabric-react/lib/index';
 
-import { ImageTagType, findImageTagTypeName } from 'models/ImageTagType';
+import {
+  ImageTagType,
+  findImageTagTypeNameAndLabel
+} from 'models/ImageTagType';
 import styled from 'styled-components';
 import { getOptionLabel } from './TagOption';
 import { ITagsPagedGroup, ITagsPaged } from 'models/Tag';
@@ -32,8 +35,8 @@ const TagTypeSelector = ({
     handleSelectStrategy(e, option);
   };
 
-  function groupedTagsTotalCount(type: ImageTagType) {
-    const imageTagTypeName = findImageTagTypeName(type);
+  function groupedTagsTotalCount(type: ImageTagType): number | undefined {
+    const imageTagTypeName = findImageTagTypeNameAndLabel(type).name;
     if (findGroupedTagsPagedResult.auroraSnapshotVersion.totalCount > 0) {
       const tagsCount = Object.entries(findGroupedTagsPagedResult).reduce(
         (acc, k: [string, ITagsPaged]) => {
@@ -49,23 +52,25 @@ const TagTypeSelector = ({
     }
   }
 
-  function createOption(type: ImageTagType, text: string): IImageTagTypeOption {
+  function createOption(type: ImageTagType): IImageTagTypeOption {
     return {
       key: type,
       tag: type,
-      text: `(${groupedTagsTotalCount(type)}) ${text} - ${getOptionLabel(type)}`
+      text: `(${groupedTagsTotalCount(type)}) ${
+        findImageTagTypeNameAndLabel(type).label
+      } - ${getOptionLabel(type)}`
     };
   }
 
   const versionStategyOptions: IImageTagTypeOption[] = [
-    createOption(ImageTagType.MAJOR, 'Major'),
-    createOption(ImageTagType.MINOR, 'Minor'),
-    createOption(ImageTagType.BUGFIX, 'Bugfix'),
-    createOption(ImageTagType.LATEST, 'Latest'),
-    createOption(ImageTagType.SNAPSHOT, 'Snapshot'),
-    createOption(ImageTagType.AURORA_SNAPSHOT_VERSION, 'Unik snapshot version'),
-    createOption(ImageTagType.COMMIT_HASH, 'Commit hash'),
-    createOption(ImageTagType.AURORA_VERSION, 'Aurora version')
+    createOption(ImageTagType.MAJOR),
+    createOption(ImageTagType.MINOR),
+    createOption(ImageTagType.BUGFIX),
+    createOption(ImageTagType.LATEST),
+    createOption(ImageTagType.SNAPSHOT),
+    createOption(ImageTagType.AURORA_SNAPSHOT_VERSION),
+    createOption(ImageTagType.COMMIT_HASH),
+    createOption(ImageTagType.AURORA_VERSION)
   ];
   return (
     <div className={className}>

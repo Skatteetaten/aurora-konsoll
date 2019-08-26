@@ -82,7 +82,7 @@ const VersionView = ({
               admin rettigheter.
             </MessageBar>
           )}
-          <div className="g-action-bar">
+          <div className="action-bar">
             <TagTypeSelector
               imageTagType={selectedTagType}
               handleSelectStrategy={handleSelectStrategy}
@@ -96,7 +96,7 @@ const VersionView = ({
               />
             </div>
           </div>
-          <div className="g-details-list">
+          <div className="details-list">
             <TagsList
               tags={tagsPaged.tags}
               imageTagType={selectedTagType}
@@ -150,7 +150,7 @@ export default styled(VersionView)`
   margin-left: 30px;
   max-width: 1400px;
 
-  .g-action-bar {
+  .action-bar {
     margin-bottom: 10px;
     max-width: 850px;
     display: flex;
@@ -158,9 +158,7 @@ export default styled(VersionView)`
     align-items: flex-end;
   }
 
-  .g-control-group {
-  }
-  .g-details-list {
+  .details-list {
     max-width: 1400px;
     max-height: 800px;
     margin-top: 30px;
@@ -174,19 +172,5 @@ export default styled(VersionView)`
 
   .tags-action > div:first-child {
     margin: 20px 0 15px 0;
-  }
-
-  .unavailable-upgrade-message {
-    margin-top: 30px;
-  }
-`;
-
-const ButtonWrapper = styled.div`
-  display: flex;
-  flex-direction: column;
-  max-width: 250px;
-
-  button {
-    margin: 20px 0 10px 0;
   }
 `;

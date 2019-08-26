@@ -9,48 +9,32 @@ export enum ImageTagType {
   COMMIT_HASH = 'COMMIT_HASH'
 }
 
-export function findImageTagTypeName(type: ImageTagType): string {
-  switch (type) {
-    case ImageTagType.AURORA_VERSION:
-      return 'auroraVersion';
-    case ImageTagType.AURORA_SNAPSHOT_VERSION:
-      return 'auroraSnapshotVersion';
-    case ImageTagType.BUGFIX:
-      return 'bugfix';
-    case ImageTagType.LATEST:
-      return 'latest';
-    case ImageTagType.MAJOR:
-      return 'major';
-    case ImageTagType.MINOR:
-      return 'minor';
-    case ImageTagType.SNAPSHOT:
-      return 'snapshot';
-    case ImageTagType.COMMIT_HASH:
-      return 'commitHash';
-    default:
-      return '';
-  }
+interface IImageTagTypeNameAndLabel {
+  name: string;
+  label: string;
 }
 
-export function findImageTagTypeLabel(type: ImageTagType): string {
+export function findImageTagTypeNameAndLabel(
+  type: ImageTagType
+): IImageTagTypeNameAndLabel {
   switch (type) {
     case ImageTagType.AURORA_VERSION:
-      return 'Aurora Version';
+      return { name: 'auroraVersion', label: 'Aurora Version' };
     case ImageTagType.AURORA_SNAPSHOT_VERSION:
-      return 'Unik snapshot version';
+      return { name: 'auroraSnapshotVersion', label: 'Unik snapshot version' };
     case ImageTagType.BUGFIX:
-      return 'Bugfix';
+      return { name: 'bugfix', label: 'Bugfix' };
     case ImageTagType.LATEST:
-      return 'Latest';
+      return { name: 'latest', label: 'Latest' };
     case ImageTagType.MAJOR:
-      return 'Major';
+      return { name: 'major', label: 'Major' };
     case ImageTagType.MINOR:
-      return 'Minor';
+      return { name: 'minor', label: 'Minor' };
     case ImageTagType.SNAPSHOT:
-      return 'Snapshot';
+      return { name: 'snapshot', label: 'Snapshot' };
     case ImageTagType.COMMIT_HASH:
-      return 'Commit hash';
+      return { name: 'commitHash', label: 'Commit hash' };
     default:
-      return '';
+      return { name: '', label: '' };
   }
 }

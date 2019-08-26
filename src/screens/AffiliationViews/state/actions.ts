@@ -256,7 +256,11 @@ function filterNewTagsWithCurrentTags(
 export const findNewTagsPaged: Thunk = (
   repository: string,
   type: ImageTagType,
-  updateTagsPaged: (type: ImageTagType, newTags: ITag[]) => void,
+  updateTagsPaged: (
+    type: ImageTagType,
+    next?: ITagsPaged,
+    newTags?: ITag[]
+  ) => void,
   current: ITagsPaged
 ) => async (dispatch, getState, { clients }) => {
   dispatch(fetchTagsRequest(true));
@@ -281,7 +285,11 @@ export const findNewTagsPaged: Thunk = (
   } else {
     const { imageRepositories } = newestTags.data;
     if (filterNewTagsWithCurrentTags(newestTags, current).length > 0) {
-      updateTagsPaged(type, filterNewTagsWithCurrentTags(newestTags, current));
+      updateTagsPaged(
+        type,
+        undefined,
+        filterNewTagsWithCurrentTags(newestTags, current)
+      );
     }
     dispatch(findTagsPagedResponse(toTagsPaged(imageRepositories[0].tags)));
   }
@@ -291,7 +299,11 @@ export const findNewTagsPaged: Thunk = (
 export const findTagsPaged: Thunk = (
   repository: string,
   type: ImageTagType,
-  updateTagsPaged: (type: ImageTagType, next: ITagsPaged) => void,
+  updateTagsPaged: (
+    type: ImageTagType,
+    next?: ITagsPaged,
+    newTags?: ITag[]
+  ) => void,
   first: number,
   current: ITagsPaged
 ) => async (dispatch, getState, { clients }) => {

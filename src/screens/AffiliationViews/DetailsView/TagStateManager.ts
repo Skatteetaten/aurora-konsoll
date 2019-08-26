@@ -1,4 +1,7 @@
-import { findImageTagTypeName, ImageTagType } from 'models/ImageTagType';
+import {
+  findImageTagTypeNameAndLabel,
+  ImageTagType
+} from 'models/ImageTagType';
 import StateManager from 'models/StateManager';
 import { ITag, ITagsPaged, ITagsPagedGroup } from 'models/Tag';
 
@@ -9,30 +12,28 @@ export class TagStateManager extends StateManager<ITagsPagedGroup> {
 
   public updateTagsPaged(
     type: ImageTagType,
-    next: ITagsPaged
-  ) {
-    const name = findImageTagTypeName(type);
+    next?: ITagsPaged,
+    newTags?: ITag[]
+  ): void {
+    const name = findImageTagTypeNameAndLabel(type).name;
+
+    const updateTags = (state: ITagsPagedGroup) => {
+      if (next && next.tags.length > 0) {
+        return this.addOldTags(state[name], next);
+      } else if (newTags && newTags.length > 0) {
+        return this.addNewTags(type, newTags);
+      }
+      return undefined;
+    };
 
     this.updateState(state => ({
       ...state,
-      [name]: this.updateTags(state[name], next)
-    }));
-  }
-
-  public addNewTagsPaged(
-    type: ImageTagType,
-    newTags: ITag[] 
-  ) {
-    const name = findImageTagTypeName(type);
-
-    this.updateState(state => ({
-      ...state,
-      [name]: this.addNewTags(type, newTags)
+      [name]: updateTags(state)
     }));
   }
 
   public getTagsPaged(type: ImageTagType): ITagsPaged {
-    const name = findImageTagTypeName(type);
+    const name = findImageTagTypeNameAndLabel(type).name;
     return this.getState()[name];
   }
 
@@ -64,7 +65,7 @@ export class TagStateManager extends StateManager<ITagsPagedGroup> {
     };
   }
 
-  public containsTags() {
+  public containsTags(): boolean {
     const state = this.getState();
     const tagsCount = Object.keys(state).reduce((acc, k) => {
       return acc + (state[k] as ITagsPaged).tags.length;
@@ -73,7 +74,7 @@ export class TagStateManager extends StateManager<ITagsPagedGroup> {
     return tagsCount > 0;
   }
 
-  private updateTags(old: ITagsPaged, next: ITagsPaged): ITagsPaged {
+  private addOldTags(old: ITagsPaged, next: ITagsPaged): ITagsPaged {
     return {
       ...next,
       tags: [...old.tags, ...next.tags]

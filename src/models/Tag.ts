@@ -6,7 +6,7 @@ export interface ITag {
   lastModified: string;
 }
 
-export interface ITagWithDeployButton {
+export interface ITagTable {
   deploy: JSX.Element;
   name: string;
   type: string;
