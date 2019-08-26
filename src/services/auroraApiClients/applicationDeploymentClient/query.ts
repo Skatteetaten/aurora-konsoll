@@ -43,7 +43,7 @@ export interface IStatusCheck {
 interface IApplicationDeployment {
   id: string;
   name: string;
-  imageRepository: IImageRepository;
+  imageRepository?: IImageRepository;
   affiliation: {
     name: string;
   };

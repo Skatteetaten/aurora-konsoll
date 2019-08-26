@@ -12,7 +12,7 @@ export interface IApplicationDeployment {
   id: string;
   affiliation: string;
   name: string;
-  imageRepository: IImageRepository;
+  imageRepository?: IImageRepository;
   environment: string;
   status: IApplicationDeploymentStatus;
   version: {

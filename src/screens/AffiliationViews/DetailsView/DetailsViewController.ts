@@ -150,13 +150,15 @@ export default class DetailsViewController {
 
     const updateTagsPaged = (type: ImageTagType, next: ITagsPaged) =>
       this.sm.tag.updateTagsPaged(type, next);
-    await findTagsPaged(
-      deployment.imageRepository.repository,
-      selectedTagType,
-      updateTagsPaged,
-      15,
-      cursor
-    );
+    if (deployment.imageRepository) {
+      await findTagsPaged(
+        deployment.imageRepository.repository,
+        selectedTagType,
+        updateTagsPaged,
+        15,
+        cursor
+      );
+    }
   };
 
   public handleSelectStrategy = (e: Event, option: IImageTagTypeOption) => {
@@ -191,7 +193,8 @@ export default class DetailsViewController {
     } = this.component.props;
 
     findApplicationDeploymentDetails(id);
-    if (imageRepository.repository) {
+
+    if (imageRepository && imageRepository.guiUrl) {
       const setTagsPagedGroup = (tagsPagedGroup: ITagsPagedGroup) =>
         this.sm.tag.setTagsPagedGroup(tagsPagedGroup);
       findGroupedTagsPaged(imageRepository.repository, setTagsPagedGroup);
