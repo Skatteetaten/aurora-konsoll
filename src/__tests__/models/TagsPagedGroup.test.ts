@@ -169,7 +169,7 @@ it('should update tags and insert new tags in the start of the array for a given
     )
   );
 
-  tagsPagedGroup.addNewTagsPaged(ImageTagType.MINOR, [
+  tagsPagedGroup.updateTagsPaged(ImageTagType.MINOR, undefined, [
     {
       lastModified: '28.05.2018',
       name: '1.4',
