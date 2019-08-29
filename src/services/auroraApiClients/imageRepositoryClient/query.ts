@@ -35,7 +35,7 @@ export interface IImageTagsConnection {
 export interface IImageTag {
   name: string;
   type: ImageTagType;
-  image: {
+  image?: {
     buildTime: string;
   };
 }

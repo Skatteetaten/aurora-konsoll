@@ -7,7 +7,12 @@ import {
   addErrors,
   addCurrentErrors
 } from 'screens/ErrorHandler/state/actions';
-import { defaultTagsPagedGroup, ITagsPagedGroup, ITagsPaged } from 'models/Tag';
+import {
+  defaultTagsPagedGroup,
+  ITagsPagedGroup,
+  ITagsPaged,
+  ITag
+} from 'models/Tag';
 import { IUserSettings } from 'models/UserSettings';
 import { createAction } from 'redux-ts-utils';
 import { Thunk } from 'store/types';
@@ -350,11 +355,15 @@ export const toTagsPaged = (
   return {
     endCursor: pageInfo.endCursor,
     hasNextPage: pageInfo.hasNextPage,
-    tags: edges.map(edge => ({
-      lastModified: edge.node.image.buildTime,
-      name: edge.node.name,
-      type: edge.node.type
-    }))
+    tags: edges.reduce((arr: ITag[], edge) => {
+      if (edge.node.image && edge.node.image.buildTime)
+        arr.push({
+          lastModified: edge.node.image.buildTime,
+          name: edge.node.name,
+          type: edge.node.type
+        });
+      return arr;
+    }, [])
   };
 };
 
