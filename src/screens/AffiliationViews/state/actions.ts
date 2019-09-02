@@ -356,12 +356,13 @@ export const toTagsPaged = (
     endCursor: pageInfo.endCursor,
     hasNextPage: pageInfo.hasNextPage,
     tags: edges.reduce((arr: ITag[], edge) => {
-      if (edge.node.image && edge.node.image.buildTime)
+      if (edge.node.image) {
         arr.push({
           lastModified: edge.node.image.buildTime,
           name: edge.node.name,
           type: edge.node.type
         });
+      }
       return arr;
     }, [])
   };
