@@ -39,27 +39,30 @@ const UpgradeButton = ({
     return <ActionButton onClick={onClose}>Utfør</ActionButton>;
   };
 
-  const handleVersionChange = (tags: ITag) => {
-    return canUpgrade(tags) || isRedeploying ? 'Deploy' : 'Redeploy';
-  };
+  const handleVersionChange =
+    canUpgrade(tag) || isRedeploying ? 'Deploy' : 'Redeploy';
 
   const redeployType = (open: () => void) => {
     return canUpgrade(tag) ? open : redeployWithCurrentVersion;
   };
 
   const renderOpenDialogButton = (open: () => void) => {
+    const isSelectedVersion =
+      JSON.stringify(selectedTag) === JSON.stringify(tag) ||
+      (previousVersion === tag.name && !selectedTag);
+
     return (
       <>
-        {isRedeploying &&
-        JSON.stringify(selectedTag) === JSON.stringify(tag) ? (
+        {isRedeploying && isSelectedVersion ? (
           <Spinner />
         ) : (
           <ActionButton
             buttonType="primary"
+            icon="Deploy"
             onClick={redeployType(open)}
             disabled={isRedeploying || !hasPermissionToUpgrade}
           >
-            {handleVersionChange(tag)}
+            {handleVersionChange}
           </ActionButton>
         )}
       </>
