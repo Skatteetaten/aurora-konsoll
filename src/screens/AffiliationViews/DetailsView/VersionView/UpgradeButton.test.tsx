@@ -64,7 +64,7 @@ describe('UpgradeVersionDialog', () => {
     const button = wrapper.find(ActionButton);
     expect(button).toHaveLength(1);
     expect(button.prop('disabled')).toBeTruthy();
-    expect(button.text()).toEqual('Deploy');
+    expect(button.text()).toContain('Deploy');
   });
   it('should enable button and the button should display "Redeploy" when canUpgrade=false and tag===selectedTag', () => {
     const wrapper = mount(
@@ -85,7 +85,7 @@ describe('UpgradeVersionDialog', () => {
     const button = wrapper.find(ActionButton);
     expect(button).toHaveLength(1);
     expect(button.prop('disabled')).toBeFalsy();
-    expect(button.text()).toEqual('Redeploy');
+    expect(button.text()).toContain('Redeploy');
   });
   it('should disable button and the button should display "Deploy" when hasPermissionToUpgrade=false', () => {
     const wrapper = mount(
@@ -107,6 +107,6 @@ describe('UpgradeVersionDialog', () => {
     const button = wrapper.find(ActionButton);
     expect(button).toHaveLength(1);
     expect(button.prop('disabled')).toBeTruthy();
-    expect(button.text()).toEqual('Deploy');
+    expect(button.text()).toContain('Deploy');
   });
 });
