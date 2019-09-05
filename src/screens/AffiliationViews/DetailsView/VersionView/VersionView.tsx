@@ -149,8 +149,8 @@ const VersionView = ({
                   title="Vis info"
                   content={
                     <p>
-                      Hver gang man laster inn tags vil det det alltid hentes de
-                      5 nyeste tagene for typen.
+                      Hver gang man laster inn tags så vil det alltid hentes de
+                      nyeste tagene i tillegg.
                     </p>
                   }
                 />
