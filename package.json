@@ -71,7 +71,7 @@
     "@types/react-select": "2.0.17",
     "@types/styled-components": "4.1.18",
     "@types/uuid": "3.4.5",
-    "aurora-ci-scripts": "0.3.1",
+    "aurora-ci-scripts": "1.0.1",
     "dotenv": "7.0.0",
     "enzyme": "3.10.0",
     "enzyme-adapter-react-16": "1.14.0",

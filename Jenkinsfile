@@ -8,7 +8,6 @@ def overrides = [
     jiraFiksetIKomponentversjon: true,
     chatRoom: "#aos-notifications",
     npmInstallCommand: 'ci',
-    iq: true,
     iqOrganizationName: "Team AOS",
     nodeVersion: "10",
     versionStrategy: [
