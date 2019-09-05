@@ -1,7 +1,4 @@
-import {
-  findImageTagTypeNameAndLabel,
-  ImageTagType
-} from 'models/ImageTagType';
+import { findImageTagTypeName, ImageTagType } from 'models/ImageTagType';
 import StateManager from 'models/StateManager';
 import { ITag, ITagsPaged, ITagsPagedGroup } from 'models/Tag';
 
@@ -13,17 +10,12 @@ export class TagStateManager extends StateManager<ITagsPagedGroup> {
   public updateTagsPaged(
     type: ImageTagType,
     next?: ITagsPaged,
-    newTags?: ITag[]
+    newTags?: ITagsPaged
   ): void {
-    const name = findImageTagTypeNameAndLabel(type).name;
+    const name = findImageTagTypeName(type);
 
     const updateTags = (state: ITagsPagedGroup) => {
-      if (next && next.tags.length > 0) {
-        return this.addOldTags(state[name], next);
-      } else if (newTags && newTags.length > 0) {
-        return this.addNewTags(type, newTags);
-      }
-      return undefined;
+      return this.addTags(state[name], next, newTags);
     };
 
     this.updateState(state => ({
@@ -33,7 +25,7 @@ export class TagStateManager extends StateManager<ITagsPagedGroup> {
   }
 
   public getTagsPaged(type: ImageTagType): ITagsPaged {
-    const name = findImageTagTypeNameAndLabel(type).name;
+    const name = findImageTagTypeName(type);
     return this.getState()[name];
   }
 
@@ -74,18 +66,22 @@ export class TagStateManager extends StateManager<ITagsPagedGroup> {
     return tagsCount > 0;
   }
 
-  private addOldTags(old: ITagsPaged, next: ITagsPaged): ITagsPaged {
-    return {
-      ...next,
-      tags: [...old.tags, ...next.tags]
-    };
-  }
-
-  public addNewTags(type: ImageTagType, newTags: ITag[]): ITagsPaged {
-    const currentTags = this.getTagsPaged(type);
-    return {
-      ...currentTags,
-      tags: [...newTags, ...currentTags.tags]
-    };
+  private addTags(
+    old: ITagsPaged,
+    next?: ITagsPaged,
+    newTags?: ITagsPaged
+  ): ITagsPaged {
+    if (next) {
+      return {
+        ...next,
+        tags: [...old.tags, ...next.tags]
+      };
+    } else if (newTags) {
+      return {
+        ...old,
+        tags: [...newTags.tags, ...old.tags]
+      };
+    }
+    return old;
   }
 }

@@ -7,12 +7,7 @@ import {
   addErrors,
   addCurrentErrors
 } from 'screens/ErrorHandler/state/actions';
-import {
-  defaultTagsPagedGroup,
-  ITagsPagedGroup,
-  ITagsPaged,
-  ITag
-} from 'models/Tag';
+import { defaultTagsPagedGroup, ITagsPagedGroup, ITagsPaged } from 'models/Tag';
 import { IUserSettings } from 'models/UserSettings';
 import { createAction } from 'redux-ts-utils';
 import { Thunk } from 'store/types';
@@ -237,7 +232,7 @@ export const redeployWithCurrentVersion: Thunk = (
 function filterNewTagsWithCurrentTags(
   newestTags: IGoboResult<ITagsQuery> | undefined,
   current: ITagsPaged
-) {
+): ITagsPaged {
   if (
     !(
       newestTags &&
@@ -246,11 +241,16 @@ function filterNewTagsWithCurrentTags(
       newestTags.data.imageRepositories.length > 0
     )
   ) {
-    return [];
+    return defaultTagsPaged;
   }
-  return toTagsPaged(newestTags.data.imageRepositories[0].tags).tags.filter(
-    item1 => !current.tags.some(item2 => item2.name === item1.name)
-  );
+
+  const imageTagsConnection = newestTags.data.imageRepositories[0].tags;
+  return {
+    ...toTagsPaged(imageTagsConnection),
+    tags: toTagsPaged(imageTagsConnection).tags.filter(
+      item1 => !current.tags.some(item2 => item2.name === item1.name)
+    )
+  };
 }
 
 export const findNewTagsPaged: Thunk = (
@@ -259,7 +259,7 @@ export const findNewTagsPaged: Thunk = (
   updateTagsPaged: (
     type: ImageTagType,
     next?: ITagsPaged,
-    newTags?: ITag[]
+    newTags?: ITagsPaged
   ) => void,
   current: ITagsPaged
 ) => async (dispatch, getState, { clients }) => {
@@ -284,12 +284,10 @@ export const findNewTagsPaged: Thunk = (
     dispatch(findTagsPagedResponse(defaultTagsPagedGroup()[type]));
   } else {
     const { imageRepositories } = newestTags.data;
-    if (filterNewTagsWithCurrentTags(newestTags, current).length > 0) {
-      updateTagsPaged(
-        type,
-        undefined,
-        filterNewTagsWithCurrentTags(newestTags, current)
-      );
+    const filteredTags = filterNewTagsWithCurrentTags(newestTags, current);
+
+    if (filteredTags.tags.length > 0) {
+      updateTagsPaged(type, undefined, filteredTags);
     }
     dispatch(findTagsPagedResponse(toTagsPaged(imageRepositories[0].tags)));
   }
@@ -302,7 +300,7 @@ export const findTagsPaged: Thunk = (
   updateTagsPaged: (
     type: ImageTagType,
     next?: ITagsPaged,
-    newTags?: ITag[]
+    newTags?: ITagsPaged
   ) => void,
   first: number,
   current: ITagsPaged
@@ -421,6 +419,13 @@ export const findApplicationDeploymentDetails: Thunk = (
     );
   }
   dispatch(fetchDetailsRequest(false));
+};
+
+const defaultTagsPaged: ITagsPaged = {
+  endCursor: '',
+  hasNextPage: false,
+  tags: [],
+  totalCount: 0
 };
 
 export const toTagsPaged = (

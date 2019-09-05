@@ -50,7 +50,7 @@ export interface IDetailsViewProps
     updateTagsPaged: (
       type: ImageTagType,
       next?: ITagsPaged,
-      newTags?: ITag[]
+      newTags?: ITagsPaged
     ) => void,
     first: number,
     current: ITagsPaged
@@ -61,7 +61,7 @@ export interface IDetailsViewProps
     updateTagsPaged: (
       type: ImageTagType,
       next?: ITagsPaged,
-      newTags?: ITag[]
+      newTags?: ITagsPaged
     ) => void,
     current: ITagsPaged
   ) => void;
@@ -170,7 +170,7 @@ export default class DetailsViewController {
     const updateTagsPaged = (
       type: ImageTagType,
       next?: ITagsPaged,
-      newTags?: ITag[]
+      newTags?: ITagsPaged
     ) => {
       this.sm.tag.updateTagsPaged(type, next, newTags);
     };

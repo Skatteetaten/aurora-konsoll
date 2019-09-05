@@ -1,4 +1,4 @@
-import { ITagsPaged, ITagsPagedGroup, ITag } from 'models/Tag';
+import { ITagsPaged, ITagsPagedGroup } from 'models/Tag';
 import * as React from 'react';
 import { connect } from 'react-redux';
 import { Route, RouteComponentProps } from 'react-router-dom';
@@ -45,7 +45,7 @@ interface IApplicationDeploymentSelectorConnectedProps {
     updateTagsPaged: (
       type: ImageTagType,
       next?: ITagsPaged,
-      newTags?: ITag[]
+      newTags?: ITagsPaged
     ) => void,
     first: number,
     current: ITagsPaged
@@ -56,7 +56,7 @@ interface IApplicationDeploymentSelectorConnectedProps {
     updateTagsPaged: (
       type: ImageTagType,
       next?: ITagsPaged,
-      newTags?: ITag[]
+      newTags?: ITagsPaged
     ) => void,
     current: ITagsPaged
   ) => void;
@@ -188,7 +188,7 @@ export const ApplicationDeploymentSelectorConnected = connect(
       updateTagsPaged: (
         type: ImageTagType,
         next?: ITagsPaged,
-        newTags?: ITag[]
+        newTags?: ITagsPaged
       ) => void,
       first: number,
       current: ITagsPaged
@@ -199,7 +199,7 @@ export const ApplicationDeploymentSelectorConnected = connect(
       updateTagsPaged: (
         type: ImageTagType,
         next?: ITagsPaged,
-        newTags?: ITag[]
+        newTags?: ITagsPaged
       ) => void,
       current: ITagsPaged
     ) => findNewTagsPaged(repository, type, updateTagsPaged, current),
