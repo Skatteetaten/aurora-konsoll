@@ -9,32 +9,25 @@ export enum ImageTagType {
   COMMIT_HASH = 'COMMIT_HASH'
 }
 
-interface IImageTagTypeNameAndLabel {
-  name: string;
-  label: string;
-}
-
-export function findImageTagTypeNameAndLabel(
-  type: ImageTagType
-): IImageTagTypeNameAndLabel {
+export function findImageTagTypeName(type: ImageTagType): string {
   switch (type) {
     case ImageTagType.AURORA_VERSION:
-      return { name: 'auroraVersion', label: 'Aurora Version' };
+      return 'auroraVersion';
     case ImageTagType.AURORA_SNAPSHOT_VERSION:
-      return { name: 'auroraSnapshotVersion', label: 'Unik snapshot version' };
+      return 'auroraSnapshotVersion';
     case ImageTagType.BUGFIX:
-      return { name: 'bugfix', label: 'Bugfix' };
+      return 'bugfix';
     case ImageTagType.LATEST:
-      return { name: 'latest', label: 'Latest' };
+      return 'latest';
     case ImageTagType.MAJOR:
-      return { name: 'major', label: 'Major' };
+      return 'major';
     case ImageTagType.MINOR:
-      return { name: 'minor', label: 'Minor' };
+      return 'minor';
     case ImageTagType.SNAPSHOT:
-      return { name: 'snapshot', label: 'Snapshot' };
+      return 'snapshot';
     case ImageTagType.COMMIT_HASH:
-      return { name: 'commitHash', label: 'Commit hash' };
+      return 'commitHash';
     default:
-      return { name: '', label: '' };
+      return '';
   }
 }

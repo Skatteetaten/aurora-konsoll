@@ -4,13 +4,20 @@ import ComboBox from 'aurora-frontend-react-komponenter/ComboBox';
 
 import { IComboBoxOption } from 'office-ui-fabric-react/lib/index';
 
-import {
-  ImageTagType,
-  findImageTagTypeNameAndLabel
-} from 'models/ImageTagType';
+import { ImageTagType, findImageTagTypeName } from 'models/ImageTagType';
 import styled from 'styled-components';
-import { getOptionLabel } from './TagOption';
 import { ITagsPagedGroup, ITagsPaged } from 'models/Tag';
+
+const {
+  AURORA_VERSION,
+  AURORA_SNAPSHOT_VERSION,
+  COMMIT_HASH,
+  BUGFIX,
+  LATEST,
+  MAJOR,
+  MINOR,
+  SNAPSHOT
+} = ImageTagType;
 
 export interface IImageTagTypeOption {
   key: ImageTagType;
@@ -25,6 +32,52 @@ interface ITagTypeSelector {
   className?: string;
 }
 
+export function getOptionName(type: ImageTagType): string {
+  switch (type) {
+    case ImageTagType.AURORA_VERSION:
+      return 'Aurora Version';
+    case ImageTagType.AURORA_SNAPSHOT_VERSION:
+      return 'Unik snapshot version';
+    case ImageTagType.BUGFIX:
+      return 'Bugfix';
+    case ImageTagType.LATEST:
+      return 'Latest';
+    case ImageTagType.MAJOR:
+      return 'Major';
+    case ImageTagType.MINOR:
+      return 'Minor';
+    case ImageTagType.SNAPSHOT:
+      return 'Snapshot';
+    case ImageTagType.COMMIT_HASH:
+      return 'Commit hash';
+    default:
+      return '';
+  }
+}
+
+function getOptionLabel(imageTagType: ImageTagType): string {
+  switch (imageTagType) {
+    case MAJOR:
+      return 'Deploy ved os og java-patcher.';
+    case MINOR:
+      return 'Deploy ved applikasjonsspesifikke patcher.';
+    case BUGFIX:
+      return 'Deploy ved ny bakoverkompatibel funksjonalitet.';
+    case LATEST:
+      return 'Deploy ved nyeste versjon.';
+    case SNAPSHOT:
+      return 'Deploy ved nytt snapshot-bygg.';
+    case AURORA_VERSION:
+      return 'Deploy spesifikk versjon som alltid skal kjøres.';
+    case AURORA_SNAPSHOT_VERSION:
+      return 'Deploy spesifikk snapshot versjon som alltid skal kjøres.';
+    case COMMIT_HASH:
+      return 'Deploy commit hash.';
+    default:
+      return '';
+  }
+}
+
 const TagTypeSelector = ({
   imageTagType,
   handleSelectStrategy,
@@ -36,29 +89,27 @@ const TagTypeSelector = ({
   };
 
   function groupedTagsTotalCount(type: ImageTagType): number | undefined {
-    const imageTagTypeName = findImageTagTypeNameAndLabel(type).name;
-    if (findGroupedTagsPagedResult.auroraSnapshotVersion.totalCount > 0) {
-      const tagsCount = Object.entries(findGroupedTagsPagedResult).reduce(
-        (acc, k: [string, ITagsPaged]) => {
-          if (k[0] === imageTagTypeName) {
-            return acc + k[1].totalCount;
-          } else {
-            return acc;
-          }
-        },
-        0
-      );
-      return tagsCount;
-    }
+    const imageTagTypeName = findImageTagTypeName(type);
+    const tagsCount = Object.entries(findGroupedTagsPagedResult).reduce(
+      (acc, k: [string, ITagsPaged]) => {
+        if (k[0] === imageTagTypeName) {
+          return acc + k[1].totalCount;
+        } else {
+          return acc;
+        }
+      },
+      0
+    );
+    return tagsCount;
   }
 
   function createOption(type: ImageTagType): IImageTagTypeOption {
     return {
       key: type,
       tag: type,
-      text: `(${groupedTagsTotalCount(type)}) ${
-        findImageTagTypeNameAndLabel(type).label
-      } - ${getOptionLabel(type)}`
+      text: `(${groupedTagsTotalCount(type)}) ${getOptionName(
+        type
+      )} - ${getOptionLabel(type)}`
     };
   }
 
@@ -81,7 +132,6 @@ const TagTypeSelector = ({
             selectedKey={imageTagType}
             onChange={onTagTypeChanged}
             label="Velg type deploy"
-            info="Her vises de forskjellige deploy kategroiene og antall tags for finnes for hver av dem"
             onRenderOption={onRenderOption}
           />
         </div>

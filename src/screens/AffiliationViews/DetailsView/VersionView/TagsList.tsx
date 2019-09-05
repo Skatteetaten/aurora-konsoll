@@ -4,12 +4,10 @@ import styled from 'styled-components';
 import DetailsList from 'aurora-frontend-react-komponenter/DetailsList';
 import Table from 'aurora-frontend-react-komponenter/Table';
 
-import {
-  ImageTagType,
-  findImageTagTypeNameAndLabel
-} from 'models/ImageTagType';
-import { ITag, ITagTable } from 'models/Tag';
+import { ImageTagType } from 'models/ImageTagType';
+import { ITag } from 'models/Tag';
 import UpgradeButton from './UpgradeButton';
+import { getOptionName } from './TagTypeSelector/TagTypeSelector';
 
 const detailListColumns = [
   {
@@ -46,6 +44,13 @@ const detailListColumns = [
   }
 ];
 
+interface ITagTable {
+  deploy: JSX.Element;
+  name: string;
+  type: string;
+  lastModified: string;
+}
+
 interface ITagsListProps {
   tags: ITag[];
   imageTagType: ImageTagType;
@@ -67,10 +72,7 @@ interface ITagsListState {
   selectedTagIndex: number;
 }
 
-export default class TagsList extends React.Component<
-  ITagsListProps,
-  ITagsListState
-> {
+class TagsList extends React.Component<ITagsListProps, ITagsListState> {
   public state: ITagsListState = {
     deployedTagIndex: -1,
     selectedTagIndex: -1
@@ -171,7 +173,7 @@ export default class TagsList extends React.Component<
     const tableTags = (): ITagTable[] =>
       tags.map(it => {
         return {
-          type: findImageTagTypeNameAndLabel(it.type).label,
+          type: getOptionName(it.type),
           name: it.name,
           lastModified: it.lastModified,
           deploy: deployButton(it)
@@ -212,3 +214,5 @@ const DetailsListWrapper = styled.div<IDetailsListWrapper>`
     cursor: pointer;
   }
 `;
+
+export default TagsList;

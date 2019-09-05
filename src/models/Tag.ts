@@ -6,13 +6,6 @@ export interface ITag {
   lastModified: string;
 }
 
-export interface ITagTable {
-  deploy: JSX.Element;
-  name: string;
-  type: string;
-  lastModified: string;
-}
-
 export interface ITagsPaged {
   endCursor: string;
   hasNextPage: boolean;

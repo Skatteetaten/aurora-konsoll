@@ -3,8 +3,10 @@ import styled from 'styled-components';
 
 import Button from 'aurora-frontend-react-komponenter/Button';
 import TextField from 'aurora-frontend-react-komponenter/TextField';
+import Callout from 'aurora-frontend-react-komponenter/Callout';
 
 import Spinner from 'components/Spinner';
+import CalloutButton from 'components/CalloutButton';
 import { ImageTagType } from 'models/ImageTagType';
 import { ITag, ITagsPaged, ITagsPagedGroup } from 'models/Tag';
 
@@ -21,7 +23,6 @@ interface IVersionViewProps {
   isFetchingTags: boolean;
   isFetchingGroupedTags: boolean;
   isRedeploying: boolean;
-  canUpgrade: (selectedTag?: ITag) => boolean;
   initialTagType: string;
   unavailableMessage?: IUnavailableServiceMessage;
   selectedTagType: ImageTagType;
@@ -31,6 +32,7 @@ interface IVersionViewProps {
   className?: string;
   findGroupedTagsPagedResult: ITagsPagedGroup;
   versionSearchText: string;
+  canUpgrade: (selectedTag?: ITag) => boolean;
   handlefetchTags: () => void;
   handleSelectStrategy: (e: Event, option: IImageTagTypeOption) => void;
   handleVersionSearch: (value: string) => void;
@@ -133,6 +135,26 @@ const VersionView = ({
                   loadMoreTagsMessage()
                 )}
               </Button>
+              <div className="callout-button">
+                <CalloutButton
+                  calloutProps={{
+                    color: Callout.INFO,
+                    gapSpace: 8,
+                    directionalHint: Callout.POS_BOTTOM_CENTER
+                  }}
+                  buttonProps={{
+                    icon: 'info',
+                    buttonType: 'secondary'
+                  }}
+                  title="Vis info"
+                  content={
+                    <p>
+                      Hver gang man laster inn tags vil det det alltid hentes de
+                      5 nyeste tagene for typen.
+                    </p>
+                  }
+                />
+              </div>
             </div>
           </div>
         </>
@@ -168,6 +190,9 @@ export default styled(VersionView)`
   .tags-action {
     width: 1400px;
     text-align: center;
+    .callout-button {
+      padding-top: 10px;
+    }
   }
 
   .tags-action > div:first-child {
