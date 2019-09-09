@@ -182,7 +182,7 @@ export default styled(VersionView)`
 
   .details-list {
     max-width: 1400px;
-    max-height: 800px;
+    max-height: 80%;
     margin-top: 30px;
     overflow-x: hidden;
   }

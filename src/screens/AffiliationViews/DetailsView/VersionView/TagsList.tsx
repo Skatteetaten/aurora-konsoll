@@ -210,6 +210,10 @@ const DetailsListWrapper = styled.div<IDetailsListWrapper>`
     }
   }
 
+  button.ms-Button.ms-Button--action.ms-Button--command {
+    height: 100%;
+  }
+
   .ms-List-cell {
     cursor: pointer;
   }
