@@ -2,11 +2,11 @@ import * as React from 'react';
 
 import { connect } from 'react-redux';
 
-import Dropdown, {
-  IDropdownOption
-} from 'aurora-frontend-react-komponenter/Dropdown';
+import ComboBox, {
+  IComboBoxOption
+} from 'aurora-frontend-react-komponenter/ComboBox';
 
-import { toDropdownOptions } from 'utils/aurora-frontend';
+import { toComboBoxOptions } from 'utils/aurora-frontend';
 
 import { IUserAndAffiliations } from 'models/ApplicationDeployment';
 import { RootState } from 'store/types';
@@ -41,7 +41,7 @@ const Layout = ({
   displaySkapViews,
   currentUser
 }: ILayoutProps) => {
-  const onAffiliationChanged = (item: IDropdownOption, index: number) => {
+  const onAffiliationChanged = (item: IComboBoxOption, index: number) => {
     if (index > 0) {
       onAffiliationChange(item.text);
     }
@@ -103,11 +103,17 @@ const Layout = ({
         currentUser={currentUser}
       >
         {showAffiliationSelector && (
-          <Dropdown
+          <ComboBox
+            useComboBoxAsMenuWidth={true}
             placeholder="Velg tilhørighet"
-            options={toDropdownOptions(currentUser.affiliations)}
+            options={toComboBoxOptions(currentUser.affiliations)}
             onChanged={onAffiliationChanged}
             selectedKey={affiliation}
+            styles={{
+              optionsContainerWrapper: {
+                maxHeight: '1200px'
+              }
+            }}
           />
         )}
       </Header>
@@ -145,8 +151,11 @@ const StyledLayout = styled(Layout)`
     overflow: hidden;
   }
 
-  .ms-Dropdown-container {
+  .ms-ComboBox-container {
     max-width: 250px;
+    .ms-ComboBox-Input {
+      cursor: pointer;
+    }
   }
 `;
 

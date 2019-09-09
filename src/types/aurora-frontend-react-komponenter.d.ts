@@ -1,10 +1,10 @@
 declare module 'aurora-frontend-react-komponenter/*';
-declare module 'aurora-frontend-react-komponenter/Dropdown' {
-  let Dropdown: any;
-  export interface IDropdownOption {
+declare module 'aurora-frontend-react-komponenter/ComboBox' {
+  let ComboBox: any;
+  export interface IComboBoxOption {
     key: string;
     text: string;
   }
 
-  export default Dropdown;
+  export default ComboBox;
 }

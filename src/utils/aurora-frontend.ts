@@ -1,12 +1,12 @@
-import { IDropdownOption } from 'aurora-frontend-react-komponenter/Dropdown';
+import { IComboBoxOption } from 'aurora-frontend-react-komponenter/ComboBox';
 
-function toDropdownOptions(names: string[]): IDropdownOption[] {
-  const dropdownNames = names
+function toComboBoxOptions(names: string[]): IComboBoxOption[] {
+  const comboBoxNames = names
     .map(name => name.toLowerCase())
     .filter((name, index, self) => self.indexOf(name) === index)
     .sort()
     .reduce(
-      (acc: IDropdownOption[], name) => [
+      (acc: IComboBoxOption[], name) => [
         ...acc,
         {
           key: name,
@@ -15,7 +15,7 @@ function toDropdownOptions(names: string[]): IDropdownOption[] {
       ],
       []
     );
-  return [{ key: 'Ingen', text: '' }, ...dropdownNames];
+  return [...comboBoxNames];
 }
 
-export { toDropdownOptions };
+export { toComboBoxOptions };
