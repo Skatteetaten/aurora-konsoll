@@ -166,11 +166,10 @@ const VersionView = ({
 };
 
 export default styled(VersionView)`
-  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
   height: 100%;
-  width: 1300;
-  margin-left: 30px;
-  max-width: 1400px;
+  margin: 0 16px;
 
   .action-bar {
     margin-bottom: 10px;
@@ -181,14 +180,11 @@ export default styled(VersionView)`
   }
 
   .details-list {
-    max-width: 1400px;
-    max-height: 80%;
     margin-top: 30px;
     overflow-x: hidden;
   }
 
   .tags-action {
-    width: 1400px;
     text-align: center;
     .callout-button {
       padding-top: 10px;

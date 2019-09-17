@@ -12,34 +12,22 @@ import { getOptionName } from './TagTypeSelector/TagTypeSelector';
 const detailListColumns = [
   {
     fieldName: 'type',
-    isResizable: true,
     key: 'type',
-    maxWidth: 150,
-    minWidth: 100,
     name: 'Type deploy'
   },
   {
     fieldName: 'name',
-    isResizable: true,
     key: 'name',
-    maxWidth: 550,
-    minWidth: 100,
     name: 'Navn'
   },
   {
     fieldName: 'lastModified',
-    isResizable: true,
     key: 'lastModified',
-    maxWidth: 250,
-    minWidth: 150,
     name: 'Sist endret'
   },
   {
     fieldName: 'deploy',
-    isResizable: true,
     key: 'deploy',
-    maxWidth: 200,
-    minWidth: 100,
     name: ''
   }
 ];
@@ -184,7 +172,6 @@ class TagsList extends React.Component<ITagsListProps, ITagsListState> {
       <DetailsListWrapper
         deployedIndex={deployedTagIndex}
         selectedIndex={selectedTagIndex}
-        style={{ backgroundColor: 'white' }}
       >
         <Table data={tableTags()} columns={detailListColumns} />
       </DetailsListWrapper>
@@ -199,14 +186,16 @@ interface IDetailsListWrapper {
 
 const DetailsListWrapper = styled.div<IDetailsListWrapper>`
   table {
+    background-color: white;
+    width: 100%;
     th:nth-child(1) {
-      width: 200px;
+      width: 15%;
     }
     th:nth-child(2) {
-      width: 800px;
+      width: 65%;
     }
     th:nth-child(3) {
-      width: 300px;
+      width: 20%;
     }
   }
 
