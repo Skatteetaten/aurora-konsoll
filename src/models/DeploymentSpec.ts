@@ -3,14 +3,13 @@ export const normalizeRawDeploymentSpec = (node: any) => (
   key: string
 ): IDeploymentSpec => {
   const currentNode = node[key];
-
   const children = Object.keys(currentNode).filter(
     cKey => ['sources', 'source', 'value'].indexOf(cKey) === -1
   );
 
   const nextValue =
     children.length > 0
-      ? children.reduce(normalizeRawDeploymentSpec(currentNode), {})
+      ? children.reduce(normalizeRawDeploymentSpec(currentNode), {} as IDeploymentSpec)
       : currentNode.value;
 
   return {

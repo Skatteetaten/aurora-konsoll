@@ -1,7 +1,7 @@
 import * as React from 'react';
 
 import ReactSelect from 'react-select';
-import { Theme } from 'react-select/lib/types';
+import { Theme } from 'react-select/src/types';
 
 import palette from 'aurora-frontend-react-komponenter/utils/palette';
 
