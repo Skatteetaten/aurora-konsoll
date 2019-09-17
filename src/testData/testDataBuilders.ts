@@ -24,7 +24,7 @@ import {
   IUpdateDatabaseSchemaInputWithCreatedBy
 } from 'models/schemas';
 import { StatusCode } from 'models/Status';
-import { ITagsPagedGroup, ITagsPaged } from 'models/Tag';
+import { ITagsPagedGroup, ITagsPaged, ITag } from 'models/Tag';
 import {
   IApplicationDeploymentFilters,
   IUserSettings
@@ -214,7 +214,8 @@ export const tagsPagedGroupFactory = Factory.Sync.makeFactory<ITagsPagedGroup>({
       }
     ],
     endCursor: '',
-    hasNextPage: false
+    hasNextPage: false,
+    totalCount: 0
   },
   auroraVersion: {
     tags: [
@@ -225,7 +226,8 @@ export const tagsPagedGroupFactory = Factory.Sync.makeFactory<ITagsPagedGroup>({
       }
     ],
     endCursor: '',
-    hasNextPage: false
+    hasNextPage: false,
+    totalCount: 0
   },
   bugfix: {
     tags: [
@@ -236,12 +238,14 @@ export const tagsPagedGroupFactory = Factory.Sync.makeFactory<ITagsPagedGroup>({
       }
     ],
     endCursor: '',
-    hasNextPage: false
+    hasNextPage: false,
+    totalCount: 0
   },
   commitHash: {
     tags: [],
     endCursor: '',
-    hasNextPage: false
+    hasNextPage: false,
+    totalCount: 0
   },
   latest: {
     tags: [
@@ -252,7 +256,8 @@ export const tagsPagedGroupFactory = Factory.Sync.makeFactory<ITagsPagedGroup>({
       }
     ],
     endCursor: '',
-    hasNextPage: false
+    hasNextPage: false,
+    totalCount: 0
   },
   major: {
     tags: [
@@ -263,7 +268,8 @@ export const tagsPagedGroupFactory = Factory.Sync.makeFactory<ITagsPagedGroup>({
       }
     ],
     endCursor: '',
-    hasNextPage: false
+    hasNextPage: false,
+    totalCount: 0
   },
   minor: {
     tags: [
@@ -274,7 +280,8 @@ export const tagsPagedGroupFactory = Factory.Sync.makeFactory<ITagsPagedGroup>({
       }
     ],
     endCursor: '',
-    hasNextPage: false
+    hasNextPage: false,
+    totalCount: 0
   },
   snapshot: {
     tags: [
@@ -285,14 +292,22 @@ export const tagsPagedGroupFactory = Factory.Sync.makeFactory<ITagsPagedGroup>({
       }
     ],
     endCursor: '',
-    hasNextPage: false
+    hasNextPage: false,
+    totalCount: 0
   }
+});
+
+export const tagFactory = Factory.Sync.makeFactory<ITag>({
+  lastModified: '2019-08-13T14:06:23.825Z',
+  name: '1.0',
+  type: ImageTagType.MINOR
 });
 
 export const tagsPagedFactory = Factory.Sync.makeFactory<ITagsPaged>({
   endCursor: 'test',
   hasNextPage: false,
-  tags: []
+  tags: [],
+  totalCount: 0
 });
 
 export const databaseSchemaInputFactory = Factory.Sync.makeFactory<
@@ -500,6 +515,7 @@ export const affiliationViewStateFactory = Factory.Sync.makeFactory<
   userSettings: userSettingsFactory.build(),
   isRedeploying: false,
   isFetchingTags: false,
+  isFetchingGroupedTags: false,
   isFetchingDetails: false
 });
 

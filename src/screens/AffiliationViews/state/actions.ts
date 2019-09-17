@@ -11,8 +11,12 @@ import { defaultTagsPagedGroup, ITagsPagedGroup, ITagsPaged } from 'models/Tag';
 import { IUserSettings } from 'models/UserSettings';
 import { createAction } from 'redux-ts-utils';
 import { Thunk } from 'store/types';
-import { IImageTagsConnection } from 'services/auroraApiClients/imageRepositoryClient/query';
+import {
+  IImageTagsConnection,
+  ITagsQuery
+} from 'services/auroraApiClients/imageRepositoryClient/query';
 import { ImageTagType } from 'models/ImageTagType';
+import { IGoboResult } from 'services/GoboClient';
 
 const affiliationViewAction = (action: string) => `affiliationView/${action}`;
 
@@ -66,6 +70,10 @@ export const findGroupedTagsPagedResponse = createAction<ITagsPagedGroup>(
 
 export const fetchTagsRequest = createAction<boolean>(
   affiliationViewAction('FETCH_TAGS_REQUEST')
+);
+
+export const fetchGroupedTagsRequest = createAction<boolean>(
+  affiliationViewAction('FETCH_GROUPED_TAGS_REQUEST')
 );
 
 export const refreshAffiliations: Thunk = (affiliations: string[]) => async (
@@ -221,38 +229,108 @@ export const redeployWithCurrentVersion: Thunk = (
   dispatch(redeployRequest(false));
 };
 
-export const findTagsPaged: Thunk = (
+function filterNewTagsWithCurrentTags(
+  newestTags: IGoboResult<ITagsQuery> | undefined,
+  current: ITagsPaged
+): ITagsPaged {
+  if (
+    !(
+      newestTags &&
+      newestTags.data &&
+      newestTags.data.imageRepositories &&
+      newestTags.data.imageRepositories.length > 0
+    )
+  ) {
+    return defaultTagsPaged;
+  }
+
+  const imageTagsConnection = newestTags.data.imageRepositories[0].tags;
+  return {
+    ...toTagsPaged(imageTagsConnection),
+    tags: toTagsPaged(imageTagsConnection).tags.filter(
+      item1 => !current.tags.some(item2 => item2.name === item1.name)
+    )
+  };
+}
+
+export const findNewTagsPaged: Thunk = (
   repository: string,
   type: ImageTagType,
-  updateTagsPaged: (type: ImageTagType, next: ITagsPaged) => void,
-  first: number,
-  cursor?: string
+  updateTagsPaged: (
+    type: ImageTagType,
+    next?: ITagsPaged,
+    newTags?: ITagsPaged
+  ) => void,
+  current: ITagsPaged
 ) => async (dispatch, getState, { clients }) => {
   dispatch(fetchTagsRequest(true));
-  const result = await clients.imageRepositoryClient.findTagsPaged(
+
+  const newestTags = await clients.imageRepositoryClient.findTagsPaged(
     repository,
     type,
-    first,
-    cursor
+    5
   );
-  dispatch(addCurrentErrors(result));
+
+  dispatch(addCurrentErrors(newestTags));
 
   if (
-    !result ||
     !(
-      result.data &&
-      result.data.imageRepositories &&
-      result.data.imageRepositories.length > 0
+      newestTags &&
+      newestTags.data &&
+      newestTags.data.imageRepositories &&
+      newestTags.data.imageRepositories.length > 0
     )
   ) {
     dispatch(findTagsPagedResponse(defaultTagsPagedGroup()[type]));
   } else {
-    const { imageRepositories } = result.data;
+    const { imageRepositories } = newestTags.data;
+    const filteredTags = filterNewTagsWithCurrentTags(newestTags, current);
 
-    if (result && result.data) {
-      updateTagsPaged(type, toTagsPaged(imageRepositories[0].tags));
-      dispatch(findTagsPagedResponse(toTagsPaged(imageRepositories[0].tags)));
+    if (filteredTags.tags.length > 0) {
+      updateTagsPaged(type, undefined, filteredTags);
     }
+    dispatch(findTagsPagedResponse(toTagsPaged(imageRepositories[0].tags)));
+  }
+  dispatch(fetchTagsRequest(false));
+};
+
+export const findTagsPaged: Thunk = (
+  repository: string,
+  type: ImageTagType,
+  updateTagsPaged: (
+    type: ImageTagType,
+    next?: ITagsPaged,
+    newTags?: ITagsPaged
+  ) => void,
+  first: number,
+  current: ITagsPaged
+) => async (dispatch, getState, { clients }) => {
+  dispatch(fetchTagsRequest(true));
+
+  const tagsAfterCursor = await clients.imageRepositoryClient.findTagsPaged(
+    repository,
+    type,
+    first,
+    current.endCursor
+  );
+
+  findNewTagsPaged(repository, type, current);
+
+  dispatch(addCurrentErrors(tagsAfterCursor));
+
+  if (
+    !(
+      tagsAfterCursor &&
+      tagsAfterCursor.data &&
+      tagsAfterCursor.data.imageRepositories &&
+      tagsAfterCursor.data.imageRepositories.length > 0
+    )
+  ) {
+    dispatch(findTagsPagedResponse(defaultTagsPagedGroup()[type]));
+  } else {
+    const { imageRepositories } = tagsAfterCursor.data;
+    updateTagsPaged(type, toTagsPaged(imageRepositories[0].tags));
+    dispatch(findTagsPagedResponse(toTagsPaged(imageRepositories[0].tags)));
   }
   dispatch(fetchTagsRequest(false));
 };
@@ -261,7 +339,7 @@ export const findGroupedTagsPaged: Thunk = (
   repository: string,
   setTagsPagedGroup: (tagsPagedGroup: ITagsPagedGroup) => void
 ) => async (dispatch, getState, { clients }) => {
-  dispatch(fetchTagsRequest(true));
+  dispatch(fetchGroupedTagsRequest(true));
   const result = await clients.imageRepositoryClient.findGroupedTagsPaged(
     repository
   );
@@ -291,7 +369,7 @@ export const findGroupedTagsPaged: Thunk = (
     setTagsPagedGroup(normalizedTags);
     dispatch(findGroupedTagsPagedResponse(normalizedTags));
   }
-  dispatch(fetchTagsRequest(false));
+  dispatch(fetchGroupedTagsRequest(false));
 };
 
 export const findApplicationDeploymentDetails: Thunk = (
@@ -343,11 +421,19 @@ export const findApplicationDeploymentDetails: Thunk = (
   dispatch(fetchDetailsRequest(false));
 };
 
+const defaultTagsPaged: ITagsPaged = {
+  endCursor: '',
+  hasNextPage: false,
+  tags: [],
+  totalCount: 0
+};
+
 export const toTagsPaged = (
   imageTagsConnection: IImageTagsConnection
 ): ITagsPaged => {
-  const { edges, pageInfo } = imageTagsConnection;
+  const { edges, pageInfo, totalCount } = imageTagsConnection;
   return {
+    totalCount,
     endCursor: pageInfo.endCursor,
     hasNextPage: pageInfo.hasNextPage,
     tags: edges.map(edge => ({

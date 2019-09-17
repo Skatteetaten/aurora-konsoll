@@ -18,7 +18,8 @@ import actions, {
   findGroupedTagsPagedResponse,
   redeployRequest,
   fetchDetailsRequest,
-  fetchTagsRequest
+  fetchTagsRequest,
+  fetchGroupedTagsRequest
 } from './actions';
 import { IUserSettings } from 'models/UserSettings';
 import { ITagsPaged, ITagsPagedGroup, defaultTagsPagedGroup } from 'models/Tag';
@@ -30,6 +31,7 @@ export interface IAffiliationViewState {
   readonly allApplicationDeploymentsResult: IApplicationDeployment[];
   readonly isFetchingAllApplicationDeployments: boolean;
   readonly isFetchingTags: boolean;
+  readonly isFetchingGroupedTags: boolean;
   readonly userSettings: IUserSettings;
   readonly isUpdatingUserSettings: boolean;
   readonly isRefreshingApplicationDeployment: boolean;
@@ -44,6 +46,7 @@ const initialState = (): IAffiliationViewState => {
   return {
     isRefreshingAffiliations: false,
     isFetchingTags: false,
+    isFetchingGroupedTags: false,
     allApplicationDeploymentsResult: [],
     isFetchingAllApplicationDeployments: false,
     userSettings: { applicationDeploymentFilters: [] },
@@ -107,6 +110,10 @@ export const affiliationViewReducer = reduceReducers<IAffiliationViewState>(
       updateStateWithPayload('findGroupedTagsPagedResult')
     ),
     handleAction(fetchTagsRequest, updateStateWithPayload('isFetchingTags')),
+    handleAction(
+      fetchGroupedTagsRequest,
+      updateStateWithPayload('isFetchingGroupedTags')
+    ),
     handleAction(
       fetchDetailsRequest,
       updateStateWithPayload('isFetchingDetails')

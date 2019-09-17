@@ -10,6 +10,7 @@ export interface ITagsPaged {
   endCursor: string;
   hasNextPage: boolean;
   tags: ITag[];
+  totalCount: number;
 }
 
 export interface ITagsPagedGroup {
@@ -27,7 +28,8 @@ export function defaultTagsPagedGroup(): ITagsPagedGroup {
   const defaultTagsPaged: ITagsPaged = {
     endCursor: '',
     hasNextPage: false,
-    tags: []
+    tags: [],
+    totalCount: 0
   };
 
   return {

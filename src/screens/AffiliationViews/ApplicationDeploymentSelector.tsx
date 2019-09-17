@@ -12,7 +12,8 @@ import {
   redeployWithVersion,
   refreshApplicationDeployment,
   findApplicationDeploymentDetails,
-  findAllApplicationDeployments
+  findAllApplicationDeployments,
+  findNewTagsPaged
 } from './state/actions';
 import { IApplicationDeploymentDetails } from 'models/ApplicationDeployment';
 import { ImageTagType } from 'models/ImageTagType';
@@ -41,15 +42,30 @@ interface IApplicationDeploymentSelectorConnectedProps {
   getTagsPaged: (
     repository: string,
     type: ImageTagType,
-    updateTagsPaged: (type: ImageTagType, next: ITagsPaged) => void,
+    updateTagsPaged: (
+      type: ImageTagType,
+      next?: ITagsPaged,
+      newTags?: ITagsPaged
+    ) => void,
     first: number,
-    cursor?: string
+    current: ITagsPaged
+  ) => void;
+  getNewTagsPaged: (
+    repository: string,
+    type: ImageTagType,
+    updateTagsPaged: (
+      type: ImageTagType,
+      next?: ITagsPaged,
+      newTags?: ITagsPaged
+    ) => void,
+    current: ITagsPaged
   ) => void;
   getAllApplicationDeployments: (affiliation: string) => void;
   getApplicationDeploymentDetails: (id: string) => void;
   findTagsPagedResponse: ITagsPaged;
   findGroupedTagsPagedResult: ITagsPagedGroup;
   isFetchingTags: boolean;
+  isFetchingGroupedTags: boolean;
   isRefreshingApplicationDeployment: boolean;
   isRedeploying: boolean;
   isFetchingDetails: boolean;
@@ -77,8 +93,10 @@ const ApplicationDeploymentSelector = ({
   isRedeploying,
   getGroupedTagsPaged,
   getTagsPaged,
+  getNewTagsPaged,
   findTagsPagedResponse,
   isFetchingTags,
+  isFetchingGroupedTags,
   isFetchingDetails,
   findGroupedTagsPagedResult,
   isRefreshingApplicationDeployment,
@@ -108,9 +126,11 @@ const ApplicationDeploymentSelector = ({
       findGroupedTagsPaged={getGroupedTagsPaged}
       findGroupedTagsPagedResult={findGroupedTagsPagedResult}
       findTagsPaged={getTagsPaged}
+      findNewTagsPaged={getNewTagsPaged}
       findTagsPagedResponse={findTagsPagedResponse}
       affiliation={affiliation}
       isFetchingTags={isFetchingTags}
+      isFetchingGroupedTags={isFetchingGroupedTags}
       isFetchingDetails={isFetchingDetails}
     />
   );
@@ -128,6 +148,7 @@ const mapStateToProps = (state: RootState) => ({
     state.affiliationView.applicationDeploymentDetails,
   isRedeploying: state.affiliationView.isRedeploying,
   isFetchingTags: state.affiliationView.isFetchingTags,
+  isFetchingGroupedTags: state.affiliationView.isFetchingGroupedTags,
   isFetchingDetails: state.affiliationView.isFetchingDetails
 });
 
@@ -164,10 +185,24 @@ export const ApplicationDeploymentSelectorConnected = connect(
     getTagsPaged: (
       repository: string,
       type: ImageTagType,
-      updateTagsPaged: (type: ImageTagType, next: ITagsPaged) => void,
+      updateTagsPaged: (
+        type: ImageTagType,
+        next?: ITagsPaged,
+        newTags?: ITagsPaged
+      ) => void,
       first: number,
-      cursor?: string
-    ) => findTagsPaged(repository, type, updateTagsPaged, first, cursor),
+      current: ITagsPaged
+    ) => findTagsPaged(repository, type, updateTagsPaged, first, current),
+    getNewTagsPaged: (
+      repository: string,
+      type: ImageTagType,
+      updateTagsPaged: (
+        type: ImageTagType,
+        next?: ITagsPaged,
+        newTags?: ITagsPaged
+      ) => void,
+      current: ITagsPaged
+    ) => findNewTagsPaged(repository, type, updateTagsPaged, current),
     getApplicationDeploymentDetails: (id: string) =>
       findApplicationDeploymentDetails(id),
     getAllApplicationDeployments: (affiliation: string) =>
