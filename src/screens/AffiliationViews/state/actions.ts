@@ -2,7 +2,7 @@ import {
   IApplicationDeployment,
   IApplicationDeploymentDetails
 } from 'models/ApplicationDeployment';
-import { normalizeRawDeploymentSpec } from 'models/DeploymentSpec';
+import { normalizeRawDeploymentSpec, IDeploymentSpec } from 'models/DeploymentSpec';
 import {
   addErrors,
   addCurrentErrors
@@ -398,7 +398,7 @@ export const findApplicationDeploymentDetails: Thunk = (
       const spec = JSON.parse(deploymentSpecs.current.jsonRepresentation);
       deploymentSpec = Object.keys(spec).reduce(
         normalizeRawDeploymentSpec(spec),
-        {}
+        {} as IDeploymentSpec
       );
     }
     dispatch(
