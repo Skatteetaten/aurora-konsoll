@@ -131,7 +131,7 @@ const TagTypeSelector = ({
             options={versionStategyOptions}
             selectedKey={imageTagType}
             onChange={onTagTypeChanged}
-            label="Velg versjonstype"
+            label="Velg versjontype"
             onRenderOption={onRenderOption}
           />
         </div>
