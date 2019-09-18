@@ -64,19 +64,39 @@ class PodsStatus extends React.Component<IPodsStatusProps, IPodsStatusState> {
     const { managementResponses } = pod;
     const { isUpdating, refreshApplicationDeployment } = this.props;
 
-    if (!managementResponses || !managementResponses.health) {
+    if (!managementResponses) {
       return null;
     }
-    return (
-      <div>
+
+    const buttons: JSX.Element[] = [];
+    if (managementResponses.health) {
+      buttons.push(
         <ManagementResponseDialogSelector
+          icon="Favorite"
           title="Pod helsestatus"
           response={managementResponses.health}
           isUpdating={isUpdating}
           refreshApplicationDeployment={refreshApplicationDeployment}
         />
-      </div>
-    );
+      );
+    }
+    if (managementResponses.env) {
+      buttons.push(
+        <ManagementResponseDialogSelector
+          icon="Description"
+          title="Pod miljøvariabler"
+          response={managementResponses.env!!}
+          isUpdating={isUpdating}
+          refreshApplicationDeployment={refreshApplicationDeployment}
+        />
+      );
+    }
+
+    if (buttons.length === 0) {
+      return null;
+    }
+
+    return <div>{buttons}</div>;
   };
 
   public getItemsFromChildComp = (currentViewItems: any) => {

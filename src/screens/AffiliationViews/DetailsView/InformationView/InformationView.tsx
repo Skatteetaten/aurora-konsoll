@@ -92,6 +92,7 @@ const InformationView = ({
 };
 
 export default styled(InformationView)`
+  margin-bottom: 16px;
   .health-status {
     background: white;
     display: flex;

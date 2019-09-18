@@ -11,6 +11,7 @@ interface IManagementResponseDialogSelectorProps {
   response: IManagementEndpointResponse;
   isUpdating: boolean;
   title: string;
+  icon: string;
   refreshApplicationDeployment: () => void;
 }
 
@@ -18,7 +19,8 @@ const ManagementResponseDialogSelector = ({
   response,
   refreshApplicationDeployment,
   isUpdating,
-  title
+  title,
+  icon
 }: IManagementResponseDialogSelectorProps) => {
   const renderRefreshButton = () => {
     return (
@@ -35,6 +37,7 @@ const ManagementResponseDialogSelector = ({
 
   return !response.error ? (
     <SuccessResponseDialog
+      icon={icon}
       title={title}
       createdAtTime={createdAtTime}
       response={response}
@@ -42,6 +45,7 @@ const ManagementResponseDialogSelector = ({
     />
   ) : (
     <ErrorResponseDialog
+      icon={icon}
       createdAtTime={createdAtTime}
       response={response}
       renderRefreshButton={renderRefreshButton}

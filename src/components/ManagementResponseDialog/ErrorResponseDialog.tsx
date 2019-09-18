@@ -11,13 +11,15 @@ import { StyledPre } from 'components/StyledPre';
 interface IErrorResponseDialogProps {
   response: IManagementEndpointResponse;
   createdAtTime: string;
+  icon: string;
   renderRefreshButton: () => JSX.Element;
 }
 
 const ErrorResponseDialog = ({
   response,
   createdAtTime,
-  renderRefreshButton
+  renderRefreshButton,
+  icon
 }: IErrorResponseDialogProps) => {
   const renderOpenErrorButton = (open: () => void) => (
     <StyledActionButton>
@@ -25,7 +27,7 @@ const ErrorResponseDialog = ({
         onClick={open}
         iconSize={ActionButton.LARGE}
         color="red"
-        icon="Warning"
+        icon={icon}
       >
         Helsestatus
       </ActionButton>

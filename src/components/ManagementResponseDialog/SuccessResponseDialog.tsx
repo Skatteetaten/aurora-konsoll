@@ -13,39 +13,42 @@ interface ISuccessResponseDialogProps {
   response: IManagementEndpointResponse;
   createdAtTime: string;
   title: string;
+  icon: string;
   renderRefreshButton: () => JSX.Element;
 }
-
-const renderOpenDialogButton = (title: string) => (open: () => void) => {
-  return (
-    <Icon
-      onClick={open}
-      iconName="Favorite"
-      title={title}
-      style={{
-        fontSize: '21px',
-        cursor: 'pointer',
-        color: `${skeColor.blue}`,
-        float: 'none',
-        marginBottom: '2px'
-      }}
-    />
-  );
-};
 
 const SuccessResponseDialog = ({
   response,
   createdAtTime,
   renderRefreshButton,
-  title
+  title,
+  icon
 }: ISuccessResponseDialogProps) => {
   const { httpCode, textResponse } = response;
   const text = textResponse ? prettifyJSON(textResponse) : '';
   const status = httpCode ? ` (${httpCode})` : '';
 
+  const renderOpenDialogButton = (open: () => void) => {
+    return (
+      <Icon
+        onClick={open}
+        iconName={icon}
+        title={title}
+        style={{
+          fontSize: '23px',
+          cursor: 'pointer',
+          color: `${skeColor.blue}`,
+          float: 'none',
+          marginBottom: '2px',
+          marginLeft: '4px'
+        }}
+      />
+    );
+  };
+
   return (
     <InfoDialog
-      renderOpenDialogButton={renderOpenDialogButton(title)}
+      renderOpenDialogButton={renderOpenDialogButton}
       renderFooterButtons={renderRefreshButton}
       title={title + status}
       buttonText={title}

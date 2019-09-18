@@ -164,15 +164,10 @@ export const APPLICATION_DEPLOYMENT_DETAILS_QUERY = gql`
             }
           }
           health {
-            hasResponse
-            textResponse
-            createdAt
-            httpCode
-            url
-            error {
-              code
-              message
-            }
+            ...managementResponse
+          }
+          env {
+            ...managementResponse
           }
         }
         links {
@@ -185,6 +180,18 @@ export const APPLICATION_DEPLOYMENT_DETAILS_QUERY = gql`
           jsonRepresentation
         }
       }
+    }
+  }
+
+  fragment managementResponse on ManagementEndpointResponse {
+    hasResponse
+    textResponse
+    createdAt
+    httpCode
+    url
+    error {
+      code
+      message
     }
   }
 `;
