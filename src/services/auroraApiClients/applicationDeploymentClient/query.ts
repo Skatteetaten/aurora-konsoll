@@ -125,6 +125,7 @@ export const APPLICATIONS_QUERY = gql`
 
 export interface IApplicationDeploymentDetailsQuery {
   applicationDeploymentDetails?: {
+    updatedBy?: string;
     buildTime?: string;
     gitInfo?: IGitInfo;
     serviceLinks: ILink[];
@@ -140,6 +141,7 @@ export interface IApplicationDeploymentDetailsQuery {
 export const APPLICATION_DEPLOYMENT_DETAILS_QUERY = gql`
   query getApplicationDeploymentDetails($id: String!) {
     applicationDeploymentDetails(id: $id) {
+      updatedBy
       buildTime
       gitInfo {
         commitId

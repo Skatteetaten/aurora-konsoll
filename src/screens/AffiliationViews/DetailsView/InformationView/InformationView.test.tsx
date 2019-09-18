@@ -119,6 +119,7 @@ describe('InformationView', () => {
       );
       const info = wrapper.find(InfoContent).find('div#active-deployment');
       expect(info.html()).toContain(message);
+      expect(info.html()).toContain('linus');
     });
   });
 });
