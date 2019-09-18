@@ -30,11 +30,11 @@ import {
 import DatabaseSchemaService, {
   filterDatabaseSchemaView
 } from 'services/DatabaseSchemaService';
-import { StyledPre } from '../DetailsView/InformationView/HealthResponseDialogSelector/utilComponents';
 import ConfirmDeletionDialog from './ConfirmDeletionDialog';
 import DatabaseSchemaCreateDialog from './DatabaseSchemaCreateDialog';
 import DatabaseSchemaUpdateDialog from './DatabaseSchemaUpdateDialog';
 import DeletionSummary from './DeletionSummary';
+import { StyledPre } from 'components/StyledPre';
 
 export const renderDetailsListWithSchemaInfo = (schemas: IDatabaseSchema[]) => (
   <StyledPre>

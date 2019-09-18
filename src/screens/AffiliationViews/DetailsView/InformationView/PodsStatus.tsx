@@ -11,9 +11,9 @@ import Icon from 'aurora-frontend-react-komponenter/Icon';
 import { getLocalDatetime } from 'utils/date';
 import IconLink from 'components/IconLink';
 import Callout from 'aurora-frontend-react-komponenter/Callout';
-import HealthResponseDialogSelector from './HealthResponseDialogSelector/HealthResponseDialogSelector';
 import DetailsList from 'aurora-frontend-react-komponenter/DetailsList';
 import ActionButton from 'aurora-frontend-react-komponenter/ActionButton';
+import ManagementResponseDialogSelector from 'components/ManagementResponseDialog';
 
 interface IPodsStatusProps {
   details: IApplicationDeploymentDetails;
@@ -69,8 +69,9 @@ class PodsStatus extends React.Component<IPodsStatusProps, IPodsStatusState> {
     }
     return (
       <div>
-        <HealthResponseDialogSelector
-          health={managementResponses.health}
+        <ManagementResponseDialogSelector
+          title="Pod helsestatus"
+          response={managementResponses.health}
           isUpdating={isUpdating}
           refreshApplicationDeployment={refreshApplicationDeployment}
         />
