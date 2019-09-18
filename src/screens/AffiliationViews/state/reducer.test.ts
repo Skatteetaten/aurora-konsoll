@@ -19,7 +19,8 @@ import {
   findAllApplicationDeploymentsResponse,
   redeployRequest,
   fetchTagsRequest,
-  fetchDetailsRequest
+  fetchDetailsRequest,
+  fetchGroupedTagsRequest
 } from './actions';
 import { affiliationViewReducer } from './reducer';
 
@@ -75,6 +76,19 @@ describe('AffiliationView reducer', () => {
       },
       affiliationViewStateFactory.build({
         isFetchingTags: true
+      })
+    ],
+    [
+      {
+        name: 'fetchTagsRequest',
+        item: affiliationViewStateFactory.build()
+      },
+      {
+        name: 'isFetchingGroupedTags',
+        item: fetchGroupedTagsRequest(true)
+      },
+      affiliationViewStateFactory.build({
+        isFetchingGroupedTags: true
       })
     ],
     [

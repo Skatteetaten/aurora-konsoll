@@ -15,7 +15,11 @@ describe('findTagsPaged', () => {
   it('should fetch tags from GraphQL server and normalize data', async () => {
     serverMock.putResponse('getTags', getTags);
 
-    const result = await imageRepositoryClient.findTagsPaged('test', 'MAJOR');
+    const result = await imageRepositoryClient.findTagsPaged(
+      'test',
+      'MAJOR',
+      0
+    );
     expect(result).toMatchSnapshot();
   });
 
@@ -23,7 +27,7 @@ describe('findTagsPaged', () => {
     serverMock.putResponse('getTags', { data: { imageRepositories: [] } });
 
     try {
-      await imageRepositoryClient.findTagsPaged('mock-repo', 'MAJOR');
+      await imageRepositoryClient.findTagsPaged('mock-repo', 'MAJOR', 0);
     } catch (error) {
       expect((error as Error).message).toEqual(
         'Could not find tags for repository mock-repo'

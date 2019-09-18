@@ -5,7 +5,7 @@ interface IStatusProps {
   code: StatusCode;
 }
 
-const Status = styled<IStatusProps, 'td'>('td')`
+const Status = styled.td<IStatusProps>`
   cursor: pointer;
   padding: 0;
 

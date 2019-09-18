@@ -1,62 +1,71 @@
 import * as React from 'react';
 
 import ActionButton from 'aurora-frontend-react-komponenter/ActionButton';
-import Button from 'aurora-frontend-react-komponenter/Button';
 
 import InfoDialog from 'components/InfoDialog';
 import Spinner from 'components/Spinner';
 import styled from 'styled-components';
+import { ITag } from 'models/Tag';
 
-interface IUpgradeVersionDialogProps {
+export interface IUpgradeButtonProps {
   previousVersion: string;
-  newVersion: string | undefined;
+  tag: ITag;
+  selectedTag?: ITag;
   isRedeploying: boolean;
-  redeployWithVersion: () => void;
+  hasPermissionToUpgrade: boolean;
+  canUpgrade: (selectedTag?: ITag) => boolean;
+  redeployWithVersion: (version?: ITag) => void;
   redeployWithCurrentVersion: () => void;
-  canUpgrade: boolean;
+  handleSelectNextTag: (item?: ITag) => void;
 }
 
-const UpgradeVersionDialog = ({
+const UpgradeButton = ({
   previousVersion,
-  newVersion,
+  tag,
   isRedeploying,
+  hasPermissionToUpgrade,
   redeployWithVersion,
   redeployWithCurrentVersion,
-  canUpgrade
-}: IUpgradeVersionDialogProps) => {
+  canUpgrade,
+  handleSelectNextTag,
+  selectedTag
+}: IUpgradeButtonProps) => {
   const renderFooterButtons = (close: () => void) => {
     const onClose = () => {
-      redeployWithVersion();
+      handleSelectNextTag(tag);
+      redeployWithVersion(tag);
       close();
     };
     return <ActionButton onClick={onClose}>Utfør</ActionButton>;
   };
 
-  const handleVersionChange = () => {
-    return canUpgrade ? 'Endre versjon' : 'Deploy nåværende versjon';
-  };
+  const handleVersionChange =
+    canUpgrade(tag) || isRedeploying ? 'Deploy' : 'Redeploy';
 
   const redeployType = (open: () => void) => {
-    return canUpgrade ? open : redeployWithCurrentVersion;
-  };
-
-  const displayTooltip = () => {
-    if (!canUpgrade && !isRedeploying) {
-      return `Versjon: ${previousVersion}`;
-    }
-    return '';
+    return canUpgrade(tag) ? open : redeployWithCurrentVersion;
   };
 
   const renderOpenDialogButton = (open: () => void) => {
+    const isSelectedVersion =
+      JSON.stringify(selectedTag) === JSON.stringify(tag) ||
+      (previousVersion === tag.name && !selectedTag);
+
     return (
-      <Button
-        buttonType="primary"
-        onClick={redeployType(open)}
-        title={displayTooltip()}
-        disabled={isRedeploying}
-      >
-        {isRedeploying ? <Spinner /> : handleVersionChange()}
-      </Button>
+      <>
+        {isRedeploying && isSelectedVersion ? (
+          <Spinner />
+        ) : (
+          <ActionButton
+            buttonType="primary"
+            icon="Deploy"
+            onClick={redeployType(open)}
+            disabled={isRedeploying || !hasPermissionToUpgrade}
+          >
+            {handleVersionChange}
+          </ActionButton>
+        )}
+      </>
     );
   };
 
@@ -73,7 +82,7 @@ const UpgradeVersionDialog = ({
         </VersionInfo>
         <VersionInfo>
           <p>Til:</p>
-          {newVersion}
+          {tag.name}
         </VersionInfo>
       </>
     </InfoDialog>
@@ -92,4 +101,4 @@ const VersionInfo = styled.div`
   }
 `;
 
-export default UpgradeVersionDialog;
+export default UpgradeButton;
