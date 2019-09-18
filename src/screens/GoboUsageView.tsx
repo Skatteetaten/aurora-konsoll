@@ -33,8 +33,7 @@ class GoboUsageView extends React.Component<
   };
 
   public async getGoboUsers() {
-    const { goboUsers, getGoboUsers } = this.props;
-    await getGoboUsers();
+    const { goboUsers } = this.props;
 
     const count = goboUsers
       .filter(it => it.name !== 'anonymous')
@@ -44,7 +43,17 @@ class GoboUsageView extends React.Component<
   }
 
   public async componentDidMount() {
-    await this.getGoboUsers();
+    const { getGoboUsers } = this.props;
+    await getGoboUsers();
+  }
+
+  public componentDidUpdate(prevProps: IGoboUsageViewProps) {
+    if (
+      JSON.stringify(prevProps.goboUsers) !==
+      JSON.stringify(this.props.goboUsers)
+    ) {
+      this.getGoboUsers();
+    }
   }
 
   public closeModal() {

@@ -13,7 +13,7 @@ const detailListColumns = [
   {
     fieldName: 'type',
     key: 'type',
-    name: 'Type deploy'
+    name: 'Versjontype'
   },
   {
     fieldName: 'name',

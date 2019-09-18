@@ -2,6 +2,7 @@ import * as React from 'react';
 
 import Tooltip from 'components/IconWithTooltip';
 import InfoContent from 'components/InfoContent';
+import DetailsList from 'aurora-frontend-react-komponenter/DetailsList';
 
 import { mount } from 'enzyme';
 
@@ -13,6 +14,7 @@ import {
 } from 'testData/testDataBuilders';
 
 import InformationView from './InformationView';
+import { IPodsStatus } from 'models/Pod';
 
 describe('InformationView', () => {
   const downPod = podFactory.build({ phase: 'Down', latestDeployTag: true });
@@ -25,11 +27,35 @@ describe('InformationView', () => {
     latestDeployTag: false
   });
 
+  const podWithUndefinedStartTime = podFactory.build({
+    startTime: undefined
+  });
+
   const refreshApplicationDeployment = () => {
     return;
   };
 
   describe('AreAnyPodsRunningWithLatestDeployTag', () => {
+    it('Given startTime is not defined, should display startedDate as a dash', () => {
+      const wrapper = mount(
+        <InformationView
+          deployment={deploymentFactory.build()}
+          isFetchingDetails={false}
+          isUpdating={false}
+          refreshApplicationDeployment={refreshApplicationDeployment}
+          deploymentDetails={deploymentDetailsFactory.build({
+            pods: [podWithUndefinedStartTime],
+            deploymentSpec: deploymentSpecFactory.build()
+          })}
+        />
+      );
+      const items: IPodsStatus[] = wrapper
+        .find(DetailsList)
+        .first()
+        .prop('items');
+      expect(items[0]).toMatchObject({ startedDate: '-' });
+    });
+
     it('Given none of the pods have latestDeployTag=true and phase=Running, do display warning message', () => {
       const wrapper = mount(
         <InformationView
