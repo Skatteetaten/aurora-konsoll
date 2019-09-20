@@ -149,6 +149,7 @@ export const deploymentFactory = Factory.Sync.makeFactory<
 export const deploymentDetailsFactory = Factory.Sync.makeFactory<
   IApplicationDeploymentDetails
 >({
+  updatedBy: 'linus',
   deploymentSpec: deploymentSpecFactory.build(),
   pods: podFactory.buildList(3),
   serviceLinks: []

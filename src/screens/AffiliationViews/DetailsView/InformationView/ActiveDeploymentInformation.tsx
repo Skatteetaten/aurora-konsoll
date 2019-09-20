@@ -1,7 +1,10 @@
 import * as React from 'react';
 
 import InfoContent from 'components/InfoContent';
-import { IApplicationDeployment } from 'models/ApplicationDeployment';
+import {
+  IApplicationDeployment,
+  IApplicationDeploymentDetails
+} from 'models/ApplicationDeployment';
 import { IDeploymentSpec } from 'models/DeploymentSpec';
 import { InfoContentValues } from 'models/InfoContentValues';
 import { IPodResource } from 'models/Pod';
@@ -12,10 +15,12 @@ interface IActiveDeploymentInformationProps {
   pods: IPodResource[];
   deploymentSpec?: IDeploymentSpec;
   deployment: IApplicationDeployment;
+  deploymentDetails: IApplicationDeploymentDetails;
 }
 
 export const ActiveDeploymentInformation = ({
   deployment,
+  deploymentDetails,
   pods,
   deploymentSpec
 }: IActiveDeploymentInformationProps) => {
@@ -49,6 +54,10 @@ export const ActiveDeploymentInformation = ({
           })
         : (repo: IImageRepository) => removeFirstPath(repo.repository);
     add('imageRepository', 'Image repository', getImageRepository);
+  });
+
+  values.addFrom(deploymentDetails, add => {
+    add('updatedBy', 'Oppdatert av');
   });
 
   return (

@@ -55,6 +55,7 @@ const InformationView = ({
             pods={pods}
             deployment={deployment}
             deploymentSpec={deploymentSpec}
+            deploymentDetails={deploymentDetails}
           />
           <DeploymentSpecInformation deploymentSpec={deploymentSpec} />
           <GitAndBuildInformation deploymentDetails={deploymentDetails} />

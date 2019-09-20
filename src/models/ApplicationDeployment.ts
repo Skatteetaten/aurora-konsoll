@@ -32,6 +32,7 @@ export interface IApplicationDeploymentStatus {
 }
 
 export interface IApplicationDeploymentDetails {
+  updatedBy?: string;
   buildTime?: string;
   gitInfo?: IGitInfo;
   deploymentSpec?: IDeploymentSpec;

@@ -2,7 +2,10 @@ import {
   IApplicationDeployment,
   IApplicationDeploymentDetails
 } from 'models/ApplicationDeployment';
-import { normalizeRawDeploymentSpec, IDeploymentSpec } from 'models/DeploymentSpec';
+import {
+  normalizeRawDeploymentSpec,
+  IDeploymentSpec
+} from 'models/DeploymentSpec';
 import {
   addErrors,
   addCurrentErrors
@@ -395,7 +398,8 @@ export const findApplicationDeploymentDetails: Thunk = (
       podResources,
       buildTime,
       gitInfo,
-      serviceLinks
+      serviceLinks,
+      updatedBy
     } = result.data.applicationDeploymentDetails;
 
     let deploymentSpec;
@@ -408,6 +412,7 @@ export const findApplicationDeploymentDetails: Thunk = (
     }
     dispatch(
       applicationDeploymentDetailsResponse({
+        updatedBy,
         buildTime,
         gitInfo,
         pods: podResources,
