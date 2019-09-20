@@ -175,23 +175,28 @@ export default class DetailsViewController {
       this.sm.tag.updateTagsPaged(type, next, newTags);
     };
 
-    const fetchNewTags = async () =>
-      await findNewTagsPaged(
-        deployment.repository,
-        selectedTagType,
-        updateTagsPaged,
-        current
-      );
+    const fetchNewTags = async () => {
+      if (deployment.imageRepository) {
+        await findNewTagsPaged(
+          deployment.imageRepository.repository,
+          selectedTagType,
+          updateTagsPaged,
+          current
+        );
+      }
+    };
 
     if (current.hasNextPage) {
       fetchNewTags();
-      await findTagsPaged(
-        deployment.repository,
-        selectedTagType,
-        updateTagsPaged,
-        15,
-        current
-      );
+      if (deployment.imageRepository) {
+        await findTagsPaged(
+          deployment.imageRepository.repository,
+          selectedTagType,
+          updateTagsPaged,
+          15,
+          current
+        );
+      }
     } else {
       fetchNewTags();
     }
@@ -221,7 +226,7 @@ export default class DetailsViewController {
   };
 
   public onMount = () => {
-    const { id, repository } = this.component.props.deployment;
+    const { id, imageRepository } = this.component.props.deployment;
     const {
       findApplicationDeploymentDetails,
       findGroupedTagsPaged,
@@ -229,10 +234,11 @@ export default class DetailsViewController {
     } = this.component.props;
 
     findApplicationDeploymentDetails(id);
-    if (repository) {
+
+    if (imageRepository && imageRepository.guiUrl) {
       const setTagsPagedGroup = (tagsPagedGroup: ITagsPagedGroup) =>
         this.sm.tag.setTagsPagedGroup(tagsPagedGroup);
-      findGroupedTagsPaged(repository, setTagsPagedGroup);
+      findGroupedTagsPaged(imageRepository.repository, setTagsPagedGroup);
     }
     this.component.setState(() => ({
       initialTagType: deployment.version.deployTag.type

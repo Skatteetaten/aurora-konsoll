@@ -16,12 +16,12 @@ interface IApplicationEdge {
 
 interface IApplication {
   name: string;
-  imageRepository?: IImageRepository;
   applicationDeployments: IApplicationDeployment[];
 }
 
-interface IImageRepository {
+export interface IImageRepository {
   repository: string;
+  guiUrl?: string;
 }
 
 export interface IPermission {
@@ -43,6 +43,7 @@ export interface IStatusCheck {
 interface IApplicationDeployment {
   id: string;
   name: string;
+  imageRepository?: IImageRepository;
   affiliation: {
     name: string;
   };
@@ -71,10 +72,11 @@ export const APPLICATIONS_QUERY = gql`
       edges {
         node {
           name
-          imageRepository {
-            repository
-          }
           applicationDeployments {
+            imageRepository {
+              repository
+              guiUrl
+            }
             id
             name
             affiliation {

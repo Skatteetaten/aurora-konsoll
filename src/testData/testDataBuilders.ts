@@ -120,7 +120,9 @@ export const deploymentFactory = Factory.Sync.makeFactory<
   affiliation: 'paas',
   environment: 'martin-dev',
   name: 'martin-test-applikasjon',
-  repository: 'localhost/"martin-test-applikasjon',
+  imageRepository: {
+    repository: 'localhost/"martin-test-applikasjon'
+  },
   status: {
     code: StatusCode.OBSERVE,
     reasons: [],

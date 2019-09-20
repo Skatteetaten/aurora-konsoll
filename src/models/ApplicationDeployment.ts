@@ -3,7 +3,8 @@ import { IPodResource } from 'models/Pod';
 import { ITag } from 'models/Tag';
 import {
   IPermission,
-  IStatusCheck
+  IStatusCheck,
+  IImageRepository
 } from 'services/auroraApiClients/applicationDeploymentClient/query';
 import { StatusCode } from './Status';
 
@@ -11,6 +12,7 @@ export interface IApplicationDeployment {
   id: string;
   affiliation: string;
   name: string;
+  imageRepository?: IImageRepository;
   environment: string;
   status: IApplicationDeploymentStatus;
   version: {
@@ -19,7 +21,6 @@ export interface IApplicationDeployment {
     releaseTo?: string;
   };
   permission: IPermission;
-  repository: string;
   time: string;
   message?: string;
 }

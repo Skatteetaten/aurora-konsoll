@@ -6,6 +6,7 @@ import { IDeploymentSpec } from 'models/DeploymentSpec';
 import { InfoContentValues } from 'models/InfoContentValues';
 import { IPodResource } from 'models/Pod';
 import { DifferentVersionTooltip } from './DifferentVersionTooltip';
+import { IImageRepository } from 'services/auroraApiClients/applicationDeploymentClient/query';
 
 interface IActiveDeploymentInformationProps {
   pods: IPodResource[];
@@ -42,14 +43,12 @@ export const ActiveDeploymentInformation = ({
   values.addFrom(deployment, add => {
     const getImageRepository =
       deploymentSpec && deploymentSpec.type === 'deploy'
-        ? (repo: string) => ({
-            value: removeFirstPath(repo),
-            link: `/api/docker-registry/${removeFirstPath(repo)}/${
-              deployment.version.deployTag.name
-            }`
+        ? (repo: IImageRepository) => ({
+            value: removeFirstPath(repo.repository),
+            link: `${repo.guiUrl}${deployment.version.deployTag.name}`
           })
-        : (repo: string) => removeFirstPath(repo);
-    add('repository', 'Image repository', getImageRepository);
+        : (repo: IImageRepository) => removeFirstPath(repo.repository);
+    add('imageRepository', 'Image repository', getImageRepository);
   });
 
   return (

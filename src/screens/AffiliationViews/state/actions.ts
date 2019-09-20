@@ -7,7 +7,12 @@ import {
   addErrors,
   addCurrentErrors
 } from 'screens/ErrorHandler/state/actions';
-import { defaultTagsPagedGroup, ITagsPagedGroup, ITagsPaged } from 'models/Tag';
+import {
+  defaultTagsPagedGroup,
+  ITagsPagedGroup,
+  ITagsPaged,
+  ITag
+} from 'models/Tag';
 import { IUserSettings } from 'models/UserSettings';
 import { createAction } from 'redux-ts-utils';
 import { Thunk } from 'store/types';
@@ -102,14 +107,14 @@ export const findAllApplicationDeployments: Thunk = (
   } else {
     const r = result.data.applications.edges.reduce(
       (acc: IApplicationDeployment[], { node }) => {
-        const { applicationDeployments, imageRepository } = node;
+        const { applicationDeployments } = node;
         const deployments = applicationDeployments.map(app => ({
           affiliation: app.affiliation.name,
           environment: app.environment,
           id: app.id,
           name: app.name,
           permission: app.namespace.permission,
-          repository: imageRepository ? imageRepository.repository : '',
+          imageRepository: app.imageRepository,
           status: {
             code: app.status.code,
             reasons: app.status.reasons,
@@ -436,11 +441,16 @@ export const toTagsPaged = (
     totalCount,
     endCursor: pageInfo.endCursor,
     hasNextPage: pageInfo.hasNextPage,
-    tags: edges.map(edge => ({
-      lastModified: edge.node.image.buildTime,
-      name: edge.node.name,
-      type: edge.node.type
-    }))
+    tags: edges.reduce((arr: ITag[], edge) => {
+      if (edge.node.image) {
+        arr.push({
+          lastModified: edge.node.image.buildTime,
+          name: edge.node.name,
+          type: edge.node.type
+        });
+      }
+      return arr;
+    }, [])
   };
 };
 
