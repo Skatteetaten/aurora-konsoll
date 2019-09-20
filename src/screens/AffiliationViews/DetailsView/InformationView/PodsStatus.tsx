@@ -72,6 +72,7 @@ class PodsStatus extends React.Component<IPodsStatusProps, IPodsStatusState> {
     if (managementResponses.health) {
       buttons.push(
         <ManagementResponseDialogSelector
+          key="management-health-dialog"
           icon="Favorite"
           title="Pod helsestatus"
           response={managementResponses.health}
@@ -83,6 +84,7 @@ class PodsStatus extends React.Component<IPodsStatusProps, IPodsStatusState> {
     if (managementResponses.env) {
       buttons.push(
         <ManagementResponseDialogSelector
+          key="management-env-dialog"
           icon="Description"
           title="Pod miljøvariabler"
           response={managementResponses.env!!}
