@@ -47,9 +47,23 @@ export interface IDetailsViewProps
   findTagsPaged: (
     repository: string,
     type: ImageTagType,
-    updateTagsPaged: (type: ImageTagType, next: ITagsPaged) => void,
+    updateTagsPaged: (
+      type: ImageTagType,
+      next?: ITagsPaged,
+      newTags?: ITagsPaged
+    ) => void,
     first: number,
-    cursor?: string
+    current: ITagsPaged
+  ) => void;
+  findNewTagsPaged: (
+    repository: string,
+    type: ImageTagType,
+    updateTagsPaged: (
+      type: ImageTagType,
+      next?: ITagsPaged,
+      newTags?: ITagsPaged
+    ) => void,
+    current: ITagsPaged
   ) => void;
   findTagsPagedResponse: ITagsPaged;
   findGroupedTagsPagedResult: ITagsPagedGroup;
@@ -57,6 +71,7 @@ export interface IDetailsViewProps
   isRedeploying: boolean;
   isFetchingDetails: boolean;
   isFetchingTags: boolean;
+  isFetchingGroupedTags: boolean;
   affiliation: string;
 }
 
@@ -67,6 +82,7 @@ export interface IDetailsViewState {
   selectedTagType: ImageTagType;
   versionSearchText: string;
   isInitialTagType: boolean;
+  initialTagType: string;
 }
 
 interface IStateManagers {
@@ -97,20 +113,20 @@ export default class DetailsViewController {
     };
   }
 
-  public redeployWithVersion = async () => {
+  public redeployWithVersion = async (selectedTag?: ITag) => {
     const {
       deployment,
       redeployWithVersion,
       affiliation
     } = this.component.props;
-    const { selectedTag } = this.component.state;
     if (!selectedTag) {
       // TODO: Error message
       return;
     }
     const setInitialTagTypeTrue = () => {
       this.component.setState({
-        isInitialTagType: true
+        isInitialTagType: true,
+        initialTagType: selectedTag.type
       });
     };
 
@@ -142,27 +158,51 @@ export default class DetailsViewController {
   };
 
   public loadMoreTags = async () => {
-    const { deployment, findTagsPaged } = this.component.props;
+    const {
+      deployment,
+      findTagsPaged,
+      findNewTagsPaged
+    } = this.component.props;
     const { selectedTagType } = this.component.state;
 
     const current: ITagsPaged = this.sm.tag.getTagsPaged(selectedTagType);
-    const cursor = current.endCursor;
 
-    const updateTagsPaged = (type: ImageTagType, next: ITagsPaged) =>
-      this.sm.tag.updateTagsPaged(type, next);
-    if (deployment.imageRepository) {
-      await findTagsPaged(
-        deployment.imageRepository.repository,
-        selectedTagType,
-        updateTagsPaged,
-        15,
-        cursor
-      );
+    const updateTagsPaged = (
+      type: ImageTagType,
+      next?: ITagsPaged,
+      newTags?: ITagsPaged
+    ) => {
+      this.sm.tag.updateTagsPaged(type, next, newTags);
+    };
+
+    const fetchNewTags = async () => {
+      if (deployment.imageRepository) {
+        await findNewTagsPaged(
+          deployment.imageRepository.repository,
+          selectedTagType,
+          updateTagsPaged,
+          current
+        );
+      }
+    };
+
+    if (current.hasNextPage) {
+      fetchNewTags();
+      if (deployment.imageRepository) {
+        await findTagsPaged(
+          deployment.imageRepository.repository,
+          selectedTagType,
+          updateTagsPaged,
+          15,
+          current
+        );
+      }
+    } else {
+      fetchNewTags();
     }
   };
 
   public handleSelectStrategy = (e: Event, option: IImageTagTypeOption) => {
-    e.preventDefault();
     this.component.setState(() => ({
       selectedTagType: option.key
     }));
@@ -189,7 +229,8 @@ export default class DetailsViewController {
     const { id, imageRepository } = this.component.props.deployment;
     const {
       findApplicationDeploymentDetails,
-      findGroupedTagsPaged
+      findGroupedTagsPaged,
+      deployment
     } = this.component.props;
 
     findApplicationDeploymentDetails(id);
@@ -199,12 +240,21 @@ export default class DetailsViewController {
         this.sm.tag.setTagsPagedGroup(tagsPagedGroup);
       findGroupedTagsPaged(imageRepository.repository, setTagsPagedGroup);
     }
+    this.component.setState(() => ({
+      initialTagType: deployment.version.deployTag.type
+    }));
   };
 
   public getVersionViewUnavailableMessage():
     | IUnavailableServiceMessage
     | undefined {
-    const { deploymentSpec } = this.component.props.deploymentDetails;
+    const {
+      isFetchingTags,
+      isFetchingGroupedTags,
+      deploymentDetails
+    } = this.component.props;
+    const { deploymentSpec } = deploymentDetails;
+
     const serviceUnavailableBecause = unavailableServiceMessageCreator(
       'Det er ikke mulig å endre versjonen på denne applikasjonen'
     );
@@ -215,20 +265,23 @@ export default class DetailsViewController {
       );
     }
 
-    if (!this.sm.tag.containsTags() && !this.component.props.isFetchingTags) {
+    if (
+      !this.sm.tag.containsTags() &&
+      !isFetchingTags &&
+      !isFetchingGroupedTags
+    ) {
       return serviceUnavailableBecause('Det finnes ingen tilgjengelig tags');
     }
 
     return undefined;
   }
 
-  public canUpgrade = () => {
+  public canUpgrade = (selectedTag?: ITag) => {
     const {
       deployment,
       isRedeploying,
       deploymentDetails
     } = this.component.props;
-    const { selectedTag } = this.component.state;
 
     const isAuroraVersionSelectedTag = () =>
       deploymentDetails.deploymentSpec &&

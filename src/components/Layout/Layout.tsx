@@ -26,8 +26,14 @@ interface ILayoutProps {
   onAffiliationChange: (affiliation: string) => void;
   displayDatabaseView: boolean;
   displaySkapViews: boolean;
-  currentUser: IUserAndAffiliations;
+  currentUser?: IUserAndAffiliations;
 }
+
+const defaultUser: IUserAndAffiliations = {
+  affiliations: [],
+  id: '',
+  user: ''
+};
 
 const Layout = ({
   affiliation,
@@ -39,7 +45,7 @@ const Layout = ({
   onAffiliationChange,
   displayDatabaseView,
   displaySkapViews,
-  currentUser
+  currentUser = defaultUser
 }: ILayoutProps) => {
   const onAffiliationChanged = (item: IDropdownOption, index: number) => {
     if (index > 0) {

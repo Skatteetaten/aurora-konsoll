@@ -27,6 +27,7 @@ export interface IImageTagsConnection {
     endCursor: string;
     hasNextPage: boolean;
   };
+  totalCount: number;
   edges: Array<{
     node: IImageTag;
   }>;
@@ -43,7 +44,7 @@ export interface IImageTag {
 export const TAGS_QUERY = gql`
   query getTags(
     $repositories: [String!]!
-    $cursor: String!
+    $cursor: String
     $types: [ImageTagType!]!
     $first: Int!
   ) {
@@ -53,6 +54,7 @@ export const TAGS_QUERY = gql`
           endCursor
           hasNextPage
         }
+        totalCount
         edges {
           node {
             name
@@ -102,6 +104,7 @@ export const TAGS_GROUPED_QUERY = gql`
       endCursor
       hasNextPage
     }
+    totalCount
     edges {
       node {
         name

@@ -11,7 +11,8 @@ import {
   findAllApplicationDeploymentsRequest,
   redeployRequest,
   fetchTagsRequest,
-  fetchDetailsRequest
+  fetchDetailsRequest,
+  fetchGroupedTagsRequest
 } from './actions';
 import {
   deploymentFactory,
@@ -59,10 +60,17 @@ describe('affiliation views actions', () => {
     });
   });
 
-  it('should return type of action fetchRequest and payload', () => {
+  it('should return type of action fetchTagsRequest and payload', () => {
     expect(fetchTagsRequest(true)).toEqual({
       payload: true,
       type: 'affiliationView/FETCH_TAGS_REQUEST'
+    });
+  });
+
+  it('should return type of action fetchGroupedTagsRequest and payload', () => {
+    expect(fetchGroupedTagsRequest(true)).toEqual({
+      payload: true,
+      type: 'affiliationView/FETCH_GROUPED_TAGS_REQUEST'
     });
   });
 
