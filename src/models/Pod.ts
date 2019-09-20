@@ -12,6 +12,7 @@ export interface IPodResource {
       error?: IManagementEndpointError;
     };
     health?: IManagementEndpointResponse;
+    env?: IManagementEndpointResponse;
   };
   links: ILink[];
 }

@@ -6,18 +6,20 @@ import InfoDialog from 'components/InfoDialog';
 import { IManagementEndpointResponse } from 'models/Pod';
 import styled from 'styled-components';
 import { prettifyJSON } from 'utils/string';
-import { StyledActionButton, StyledPre } from './utilComponents';
+import { StyledPre } from 'components/StyledPre';
 
 interface IErrorResponseDialogProps {
-  health: IManagementEndpointResponse;
+  response: IManagementEndpointResponse;
   createdAtTime: string;
+  icon: string;
   renderRefreshButton: () => JSX.Element;
 }
 
 const ErrorResponseDialog = ({
-  health,
+  response,
   createdAtTime,
-  renderRefreshButton
+  renderRefreshButton,
+  icon
 }: IErrorResponseDialogProps) => {
   const renderOpenErrorButton = (open: () => void) => (
     <StyledActionButton>
@@ -25,14 +27,14 @@ const ErrorResponseDialog = ({
         onClick={open}
         iconSize={ActionButton.LARGE}
         color="red"
-        icon="Warning"
+        icon={icon}
       >
         Helsestatus
       </ActionButton>
     </StyledActionButton>
   );
 
-  const { httpCode, textResponse, error } = health;
+  const { httpCode, textResponse, error } = response;
   const text = (textResponse && prettifyJSON(textResponse)) || textResponse;
   const status = httpCode ? ` (${httpCode})` : '';
 
@@ -40,7 +42,7 @@ const ErrorResponseDialog = ({
     <InfoDialog
       renderFooterButtons={renderRefreshButton}
       renderOpenDialogButton={renderOpenErrorButton}
-      title={'Feil fra helsesjekk' + status}
+      title={'Feil fra endepunkt' + status}
       subText={createdAtTime}
     >
       <>
@@ -50,6 +52,16 @@ const ErrorResponseDialog = ({
     </InfoDialog>
   );
 };
+
+export const StyledActionButton = styled.div`
+  display: flex;
+  flex: 1;
+
+  button {
+    display: flex;
+    justify-content: center;
+  }
+`;
 
 const Content = styled.div`
   margin-bottom: 10px;

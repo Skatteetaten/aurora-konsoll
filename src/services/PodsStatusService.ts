@@ -49,8 +49,8 @@ const podsStatusColumns: IColumn[] = [
     isResizable: true,
     key: '4',
     columnActionsMode: ColumnActionsMode.disabled,
-    maxWidth: 80,
-    minWidth: 80,
+    maxWidth: 120,
+    minWidth: 120,
     name: '',
     iconName: ''
   }

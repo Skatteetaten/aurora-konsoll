@@ -10,7 +10,7 @@ import DetailsList from 'aurora-frontend-react-komponenter/DetailsList';
 import { IWebsealState } from 'models/Webseal';
 import WebsealService from 'services/WebsealService';
 import styled from 'styled-components';
-import { StyledPre } from '../DetailsView/InformationView/HealthResponseDialogSelector/utilComponents';
+import { StyledPre } from 'components/StyledPre';
 
 interface IWebsealDialogProps {
   className?: string;

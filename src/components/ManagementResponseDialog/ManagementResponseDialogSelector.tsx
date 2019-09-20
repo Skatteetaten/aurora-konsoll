@@ -7,17 +7,21 @@ import { getTimestamp } from 'utils/date';
 import ErrorResponseDialog from './ErrorResponseDialog';
 import SuccessResponseDialog from './SuccessResponseDialog';
 
-interface IHealthResponseDialogSelectorProps {
-  health: IManagementEndpointResponse;
+interface IManagementResponseDialogSelectorProps {
+  response: IManagementEndpointResponse;
   isUpdating: boolean;
+  title: string;
+  icon: string;
   refreshApplicationDeployment: () => void;
 }
 
-const HealthResponseDialogSelector = ({
-  health,
+const ManagementResponseDialogSelector = ({
+  response,
   refreshApplicationDeployment,
-  isUpdating
-}: IHealthResponseDialogSelectorProps) => {
+  isUpdating,
+  title,
+  icon
+}: IManagementResponseDialogSelectorProps) => {
   const renderRefreshButton = () => {
     return (
       <ActionButton
@@ -29,21 +33,24 @@ const HealthResponseDialogSelector = ({
     );
   };
 
-  const createdAtTime = `Oppdatert: ${getTimestamp(health.createdAt)}`;
+  const createdAtTime = `Oppdatert: ${getTimestamp(response.createdAt)}`;
 
-  return !health.error ? (
+  return !response.error ? (
     <SuccessResponseDialog
+      icon={icon}
+      title={title}
       createdAtTime={createdAtTime}
-      health={health}
+      response={response}
       renderRefreshButton={renderRefreshButton}
     />
   ) : (
     <ErrorResponseDialog
+      icon={icon}
       createdAtTime={createdAtTime}
-      health={health}
+      response={response}
       renderRefreshButton={renderRefreshButton}
     />
   );
 };
 
-export default HealthResponseDialogSelector;
+export default ManagementResponseDialogSelector;
