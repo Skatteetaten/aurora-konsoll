@@ -414,6 +414,51 @@ export const findApplicationDeploymentDetails: Thunk = (
         {} as IDeploymentSpec
       );
     }
+
+    const isHtml = (str: any): boolean => {
+      if (!str) {
+        return false;
+      }
+
+      return !(str || '')
+        .replace(/<([^>]+?)([^>]*?)>(.*?)<\/\1>/gi, '')
+        .replace(/(<([^>]+)>)/gi, '')
+        .trim();
+    };
+
+    for (const podResource of podResources) {
+      const managementResponses = podResource.managementResponses;
+      if (managementResponses) {
+        if (
+          managementResponses.health &&
+          isHtml(managementResponses.health.textResponse)
+        ) {
+          dispatch(
+            addErrors([
+              new Error(
+                'health endepunktet inneholder HTML som er ugyldig data. Feilen kan være forårsaket av feil oppsett av Management Interface'
+              )
+            ])
+          );
+          delete managementResponses.health;
+        }
+
+        if (
+          managementResponses.env &&
+          isHtml(managementResponses.env.textResponse)
+        ) {
+          dispatch(
+            addErrors([
+              new Error(
+                'env endepunktet inneholder HTML som er ugyldig data. Feilen kan være forårsaket av feil oppsett av Management Interface'
+              )
+            ])
+          );
+          delete managementResponses.env;
+        }
+      }
+    }
+
     dispatch(
       applicationDeploymentDetailsResponse({
         updatedBy,
