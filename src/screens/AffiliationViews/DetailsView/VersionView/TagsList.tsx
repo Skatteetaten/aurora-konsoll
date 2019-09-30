@@ -46,7 +46,6 @@ interface ITagsListProps {
   selectedTag?: ITag;
   initialTagType: string;
   isRedeploying: boolean;
-  versionSearchText: string;
   hasPermissionToUpgrade: boolean;
   handlefetchTags: () => void;
   handleSelectNextTag: (item?: ITag) => void;
@@ -79,8 +78,7 @@ class TagsList extends React.Component<ITagsListProps, ITagsListState> {
       selectedTag,
       initialTagType,
       imageTagType,
-      handlefetchTags,
-      versionSearchText
+      handlefetchTags
     } = this.props;
 
     const deployedTagIndex = tags.findIndex(t => t.name === deployedTag.name);
@@ -95,7 +93,7 @@ class TagsList extends React.Component<ITagsListProps, ITagsListState> {
 
     if (deployedTagIndex !== -1) {
       this.selection.setIndexSelected(deployedTagIndex, true, true);
-    } else if (imageTagType === initialTagType && !!!versionSearchText) {
+    } else if (imageTagType === initialTagType) {
       handlefetchTags();
     }
   };

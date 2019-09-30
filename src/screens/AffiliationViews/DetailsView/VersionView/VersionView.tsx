@@ -44,10 +44,6 @@ interface IVersionViewProps {
   searchForVersions: () => void;
 }
 
-interface IVersionViewState {
-  searchRef?: ITextField;
-}
-
 const ENTER_KEY = 13;
 
 const VersionView = ({
@@ -73,14 +69,12 @@ const VersionView = ({
   versionSearchText,
   searchForVersions
 }: IVersionViewProps) => {
-  const [state, setState] = useState<IVersionViewState>({
-    searchRef: undefined
-  });
+  let searchRef: ITextField | undefined;
   useEffect(() => {
-    if (state.searchRef) {
-      state.searchRef.focus();
+    if (searchRef) {
+      searchRef.focus();
     }
-  }, [state.searchRef]);
+  }, [searchRef]);
 
   if (unavailableMessage) {
     return <UnavailableServiceMessage message={unavailableMessage} />;
@@ -98,10 +92,7 @@ const VersionView = ({
   };
 
   const loadMoreTagsMessage = () => {
-    if (!tagsPaged.hasNextPage) {
-      return 'Søk etter nye';
-    }
-    return 'Last inn 100 flere';
+    return 'Hent flere versjoner';
   };
 
   return (
@@ -122,9 +113,9 @@ const VersionView = ({
             />
             <div style={{ width: 300, marginLeft: 20, marginRight: 6 }}>
               <TextField
-                componentRef={value => {
-                  if (!state.searchRef) {
-                    setState({ searchRef: value });
+                componentRef={(value: ITextField) => {
+                  if (!searchRef) {
+                    searchRef = value;
                   }
                 }}
                 placeholder="Søk etter versjon"
@@ -135,12 +126,42 @@ const VersionView = ({
               />
             </div>
           </div>
-          <span style={{ marginBottom: '5px' }}>
-            <MessageBar type={MessageBar.Type.info}>
-              Listen kan være mangelfull. Gjør et søk eller last inn flere
-              versjoner.
-            </MessageBar>
-          </span>
+          <CalloutButton
+            style={{
+              marginBottom: '6px'
+            }}
+            calloutProps={{
+              color: Callout.INFO,
+              gapSpace: 8,
+              directionalHint: Callout.POS_BOTTOM_LEFT
+            }}
+            buttonProps={{
+              icon: 'info',
+              buttonType: 'secondary'
+            }}
+            title="Finner du ikke versjoner du leter etter?"
+            content={
+              <>
+                <p>
+                  På grunn av overgang til nytt Docker registry (fra Dockers
+                  eget registry til Nexus Docker registry) har vi ikke lengre
+                  mulighet til å hente ut en versjonsliste sortert på dato
+                  (denne featuren baserte seg tidligere på en funksjon i Dockers
+                  eget registry som ikke er i Nexus Docker registry). Denne
+                  informasjonen må nå hentes ut individuelt for hver versjon,
+                  noe som er tid- og ressurskrevende. Inntil videre er det
+                  derfor ikke mulig å tilby en korrekt versjonsliste hvor nyeste
+                  versjoner alltid kommer først.
+                </p>
+                <p>
+                  Dersom du ikke finner versjonen kan du forsøke å søke eller
+                  trykke på "Hent flere versjoner". Det kan være du må trykke
+                  flere ganger før versjone du er på jakt etter dukker opp. Et
+                  søk vil ofte være bedre.
+                </p>
+              </>
+            }
+          />
           <div className="details-list">
             <TagsList
               tags={tagsPaged.tags}
@@ -154,7 +175,6 @@ const VersionView = ({
               isRedeploying={isRedeploying}
               redeployWithVersion={redeployWithVersion}
               redeployWithCurrentVersion={redeployWithCurrentVersion}
-              versionSearchText={versionSearchText}
               hasPermissionToUpgrade={hasPermissionToUpgrade}
             />
           </div>
@@ -195,8 +215,9 @@ const VersionView = ({
                   title="Vis info"
                   content={
                     <p>
-                      Hver gang man laster inn tags så vil det alltid hentes de
-                      nyeste tagene i tillegg.
+                      Hver gang man henter flere versjoner så vil det alltid
+                      hentes de nyeste versjonene i tillegg. Det hentes maks 100
+                      versjoner av gangen.
                     </p>
                   }
                 />
