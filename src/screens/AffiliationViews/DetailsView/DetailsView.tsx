@@ -127,7 +127,7 @@ class DetailsView extends React.Component<
                 handleSelectNextTag={this.controller.handleSelectNextTag}
                 handlefetchTags={this.controller.loadMoreTags}
                 handleSelectStrategy={this.controller.handleSelectStrategy}
-                handleVersionSearch={this.controller.handleVersionSearch}
+                setVersionSearchText={this.controller.setVersionSearchText}
                 searchForVersions={this.controller.searchForVersions}
                 redeployWithVersion={this.controller.redeployWithVersion}
                 redeployWithCurrentVersion={

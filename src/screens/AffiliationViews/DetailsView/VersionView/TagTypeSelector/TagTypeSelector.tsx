@@ -28,7 +28,7 @@ export interface IImageTagTypeOption {
 
 interface ITagTypeSelector {
   imageTagType: ImageTagType;
-  handleSelectStrategy: (e: Event, option: IImageTagTypeOption) => void;
+  handleSelectStrategy: (option: ImageTagType) => void;
   findGroupedTagsPagedResult: ITagsPagedGroup;
   className?: string;
 }
@@ -86,7 +86,7 @@ const TagTypeSelector = ({
   className
 }: ITagTypeSelector) => {
   const onTagTypeChanged = (e: Event, option: IImageTagTypeOption) => {
-    handleSelectStrategy(e, option);
+    handleSelectStrategy(option.key);
   };
 
   function groupedTagsTotalCount(type: ImageTagType): number | undefined {

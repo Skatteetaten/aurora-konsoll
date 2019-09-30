@@ -164,7 +164,7 @@ export default class DetailsViewController {
     await refreshApplicationDeployment(deployment.id, affiliation);
   };
 
-  public loadMoreTags = async () => {
+  public loadMoreTags = async (searchText?: string) => {
     const {
       deployment,
       findTagsPaged,
@@ -211,7 +211,7 @@ export default class DetailsViewController {
             updateSearchTagsPaged,
             100,
             current,
-            this.component.state.versionSearchText
+            searchText || ''
           );
         } else {
           findTagsPaged(
@@ -228,7 +228,7 @@ export default class DetailsViewController {
     }
   };
 
-  public searchForVersions = () => {
+  public searchForVersions = (text: string) => {
     const { deployment, searchTagsPaged } = this.component.props;
 
     this.sm.tag.clearTagsPaged(ImageTagType.SEARCH);
@@ -244,23 +244,22 @@ export default class DetailsViewController {
         updateTagsPaged,
         100,
         current,
-        this.component.state.versionSearchText
+        text
       );
     }
   };
 
-  public handleSelectStrategy = (e: Event, option: IImageTagTypeOption) => {
+  public handleSelectStrategy = (type: ImageTagType) => {
     this.sm.tag.clearTagsPaged(ImageTagType.SEARCH);
     this.component.setState(() => ({
-      selectedTagType: option.key,
+      selectedTagType: type,
       versionSearchText: ''
     }));
   };
 
-  public handleVersionSearch = (value: string) => {
+  public setVersionSearchText = (value: string) => {
     this.component.setState({
-      versionSearchText: value,
-      selectedTagType: ImageTagType.SEARCH
+      versionSearchText: value
     });
   };
 

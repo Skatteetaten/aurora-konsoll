@@ -47,7 +47,7 @@ interface ITagsListProps {
   initialTagType: string;
   isRedeploying: boolean;
   hasPermissionToUpgrade: boolean;
-  handlefetchTags: () => void;
+  handlefetchTags: (searchText?: string) => void;
   handleSelectNextTag: (item?: ITag) => void;
   canUpgrade: (selectedTag?: ITag) => boolean;
   redeployWithCurrentVersion: () => void;

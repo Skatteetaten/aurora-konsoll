@@ -14,9 +14,7 @@ import { ITag, ITagsPaged, ITagsPagedGroup } from 'models/Tag';
 import UnavailableServiceMessage from 'components/UnavailableServiceMessage';
 import { IUnavailableServiceMessage } from 'models/UnavailableServiceMessage';
 import TagsList from './TagsList';
-import TagTypeSelector, {
-  IImageTagTypeOption
-} from './TagTypeSelector/TagTypeSelector';
+import TagTypeSelector from './TagTypeSelector/TagTypeSelector';
 import MessageBar from 'aurora-frontend-react-komponenter/MessageBar';
 import { ITextField } from 'office-ui-fabric-react';
 
@@ -35,13 +33,13 @@ interface IVersionViewProps {
   findGroupedTagsPagedResult: ITagsPagedGroup;
   versionSearchText: string;
   canUpgrade: (selectedTag?: ITag) => boolean;
-  handlefetchTags: () => void;
-  handleSelectStrategy: (e: Event, option: IImageTagTypeOption) => void;
-  handleVersionSearch: (value: string) => void;
+  handlefetchTags: (searchText?: string) => void;
+  handleSelectStrategy: (option: ImageTagType) => void;
+  setVersionSearchText: (value: string) => void;
   redeployWithVersion: (version?: ITag) => void;
   redeployWithCurrentVersion: () => void;
   handleSelectNextTag: (item?: ITag) => void;
-  searchForVersions: () => void;
+  searchForVersions: (text: string) => void;
 }
 
 const ENTER_KEY = 13;
@@ -62,12 +60,12 @@ const VersionView = ({
   deployedTag,
   className,
   handleSelectStrategy,
-  handleVersionSearch,
   redeployWithVersion,
   redeployWithCurrentVersion,
   handleSelectNextTag,
-  versionSearchText,
-  searchForVersions
+  setVersionSearchText,
+  searchForVersions,
+  versionSearchText
 }: IVersionViewProps) => {
   let searchRef: ITextField | undefined;
   useEffect(() => {
@@ -76,17 +74,28 @@ const VersionView = ({
     }
   }, [searchRef]);
 
+  useEffect(() => {
+    if (selectedTagType !== ImageTagType.SEARCH) {
+      setVersionSearchText('');
+    }
+  }, [selectedTagType, setVersionSearchText]);
+
   if (unavailableMessage) {
     return <UnavailableServiceMessage message={unavailableMessage} />;
   }
 
   const searchOnEnterPress = (e: React.KeyboardEvent<InputEvent>) => {
+    if (selectedTagType !== ImageTagType.SEARCH) {
+      handleSelectStrategy(ImageTagType.SEARCH);
+    }
     if (
       e.charCode === ENTER_KEY &&
       (!isFetchingTags || !isFetchingGroupedTags)
     ) {
-      if (versionSearchText !== '') {
-        searchForVersions();
+      const text = searchRef ? searchRef.value : undefined;
+      if (text) {
+        setVersionSearchText(text);
+        searchForVersions(text);
       }
     }
   };
@@ -119,7 +128,6 @@ const VersionView = ({
                   }
                 }}
                 placeholder="Søk etter versjon"
-                onChange={(_e, value) => handleVersionSearch(value)}
                 value={versionSearchText}
                 iconProps={{ iconName: 'Search' }}
                 onKeyPress={searchOnEnterPress}
@@ -184,7 +192,11 @@ const VersionView = ({
               <Button
                 icon="History"
                 buttonType="primaryRoundedFilled"
-                onClick={handlefetchTags}
+                onClick={() => {
+                  if (searchRef) {
+                    handlefetchTags(searchRef.value);
+                  }
+                }}
                 disabled={
                   isFetchingTags ||
                   isFetchingGroupedTags ||
