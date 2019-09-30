@@ -1,6 +1,12 @@
+import { uniqBy } from 'lodash';
 import { findImageTagTypeName, ImageTagType } from 'models/ImageTagType';
 import StateManager from 'models/StateManager';
-import { ITag, ITagsPaged, ITagsPagedGroup } from 'models/Tag';
+import {
+  ITag,
+  ITagsPaged,
+  ITagsPagedGroup,
+  defaultTagsPaged
+} from 'models/Tag';
 
 export class TagStateManager extends StateManager<ITagsPagedGroup> {
   public setTagsPagedGroup(tagsPagedGroup: ITagsPagedGroup) {
@@ -13,6 +19,9 @@ export class TagStateManager extends StateManager<ITagsPagedGroup> {
     newTags?: ITagsPaged
   ): void {
     const name = findImageTagTypeName(type);
+    if (!name) {
+      return;
+    }
 
     const updateTags = (state: ITagsPagedGroup) => {
       return this.addTags(state[name], next, newTags);
@@ -24,32 +33,44 @@ export class TagStateManager extends StateManager<ITagsPagedGroup> {
     }));
   }
 
+  public clearTagsPaged(type: ImageTagType): void {
+    const name = findImageTagTypeName(type);
+    if (!name) {
+      return;
+    }
+
+    this.updateState(state => ({
+      ...state,
+      [name]: defaultTagsPaged
+    }));
+  }
+
   public getTagsPaged(type: ImageTagType): ITagsPaged {
     const name = findImageTagTypeName(type);
+    if (!name) {
+      return defaultTagsPaged;
+    }
     return this.getState()[name];
   }
 
-  public getTagsPageFiltered(
-    type: ImageTagType,
-    searchText: string
-  ): ITagsPaged {
+  public getTagsPageFiltered(type: ImageTagType): ITagsPaged {
     const sortTagsByDate = (t1: ITag, t2: ITag) => {
-      const date1 = new Date(t1.lastModified).getTime();
-      const date2 = new Date(t2.lastModified).getTime();
-      return date2 - date1;
+      if (t1.lastModified && t2.lastModified) {
+        const date1 = new Date(t1.lastModified).getTime();
+        const date2 = new Date(t2.lastModified).getTime();
+        return date2 - date1;
+      }
+      return 0;
     };
 
     const tagsPaged = this.getTagsPaged(type);
 
-    const tags = tagsPaged.tags
-      .filter(v => {
-        return searchText.length === 0 || v.name.search(searchText) !== -1;
-      })
-      .sort(sortTagsByDate)
-      .map(tag => ({
-        ...tag,
-        lastModified: new Date(tag.lastModified).toISOString()
-      }));
+    const tags = tagsPaged.tags.sort(sortTagsByDate).map(tag => ({
+      ...tag,
+      lastModified: tag.lastModified
+        ? new Date(tag.lastModified).toISOString()
+        : ''
+    }));
 
     return {
       ...tagsPaged,
@@ -74,12 +95,12 @@ export class TagStateManager extends StateManager<ITagsPagedGroup> {
     if (next) {
       return {
         ...next,
-        tags: [...old.tags, ...next.tags]
+        tags: uniqBy([...old.tags, ...next.tags], 'name')
       };
     } else if (newTags) {
       return {
         ...old,
-        tags: [...newTags.tags, ...old.tags]
+        tags: uniqBy([...newTags.tags, ...old.tags], 'name')
       };
     }
     return old;

@@ -6,10 +6,11 @@ export enum ImageTagType {
   MAJOR = 'MAJOR',
   MINOR = 'MINOR',
   SNAPSHOT = 'SNAPSHOT',
-  COMMIT_HASH = 'COMMIT_HASH'
+  COMMIT_HASH = 'COMMIT_HASH',
+  SEARCH = 'SEARCH'
 }
 
-export function findImageTagTypeName(type: ImageTagType): string {
+export function findImageTagTypeName(type: ImageTagType): string | undefined {
   switch (type) {
     case ImageTagType.AURORA_VERSION:
       return 'auroraVersion';
@@ -27,7 +28,9 @@ export function findImageTagTypeName(type: ImageTagType): string {
       return 'snapshot';
     case ImageTagType.COMMIT_HASH:
       return 'commitHash';
+    case ImageTagType.SEARCH:
+      return 'search';
     default:
-      return '';
+      return undefined;
   }
 }

@@ -163,7 +163,7 @@ class TagsList extends React.Component<ITagsListProps, ITagsListState> {
         return {
           type: getOptionName(it.type),
           name: it.name,
-          lastModified: it.lastModified,
+          lastModified: it.lastModified || '',
           deploy: deployButton(it)
         };
       });

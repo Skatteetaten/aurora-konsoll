@@ -5,6 +5,14 @@ import {
   TAGS_GROUPED_QUERY,
   TAGS_QUERY
 } from './query';
+import { ImageTagType } from 'models/ImageTagType';
+
+interface IImageTagsVariables {
+  cursor?: string;
+  first: number;
+  repositories: string[];
+  types?: string[];
+}
 
 export class ImageRepositoryClient {
   private client: GoboClient;
@@ -13,10 +21,10 @@ export class ImageRepositoryClient {
     this.client = client;
   }
 
-  public async findTagsPaged(
+  public async searchTagsPaged(
     repository: string,
-    type: string,
     first: number,
+    filter: string,
     cursor?: string
   ): Promise<IGoboResult<ITagsQuery> | undefined> {
     return await this.client.query<ITagsQuery>({
@@ -24,9 +32,32 @@ export class ImageRepositoryClient {
       variables: {
         cursor,
         first,
-        repositories: [repository],
-        types: [type]
+        filter,
+        repositories: [repository]
       }
+    });
+  }
+
+  public async findTagsPaged(
+    repository: string,
+    type: string,
+    first: number,
+    cursor?: string
+  ): Promise<IGoboResult<ITagsQuery> | undefined> {
+    const isSearch = type === ImageTagType.SEARCH;
+    let variables: IImageTagsVariables = {
+      cursor,
+      first,
+      repositories: [repository]
+    };
+
+    if (!isSearch) {
+      variables.types = [type];
+    }
+
+    return await this.client.query<ITagsQuery>({
+      query: TAGS_QUERY,
+      variables
     });
   }
 

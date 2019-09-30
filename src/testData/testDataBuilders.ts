@@ -297,6 +297,12 @@ export const tagsPagedGroupFactory = Factory.Sync.makeFactory<ITagsPagedGroup>({
     endCursor: '',
     hasNextPage: false,
     totalCount: 0
+  },
+  search: {
+    tags: [],
+    endCursor: '',
+    hasNextPage: false,
+    totalCount: 0
   }
 });
 

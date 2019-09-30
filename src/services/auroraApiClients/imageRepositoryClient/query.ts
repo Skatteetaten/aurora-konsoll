@@ -45,11 +45,12 @@ export const TAGS_QUERY = gql`
   query getTags(
     $repositories: [String!]!
     $cursor: String
-    $types: [ImageTagType!]!
+    $types: [ImageTagType!]
     $first: Int!
+    $filter: String
   ) {
     imageRepositories(repositories: $repositories) {
-      tags(types: $types, first: $first, after: $cursor) {
+      tags(types: $types, first: $first, after: $cursor, filter: $filter) {
         pageInfo {
           endCursor
           hasNextPage

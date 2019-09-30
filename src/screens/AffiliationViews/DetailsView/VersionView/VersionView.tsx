@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { useEffect, useState } from 'react';
 import styled from 'styled-components';
 
 import Button from 'aurora-frontend-react-komponenter/Button';
@@ -17,6 +18,7 @@ import TagTypeSelector, {
   IImageTagTypeOption
 } from './TagTypeSelector/TagTypeSelector';
 import MessageBar from 'aurora-frontend-react-komponenter/MessageBar';
+import { ITextField } from 'office-ui-fabric-react';
 
 interface IVersionViewProps {
   hasPermissionToUpgrade: boolean;
@@ -39,7 +41,14 @@ interface IVersionViewProps {
   redeployWithVersion: (version?: ITag) => void;
   redeployWithCurrentVersion: () => void;
   handleSelectNextTag: (item?: ITag) => void;
+  searchForVersions: () => void;
 }
+
+interface IVersionViewState {
+  searchRef?: ITextField;
+}
+
+const ENTER_KEY = 13;
 
 const VersionView = ({
   tagsPaged,
@@ -61,8 +70,18 @@ const VersionView = ({
   redeployWithVersion,
   redeployWithCurrentVersion,
   handleSelectNextTag,
-  versionSearchText
+  versionSearchText,
+  searchForVersions
 }: IVersionViewProps) => {
+  const [state, setState] = useState<IVersionViewState>({
+    searchRef: undefined
+  });
+  useEffect(() => {
+    if (state.searchRef) {
+      state.searchRef.focus();
+    }
+  }, [state.searchRef]);
+
   if (unavailableMessage) {
     return <UnavailableServiceMessage message={unavailableMessage} />;
   }
@@ -71,7 +90,7 @@ const VersionView = ({
     if (!tagsPaged.hasNextPage) {
       return 'Søk etter nye';
     }
-    return 'Last inn 15 flere';
+    return 'Last inn 100 flere';
   };
 
   return (
@@ -90,14 +109,36 @@ const VersionView = ({
               handleSelectStrategy={handleSelectStrategy}
               findGroupedTagsPagedResult={findGroupedTagsPagedResult}
             />
-            <div style={{ width: 300, paddingLeft: 20 }}>
+            <div style={{ width: 300, marginLeft: 20, marginRight: 6 }}>
               <TextField
-                placeholder="Listen oppdateres når du skriver"
-                onChanged={handleVersionSearch}
+                componentRef={value => {
+                  if (!state.searchRef) {
+                    setState({ searchRef: value });
+                  }
+                }}
+                placeholder="Søk etter versjon"
+                onChange={(_e, value) => handleVersionSearch(value)}
+                value={versionSearchText}
                 iconProps={{ iconName: 'Search' }}
+                onKeyPress={(e: React.KeyboardEvent<InputEvent>) => {
+                  if (
+                    e.charCode === ENTER_KEY &&
+                    (!isFetchingTags || !isFetchingGroupedTags)
+                  ) {
+                    if (versionSearchText !== '') {
+                      searchForVersions();
+                    }
+                  }
+                }}
               />
             </div>
           </div>
+          <span style={{ marginBottom: '5px' }}>
+            <MessageBar type={MessageBar.Type.info}>
+              Listen kan være mangelfull. Gjør et søk eller last inn flere
+              versjoner.
+            </MessageBar>
+          </span>
           <div className="details-list">
             <TagsList
               tags={tagsPaged.tags}
@@ -116,15 +157,18 @@ const VersionView = ({
             />
           </div>
           <div className="tags-action">
-            <div>{`Viser ${tagsPaged.tags.length} av ${
-              tagsPaged.totalCount
-            } tags`}</div>
+            <div>{`Viser ${tagsPaged.tags.length} av ${tagsPaged.totalCount} tags`}</div>
             <div>
               <Button
                 icon="History"
                 buttonType="primaryRoundedFilled"
                 onClick={handlefetchTags}
-                disabled={isFetchingTags || isFetchingGroupedTags}
+                disabled={
+                  isFetchingTags ||
+                  isFetchingGroupedTags ||
+                  (selectedTagType === ImageTagType.SEARCH &&
+                    !tagsPaged.hasNextPage)
+                }
                 style={{
                   minWidth: '195px'
                 }}
@@ -173,14 +217,11 @@ export default styled(VersionView)`
 
   .action-bar {
     margin-bottom: 10px;
-    max-width: 850px;
     display: flex;
-    justify-content: space-between;
     align-items: flex-end;
   }
 
   .details-list {
-    margin-top: 30px;
     overflow-x: hidden;
   }
 

@@ -3,7 +3,7 @@ import { ImageTagType } from 'models/ImageTagType';
 export interface ITag {
   name: string;
   type: ImageTagType;
-  lastModified: string;
+  lastModified?: string;
 }
 
 export interface ITagsPaged {
@@ -22,16 +22,17 @@ export interface ITagsPagedGroup {
   auroraVersion: ITagsPaged;
   auroraSnapshotVersion: ITagsPaged;
   commitHash: ITagsPaged;
+  search: ITagsPaged;
 }
 
-export function defaultTagsPagedGroup(): ITagsPagedGroup {
-  const defaultTagsPaged: ITagsPaged = {
-    endCursor: '',
-    hasNextPage: false,
-    tags: [],
-    totalCount: 0
-  };
+export const defaultTagsPaged: ITagsPaged = {
+  endCursor: '',
+  hasNextPage: false,
+  tags: [],
+  totalCount: 0
+};
 
+export function defaultTagsPagedGroup(): ITagsPagedGroup {
   return {
     auroraSnapshotVersion: defaultTagsPaged,
     auroraVersion: defaultTagsPaged,
@@ -40,6 +41,7 @@ export function defaultTagsPagedGroup(): ITagsPagedGroup {
     latest: defaultTagsPaged,
     major: defaultTagsPaged,
     minor: defaultTagsPaged,
-    snapshot: defaultTagsPaged
+    snapshot: defaultTagsPaged,
+    search: defaultTagsPaged
   };
 }
