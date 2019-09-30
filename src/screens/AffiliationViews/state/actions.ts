@@ -105,9 +105,11 @@ export const findAllApplicationDeployments: Thunk = (
     affiliations
   );
   dispatch(addCurrentErrors(result));
-  if (!result) {
-    dispatch(findAllApplicationDeploymentsResponse([]));
-  } else {
+  if (
+    result &&
+    result.data.applications &&
+    result.data.applications.edges.length > 0
+  ) {
     const r = result.data.applications.edges.reduce(
       (acc: IApplicationDeployment[], { node }) => {
         const { applicationDeployments } = node;
@@ -143,6 +145,8 @@ export const findAllApplicationDeployments: Thunk = (
       []
     );
     dispatch(findAllApplicationDeploymentsResponse(r));
+  } else {
+    dispatch(findAllApplicationDeploymentsResponse([]));
   }
   dispatch(findAllApplicationDeploymentsRequest(false));
 };
