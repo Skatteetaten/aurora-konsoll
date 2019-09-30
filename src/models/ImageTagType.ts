@@ -10,7 +10,7 @@ export enum ImageTagType {
   SEARCH = 'SEARCH'
 }
 
-export function findImageTagTypeName(type: ImageTagType): string | undefined {
+export function findImageTagTypeName(type: ImageTagType): string {
   switch (type) {
     case ImageTagType.AURORA_VERSION:
       return 'auroraVersion';
@@ -30,7 +30,5 @@ export function findImageTagTypeName(type: ImageTagType): string | undefined {
       return 'commitHash';
     case ImageTagType.SEARCH:
       return 'search';
-    default:
-      return undefined;
   }
 }

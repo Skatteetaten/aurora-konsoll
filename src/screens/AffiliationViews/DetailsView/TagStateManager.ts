@@ -19,10 +19,6 @@ export class TagStateManager extends StateManager<ITagsPagedGroup> {
     newTags?: ITagsPaged
   ): void {
     const name = findImageTagTypeName(type);
-    if (!name) {
-      return;
-    }
-
     const updateTags = (state: ITagsPagedGroup) => {
       return this.addTags(state[name], next, newTags);
     };
@@ -35,9 +31,6 @@ export class TagStateManager extends StateManager<ITagsPagedGroup> {
 
   public clearTagsPaged(type: ImageTagType): void {
     const name = findImageTagTypeName(type);
-    if (!name) {
-      return;
-    }
 
     this.updateState(state => ({
       ...state,
@@ -47,9 +40,6 @@ export class TagStateManager extends StateManager<ITagsPagedGroup> {
 
   public getTagsPaged(type: ImageTagType): ITagsPaged {
     const name = findImageTagTypeName(type);
-    if (!name) {
-      return defaultTagsPaged;
-    }
     return this.getState()[name];
   }
 

@@ -86,6 +86,17 @@ const VersionView = ({
     return <UnavailableServiceMessage message={unavailableMessage} />;
   }
 
+  const searchOnEnterPress = (e: React.KeyboardEvent<InputEvent>) => {
+    if (
+      e.charCode === ENTER_KEY &&
+      (!isFetchingTags || !isFetchingGroupedTags)
+    ) {
+      if (versionSearchText !== '') {
+        searchForVersions();
+      }
+    }
+  };
+
   const loadMoreTagsMessage = () => {
     if (!tagsPaged.hasNextPage) {
       return 'Søk etter nye';
@@ -120,16 +131,7 @@ const VersionView = ({
                 onChange={(_e, value) => handleVersionSearch(value)}
                 value={versionSearchText}
                 iconProps={{ iconName: 'Search' }}
-                onKeyPress={(e: React.KeyboardEvent<InputEvent>) => {
-                  if (
-                    e.charCode === ENTER_KEY &&
-                    (!isFetchingTags || !isFetchingGroupedTags)
-                  ) {
-                    if (versionSearchText !== '') {
-                      searchForVersions();
-                    }
-                  }
-                }}
+                onKeyPress={searchOnEnterPress}
               />
             </div>
           </div>
