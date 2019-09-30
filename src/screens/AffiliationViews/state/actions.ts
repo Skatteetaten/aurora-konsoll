@@ -415,31 +415,24 @@ export const findApplicationDeploymentDetails: Thunk = (
       );
     }
 
-    const isHtml = (str: any): boolean => {
-      if (!str) {
-        return false;
-      }
-
-      return !(str || '')
-        .replace(/<([^>]+?)([^>]*?)>(.*?)<\/\1>/gi, '')
-        .replace(/(<([^>]+)>)/gi, '')
-        .trim();
-    };
-
     for (const podResource of podResources) {
       const managementResponses = podResource.managementResponses;
+      const addManagementInterfaceError = (prop: string) => {
+        dispatch(
+          addErrors([
+            new Error(
+              `${prop} endepunktet inneholder HTML, som er ugyldig data. Feilen kan være forårsaket av feil oppsett av Management Interface`
+            )
+          ])
+        );
+      };
+
       if (managementResponses) {
         if (
           managementResponses.health &&
           isHtml(managementResponses.health.textResponse)
         ) {
-          dispatch(
-            addErrors([
-              new Error(
-                'health endepunktet inneholder HTML som er ugyldig data. Feilen kan være forårsaket av feil oppsett av Management Interface'
-              )
-            ])
-          );
+          addManagementInterfaceError('health');
           delete managementResponses.health;
         }
 
@@ -447,13 +440,7 @@ export const findApplicationDeploymentDetails: Thunk = (
           managementResponses.env &&
           isHtml(managementResponses.env.textResponse)
         ) {
-          dispatch(
-            addErrors([
-              new Error(
-                'env endepunktet inneholder HTML som er ugyldig data. Feilen kan være forårsaket av feil oppsett av Management Interface'
-              )
-            ])
-          );
+          addManagementInterfaceError('env');
           delete managementResponses.env;
         }
       }
@@ -507,6 +494,17 @@ export const toTagsPaged = (
     }, [])
   };
 };
+
+function isHtml(str: any): boolean {
+  if (!str) {
+    return false;
+  }
+
+  return !(str || '')
+    .replace(/<([^>]+?)([^>]*?)>(.*?)<\/\1>/gi, '')
+    .replace(/(<([^>]+)>)/gi, '')
+    .trim();
+}
 
 // ! Temp fix for template deployments with default version
 // TODO: FIX
