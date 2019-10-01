@@ -26,6 +26,7 @@ import {
 import { ImageTagType } from 'models/ImageTagType';
 import { IGoboResult } from 'services/GoboClient';
 import { IPodResource } from 'models/Pod';
+import { stringContainsHtml } from 'utils/string';
 
 const affiliationViewAction = (action: string) => `affiliationView/${action}`;
 
@@ -431,7 +432,7 @@ export const findApplicationDeploymentDetails: Thunk = (
       if (managementResponses) {
         if (
           managementResponses.health &&
-          isHtml(managementResponses.health.textResponse)
+          stringContainsHtml(managementResponses.health.textResponse)
         ) {
           addManagementInterfaceError('health');
           delete managementResponses.health;
@@ -439,7 +440,7 @@ export const findApplicationDeploymentDetails: Thunk = (
 
         if (
           managementResponses.env &&
-          isHtml(managementResponses.env.textResponse)
+          stringContainsHtml(managementResponses.env.textResponse)
         ) {
           addManagementInterfaceError('env');
           delete managementResponses.env;
@@ -495,17 +496,6 @@ export const toTagsPaged = (
     }, [])
   };
 };
-
-function isHtml(str: any): boolean {
-  if (!str) {
-    return false;
-  }
-
-  return !(str || '')
-    .replace(/<([^>]+?)([^>]*?)>(.*?)<\/\1>/gi, '')
-    .replace(/(<([^>]+)>)/gi, '')
-    .trim();
-}
 
 // ! Temp fix for template deployments with default version
 // TODO: FIX
