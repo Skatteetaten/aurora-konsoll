@@ -25,6 +25,7 @@ import {
 } from 'services/auroraApiClients/imageRepositoryClient/query';
 import { ImageTagType } from 'models/ImageTagType';
 import { IGoboResult } from 'services/GoboClient';
+import { IPodResource } from 'models/Pod';
 
 const affiliationViewAction = (action: string) => `affiliationView/${action}`;
 
@@ -415,18 +416,18 @@ export const findApplicationDeploymentDetails: Thunk = (
       );
     }
 
-    for (const podResource of podResources) {
-      const managementResponses = podResource.managementResponses;
-      const addManagementInterfaceError = (prop: string) => {
-        dispatch(
-          addErrors([
-            new Error(
-              `${prop} endepunktet inneholder HTML, som er ugyldig data. Feilen kan være forårsaket av feil oppsett av Management Interface`
-            )
-          ])
-        );
-      };
+    const addManagementInterfaceError = (prop: string) => {
+      dispatch(
+        addErrors([
+          new Error(
+            `${prop} endepunktet inneholder HTML, som er ugyldig data. Feilen kan være forårsaket av feil oppsett av Management Interface`
+          )
+        ])
+      );
+    };
 
+    podResources.every((it: IPodResource) => {
+      const managementResponses = it.managementResponses;
       if (managementResponses) {
         if (
           managementResponses.health &&
@@ -444,7 +445,7 @@ export const findApplicationDeploymentDetails: Thunk = (
           delete managementResponses.env;
         }
       }
-    }
+    });
 
     dispatch(
       applicationDeploymentDetailsResponse({
