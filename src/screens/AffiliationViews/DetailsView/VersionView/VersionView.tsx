@@ -164,7 +164,7 @@ const VersionView = ({
                 <p>
                   Dersom du ikke finner versjonen kan du forsøke å søke eller
                   trykke på "Hent flere versjoner". Det kan være du må trykke
-                  flere ganger før versjone du er på jakt etter dukker opp. Et
+                  flere ganger før versjonen du er på jakt etter dukker opp. Et
                   søk vil ofte være bedre.
                 </p>
               </>
@@ -187,7 +187,7 @@ const VersionView = ({
             />
           </div>
           <div className="tags-action">
-            <div>{`Viser ${tagsPaged.tags.length} av ${tagsPaged.totalCount} tags`}</div>
+            <div>{`Viser ${tagsPaged.tags.length} av ${tagsPaged.totalCount} versjoner`}</div>
             <div>
               <Button
                 icon="History"
