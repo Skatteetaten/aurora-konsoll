@@ -427,7 +427,7 @@ export const findApplicationDeploymentDetails: Thunk = (
       );
     };
 
-    podResources.every((it: IPodResource) => {
+    podResources.forEach((it: IPodResource) => {
       const managementResponses = it.managementResponses;
       if (managementResponses) {
         if (
@@ -435,7 +435,7 @@ export const findApplicationDeploymentDetails: Thunk = (
           stringContainsHtml(managementResponses.health.textResponse)
         ) {
           addManagementInterfaceError('health');
-          delete managementResponses.health;
+          managementResponses.health = undefined;
         }
 
         if (
@@ -443,7 +443,7 @@ export const findApplicationDeploymentDetails: Thunk = (
           stringContainsHtml(managementResponses.env.textResponse)
         ) {
           addManagementInterfaceError('env');
-          delete managementResponses.env;
+          managementResponses.env = undefined;
         }
       }
     });
