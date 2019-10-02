@@ -38,9 +38,7 @@ describe('webseal reducer', () => {
       })
     ]
   ]).describe.only('', (a, b, expected) => {
-    test.only(`given defaultState and action ${
-      a.name
-    } with given value should change ${b.name} to given value`, () => {
+    test.only(`given defaultState and action ${a.name} with given value should change ${b.name} to given value`, () => {
       expect(websealReducer(a.item, b.item)).toEqual(expected);
     });
   });

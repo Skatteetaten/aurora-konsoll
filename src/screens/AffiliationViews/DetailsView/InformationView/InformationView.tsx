@@ -55,14 +55,16 @@ const InformationView = ({
     ).length > 0;
 
   const renderConfirmationOpenButton = (open: () => void) => (
-    <Button icon="Delete" buttonType="primaryRoundedFilled" onClick={open}>Slett applikasjon</Button>
+    <Button icon="Delete" buttonType="primaryRoundedFilled" onClick={open} disabled={!deployment.permission.paas.admin}>
+      Slett applikasjon
+    </Button>
   );
 
   const renderConfirmationFooterButtons = (close: () => void) => {
     const deleteApp = () => {
-        deleteApplicationDeployment(deployment.namespace, deployment.name);
-        close();
-        goToDeploymentsPage();
+      deleteApplicationDeployment(deployment.namespace, deployment.name);
+      close();
+      goToDeploymentsPage();
     };
 
     return (
@@ -104,13 +106,13 @@ const InformationView = ({
           <h3>AuroraStatus for deployment</h3>
           <StatusCheckReportCard deployment={deployment} />
           <ServiceLinks serviceLinks={deploymentDetails.serviceLinks} />
-          <br/>
+          <br />
           <ConfirmationDialog
-              title="Slett applikasjon"
-              text={`Ønsker du å slette applikasjonen ${deployment.name}?`}
-              renderOpenDialogButton={renderConfirmationOpenButton}
-              renderFooterButtons={renderConfirmationFooterButtons}
-            />
+            title="Slett applikasjon"
+            text={`Ønsker du å slette applikasjonen ${deployment.name}?`}
+            renderOpenDialogButton={renderConfirmationOpenButton}
+            renderFooterButtons={renderConfirmationFooterButtons}
+          />
         </div>
         <div>
           <ManagementInterface

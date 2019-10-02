@@ -38,7 +38,7 @@ export function withApplicationDeployments<
       return (
         <ApplicationDeploymentContext.Consumer>
           {props => {
-            return <Component {...this.props as P} {...props} />;
+            return <Component {...(this.props as P)} {...props} />;
           }}
         </ApplicationDeploymentContext.Consumer>
       );

@@ -115,9 +115,12 @@ export class ApplicationDeploymentClient {
   }
 
   public async deleteApplicationDeployment(
-    namespace: string, name: string
-  ): Promise<IGoboResult<{deleteApplicationDeployment: boolean}> | undefined> {
-    return await this.client.mutate<{deleteApplicationDeployment: boolean}>({
+    namespace: string,
+    name: string
+  ): Promise<
+    IGoboResult<{ deleteApplicationDeployment: boolean }> | undefined
+  > {
+    return await this.client.mutate<{ deleteApplicationDeployment: boolean }>({
       mutation: DELETE_APPLICATION_DEPLOYMENT_MUTATION,
       variables: {
         input: {

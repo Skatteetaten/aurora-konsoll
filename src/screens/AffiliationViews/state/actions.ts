@@ -479,16 +479,21 @@ export const findApplicationDeploymentDetails: Thunk = (
   dispatch(fetchDetailsRequest(false));
 };
 
-export const deleteApplicationDeployment: Thunk = (namespace: string, name: string) =>
-  async (dispatch, getState, { clients }) => {
-    const result = await clients.applicationDeploymentClient.deleteApplicationDeployment(namespace, name);
-    dispatch(addCurrentErrors(result));
+export const deleteApplicationDeployment: Thunk = (
+  namespace: string,
+  name: string
+) => async (dispatch, getState, { clients }) => {
+  const result = await clients.applicationDeploymentClient.deleteApplicationDeployment(
+    namespace,
+    name
+  );
+  dispatch(addCurrentErrors(result));
 
-    if (result && result.data && result.data.deleteApplicationDeployment) {
-      dispatch(deleteApplicationDeploymentResponse(true));
-    } else {
-      dispatch(deleteApplicationDeploymentResponse(false));
-    }
+  if (result && result.data && result.data.deleteApplicationDeployment) {
+    dispatch(deleteApplicationDeploymentResponse(true));
+  } else {
+    dispatch(deleteApplicationDeploymentResponse(false));
+  }
 };
 
 export const toTagsPaged = (

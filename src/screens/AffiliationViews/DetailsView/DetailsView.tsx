@@ -111,7 +111,7 @@ class DetailsView extends React.Component<
                 }
                 deleteApplicationDeployment={deleteApplicationDeployment}
                 goToDeploymentsPage={this.controller.goToDeploymentsPage}
-              />  
+              />
             </Route>
             <Route path={`${match.path}/version`}>
               <VersionView

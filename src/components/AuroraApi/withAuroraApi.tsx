@@ -20,7 +20,7 @@ export function withAuroraApi<P extends IAuroraApiComponentProps>(
               );
             }
             const props = { clients };
-            return <Component {...this.props as P} {...props} />;
+            return <Component {...(this.props as P)} {...props} />;
           }}
         </AuroraApiContext.Consumer>
       );

@@ -167,7 +167,8 @@ const mapStateToProps = (state: RootState) => ({
   isFetchingTags: state.affiliationView.isFetchingTags,
   isFetchingGroupedTags: state.affiliationView.isFetchingGroupedTags,
   isFetchingDetails: state.affiliationView.isFetchingDetails,
-  isApplicationDeploymentDeleted: state.affiliationView.isApplicationDeploymentDeleted
+  isApplicationDeploymentDeleted:
+    state.affiliationView.isApplicationDeploymentDeleted
 });
 
 export const ApplicationDeploymentSelectorConnected = connect(

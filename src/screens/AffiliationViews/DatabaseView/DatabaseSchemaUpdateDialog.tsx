@@ -239,9 +239,7 @@ class DatabaseSchemaUpdateDialog extends React.Component<
           <Dialog.Footer>
             <ConfirmationDialog
               title="Slett databaseskjema"
-              text={`Ønsker du å slette databaseskjemaet til ${
-                updatedSchemaValues.application
-              }?`}
+              text={`Ønsker du å slette databaseskjemaet til ${updatedSchemaValues.application}?`}
               renderOpenDialogButton={this.renderConfirmationOpenButton}
               renderFooterButtons={this.renderConfirmationFooterButtons}
             />
