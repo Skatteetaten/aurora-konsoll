@@ -1,6 +1,7 @@
 import * as React from 'react';
 
 import ActionButton from 'aurora-frontend-react-komponenter/ActionButton';
+import MessageBar from 'aurora-frontend-react-komponenter/MessageBar';
 
 import InfoDialog from 'components/InfoDialog';
 import Spinner from 'components/Spinner';
@@ -76,6 +77,13 @@ const UpgradeButton = ({
       renderFooterButtons={renderFooterButtons}
     >
       <>
+        {!tag.lastModified && (
+          <MessageBar style={{ maxWidth: '600px' }}>
+            Dette ser ut til å være en eldre versjon som har et metadata format
+            vi ikke støtter. Trenger du denne versjonen ta kontakt med Aurora så
+            kan vi oppgradere den manuelt for deg.
+          </MessageBar>
+        )}
         <VersionInfo>
           <p>Fra:</p>
           {previousVersion}
