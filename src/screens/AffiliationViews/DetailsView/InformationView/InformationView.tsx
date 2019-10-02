@@ -2,6 +2,7 @@ import * as React from 'react';
 import styled from 'styled-components';
 
 import Button from 'aurora-frontend-react-komponenter/Button';
+import ActionButton from 'aurora-frontend-react-komponenter/ActionButton';
 import Spinner from 'components/Spinner';
 import {
   IApplicationDeployment,
@@ -14,6 +15,7 @@ import { ManagementInterface } from './ManagementInterface';
 import { ServiceLinks } from './ServiceLinks';
 import StatusCheckReportCard from './StatusCheckReportCard';
 import PodsStatus from './PodsStatus';
+import ConfirmationDialog from 'components/ConfirmationDialog';
 
 interface IInformationViewProps {
   isFetchingDetails: boolean;
@@ -22,8 +24,8 @@ interface IInformationViewProps {
   className?: string;
   isUpdating: boolean;
   refreshApplicationDeployment: () => void;
-  isApplicationDeploymentDeleted: boolean;
   deleteApplicationDeployment: (namespace: string, name: string) => void;
+  goToDeploymentsPage: () => void;
 }
 
 const InformationView = ({
@@ -33,8 +35,8 @@ const InformationView = ({
   className,
   refreshApplicationDeployment,
   isUpdating,
-  isApplicationDeploymentDeleted,
-  deleteApplicationDeployment
+  deleteApplicationDeployment,
+  goToDeploymentsPage
 }: IInformationViewProps) => {
   const { deploymentSpec, pods } = deploymentDetails;
   if (isFetchingDetails) {
@@ -52,9 +54,38 @@ const InformationView = ({
         pod.managementResponses.links.error
     ).length > 0;
 
-  const deleteApp = () => {
-    deleteApplicationDeployment(deployment.namespace, deployment.name);
-  }
+  const renderConfirmationOpenButton = (open: () => void) => (
+    <Button icon="Delete" buttonType="primaryRoundedFilled" onClick={open}>Slett applikasjon</Button>
+  );
+
+  const renderConfirmationFooterButtons = (close: () => void) => {
+    const deleteApp = () => {
+        deleteApplicationDeployment(deployment.namespace, deployment.name);
+        close();
+        goToDeploymentsPage();
+    };
+
+    return (
+      <>
+        <ActionButton
+          onClick={deleteApp}
+          iconSize={ActionButton.LARGE}
+          icon="Check"
+          color="black"
+        >
+          Ja
+        </ActionButton>
+        <ActionButton
+          onClick={close}
+          iconSize={ActionButton.LARGE}
+          icon="Cancel"
+          color="black"
+        >
+          Nei
+        </ActionButton>
+      </>
+    );
+  };
 
   return (
     <div className={className}>
@@ -74,7 +105,12 @@ const InformationView = ({
           <StatusCheckReportCard deployment={deployment} />
           <ServiceLinks serviceLinks={deploymentDetails.serviceLinks} />
           <br/>
-          <Button icon="Delete" buttonType="primaryRoundedFilled" onClick={deleteApp}>Slett applikasjon</Button>
+          <ConfirmationDialog
+              title="Slett applikasjon"
+              text={`Ønsker du å slette applikasjonen ${deployment.name}?`}
+              renderOpenDialogButton={renderConfirmationOpenButton}
+              renderFooterButtons={renderConfirmationFooterButtons}
+            />
         </div>
         <div>
           <ManagementInterface
