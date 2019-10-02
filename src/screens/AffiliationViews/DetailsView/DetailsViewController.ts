@@ -14,7 +14,6 @@ import {
 } from 'models/UnavailableServiceMessage';
 import { ApplicationDeploymentDetailsRoute } from '../ApplicationDeploymentSelector';
 import { TagStateManager } from './TagStateManager';
-import { IImageTagTypeOption } from './VersionView/TagTypeSelector/TagTypeSelector';
 
 export interface IDetailsViewProps
   extends ApplicationDeploymentDetailsRoute,
@@ -43,6 +42,13 @@ export interface IDetailsViewProps
   findGroupedTagsPaged: (
     repository: string,
     setTagsPagedGroup: (tagsPagedGroup: ITagsPagedGroup) => void
+  ) => void;
+  searchTagsPaged: (
+    repository: string,
+    updateTagsPaged: (next?: ITagsPaged, newTags?: ITagsPaged) => void,
+    first: number,
+    current: ITagsPaged,
+    filter: string
   ) => void;
   findTagsPaged: (
     repository: string,
@@ -157,11 +163,12 @@ export default class DetailsViewController {
     await refreshApplicationDeployment(deployment.id, affiliation);
   };
 
-  public loadMoreTags = async () => {
+  public loadMoreTags = async (searchText?: string) => {
     const {
       deployment,
       findTagsPaged,
-      findNewTagsPaged
+      findNewTagsPaged,
+      searchTagsPaged
     } = this.component.props;
     const { selectedTagType } = this.component.state;
 
@@ -175,9 +182,9 @@ export default class DetailsViewController {
       this.sm.tag.updateTagsPaged(type, next, newTags);
     };
 
-    const fetchNewTags = async () => {
+    const fetchNewTags = () => {
       if (deployment.imageRepository) {
-        await findNewTagsPaged(
+        findNewTagsPaged(
           deployment.imageRepository.repository,
           selectedTagType,
           updateTagsPaged,
@@ -187,28 +194,69 @@ export default class DetailsViewController {
     };
 
     if (current.hasNextPage) {
-      fetchNewTags();
+      if (selectedTagType !== ImageTagType.SEARCH) {
+        fetchNewTags();
+      }
       if (deployment.imageRepository) {
-        await findTagsPaged(
-          deployment.imageRepository.repository,
-          selectedTagType,
-          updateTagsPaged,
-          15,
-          current
-        );
+        if (selectedTagType === ImageTagType.SEARCH) {
+          const updateSearchTagsPaged = (
+            next?: ITagsPaged,
+            newTags?: ITagsPaged
+          ) => {
+            this.sm.tag.updateTagsPaged(ImageTagType.SEARCH, next, newTags);
+          };
+          searchTagsPaged(
+            deployment.imageRepository.repository,
+            updateSearchTagsPaged,
+            100,
+            current,
+            searchText || ''
+          );
+        } else {
+          findTagsPaged(
+            deployment.imageRepository.repository,
+            selectedTagType,
+            updateTagsPaged,
+            100,
+            current
+          );
+        }
       }
     } else {
       fetchNewTags();
     }
   };
 
-  public handleSelectStrategy = (e: Event, option: IImageTagTypeOption) => {
+  public searchForVersions = (text: string) => {
+    const { deployment, searchTagsPaged } = this.component.props;
+
+    this.sm.tag.clearTagsPaged(ImageTagType.SEARCH);
+    const current: ITagsPaged = this.sm.tag.getTagsPaged(ImageTagType.SEARCH);
+
+    const updateTagsPaged = (next?: ITagsPaged, newTags?: ITagsPaged) => {
+      this.sm.tag.updateTagsPaged(ImageTagType.SEARCH, next, newTags);
+    };
+
+    if (deployment.imageRepository) {
+      searchTagsPaged(
+        deployment.imageRepository.repository,
+        updateTagsPaged,
+        100,
+        current,
+        text
+      );
+    }
+  };
+
+  public handleSelectStrategy = (type: ImageTagType) => {
+    this.sm.tag.clearTagsPaged(ImageTagType.SEARCH);
     this.component.setState(() => ({
-      selectedTagType: option.key
+      selectedTagType: type,
+      versionSearchText: ''
     }));
   };
 
-  public handleVersionSearch = (value: string) => {
+  public setVersionSearchText = (value: string) => {
     this.component.setState({
       versionSearchText: value
     });

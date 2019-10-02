@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { useEffect } from 'react';
 import styled from 'styled-components';
 
 import Button from 'aurora-frontend-react-komponenter/Button';
@@ -13,10 +14,9 @@ import { ITag, ITagsPaged, ITagsPagedGroup } from 'models/Tag';
 import UnavailableServiceMessage from 'components/UnavailableServiceMessage';
 import { IUnavailableServiceMessage } from 'models/UnavailableServiceMessage';
 import TagsList from './TagsList';
-import TagTypeSelector, {
-  IImageTagTypeOption
-} from './TagTypeSelector/TagTypeSelector';
+import TagTypeSelector from './TagTypeSelector/TagTypeSelector';
 import MessageBar from 'aurora-frontend-react-komponenter/MessageBar';
+import { ITextField } from 'office-ui-fabric-react';
 
 interface IVersionViewProps {
   hasPermissionToUpgrade: boolean;
@@ -33,13 +33,16 @@ interface IVersionViewProps {
   findGroupedTagsPagedResult: ITagsPagedGroup;
   versionSearchText: string;
   canUpgrade: (selectedTag?: ITag) => boolean;
-  handlefetchTags: () => void;
-  handleSelectStrategy: (e: Event, option: IImageTagTypeOption) => void;
-  handleVersionSearch: (value: string) => void;
+  handlefetchTags: (searchText?: string) => void;
+  handleSelectStrategy: (option: ImageTagType) => void;
+  setVersionSearchText: (value: string) => void;
   redeployWithVersion: (version?: ITag) => void;
   redeployWithCurrentVersion: () => void;
   handleSelectNextTag: (item?: ITag) => void;
+  searchForVersions: (text: string) => void;
 }
+
+const ENTER_KEY = 13;
 
 const VersionView = ({
   tagsPaged,
@@ -57,21 +60,48 @@ const VersionView = ({
   deployedTag,
   className,
   handleSelectStrategy,
-  handleVersionSearch,
   redeployWithVersion,
   redeployWithCurrentVersion,
   handleSelectNextTag,
+  setVersionSearchText,
+  searchForVersions,
   versionSearchText
 }: IVersionViewProps) => {
+  let searchRef: ITextField | undefined;
+  useEffect(() => {
+    if (searchRef) {
+      searchRef.focus();
+    }
+  }, [searchRef]);
+
+  useEffect(() => {
+    if (selectedTagType !== ImageTagType.SEARCH) {
+      setVersionSearchText('');
+    }
+  }, [selectedTagType, setVersionSearchText]);
+
   if (unavailableMessage) {
     return <UnavailableServiceMessage message={unavailableMessage} />;
   }
 
-  const loadMoreTagsMessage = () => {
-    if (!tagsPaged.hasNextPage) {
-      return 'Søk etter nye';
+  const searchOnEnterPress = (e: React.KeyboardEvent<InputEvent>) => {
+    if (selectedTagType !== ImageTagType.SEARCH) {
+      handleSelectStrategy(ImageTagType.SEARCH);
     }
-    return 'Last inn 15 flere';
+    if (
+      e.charCode === ENTER_KEY &&
+      (!isFetchingTags || !isFetchingGroupedTags)
+    ) {
+      const text = searchRef ? searchRef.value : undefined;
+      if (text) {
+        setVersionSearchText(text);
+        searchForVersions(text);
+      }
+    }
+  };
+
+  const loadMoreTagsMessage = () => {
+    return 'Hent flere versjoner';
   };
 
   return (
@@ -90,14 +120,56 @@ const VersionView = ({
               handleSelectStrategy={handleSelectStrategy}
               findGroupedTagsPagedResult={findGroupedTagsPagedResult}
             />
-            <div style={{ width: 300, paddingLeft: 20 }}>
+            <div style={{ width: 300, marginLeft: 20, marginRight: 6 }}>
               <TextField
-                placeholder="Listen oppdateres når du skriver"
-                onChanged={handleVersionSearch}
+                componentRef={(value: ITextField) => {
+                  if (!searchRef) {
+                    searchRef = value;
+                  }
+                }}
+                placeholder="Søk etter versjon"
+                value={versionSearchText}
                 iconProps={{ iconName: 'Search' }}
+                onKeyPress={searchOnEnterPress}
               />
             </div>
           </div>
+          <CalloutButton
+            style={{
+              marginBottom: '6px'
+            }}
+            calloutProps={{
+              color: Callout.INFO,
+              gapSpace: 8,
+              directionalHint: Callout.POS_BOTTOM_LEFT
+            }}
+            buttonProps={{
+              icon: 'info',
+              buttonType: 'secondary'
+            }}
+            title="Finner du ikke versjoner du leter etter?"
+            content={
+              <>
+                <p>
+                  På grunn av overgang til nytt Docker registry (fra Dockers
+                  eget registry til Nexus Docker registry) har vi ikke lengre
+                  mulighet til å hente ut en versjonsliste sortert på dato
+                  (denne featuren baserte seg tidligere på en funksjon i Dockers
+                  eget registry som ikke er i Nexus Docker registry). Denne
+                  informasjonen må nå hentes ut individuelt for hver versjon,
+                  noe som er tid- og ressurskrevende. Inntil videre er det
+                  derfor ikke mulig å tilby en korrekt versjonsliste hvor nyeste
+                  versjoner alltid kommer først.
+                </p>
+                <p>
+                  Dersom du ikke finner versjonen kan du forsøke å søke eller
+                  trykke på "Hent flere versjoner". Det kan være du må trykke
+                  flere ganger før versjonen du er på jakt etter dukker opp. Et
+                  søk vil ofte være bedre.
+                </p>
+              </>
+            }
+          />
           <div className="details-list">
             <TagsList
               tags={tagsPaged.tags}
@@ -111,20 +183,26 @@ const VersionView = ({
               isRedeploying={isRedeploying}
               redeployWithVersion={redeployWithVersion}
               redeployWithCurrentVersion={redeployWithCurrentVersion}
-              versionSearchText={versionSearchText}
               hasPermissionToUpgrade={hasPermissionToUpgrade}
             />
           </div>
           <div className="tags-action">
-            <div>{`Viser ${tagsPaged.tags.length} av ${
-              tagsPaged.totalCount
-            } tags`}</div>
+            <div>{`Viser ${tagsPaged.tags.length} av ${tagsPaged.totalCount} versjoner`}</div>
             <div>
               <Button
                 icon="History"
                 buttonType="primaryRoundedFilled"
-                onClick={handlefetchTags}
-                disabled={isFetchingTags || isFetchingGroupedTags}
+                onClick={() => {
+                  if (searchRef) {
+                    handlefetchTags(searchRef.value);
+                  }
+                }}
+                disabled={
+                  isFetchingTags ||
+                  isFetchingGroupedTags ||
+                  (selectedTagType === ImageTagType.SEARCH &&
+                    !tagsPaged.hasNextPage)
+                }
                 style={{
                   minWidth: '195px'
                 }}
@@ -149,8 +227,9 @@ const VersionView = ({
                   title="Vis info"
                   content={
                     <p>
-                      Hver gang man laster inn tags så vil det alltid hentes de
-                      nyeste tagene i tillegg.
+                      Hver gang man henter flere versjoner så vil det alltid
+                      hentes de nyeste versjonene i tillegg. Det hentes maks 100
+                      versjoner av gangen.
                     </p>
                   }
                 />
@@ -173,14 +252,11 @@ export default styled(VersionView)`
 
   .action-bar {
     margin-bottom: 10px;
-    max-width: 850px;
     display: flex;
-    justify-content: space-between;
     align-items: flex-end;
   }
 
   .details-list {
-    margin-top: 30px;
     overflow-x: hidden;
   }
 

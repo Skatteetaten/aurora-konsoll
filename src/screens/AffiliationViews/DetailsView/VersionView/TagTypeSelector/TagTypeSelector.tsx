@@ -9,6 +9,7 @@ import styled from 'styled-components';
 import { ITagsPagedGroup, ITagsPaged } from 'models/Tag';
 
 const {
+  SEARCH,
   AURORA_VERSION,
   AURORA_SNAPSHOT_VERSION,
   COMMIT_HASH,
@@ -27,28 +28,28 @@ export interface IImageTagTypeOption {
 
 interface ITagTypeSelector {
   imageTagType: ImageTagType;
-  handleSelectStrategy: (e: Event, option: IImageTagTypeOption) => void;
+  handleSelectStrategy: (option: ImageTagType) => void;
   findGroupedTagsPagedResult: ITagsPagedGroup;
   className?: string;
 }
 
 export function getOptionName(type: ImageTagType): string {
   switch (type) {
-    case ImageTagType.AURORA_VERSION:
+    case AURORA_VERSION:
       return 'Aurora Version';
-    case ImageTagType.AURORA_SNAPSHOT_VERSION:
+    case AURORA_SNAPSHOT_VERSION:
       return 'Unik snapshot version';
-    case ImageTagType.BUGFIX:
+    case BUGFIX:
       return 'Bugfix';
-    case ImageTagType.LATEST:
+    case LATEST:
       return 'Latest';
-    case ImageTagType.MAJOR:
+    case MAJOR:
       return 'Major';
-    case ImageTagType.MINOR:
+    case MINOR:
       return 'Minor';
-    case ImageTagType.SNAPSHOT:
+    case SNAPSHOT:
       return 'Snapshot';
-    case ImageTagType.COMMIT_HASH:
+    case COMMIT_HASH:
       return 'Commit hash';
     default:
       return '';
@@ -85,7 +86,7 @@ const TagTypeSelector = ({
   className
 }: ITagTypeSelector) => {
   const onTagTypeChanged = (e: Event, option: IImageTagTypeOption) => {
-    handleSelectStrategy(e, option);
+    handleSelectStrategy(option.key);
   };
 
   function groupedTagsTotalCount(type: ImageTagType): number | undefined {
@@ -104,24 +105,26 @@ const TagTypeSelector = ({
   }
 
   function createOption(type: ImageTagType): IImageTagTypeOption {
+    const text = `(${groupedTagsTotalCount(type)}) ${getOptionName(
+      type
+    )} - ${getOptionLabel(type)}`;
     return {
       key: type,
       tag: type,
-      text: `(${groupedTagsTotalCount(type)}) ${getOptionName(
-        type
-      )} - ${getOptionLabel(type)}`
+      text: type !== SEARCH ? text : ''
     };
   }
 
   const versionStategyOptions: IImageTagTypeOption[] = [
-    createOption(ImageTagType.MAJOR),
-    createOption(ImageTagType.MINOR),
-    createOption(ImageTagType.BUGFIX),
-    createOption(ImageTagType.LATEST),
-    createOption(ImageTagType.SNAPSHOT),
-    createOption(ImageTagType.AURORA_SNAPSHOT_VERSION),
-    createOption(ImageTagType.COMMIT_HASH),
-    createOption(ImageTagType.AURORA_VERSION)
+    createOption(SEARCH),
+    createOption(MAJOR),
+    createOption(MINOR),
+    createOption(BUGFIX),
+    createOption(LATEST),
+    createOption(SNAPSHOT),
+    createOption(AURORA_SNAPSHOT_VERSION),
+    createOption(COMMIT_HASH),
+    createOption(AURORA_VERSION)
   ];
   return (
     <div className={className}>

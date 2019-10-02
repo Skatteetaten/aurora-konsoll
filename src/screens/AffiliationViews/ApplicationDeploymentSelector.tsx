@@ -13,7 +13,8 @@ import {
   refreshApplicationDeployment,
   findApplicationDeploymentDetails,
   findAllApplicationDeployments,
-  findNewTagsPaged
+  findNewTagsPaged,
+  searchTagsPaged
 } from './state/actions';
 import { IApplicationDeploymentDetails } from 'models/ApplicationDeployment';
 import { ImageTagType } from 'models/ImageTagType';
@@ -38,6 +39,13 @@ interface IApplicationDeploymentSelectorConnectedProps {
   getGroupedTagsPaged: (
     repository: string,
     setTagsPagedGroup: (tagsPagedGroup: ITagsPagedGroup) => void
+  ) => void;
+  searchTagsPaged: (
+    repository: string,
+    updateTagsPaged: (next?: ITagsPaged, newTags?: ITagsPaged) => void,
+    first: number,
+    current: ITagsPaged,
+    filter: string
   ) => void;
   getTagsPaged: (
     repository: string,
@@ -100,7 +108,8 @@ const ApplicationDeploymentSelector = ({
   isFetchingDetails,
   findGroupedTagsPagedResult,
   isRefreshingApplicationDeployment,
-  affiliation
+  affiliation,
+  searchTagsPaged
 }: ApplicationDeploymentSelectorProps) => {
   const deployment = allDeployments.find(
     d => d.id === match.params.applicationDeploymentId
@@ -125,6 +134,7 @@ const ApplicationDeploymentSelector = ({
       isRedeploying={isRedeploying}
       findGroupedTagsPaged={getGroupedTagsPaged}
       findGroupedTagsPagedResult={findGroupedTagsPagedResult}
+      searchTagsPaged={searchTagsPaged}
       findTagsPaged={getTagsPaged}
       findNewTagsPaged={getNewTagsPaged}
       findTagsPagedResponse={findTagsPagedResponse}
@@ -193,6 +203,21 @@ export const ApplicationDeploymentSelectorConnected = connect(
       first: number,
       current: ITagsPaged
     ) => findTagsPaged(repository, type, updateTagsPaged, first, current),
+    searchTagsPaged: (
+      repository: string,
+      updateTagsPaged: (next?: ITagsPaged, newTags?: ITagsPaged) => void,
+      first: number,
+      current: ITagsPaged,
+      filter: string
+    ) => {
+      return searchTagsPaged(
+        repository,
+        updateTagsPaged,
+        first,
+        current,
+        filter
+      );
+    },
     getNewTagsPaged: (
       repository: string,
       type: ImageTagType,

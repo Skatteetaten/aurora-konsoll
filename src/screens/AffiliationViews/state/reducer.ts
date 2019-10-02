@@ -14,6 +14,7 @@ import actions, {
   updateUserSettingsRequest,
   refreshApplicationDeploymentResponse,
   applicationDeploymentDetailsResponse,
+  searchTagsPagedResponse,
   findTagsPagedResponse,
   findGroupedTagsPagedResponse,
   redeployRequest,
@@ -101,6 +102,10 @@ export const affiliationViewReducer = reduceReducers<IAffiliationViewState>(
       updateStateWithPayload('applicationDeploymentDetails')
     ),
     handleAction(redeployRequest, updateStateWithPayload('isRedeploying')),
+    handleAction(
+      searchTagsPagedResponse,
+      updateStateWithPayload('searchTagsPagedResult')
+    ),
     handleAction(
       findTagsPagedResponse,
       updateStateWithPayload('findTagsPagedResult')

@@ -3,14 +3,20 @@ import React, { useState, useRef } from 'react';
 import Callout from 'aurora-frontend-react-komponenter/Callout';
 import Button from 'aurora-frontend-react-komponenter/Button';
 
-interface ICalloutProps {
+interface ICalloutProps extends React.ComponentProps<'div'> {
   title: string;
   content: JSX.Element;
   buttonProps: { [key: string]: any };
   calloutProps: { [key: string]: any };
 }
 
-function CalloutButton(props: ICalloutProps) {
+function CalloutButton({
+  buttonProps,
+  title,
+  calloutProps,
+  content,
+  ...restProps
+}: ICalloutProps) {
   const [isCalloutVisible, setIsCalloutVisible] = useState(false);
 
   const menuButtonElement = useRef<HTMLDivElement>(null);
@@ -24,19 +30,19 @@ function CalloutButton(props: ICalloutProps) {
   };
 
   return (
-    <div>
+    <div {...restProps}>
       <span ref={menuButtonElement}>
-        <Button onClick={onShowMenuClicked} {...props.buttonProps}>
-          {props.title}
+        <Button onClick={onShowMenuClicked} {...buttonProps}>
+          {title}
         </Button>
       </span>
       {isCalloutVisible && (
         <Callout
           target={menuButtonElement.current}
           onClose={onCalloutDismiss}
-          {...props.calloutProps}
+          {...calloutProps}
         >
-          {props.content}
+          {content}
         </Callout>
       )}
     </div>

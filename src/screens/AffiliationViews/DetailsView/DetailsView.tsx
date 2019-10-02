@@ -81,7 +81,7 @@ class DetailsView extends React.Component<
       isRedeploying,
       isRefreshingApplicationDeployment
     } = this.props;
-    const { selectedTagType, selectedTag, versionSearchText } = this.state;
+    const { selectedTagType, selectedTag } = this.state;
     return (
       <DetailsViewGrid>
         <DetailsActionBar
@@ -118,8 +118,7 @@ class DetailsView extends React.Component<
                 selectedTag={selectedTag}
                 selectedTagType={selectedTagType}
                 tagsPaged={this.controller.sm.tag.getTagsPageFiltered(
-                  selectedTagType,
-                  versionSearchText
+                  selectedTagType
                 )}
                 isFetchingTags={isFetchingTags}
                 isFetchingGroupedTags={isFetchingGroupedTags}
@@ -128,7 +127,8 @@ class DetailsView extends React.Component<
                 handleSelectNextTag={this.controller.handleSelectNextTag}
                 handlefetchTags={this.controller.loadMoreTags}
                 handleSelectStrategy={this.controller.handleSelectStrategy}
-                handleVersionSearch={this.controller.handleVersionSearch}
+                setVersionSearchText={this.controller.setVersionSearchText}
+                searchForVersions={this.controller.searchForVersions}
                 redeployWithVersion={this.controller.redeployWithVersion}
                 redeployWithCurrentVersion={
                   this.controller.redeployWithCurrentVersion
