@@ -14,7 +14,6 @@ import {
 } from 'models/UnavailableServiceMessage';
 import { ApplicationDeploymentDetailsRoute } from '../ApplicationDeploymentSelector';
 import { TagStateManager } from './TagStateManager';
-import { IImageTagTypeOption } from './VersionView/TagTypeSelector/TagTypeSelector';
 
 export interface IDetailsViewProps
   extends ApplicationDeploymentDetailsRoute,
