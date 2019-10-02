@@ -14,7 +14,8 @@ import {
   findApplicationDeploymentDetails,
   findAllApplicationDeployments,
   findNewTagsPaged,
-  searchTagsPaged
+  searchTagsPaged,
+  deleteApplicationDeployment
 } from './state/actions';
 import { IApplicationDeploymentDetails } from 'models/ApplicationDeployment';
 import { ImageTagType } from 'models/ImageTagType';
@@ -78,6 +79,8 @@ interface IApplicationDeploymentSelectorConnectedProps {
   isRedeploying: boolean;
   isFetchingDetails: boolean;
   applicationDeploymentDetails: IApplicationDeploymentDetails;
+  isApplicationDeploymentDeleted: boolean;
+  deleteApplicationDeployment: (namespace: string, name: string) => void;
 }
 export type ApplicationDeploymentDetailsRoute = RouteComponentProps<{
   affiliation: string;
@@ -109,7 +112,9 @@ const ApplicationDeploymentSelector = ({
   findGroupedTagsPagedResult,
   isRefreshingApplicationDeployment,
   affiliation,
-  searchTagsPaged
+  searchTagsPaged,
+  isApplicationDeploymentDeleted,
+  deleteApplicationDeployment
 }: ApplicationDeploymentSelectorProps) => {
   const deployment = allDeployments.find(
     d => d.id === match.params.applicationDeploymentId
@@ -142,6 +147,8 @@ const ApplicationDeploymentSelector = ({
       isFetchingTags={isFetchingTags}
       isFetchingGroupedTags={isFetchingGroupedTags}
       isFetchingDetails={isFetchingDetails}
+      isApplicationDeploymentDeleted={isApplicationDeploymentDeleted}
+      deleteApplicationDeployment={deleteApplicationDeployment}
     />
   );
 
@@ -159,7 +166,8 @@ const mapStateToProps = (state: RootState) => ({
   isRedeploying: state.affiliationView.isRedeploying,
   isFetchingTags: state.affiliationView.isFetchingTags,
   isFetchingGroupedTags: state.affiliationView.isFetchingGroupedTags,
-  isFetchingDetails: state.affiliationView.isFetchingDetails
+  isFetchingDetails: state.affiliationView.isFetchingDetails,
+  isApplicationDeploymentDeleted: state.affiliationView.isApplicationDeploymentDeleted
 });
 
 export const ApplicationDeploymentSelectorConnected = connect(
@@ -231,6 +239,8 @@ export const ApplicationDeploymentSelectorConnected = connect(
     getApplicationDeploymentDetails: (id: string) =>
       findApplicationDeploymentDetails(id),
     getAllApplicationDeployments: (affiliation: string) =>
-      findAllApplicationDeployments(affiliation)
+      findAllApplicationDeployments(affiliation),
+    deleteApplicationDeployment: (namespace: string, name: string) =>
+      deleteApplicationDeployment(namespace, name)
   }
 )(ApplicationDeploymentSelector);

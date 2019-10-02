@@ -25,3 +25,9 @@ export const REFRESH_APPLICATION_DEPLOYMENTS_MUTATION = gql`
     refreshApplicationDeployments(input: $input)
   }
 `;
+
+export const DELETE_APPLICATION_DEPLOYMENT_MUTATION = gql`
+  mutation deleteApplicationDeployment($input: DeleteApplicationDeploymentInput!){
+    deleteApplicationDeployment(input: $input)
+  }
+`;

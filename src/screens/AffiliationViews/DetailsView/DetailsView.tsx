@@ -79,7 +79,9 @@ class DetailsView extends React.Component<
       isFetchingTags,
       isFetchingGroupedTags,
       isRedeploying,
-      isRefreshingApplicationDeployment
+      isRefreshingApplicationDeployment,
+      isApplicationDeploymentDeleted,
+      deleteApplicationDeployment
     } = this.props;
     const { selectedTagType, selectedTag } = this.state;
     return (
@@ -108,6 +110,8 @@ class DetailsView extends React.Component<
                 refreshApplicationDeployment={
                   this.controller.refreshApplicationDeployment
                 }
+                isApplicationDeploymentDeleted={isApplicationDeploymentDeleted}
+                deleteApplicationDeployment={deleteApplicationDeployment}
               />
             </Route>
             <Route path={`${match.path}/version`}>

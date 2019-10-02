@@ -20,7 +20,8 @@ import actions, {
   redeployRequest,
   fetchDetailsRequest,
   fetchTagsRequest,
-  fetchGroupedTagsRequest
+  fetchGroupedTagsRequest,
+  deleteApplicationDeploymentResponse
 } from './actions';
 import { IUserSettings } from 'models/UserSettings';
 import { ITagsPaged, ITagsPagedGroup, defaultTagsPagedGroup } from 'models/Tag';
@@ -41,6 +42,7 @@ export interface IAffiliationViewState {
   readonly isFetchingDetails: boolean;
   readonly findTagsPagedResult: ITagsPaged;
   readonly findGroupedTagsPagedResult: ITagsPagedGroup;
+  readonly isApplicationDeploymentDeleted: boolean;
 }
 
 const initialState = (): IAffiliationViewState => {
@@ -60,7 +62,8 @@ const initialState = (): IAffiliationViewState => {
     applicationDeploymentDetails: {
       pods: [],
       serviceLinks: []
-    }
+    },
+    isApplicationDeploymentDeleted: false
   };
 };
 
@@ -122,6 +125,10 @@ export const affiliationViewReducer = reduceReducers<IAffiliationViewState>(
     handleAction(
       fetchDetailsRequest,
       updateStateWithPayload('isFetchingDetails')
+    ),
+    handleAction(
+      deleteApplicationDeploymentResponse,
+      updateStateWithPayload('isApplicationDeploymentDeleted')
     )
   ],
   initialState()

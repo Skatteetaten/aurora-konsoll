@@ -1,6 +1,7 @@
 import * as React from 'react';
 import styled from 'styled-components';
 
+import Button from 'aurora-frontend-react-komponenter/Button';
 import Spinner from 'components/Spinner';
 import {
   IApplicationDeployment,
@@ -21,6 +22,8 @@ interface IInformationViewProps {
   className?: string;
   isUpdating: boolean;
   refreshApplicationDeployment: () => void;
+  isApplicationDeploymentDeleted: boolean;
+  deleteApplicationDeployment: (namespace: string, name: string) => void;
 }
 
 const InformationView = ({
@@ -29,7 +32,9 @@ const InformationView = ({
   deployment,
   className,
   refreshApplicationDeployment,
-  isUpdating
+  isUpdating,
+  isApplicationDeploymentDeleted,
+  deleteApplicationDeployment
 }: IInformationViewProps) => {
   const { deploymentSpec, pods } = deploymentDetails;
   if (isFetchingDetails) {
@@ -46,6 +51,10 @@ const InformationView = ({
         pod.managementResponses.links &&
         pod.managementResponses.links.error
     ).length > 0;
+
+  const deleteApp = () => {
+    deleteApplicationDeployment(deployment.namespace, deployment.name);
+  }
 
   return (
     <div className={className}>
@@ -64,6 +73,8 @@ const InformationView = ({
           <h3>AuroraStatus for deployment</h3>
           <StatusCheckReportCard deployment={deployment} />
           <ServiceLinks serviceLinks={deploymentDetails.serviceLinks} />
+          <br/>
+          <Button icon="Delete" buttonType="primaryRoundedFilled" onClick={deleteApp}>Slett applikasjon</Button>
         </div>
         <div>
           <ManagementInterface

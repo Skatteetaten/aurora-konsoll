@@ -89,6 +89,10 @@ export const fetchGroupedTagsRequest = createAction<boolean>(
   affiliationViewAction('FETCH_GROUPED_TAGS_REQUEST')
 );
 
+export const deleteApplicationDeploymentResponse = createAction<boolean>(
+  affiliationViewAction('DELETE_APPLICATION_DEPLOYMENT_RESPONSE')
+);
+
 export const refreshAffiliations: Thunk = (affiliations: string[]) => async (
   dispatch,
   getState,
@@ -121,6 +125,7 @@ export const findAllApplicationDeployments: Thunk = (
           environment: app.environment,
           id: app.id,
           name: app.name,
+          namespace: app.namespace.name,
           permission: app.namespace.permission,
           imageRepository: app.imageRepository,
           status: {
@@ -474,6 +479,18 @@ export const findApplicationDeploymentDetails: Thunk = (
   dispatch(fetchDetailsRequest(false));
 };
 
+export const deleteApplicationDeployment: Thunk = (namespace: string, name: string) =>
+  async (dispatch, getState, { clients }) => {
+    const result = await clients.applicationDeploymentClient.deleteApplicationDeployment(namespace, name);
+    dispatch(addCurrentErrors(result));
+
+    if (result && result.data && result.data.deleteApplicationDeployment) {
+      dispatch(deleteApplicationDeploymentResponse(true));
+    } else {
+      dispatch(deleteApplicationDeploymentResponse(false));
+    }
+};
+
 export const toTagsPaged = (
   imageTagsConnection: IImageTagsConnection
 ): ITagsPaged => {
@@ -526,5 +543,6 @@ export default {
   applicationDeploymentDetailsResponse,
   findTagsPagedResponse,
   findGroupedTagsPagedResponse,
-  redeployRequest
+  redeployRequest,
+  deleteApplicationDeploymentResponse
 };

@@ -120,6 +120,7 @@ export const deploymentFactory = Factory.Sync.makeFactory<
   affiliation: 'paas',
   environment: 'martin-dev',
   name: 'martin-test-applikasjon',
+  namespace: 'paas-martin-dev',
   imageRepository: {
     repository: 'localhost/"martin-test-applikasjon'
   },
@@ -525,7 +526,8 @@ export const affiliationViewStateFactory = Factory.Sync.makeFactory<
   isRedeploying: false,
   isFetchingTags: false,
   isFetchingGroupedTags: false,
-  isFetchingDetails: false
+  isFetchingDetails: false,
+  isApplicationDeploymentDeleted: false
 });
 
 export const iconLinkDataFactory = Factory.Sync.makeFactory<IIconLinkData>({
