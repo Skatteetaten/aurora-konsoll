@@ -26,6 +26,8 @@ import {
 } from 'services/auroraApiClients/imageRepositoryClient/query';
 import { ImageTagType } from 'models/ImageTagType';
 import { IGoboResult } from 'services/GoboClient';
+import { IPodResource } from 'models/Pod';
+import { stringContainsHtml } from 'utils/string';
 
 const affiliationViewAction = (action: string) => `affiliationView/${action}`;
 
@@ -110,9 +112,11 @@ export const findAllApplicationDeployments: Thunk = (
     affiliations
   );
   dispatch(addCurrentErrors(result));
-  if (!result) {
-    dispatch(findAllApplicationDeploymentsResponse([]));
-  } else {
+  if (
+    result &&
+    result.data.applications &&
+    result.data.applications.edges.length > 0
+  ) {
     const r = result.data.applications.edges.reduce(
       (acc: IApplicationDeployment[], { node }) => {
         const { applicationDeployments } = node;
@@ -148,6 +152,8 @@ export const findAllApplicationDeployments: Thunk = (
       []
     );
     dispatch(findAllApplicationDeploymentsResponse(r));
+  } else {
+    dispatch(findAllApplicationDeploymentsResponse([]));
   }
   dispatch(findAllApplicationDeploymentsRequest(false));
 };
@@ -453,6 +459,38 @@ export const findApplicationDeploymentDetails: Thunk = (
         {} as IDeploymentSpec
       );
     }
+
+    const addManagementInterfaceError = (prop: string) => {
+      dispatch(
+        addErrors([
+          new Error(
+            `${prop} endepunktet inneholder HTML, som er ugyldig data. Feilen kan være forårsaket av feil oppsett av Management Interface`
+          )
+        ])
+      );
+    };
+
+    podResources.forEach((it: IPodResource) => {
+      const managementResponses = it.managementResponses;
+      if (managementResponses) {
+        if (
+          managementResponses.health &&
+          stringContainsHtml(managementResponses.health.textResponse)
+        ) {
+          addManagementInterfaceError('health');
+          managementResponses.health = undefined;
+        }
+
+        if (
+          managementResponses.env &&
+          stringContainsHtml(managementResponses.env.textResponse)
+        ) {
+          addManagementInterfaceError('env');
+          managementResponses.env = undefined;
+        }
+      }
+    });
+
     dispatch(
       applicationDeploymentDetailsResponse({
         updatedBy,
