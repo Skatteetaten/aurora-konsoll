@@ -15,6 +15,18 @@ import {
 import { ApplicationDeploymentDetailsRoute } from '../ApplicationDeploymentSelector';
 import { TagStateManager } from './TagStateManager';
 
+export enum DeployVersionType {
+  ACTIVE_DEPLOYMENT_VERSION = 'ACTIVE_DEPLOYMENT_VERSION',
+  AURORA_CONFIG_VERSION = 'AURORA_CONFIG_VERSION',
+  CURRENT_VERSION = 'CURRENT_VERSION',
+  NEW_VERSION = 'NEW_VERSION'
+}
+
+export interface ICanUpgrade {
+  isNewVersion: boolean;
+  type: DeployVersionType;
+}
+
 export interface IDetailsViewProps
   extends ApplicationDeploymentDetailsRoute,
     IAuroraApiComponentProps {
@@ -324,7 +336,7 @@ export default class DetailsViewController {
     return undefined;
   }
 
-  public canUpgrade = (selectedTag?: ITag) => {
+  public canUpgrade = (selectedTag?: ITag): ICanUpgrade => {
     const {
       deployment,
       isRedeploying,
@@ -336,11 +348,32 @@ export default class DetailsViewController {
       selectedTag &&
       selectedTag.name === deploymentDetails.deploymentSpec.version;
 
-    if (!selectedTag || isRedeploying || isAuroraVersionSelectedTag()) {
-      return false;
+    const IsNewVersion =
+      !isRedeploying &&
+      (selectedTag && selectedTag.name) !== deployment.version.deployTag.name;
+
+    if (
+      !selectedTag ||
+      isRedeploying ||
+      (isAuroraVersionSelectedTag() && !IsNewVersion)
+    ) {
+      return { isNewVersion: false, type: DeployVersionType.CURRENT_VERSION };
     }
-    return (
-      !isRedeploying && selectedTag.name !== deployment.version.deployTag.name
-    );
+
+    if (!selectedTag || isRedeploying || isAuroraVersionSelectedTag()) {
+      return {
+        isNewVersion: false,
+        type: DeployVersionType.AURORA_CONFIG_VERSION
+      };
+    }
+
+    if (IsNewVersion) {
+      return { isNewVersion: true, type: DeployVersionType.NEW_VERSION };
+    }
+
+    return {
+      isNewVersion: false,
+      type: DeployVersionType.ACTIVE_DEPLOYMENT_VERSION
+    };
   };
 }

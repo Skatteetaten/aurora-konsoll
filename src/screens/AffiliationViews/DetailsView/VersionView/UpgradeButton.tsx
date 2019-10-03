@@ -8,13 +8,12 @@ import Spinner from 'components/Spinner';
 import styled from 'styled-components';
 import { ITag } from 'models/Tag';
 
-export interface IUpgradeButtonProps {
+interface IUpgradeButtonProps {
   previousVersion: string;
   tag: ITag;
   selectedTag?: ITag;
   isRedeploying: boolean;
   hasPermissionToUpgrade: boolean;
-  canUpgrade: (selectedTag?: ITag) => boolean;
   redeployWithVersion: (version?: ITag) => void;
   redeployWithCurrentVersion: () => void;
   handleSelectNextTag: (item?: ITag) => void;
@@ -26,8 +25,6 @@ const UpgradeButton = ({
   isRedeploying,
   hasPermissionToUpgrade,
   redeployWithVersion,
-  redeployWithCurrentVersion,
-  canUpgrade,
   handleSelectNextTag,
   selectedTag
 }: IUpgradeButtonProps) => {
@@ -39,18 +36,11 @@ const UpgradeButton = ({
     };
     return <ActionButton onClick={onClose}>Utfør</ActionButton>;
   };
-
-  const handleVersionChange =
-    canUpgrade(tag) || isRedeploying ? 'Deploy' : 'Redeploy';
-
-  const redeployType = (open: () => void) => {
-    return canUpgrade(tag) ? open : redeployWithCurrentVersion;
-  };
-
+  
   const renderOpenDialogButton = (open: () => void) => {
     const isSelectedVersion =
-      JSON.stringify(selectedTag) === JSON.stringify(tag) ||
-      (previousVersion === tag.name && !selectedTag);
+    JSON.stringify(selectedTag) === JSON.stringify(tag) ||
+    (previousVersion === tag.name && !selectedTag);
 
     return (
       <>
@@ -60,10 +50,10 @@ const UpgradeButton = ({
           <ActionButton
             buttonType="primary"
             icon="Deploy"
-            onClick={redeployType(open)}
+            onClick={open}
             disabled={isRedeploying || !hasPermissionToUpgrade}
           >
-            {handleVersionChange}
+            Deploy
           </ActionButton>
         )}
       </>

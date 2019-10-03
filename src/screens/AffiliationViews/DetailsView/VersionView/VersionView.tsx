@@ -17,6 +17,7 @@ import TagsList from './TagsList';
 import TagTypeSelector from './TagTypeSelector/TagTypeSelector';
 import MessageBar from 'aurora-frontend-react-komponenter/MessageBar';
 import { ITextField } from 'office-ui-fabric-react';
+import { ICanUpgrade } from '../DetailsViewController';
 
 interface IVersionViewProps {
   hasPermissionToUpgrade: boolean;
@@ -32,7 +33,7 @@ interface IVersionViewProps {
   className?: string;
   findGroupedTagsPagedResult: ITagsPagedGroup;
   versionSearchText: string;
-  canUpgrade: (selectedTag?: ITag) => boolean;
+  canUpgrade: (selectedTag?: ITag) => ICanUpgrade;
   handlefetchTags: (searchText?: string) => void;
   handleSelectStrategy: (option: ImageTagType) => void;
   setVersionSearchText: (value: string) => void;

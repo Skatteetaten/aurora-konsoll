@@ -8,6 +8,8 @@ import { ImageTagType } from 'models/ImageTagType';
 import { ITag } from 'models/Tag';
 import UpgradeButton from './UpgradeButton';
 import { getOptionName } from './TagTypeSelector/TagTypeSelector';
+import { ICanUpgrade } from '../DetailsViewController';
+import RedployButton from './RedployButton';
 
 const detailListColumns = [
   {
@@ -49,7 +51,7 @@ interface ITagsListProps {
   hasPermissionToUpgrade: boolean;
   handlefetchTags: (searchText?: string) => void;
   handleSelectNextTag: (item?: ITag) => void;
-  canUpgrade: (selectedTag?: ITag) => boolean;
+  canUpgrade: (selectedTag?: ITag) => ICanUpgrade;
   redeployWithCurrentVersion: () => void;
   redeployWithVersion: (version?: ITag) => void;
 }
@@ -151,8 +153,19 @@ class TagsList extends React.Component<ITagsListProps, ITagsListState> {
         isRedeploying={isRedeploying}
         redeployWithVersion={redeployWithVersion}
         redeployWithCurrentVersion={redeployWithCurrentVersion}
-        canUpgrade={canUpgrade}
         hasPermissionToUpgrade={hasPermissionToUpgrade}
+      />
+    );
+
+    const redeployButton = (tag: ITag) => (
+      <RedployButton
+        tag={tag}
+        handleSelectNextTag={handleSelectNextTag}
+        isRedeploying={isRedeploying}
+        redeployWithVersion={redeployWithVersion}
+        redeployWithCurrentVersion={redeployWithCurrentVersion}
+        hasPermissionToUpgrade={hasPermissionToUpgrade}
+        deployVersionType={canUpgrade(tag).type}
       />
     );
 
@@ -162,7 +175,10 @@ class TagsList extends React.Component<ITagsListProps, ITagsListState> {
           type: getOptionName(it.type),
           name: it.name,
           lastModified: it.lastModified || '',
-          deploy: deployButton(it)
+          deploy:
+            canUpgrade(it).isNewVersion || isRedeploying
+              ? deployButton(it)
+              : redeployButton(it)
         };
       });
 
