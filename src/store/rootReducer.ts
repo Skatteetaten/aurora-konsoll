@@ -7,6 +7,9 @@ import { certificateReducer } from 'screens/CertificateView/state/reducers';
 import { netdebugViewReducer } from 'screens/NetdebugView/state/reducer';
 import { startupReducer } from 'state/reducers';
 
+import { versionsReducer } from './state/versions/reducers';
+import { deployReducer } from './state/application/reducers';
+
 export const rootReducer = combineReducers({
   database: databaseReducer,
   startup: startupReducer,
@@ -14,5 +17,7 @@ export const rootReducer = combineReducers({
   certificate: certificateReducer,
   errors: errorsReducer,
   affiliationView: affiliationViewReducer,
-  netdebug: netdebugViewReducer
+  netdebug: netdebugViewReducer,
+  versions: versionsReducer,
+  deploy: deployReducer
 });

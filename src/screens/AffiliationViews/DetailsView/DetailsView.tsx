@@ -14,7 +14,7 @@ import DetailsViewController, {
   IDetailsViewState
 } from './DetailsViewController';
 import InformationView from './InformationView/InformationView';
-import VersionView from './VersionView/VersionView';
+import { VersionView } from 'screens/VersionView/VersionView';
 
 class DetailsView extends React.Component<
   IDetailsViewProps,
@@ -111,7 +111,9 @@ class DetailsView extends React.Component<
               />
             </Route>
             <Route path={`${match.path}/version`}>
-              <VersionView
+              <VersionView deployment={deployment} />
+              {/* <VersionView
+                deployment={deployment}
                 hasPermissionToUpgrade={deployment.permission.paas.admin}
                 unavailableMessage={this.controller.getVersionViewUnavailableMessage()}
                 deployedTag={this.getDeployTag()}
@@ -138,7 +140,7 @@ class DetailsView extends React.Component<
                   this.props.findGroupedTagsPagedResult
                 }
                 versionSearchText={this.state.versionSearchText}
-              />
+              /> */}
             </Route>
           </Switch>
         </Card>

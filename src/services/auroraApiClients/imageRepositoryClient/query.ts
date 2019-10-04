@@ -22,15 +22,19 @@ interface IImageRepositoryGrouped {
   commitHash: IImageTagsConnection;
 }
 
+export interface IPageInfo {
+  endCursor: string;
+  hasNextPage: boolean;
+}
+
+export interface IImageTagEdge {
+  node: IImageTag;
+}
+
 export interface IImageTagsConnection {
-  pageInfo: {
-    endCursor: string;
-    hasNextPage: boolean;
-  };
+  pageInfo: IPageInfo;
   totalCount: number;
-  edges: Array<{
-    node: IImageTag;
-  }>;
+  edges: IImageTagEdge[];
 }
 
 export interface IImageTag {
