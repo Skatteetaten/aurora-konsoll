@@ -15,6 +15,7 @@ import DetailsViewController, {
 } from './DetailsViewController';
 import InformationView from './InformationView/InformationView';
 import { VersionView } from 'screens/VersionView/VersionView';
+import UnavailableServiceMessage from 'components/UnavailableServiceMessage';
 
 class DetailsView extends React.Component<
   IDetailsViewProps,
@@ -82,6 +83,8 @@ class DetailsView extends React.Component<
       isRefreshingApplicationDeployment
     } = this.props;
     const { selectedTagType, selectedTag } = this.state;
+
+    const unavailableMessage = this.controller.getVersionViewUnavailableMessage();
     return (
       <DetailsViewGrid>
         <DetailsActionBar
@@ -111,7 +114,12 @@ class DetailsView extends React.Component<
               />
             </Route>
             <Route path={`${match.path}/version`}>
-              <VersionView deployment={deployment} />
+              {unavailableMessage ? (
+                <UnavailableServiceMessage message={unavailableMessage} />
+              ) : (
+                <VersionView deployment={deployment} />
+              )}
+
               {/* <VersionView
                 deployment={deployment}
                 hasPermissionToUpgrade={deployment.permission.paas.admin}

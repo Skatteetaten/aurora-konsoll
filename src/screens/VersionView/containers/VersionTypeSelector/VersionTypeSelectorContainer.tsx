@@ -10,12 +10,10 @@ const mapStateToProps = ({ versions }: RootState) => {
   );
   return {
     totalCountMap: types.reduce(
-      (obj, type) => {
-        return {
-          ...obj,
-          [type]: versions.types[type].totalCount
-        };
-      },
+      (obj, type) => ({
+        ...obj,
+        [type]: versions.types[type].totalCount
+      }),
       {} as TotalCountMap
     )
   };

@@ -14,6 +14,7 @@ interface IVersionTableData {
 
 interface IVersionTableProps {
   versions: IImageTag[];
+  currentVersion: string;
   applicationId: string;
 }
 
@@ -42,34 +43,48 @@ const columns = [
 
 const getVersionData = (
   applicationId: string,
+  currentVersion: string,
   tags: IImageTag[]
 ): IVersionTableData[] =>
-  tags.map(it => {
-    return {
-      type: getOptionName(it.type),
-      name: it.name,
-      lastModified: it.image ? it.image.buildTime : '',
-      deploy: (
-        <DeployButtonContainer
-          applicationId={applicationId}
-          version={it.name}
-        />
-      )
-    };
-  });
+  tags
+    .map(it => {
+      return {
+        type: getOptionName(it.type),
+        name: it.name,
+        lastModified: it.image ? it.image.buildTime : '',
+        deploy: (
+          <DeployButtonContainer
+            applicationId={applicationId}
+            currentVersion={currentVersion}
+            version={it.name}
+          />
+        )
+      };
+    })
+    .sort((t1, t2) => {
+      if (t1.lastModified === '' || t2.lastModified === '') return 0;
+      const date1 = new Date(t1.lastModified).getTime();
+      const date2 = new Date(t2.lastModified).getTime();
+      return date2 - date1;
+    });
 
 export const VersionTabel = ({
   applicationId,
+  currentVersion,
   versions
 }: IVersionTableProps) => {
   return (
     <TableWrapper>
-      <Table data={getVersionData(applicationId, versions)} columns={columns} />
+      <Table
+        data={getVersionData(applicationId, currentVersion, versions)}
+        columns={columns}
+      />
     </TableWrapper>
   );
 };
 
 const TableWrapper = styled.div`
+  overflow-x: hidden;
   table {
     background-color: white;
     width: 100%;
@@ -85,6 +100,7 @@ const TableWrapper = styled.div`
   }
 
   tr:hover {
+    background: #cde1f9;
     button {
       opacity: 1;
     }

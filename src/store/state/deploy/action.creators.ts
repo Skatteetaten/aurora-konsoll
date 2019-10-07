@@ -1,6 +1,6 @@
 import { StateThunk } from 'store/types';
 
-import { actions } from './actions.type';
+import { actions } from './actions';
 
 export const deploy = (
   applicationDeploymentId: string,

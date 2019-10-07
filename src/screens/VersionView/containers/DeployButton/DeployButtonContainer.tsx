@@ -1,11 +1,12 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { DeployButton } from './DeployButton';
-import { deploy } from 'store/state/application/actions';
+import { deploy } from 'store/state/deploy/action.creators';
 import { RootState, ReduxProps } from 'store/types';
 
 interface IDeployButtonContainerProps {
   applicationId: string;
+  currentVersion: string;
   version: string;
 }
 
@@ -31,6 +32,7 @@ type Props = IDeployButtonContainerProps & StateProps;
 const DeployButtonBase = ({
   applicationId,
   version,
+  currentVersion,
   isLoading,
   isDeploying,
   deploy
@@ -41,7 +43,7 @@ const DeployButtonBase = ({
 
   return (
     <DeployButton
-      previousVersion="test"
+      previousVersion={currentVersion}
       nextVersion={version}
       onDeploy={performDeploy}
       isLoading={isLoading}

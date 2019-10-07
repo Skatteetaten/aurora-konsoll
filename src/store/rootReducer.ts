@@ -8,7 +8,7 @@ import { netdebugViewReducer } from 'screens/NetdebugView/state/reducer';
 import { startupReducer } from 'state/reducers';
 
 import { versionsReducer } from './state/versions/reducers';
-import { deployReducer } from './state/application/reducers';
+import { deployReducer } from './state/deploy/reducers';
 
 export const rootReducer = combineReducers({
   database: databaseReducer,

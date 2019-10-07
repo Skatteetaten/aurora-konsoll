@@ -1,6 +1,6 @@
 import { reduceReducers, handleAction } from 'redux-ts-utils';
 
-import { actions } from './actions.type';
+import { actions } from './actions';
 
 export interface IDeployState {
   readonly deployingVersion?: string;

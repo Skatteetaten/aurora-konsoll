@@ -7,8 +7,8 @@ import {
   IImageTagEdge
 } from 'services/auroraApiClients/imageRepositoryClient/query';
 
-import { actions } from './actions.type';
-import { defaultImageTagsConnection } from './actions';
+import { actions } from './actions';
+import { defaultImageTagsConnection } from './action.creators';
 
 const {
   AURORA_SNAPSHOT_VERSION,
