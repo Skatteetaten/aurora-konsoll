@@ -57,7 +57,12 @@ const InformationView = ({
     ).length > 0;
 
   const renderConfirmationOpenButton = (open: () => void) => (
-    <Button icon="Delete" buttonType="primaryRoundedFilled" onClick={open} disabled={!deployment.permission.paas.admin}>
+    <Button
+      icon="Delete"
+      buttonType="primaryRoundedFilled"
+      onClick={open}
+      disabled={!deployment.permission.paas.admin}
+    >
       Slett applikasjon
     </Button>
   );
