@@ -24,6 +24,7 @@ interface IInformationViewProps {
   className?: string;
   isUpdating: boolean;
   refreshApplicationDeployment: () => void;
+  refreshApplicationDeployments: () => void;
   deleteApplicationDeployment: (namespace: string, name: string) => void;
   goToDeploymentsPage: () => void;
 }
@@ -34,6 +35,7 @@ const InformationView = ({
   deployment,
   className,
   refreshApplicationDeployment,
+  refreshApplicationDeployments,
   isUpdating,
   deleteApplicationDeployment,
   goToDeploymentsPage
@@ -65,6 +67,7 @@ const InformationView = ({
       deleteApplicationDeployment(deployment.namespace, deployment.name);
       close();
       goToDeploymentsPage();
+      refreshApplicationDeployments();
     };
 
     return (

@@ -99,6 +99,7 @@ const ApplicationDeploymentSelector = ({
   getApplicationDeploymentDetails,
   applicationDeploymentDetails,
   refreshCurrentApplicationDeployment,
+  refreshApplicationDeployments,
   redeployWithNewVersion,
   redeployWithCurrent,
   isRedeploying,
@@ -133,6 +134,7 @@ const ApplicationDeploymentSelector = ({
       findApplicationDeploymentDetails={getApplicationDeploymentDetails}
       deploymentDetails={applicationDeploymentDetails}
       refreshApplicationDeployment={refreshCurrentApplicationDeployment}
+      refreshApplicationDeployments={refreshApplicationDeployments}
       isRefreshingApplicationDeployment={isRefreshingApplicationDeployment}
       redeployWithVersion={redeployWithNewVersion}
       redeployWithCurrentVersion={redeployWithCurrent}

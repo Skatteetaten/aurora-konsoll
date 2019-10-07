@@ -11,6 +11,7 @@ export interface IApplicationDeploymentContext {
   ) => React.ComponentType;
   filterPathUrl: string;
   affiliation: string;
+  refreshApplicationDeployments: () => void;
 }
 
 const ApplicationDeploymentContext = React.createContext<
@@ -20,7 +21,8 @@ const ApplicationDeploymentContext = React.createContext<
   allDeployments: [],
   deployments: [],
   filterPathUrl: '',
-  affiliation: ''
+  affiliation: '',
+  refreshApplicationDeployments: () => {}
 });
 
 export const ApplicationDeploymentProvider =

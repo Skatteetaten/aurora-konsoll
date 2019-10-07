@@ -80,7 +80,8 @@ class DetailsView extends React.Component<
       isFetchingGroupedTags,
       isRedeploying,
       isRefreshingApplicationDeployment,
-      deleteApplicationDeployment
+      deleteApplicationDeployment,
+      refreshApplicationDeployments
     } = this.props;
     const { selectedTagType, selectedTag } = this.state;
     return (
@@ -109,6 +110,7 @@ class DetailsView extends React.Component<
                 refreshApplicationDeployment={
                   this.controller.refreshApplicationDeployment
                 }
+                refreshApplicationDeployments={refreshApplicationDeployments}
                 deleteApplicationDeployment={deleteApplicationDeployment}
                 goToDeploymentsPage={this.controller.goToDeploymentsPage}
               />

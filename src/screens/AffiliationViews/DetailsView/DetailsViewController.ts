@@ -27,6 +27,7 @@ export interface IDetailsViewProps
     applicationDeploymentId: string,
     affiliation: string
   ) => void;
+  refreshApplicationDeployments: () => void;
   redeployWithVersion: (
     applicationDeploymentId: string,
     version: string,
