@@ -9,7 +9,10 @@ export const normalizeRawDeploymentSpec = (node: any) => (
 
   const nextValue =
     children.length > 0
-      ? children.reduce(normalizeRawDeploymentSpec(currentNode), {} as IDeploymentSpec)
+      ? children.reduce(
+          normalizeRawDeploymentSpec(currentNode),
+          {} as IDeploymentSpec
+        )
       : currentNode.value;
 
   return {

@@ -17,7 +17,7 @@ export function decrypt(text: string): string {
   try {
     const textParts = text.split(':');
     const first = textParts.shift();
-    if(!first) {
+    if (!first) {
       return text;
     }
 
@@ -28,7 +28,10 @@ export function decrypt(text: string): string {
       Buffer.from(password),
       iv
     );
-    const decrypted = Buffer.concat([decipher.update(encryptedText), decipher.final()]);
+    const decrypted = Buffer.concat([
+      decipher.update(encryptedText),
+      decipher.final()
+    ]);
     return decrypted.toString();
   } catch (err) {
     return text;

@@ -3,7 +3,8 @@ import {
   REDEPLOY_WITH_CURRENT_VERSION_MUTATION,
   REDEPLOY_WITH_VERSION_MUTATION,
   REFRESH_APPLICATION_DEPLOYMENT_MUTATION,
-  REFRESH_APPLICATION_DEPLOYMENTS_MUTATION
+  REFRESH_APPLICATION_DEPLOYMENTS_MUTATION,
+  DELETE_APPLICATION_DEPLOYMENT_MUTATION
 } from './mutation';
 import {
   APPLICATION_DEPLOYMENT_DETAILS_QUERY,
@@ -109,6 +110,23 @@ export class ApplicationDeploymentClient {
       query: APPLICATIONS_QUERY,
       variables: {
         affiliations
+      }
+    });
+  }
+
+  public async deleteApplicationDeployment(
+    namespace: string,
+    name: string
+  ): Promise<
+    IGoboResult<{ deleteApplicationDeployment: boolean }> | undefined
+  > {
+    return await this.client.mutate<{ deleteApplicationDeployment: boolean }>({
+      mutation: DELETE_APPLICATION_DEPLOYMENT_MUTATION,
+      variables: {
+        input: {
+          namespace,
+          name
+        }
       }
     });
   }

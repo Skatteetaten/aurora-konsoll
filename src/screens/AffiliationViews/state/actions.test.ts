@@ -12,7 +12,8 @@ import {
   redeployRequest,
   fetchTagsRequest,
   fetchDetailsRequest,
-  fetchGroupedTagsRequest
+  fetchGroupedTagsRequest,
+  deleteApplicationDeploymentResponse
 } from './actions';
 import {
   deploymentFactory,
@@ -124,5 +125,12 @@ describe('affiliation views actions', () => {
         type: 'affiliationView/FIND_GROUPED_TAGS_PAGED_RESPONSE'
       }
     );
+  });
+
+  it('should return type of action deleteApplicationDeploymentResponse and payload', () => {
+    expect(deleteApplicationDeploymentResponse(true)).toEqual({
+      payload: true,
+      type: 'affiliationView/DELETE_APPLICATION_DEPLOYMENT_RESPONSE'
+    });
   });
 });

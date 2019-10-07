@@ -27,6 +27,7 @@ export interface IDetailsViewProps
     applicationDeploymentId: string,
     affiliation: string
   ) => void;
+  refreshApplicationDeployments: () => void;
   redeployWithVersion: (
     applicationDeploymentId: string,
     version: string,
@@ -71,6 +72,7 @@ export interface IDetailsViewProps
     ) => void,
     current: ITagsPaged
   ) => void;
+  deleteApplicationDeployment: (namespace: string, name: string) => void;
   findTagsPagedResponse: ITagsPaged;
   findGroupedTagsPagedResult: ITagsPagedGroup;
   isRefreshingApplicationDeployment: boolean;
@@ -79,6 +81,7 @@ export interface IDetailsViewProps
   isFetchingTags: boolean;
   isFetchingGroupedTags: boolean;
   affiliation: string;
+  isApplicationDeploymentDeleted: boolean;
 }
 
 export interface IDetailsViewState {
