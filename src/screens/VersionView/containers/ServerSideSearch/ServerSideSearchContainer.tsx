@@ -3,35 +3,39 @@ import TextField from 'aurora-frontend-react-komponenter/TextField';
 import { ITextField } from 'office-ui-fabric-react';
 import { ImageTagType } from 'models/ImageTagType';
 import { fetchVersions } from 'store/state/versions/action.creators';
-import { ResolveThunks, connect } from 'react-redux';
+import { connect } from 'react-redux';
+import { RootState, ReduxProps } from 'store/types';
 
 const ENTER_KEY = 13;
 
 interface IServerSideSearchProps {
   selectedVersionType: ImageTagType;
-  isFetchingTags: boolean;
   repository: string;
   searchText?: string;
   handleSelectVersionType: (type: ImageTagType) => void;
   handleSetSearchText: (text: string) => void;
 }
 
+const mapStateToProps = ({ versions }: RootState) => ({
+  isFetchingVersions: versions.isLoading
+});
+
 const mapDispatchToProps = {
   fetchVersions
 };
 
-type StateProps = ResolveThunks<typeof mapDispatchToProps>;
+type StateProps = ReduxProps<typeof mapDispatchToProps, typeof mapStateToProps>;
 
 type Props = IServerSideSearchProps & StateProps;
 
 const ServerSideSearch = ({
-  isFetchingTags,
   selectedVersionType,
   handleSelectVersionType,
   handleSetSearchText,
   repository,
   fetchVersions,
-  searchText
+  searchText,
+  isFetchingVersions
 }: Props) => {
   let searchRef: ITextField | undefined;
   useEffect(() => {
@@ -44,7 +48,7 @@ const ServerSideSearch = ({
     if (selectedVersionType !== ImageTagType.SEARCH) {
       handleSelectVersionType(ImageTagType.SEARCH);
     }
-    if (e.charCode === ENTER_KEY && !isFetchingTags) {
+    if (e.charCode === ENTER_KEY && !isFetchingVersions) {
       const text = searchRef ? searchRef.value : undefined;
       if (text) {
         handleSetSearchText(text);
@@ -61,6 +65,7 @@ const ServerSideSearch = ({
           }
         }}
         value={searchText}
+        disabled={isFetchingVersions}
         placeholder="Søk etter versjon"
         iconProps={{ iconName: 'Search' }}
         onKeyPress={searchOnEnterPress}
@@ -70,6 +75,6 @@ const ServerSideSearch = ({
 };
 
 export const ServerSideSearchContainer = connect(
-  () => {},
+  mapStateToProps,
   mapDispatchToProps
 )(ServerSideSearch);

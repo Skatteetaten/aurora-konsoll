@@ -28,7 +28,7 @@ export const fetchVersions = (
   const { versions } = getState();
   const current = versions.types[type];
 
-  if (page && !current.hasNextPage()) {
+  if (page && !current.hasNextPage() && !filter) {
     return;
   }
 
@@ -38,6 +38,7 @@ export const fetchVersions = (
 
   let response: IGoboResult<ITagsQuery> | undefined;
   if (filter) {
+    dispatch(actions.clearType(ImageTagType.SEARCH));
     response = await client.searchTagsPaged(repository, first, filter, cursor);
   } else {
     response = await client.findTagsPaged(repository, type, first, cursor);

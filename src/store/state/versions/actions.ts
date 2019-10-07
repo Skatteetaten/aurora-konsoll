@@ -15,10 +15,13 @@ const fetchVersionsForType = createAction<{
 
 const reset = createAction<void>(action('RESET'));
 
+const clearType = createAction<ImageTagType>(action('CLEAR_TYPE'));
+
 export const actions = {
   isLoading,
   fetchVersionsForType,
-  reset
+  reset,
+  clearType
 };
 
 export type VersionsAction = ActionType<typeof actions>;

@@ -7,7 +7,6 @@ import { IApplicationDeployment } from 'models/ApplicationDeployment';
 import { VersionTypeSelectorContainer } from './containers/VersionTypeSelector/VersionTypeSelectorContainer';
 import { DeployResultMessageContainer } from './containers/DeployResultMessageContainer';
 import { VersionTableInformation } from './components/VersionTableInformation';
-import { FetchVersionsInformation } from './components/FetchVersionsInformation';
 import { ServerSideSearchContainer } from './containers/ServerSideSearch/ServerSideSearchContainer';
 import styled from 'styled-components';
 
@@ -40,7 +39,6 @@ export const VersionView = ({ deployment }: IVersionViewProps) => {
           onSelect={onSelectType}
         />
         <ServerSideSearchContainer
-          isFetchingTags={false}
           searchText={searchText}
           handleSelectVersionType={setVersionType}
           handleSetSearchText={setSearchText}

@@ -29,6 +29,7 @@ export const DeployButton = ({
     onDeploy();
     close();
   };
+  const buttonText = nextVersion === previousVersion ? 'Redeploy' : 'Deploy';
   return (
     <>
       <ActionButton
@@ -37,7 +38,7 @@ export const DeployButton = ({
         icon="Deploy"
         style={{ opacity: isLoading ? 1 : undefined }}
       >
-        {isLoading ? <Spinner /> : 'Deploy'}
+        {isLoading ? <Spinner /> : buttonText}
       </ActionButton>
       <Dialog
         hidden={hidden}
