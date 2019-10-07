@@ -337,43 +337,40 @@ export default class DetailsViewController {
   }
 
   public canUpgrade = (selectedTag?: ITag): ICanUpgrade => {
-    const {
-      deployment,
-      isRedeploying,
-      deploymentDetails
-    } = this.component.props;
+    const { deployment, deploymentDetails } = this.component.props;
 
-    const isAuroraVersionSelectedTag = () =>
-      deploymentDetails.deploymentSpec &&
-      selectedTag &&
-      selectedTag.name === deploymentDetails.deploymentSpec.version;
+    const SelectedTagEqualsAuroraConfigTag =
+      (selectedTag && selectedTag.name) ===
+      (deploymentDetails.deploymentSpec &&
+        deploymentDetails.deploymentSpec.version);
 
-    const IsNewVersion =
-      !isRedeploying &&
-      (selectedTag && selectedTag.name) !== deployment.version.deployTag.name;
+    const SelectedTagEqualsActiveDeployTag =
+      (selectedTag && selectedTag.name) === deployment.version.deployTag.name;
+
+    if (SelectedTagEqualsAuroraConfigTag) {
+      if (SelectedTagEqualsActiveDeployTag) {
+        return {
+          isNewVersion: false,
+          type: DeployVersionType.NEW_VERSION
+        };
+      } else {
+        return {
+          isNewVersion: false,
+          type: DeployVersionType.AURORA_CONFIG_VERSION
+        };
+      }
+    }
 
     if (
-      !selectedTag ||
-      isRedeploying ||
-      (isAuroraVersionSelectedTag() && !IsNewVersion)
+      !SelectedTagEqualsAuroraConfigTag &&
+      !SelectedTagEqualsActiveDeployTag
     ) {
-      return { isNewVersion: false, type: DeployVersionType.CURRENT_VERSION };
-    }
-
-    if (!selectedTag || isRedeploying || isAuroraVersionSelectedTag()) {
+      return { isNewVersion: true, type: DeployVersionType.NEW_VERSION };
+    } else {
       return {
         isNewVersion: false,
-        type: DeployVersionType.AURORA_CONFIG_VERSION
+        type: DeployVersionType.ACTIVE_DEPLOYMENT_VERSION
       };
     }
-
-    if (IsNewVersion) {
-      return { isNewVersion: true, type: DeployVersionType.NEW_VERSION };
-    }
-
-    return {
-      isNewVersion: false,
-      type: DeployVersionType.ACTIVE_DEPLOYMENT_VERSION
-    };
   };
 }
