@@ -16,6 +16,7 @@ import DetailsViewController, {
 import InformationView from './InformationView/InformationView';
 import { VersionView } from 'screens/VersionView/VersionView';
 import UnavailableServiceMessage from 'components/UnavailableServiceMessage';
+import { InitVersionsContainer } from 'containers/InitVersionsContainer';
 
 class DetailsView extends React.Component<
   IDetailsViewProps,
@@ -73,6 +74,7 @@ class DetailsView extends React.Component<
 
   public render() {
     const {
+      affiliation,
       deployment,
       match,
       deploymentDetails,
@@ -87,6 +89,7 @@ class DetailsView extends React.Component<
     const unavailableMessage = this.controller.getVersionViewUnavailableMessage();
     return (
       <DetailsViewGrid>
+        <InitVersionsContainer imageRepository={deployment.imageRepository} />
         <DetailsActionBar
           title={`${deployment.environment}/${deployment.name}`}
           isRefreshing={isRefreshingApplicationDeployment}
@@ -117,7 +120,10 @@ class DetailsView extends React.Component<
               {unavailableMessage ? (
                 <UnavailableServiceMessage message={unavailableMessage} />
               ) : (
-                <VersionView deployment={deployment} />
+                <VersionView
+                  affiliation={affiliation}
+                  deployment={deployment}
+                />
               )}
 
               {/* <VersionView

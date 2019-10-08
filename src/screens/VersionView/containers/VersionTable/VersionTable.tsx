@@ -13,6 +13,7 @@ interface IVersionTableData {
 }
 
 interface IVersionTableProps {
+  affiliation: string;
   versions: IImageTag[];
   currentVersion: string;
   applicationId: string;
@@ -42,6 +43,7 @@ const columns = [
 ];
 
 const getVersionData = (
+  affiliation: string,
   applicationId: string,
   currentVersion: string,
   tags: IImageTag[]
@@ -54,6 +56,7 @@ const getVersionData = (
         lastModified: it.image ? it.image.buildTime : '',
         deploy: (
           <DeployButtonContainer
+            affiliation={affiliation}
             applicationId={applicationId}
             currentVersion={currentVersion}
             version={it.name}
@@ -69,6 +72,7 @@ const getVersionData = (
     });
 
 export const VersionTabel = ({
+  affiliation,
   applicationId,
   currentVersion,
   versions
@@ -76,7 +80,12 @@ export const VersionTabel = ({
   return (
     <TableWrapper>
       <Table
-        data={getVersionData(applicationId, currentVersion, versions)}
+        data={getVersionData(
+          affiliation,
+          applicationId,
+          currentVersion,
+          versions
+        )}
         columns={columns}
       />
     </TableWrapper>
@@ -99,10 +108,12 @@ const TableWrapper = styled.div`
     }
   }
 
-  tr:hover {
-    background: #cde1f9;
-    button {
-      opacity: 1;
+  tbody {
+    tr:hover {
+      background: #cde1f9;
+      button {
+        opacity: 1;
+      }
     }
   }
 

@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { connect } from 'react-redux';
 import Button from 'aurora-frontend-react-komponenter/Button';
 import Spinner from 'aurora-frontend-react-komponenter/Spinner';
@@ -6,13 +6,12 @@ import Spinner from 'aurora-frontend-react-komponenter/Spinner';
 import { ImageTagType } from 'models/ImageTagType';
 import { RootState, ReduxProps } from 'store/types';
 
-import { fetchVersions, reset } from 'store/state/versions/action.creators';
+import { fetchVersions } from 'store/state/versions/action.creators';
 import { VersionTabel } from './VersionTable';
 import { FetchVersionsInformation } from 'screens/VersionView/components/FetchVersionsInformation';
 
 const mapDispatchToProps = {
-  fetchVersions,
-  reset
+  fetchVersions
 };
 const mapStateToProps = ({ versions }: RootState) => ({
   versions
@@ -24,6 +23,7 @@ type VersionProps = ReduxProps<
 >;
 
 type Props = {
+  affiliation: string;
   versionType: ImageTagType;
   searchText?: string;
   repository: string;
@@ -32,33 +32,21 @@ type Props = {
 };
 
 const VersionTableContainerBase = ({
+  affiliation,
   versionType,
   searchText,
   repository,
   fetchVersions,
   versions,
   applicationId,
-  currentVersion,
-  reset
+  currentVersion
 }: Props & VersionProps) => {
-  // TODO: Move higher
-  useEffect(() => {
-    reset();
-    fetchVersions(repository, ImageTagType.MAJOR, 15);
-    fetchVersions(repository, ImageTagType.MINOR, 15);
-    fetchVersions(repository, ImageTagType.BUGFIX, 15);
-    fetchVersions(repository, ImageTagType.SNAPSHOT, 15);
-    fetchVersions(repository, ImageTagType.LATEST, 1);
-    fetchVersions(repository, ImageTagType.COMMIT_HASH, 15);
-    fetchVersions(repository, ImageTagType.AURORA_VERSION, 15);
-    fetchVersions(repository, ImageTagType.AURORA_SNAPSHOT_VERSION, 15);
-  }, [fetchVersions, repository, reset]);
-
   const current = versions.types[versionType];
 
   return (
     <>
       <VersionTabel
+        affiliation={affiliation}
         applicationId={applicationId}
         currentVersion={currentVersion}
         versions={current.getTags()}

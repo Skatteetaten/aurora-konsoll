@@ -19,7 +19,7 @@ import {
 } from 'models/Tag';
 import { IUserSettings } from 'models/UserSettings';
 import { createAction } from 'redux-ts-utils';
-import { Thunk } from 'store/types';
+import { Thunk, StateThunk } from 'store/types';
 import {
   IImageTagsConnection,
   ITagsQuery
@@ -102,9 +102,9 @@ export const refreshAffiliations: Thunk = (affiliations: string[]) => async (
   dispatch(refreshAffiliationsRequest(false));
 };
 
-export const findAllApplicationDeployments: Thunk = (
+export const findAllApplicationDeployments = (
   affiliations: string[]
-) => async (dispatch, getState, { clients }) => {
+): StateThunk => async (dispatch, getState, { clients }) => {
   dispatch(findAllApplicationDeploymentsRequest(true));
   const result = await clients.applicationDeploymentClient.findAllApplicationDeployments(
     affiliations
@@ -184,10 +184,10 @@ export const updateUserSettings: Thunk = (
   }
 };
 
-export const refreshApplicationDeployment: Thunk = (
+export const refreshApplicationDeployment = (
   applicationDeploymentId: string,
   affiliation: string
-) => async (dispatch, getState, { clients }) => {
+): StateThunk => async (dispatch, getState, { clients }) => {
   dispatch(refreshApplicationDeploymentRequest(true));
   const result = await clients.applicationDeploymentClient.refreshApplicationDeployment(
     applicationDeploymentId
@@ -196,7 +196,7 @@ export const refreshApplicationDeployment: Thunk = (
 
   if (result && result.data) {
     dispatch(refreshApplicationDeploymentResponse(true));
-    dispatch(findAllApplicationDeployments(affiliation));
+    dispatch(findAllApplicationDeployments([affiliation]));
     dispatch(findApplicationDeploymentDetails(applicationDeploymentId, true));
   } else {
     dispatch(refreshApplicationDeploymentResponse(false));
@@ -496,10 +496,7 @@ export const toTagsPaged = (
 
 // ! Temp fix for template deployments with default version
 // TODO: FIX
-export function findDeployTagForTemplate(
-  applicationName: string,
-  deployTag: string
-) {
+function findDeployTagForTemplate(applicationName: string, deployTag: string) {
   const templates = {
     'aurora-activemq-1.0.0': '2',
     'aurora-redis-1.0.0': '3.2.3',

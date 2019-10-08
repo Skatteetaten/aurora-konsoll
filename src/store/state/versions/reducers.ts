@@ -78,7 +78,7 @@ export const versionsReducer = reduceReducers<IVersionsState>(
       state.types = initialState.types;
     }),
 
-    handleAction(actions.clearType, (state, { payload }) => {
+    handleAction(actions.clearStateForType, (state, { payload }) => {
       state.types[payload] = createImageTagsConnection();
     })
   ],

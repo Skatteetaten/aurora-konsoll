@@ -1,26 +1,31 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 
 import { ImageTagType } from 'models/ImageTagType';
 
 import { VersionTableContainer } from './containers/VersionTable/VersionTableContainer';
 import { IApplicationDeployment } from 'models/ApplicationDeployment';
 import { VersionTypeSelectorContainer } from './containers/VersionTypeSelector/VersionTypeSelectorContainer';
-import { DeployResultMessageContainer } from './containers/DeployResultMessageContainer';
 import { VersionTableInformation } from './components/VersionTableInformation';
 import { ServerSideSearchContainer } from './containers/ServerSideSearch/ServerSideSearchContainer';
 import styled from 'styled-components';
 
 interface IVersionViewProps {
+  affiliation: string;
   deployment: IApplicationDeployment;
 }
 
-export const VersionView = ({ deployment }: IVersionViewProps) => {
+export const VersionView = ({ affiliation, deployment }: IVersionViewProps) => {
   const { id, version, imageRepository } = deployment;
 
   const [searchText, setSearchText] = useState<string | undefined>();
   const [versionType, setVersionType] = useState(version.deployTag.type);
 
+  useEffect(() => {
+    setVersionType(version.deployTag.type);
+  }, [version.deployTag.type]);
+
   if (!imageRepository) {
+    // TODO: Bedre feilmelding
     return <p>Mangler repository</p>;
   }
 
@@ -46,9 +51,9 @@ export const VersionView = ({ deployment }: IVersionViewProps) => {
           selectedVersionType={versionType}
         />
       </ActionBar>
-      <DeployResultMessageContainer />
       <VersionTableInformation />
       <VersionTableContainer
+        affiliation={affiliation}
         searchText={searchText}
         currentVersion={version.deployTag.name}
         applicationId={id}

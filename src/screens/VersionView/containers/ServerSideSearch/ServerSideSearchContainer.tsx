@@ -2,7 +2,10 @@ import React, { useEffect } from 'react';
 import TextField from 'aurora-frontend-react-komponenter/TextField';
 import { ITextField } from 'office-ui-fabric-react';
 import { ImageTagType } from 'models/ImageTagType';
-import { fetchVersions } from 'store/state/versions/action.creators';
+import {
+  fetchVersions,
+  clearStateForType
+} from 'store/state/versions/action.creators';
 import { connect } from 'react-redux';
 import { RootState, ReduxProps } from 'store/types';
 
@@ -21,7 +24,8 @@ const mapStateToProps = ({ versions }: RootState) => ({
 });
 
 const mapDispatchToProps = {
-  fetchVersions
+  fetchVersions,
+  clearStateForType
 };
 
 type StateProps = ReduxProps<typeof mapDispatchToProps, typeof mapStateToProps>;
@@ -35,7 +39,8 @@ const ServerSideSearch = ({
   repository,
   fetchVersions,
   searchText,
-  isFetchingVersions
+  isFetchingVersions,
+  clearStateForType
 }: Props) => {
   let searchRef: ITextField | undefined;
   useEffect(() => {
@@ -52,6 +57,7 @@ const ServerSideSearch = ({
       const text = searchRef ? searchRef.value : undefined;
       if (text) {
         handleSetSearchText(text);
+        clearStateForType(ImageTagType.SEARCH);
         fetchVersions(repository, ImageTagType.SEARCH, 100, true, text);
       }
     }

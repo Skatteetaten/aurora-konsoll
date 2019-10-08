@@ -5,6 +5,7 @@ import { deploy } from 'store/state/deploy/action.creators';
 import { RootState, ReduxProps } from 'store/types';
 
 interface IDeployButtonContainerProps {
+  affiliation: string;
   applicationId: string;
   currentVersion: string;
   version: string;
@@ -30,6 +31,7 @@ type StateProps = ReduxProps<typeof mapDispatchToProps, typeof mapStateToProps>;
 type Props = IDeployButtonContainerProps & StateProps;
 
 const DeployButtonBase = ({
+  affiliation,
   applicationId,
   version,
   currentVersion,
@@ -38,7 +40,7 @@ const DeployButtonBase = ({
   deploy
 }: Props) => {
   const performDeploy = () => {
-    deploy(applicationId, version);
+    deploy(affiliation, applicationId, version);
   };
 
   return (

@@ -231,6 +231,6 @@ export const ApplicationDeploymentSelectorConnected = connect(
     getApplicationDeploymentDetails: (id: string) =>
       findApplicationDeploymentDetails(id),
     getAllApplicationDeployments: (affiliation: string) =>
-      findAllApplicationDeployments(affiliation)
+      findAllApplicationDeployments([affiliation])
   }
 )(ApplicationDeploymentSelector);

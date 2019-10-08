@@ -7,6 +7,7 @@ import {
 
 import { actions } from './actions';
 import { IGoboResult } from 'services/GoboClient';
+import { addCurrentErrors } from 'screens/ErrorHandler/state/actions';
 
 export const defaultImageTagsConnection: IImageTagsConnection = {
   edges: [],
@@ -38,13 +39,12 @@ export const fetchVersions = (
 
   let response: IGoboResult<ITagsQuery> | undefined;
   if (filter) {
-    dispatch(actions.clearType(ImageTagType.SEARCH));
     response = await client.searchTagsPaged(repository, first, filter, cursor);
   } else {
     response = await client.findTagsPaged(repository, type, first, cursor);
   }
 
-  // TODO: add error message
+  dispatch(addCurrentErrors(response));
 
   if (
     !(
@@ -75,6 +75,10 @@ export const fetchVersions = (
   dispatch(actions.isLoading(false));
 };
 
-export const reset = (): StateThunk => (dispatch, getState, other) => {
-  dispatch(actions.reset());
-};
+export function resetState(): StateThunk {
+  return dispatch => dispatch(actions.reset());
+}
+
+export function clearStateForType(type: ImageTagType): StateThunk {
+  return dispatch => dispatch(actions.clearStateForType(type));
+}
