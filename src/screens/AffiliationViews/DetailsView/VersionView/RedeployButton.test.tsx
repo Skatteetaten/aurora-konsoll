@@ -4,10 +4,10 @@ import { mount } from 'enzyme';
 
 import ActionButton from 'aurora-frontend-react-komponenter/ActionButton';
 import Spinner from 'components/Spinner';
-import UpgradeButton from './UpgradeButton';
 import { ITag } from 'models/Tag';
 import { tagFactory } from 'testData/testDataBuilders';
-import { ImageTagType } from 'models/ImageTagType';
+import RedployButton from './RedployButton';
+import { DeployVersionType } from '../DetailsViewController';
 
 describe('UpgradeVersionDialog', () => {
   const redeploy = () => {
@@ -18,17 +18,16 @@ describe('UpgradeVersionDialog', () => {
     return;
   };
 
-  it('should not show a button and should show a spinner when isRedeploying=true and tag===selectedTag', () => {
+  it('should not show a button and should show a spinner when isRedeploying=true', () => {
     const wrapper = mount(
-      <UpgradeButton
-        previousVersion="latest"
+      <RedployButton
         tag={tagFactory.build()}
-        selectedTag={tagFactory.build()}
         isRedeploying={true}
         redeployWithVersion={redeploy}
         redeployWithCurrentVersion={redeploy}
         handleSelectNextTag={handleSelectNextTag}
         hasPermissionToUpgrade={true}
+        deployVersionType={DeployVersionType.CURRENT_VERSION}
       />
     );
 
@@ -38,17 +37,17 @@ describe('UpgradeVersionDialog', () => {
     const button = wrapper.find(ActionButton);
     expect(button).toHaveLength(0);
   });
-  it('should show a button and should not show a spinner when isRedeploying=true and tag!==selectedTag', () => {
+
+  it('should show a button and should not show a spinner when isRedeploying=false and deployVersionType=ACTIVE_DEPLOYMENT_VERSION', () => {
     const wrapper = mount(
-      <UpgradeButton
-        previousVersion="latest"
+      <RedployButton
         tag={tagFactory.build()}
-        selectedTag={tagFactory.build({ type: ImageTagType.MAJOR, name: '1' })}
-        isRedeploying={true}
+        isRedeploying={false}
         redeployWithVersion={redeploy}
         redeployWithCurrentVersion={redeploy}
         handleSelectNextTag={handleSelectNextTag}
         hasPermissionToUpgrade={true}
+        deployVersionType={DeployVersionType.ACTIVE_DEPLOYMENT_VERSION}
       />
     );
 
@@ -57,28 +56,29 @@ describe('UpgradeVersionDialog', () => {
 
     const button = wrapper.find(ActionButton);
     expect(button).toHaveLength(1);
-    expect(button.prop('disabled')).toBeTruthy();
-    expect(button.text()).toContain('Deploy');
+    expect(button.prop('disabled')).toBeFalsy();
+    expect(button.text()).toContain('Redeploy');
   });
-  it('should disable button and the button should display "Deploy" when hasPermissionToUpgrade=false', () => {
+
+  it('should disable button and the button should display "Redeploy" when hasPermissionToUpgrade=false', () => {
     const wrapper = mount(
-      <UpgradeButton
-        previousVersion="latest"
+      <RedployButton
         tag={tagFactory.build()}
-        selectedTag={tagFactory.build()}
         isRedeploying={false}
         redeployWithVersion={redeploy}
         redeployWithCurrentVersion={redeploy}
         handleSelectNextTag={handleSelectNextTag}
         hasPermissionToUpgrade={false}
+        deployVersionType={DeployVersionType.AURORA_CONFIG_VERSION}
       />
     );
+
     const spinner = wrapper.find(Spinner);
     expect(spinner).toHaveLength(0);
 
     const button = wrapper.find(ActionButton);
     expect(button).toHaveLength(1);
     expect(button.prop('disabled')).toBeTruthy();
-    expect(button.text()).toContain('Deploy');
+    expect(button.text()).toContain('Redeploy');
   });
 });
