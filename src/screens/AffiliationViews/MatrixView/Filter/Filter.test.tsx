@@ -12,6 +12,10 @@ describe('Filter', () => {
   const applicationCheckboxIndex = 0;
   const environmentCheckboxIndex = 2;
 
+  const addErrors = (errors: any[]) => {
+    return;
+  };
+
   const emptyFilter = { applications: [], environments: [] };
   const deployments: IApplicationDeployment[] = [
     {
@@ -39,7 +43,6 @@ describe('Filter', () => {
           view: true
         }
       },
-      repository: '',
       time: ''
     },
     {
@@ -67,7 +70,6 @@ describe('Filter', () => {
           view: true
         }
       },
-      repository: '',
       time: ''
     }
   ];
@@ -86,6 +88,7 @@ describe('Filter', () => {
         filters={emptyFilter}
         allFilters={[]}
         deleteFilter={deleteFilter}
+        addErrors={addErrors}
       />
     );
     const checkbox = wrapper.find(Checkbox);
@@ -106,6 +109,7 @@ describe('Filter', () => {
         filters={emptyFilter}
         allFilters={[]}
         deleteFilter={deleteFilter}
+        addErrors={addErrors}
       />
     );
     const checkbox = wrapper.find(Checkbox);
@@ -126,6 +130,7 @@ describe('Filter', () => {
         filters={{ applications: ['app1'], environments: [] }}
         allFilters={[]}
         deleteFilter={deleteFilter}
+        addErrors={addErrors}
       />
     );
     const applications = wrapper.state('applications');
@@ -145,6 +150,7 @@ describe('Filter', () => {
         filters={{ applications: ['app1'], environments: ['env1'] }}
         allFilters={[]}
         deleteFilter={deleteFilter}
+        addErrors={addErrors}
       />
     );
     wrapper.setProps({ affiliation: 'aurora' });
@@ -167,6 +173,7 @@ describe('Filter', () => {
         }}
         allFilters={[]}
         deleteFilter={deleteFilter}
+        addErrors={addErrors}
       />
     );
 
@@ -201,6 +208,7 @@ describe('Filter', () => {
         }}
         allFilters={[]}
         deleteFilter={deleteFilter}
+        addErrors={addErrors}
       />
     );
 
