@@ -23,3 +23,14 @@ function parseAndStringify(value: string | object): string {
 function stringify(value: any): string {
   return JSON.stringify(value, undefined, '  ');
 }
+
+export function stringContainsHtml(str?: string): boolean {
+  if (!str) {
+    return false;
+  }
+
+  return !(str || '')
+    .replace(/<([^>]+?)([^>]*?)>(.*?)<\/\1>/gi, '')
+    .replace(/(<([^>]+)>)/gi, '')
+    .trim();
+}

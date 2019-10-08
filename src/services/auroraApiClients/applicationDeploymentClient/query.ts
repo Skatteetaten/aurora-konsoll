@@ -5,7 +5,7 @@ import { StatusCode } from 'models/Status';
 import { IImageTag } from '../imageRepositoryClient/query';
 
 export interface IApplicationsConnectionQuery {
-  applications: {
+  applications?: {
     edges: IApplicationEdge[];
   };
 }

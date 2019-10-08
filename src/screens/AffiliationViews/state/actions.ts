@@ -26,6 +26,8 @@ import {
 } from 'services/auroraApiClients/imageRepositoryClient/query';
 import { ImageTagType } from 'models/ImageTagType';
 import { IGoboResult } from 'services/GoboClient';
+import { IPodResource } from 'models/Pod';
+import { stringContainsHtml } from 'utils/string';
 
 const affiliationViewAction = (action: string) => `affiliationView/${action}`;
 
@@ -89,6 +91,10 @@ export const fetchGroupedTagsRequest = createAction<boolean>(
   affiliationViewAction('FETCH_GROUPED_TAGS_REQUEST')
 );
 
+export const deleteApplicationDeploymentResponse = createAction<boolean>(
+  affiliationViewAction('DELETE_APPLICATION_DEPLOYMENT_RESPONSE')
+);
+
 export const refreshAffiliations: Thunk = (affiliations: string[]) => async (
   dispatch,
   getState,
@@ -110,9 +116,11 @@ export const findAllApplicationDeployments = (
     affiliations
   );
   dispatch(addCurrentErrors(result));
-  if (!result) {
-    dispatch(findAllApplicationDeploymentsResponse([]));
-  } else {
+  if (
+    result &&
+    result.data.applications &&
+    result.data.applications.edges.length > 0
+  ) {
     const r = result.data.applications.edges.reduce(
       (acc: IApplicationDeployment[], { node }) => {
         const { applicationDeployments } = node;
@@ -121,6 +129,7 @@ export const findAllApplicationDeployments = (
           environment: app.environment,
           id: app.id,
           name: app.name,
+          namespace: app.namespace.name,
           permission: app.namespace.permission,
           imageRepository: app.imageRepository,
           status: {
@@ -148,6 +157,8 @@ export const findAllApplicationDeployments = (
       []
     );
     dispatch(findAllApplicationDeploymentsResponse(r));
+  } else {
+    dispatch(findAllApplicationDeploymentsResponse([]));
   }
   dispatch(findAllApplicationDeploymentsRequest(false));
 };
@@ -453,6 +464,38 @@ export const findApplicationDeploymentDetails: Thunk = (
         {} as IDeploymentSpec
       );
     }
+
+    const addManagementInterfaceError = (prop: string) => {
+      dispatch(
+        addErrors([
+          new Error(
+            `${prop} endepunktet inneholder HTML, som er ugyldig data. Feilen kan være forårsaket av feil oppsett av Management Interface`
+          )
+        ])
+      );
+    };
+
+    podResources.forEach((it: IPodResource) => {
+      const managementResponses = it.managementResponses;
+      if (managementResponses) {
+        if (
+          managementResponses.health &&
+          stringContainsHtml(managementResponses.health.textResponse)
+        ) {
+          addManagementInterfaceError('health');
+          managementResponses.health = undefined;
+        }
+
+        if (
+          managementResponses.env &&
+          stringContainsHtml(managementResponses.env.textResponse)
+        ) {
+          addManagementInterfaceError('env');
+          managementResponses.env = undefined;
+        }
+      }
+    });
+
     dispatch(
       applicationDeploymentDetailsResponse({
         updatedBy,
@@ -472,6 +515,23 @@ export const findApplicationDeploymentDetails: Thunk = (
     );
   }
   dispatch(fetchDetailsRequest(false));
+};
+
+export const deleteApplicationDeployment: Thunk = (
+  namespace: string,
+  name: string
+) => async (dispatch, getState, { clients }) => {
+  const result = await clients.applicationDeploymentClient.deleteApplicationDeployment(
+    namespace,
+    name
+  );
+  dispatch(addCurrentErrors(result));
+
+  if (result && result.data && result.data.deleteApplicationDeployment) {
+    dispatch(deleteApplicationDeploymentResponse(true));
+  } else {
+    dispatch(deleteApplicationDeploymentResponse(false));
+  }
 };
 
 export const toTagsPaged = (
@@ -523,5 +583,6 @@ export default {
   applicationDeploymentDetailsResponse,
   findTagsPagedResponse,
   findGroupedTagsPagedResponse,
-  redeployRequest
+  redeployRequest,
+  deleteApplicationDeploymentResponse
 };

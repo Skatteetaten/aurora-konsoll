@@ -35,13 +35,15 @@ async function init() {
     redirectToLoginPage(config.AUTHORIZATION_URI, config.CLIENT_ID);
   }
 
-  const urlParams = new URLSearchParams(window.location.hash.replace("#","?"));
-  const token = urlParams.get('access_token') ? urlParams.get('access_token') : tokenStore.getToken();
+  const urlParams = new URLSearchParams(window.location.hash.replace('#', '?'));
+  const token = urlParams.get('access_token')
+    ? urlParams.get('access_token')
+    : tokenStore.getToken();
   const expiresInSeconds = Number(urlParams.get('expires_in'));
   if (urlParams.get('access_token')) {
     tokenStore.updateToken(token as string, expiresInSeconds);
   }
-  
+
   const goboClient = new GoboClient({
     url: '/api/graphql',
     headers: {

@@ -12,6 +12,7 @@ export interface IApplicationDeployment {
   id: string;
   affiliation: string;
   name: string;
+  namespace: string;
   imageRepository?: IImageRepository;
   environment: string;
   status: IApplicationDeploymentStatus;

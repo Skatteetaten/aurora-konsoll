@@ -269,7 +269,8 @@ class AffiliationViewController extends React.Component<
           allDeployments: allApplicationDeployments,
           deployments: filteredDeployments,
           filterPathUrl,
-          affiliation
+          affiliation,
+          refreshApplicationDeployments: this.refreshApplicationDeployments
         }}
       >
         <Route exact={true} path={`${matchPath}/deployments`}>

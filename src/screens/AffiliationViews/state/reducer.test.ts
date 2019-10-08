@@ -20,7 +20,8 @@ import {
   redeployRequest,
   fetchTagsRequest,
   fetchDetailsRequest,
-  fetchGroupedTagsRequest
+  fetchGroupedTagsRequest,
+  deleteApplicationDeploymentResponse
 } from './actions';
 import { affiliationViewReducer } from './reducer';
 
@@ -196,11 +197,22 @@ describe('AffiliationView reducer', () => {
       affiliationViewStateFactory.build({
         allApplicationDeploymentsResult: [deploymentFactory.build()]
       })
+    ],
+    [
+      {
+        name: 'deleteApplicationDeploymentResponse',
+        item: affiliationViewStateFactory.build()
+      },
+      {
+        name: 'isApplicationDeploymentDeleted',
+        item: deleteApplicationDeploymentResponse(true)
+      },
+      affiliationViewStateFactory.build({
+        isApplicationDeploymentDeleted: true
+      })
     ]
   ]).describe.only('', (a, b, expected) => {
-    test.only(`given defaultState and action ${
-      a.name
-    } with given value should change ${b.name} to given value`, () => {
+    test.only(`given defaultState and action ${a.name} with given value should change ${b.name} to given value`, () => {
       expect(affiliationViewReducer(a.item, b.item)).toEqual(expected);
     });
   });
