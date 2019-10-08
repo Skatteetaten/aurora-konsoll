@@ -1,15 +1,17 @@
 import React, { useState } from 'react';
 
 import Dialog from 'aurora-frontend-react-komponenter/Dialog';
+import MessageBar from 'aurora-frontend-react-komponenter/MessageBar';
 import ActionButton from 'aurora-frontend-react-komponenter/ActionButton';
 import Spinner from 'aurora-frontend-react-komponenter/Spinner';
 import styled from 'styled-components';
+import { IImageTag } from 'services/auroraApiClients/imageRepositoryClient/query';
 
 interface IDeployButtonProps {
-  previousVersion: string;
-  nextVersion: string;
+  previousVersion: IImageTag;
+  nextVersion: IImageTag;
   isLoading: boolean;
-  onDeploy: () => void;
+  onDeploy: (version: string) => void;
   disabled: boolean;
 }
 
@@ -26,10 +28,14 @@ export const DeployButton = ({
   const close = () => setHidden(true);
   const open = () => setHidden(false);
   const onApply = () => {
-    onDeploy();
+    onDeploy(nextVersion.name);
     close();
   };
-  const buttonText = nextVersion === previousVersion ? 'Redeploy' : 'Deploy';
+  const isSameVersion = nextVersion.name === previousVersion.name;
+  const buttonText = isSameVersion ? 'Redeploy' : 'Deploy';
+  const title = isSameVersion
+    ? 'Vil du gjøre en redeploy?'
+    : 'Vil du endre versjonen?';
   return (
     <>
       <ActionButton
@@ -43,16 +49,33 @@ export const DeployButton = ({
       <Dialog
         hidden={hidden}
         onDismiss={close}
-        title="Vil du endre versjonen?"
+        title={title}
         dialogMinWidth="500px"
         dialogMaxWidth="800px"
       >
-        <VersionInfo>
-          <p>Fra:</p> {previousVersion}
-        </VersionInfo>
-        <VersionInfo>
-          <p>Til:</p> {nextVersion}
-        </VersionInfo>
+        {!nextVersion.image && (
+          <MessageBar style={{ maxWidth: '600px' }}>
+            Dette ser ut til å være en eldre versjon som har et metadata format
+            vi ikke støtter. Trenger du denne versjonen ta kontakt med Aurora så
+            kan vi oppgradere den manuelt for deg.
+          </MessageBar>
+        )}
+        {isSameVersion ? (
+          <>
+            <VersionInfo>
+              <p>Versjon:</p> {nextVersion.name}
+            </VersionInfo>
+          </>
+        ) : (
+          <>
+            <VersionInfo>
+              <p>Fra:</p> {previousVersion.name}
+            </VersionInfo>
+            <VersionInfo>
+              <p>Til:</p> {nextVersion.name}
+            </VersionInfo>
+          </>
+        )}
         <Dialog.Footer>
           <ActionButton onClick={onApply}>Utfør</ActionButton>
           <ActionButton onClick={close}>Lukk</ActionButton>
@@ -68,8 +91,9 @@ const VersionInfo = styled.div`
   font-weight: 700;
 
   p {
-    width: 40px;
+    min-width: 35px;
     margin: 0;
+    margin-right: 5px;
     font-weight: 400;
   }
 `;

@@ -19,8 +19,11 @@ interface IServerSideSearchProps {
   handleSetSearchText: (text: string) => void;
 }
 
-const mapStateToProps = ({ versions }: RootState) => ({
-  isFetchingVersions: versions.isLoading
+const mapStateToProps = (
+  { versions }: RootState,
+  { selectedVersionType }: IServerSideSearchProps
+) => ({
+  isFetchingVersions: versions.isFetching[selectedVersionType]
 });
 
 const mapDispatchToProps = {

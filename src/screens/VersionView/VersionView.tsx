@@ -55,7 +55,7 @@ export const VersionView = ({ affiliation, deployment }: IVersionViewProps) => {
       <VersionTableContainer
         affiliation={affiliation}
         searchText={searchText}
-        currentVersion={version.deployTag.name}
+        currentVersion={version.deployTag}
         applicationId={id}
         repository={imageRepository.repository}
         versionType={versionType}

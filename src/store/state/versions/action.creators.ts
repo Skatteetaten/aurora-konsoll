@@ -33,7 +33,12 @@ export const fetchVersions = (
     return;
   }
 
-  dispatch(actions.isLoading(true));
+  dispatch(
+    actions.isFetching({
+      isFetching: true,
+      type
+    })
+  );
 
   const cursor = page ? current.pageInfo.endCursor : undefined;
 
@@ -72,7 +77,14 @@ export const fetchVersions = (
     );
   }
 
-  dispatch(actions.isLoading(false));
+  setTimeout(() => {
+    dispatch(
+      actions.isFetching({
+        isFetching: false,
+        type
+      })
+    );
+  }, 50);
 };
 
 export function resetState(): StateThunk {

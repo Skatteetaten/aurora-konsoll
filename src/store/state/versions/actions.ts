@@ -5,7 +5,9 @@ import { ActionType } from 'typesafe-actions';
 
 const action = (action: string) => `versions/${action}`;
 
-const isLoading = createAction<boolean>(action('LOADING'));
+const isFetching = createAction<{ isFetching: boolean; type: ImageTagType }>(
+  action('IS_FETCHING')
+);
 
 const fetchVersionsForType = createAction<{
   data: IImageTagsConnection;
@@ -18,7 +20,7 @@ const reset = createAction<void>(action('RESET'));
 const clearStateForType = createAction<ImageTagType>(action('CLEAR_TYPE'));
 
 export const actions = {
-  isLoading,
+  isFetching,
   fetchVersionsForType,
   reset,
   clearStateForType

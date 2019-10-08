@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { connect } from 'react-redux';
 import Button from 'aurora-frontend-react-komponenter/Button';
 import Spinner from 'aurora-frontend-react-komponenter/Spinner';
@@ -9,12 +9,14 @@ import { RootState, ReduxProps } from 'store/types';
 import { fetchVersions } from 'store/state/versions/action.creators';
 import { VersionTabel } from './VersionTable';
 import { FetchVersionsInformation } from 'screens/VersionView/components/FetchVersionsInformation';
+import { IImageTag } from 'services/auroraApiClients/imageRepositoryClient/query';
 
 const mapDispatchToProps = {
   fetchVersions
 };
-const mapStateToProps = ({ versions }: RootState) => ({
-  versions
+const mapStateToProps = ({ versions }: RootState, { versionType }: Props) => ({
+  versions,
+  isFetching: versions.isFetching[versionType]
 });
 
 type VersionProps = ReduxProps<
@@ -28,7 +30,7 @@ type Props = {
   searchText?: string;
   repository: string;
   applicationId: string;
-  currentVersion: string;
+  currentVersion: IImageTag;
 };
 
 const VersionTableContainerBase = ({
@@ -39,9 +41,27 @@ const VersionTableContainerBase = ({
   fetchVersions,
   versions,
   applicationId,
-  currentVersion
+  currentVersion,
+  isFetching
 }: Props & VersionProps) => {
   const current = versions.types[versionType];
+  const index = current.edges.findIndex(
+    edge => edge.node.name === currentVersion.name
+  );
+
+  useEffect(() => {
+    if (index === -1 && !isFetching && versionType === currentVersion.type) {
+      fetchVersions(repository, versionType, 100, true, searchText);
+    }
+  }, [
+    currentVersion.type,
+    fetchVersions,
+    index,
+    isFetching,
+    repository,
+    searchText,
+    versionType
+  ]);
 
   return (
     <>
@@ -58,7 +78,7 @@ const VersionTableContainerBase = ({
         <Button
           icon="History"
           buttonType="primaryRoundedFilled"
-          disabled={versions.isLoading}
+          disabled={isFetching}
           onClick={() => {
             // Check for new tags
             fetchVersions(repository, versionType, 5, false, searchText);
@@ -67,7 +87,7 @@ const VersionTableContainerBase = ({
             }
           }}
         >
-          {versions.isLoading ? <Spinner /> : 'Hent flere versjoner'}
+          {isFetching ? <Spinner /> : 'Hent flere versjoner'}
         </Button>
         <div style={{ marginTop: '8px' }}>
           <FetchVersionsInformation />

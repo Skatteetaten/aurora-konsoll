@@ -15,7 +15,7 @@ interface IVersionTableData {
 interface IVersionTableProps {
   affiliation: string;
   versions: IImageTag[];
-  currentVersion: string;
+  currentVersion: IImageTag;
   applicationId: string;
 }
 
@@ -45,7 +45,7 @@ const columns = [
 const getVersionData = (
   affiliation: string,
   applicationId: string,
-  currentVersion: string,
+  currentVersion: IImageTag,
   tags: IImageTag[]
 ): IVersionTableData[] =>
   tags
@@ -59,7 +59,7 @@ const getVersionData = (
             affiliation={affiliation}
             applicationId={applicationId}
             currentVersion={currentVersion}
-            version={it.name}
+            version={it}
           />
         )
       };
@@ -77,22 +77,22 @@ export const VersionTabel = ({
   currentVersion,
   versions
 }: IVersionTableProps) => {
+  const data = getVersionData(
+    affiliation,
+    applicationId,
+    currentVersion,
+    versions
+  );
+  const index = data.findIndex(d => d.name === currentVersion.name) + 1;
   return (
-    <TableWrapper>
-      <Table
-        data={getVersionData(
-          affiliation,
-          applicationId,
-          currentVersion,
-          versions
-        )}
-        columns={columns}
-      />
+    <TableWrapper currentVersionIndex={index}>
+      <Table data={data} columns={columns} />
     </TableWrapper>
   );
 };
 
-const TableWrapper = styled.div`
+type TableWrapperProps = { currentVersionIndex: number };
+const TableWrapper = styled.div<TableWrapperProps>`
   overflow-x: hidden;
   table {
     background-color: white;
@@ -109,10 +109,20 @@ const TableWrapper = styled.div`
   }
 
   tbody {
-    tr:hover {
-      background: #cde1f9;
-      button {
-        opacity: 1;
+    tr {
+      &:hover,
+      &:active,
+      &:focus {
+        background: #cde1f9;
+        button {
+          opacity: 1;
+        }
+      }
+      &:nth-child(${props => props.currentVersionIndex}) {
+        background: #e7b78a;
+        button {
+          opacity: 1;
+        }
       }
     }
   }

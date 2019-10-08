@@ -3,12 +3,13 @@ import { connect } from 'react-redux';
 import { DeployButton } from './DeployButton';
 import { deploy } from 'store/state/deploy/action.creators';
 import { RootState, ReduxProps } from 'store/types';
+import { IImageTag } from 'services/auroraApiClients/imageRepositoryClient/query';
 
 interface IDeployButtonContainerProps {
   affiliation: string;
   applicationId: string;
-  currentVersion: string;
-  version: string;
+  currentVersion: IImageTag;
+  version: IImageTag;
 }
 
 const mapDispatchToProps = {
@@ -21,7 +22,7 @@ const mapStateToProps = (
 ) => {
   const { deployingVersion, isDeploying } = deploy;
   return {
-    isLoading: deployingVersion === version,
+    isLoading: deployingVersion === version.name,
     isDeploying
   };
 };
@@ -39,7 +40,7 @@ const DeployButtonBase = ({
   isDeploying,
   deploy
 }: Props) => {
-  const performDeploy = () => {
+  const performDeploy = (version: string) => {
     deploy(affiliation, applicationId, version);
   };
 

@@ -44,6 +44,6 @@ const InitVersions = ({
 };
 
 export const InitVersionsContainer = connect(
-  () => {},
+  () => ({}),
   mapDispatchToProps
 )(InitVersions);
