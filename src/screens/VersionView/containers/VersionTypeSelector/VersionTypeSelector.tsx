@@ -3,27 +3,31 @@ import styled from 'styled-components';
 import ComboBox from 'aurora-frontend-react-komponenter/ComboBox';
 
 import { ImageTagType } from 'models/ImageTagType';
+
 import {
-  IImageTagTypeOption,
-  TotalCountMap
-} from './VersionTypeSelector.types';
-import { getVersionTypeSelectorOptions } from './Options';
-import { onRenderOption } from './VersionTypeOption';
+  getVersionTypeSelectorOptions,
+  IImageTagTypeOption
+} from './utils/options';
+import { onRenderOption } from './components/VersionTypeOption';
+import { VersionTypeSelectorState } from './VersionTypeSelector.state';
 
 interface IVersionTypeSelectorProps {
-  totalCountMap: TotalCountMap;
   onSelect: (type: ImageTagType) => void;
   versionType: ImageTagType;
   className?: string;
 }
 
+type Props = IVersionTypeSelectorProps & VersionTypeSelectorState;
+
 export const VersionTypeSelector = ({
   totalCountMap,
   onSelect,
   versionType,
-  className
-}: IVersionTypeSelectorProps) => {
+  className,
+  clearStateForType
+}: Props) => {
   const onTagTypeChanged = (e: Event, option: IImageTagTypeOption) => {
+    clearStateForType(ImageTagType.SEARCH);
     onSelect(option.key);
   };
 

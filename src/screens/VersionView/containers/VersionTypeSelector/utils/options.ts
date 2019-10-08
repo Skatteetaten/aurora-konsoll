@@ -1,8 +1,11 @@
 import { ImageTagType } from 'models/ImageTagType';
-import {
-  IImageTagTypeOption,
-  TotalCountMap
-} from './VersionTypeSelector.types';
+import { TotalCountMap } from '../VersionTypeSelector.types';
+
+export interface IImageTagTypeOption {
+  key: ImageTagType;
+  tag: ImageTagType;
+  text: string;
+}
 
 const {
   SEARCH,
