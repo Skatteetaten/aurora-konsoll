@@ -5,11 +5,11 @@ import Spinner from 'aurora-frontend-react-komponenter/Spinner';
 
 import { ImageTagType } from 'models/ImageTagType';
 import { RootState, ReduxProps } from 'store/types';
+import { IImageTag } from 'services/auroraApiClients/imageRepositoryClient/query';
 
+import { FetchVersionsInformation } from '../../components/FetchVersionsInformation';
 import { fetchVersions } from 'store/state/versions/action.creators';
 import { VersionTabel } from './VersionTable';
-import { FetchVersionsInformation } from 'screens/VersionView/components/FetchVersionsInformation';
-import { IImageTag } from 'services/auroraApiClients/imageRepositoryClient/query';
 
 const mapDispatchToProps = {
   fetchVersions

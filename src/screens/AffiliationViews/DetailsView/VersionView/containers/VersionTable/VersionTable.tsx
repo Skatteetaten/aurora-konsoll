@@ -2,7 +2,7 @@ import * as React from 'react';
 import Table from 'aurora-frontend-react-komponenter/Table';
 import { IImageTag } from 'services/auroraApiClients/imageRepositoryClient/query';
 import styled from 'styled-components';
-import { DeployButtonContainer } from 'screens/VersionView/containers/DeployButton/DeployButtonContainer';
+import { DeployButtonContainer } from '../DeployButton/DeployButtonContainer';
 import { ImageTagType } from 'models/ImageTagType';
 
 interface IVersionTableData {

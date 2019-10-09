@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import styled from 'styled-components';
 
 import { ImageTagType } from 'models/ImageTagType';
 
@@ -7,7 +8,6 @@ import { IApplicationDeployment } from 'models/ApplicationDeployment';
 import { VersionTypeSelectorContainer } from './containers/VersionTypeSelector/VersionTypeSelectorContainer';
 import { VersionTableInformation } from './components/VersionTableInformation';
 import { ServerSideSearchContainer } from './containers/ServerSideSearch/ServerSideSearchContainer';
-import styled from 'styled-components';
 import { PermissionToUpgradeInformation } from './components/PermissionToUpgradeInformation';
 
 interface IVersionViewProps {
