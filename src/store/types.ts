@@ -42,6 +42,9 @@ export type Thunk = ActionCreator<StateThunk>;
 
 /**
  * Usage ReduxProps<typeof mapDispatchToProps, typeof mapStateToProps>
+ *
+ * If only mapDispatchToProps is used, use ResolveThunks<typeof mapDispatchToProps>
+ * If only mapStateToProps is used, use ReturnType<typeof mapStateToProps>
  */
 export type ReduxProps<D, S extends (...args: any) => any> = ResolveThunks<D> &
   ReturnType<S>;
