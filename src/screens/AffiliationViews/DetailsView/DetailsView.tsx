@@ -2,24 +2,84 @@ import * as React from 'react';
 import { Route, Switch } from 'react-router-dom';
 import styled from 'styled-components';
 
-import { withAuroraApi } from 'components/AuroraApi';
+import { withAuroraApi, IAuroraApiComponentProps } from 'components/AuroraApi';
 import Card from 'components/Card';
 import TabLink, { TabLinkWrapper } from 'components/TabLink';
-
-import DetailsActionBar from './DetailsActionBar';
-import DetailsViewController, {
-  IDetailsViewProps
-} from './DetailsViewController';
-import InformationView from './InformationView/InformationView';
-import { VersionView } from 'screens/VersionView/VersionView';
 import UnavailableServiceMessage from 'components/UnavailableServiceMessage';
 import { InitVersionsContainer } from 'containers/InitVersionsContainer';
+import {
+  IUnavailableServiceMessage,
+  unavailableServiceMessageCreator
+} from 'models/UnavailableServiceMessage';
+import {
+  IApplicationDeployment,
+  IApplicationDeploymentDetails
+} from 'models/ApplicationDeployment';
+
+import { ApplicationDeploymentDetailsRoute } from '../ApplicationDeploymentSelector';
+import DetailsActionBar from './DetailsActionBar';
+import InformationView from './InformationView/InformationView';
+import { VersionView } from './VersionView/VersionView';
+
+export interface IDetailsViewProps
+  extends ApplicationDeploymentDetailsRoute,
+    IAuroraApiComponentProps {
+  deployment: IApplicationDeployment;
+  getAllApplicationDeployments: (affiliation: string) => void;
+  filterPathUrl: string;
+  findApplicationDeploymentDetails: (id: string) => void;
+  deploymentDetails: IApplicationDeploymentDetails;
+  refreshApplicationDeployment: (
+    applicationDeploymentId: string,
+    affiliation: string
+  ) => void;
+  refreshApplicationDeployments: () => void;
+  deleteApplicationDeployment: (namespace: string, name: string) => void;
+  isRefreshingApplicationDeployment: boolean;
+  isFetchingDetails: boolean;
+  affiliation: string;
+  isApplicationDeploymentDeleted: boolean;
+}
 
 class DetailsView extends React.Component<IDetailsViewProps> {
-  private controller = new DetailsViewController(this);
+  public refreshApplicationDeployment = () => {
+    const {
+      deployment,
+      refreshApplicationDeployment,
+      affiliation
+    } = this.props;
+    refreshApplicationDeployment(deployment.id, affiliation);
+  };
+
+  public goToDeploymentsPage = () => {
+    const { match, history, filterPathUrl } = this.props;
+    history.push(`/a/${match.params.affiliation}/deployments/${filterPathUrl}`);
+  };
+
+  public getVersionViewUnavailableMessage():
+    | IUnavailableServiceMessage
+    | undefined {
+    const { deploymentDetails } = this.props;
+    const { deploymentSpec } = deploymentDetails;
+
+    const serviceUnavailableBecause = unavailableServiceMessageCreator(
+      'Det er ikke mulig å endre versjonen på denne applikasjonen'
+    );
+
+    if (deploymentSpec && deploymentSpec.type === 'development') {
+      return serviceUnavailableBecause(
+        'Applikasjonen er av type development, og kan kun oppgraderes med binary builds'
+      );
+    }
+
+    return undefined;
+  }
 
   public async componentDidMount() {
-    this.controller.onMount();
+    const { id } = this.props.deployment;
+    const { findApplicationDeploymentDetails } = this.props;
+
+    findApplicationDeploymentDetails(id);
   }
 
   public render() {
@@ -34,7 +94,7 @@ class DetailsView extends React.Component<IDetailsViewProps> {
       refreshApplicationDeployments
     } = this.props;
 
-    const unavailableMessage = this.controller.getVersionViewUnavailableMessage();
+    const unavailableMessage = this.getVersionViewUnavailableMessage();
     return (
       <DetailsViewGrid>
         <InitVersionsContainer
@@ -45,10 +105,8 @@ class DetailsView extends React.Component<IDetailsViewProps> {
           title={`${deployment.environment}/${deployment.name}`}
           isRefreshing={isRefreshingApplicationDeployment}
           updatedTime={deployment.time}
-          goToDeploymentsPage={this.controller.goToDeploymentsPage}
-          refreshApplicationDeployment={
-            this.controller.refreshApplicationDeployment
-          }
+          goToDeploymentsPage={this.goToDeploymentsPage}
+          refreshApplicationDeployment={this.refreshApplicationDeployment}
         />
         <TabLinkWrapper>
           <TabLink to={`${match.url}/info`}>Sammendrag</TabLink>
@@ -62,12 +120,10 @@ class DetailsView extends React.Component<IDetailsViewProps> {
                 deployment={deployment}
                 isFetchingDetails={isFetchingDetails}
                 deploymentDetails={deploymentDetails}
-                refreshApplicationDeployment={
-                  this.controller.refreshApplicationDeployment
-                }
+                refreshApplicationDeployment={this.refreshApplicationDeployment}
                 refreshApplicationDeployments={refreshApplicationDeployments}
                 deleteApplicationDeployment={deleteApplicationDeployment}
-                goToDeploymentsPage={this.controller.goToDeploymentsPage}
+                goToDeploymentsPage={this.goToDeploymentsPage}
               />
             </Route>
             <Route path={`${match.path}/version`}>
