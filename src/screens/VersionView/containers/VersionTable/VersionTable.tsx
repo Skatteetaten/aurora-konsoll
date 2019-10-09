@@ -1,9 +1,9 @@
 import * as React from 'react';
 import Table from 'aurora-frontend-react-komponenter/Table';
-import { getOptionName } from 'screens/AffiliationViews/DetailsView/VersionView/TagTypeSelector/TagTypeSelector';
 import { IImageTag } from 'services/auroraApiClients/imageRepositoryClient/query';
 import styled from 'styled-components';
 import { DeployButtonContainer } from 'screens/VersionView/containers/DeployButton/DeployButtonContainer';
+import { ImageTagType } from 'models/ImageTagType';
 
 interface IVersionTableData {
   deploy: JSX.Element;
@@ -41,6 +41,29 @@ const columns = [
     name: ''
   }
 ];
+
+function getOptionName(type: ImageTagType): string {
+  switch (type) {
+    case ImageTagType.AURORA_VERSION:
+      return 'Aurora Version';
+    case ImageTagType.AURORA_SNAPSHOT_VERSION:
+      return 'Unik snapshot version';
+    case ImageTagType.BUGFIX:
+      return 'Bugfix';
+    case ImageTagType.LATEST:
+      return 'Latest';
+    case ImageTagType.MAJOR:
+      return 'Major';
+    case ImageTagType.MINOR:
+      return 'Minor';
+    case ImageTagType.SNAPSHOT:
+      return 'Snapshot';
+    case ImageTagType.COMMIT_HASH:
+      return 'Commit hash';
+    default:
+      return '';
+  }
+}
 
 const getVersionData = (
   affiliation: string,

@@ -10,22 +10,9 @@ import {
   addErrors,
   addCurrentErrors
 } from 'screens/ErrorHandler/state/actions';
-import {
-  defaultTagsPagedGroup,
-  ITagsPagedGroup,
-  ITagsPaged,
-  ITag,
-  defaultTagsPaged
-} from 'models/Tag';
 import { IUserSettings } from 'models/UserSettings';
 import { createAction } from 'redux-ts-utils';
 import { Thunk, StateThunk } from 'store/types';
-import {
-  IImageTagsConnection,
-  ITagsQuery
-} from 'services/auroraApiClients/imageRepositoryClient/query';
-import { ImageTagType } from 'models/ImageTagType';
-import { IGoboResult } from 'services/GoboClient';
 import { IPodResource } from 'models/Pod';
 import { stringContainsHtml } from 'utils/string';
 
@@ -59,36 +46,12 @@ export const refreshApplicationDeploymentResponse = createAction<boolean>(
   affiliationViewAction('REFRESH_APPLICATION_DEPLOYMENT_RESPONSE')
 );
 
-export const redeployRequest = createAction<boolean>(
-  affiliationViewAction('REDEPLOY_REQUEST')
-);
-
 export const applicationDeploymentDetailsResponse = createAction<
   IApplicationDeploymentDetails
 >(affiliationViewAction('APPLICATION_DEPLOYMENT_DETAILS'));
 
 export const fetchDetailsRequest = createAction<boolean>(
   affiliationViewAction('FETCH_DETAILS_REQUEST')
-);
-
-export const searchTagsPagedResponse = createAction<ITagsPaged>(
-  affiliationViewAction('SEARCH_TAGS_PAGED_RESPONSE')
-);
-
-export const findTagsPagedResponse = createAction<ITagsPaged>(
-  affiliationViewAction('FIND_TAGS_PAGED_RESPONSE')
-);
-
-export const findGroupedTagsPagedResponse = createAction<ITagsPagedGroup>(
-  affiliationViewAction('FIND_GROUPED_TAGS_PAGED_RESPONSE')
-);
-
-export const fetchTagsRequest = createAction<boolean>(
-  affiliationViewAction('FETCH_TAGS_REQUEST')
-);
-
-export const fetchGroupedTagsRequest = createAction<boolean>(
-  affiliationViewAction('FETCH_GROUPED_TAGS_REQUEST')
 );
 
 export const deleteApplicationDeploymentResponse = createAction<boolean>(
@@ -144,10 +107,7 @@ export const findAllApplicationDeployments = (
             auroraVersion: app.version.auroraVersion,
             deployTag: {
               lastModified: '',
-              name: findDeployTagForTemplate(
-                node.name,
-                app.version.deployTag.name
-              ),
+              name: app.version.deployTag.name,
               type: app.version.deployTag.type
             }
           }
@@ -213,225 +173,6 @@ export const refreshApplicationDeployment = (
     dispatch(refreshApplicationDeploymentResponse(false));
   }
   dispatch(refreshApplicationDeploymentRequest(false));
-};
-
-export const redeployWithVersion: Thunk = (
-  applicationDeploymentId: string,
-  version: string,
-  affiliation: string,
-  id: string,
-  setInitialTagTypeTrue: () => void
-) => async (dispatch, getState, { clients }) => {
-  dispatch(redeployRequest(true));
-  const result = await clients.applicationDeploymentClient.redeployWithVersion(
-    applicationDeploymentId,
-    version
-  );
-  dispatch(addCurrentErrors(result));
-
-  if (result && result.data) {
-    dispatch(refreshApplicationDeployment(id, affiliation));
-    setInitialTagTypeTrue();
-  }
-  dispatch(redeployRequest(false));
-};
-
-export const redeployWithCurrentVersion: Thunk = (
-  applicationDeploymentId: string,
-  affiliation: string,
-  id: string
-) => async (dispatch, getState, { clients }) => {
-  dispatch(redeployRequest(true));
-  const result = await clients.applicationDeploymentClient.redeployWithCurrentVersion(
-    applicationDeploymentId
-  );
-  dispatch(addCurrentErrors(result));
-
-  if (result && result.data) {
-    dispatch(refreshApplicationDeployment(id, affiliation));
-  }
-  dispatch(redeployRequest(false));
-};
-
-function filterNewTagsWithCurrentTags(
-  newestTags: IGoboResult<ITagsQuery> | undefined,
-  current: ITagsPaged
-): ITagsPaged {
-  if (
-    !(
-      newestTags &&
-      newestTags.data &&
-      newestTags.data.imageRepositories &&
-      newestTags.data.imageRepositories.length > 0
-    )
-  ) {
-    return defaultTagsPaged;
-  }
-
-  const imageTagsConnection = newestTags.data.imageRepositories[0].tags;
-  return {
-    ...toTagsPaged(imageTagsConnection),
-    tags: toTagsPaged(imageTagsConnection).tags.filter(
-      item1 => !current.tags.some(item2 => item2.name === item1.name)
-    )
-  };
-}
-
-export const findNewTagsPaged: Thunk = (
-  repository: string,
-  type: ImageTagType,
-  updateTagsPaged: (
-    type: ImageTagType,
-    next?: ITagsPaged,
-    newTags?: ITagsPaged
-  ) => void,
-  current: ITagsPaged
-) => async (dispatch, getState, { clients }) => {
-  dispatch(fetchTagsRequest(true));
-
-  const newestTags = await clients.imageRepositoryClient.findTagsPaged(
-    repository,
-    type,
-    5
-  );
-
-  dispatch(addCurrentErrors(newestTags));
-
-  if (
-    !(
-      newestTags &&
-      newestTags.data &&
-      newestTags.data.imageRepositories &&
-      newestTags.data.imageRepositories.length > 0
-    )
-  ) {
-    dispatch(findTagsPagedResponse(defaultTagsPagedGroup()[type]));
-  } else {
-    const { imageRepositories } = newestTags.data;
-    const filteredTags = filterNewTagsWithCurrentTags(newestTags, current);
-
-    if (filteredTags.tags.length > 0) {
-      updateTagsPaged(type, undefined, filteredTags);
-    }
-    dispatch(findTagsPagedResponse(toTagsPaged(imageRepositories[0].tags)));
-  }
-  dispatch(fetchTagsRequest(false));
-};
-
-export const searchTagsPaged: Thunk = (
-  repository: string,
-  updateTagsPaged: (next?: ITagsPaged, newTags?: ITagsPaged) => void,
-  first: number,
-  current: ITagsPaged,
-  filter: string
-) => async (dispatch, getState, { clients }) => {
-  dispatch(fetchTagsRequest(true));
-
-  const tagsAfterCursor = await clients.imageRepositoryClient.searchTagsPaged(
-    repository,
-    first,
-    filter,
-    current.endCursor
-  );
-
-  dispatch(addCurrentErrors(tagsAfterCursor));
-
-  if (
-    !(
-      tagsAfterCursor &&
-      tagsAfterCursor.data &&
-      tagsAfterCursor.data.imageRepositories &&
-      tagsAfterCursor.data.imageRepositories.length > 0
-    )
-  ) {
-    dispatch(findTagsPagedResponse(defaultTagsPaged));
-  } else {
-    const { imageRepositories } = tagsAfterCursor.data;
-    updateTagsPaged(toTagsPaged(imageRepositories[0].tags));
-    dispatch(findTagsPagedResponse(toTagsPaged(imageRepositories[0].tags)));
-  }
-  dispatch(fetchTagsRequest(false));
-};
-
-export const findTagsPaged: Thunk = (
-  repository: string,
-  type: ImageTagType,
-  updateTagsPaged: (
-    type: ImageTagType,
-    next?: ITagsPaged,
-    newTags?: ITagsPaged
-  ) => void,
-  first: number,
-  current: ITagsPaged
-) => async (dispatch, getState, { clients }) => {
-  dispatch(fetchTagsRequest(true));
-
-  const tagsAfterCursor = await clients.imageRepositoryClient.findTagsPaged(
-    repository,
-    type,
-    first,
-    current.endCursor
-  );
-
-  if (type !== ImageTagType.SEARCH) {
-    findNewTagsPaged(repository, type, current);
-  }
-
-  dispatch(addCurrentErrors(tagsAfterCursor));
-
-  if (
-    !(
-      tagsAfterCursor &&
-      tagsAfterCursor.data &&
-      tagsAfterCursor.data.imageRepositories &&
-      tagsAfterCursor.data.imageRepositories.length > 0
-    )
-  ) {
-    dispatch(findTagsPagedResponse(defaultTagsPagedGroup()[type]));
-  } else {
-    const { imageRepositories } = tagsAfterCursor.data;
-    updateTagsPaged(type, toTagsPaged(imageRepositories[0].tags));
-    dispatch(findTagsPagedResponse(toTagsPaged(imageRepositories[0].tags)));
-  }
-  dispatch(fetchTagsRequest(false));
-};
-
-export const findGroupedTagsPaged: Thunk = (
-  repository: string,
-  setTagsPagedGroup: (tagsPagedGroup: ITagsPagedGroup) => void
-) => async (dispatch, getState, { clients }) => {
-  dispatch(fetchGroupedTagsRequest(true));
-  const result = await clients.imageRepositoryClient.findGroupedTagsPaged(
-    repository
-  );
-  dispatch(addCurrentErrors(result));
-
-  if (
-    !result ||
-    !(result.data.imageRepositories && result.data.imageRepositories.length > 0)
-  ) {
-    dispatch(findGroupedTagsPagedResponse(defaultTagsPagedGroup()));
-  } else {
-    const { imageRepositories } = result.data;
-
-    const [mainRepo] = imageRepositories;
-
-    const normalizedTags: ITagsPagedGroup = {
-      auroraSnapshotVersion: toTagsPaged(mainRepo.auroraSnapshotVersion),
-      auroraVersion: toTagsPaged(mainRepo.auroraVersion),
-      bugfix: toTagsPaged(mainRepo.bugfix),
-      commitHash: toTagsPaged(mainRepo.commitHash),
-      latest: toTagsPaged(mainRepo.latest),
-      major: toTagsPaged(mainRepo.major),
-      minor: toTagsPaged(mainRepo.minor),
-      snapshot: toTagsPaged(mainRepo.snapshot),
-      search: getState().affiliationView.findGroupedTagsPagedResult.search
-    };
-
-    setTagsPagedGroup(normalizedTags);
-    dispatch(findGroupedTagsPagedResponse(normalizedTags));
-  }
-  dispatch(fetchGroupedTagsRequest(false));
 };
 
 export const findApplicationDeploymentDetails: Thunk = (
@@ -534,44 +275,6 @@ export const deleteApplicationDeployment: Thunk = (
   }
 };
 
-export const toTagsPaged = (
-  imageTagsConnection: IImageTagsConnection
-): ITagsPaged => {
-  const { edges, pageInfo, totalCount } = imageTagsConnection;
-  return {
-    totalCount,
-    endCursor: pageInfo.endCursor,
-    hasNextPage: pageInfo.hasNextPage,
-    tags: edges.reduce((arr: ITag[], edge) => {
-      const { image, name, type } = edge.node;
-      arr.push({
-        lastModified: image ? image.buildTime : undefined,
-        name,
-        type
-      });
-      return arr;
-    }, [])
-  };
-};
-
-// ! Temp fix for template deployments with default version
-// TODO: FIX
-function findDeployTagForTemplate(applicationName: string, deployTag: string) {
-  const templates = {
-    'aurora-activemq-1.0.0': '2',
-    'aurora-redis-1.0.0': '3.2.3',
-    'aurora-wiremock-1.0.0': '1.3.0',
-    redis: '3.2.3',
-    wiremock: '1.3.0'
-  };
-
-  if (deployTag) {
-    return deployTag;
-  }
-
-  return templates[applicationName] || deployTag;
-}
-
 export default {
   refreshAffiliationsRequest,
   findAllApplicationDeploymentsResponse,
@@ -581,8 +284,5 @@ export default {
   updateUserSettingsRequest,
   refreshApplicationDeploymentResponse,
   applicationDeploymentDetailsResponse,
-  findTagsPagedResponse,
-  findGroupedTagsPagedResponse,
-  redeployRequest,
   deleteApplicationDeploymentResponse
 };

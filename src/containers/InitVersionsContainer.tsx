@@ -13,6 +13,7 @@ const mapDispatchToProps = {
 };
 
 interface InitVersionsProps {
+  hasPermission: boolean;
   imageRepository?: IImageRepository;
 }
 
@@ -22,11 +23,12 @@ type Props = ResolveThunks<typeof mapDispatchToProps> & InitVersionsProps;
 const InitVersions = ({
   imageRepository,
   fetchVersions,
-  resetState
+  resetState,
+  hasPermission
 }: Props) => {
   useEffect(() => {
     resetState();
-    if (!imageRepository) {
+    if (!imageRepository || !hasPermission) {
       return;
     }
     const { repository } = imageRepository;
@@ -38,7 +40,7 @@ const InitVersions = ({
     fetchVersions(repository, ImageTagType.COMMIT_HASH, 15);
     fetchVersions(repository, ImageTagType.AURORA_VERSION, 15);
     fetchVersions(repository, ImageTagType.AURORA_SNAPSHOT_VERSION, 15);
-  }, [fetchVersions, imageRepository, resetState]);
+  }, [fetchVersions, hasPermission, imageRepository, resetState]);
 
   return <React.Fragment />;
 };

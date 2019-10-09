@@ -5,72 +5,22 @@ import styled from 'styled-components';
 import { withAuroraApi } from 'components/AuroraApi';
 import Card from 'components/Card';
 import TabLink, { TabLinkWrapper } from 'components/TabLink';
-import { defaultTagsPagedGroup } from 'models/Tag';
 
-import DetailsService from 'services/DetailsService';
 import DetailsActionBar from './DetailsActionBar';
 import DetailsViewController, {
-  IDetailsViewProps,
-  IDetailsViewState
+  IDetailsViewProps
 } from './DetailsViewController';
 import InformationView from './InformationView/InformationView';
 import { VersionView } from 'screens/VersionView/VersionView';
 import UnavailableServiceMessage from 'components/UnavailableServiceMessage';
 import { InitVersionsContainer } from 'containers/InitVersionsContainer';
 
-class DetailsView extends React.Component<
-  IDetailsViewProps,
-  IDetailsViewState
-> {
-  public state: IDetailsViewState = {
-    releaseToDeployTag: this.props.deployment.version.deployTag,
-    selectedTagType: this.props.deployment.version.deployTag.type,
-    tagsPagedGroup: defaultTagsPagedGroup(),
-    versionSearchText: '',
-    initialTagType: '',
-    isInitialTagType: true
-  };
-
-  private detailsService = new DetailsService();
-
+class DetailsView extends React.Component<IDetailsViewProps> {
   private controller = new DetailsViewController(this);
 
   public async componentDidMount() {
     this.controller.onMount();
   }
-
-  public async componentDidUpdate() {
-    const { tagsPagedGroup, isInitialTagType } = this.state;
-    const { deployment, deploymentDetails } = this.props;
-    if (
-      !!deployment.version.releaseTo &&
-      isInitialTagType &&
-      this.detailsService.hasRecivedTagsAndVersion(
-        tagsPagedGroup,
-        deploymentDetails
-      )
-    ) {
-      const deploymentSpecTag = this.detailsService.findTagForDeploymentSpec(
-        tagsPagedGroup,
-        deploymentDetails.deploymentSpec
-      );
-      const tag = deploymentSpecTag || deployment.version.deployTag;
-
-      this.setState({
-        releaseToDeployTag: tag,
-        selectedTagType: tag.type,
-        isInitialTagType: false
-      });
-    }
-  }
-
-  public getDeployTag = () => {
-    const { deployment } = this.props;
-    const { releaseToDeployTag } = this.state;
-    return !!deployment.version.releaseTo
-      ? releaseToDeployTag
-      : deployment.version.deployTag;
-  };
 
   public render() {
     const {
@@ -79,19 +29,18 @@ class DetailsView extends React.Component<
       match,
       deploymentDetails,
       isFetchingDetails,
-      isFetchingTags,
-      isFetchingGroupedTags,
-      isRedeploying,
       isRefreshingApplicationDeployment,
       deleteApplicationDeployment,
       refreshApplicationDeployments
     } = this.props;
-    const { selectedTagType, selectedTag } = this.state;
 
     const unavailableMessage = this.controller.getVersionViewUnavailableMessage();
     return (
       <DetailsViewGrid>
-        <InitVersionsContainer imageRepository={deployment.imageRepository} />
+        <InitVersionsContainer
+          hasPermission={deployment.permission.paas.admin}
+          imageRepository={deployment.imageRepository}
+        />
         <DetailsActionBar
           title={`${deployment.environment}/${deployment.name}`}
           isRefreshing={isRefreshingApplicationDeployment}
@@ -130,36 +79,6 @@ class DetailsView extends React.Component<
                   deployment={deployment}
                 />
               )}
-
-              {/* <VersionView
-                deployment={deployment}
-                hasPermissionToUpgrade={deployment.permission.paas.admin}
-                unavailableMessage={this.controller.getVersionViewUnavailableMessage()}
-                deployedTag={this.getDeployTag()}
-                selectedTag={selectedTag}
-                selectedTagType={selectedTagType}
-                tagsPaged={this.controller.sm.tag.getTagsPageFiltered(
-                  selectedTagType
-                )}
-                isFetchingTags={isFetchingTags}
-                isFetchingGroupedTags={isFetchingGroupedTags}
-                isRedeploying={isRedeploying}
-                canUpgrade={this.controller.canUpgrade}
-                handleSelectNextTag={this.controller.handleSelectNextTag}
-                handlefetchTags={this.controller.loadMoreTags}
-                handleSelectStrategy={this.controller.handleSelectStrategy}
-                setVersionSearchText={this.controller.setVersionSearchText}
-                searchForVersions={this.controller.searchForVersions}
-                redeployWithVersion={this.controller.redeployWithVersion}
-                redeployWithCurrentVersion={
-                  this.controller.redeployWithCurrentVersion
-                }
-                initialTagType={this.state.initialTagType}
-                findGroupedTagsPagedResult={
-                  this.props.findGroupedTagsPagedResult
-                }
-                versionSearchText={this.state.versionSearchText}
-              /> */}
             </Route>
           </Switch>
         </Card>
