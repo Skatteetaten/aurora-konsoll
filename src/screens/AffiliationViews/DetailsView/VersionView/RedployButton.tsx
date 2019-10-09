@@ -63,7 +63,7 @@ const RedployButton = ({
     );
   };
 
-  const renderMessageBar = (type: string) => (
+  const renderMessageBar = (type: string): JSX.Element => (
     <MessageBar style={{ maxWidth: '600px' }}>
       <div>
         Det er forskjellige versjoner satt i Aurora Config og Aktivt Deployment.
@@ -72,16 +72,11 @@ const RedployButton = ({
     </MessageBar>
   );
 
-  function handleWhenDifferentVersions() {
-    switch (deployVersionType) {
-      case ACTIVE_DEPLOYMENT_VERSION:
-        return renderMessageBar('Aktivt Deployment');
-      case AURORA_CONFIG_VERSION:
-        return renderMessageBar('Aurora Config');
-      default:
-        return undefined;
-    }
-  }
+  const handleWhenDifferentVersions: JSX.Element | undefined =
+    {
+      [ACTIVE_DEPLOYMENT_VERSION]: renderMessageBar('Aktivt Deployment'),
+      [AURORA_CONFIG_VERSION]: renderMessageBar('Aurora Config')
+    }[deployVersionType] || undefined;
 
   return (
     <InfoDialog
@@ -97,7 +92,7 @@ const RedployButton = ({
             kan vi oppgradere den manuelt for deg.
           </MessageBar>
         )}
-        {handleWhenDifferentVersions()}
+        {handleWhenDifferentVersions}
         <VersionInfo>
           <p>Versjon:</p>
           {tag.name}
