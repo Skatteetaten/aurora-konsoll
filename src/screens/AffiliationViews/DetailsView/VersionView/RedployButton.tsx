@@ -42,7 +42,7 @@ const RedployButton = ({
     return <ActionButton onClick={onClose}>Utfør</ActionButton>;
   };
 
-  const renderOpenDialogButton = (open: () => void) => {
+  const renderOpenDialogButton = (open: () => void): JSX.Element => {
     return (
       <>
         {isRedeploying ? (

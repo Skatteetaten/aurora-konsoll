@@ -339,12 +339,12 @@ export default class DetailsViewController {
   public canUpgrade = (selectedTag?: ITag): ICanUpgrade => {
     const { deployment, deploymentDetails } = this.component.props;
 
-    const SelectedTagEqualsAuroraConfigTag =
+    const SelectedTagEqualsAuroraConfigTag: boolean =
       (selectedTag && selectedTag.name) ===
       (deploymentDetails.deploymentSpec &&
         deploymentDetails.deploymentSpec.version);
 
-    const SelectedTagEqualsActiveDeployTag =
+    const SelectedTagEqualsActiveDeployTag: boolean =
       (selectedTag && selectedTag.name) === deployment.version.deployTag.name;
 
     if (SelectedTagEqualsAuroraConfigTag) {

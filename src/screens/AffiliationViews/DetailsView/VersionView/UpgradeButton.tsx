@@ -36,11 +36,11 @@ const UpgradeButton = ({
     };
     return <ActionButton onClick={onClose}>Utfør</ActionButton>;
   };
-  
-  const renderOpenDialogButton = (open: () => void) => {
+
+  const renderOpenDialogButton = (open: () => void): JSX.Element => {
     const isSelectedVersion =
-    JSON.stringify(selectedTag) === JSON.stringify(tag) ||
-    (previousVersion === tag.name && !selectedTag);
+      JSON.stringify(selectedTag) === JSON.stringify(tag) ||
+      (previousVersion === tag.name && !selectedTag);
 
     return (
       <>
