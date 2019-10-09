@@ -8,6 +8,7 @@ import { VersionTypeSelectorContainer } from './containers/VersionTypeSelector/V
 import { VersionTableInformation } from './components/VersionTableInformation';
 import { ServerSideSearchContainer } from './containers/ServerSideSearch/ServerSideSearchContainer';
 import styled from 'styled-components';
+import { PermissionToUpgradeInformation } from './components/PermissionToUpgradeInformation';
 
 interface IVersionViewProps {
   affiliation: string;
@@ -27,6 +28,10 @@ export const VersionView = ({ affiliation, deployment }: IVersionViewProps) => {
   if (!imageRepository) {
     // TODO: Bedre feilmelding
     return <p>Mangler repository</p>;
+  }
+
+  if (!deployment.permission.paas.admin) {
+    return <PermissionToUpgradeInformation />;
   }
 
   const onSelectType = (type: ImageTagType) => {
