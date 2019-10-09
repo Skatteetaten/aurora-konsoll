@@ -59,7 +59,7 @@ const getVersionData = (
             affiliation={affiliation}
             applicationId={applicationId}
             currentVersion={currentVersion}
-            version={it}
+            nextVersion={it}
           />
         )
       };
@@ -113,13 +113,13 @@ const TableWrapper = styled.div<TableWrapperProps>`
       &:hover,
       &:active,
       &:focus {
-        background: #cde1f9;
+        background: #cde1f9 !important;
         button {
           opacity: 1;
         }
       }
       &:nth-child(${props => props.currentVersionIndex}) {
-        background: #e7b78a;
+        background: rgb(249, 237, 226);
         button {
           opacity: 1;
         }

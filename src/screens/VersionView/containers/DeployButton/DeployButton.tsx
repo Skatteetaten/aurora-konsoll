@@ -5,33 +5,25 @@ import MessageBar from 'aurora-frontend-react-komponenter/MessageBar';
 import ActionButton from 'aurora-frontend-react-komponenter/ActionButton';
 import Spinner from 'aurora-frontend-react-komponenter/Spinner';
 import styled from 'styled-components';
-import { IImageTag } from 'services/auroraApiClients/imageRepositoryClient/query';
+import { IDeployButtonProps, StateProps } from './DeployButton.state';
 
-interface IDeployButtonProps {
-  previousVersion: IImageTag;
-  nextVersion: IImageTag;
-  isLoading: boolean;
-  onDeploy: (version: string) => void;
-  disabled: boolean;
-}
-
-type Props = IDeployButtonProps;
+type Props = IDeployButtonProps & StateProps;
 
 export const DeployButton = ({
   isLoading,
-  onDeploy,
   nextVersion,
-  previousVersion,
-  disabled
+  currentVersion,
+  disabled,
+  performDeploy
 }: Props) => {
   const [hidden, setHidden] = useState(true);
   const close = () => setHidden(true);
   const open = () => setHidden(false);
   const onApply = () => {
-    onDeploy(nextVersion.name);
+    performDeploy();
     close();
   };
-  const isSameVersion = nextVersion.name === previousVersion.name;
+  const isSameVersion = nextVersion.name === currentVersion.name;
   const buttonText = isSameVersion ? 'Redeploy' : 'Deploy';
   const title = isSameVersion
     ? 'Vil du gjøre en redeploy?'
@@ -69,7 +61,7 @@ export const DeployButton = ({
         ) : (
           <>
             <VersionInfo>
-              <p>Fra:</p> {previousVersion.name}
+              <p>Fra:</p> {currentVersion.name}
             </VersionInfo>
             <VersionInfo>
               <p>Til:</p> {nextVersion.name}
