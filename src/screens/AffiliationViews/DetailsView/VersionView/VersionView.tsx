@@ -9,6 +9,7 @@ import { VersionTypeSelectorContainer } from './containers/VersionTypeSelector/V
 import { VersionTableInformation } from './components/VersionTableInformation';
 import { ServerSideSearchContainer } from './containers/ServerSideSearch/ServerSideSearchContainer';
 import { PermissionToUpgradeInformation } from './components/PermissionToUpgradeInformation';
+import { FetchMoreVersionsContainer } from './containers/FetchMoreVersions/FetchMoreVersionsContainer';
 
 interface IVersionViewProps {
   affiliation: string;
@@ -30,10 +31,6 @@ export const VersionView = ({ affiliation, deployment }: IVersionViewProps) => {
     return <p>Mangler repository</p>;
   }
 
-  if (!deployment.permission.paas.admin) {
-    return <PermissionToUpgradeInformation />;
-  }
-
   const onSelectType = (type: ImageTagType) => {
     setVersionType(type);
     if (type !== ImageTagType.SEARCH) {
@@ -41,8 +38,11 @@ export const VersionView = ({ affiliation, deployment }: IVersionViewProps) => {
     }
   };
 
+  const hasAccessToDeploy = deployment.permission.paas.admin;
+
   return (
     <Wrapper>
+      {!hasAccessToDeploy && <PermissionToUpgradeInformation />}
       <ActionBar>
         <VersionTypeSelectorContainer
           versionType={versionType}
@@ -58,10 +58,16 @@ export const VersionView = ({ affiliation, deployment }: IVersionViewProps) => {
       </ActionBar>
       <VersionTableInformation />
       <VersionTableContainer
+        hasAccessToDeploy={hasAccessToDeploy}
         affiliation={affiliation}
         searchText={searchText}
         currentVersion={version.deployTag}
         applicationId={id}
+        repository={imageRepository.repository}
+        versionType={versionType}
+      />
+      <FetchMoreVersionsContainer
+        searchText={searchText}
         repository={imageRepository.repository}
         versionType={versionType}
       />

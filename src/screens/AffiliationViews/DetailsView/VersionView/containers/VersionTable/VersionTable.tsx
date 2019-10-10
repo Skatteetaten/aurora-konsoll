@@ -1,23 +1,10 @@
 import * as React from 'react';
 import Table from 'aurora-frontend-react-komponenter/Table';
-import { IImageTag } from 'services/auroraApiClients/imageRepositoryClient/query';
 import styled from 'styled-components';
 import { DeployButtonContainer } from '../DeployButton/DeployButtonContainer';
 import { ImageTagType } from 'models/ImageTagType';
-
-interface IVersionTableData {
-  deploy: JSX.Element;
-  name: string;
-  type: string;
-  lastModified: string;
-}
-
-interface IVersionTableProps {
-  affiliation: string;
-  versions: IImageTag[];
-  currentVersion: IImageTag;
-  applicationId: string;
-}
+import { IVersionTableProps, VersionTableState } from './VersionTable.state';
+import { useEffect } from 'react';
 
 const columns = [
   {
@@ -65,13 +52,40 @@ function getOptionName(type: ImageTagType): string {
   }
 }
 
-const getVersionData = (
-  affiliation: string,
-  applicationId: string,
-  currentVersion: IImageTag,
-  tags: IImageTag[]
-): IVersionTableData[] =>
-  tags
+type Props = IVersionTableProps & VersionTableState;
+
+export const VersionTabel = ({
+  affiliation,
+  applicationId,
+  currentVersion,
+  imageTagsConnection,
+  hasAccessToDeploy,
+  fetchVersions,
+  isFetching,
+  repository,
+  searchText,
+  versionType
+}: Props) => {
+  const index = imageTagsConnection.edges.findIndex(
+    edge => edge.node.name === currentVersion.name
+  );
+
+  useEffect(() => {
+    if (index === -1 && !isFetching && versionType === currentVersion.type) {
+      fetchVersions(repository, versionType, 100, true, searchText);
+    }
+  }, [
+    currentVersion.type,
+    fetchVersions,
+    index,
+    isFetching,
+    repository,
+    searchText,
+    versionType
+  ]);
+
+  const data = imageTagsConnection
+    .getTags()
     .map(it => {
       return {
         type: getOptionName(it.type),
@@ -79,6 +93,7 @@ const getVersionData = (
         lastModified: it.image ? it.image.buildTime : '',
         deploy: (
           <DeployButtonContainer
+            hasAccessToDeploy={hasAccessToDeploy}
             affiliation={affiliation}
             applicationId={applicationId}
             currentVersion={currentVersion}
@@ -94,21 +109,8 @@ const getVersionData = (
       return date2 - date1;
     });
 
-export const VersionTabel = ({
-  affiliation,
-  applicationId,
-  currentVersion,
-  versions
-}: IVersionTableProps) => {
-  const data = getVersionData(
-    affiliation,
-    applicationId,
-    currentVersion,
-    versions
-  );
-  const index = data.findIndex(d => d.name === currentVersion.name) + 1;
   return (
-    <TableWrapper currentVersionIndex={index}>
+    <TableWrapper currentVersionIndex={index + 1}>
       <Table data={data} columns={columns} />
     </TableWrapper>
   );

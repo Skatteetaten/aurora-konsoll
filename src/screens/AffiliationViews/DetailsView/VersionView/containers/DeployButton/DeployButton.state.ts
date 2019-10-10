@@ -4,6 +4,7 @@ import { IImageTag } from 'services/auroraApiClients/imageRepositoryClient/query
 import { Dispatch } from 'redux';
 
 export interface IDeployButtonProps {
+  hasAccessToDeploy: boolean;
   affiliation: string;
   applicationId: string;
   currentVersion: IImageTag;
@@ -12,20 +13,26 @@ export interface IDeployButtonProps {
 
 export const mapDispatchToProps = (
   dispatch: Dispatch,
-  { affiliation, applicationId, nextVersion }: IDeployButtonProps
+  {
+    affiliation,
+    applicationId,
+    nextVersion,
+    hasAccessToDeploy
+  }: IDeployButtonProps
 ) => ({
   performDeploy: () =>
+    hasAccessToDeploy &&
     dispatch(deploy(affiliation, applicationId, nextVersion.name) as any)
 });
 
 export const mapStateToProps = (
   { deploy }: RootState,
-  { nextVersion }: IDeployButtonProps
+  { nextVersion, hasAccessToDeploy }: IDeployButtonProps
 ) => {
   const { deployingVersion, isDeploying } = deploy;
   return {
     isLoading: deployingVersion === nextVersion.name,
-    disabled: isDeploying
+    disabled: isDeploying || !hasAccessToDeploy
   };
 };
 
