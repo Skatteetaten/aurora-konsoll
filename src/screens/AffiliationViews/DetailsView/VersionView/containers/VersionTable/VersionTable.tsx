@@ -54,7 +54,7 @@ function getOptionName(type: ImageTagType): string {
 
 type Props = IVersionTableProps & VersionTableState;
 
-export const VersionTabel = ({
+export const VersionTable = ({
   affiliation,
   applicationId,
   currentVersion,
