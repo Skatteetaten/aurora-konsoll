@@ -43,41 +43,51 @@ const MatrixView = ({
   deleteFilter,
   showSemanticVersion,
   toggleShowSemanticVersion
-}: IMatrixViewProps) => (
-  <div className={className}>
-    <ActionBar>
-      <StyledFilter>
-        <Filter
-          affiliation={affiliation}
-          updateFilter={updateFilter}
-          deleteFilter={deleteFilter}
-          allDeployments={allDeployments}
-          filters={filters}
-          allFilters={allFilters}
-        />
-        <Checkbox
-          boxSide={'start'}
-          label="Vis semantisk versjon"
-          checked={showSemanticVersion}
-          onChange={toggleShowSemanticVersion}
-          className="versionCheckbox"
-        />
-      </StyledFilter>
-      <StyledUpdate>
-        <TimeSince timeSince={time} />
-        <LoadingButton
-          style={{ minWidth: '141px' }}
-          loading={isRefreshing}
-          onClick={refreshApplicationDeployments}
-          icon="Update"
-        >
-          Oppdater
-        </LoadingButton>
-      </StyledUpdate>
-    </ActionBar>
-    <Matrix showSemanticVersion={showSemanticVersion} />
-  </div>
-);
+}: IMatrixViewProps) => {
+  const [isChecked, setChecked] = React.useState(false);
+  return (
+    <div className={className}>
+      <ActionBar>
+        <StyledFilter>
+          <Filter
+            affiliation={affiliation}
+            updateFilter={updateFilter}
+            deleteFilter={deleteFilter}
+            allDeployments={allDeployments}
+            filters={filters}
+            allFilters={allFilters}
+          />
+          <Checkbox
+            boxSide={'start'}
+            label="Vis semantisk versjon"
+            checked={showSemanticVersion}
+            onChange={toggleShowSemanticVersion}
+            className="versionCheckbox"
+          />
+          <Checkbox
+            boxSide={'start'}
+            label="Vis hele applikasjonsnavnet"
+            checked={isChecked}
+            onChange={() => setChecked(!isChecked)}
+            className="versionCheckbox"
+          />
+        </StyledFilter>
+        <StyledUpdate>
+          <TimeSince timeSince={time} />
+          <LoadingButton
+            style={{ minWidth: '141px' }}
+            loading={isRefreshing}
+            onClick={refreshApplicationDeployments}
+            icon="Update"
+          >
+            Oppdater
+          </LoadingButton>
+        </StyledUpdate>
+      </ActionBar>
+      <Matrix showSemanticVersion={showSemanticVersion} isChecked={isChecked} />
+    </div>
+  );
+};
 
 const ActionBar = styled.div`
   display: flex;
