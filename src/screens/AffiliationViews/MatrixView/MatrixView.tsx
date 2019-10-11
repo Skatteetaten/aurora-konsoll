@@ -12,6 +12,7 @@ import { IFilter } from 'services/DeploymentFilterService';
 import withApplicationDeployments from '../ApplicationDeploymentContext';
 import { styledFilterConnected as Filter } from './Filter/Filter';
 import { default as MatrixBase } from './Matrix';
+import { TextField } from 'office-ui-fabric-react';
 
 const Matrix = withApplicationDeployments(MatrixBase);
 
@@ -43,7 +44,19 @@ const MatrixView = ({
   deleteFilter,
   showSemanticVersion,
   toggleShowSemanticVersion
-}: IMatrixViewProps) => (
+}: IMatrixViewProps) => {
+  
+  const quickFilter = (ev: React.FormEvent<HTMLTextAreaElement | HTMLInputElement>, filter?: string) => {
+    const filtered = allDeployments
+      .filter(deployment => filter && (deployment.name.includes(filter) || deployment.environment.includes(filter)))
+
+    updateFilter({
+      applications: filtered.map(f => f.name),
+      environments: filtered.map(f => f.environment)
+    });
+  };  
+
+  return (
   <div className={className}>
     <ActionBar>
       <StyledFilter>
@@ -62,6 +75,9 @@ const MatrixView = ({
           onChange={toggleShowSemanticVersion}
           className="versionCheckbox"
         />
+        <div style={{ marginLeft: '15px' }}>
+          <TextField id="quick-filter" placeholder="Hurtigfilter" onChange={quickFilter} />
+        </div>
       </StyledFilter>
       <StyledUpdate>
         <TimeSince timeSince={time} />
@@ -77,7 +93,7 @@ const MatrixView = ({
     </ActionBar>
     <Matrix showSemanticVersion={showSemanticVersion} />
   </div>
-);
+)};
 
 const ActionBar = styled.div`
   display: flex;
