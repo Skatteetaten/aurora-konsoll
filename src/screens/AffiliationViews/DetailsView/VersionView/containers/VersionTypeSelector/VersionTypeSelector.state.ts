@@ -12,7 +12,7 @@ export const mapStateToProps = ({ versions }: RootState) => {
     totalCountMap: types.reduce(
       (obj, type) => ({
         ...obj,
-        [type]: versions.types[type].totalCount
+        [type]: versions.types[type].totalVersionsCount()
       }),
       {} as TotalCountMap
     )

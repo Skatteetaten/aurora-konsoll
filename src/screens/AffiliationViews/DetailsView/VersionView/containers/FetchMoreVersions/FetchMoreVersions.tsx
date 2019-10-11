@@ -18,12 +18,12 @@ export const FetchMoreVersions = ({
   fetchVersions,
   isFetching
 }: Props) => {
-  const { edges, totalCount } = imageTagsConnection;
   return (
     <>
       <div style={{ textAlign: 'center' }}>
         <p>
-          Viser {edges.length} av {totalCount} versjoner
+          Viser {imageTagsConnection.currentVersionsSize()} av{' '}
+          {imageTagsConnection.totalVersionsCount()} versjoner
         </p>
         <Button
           icon="History"

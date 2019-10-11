@@ -1,11 +1,7 @@
-import { uniqBy } from 'lodash';
 import { reduceReducers, handleAction } from 'redux-ts-utils';
+
 import { ImageTagType } from 'models/ImageTagType';
-import { ImageTagsConnection } from 'models/ImageTagConnection';
-import {
-  IImageTagsConnection,
-  IImageTagEdge
-} from 'services/auroraApiClients/imageRepositoryClient/query';
+import { ImageTagsConnection } from 'models/immer/ImageTagsConnection';
 
 import { actions } from './actions';
 import { defaultImageTagsConnection } from './action.creators';
@@ -55,28 +51,18 @@ const initialState: IVersionsState = {
   }
 };
 
-function distinctEdges(
-  current: IImageTagEdge[],
-  next: IImageTagEdge[]
-): IImageTagEdge[] {
-  const edges = [...current, ...next];
-  const nodes = edges.map(edge => edge.node);
-  return uniqBy(nodes, 'name').map(node => ({ node }));
-}
-
 export const versionsReducer = reduceReducers<IVersionsState>(
   [
     handleAction(actions.fetchVersionsForType, (state, { payload }) => {
       const { data, paged, type } = payload;
       const current = state.types[type];
 
-      const imageTagsData: IImageTagsConnection = {
-        ...data,
-        pageInfo: paged ? data.pageInfo : current.pageInfo,
-        edges: distinctEdges(current.edges, data.edges)
-      };
+      current.setTotalCount(data.totalCount);
+      current.addVersions(data.edges);
 
-      state.types[type] = new ImageTagsConnection(imageTagsData);
+      if (paged) {
+        current.setPageInfo(data.pageInfo);
+      }
     }),
 
     handleAction(actions.isFetching, (state, { payload }) => {

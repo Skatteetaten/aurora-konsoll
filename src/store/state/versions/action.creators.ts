@@ -40,7 +40,7 @@ export const fetchVersions = (
     })
   );
 
-  const cursor = page ? current.pageInfo.endCursor : undefined;
+  const cursor = page ? current.getCursor() : undefined;
 
   let response: IGoboResult<ITagsQuery> | undefined;
   if (filter) {

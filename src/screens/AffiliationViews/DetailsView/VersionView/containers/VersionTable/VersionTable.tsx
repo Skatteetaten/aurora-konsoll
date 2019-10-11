@@ -66,9 +66,7 @@ export const VersionTable = ({
   searchText,
   versionType
 }: Props) => {
-  const index = imageTagsConnection.edges.findIndex(
-    edge => edge.node.name === currentVersion.name
-  );
+  const index = imageTagsConnection.findVersionIndex(currentVersion.name);
 
   useEffect(() => {
     if (index === -1 && !isFetching && versionType === currentVersion.type) {
@@ -85,7 +83,7 @@ export const VersionTable = ({
   ]);
 
   const data = imageTagsConnection
-    .getTags()
+    .getVersions()
     .map(it => {
       return {
         type: getOptionName(it.type),
