@@ -16,7 +16,7 @@ const certificateColumns: IColumn[] = [
     fieldName: 'dn',
     isResizable: true,
     key: '1',
-    minWidth: 400,
+    minWidth: 600,
     name: 'DN',
     iconName: ''
   },
