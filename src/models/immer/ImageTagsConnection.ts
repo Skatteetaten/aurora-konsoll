@@ -22,7 +22,7 @@ export class ImageTagsConnection {
   }
 
   public findVersionIndex(name: string): number {
-    return this.edges.findIndex(edge => edge.node.name === name);
+    return this.getVersions().findIndex(version => version.name === name);
   }
 
   public totalVersionsCount(): number {
@@ -34,7 +34,17 @@ export class ImageTagsConnection {
   }
 
   public getVersions(): IImageTag[] {
-    return this.edges.map(edge => edge.node);
+    return this.edges
+      .map(edge => edge.node)
+      .sort((t1, t2) => {
+        const t1LastModified = (t1.image && t1.image.buildTime) || '';
+        const t2LastModified = (t2.image && t2.image.buildTime) || '';
+
+        if (t1LastModified === '' || t2LastModified === '') return 0;
+        const date1 = new Date(t1LastModified).getTime();
+        const date2 = new Date(t2LastModified).getTime();
+        return date2 - date1;
+      });
   }
 
   public getCursor(): string {

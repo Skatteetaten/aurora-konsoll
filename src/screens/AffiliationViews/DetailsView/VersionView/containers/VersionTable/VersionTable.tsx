@@ -82,30 +82,22 @@ export const VersionTable = ({
     versionType
   ]);
 
-  const data = imageTagsConnection
-    .getVersions()
-    .map(it => {
-      return {
-        type: getOptionName(it.type),
-        name: it.name,
-        lastModified: it.image ? it.image.buildTime : '',
-        deploy: (
-          <DeployButtonContainer
-            hasAccessToDeploy={hasAccessToDeploy}
-            affiliation={affiliation}
-            applicationId={applicationId}
-            currentVersion={currentVersion}
-            nextVersion={it}
-          />
-        )
-      };
-    })
-    .sort((t1, t2) => {
-      if (t1.lastModified === '' || t2.lastModified === '') return 0;
-      const date1 = new Date(t1.lastModified).getTime();
-      const date2 = new Date(t2.lastModified).getTime();
-      return date2 - date1;
-    });
+  const data = imageTagsConnection.getVersions().map(it => {
+    return {
+      type: getOptionName(it.type),
+      name: it.name,
+      lastModified: it.image ? it.image.buildTime : '',
+      deploy: (
+        <DeployButtonContainer
+          hasAccessToDeploy={hasAccessToDeploy}
+          affiliation={affiliation}
+          applicationId={applicationId}
+          currentVersion={currentVersion}
+          nextVersion={it}
+        />
+      )
+    };
+  });
 
   return (
     <TableWrapper currentVersionIndex={index + 1}>
