@@ -5,22 +5,15 @@ import {
   updateUserSettingsRequest,
   refreshApplicationDeploymentResponse,
   applicationDeploymentDetailsResponse,
-  findTagsPagedResponse,
-  findGroupedTagsPagedResponse,
   findAllApplicationDeploymentsResponse,
   findAllApplicationDeploymentsRequest,
-  redeployRequest,
-  fetchTagsRequest,
   fetchDetailsRequest,
-  fetchGroupedTagsRequest,
   deleteApplicationDeploymentResponse
 } from './actions';
 import {
   deploymentFactory,
   userSettingsFactory,
-  deploymentDetailsFactory,
-  tagsPagedGroupFactory,
-  tagsPagedFactory
+  deploymentDetailsFactory
 } from 'testData/testDataBuilders';
 
 describe('affiliation views actions', () => {
@@ -61,20 +54,6 @@ describe('affiliation views actions', () => {
     });
   });
 
-  it('should return type of action fetchTagsRequest and payload', () => {
-    expect(fetchTagsRequest(true)).toEqual({
-      payload: true,
-      type: 'affiliationView/FETCH_TAGS_REQUEST'
-    });
-  });
-
-  it('should return type of action fetchGroupedTagsRequest and payload', () => {
-    expect(fetchGroupedTagsRequest(true)).toEqual({
-      payload: true,
-      type: 'affiliationView/FETCH_GROUPED_TAGS_REQUEST'
-    });
-  });
-
   it('should return type of action fetchRequest and payload', () => {
     expect(fetchDetailsRequest(true)).toEqual({
       payload: true,
@@ -96,13 +75,6 @@ describe('affiliation views actions', () => {
     });
   });
 
-  it('should return type of action redeployRequest and payload', () => {
-    expect(redeployRequest(true)).toEqual({
-      payload: true,
-      type: 'affiliationView/REDEPLOY_REQUEST'
-    });
-  });
-
   it('should return type of action applicationDeploymentDetailsResponse and payload', () => {
     expect(
       applicationDeploymentDetailsResponse(deploymentDetailsFactory.build())
@@ -110,21 +82,6 @@ describe('affiliation views actions', () => {
       payload: deploymentDetailsFactory.build(),
       type: 'affiliationView/APPLICATION_DEPLOYMENT_DETAILS'
     });
-  });
-  it('should return type of action findTagsPagedResponse and payload', () => {
-    expect(findTagsPagedResponse(tagsPagedFactory.build())).toEqual({
-      payload: tagsPagedFactory.build(),
-      type: 'affiliationView/FIND_TAGS_PAGED_RESPONSE'
-    });
-  });
-
-  it('should return type of action findGroupedTagsPagedResponse and payload', () => {
-    expect(findGroupedTagsPagedResponse(tagsPagedGroupFactory.build())).toEqual(
-      {
-        payload: tagsPagedGroupFactory.build(),
-        type: 'affiliationView/FIND_GROUPED_TAGS_PAGED_RESPONSE'
-      }
-    );
   });
 
   it('should return type of action deleteApplicationDeploymentResponse and payload', () => {

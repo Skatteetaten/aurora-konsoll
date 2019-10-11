@@ -1,5 +1,5 @@
 import { createAction } from 'redux-ts-utils';
-import { Thunk } from 'store/types';
+import { Thunk, StateThunk } from 'store/types';
 import { IAppError, IErrors } from 'models/errors';
 import { IGoboResult } from 'services/GoboClient';
 
@@ -15,15 +15,15 @@ export const nextErrorResponse = createAction<IAppError | undefined>(
   errors('NEXT_ERROR')
 );
 
-export const addCurrentErrors: Thunk = (
+export const addCurrentErrors = (
   result: IGoboResult<any> | undefined
-) => async dispatch => {
+): StateThunk => dispatch => {
   if (result && result.errors) {
     dispatch(addErrors(result.errors, result.name));
   }
 };
 
-export const addErrors: Thunk = (errors: any[], name?: string) => (
+export const addErrors = (errors: any[], name?: string): StateThunk => (
   dispatch,
   getState
 ) => {

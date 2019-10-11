@@ -1,273 +1,89 @@
-import * as React from 'react';
-import { useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 
-import Button from 'aurora-frontend-react-komponenter/Button';
-import TextField from 'aurora-frontend-react-komponenter/TextField';
-import Callout from 'aurora-frontend-react-komponenter/Callout';
-
-import Spinner from 'components/Spinner';
-import CalloutButton from 'components/CalloutButton';
 import { ImageTagType } from 'models/ImageTagType';
-import { ITag, ITagsPaged, ITagsPagedGroup } from 'models/Tag';
 
-import UnavailableServiceMessage from 'components/UnavailableServiceMessage';
-import { IUnavailableServiceMessage } from 'models/UnavailableServiceMessage';
-import TagsList from './TagsList';
-import TagTypeSelector from './TagTypeSelector/TagTypeSelector';
-import MessageBar from 'aurora-frontend-react-komponenter/MessageBar';
-import { ITextField } from 'office-ui-fabric-react';
+import { VersionTableContainer } from './containers/VersionTable/VersionTableContainer';
+import { IApplicationDeployment } from 'models/ApplicationDeployment';
+import { VersionTypeSelectorContainer } from './containers/VersionTypeSelector/VersionTypeSelectorContainer';
+import { VersionTableInformation } from './components/VersionTableInformation';
+import { ServerSideSearchContainer } from './containers/ServerSideSearch/ServerSideSearchContainer';
+import { PermissionToUpgradeInformation } from './components/PermissionToUpgradeInformation';
+import { FetchMoreVersionsContainer } from './containers/FetchMoreVersions/FetchMoreVersionsContainer';
 
 interface IVersionViewProps {
-  hasPermissionToUpgrade: boolean;
-  isFetchingTags: boolean;
-  isFetchingGroupedTags: boolean;
-  isRedeploying: boolean;
-  initialTagType: string;
-  unavailableMessage?: IUnavailableServiceMessage;
-  selectedTagType: ImageTagType;
-  tagsPaged: ITagsPaged;
-  deployedTag: ITag;
-  selectedTag?: ITag;
-  className?: string;
-  findGroupedTagsPagedResult: ITagsPagedGroup;
-  versionSearchText: string;
-  canUpgrade: (selectedTag?: ITag) => boolean;
-  handlefetchTags: (searchText?: string) => void;
-  handleSelectStrategy: (option: ImageTagType) => void;
-  setVersionSearchText: (value: string) => void;
-  redeployWithVersion: (version?: ITag) => void;
-  redeployWithCurrentVersion: () => void;
-  handleSelectNextTag: (item?: ITag) => void;
-  searchForVersions: (text: string) => void;
+  affiliation: string;
+  deployment: IApplicationDeployment;
 }
 
-const ENTER_KEY = 13;
+export const VersionView = ({ affiliation, deployment }: IVersionViewProps) => {
+  const { id, version, imageRepository } = deployment;
 
-const VersionView = ({
-  tagsPaged,
-  isFetchingTags,
-  isFetchingGroupedTags,
-  isRedeploying,
-  unavailableMessage,
-  canUpgrade,
-  initialTagType,
-  hasPermissionToUpgrade,
-  findGroupedTagsPagedResult,
-  selectedTagType,
-  handlefetchTags,
-  selectedTag,
-  deployedTag,
-  className,
-  handleSelectStrategy,
-  redeployWithVersion,
-  redeployWithCurrentVersion,
-  handleSelectNextTag,
-  setVersionSearchText,
-  searchForVersions,
-  versionSearchText
-}: IVersionViewProps) => {
-  let searchRef: ITextField | undefined;
-  useEffect(() => {
-    if (searchRef) {
-      searchRef.focus();
-    }
-  }, [searchRef]);
+  const [searchText, setSearchText] = useState<string | undefined>();
+  const [versionType, setVersionType] = useState(version.deployTag.type);
 
   useEffect(() => {
-    if (selectedTagType !== ImageTagType.SEARCH) {
-      setVersionSearchText('');
-    }
-  }, [selectedTagType, setVersionSearchText]);
+    setVersionType(version.deployTag.type);
+  }, [version.deployTag.type]);
 
-  if (unavailableMessage) {
-    return <UnavailableServiceMessage message={unavailableMessage} />;
+  if (!imageRepository) {
+    // TODO: Bedre feilmelding
+    return <p>Mangler repository</p>;
   }
 
-  const searchOnEnterPress = (e: React.KeyboardEvent<InputEvent>) => {
-    if (selectedTagType !== ImageTagType.SEARCH) {
-      handleSelectStrategy(ImageTagType.SEARCH);
-    }
-    if (
-      e.charCode === ENTER_KEY &&
-      (!isFetchingTags || !isFetchingGroupedTags)
-    ) {
-      const text = searchRef ? searchRef.value : undefined;
-      if (text) {
-        setVersionSearchText(text);
-        searchForVersions(text);
-      }
+  const onSelectType = (type: ImageTagType) => {
+    setVersionType(type);
+    if (type !== ImageTagType.SEARCH) {
+      setSearchText(undefined);
     }
   };
 
-  const loadMoreTagsMessage = () => {
-    return 'Hent flere versjoner';
-  };
+  const hasAccessToDeploy = deployment.permission.paas.admin;
 
   return (
-    <div className={className}>
-      {!isFetchingGroupedTags ? (
-        <>
-          {hasPermissionToUpgrade ? null : (
-            <MessageBar>
-              Ikke mulig å deploye nåværende eller annen versjon. Årsak: Mangler
-              admin rettigheter.
-            </MessageBar>
-          )}
-          <div className="action-bar">
-            <TagTypeSelector
-              imageTagType={selectedTagType}
-              handleSelectStrategy={handleSelectStrategy}
-              findGroupedTagsPagedResult={findGroupedTagsPagedResult}
-            />
-            <div style={{ width: 300, marginLeft: 20, marginRight: 6 }}>
-              <TextField
-                componentRef={(value: ITextField) => {
-                  if (!searchRef) {
-                    searchRef = value;
-                  }
-                }}
-                placeholder="Søk etter versjon"
-                value={versionSearchText}
-                iconProps={{ iconName: 'Search' }}
-                onKeyPress={searchOnEnterPress}
-              />
-            </div>
-          </div>
-          <CalloutButton
-            style={{
-              marginBottom: '6px'
-            }}
-            calloutProps={{
-              color: Callout.INFO,
-              gapSpace: 8,
-              directionalHint: Callout.POS_BOTTOM_LEFT
-            }}
-            buttonProps={{
-              icon: 'info',
-              buttonType: 'secondary'
-            }}
-            title="Finner du ikke versjoner du leter etter?"
-            content={
-              <>
-                <p>
-                  På grunn av overgang til nytt Docker registry (fra Dockers
-                  eget registry til Nexus Docker registry) har vi ikke lengre
-                  mulighet til å hente ut en versjonsliste sortert på dato
-                  (denne featuren baserte seg tidligere på en funksjon i Dockers
-                  eget registry som ikke er i Nexus Docker registry). Denne
-                  informasjonen må nå hentes ut individuelt for hver versjon,
-                  noe som er tid- og ressurskrevende. Inntil videre er det
-                  derfor ikke mulig å tilby en korrekt versjonsliste hvor nyeste
-                  versjoner alltid kommer først.
-                </p>
-                <p>
-                  Dersom du ikke finner versjonen kan du forsøke å søke eller
-                  trykke på "Hent flere versjoner". Det kan være du må trykke
-                  flere ganger før versjonen du er på jakt etter dukker opp. Et
-                  søk vil ofte være bedre.
-                </p>
-              </>
-            }
-          />
-          <div className="details-list">
-            <TagsList
-              tags={tagsPaged.tags}
-              imageTagType={selectedTagType}
-              selectedTag={selectedTag}
-              deployedTag={deployedTag}
-              initialTagType={initialTagType}
-              handlefetchTags={handlefetchTags}
-              handleSelectNextTag={handleSelectNextTag}
-              canUpgrade={canUpgrade}
-              isRedeploying={isRedeploying}
-              redeployWithVersion={redeployWithVersion}
-              redeployWithCurrentVersion={redeployWithCurrentVersion}
-              hasPermissionToUpgrade={hasPermissionToUpgrade}
-            />
-          </div>
-          <div className="tags-action">
-            <div>{`Viser ${tagsPaged.tags.length} av ${tagsPaged.totalCount} versjoner`}</div>
-            <div>
-              <Button
-                icon="History"
-                buttonType="primaryRoundedFilled"
-                onClick={() => {
-                  if (searchRef) {
-                    handlefetchTags(searchRef.value);
-                  }
-                }}
-                disabled={
-                  isFetchingTags ||
-                  isFetchingGroupedTags ||
-                  (selectedTagType === ImageTagType.SEARCH &&
-                    !tagsPaged.hasNextPage)
-                }
-                style={{
-                  minWidth: '195px'
-                }}
-              >
-                {isFetchingTags || isFetchingGroupedTags ? (
-                  <Spinner />
-                ) : (
-                  loadMoreTagsMessage()
-                )}
-              </Button>
-              <div className="callout-button">
-                <CalloutButton
-                  calloutProps={{
-                    color: Callout.INFO,
-                    gapSpace: 8,
-                    directionalHint: Callout.POS_BOTTOM_CENTER
-                  }}
-                  buttonProps={{
-                    icon: 'info',
-                    buttonType: 'secondary'
-                  }}
-                  title="Vis info"
-                  content={
-                    <p>
-                      Hver gang man henter flere versjoner så vil det alltid
-                      hentes de nyeste versjonene i tillegg. Det hentes maks 100
-                      versjoner av gangen.
-                    </p>
-                  }
-                />
-              </div>
-            </div>
-          </div>
-        </>
-      ) : (
-        <Spinner />
-      )}
-    </div>
+    <Wrapper>
+      {!hasAccessToDeploy && <PermissionToUpgradeInformation />}
+      <ActionBar>
+        <VersionTypeSelectorContainer
+          versionType={versionType}
+          onSelect={onSelectType}
+        />
+        <ServerSideSearchContainer
+          searchText={searchText}
+          handleSelectVersionType={setVersionType}
+          handleSetSearchText={setSearchText}
+          repository={imageRepository.repository}
+          selectedVersionType={versionType}
+        />
+      </ActionBar>
+      <VersionTableInformation />
+      <VersionTableContainer
+        hasAccessToDeploy={hasAccessToDeploy}
+        affiliation={affiliation}
+        searchText={searchText}
+        currentVersion={version.deployTag}
+        applicationId={id}
+        repository={imageRepository.repository}
+        versionType={versionType}
+      />
+      <FetchMoreVersionsContainer
+        searchText={searchText}
+        repository={imageRepository.repository}
+        versionType={versionType}
+      />
+    </Wrapper>
   );
 };
 
-export default styled(VersionView)`
+const Wrapper = styled.div`
   display: flex;
   flex-direction: column;
   height: 100%;
   margin: 0 16px;
+`;
 
-  .action-bar {
-    margin-bottom: 10px;
-    display: flex;
-    align-items: flex-end;
-  }
-
-  .details-list {
-    overflow-x: hidden;
-  }
-
-  .tags-action {
-    text-align: center;
-    .callout-button {
-      padding-top: 10px;
-    }
-  }
-
-  .tags-action > div:first-child {
-    margin: 20px 0 15px 0;
-  }
+const ActionBar = styled.div`
+  display: flex;
+  align-items: flex-end;
+  margin-bottom: 10px;
 `;

@@ -2,98 +2,111 @@ import * as React from 'react';
 import { Route, Switch } from 'react-router-dom';
 import styled from 'styled-components';
 
-import { withAuroraApi } from 'components/AuroraApi';
+import { withAuroraApi, IAuroraApiComponentProps } from 'components/AuroraApi';
 import Card from 'components/Card';
 import TabLink, { TabLinkWrapper } from 'components/TabLink';
-import { defaultTagsPagedGroup } from 'models/Tag';
+import UnavailableServiceMessage from 'components/UnavailableServiceMessage';
+import { InitVersionsContainer } from 'containers/InitVersionsContainer';
+import {
+  IUnavailableServiceMessage,
+  unavailableServiceMessageCreator
+} from 'models/UnavailableServiceMessage';
+import {
+  IApplicationDeployment,
+  IApplicationDeploymentDetails
+} from 'models/ApplicationDeployment';
 
-import DetailsService from 'services/DetailsService';
+import { ApplicationDeploymentDetailsRoute } from '../ApplicationDeploymentSelector';
 import DetailsActionBar from './DetailsActionBar';
-import DetailsViewController, {
-  IDetailsViewProps,
-  IDetailsViewState
-} from './DetailsViewController';
 import InformationView from './InformationView/InformationView';
-import VersionView from './VersionView/VersionView';
+import { VersionView } from './VersionView/VersionView';
 
-class DetailsView extends React.Component<
-  IDetailsViewProps,
-  IDetailsViewState
-> {
-  public state: IDetailsViewState = {
-    releaseToDeployTag: this.props.deployment.version.deployTag,
-    selectedTagType: this.props.deployment.version.deployTag.type,
-    tagsPagedGroup: defaultTagsPagedGroup(),
-    versionSearchText: '',
-    initialTagType: '',
-    isInitialTagType: true
+export interface IDetailsViewProps
+  extends ApplicationDeploymentDetailsRoute,
+    IAuroraApiComponentProps {
+  deployment: IApplicationDeployment;
+  getAllApplicationDeployments: (affiliation: string) => void;
+  filterPathUrl: string;
+  findApplicationDeploymentDetails: (id: string) => void;
+  deploymentDetails: IApplicationDeploymentDetails;
+  refreshApplicationDeployment: (
+    applicationDeploymentId: string,
+    affiliation: string
+  ) => void;
+  refreshApplicationDeployments: () => void;
+  deleteApplicationDeployment: (namespace: string, name: string) => void;
+  isRefreshingApplicationDeployment: boolean;
+  isFetchingDetails: boolean;
+  affiliation: string;
+  isApplicationDeploymentDeleted: boolean;
+}
+
+class DetailsView extends React.Component<IDetailsViewProps> {
+  public refreshApplicationDeployment = () => {
+    const {
+      deployment,
+      refreshApplicationDeployment,
+      affiliation
+    } = this.props;
+    refreshApplicationDeployment(deployment.id, affiliation);
   };
 
-  private detailsService = new DetailsService();
+  public goToDeploymentsPage = () => {
+    const { match, history, filterPathUrl } = this.props;
+    history.push(`/a/${match.params.affiliation}/deployments/${filterPathUrl}`);
+  };
 
-  private controller = new DetailsViewController(this);
+  public getVersionViewUnavailableMessage():
+    | IUnavailableServiceMessage
+    | undefined {
+    const { deploymentDetails } = this.props;
+    const { deploymentSpec } = deploymentDetails;
+
+    const serviceUnavailableBecause = unavailableServiceMessageCreator(
+      'Det er ikke mulig å endre versjonen på denne applikasjonen'
+    );
+
+    if (deploymentSpec && deploymentSpec.type === 'development') {
+      return serviceUnavailableBecause(
+        'Applikasjonen er av type development, og kan kun oppgraderes med binary builds'
+      );
+    }
+
+    return undefined;
+  }
 
   public async componentDidMount() {
-    this.controller.onMount();
+    const { id } = this.props.deployment;
+    const { findApplicationDeploymentDetails } = this.props;
+
+    findApplicationDeploymentDetails(id);
   }
-
-  public async componentDidUpdate() {
-    const { tagsPagedGroup, isInitialTagType } = this.state;
-    const { deployment, deploymentDetails } = this.props;
-    if (
-      !!deployment.version.releaseTo &&
-      isInitialTagType &&
-      this.detailsService.hasRecivedTagsAndVersion(
-        tagsPagedGroup,
-        deploymentDetails
-      )
-    ) {
-      const deploymentSpecTag = this.detailsService.findTagForDeploymentSpec(
-        tagsPagedGroup,
-        deploymentDetails.deploymentSpec
-      );
-      const tag = deploymentSpecTag || deployment.version.deployTag;
-
-      this.setState({
-        releaseToDeployTag: tag,
-        selectedTagType: tag.type,
-        isInitialTagType: false
-      });
-    }
-  }
-
-  public getDeployTag = () => {
-    const { deployment } = this.props;
-    const { releaseToDeployTag } = this.state;
-    return !!deployment.version.releaseTo
-      ? releaseToDeployTag
-      : deployment.version.deployTag;
-  };
 
   public render() {
     const {
+      affiliation,
       deployment,
       match,
       deploymentDetails,
       isFetchingDetails,
-      isFetchingTags,
-      isFetchingGroupedTags,
-      isRedeploying,
       isRefreshingApplicationDeployment,
       deleteApplicationDeployment,
       refreshApplicationDeployments
     } = this.props;
-    const { selectedTagType, selectedTag } = this.state;
+
+    const unavailableMessage = this.getVersionViewUnavailableMessage();
     return (
       <DetailsViewGrid>
+        <InitVersionsContainer
+          hasPermission={deployment.permission.paas.admin}
+          imageRepository={deployment.imageRepository}
+        />
         <DetailsActionBar
           title={`${deployment.environment}/${deployment.name}`}
           isRefreshing={isRefreshingApplicationDeployment}
           updatedTime={deployment.time}
-          goToDeploymentsPage={this.controller.goToDeploymentsPage}
-          refreshApplicationDeployment={
-            this.controller.refreshApplicationDeployment
-          }
+          goToDeploymentsPage={this.goToDeploymentsPage}
+          refreshApplicationDeployment={this.refreshApplicationDeployment}
         />
         <TabLinkWrapper>
           <TabLink to={`${match.url}/info`}>Sammendrag</TabLink>
@@ -107,43 +120,21 @@ class DetailsView extends React.Component<
                 deployment={deployment}
                 isFetchingDetails={isFetchingDetails}
                 deploymentDetails={deploymentDetails}
-                refreshApplicationDeployment={
-                  this.controller.refreshApplicationDeployment
-                }
+                refreshApplicationDeployment={this.refreshApplicationDeployment}
                 refreshApplicationDeployments={refreshApplicationDeployments}
                 deleteApplicationDeployment={deleteApplicationDeployment}
-                goToDeploymentsPage={this.controller.goToDeploymentsPage}
+                goToDeploymentsPage={this.goToDeploymentsPage}
               />
             </Route>
             <Route path={`${match.path}/version`}>
-              <VersionView
-                hasPermissionToUpgrade={deployment.permission.paas.admin}
-                unavailableMessage={this.controller.getVersionViewUnavailableMessage()}
-                deployedTag={this.getDeployTag()}
-                selectedTag={selectedTag}
-                selectedTagType={selectedTagType}
-                tagsPaged={this.controller.sm.tag.getTagsPageFiltered(
-                  selectedTagType
-                )}
-                isFetchingTags={isFetchingTags}
-                isFetchingGroupedTags={isFetchingGroupedTags}
-                isRedeploying={isRedeploying}
-                canUpgrade={this.controller.canUpgrade}
-                handleSelectNextTag={this.controller.handleSelectNextTag}
-                handlefetchTags={this.controller.loadMoreTags}
-                handleSelectStrategy={this.controller.handleSelectStrategy}
-                setVersionSearchText={this.controller.setVersionSearchText}
-                searchForVersions={this.controller.searchForVersions}
-                redeployWithVersion={this.controller.redeployWithVersion}
-                redeployWithCurrentVersion={
-                  this.controller.redeployWithCurrentVersion
-                }
-                initialTagType={this.state.initialTagType}
-                findGroupedTagsPagedResult={
-                  this.props.findGroupedTagsPagedResult
-                }
-                versionSearchText={this.state.versionSearchText}
-              />
+              {unavailableMessage ? (
+                <UnavailableServiceMessage message={unavailableMessage} />
+              ) : (
+                <VersionView
+                  affiliation={affiliation}
+                  deployment={deployment}
+                />
+              )}
             </Route>
           </Switch>
         </Card>

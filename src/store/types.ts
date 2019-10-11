@@ -12,11 +12,17 @@ import { AffiliationViewAction } from 'screens/AffiliationViews/state/reducer';
 import { NetdebugViewAction } from 'screens/NetdebugView/state/reducer';
 import { StartupAction } from 'state/reducers';
 
+import { VersionsAction } from './state/versions/actions';
+import { DeployAction } from './state/deploy/actions';
+
 import { rootReducer } from './rootReducer';
+import { ResolveThunks } from 'react-redux';
 
 export type RootState = StateType<typeof rootReducer>;
 
 export type RootAction =
+  | VersionsAction
+  | DeployAction
   | DatabaseSchemasAction
   | StartupAction
   | CertificateAction
@@ -25,6 +31,20 @@ export type RootAction =
   | AffiliationViewAction
   | NetdebugViewAction;
 
-export type Thunk = ActionCreator<
-  ThunkAction<void, RootState, IAuroraApiComponentProps, RootAction>
+export type StateThunk = ThunkAction<
+  void,
+  RootState,
+  IAuroraApiComponentProps,
+  RootAction
 >;
+
+export type Thunk = ActionCreator<StateThunk>;
+
+/**
+ * Usage ReduxProps<typeof mapDispatchToProps, typeof mapStateToProps>
+ *
+ * If only mapDispatchToProps is used, use ResolveThunks<typeof mapDispatchToProps>
+ * If only mapStateToProps is used, use ReturnType<typeof mapStateToProps>
+ */
+export type ReduxProps<D, S extends (...args: any) => any> = ResolveThunks<D> &
+  ReturnType<S>;

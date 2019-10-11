@@ -1,10 +1,5 @@
 import GoboClient, { IGoboResult } from 'services/GoboClient';
-import {
-  ITagsGroupedQuery,
-  ITagsQuery,
-  TAGS_GROUPED_QUERY,
-  TAGS_QUERY
-} from './query';
+import { ITagsQuery, TAGS_QUERY } from './query';
 import { ImageTagType } from 'models/ImageTagType';
 
 interface IImageTagsVariables {
@@ -58,17 +53,6 @@ export class ImageRepositoryClient {
     return await this.client.query<ITagsQuery>({
       query: TAGS_QUERY,
       variables
-    });
-  }
-
-  public async findGroupedTagsPaged(
-    repository: string
-  ): Promise<IGoboResult<ITagsGroupedQuery> | undefined> {
-    return await this.client.query<ITagsGroupedQuery>({
-      query: TAGS_GROUPED_QUERY,
-      variables: {
-        repositories: [repository]
-      }
     });
   }
 }
