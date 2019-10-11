@@ -36,8 +36,15 @@ export const FetchMoreVersions = ({
               fetchVersions(repository, versionType, 100, true, searchText);
             }
           }}
+          style={{
+            minWidth: '225px'
+          }}
         >
-          {isFetching ? <Spinner /> : 'Hent flere versjoner'}
+          {isFetching ? (
+            <Spinner size={Spinner.Size.large} />
+          ) : (
+            'Hent flere versjoner'
+          )}
         </Button>
         <div style={{ marginTop: '8px' }}>
           <FetchVersionsInformation />
