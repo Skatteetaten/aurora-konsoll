@@ -51,9 +51,9 @@ const MatrixView = ({
 }: IMatrixViewProps) => {
   
   const filterChange = (ev: React.FormEvent<HTMLTextAreaElement | HTMLInputElement>, filter?: string) => {
-    if(filter) {
+    if(filter !== undefined) {
       updateQuickFilter(filter);
-    }
+    }  
   };
 
   
