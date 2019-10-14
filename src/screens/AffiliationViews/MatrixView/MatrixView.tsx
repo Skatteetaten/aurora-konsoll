@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React, { useEffect } from 'react';
 import styled from 'styled-components';
 
 import Checkbox from 'aurora-frontend-react-komponenter/Checkbox';
@@ -29,6 +29,8 @@ interface IMatrixViewProps {
   deleteFilter: (filterName: string) => void;
   showSemanticVersion: boolean;
   toggleShowSemanticVersion: () => void;
+  quickFilter: string;
+  updateQuickFilter: (filter: string) => void;
 }
 
 const MatrixView = ({
@@ -43,19 +45,18 @@ const MatrixView = ({
   allFilters,
   deleteFilter,
   showSemanticVersion,
-  toggleShowSemanticVersion
+  toggleShowSemanticVersion,
+  quickFilter,
+  updateQuickFilter
 }: IMatrixViewProps) => {
   
-  const quickFilter = (ev: React.FormEvent<HTMLTextAreaElement | HTMLInputElement>, filter?: string) => {
-    const filtered = allDeployments
-      .filter(deployment => filter && (deployment.name.includes(filter) || deployment.environment.includes(filter)))
+  const filterChange = (ev: React.FormEvent<HTMLTextAreaElement | HTMLInputElement>, filter?: string) => {
+    if(filter) {
+      updateQuickFilter(filter);
+    }
+  };
 
-    updateFilter({
-      applications: filtered.map(f => f.name),
-      environments: filtered.map(f => f.environment)
-    });
-  };  
-
+  
   return (
   <div className={className}>
     <ActionBar>
@@ -69,7 +70,7 @@ const MatrixView = ({
           allFilters={allFilters}
         />
         <div style={{ marginLeft: '15px' }}>
-          <TextField id="quick-filter" placeholder="Hurtigfilter" onChange={quickFilter} />
+          <TextField id="quick-filter" placeholder="Filtrer applikasjoner" onChange={filterChange} value={quickFilter} />
         </div>
         <Checkbox
           boxSide={'start'}
