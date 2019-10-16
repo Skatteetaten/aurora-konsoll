@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import styled from 'styled-components';
 
 import Checkbox from 'aurora-frontend-react-komponenter/Checkbox';
@@ -12,6 +12,7 @@ import { IFilter } from 'services/DeploymentFilterService';
 import withApplicationDeployments from '../ApplicationDeploymentContext';
 import { styledFilterConnected as Filter } from './Filter/Filter';
 import { default as MatrixBase } from './Matrix';
+import TextField from 'aurora-frontend-react-komponenter/TextField';
 
 const Matrix = withApplicationDeployments(MatrixBase);
 
@@ -28,6 +29,8 @@ interface IMatrixViewProps {
   deleteFilter: (filterName: string) => void;
   showSemanticVersion: boolean;
   toggleShowSemanticVersion: () => void;
+  quickFilter: string;
+  updateQuickFilter: (filter: string) => void;
 }
 
 const MatrixView = ({
@@ -42,9 +45,18 @@ const MatrixView = ({
   allFilters,
   deleteFilter,
   showSemanticVersion,
-  toggleShowSemanticVersion
+  toggleShowSemanticVersion,
+  quickFilter,
+  updateQuickFilter
 }: IMatrixViewProps) => {
   const [isChecked, setChecked] = React.useState(false);
+  
+  const filterChange = (ev: React.FormEvent<HTMLTextAreaElement | HTMLInputElement>, filter?: string) => {
+    if(filter !== undefined) {
+      updateQuickFilter(filter);
+    }  
+  };
+      
   return (
     <div className={className}>
       <ActionBar>
@@ -57,6 +69,9 @@ const MatrixView = ({
             filters={filters}
             allFilters={allFilters}
           />
+          <div style={{ marginLeft: '15px' }}>
+            <TextField id="quick-filter" placeholder="Filtrer applikasjoner" onChange={filterChange} value={quickFilter} />
+          </div>
           <Checkbox
             boxSide={'start'}
             label="Vis semantisk versjon"
@@ -119,4 +134,14 @@ export default styled(MatrixView)`
   display: flex;
   flex-direction: column;
   max-height: 100%;
+
+  .ms-TextField-fieldGroup {
+    border-color: #ccc !important;
+    border-width: 1px;
+    height: 38px;
+
+    input::placeholder {
+      color: #808080;
+    }
+  }
 `;

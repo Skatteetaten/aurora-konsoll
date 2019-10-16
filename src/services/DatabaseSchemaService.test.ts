@@ -19,7 +19,7 @@ describe('DatabaseSchemaService', () => {
         createdBy: 'my-super-duper-user'
       });
       const viewItem2 = databaseSchemaViewFactory.build({
-        createdBy: '123'
+        createdBy: 'user'
       });
 
       const createdFilter = filterDatabaseSchemaView('duper');
@@ -27,6 +27,21 @@ describe('DatabaseSchemaService', () => {
 
       expect(filteredItems.length).toEqual(1);
       expect(filteredItems[0].createdBy).toEqual('my-super-duper-user');
+    });
+
+    it('filter database schema for id', () => {
+      const viewItem1 = databaseSchemaViewFactory.build({
+        id: '5678'
+      });
+      const viewItem2 = databaseSchemaViewFactory.build({
+        id: '1234'
+      });
+
+      const createdFilter = filterDatabaseSchemaView('5678');
+      const filteredItems = [viewItem1, viewItem2].filter(createdFilter);
+
+      expect(filteredItems.length).toEqual(1);
+      expect(filteredItems[0].id).toEqual('5678');
     });
   });
 

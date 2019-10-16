@@ -141,7 +141,8 @@ export const filterDatabaseSchemaView = (filter: string) => {
       : v.lastUsedDate.includes(filter)) ||
     v.sizeInMb.toString().includes(filter) ||
     v.type.includes(filter) ||
-    v.jdbcUrl.includes(filter);
+    v.jdbcUrl.includes(filter) ||
+    v.id.includes(filter);
 };
 
 export default class DatabaseSchemaService {
