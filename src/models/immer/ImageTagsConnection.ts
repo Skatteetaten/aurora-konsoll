@@ -7,6 +7,7 @@ import {
   IImageTag,
   IPageInfo
 } from 'services/auroraApiClients/imageRepositoryClient/query';
+import { ImageTagType } from 'models/ImageTagType';
 
 export class ImageTagsConnection {
   [immerable] = true;
@@ -14,11 +15,17 @@ export class ImageTagsConnection {
   private edges: IImageTagEdge[];
   private totalCount: number;
   private pageInfo: IPageInfo;
+  private type: ImageTagType;
 
-  constructor(data: IImageTagsConnection) {
+  constructor(type: ImageTagType, data: IImageTagsConnection) {
+    this.type = type;
     this.edges = data.edges;
     this.totalCount = data.totalCount;
     this.pageInfo = data.pageInfo;
+  }
+
+  public getType(): ImageTagType {
+    return this.type;
   }
 
   public findVersionIndex(name: string): number {
@@ -37,10 +44,9 @@ export class ImageTagsConnection {
     return this.edges
       .map(edge => edge.node)
       .sort((t1, t2) => {
-        const t1LastModified = (t1.image && t1.image.buildTime) || '';
-        const t2LastModified = (t2.image && t2.image.buildTime) || '';
+        const t1LastModified = (t1.image && t1.image.buildTime) || 0;
+        const t2LastModified = (t2.image && t2.image.buildTime) || 0;
 
-        if (t1LastModified === '' || t2LastModified === '') return 0;
         const date1 = new Date(t1LastModified).getTime();
         const date2 = new Date(t2LastModified).getTime();
         return date2 - date1;

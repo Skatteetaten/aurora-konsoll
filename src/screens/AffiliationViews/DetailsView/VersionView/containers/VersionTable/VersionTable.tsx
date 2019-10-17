@@ -69,6 +69,7 @@ export const VersionTable = ({
   const index = imageTagsConnection.findVersionIndex(currentVersion.name);
 
   useEffect(() => {
+    // If configured version is not in the list, fetch more to find the version.
     if (index === -1 && !isFetching && versionType === currentVersion.type) {
       fetchVersions(repository, versionType, 100, true, searchText);
     }
@@ -82,32 +83,37 @@ export const VersionTable = ({
     versionType
   ]);
 
-  const data = imageTagsConnection.getVersions().map(it => {
-    return {
-      type: getOptionName(it.type),
-      name: it.name,
-      lastModified: it.image ? it.image.buildTime : '',
-      deploy: (
-        <DeployButtonContainer
-          hasAccessToDeploy={hasAccessToDeploy}
-          affiliation={affiliation}
-          applicationId={applicationId}
-          currentVersion={currentVersion}
-          nextVersion={it}
-        />
-      )
-    };
-  });
+  const data = imageTagsConnection
+    .getVersions()
+    .filter(it => it.name !== currentVersion.name)
+    .map(it => {
+      return {
+        type: getOptionName(it.type),
+        name: it.name,
+        lastModified: it.image ? it.image.buildTime : '',
+        deploy: (
+          <DeployButtonContainer
+            hasAccessToDeploy={hasAccessToDeploy}
+            affiliation={affiliation}
+            applicationId={applicationId}
+            currentVersion={currentVersion}
+            nextVersion={it}
+          />
+        )
+      };
+    });
 
   return (
-    <TableWrapper currentVersionIndex={index + 1}>
+    <TableWrapper>
       <Table data={data} columns={columns} />
     </TableWrapper>
   );
 };
 
-type TableWrapperProps = { currentVersionIndex: number };
-const TableWrapper = styled.div<TableWrapperProps>`
+const TableWrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+  flex: 1;
   overflow-x: hidden;
   table {
     background-color: white;
@@ -129,12 +135,6 @@ const TableWrapper = styled.div<TableWrapperProps>`
       &:active,
       &:focus {
         background: #cde1f9 !important;
-        button {
-          opacity: 1;
-        }
-      }
-      &:nth-child(${props => props.currentVersionIndex}) {
-        background: rgb(249, 237, 226);
         button {
           opacity: 1;
         }

@@ -19,7 +19,7 @@ import {
 import { ApplicationDeploymentDetailsRoute } from '../ApplicationDeploymentSelector';
 import DetailsActionBar from './DetailsActionBar';
 import InformationView from './InformationView/InformationView';
-import { VersionView } from './VersionView/VersionView';
+import { VersionViewContainer } from './VersionView/VersionViewContainer';
 
 export interface IDetailsViewProps
   extends ApplicationDeploymentDetailsRoute,
@@ -130,7 +130,11 @@ class DetailsView extends React.Component<IDetailsViewProps> {
               {unavailableMessage ? (
                 <UnavailableServiceMessage message={unavailableMessage} />
               ) : (
-                <VersionView
+                <VersionViewContainer
+                  configuredVersion={
+                    deploymentDetails.deploymentSpec &&
+                    deploymentDetails.deploymentSpec.version
+                  }
                   affiliation={affiliation}
                   deployment={deployment}
                 />
