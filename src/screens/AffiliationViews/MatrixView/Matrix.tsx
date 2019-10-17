@@ -6,7 +6,7 @@ import Row, { IApplicationMap } from './Row';
 interface IMatrixProps {
   className?: string;
   showSemanticVersion: boolean;
-  isChecked: boolean;
+  expandApplicationName: boolean;
 }
 
 const Matrix = ({
@@ -92,7 +92,9 @@ export default styled(Matrix)`
         overflow: hidden;
         text-overflow: ellipsis;
         cursor: default;
-        ${props => props.isChecked && `max-width: 100%; white-space: nowrap;`}
+        ${props =>
+          props.expandApplicationName &&
+          `max-width: 100%; white-space: nowrap;`}
       }
       max-width: 150px;
     }

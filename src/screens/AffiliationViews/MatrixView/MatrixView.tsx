@@ -49,14 +49,19 @@ const MatrixView = ({
   quickFilter,
   updateQuickFilter
 }: IMatrixViewProps) => {
-  const [isChecked, setChecked] = React.useState(false);
-  
-  const filterChange = (ev: React.FormEvent<HTMLTextAreaElement | HTMLInputElement>, filter?: string) => {
-    if(filter !== undefined) {
+  const [expandApplicationName, setExpandApplicationName] = React.useState(
+    false
+  );
+
+  const filterChange = (
+    ev: React.FormEvent<HTMLTextAreaElement | HTMLInputElement>,
+    filter?: string
+  ) => {
+    if (filter !== undefined) {
       updateQuickFilter(filter);
-    }  
+    }
   };
-      
+
   return (
     <div className={className}>
       <ActionBar>
@@ -70,7 +75,12 @@ const MatrixView = ({
             allFilters={allFilters}
           />
           <div style={{ marginLeft: '15px' }}>
-            <TextField id="quick-filter" placeholder="Filtrer applikasjoner" onChange={filterChange} value={quickFilter} />
+            <TextField
+              id="quick-filter"
+              placeholder="Filtrer applikasjoner"
+              onChange={filterChange}
+              value={quickFilter}
+            />
           </div>
           <Checkbox
             boxSide={'start'}
@@ -82,8 +92,8 @@ const MatrixView = ({
           <Checkbox
             boxSide={'start'}
             label="Vis hele applikasjonsnavnet"
-            checked={isChecked}
-            onChange={() => setChecked(!isChecked)}
+            checked={expandApplicationName}
+            onChange={() => setExpandApplicationName(!expandApplicationName)}
             className="versionCheckbox"
           />
         </StyledFilter>
@@ -99,7 +109,10 @@ const MatrixView = ({
           </LoadingButton>
         </StyledUpdate>
       </ActionBar>
-      <Matrix showSemanticVersion={showSemanticVersion} isChecked={isChecked} />
+      <Matrix
+        showSemanticVersion={showSemanticVersion}
+        expandApplicationName={expandApplicationName}
+      />
     </div>
   );
 };
