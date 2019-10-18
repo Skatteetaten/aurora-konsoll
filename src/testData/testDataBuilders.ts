@@ -39,7 +39,6 @@ import { IStartupState } from 'state/reducers';
 import { INetdebugViewState } from 'screens/NetdebugView/state/reducer';
 import { IErrorsState } from 'screens/ErrorHandler/state/reducer';
 import { IAffiliationViewState } from 'screens/AffiliationViews/state/reducer';
-import { IGoboUser } from 'services/auroraApiClients/goboUsageClient/query';
 import { IErrors, IAppError } from 'models/errors';
 import { IIconLinkData } from 'components/IconLink';
 
@@ -351,14 +350,8 @@ export const errorsStateFactory = Factory.Sync.makeFactory<IErrorsState>({
   nextError: undefined
 });
 
-export const goboUsersFactory = Factory.Sync.makeFactory<IGoboUser>({
-  count: 1,
-  name: 'Bob'
-});
-
 export const startupFactory = Factory.Sync.makeFactory<IStartupState>({
-  currentUser: userAndAffiliationsFactory.build(),
-  goboUsers: [goboUsersFactory.build()]
+  currentUser: userAndAffiliationsFactory.build()
 });
 
 export const aclFactory = Factory.Sync.makeFactory<IAcl>({
@@ -394,11 +387,6 @@ export const websealReduxStateFactory = Factory.Sync.makeFactory<
 >({
   isFetchingWebsealStates: false,
   websealStates: []
-});
-
-export const goboUserFactory = Factory.Sync.makeFactory<IGoboUser>({
-  count: 1,
-  name: 'Bob'
 });
 
 export const userSettingsFactory = Factory.Sync.makeFactory<IUserSettings>({

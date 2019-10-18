@@ -1,4 +1,3 @@
-import { IAuroraApiComponentProps, withAuroraApi } from 'components/AuroraApi';
 import * as React from 'react';
 import { Route } from 'react-router';
 
@@ -23,7 +22,7 @@ const ApplicationDeploymentSelector = withApplicationDeployments(
   ApplicationDeploymentSelectorConnected
 );
 
-interface IAffiliationViewControllerProps extends IAuroraApiComponentProps {
+interface IAffiliationViewControllerProps {
   affiliation: string;
   matchPath: string;
   matchUrl: string;
@@ -45,7 +44,7 @@ interface IAffiliationViewControllerState {
   showSemanticVersion: boolean;
 }
 
-class AffiliationViewController extends React.Component<
+export class AffiliationViewController extends React.Component<
   IAffiliationViewControllerProps,
   IAffiliationViewControllerState
 > {
@@ -302,7 +301,3 @@ class AffiliationViewController extends React.Component<
     );
   }
 }
-
-export const AffiliationViewControllerWithApi = withAuroraApi(
-  AffiliationViewController
-);

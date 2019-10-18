@@ -8,7 +8,7 @@ import { IUserSettings } from 'models/UserSettings';
 import { RouteComponentProps } from 'react-router-dom';
 import { MenuType } from 'screens/App';
 import AffiliationSelector from './AffiliationSelector';
-import { AffiliationViewControllerWithApi } from './AffiliationViewController';
+import { AffiliationViewController } from './AffiliationViewController';
 import DatabaseViewController from './DatabaseView/DatabaseViewController';
 import WebsealViewController from './WebsealView/WebsealViewController';
 
@@ -113,7 +113,7 @@ class AffiliationViewValidator extends React.Component<
     }
     if (type === MenuType.DEPLOYMENTS) {
       return (
-        <AffiliationViewControllerWithApi
+        <AffiliationViewController
           affiliation={affiliation}
           matchPath={match.path}
           matchUrl={match.url}

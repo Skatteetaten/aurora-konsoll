@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import { Route, RouteComponentProps } from 'react-router-dom';
 import { RootState } from 'store/types';
 import { IApplicationDeploymentContext } from './ApplicationDeploymentContext';
-import { DetailsViewBaseWithApi } from './DetailsView/DetailsView';
+import { DetailsView } from './DetailsView/DetailsView';
 import {
   refreshApplicationDeployment,
   findApplicationDeploymentDetails,
@@ -57,8 +57,8 @@ const ApplicationDeploymentSelector = ({
     return <p>Fant ikke deployment</p>;
   }
 
-  const DetailsView = (props: ApplicationDeploymentDetailsRoute) => (
-    <DetailsViewBaseWithApi
+  const DetailsViewWithRoute = (props: ApplicationDeploymentDetailsRoute) => (
+    <DetailsView
       {...props}
       deployment={deployment}
       getAllApplicationDeployments={getAllApplicationDeployments}
@@ -75,7 +75,7 @@ const ApplicationDeploymentSelector = ({
     />
   );
 
-  return <Route render={DetailsView} />;
+  return <Route render={DetailsViewWithRoute} />;
 };
 
 export default ApplicationDeploymentSelector;

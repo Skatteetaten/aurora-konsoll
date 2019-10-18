@@ -8,19 +8,14 @@ import {
 } from 'react-router-dom';
 import styled from 'styled-components';
 
-import Konami from 'react-konami-code';
-
 import SkeBasis from 'aurora-frontend-react-komponenter/SkeBasis';
 
-import { IAuroraApiComponentProps } from 'components/AuroraApi';
 import { ITokenStore } from 'services/TokenStore';
 import AcceptTokenRoute from './AcceptTokenView/AcceptTokenRoute';
 
-import { withAuroraApi } from 'components/AuroraApi';
 import LayoutConnected from 'components/Layout/Layout';
 import { AffiliationRouteProps } from './AffiliationViews/AffiliationViewValidator';
 import { CertificateConnected } from './CertificateView/CertificateConnected';
-import { GoboUsageViewConnected } from './GoboUsageView';
 
 import { ErrorBoundaryConnected } from 'screens/ErrorHandler/ErrorBoundaryConnected';
 import { AffiliationViewValidatorConnected } from './AffiliationViews/AffiliationViewValidatorConnected';
@@ -34,7 +29,7 @@ export enum MenuType {
   WEBSEAL
 }
 
-interface IAppProps extends IAuroraApiComponentProps, RouteComponentProps<{}> {
+interface IAppProps extends RouteComponentProps<{}> {
   tokenStore: ITokenStore;
   displayDatabaseView: boolean;
   displaySkapViews: boolean;
@@ -123,9 +118,6 @@ class App extends React.Component<IAppProps, IAppState> {
 
     return (
       <StyledSkeBasis menuExpanded={isMenuExpanded}>
-        <Konami timeout={10000}>
-          <GoboUsageViewConnected clients={this.props.clients} />
-        </Konami>
         <ErrorBoundaryConnected>
           <LayoutConnected
             isMenuExpanded={isMenuExpanded}
@@ -187,7 +179,7 @@ class App extends React.Component<IAppProps, IAppState> {
   };
 }
 
-export default withRouter(withAuroraApi(App));
+export default withRouter(App);
 
 const StyledSkeBasis = styled(SkeBasis)`
   height: 100%;

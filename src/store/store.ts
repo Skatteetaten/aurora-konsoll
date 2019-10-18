@@ -14,7 +14,7 @@ const composeEnhancers =
       })
     : compose;
 
-const createStoreWithApi = (clients?: IApiClients, initialState?: {}) => {
+const createStoreWithApi = (clients: IApiClients, initialState?: {}) => {
   const middlewares = [
     thunkMiddleware.withExtraArgument({
       clients
