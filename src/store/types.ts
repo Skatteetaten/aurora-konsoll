@@ -15,7 +15,7 @@ import { DeployAction } from './state/deploy/actions';
 
 import { rootReducer } from './rootReducer';
 import { ResolveThunks } from 'react-redux';
-import { IApiClients } from 'components/AuroraApi';
+import { IApiClients } from 'models/AuroraApi';
 
 export type RootState = StateType<typeof rootReducer>;
 

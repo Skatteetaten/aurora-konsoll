@@ -4,7 +4,7 @@ import { BrowserRouter } from 'react-router-dom';
 
 import { Provider } from 'react-redux';
 
-import { IApiClients } from 'components/AuroraApi';
+import { IApiClients } from 'models/AuroraApi';
 import { tokenStore } from 'services/TokenStore';
 import { fetchConfiguration, IConfiguration } from 'utils/config';
 
