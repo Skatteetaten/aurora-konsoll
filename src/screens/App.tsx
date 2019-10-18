@@ -52,6 +52,7 @@ export const App: React.FC<IAppProps> = ({
     setMenuExpanded(!isMenuExpanded);
   };
 
+  // TODO: add screen to link
   const onAffiliationChangeFromSelector = (newAffiliation: string) => {
     let newPath = '';
     if (location.pathname.startsWith('/a/')) {
@@ -94,7 +95,7 @@ export const App: React.FC<IAppProps> = ({
                 from="/"
                 to={`/a/${affiliation || '_'}/deployments`}
               />
-              <Route path="/a/:affiliation/:screen">
+              <Route path="/a/:affiliation">
                 <AffiliationViewValidatorConnected
                   affiliation={affiliation}
                   onAffiliationValidated={onSelectedAffiliationValidated}

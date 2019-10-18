@@ -56,14 +56,14 @@ const Layout = ({
   const databaseMenuLink: IMenuNavLinkData = {
     iconName: 'Save',
     name: 'Database',
-    to: `/db/${affiliation || '_'}/databaseSchemas`
+    to: `/a/${affiliation || '_'}/databaseSchemas`
   };
 
   const skapMenuLinks: IMenuNavLinkData[] = [
     {
       iconName: 'LockOutline',
       name: 'Webseal',
-      to: `/w/${affiliation || '_'}/webseal`
+      to: `/a/${affiliation || '_'}/webseal`
     },
     {
       iconName: 'Lock',

@@ -1,40 +1,48 @@
 import * as React from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useRouteMatch } from 'react-router-dom';
 import styled from 'styled-components';
 
 interface IAffiliationSelectorProps {
   affiliations: string[];
   title: string;
-  createLink: (affiliation: string) => string;
   className?: string;
   onSelectAffiliation: (affiliation: string) => void;
 }
 
 const AffiliationSelector = ({
+  title,
   affiliations,
   className,
-  title,
-  createLink,
   onSelectAffiliation: onAffiliationSelected
-}: IAffiliationSelectorProps) => (
-  <div className={className}>
-    <div>
-      <h1>{title}</h1>
-      <div className="affiliation-list">
-        {affiliations
-          .sort((a1, a2) => a1.localeCompare(a2))
-          .map(a => {
-            const selectAffiliation = () => onAffiliationSelected(a);
-            return (
-              <Link to={createLink(a)} key={a} onClick={selectAffiliation}>
-                <li>{a}</li>
-              </Link>
-            );
-          })}
+}: IAffiliationSelectorProps) => {
+  const match = useRouteMatch<{ screen: string }>();
+  if (!match) {
+    return null;
+  }
+  return (
+    <div className={className}>
+      <div>
+        <h1>{title}</h1>
+        <div className="affiliation-list">
+          {affiliations
+            .sort((a1, a2) => a1.localeCompare(a2))
+            .map(a => {
+              const selectAffiliation = () => onAffiliationSelected(a);
+              return (
+                <Link
+                  to={`/a/${a}/${match.params.screen}`}
+                  key={a}
+                  onClick={selectAffiliation}
+                >
+                  <li>{a}</li>
+                </Link>
+              );
+            })}
+        </div>
       </div>
     </div>
-  </div>
-);
+  );
+};
 
 export default styled(AffiliationSelector)`
   display: flex;

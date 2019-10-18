@@ -22,7 +22,7 @@ const ApplicationDeploymentSelector = withApplicationDeployments(
   ApplicationDeploymentSelectorConnected
 );
 
-interface IAffiliationViewControllerProps {
+interface IDeploymentViewProps {
   affiliation: string;
   matchPath: string;
   matchUrl: string;
@@ -37,18 +37,18 @@ interface IAffiliationViewControllerProps {
   updateUserSettings: (userSettings: IUserSettings) => void;
 }
 
-interface IAffiliationViewControllerState {
+interface IDeploymentViewState {
   filter: IFilter;
   allFilters: IApplicationDeploymentFilters[];
   filterPathUrl: string;
   showSemanticVersion: boolean;
 }
 
-export class AffiliationViewController extends React.Component<
-  IAffiliationViewControllerProps,
-  IAffiliationViewControllerState
+export class DeploymentView extends React.Component<
+  IDeploymentViewProps,
+  IDeploymentViewState
 > {
-  public state: IAffiliationViewControllerState = {
+  public state: IDeploymentViewState = {
     filter: {
       applications: [],
       environments: []
@@ -143,8 +143,8 @@ export class AffiliationViewController extends React.Component<
   }
 
   public componentDidUpdate(
-    prevProps: IAffiliationViewControllerProps,
-    prevState: IAffiliationViewControllerState
+    prevProps: IDeploymentViewProps,
+    prevState: IDeploymentViewState
   ) {
     const paramsExists = this.deploymentFilterService.isParamsDefined();
     this.clearFilterOnAffiliationChange(prevProps.affiliation);
