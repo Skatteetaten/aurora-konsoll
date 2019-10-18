@@ -65,9 +65,7 @@ export class AffiliationViewController extends React.Component<
   ): React.StatelessComponent => {
     const { matchUrl } = this.props;
     return ({ children }) => (
-      <Link to={`${matchUrl}/deployments/${deployment.id}/info`}>
-        {children}
-      </Link>
+      <Link to={`${matchUrl}/${deployment.id}/info`}>{children}</Link>
     );
   };
 
@@ -272,7 +270,7 @@ export class AffiliationViewController extends React.Component<
           refreshApplicationDeployments: this.refreshApplicationDeployments
         }}
       >
-        <Route exact={true} path={`${matchPath}/deployments`}>
+        <Route exact={true} path={matchPath}>
           {({ match }) =>
             match && (
               <MatrixView
@@ -294,7 +292,7 @@ export class AffiliationViewController extends React.Component<
           }
         </Route>
         <Route
-          path={`${matchPath}/deployments/:applicationDeploymentId`}
+          path={`${matchPath}/:applicationDeploymentId`}
           component={ApplicationDeploymentSelector}
         />
       </ApplicationDeploymentProvider>
