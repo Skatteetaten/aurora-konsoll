@@ -14,8 +14,8 @@ import DeploymentFilterService, {
 import {
   ApplicationDeploymentProvider,
   withApplicationDeployments
-} from './ApplicationDeploymentContext';
-import { ApplicationDeploymentSelectorConnected } from './ApplicationDeploymentSelector';
+} from '../ApplicationDeploymentContext';
+import { ApplicationDeploymentSelectorConnected } from '../ApplicationDeploymentSelector';
 import MatrixView from './MatrixView/MatrixView';
 
 const ApplicationDeploymentSelector = withApplicationDeployments(

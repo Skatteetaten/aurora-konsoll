@@ -15,7 +15,7 @@ import {
   IApplicationDeploymentDetails
 } from 'models/ApplicationDeployment';
 
-import { ApplicationDeploymentDetailsRoute } from '../ApplicationDeploymentSelector';
+import { ApplicationDeploymentDetailsRoute } from '../../ApplicationDeploymentSelector';
 import DetailsActionBar from './DetailsActionBar';
 import InformationView from './InformationView/InformationView';
 import { VersionView } from './VersionView/VersionView';

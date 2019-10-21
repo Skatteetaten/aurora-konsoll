@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import { Route, RouteComponentProps } from 'react-router-dom';
 import { RootState } from 'store/types';
 import { IApplicationDeploymentContext } from './ApplicationDeploymentContext';
-import { DetailsView } from './DetailsView/DetailsView';
+import { DetailsView } from './DeploymentView/DetailsView/DetailsView';
 import {
   refreshApplicationDeployment,
   findApplicationDeploymentDetails,

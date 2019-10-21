@@ -8,7 +8,7 @@ import {
 import { IUserSettings } from 'models/UserSettings';
 import { RouteComponentProps } from 'react-router-dom';
 import AffiliationSelector from './AffiliationSelector';
-import { DeploymentView } from './DeploymentView';
+import { DeploymentView } from './DeploymentView/DeploymentView';
 import DatabaseViewController from './DatabaseView/DatabaseViewController';
 import WebsealViewController from './WebsealView/WebsealViewController';
 
