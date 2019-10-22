@@ -2,7 +2,7 @@ import { addErrors, closeError } from 'screens/ErrorHandler/state/actions';
 import { IUserSettings } from 'models/UserSettings';
 import { connect } from 'react-redux';
 import { RootState } from 'store/types';
-import AffiliationViewValidator from './AffiliationViewValidator';
+import { AffiliationViewValidator } from './AffiliationViewValidator';
 import {
   findAllApplicationDeployments,
   findApplicationDeploymentDetails,
@@ -10,35 +10,19 @@ import {
   refreshAffiliations,
   updateUserSettings
 } from './state/actions';
-import { IAffiliationViewState } from './state/reducer';
 
-const getAffiliationsFetchingStatus = (state: IAffiliationViewState) =>
-  state.isRefreshingAffiliations;
-
-const getAllApplicationDeployments = (state: IAffiliationViewState) =>
-  state.allApplicationDeploymentsResult;
-
-const getAllApplicationDeploymentsStatus = (state: IAffiliationViewState) =>
-  state.isFetchingAllApplicationDeployments;
-
-const fetchUserSettings = (state: IAffiliationViewState) => state.userSettings;
-
-const mapStateToProps = (state: RootState) => ({
-  isFetchingAffiliations: getAffiliationsFetchingStatus(state.affiliationView),
-  allApplicationDeployments: getAllApplicationDeployments(
-    state.affiliationView
-  ),
-  isFetchingAllApplicationDeployments: getAllApplicationDeploymentsStatus(
-    state.affiliationView
-  ),
+const mapStateToProps = ({ affiliationView, ...state }: RootState) => ({
+  isFetchingAffiliations: affiliationView.isRefreshingAffiliations,
+  allApplicationDeployments: affiliationView.allApplicationDeploymentsResult,
+  isFetchingAllApplicationDeployments:
+    affiliationView.isFetchingAllApplicationDeployments,
   currentUser: state.startup.currentUser,
   errors: state.errors.errors,
-  userSettings: fetchUserSettings(state.affiliationView),
-  applicationDeploymentDetails:
-    state.affiliationView.applicationDeploymentDetails,
-  isUpdatingUserSettings: state.affiliationView.isUpdatingUserSettings,
+  userSettings: affiliationView.userSettings,
+  applicationDeploymentDetails: affiliationView.applicationDeploymentDetails,
+  isUpdatingUserSettings: affiliationView.isUpdatingUserSettings,
   isRefreshingApplicationDeployment:
-    state.affiliationView.isRefreshingApplicationDeployment
+    affiliationView.isRefreshingApplicationDeployment
 });
 
 export const AffiliationViewValidatorConnected = connect(

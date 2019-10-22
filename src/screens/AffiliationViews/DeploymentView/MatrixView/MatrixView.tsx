@@ -9,7 +9,7 @@ import TimeSince from 'components/TimeSince';
 import { IApplicationDeployment } from 'models/ApplicationDeployment';
 import { IApplicationDeploymentFilters } from 'models/UserSettings';
 import { IFilter } from 'services/DeploymentFilterService';
-import withApplicationDeployments from '../ApplicationDeploymentContext';
+import withApplicationDeployments from '../../ApplicationDeploymentContext';
 import { styledFilterConnected as Filter } from './Filter/Filter';
 import { default as MatrixBase } from './Matrix';
 

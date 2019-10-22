@@ -1,4 +1,5 @@
-import * as React from 'react';
+import React, { useEffect } from 'react';
+import { useRouteMatch, useHistory, Route, Switch } from 'react-router-dom';
 
 import {
   IApplicationDeployment,
@@ -6,19 +7,17 @@ import {
 } from 'models/ApplicationDeployment';
 import { IUserSettings } from 'models/UserSettings';
 import { RouteComponentProps } from 'react-router-dom';
-import { MenuType } from 'screens/App';
 import AffiliationSelector from './AffiliationSelector';
-import { AffiliationViewController } from './AffiliationViewController';
-import DatabaseViewController from './DatabaseView/DatabaseViewController';
+import { DeploymentView } from './DeploymentView/DeploymentView';
+import { DatabaseViewRoutes } from './DatabaseView/DatabaseViewRoutes';
 import WebsealViewController from './WebsealView/WebsealViewController';
 
 export type AffiliationRouteProps = RouteComponentProps<{
   affiliation: string;
 }>;
 
-interface IAffiliationViewValidatorProps extends AffiliationRouteProps {
+interface IAffiliationViewValidatorProps {
   affiliation?: string;
-  type: MenuType;
   onAffiliationValidated: (affiliation: string) => void;
   currentUser: IUserAndAffiliations;
   isFetchingAffiliations: boolean;
@@ -33,91 +32,68 @@ interface IAffiliationViewValidatorProps extends AffiliationRouteProps {
   isRefreshingApplicationDeployment: boolean;
 }
 
-class AffiliationViewValidator extends React.Component<
+export const AffiliationViewValidator: React.FC<
   IAffiliationViewValidatorProps
-> {
-  public validateAndSetAffiliation = () => {
-    const {
-      affiliation,
-      onAffiliationValidated,
-      currentUser,
-      match
-    } = this.props;
+> = ({
+  affiliation,
+  currentUser,
+  refreshAffiliations,
+  isFetchingAffiliations,
+  findAllApplicationDeployments,
+  allApplicationDeployments,
+  isFetchingAllApplicationDeployments,
+  getUserSettings,
+  updateUserSettings,
+  onAffiliationValidated,
+  userSettings
+}) => {
+  const history = useHistory();
+  const match = useRouteMatch<{ affiliation: string; screen: string }>();
 
-    const pathAffiliation = match.params.affiliation;
-    const isValidAffiliation = currentUser.affiliations.find(
-      a => a === pathAffiliation
-    );
+  const updateUrlWithQuery = (query: string) => {
+    history.push(query);
+  };
+
+  const pathAffiliation = (match && match.params.affiliation) || '';
+  const isValidAffiliation = currentUser.affiliations.find(
+    a => a === pathAffiliation
+  );
+
+  useEffect(() => {
     if (isValidAffiliation && affiliation !== pathAffiliation) {
       onAffiliationValidated(pathAffiliation);
     }
-  };
+  }, [
+    affiliation,
+    isValidAffiliation,
+    onAffiliationValidated,
+    pathAffiliation
+  ]);
 
-  public updateUrlWithQuery = (query: string) => {
-    this.props.history.push(query);
-  };
-
-  public componentDidUpdate() {
-    this.validateAndSetAffiliation();
+  if (!match) {
+    return null;
   }
 
-  public componentDidMount() {
-    this.validateAndSetAffiliation();
-  }
-
-  public render() {
-    const {
-      affiliation,
-      currentUser,
-      match,
-      type,
-      refreshAffiliations,
-      isFetchingAffiliations,
-      findAllApplicationDeployments,
-      allApplicationDeployments,
-      isFetchingAllApplicationDeployments,
-      getUserSettings,
-      updateUserSettings,
-      onAffiliationValidated,
-      userSettings
-    } = this.props;
-
-    if (currentUser.affiliations.length === 0) {
-      return false;
-    }
-    if (match.params.affiliation === '_') {
-      let title = '';
-      let createLink = (a: string) => '';
-      if (type === MenuType.DEPLOYMENTS) {
-        title = `Velkommen ${currentUser.user}`;
-        createLink = (a: string) => `/a/${a}/deployments`;
-      } else if (type === MenuType.DATABASE) {
-        title = 'Velg tilhørighet';
-        createLink = (a: string) => `/db/${a}/databaseSchemas`;
-      } else if (type === MenuType.WEBSEAL) {
-        title = 'Velg tilhørighet';
-        createLink = (a: string) => `/w/${a}/webseal`;
-      }
-
-      return (
+  if (!affiliation) {
+    return (
+      <Route path="/a/_/:screen">
         <AffiliationSelector
-          title={title}
-          createLink={createLink}
+          title={`Velkommen, ${currentUser.user}`}
           affiliations={currentUser.affiliations}
           onSelectAffiliation={onAffiliationValidated}
         />
-      );
-    }
-    if (!affiliation) {
-      return <p>{affiliation} er ikke en gyldig affiliation.</p>;
-    }
-    if (type === MenuType.DEPLOYMENTS) {
-      return (
-        <AffiliationViewController
+      </Route>
+    );
+  }
+
+  return (
+    <Switch>
+      <Route path="/a/:affiliation/deployments">
+        <DeploymentView
           affiliation={affiliation}
-          matchPath={match.path}
-          matchUrl={match.url}
-          updateUrlWithQuery={this.updateUrlWithQuery}
+          matchPath={match.path + '/deployments'}
+          matchUrl={match.url + '/deployments'}
+          updateUrlWithQuery={updateUrlWithQuery}
           refreshAffiliations={refreshAffiliations}
           isFetchingAffiliations={isFetchingAffiliations}
           findAllApplicationDeployments={findAllApplicationDeployments}
@@ -129,13 +105,13 @@ class AffiliationViewValidator extends React.Component<
           updateUserSettings={updateUserSettings}
           userSettings={userSettings}
         />
-      );
-    } else if (type === MenuType.DATABASE) {
-      return <DatabaseViewController affiliation={affiliation} />;
-    } else {
-      return <WebsealViewController affiliation={affiliation} />;
-    }
-  }
-}
-
-export default AffiliationViewValidator;
+      </Route>
+      <Route path="/a/:affiliation/db">
+        <DatabaseViewRoutes affiliation={affiliation} />
+      </Route>
+      <Route path="/a/:affiliation/webseal">
+        <WebsealViewController affiliation={affiliation} />
+      </Route>
+    </Switch>
+  );
+};

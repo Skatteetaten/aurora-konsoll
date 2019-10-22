@@ -8,7 +8,7 @@ import { IApiClients } from 'models/AuroraApi';
 import { tokenStore } from 'services/TokenStore';
 import { fetchConfiguration, IConfiguration } from 'utils/config';
 
-import App from 'screens/App';
+import { App } from 'screens/App';
 import {
   ApplicationDeploymentClient,
   CertificateClient,

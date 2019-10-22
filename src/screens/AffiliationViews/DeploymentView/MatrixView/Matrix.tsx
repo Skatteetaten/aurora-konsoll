@@ -1,6 +1,6 @@
 import * as React from 'react';
 import styled from 'styled-components';
-import { IApplicationDeploymentContext } from '../ApplicationDeploymentContext';
+import { IApplicationDeploymentContext } from '../../ApplicationDeploymentContext';
 import Row, { IApplicationMap } from './Row';
 
 interface IMatrixProps {
