@@ -7,30 +7,29 @@ import {
 } from 'models/ApplicationDeployment';
 import { IDeploymentSpec } from 'models/DeploymentSpec';
 import { InfoContentValues } from 'models/InfoContentValues';
-import { IPodResource } from 'models/Pod';
 import { DifferentVersionTooltip } from './DifferentVersionTooltip';
 import { IImageRepository } from 'services/auroraApiClients/applicationDeploymentClient/query';
+import { VersionStatus } from '../models/VersionStatus';
 
 interface IActiveDeploymentInformationProps {
-  pods: IPodResource[];
+  versionStatus: VersionStatus;
   deploymentSpec?: IDeploymentSpec;
   deployment: IApplicationDeployment;
   deploymentDetails: IApplicationDeploymentDetails;
 }
 
 export const ActiveDeploymentInformation = ({
+  versionStatus,
   deployment,
   deploymentDetails,
-  pods,
   deploymentSpec
 }: IActiveDeploymentInformationProps) => {
   const values = new InfoContentValues();
 
   const tooltip = (tag: string) =>
     DifferentVersionTooltip({
-      deploymentSpec,
-      deploymentTag: tag,
-      pods
+      versionStatus,
+      deploymentTag: tag
     });
 
   const removeFirstPath = (path: string): string =>

@@ -3,8 +3,10 @@ import { RootState } from 'store/types';
 import { ImageTagType } from 'models/ImageTagType';
 import { ImageTagsConnection } from 'models/immer/ImageTagsConnection';
 import { IImageTag } from 'services/auroraApiClients/imageRepositoryClient/query';
+import { VersionStatus } from '../models/VersionStatus';
 
 interface IVersionViewProps {
+  versionStatus: VersionStatus;
   affiliation: string;
   deployment: IApplicationDeployment;
   configuredVersion?: string;

@@ -6,8 +6,13 @@ import { DeployButtonContainer } from '../containers/DeployButton/DeployButtonCo
 import { ITag } from 'models/Tag';
 import { WrongVersionCallout } from './WrongVersionCallout';
 import { getLocalDatetime } from 'utils/date';
+import {
+  VersionStatus,
+  versionStatusMessage
+} from '../../models/VersionStatus';
 
 interface IRedeployRowProps {
+  versionStatus: VersionStatus;
   affiliation: string;
   applicationId: string;
   hasAccessToDeploy: boolean;
@@ -16,24 +21,22 @@ interface IRedeployRowProps {
 }
 
 export const RedeployRow = ({
+  versionStatus,
   version,
   affiliation,
   hasAccessToDeploy,
-  applicationId,
-  activeVersion
+  applicationId
 }: IRedeployRowProps) => {
   if (!version) {
     return null;
   }
 
-  const isDeployed = activeVersion && activeVersion.name === version.name;
-
   return (
     <Wrapper>
-      {!isDeployed && (
+      {versionStatus !== VersionStatus.OK && (
         <WrongVersionCallout>
           <h4>Til informasjon</h4>
-          <span>Ønsket versjon kjører ikke. Prøv å deploy på nytt.</span>
+          <span>{versionStatusMessage(versionStatus)}</span>
         </WrongVersionCallout>
       )}
       <span>

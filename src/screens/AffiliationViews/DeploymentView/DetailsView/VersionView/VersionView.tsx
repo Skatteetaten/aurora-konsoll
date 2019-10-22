@@ -13,6 +13,7 @@ import { VersionViewProps } from './VersionView.state';
 import { RedeployRow } from './components/RedeployRow';
 
 export const VersionView = ({
+  versionStatus,
   affiliation,
   deployment,
   imageTagsConnection,
@@ -59,6 +60,7 @@ export const VersionView = ({
       </ActionBar>
       <VersionTableInformation />
       <RedeployRow
+        versionStatus={versionStatus}
         affiliation={affiliation}
         applicationId={id}
         hasAccessToDeploy={hasAccessToDeploy}

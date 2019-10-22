@@ -10,7 +10,7 @@ export const WrongVersionCallout: FC = ({ children }) => {
     <>
       {open && (
         <Callout
-          calloutWidth={400}
+          calloutWidth={500}
           target={calloutRef.current}
           directionalHint={Callout.POS_BOTTOM_LEFT}
           color={Callout.ERROR}
@@ -20,7 +20,7 @@ export const WrongVersionCallout: FC = ({ children }) => {
         </Callout>
       )}
       <div ref={calloutRef}>
-        <IconButton icon="Warning" onClick={() => setOpen(!open)} />
+        <IconButton icon="Info" onClick={() => setOpen(!open)} />
       </div>
     </>
   );

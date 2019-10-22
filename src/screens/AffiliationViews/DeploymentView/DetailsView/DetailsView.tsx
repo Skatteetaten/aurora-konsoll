@@ -19,6 +19,7 @@ import { ApplicationDeploymentDetailsRoute } from '../../ApplicationDeploymentSe
 import DetailsActionBar from './DetailsActionBar';
 import InformationView from './InformationView/InformationView';
 import { VersionViewContainer } from './VersionView/VersionViewContainer';
+import { getVersionStatus } from './models/VersionStatus';
 
 interface IDetailsViewProps extends ApplicationDeploymentDetailsRoute {
   deployment: IApplicationDeployment;
@@ -91,6 +92,16 @@ export class DetailsView extends React.Component<IDetailsViewProps> {
       refreshApplicationDeployments
     } = this.props;
 
+    const { pods, deploymentSpec } = deploymentDetails;
+    const { deployTag, releaseTo } = deployment.version;
+
+    const versionStatus = getVersionStatus(
+      pods,
+      deployTag.name,
+      deploymentSpec && deploymentSpec.version,
+      releaseTo
+    );
+
     const unavailableMessage = this.getVersionViewUnavailableMessage();
     return (
       <DetailsViewGrid>
@@ -113,6 +124,7 @@ export class DetailsView extends React.Component<IDetailsViewProps> {
           <Switch>
             <Route path={`${match.path}/info`}>
               <InformationView
+                versionStatus={versionStatus}
                 isUpdating={isRefreshingApplicationDeployment}
                 deployment={deployment}
                 isFetchingDetails={isFetchingDetails}
@@ -128,6 +140,7 @@ export class DetailsView extends React.Component<IDetailsViewProps> {
                 <UnavailableServiceMessage message={unavailableMessage} />
               ) : (
                 <VersionViewContainer
+                  versionStatus={versionStatus}
                   configuredVersion={
                     deploymentDetails.deploymentSpec &&
                     deploymentDetails.deploymentSpec.version
