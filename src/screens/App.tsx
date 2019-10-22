@@ -45,17 +45,12 @@ export const App: React.FC<IAppProps> = ({
     return null;
   }
 
-  const handleMenuExpand = () => {
-    setMenuExpanded(!isMenuExpanded);
-  };
-
-  // TODO: add screen to link
   const onAffiliationChangeFromSelector = (newAffiliation: string) => {
     let newPath = '';
     if (location.pathname.startsWith('/a/')) {
       newPath = location.pathname.replace(
-        `/a/${affiliation}`,
-        `/a/${newAffiliation}`
+        /\/a\/(\b\w*[-]?\w*\b)\/(\w*)(\/.*)?/,
+        `/a/${newAffiliation}/$2`
       );
     }
     history.push(newPath);
@@ -76,7 +71,7 @@ export const App: React.FC<IAppProps> = ({
       <ErrorBoundaryConnected>
         <LayoutConnected
           isMenuExpanded={isMenuExpanded}
-          handleMenuExpand={handleMenuExpand}
+          handleMenuExpand={() => setMenuExpanded(!isMenuExpanded)}
           affiliation={affiliation}
           showAffiliationSelector={location.pathname.startsWith('/a/')}
           onAffiliationChange={onAffiliationChangeFromSelector}
