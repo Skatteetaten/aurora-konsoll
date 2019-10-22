@@ -2,8 +2,6 @@ import { ActionCreator } from 'redux';
 import { ThunkAction } from 'redux-thunk';
 import { StateType } from 'typesafe-actions';
 
-import { IAuroraApiComponentProps } from 'components/AuroraApi';
-
 import { DatabaseSchemasAction } from 'screens/AffiliationViews/DatabaseView/state/reducers';
 import { WebsealAction } from 'screens/AffiliationViews/WebsealView/state/reducers';
 import { CertificateAction } from 'screens/CertificateView/state/reducers';
@@ -17,6 +15,7 @@ import { DeployAction } from './state/deploy/actions';
 
 import { rootReducer } from './rootReducer';
 import { ResolveThunks } from 'react-redux';
+import { IApiClients } from 'models/AuroraApi';
 
 export type RootState = StateType<typeof rootReducer>;
 
@@ -31,10 +30,14 @@ export type RootAction =
   | AffiliationViewAction
   | NetdebugViewAction;
 
+interface IExtraArguments {
+  clients: IApiClients;
+}
+
 export type StateThunk = ThunkAction<
   void,
   RootState,
-  IAuroraApiComponentProps,
+  IExtraArguments,
   RootAction
 >;
 

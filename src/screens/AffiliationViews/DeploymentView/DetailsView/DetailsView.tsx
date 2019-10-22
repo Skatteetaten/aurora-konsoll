@@ -2,7 +2,6 @@ import * as React from 'react';
 import { Route, Switch } from 'react-router-dom';
 import styled from 'styled-components';
 
-import { withAuroraApi, IAuroraApiComponentProps } from 'components/AuroraApi';
 import Card from 'components/Card';
 import TabLink, { TabLinkWrapper } from 'components/TabLink';
 import UnavailableServiceMessage from 'components/UnavailableServiceMessage';
@@ -16,14 +15,12 @@ import {
   IApplicationDeploymentDetails
 } from 'models/ApplicationDeployment';
 
-import { ApplicationDeploymentDetailsRoute } from '../ApplicationDeploymentSelector';
+import { ApplicationDeploymentDetailsRoute } from '../../ApplicationDeploymentSelector';
 import DetailsActionBar from './DetailsActionBar';
 import InformationView from './InformationView/InformationView';
 import { VersionViewContainer } from './VersionView/VersionViewContainer';
 
-export interface IDetailsViewProps
-  extends ApplicationDeploymentDetailsRoute,
-    IAuroraApiComponentProps {
+interface IDetailsViewProps extends ApplicationDeploymentDetailsRoute {
   deployment: IApplicationDeployment;
   getAllApplicationDeployments: (affiliation: string) => void;
   filterPathUrl: string;
@@ -41,7 +38,7 @@ export interface IDetailsViewProps
   isApplicationDeploymentDeleted: boolean;
 }
 
-class DetailsView extends React.Component<IDetailsViewProps> {
+export class DetailsView extends React.Component<IDetailsViewProps> {
   public refreshApplicationDeployment = () => {
     const {
       deployment,
@@ -152,7 +149,3 @@ const DetailsViewGrid = styled.div`
   display: flex;
   flex-direction: column;
 `;
-
-export const DetailsViewBaseWithApi = withAuroraApi(DetailsView);
-
-export default DetailsView;

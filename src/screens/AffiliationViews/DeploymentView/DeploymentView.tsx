@@ -1,4 +1,3 @@
-import { IAuroraApiComponentProps, withAuroraApi } from 'components/AuroraApi';
 import * as React from 'react';
 import { Route } from 'react-router';
 
@@ -15,15 +14,15 @@ import DeploymentFilterService, {
 import {
   ApplicationDeploymentProvider,
   withApplicationDeployments
-} from './ApplicationDeploymentContext';
-import { ApplicationDeploymentSelectorConnected } from './ApplicationDeploymentSelector';
+} from '../ApplicationDeploymentContext';
+import { ApplicationDeploymentSelectorConnected } from '../ApplicationDeploymentSelector';
 import MatrixView from './MatrixView/MatrixView';
 
 const ApplicationDeploymentSelector = withApplicationDeployments(
   ApplicationDeploymentSelectorConnected
 );
 
-interface IAffiliationViewControllerProps extends IAuroraApiComponentProps {
+interface IDeploymentViewProps {
   affiliation: string;
   matchPath: string;
   matchUrl: string;
@@ -38,18 +37,18 @@ interface IAffiliationViewControllerProps extends IAuroraApiComponentProps {
   updateUserSettings: (userSettings: IUserSettings) => void;
 }
 
-interface IAffiliationViewControllerState {
+interface IDeploymentViewState {
   filter: IFilter;
   allFilters: IApplicationDeploymentFilters[];
   filterPathUrl: string;
   showSemanticVersion: boolean;
 }
 
-class AffiliationViewController extends React.Component<
-  IAffiliationViewControllerProps,
-  IAffiliationViewControllerState
+export class DeploymentView extends React.Component<
+  IDeploymentViewProps,
+  IDeploymentViewState
 > {
-  public state: IAffiliationViewControllerState = {
+  public state: IDeploymentViewState = {
     filter: {
       applications: [],
       environments: []
@@ -66,9 +65,7 @@ class AffiliationViewController extends React.Component<
   ): React.StatelessComponent => {
     const { matchUrl } = this.props;
     return ({ children }) => (
-      <Link to={`${matchUrl}/deployments/${deployment.id}/info`}>
-        {children}
-      </Link>
+      <Link to={`${matchUrl}/${deployment.id}/info`}>{children}</Link>
     );
   };
 
@@ -146,8 +143,8 @@ class AffiliationViewController extends React.Component<
   }
 
   public componentDidUpdate(
-    prevProps: IAffiliationViewControllerProps,
-    prevState: IAffiliationViewControllerState
+    prevProps: IDeploymentViewProps,
+    prevState: IDeploymentViewState
   ) {
     const paramsExists = this.deploymentFilterService.isParamsDefined();
     this.clearFilterOnAffiliationChange(prevProps.affiliation);
@@ -273,7 +270,7 @@ class AffiliationViewController extends React.Component<
           refreshApplicationDeployments: this.refreshApplicationDeployments
         }}
       >
-        <Route exact={true} path={`${matchPath}/deployments`}>
+        <Route exact={true} path={matchPath}>
           {({ match }) =>
             match && (
               <MatrixView
@@ -295,14 +292,10 @@ class AffiliationViewController extends React.Component<
           }
         </Route>
         <Route
-          path={`${matchPath}/deployments/:applicationDeploymentId`}
+          path={`${matchPath}/:applicationDeploymentId`}
           component={ApplicationDeploymentSelector}
         />
       </ApplicationDeploymentProvider>
     );
   }
 }
-
-export const AffiliationViewControllerWithApi = withAuroraApi(
-  AffiliationViewController
-);

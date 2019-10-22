@@ -1,7 +1,7 @@
 import { applyMiddleware, compose, createStore } from 'redux';
 import { rootReducer } from './rootReducer';
 
-import { IApiClients } from 'components/AuroraApi';
+import { IApiClients } from 'models/AuroraApi';
 import thunkMiddleware from 'redux-thunk';
 
 const composeEnhancers =
@@ -14,7 +14,7 @@ const composeEnhancers =
       })
     : compose;
 
-const createStoreWithApi = (clients?: IApiClients, initialState?: {}) => {
+const createStoreWithApi = (clients: IApiClients, initialState?: {}) => {
   const middlewares = [
     thunkMiddleware.withExtraArgument({
       clients
