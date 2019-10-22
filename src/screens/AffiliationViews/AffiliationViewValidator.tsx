@@ -76,13 +76,11 @@ export const AffiliationViewValidator: React.FC<
 
   if (!affiliation) {
     return (
-      <Route path="/a/_/:screen">
-        <AffiliationSelector
-          title={`Velkommen, ${currentUser.user}`}
-          affiliations={currentUser.affiliations}
-          onSelectAffiliation={onAffiliationValidated}
-        />
-      </Route>
+      <AffiliationSelector
+        title={`Velkommen, ${currentUser.user}`}
+        affiliations={currentUser.affiliations}
+        onSelectAffiliation={onAffiliationValidated}
+      />
     );
   }
 
