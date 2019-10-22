@@ -30,7 +30,7 @@ export const RedeployRow = ({
 
   return (
     <Wrapper>
-      {isDeployed && (
+      {!isDeployed && (
         <WrongVersionCallout>
           <h4>Til informasjon</h4>
           <span>Ønsket versjon kjører ikke. Prøv å deploy på nytt.</span>
