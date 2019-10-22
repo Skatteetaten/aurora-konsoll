@@ -9,7 +9,7 @@ import { IUserSettings } from 'models/UserSettings';
 import { RouteComponentProps } from 'react-router-dom';
 import AffiliationSelector from './AffiliationSelector';
 import { DeploymentView } from './DeploymentView/DeploymentView';
-import DatabaseViewController from './DatabaseView/DatabaseViewController';
+import { DatabaseViewRoutes } from './DatabaseView/DatabaseViewRoutes';
 import WebsealViewController from './WebsealView/WebsealViewController';
 
 export type AffiliationRouteProps = RouteComponentProps<{
@@ -71,16 +71,11 @@ export const AffiliationViewValidator: React.FC<
   ]);
 
   if (!match) {
-    // TODO: fix
-    return <p>test</p>;
-  }
-
-  if (currentUser.affiliations.length === 0) {
     return null;
   }
 
-  return (
-    <Switch>
+  if (!affiliation) {
+    return (
       <Route path="/a/_/:screen">
         <AffiliationSelector
           title={`Velkommen, ${currentUser.user}`}
@@ -88,9 +83,14 @@ export const AffiliationViewValidator: React.FC<
           onSelectAffiliation={onAffiliationValidated}
         />
       </Route>
+    );
+  }
+
+  return (
+    <Switch>
       <Route path="/a/:affiliation/deployments">
         <DeploymentView
-          affiliation={affiliation || ''}
+          affiliation={affiliation}
           matchPath={match.path + '/deployments'}
           matchUrl={match.url + '/deployments'}
           updateUrlWithQuery={updateUrlWithQuery}
@@ -106,11 +106,11 @@ export const AffiliationViewValidator: React.FC<
           userSettings={userSettings}
         />
       </Route>
-      <Route path="/a/:affiliation/databaseSchemas">
-        <DatabaseViewController affiliation={affiliation || ''} />;
+      <Route path="/a/:affiliation/db">
+        <DatabaseViewRoutes affiliation={affiliation} />
       </Route>
       <Route path="/a/:affiliation/webseal">
-        <WebsealViewController affiliation={affiliation || ''} />;
+        <WebsealViewController affiliation={affiliation} />
       </Route>
     </Switch>
   );

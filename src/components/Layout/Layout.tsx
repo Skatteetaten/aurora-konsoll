@@ -56,7 +56,7 @@ const Layout = ({
   const databaseMenuLink: IMenuNavLinkData = {
     iconName: 'Save',
     name: 'Database',
-    to: `/a/${affiliation || '_'}/databaseSchemas`
+    to: `/a/${affiliation || '_'}/db`
   };
 
   const skapMenuLinks: IMenuNavLinkData[] = [
