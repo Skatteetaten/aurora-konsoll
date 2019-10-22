@@ -48,7 +48,6 @@ function isActiveTagSameAsAuroraConfigTag(
 }
 
 export const versionStatusMessage = (versionStatus: VersionStatus): string => {
-  console.log(versionStatus);
   const bulletPoint = '\u2022';
   const newerImageAvailable = `Det finnes et nyere image for denne taggen tilgjengelig på Docker Registry.`;
   const differentVersions = `Aktivt deploy sin tag stemmer ikke overens med Aurora Config. Deploy på nytt.`;
