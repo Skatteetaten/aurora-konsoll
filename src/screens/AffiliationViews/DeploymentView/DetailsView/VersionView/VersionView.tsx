@@ -23,7 +23,7 @@ export const VersionView = ({
 
   const [searchText, setSearchText] = useState<string | undefined>();
   const [versionType, setVersionType] = useState(imageTagsConnection.getType());
-
+    
   useEffect(() => {
     setVersionType(version.deployTag.type);
   }, [version.deployTag.type]);

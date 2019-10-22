@@ -20,6 +20,7 @@ import DetailsActionBar from './DetailsActionBar';
 import InformationView from './InformationView/InformationView';
 import { VersionViewContainer } from './VersionView/VersionViewContainer';
 import { getVersionStatus } from './models/VersionStatus';
+import { VersionView } from './VersionView/VersionView';
 
 interface IDetailsViewProps extends ApplicationDeploymentDetailsRoute {
   deployment: IApplicationDeployment;
