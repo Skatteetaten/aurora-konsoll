@@ -2,9 +2,7 @@ import React, { useState } from 'react';
 import {
   Redirect,
   Route,
-  RouteComponentProps,
   Switch,
-  withRouter,
   useHistory,
   useLocation,
   useRouteMatch
@@ -14,7 +12,6 @@ import styled from 'styled-components';
 import SkeBasis from 'aurora-frontend-react-komponenter/SkeBasis';
 
 import { ITokenStore } from 'services/TokenStore';
-import AcceptTokenRoute from './AcceptTokenView/AcceptTokenRoute';
 
 import LayoutConnected from 'components/Layout/Layout';
 import { CertificateConnected } from './CertificateView/CertificateConnected';
@@ -23,7 +20,8 @@ import { ErrorBoundaryConnected } from 'screens/ErrorHandler/ErrorBoundaryConnec
 import { AffiliationViewValidatorConnected } from './AffiliationViews/AffiliationViewValidatorConnected';
 import { NetdebugConnected } from './NetdebugView/NetdebugConnected';
 
-import { SecretTokenRoute } from './SecretTokenView/SecretTokenRoute';
+import { SecretTokenNavigation } from './SecretToken';
+import AcceptToken from './AcceptToken';
 
 interface IAppProps {
   tokenStore: ITokenStore;
@@ -44,7 +42,6 @@ export const App: React.FC<IAppProps> = ({
   const match = useRouteMatch<{ affiliation: string; screen: string }>();
 
   if (!match) {
-    // TODO: FIX
     return null;
   }
 
@@ -86,8 +83,10 @@ export const App: React.FC<IAppProps> = ({
           displayDatabaseView={displayDatabaseView}
           displaySkapViews={displaySkapViews}
         >
-          <SecretTokenRoute />
-          <AcceptTokenRoute onTokenUpdated={onTokenUpdated} />
+          <Route path="/secret" component={SecretTokenNavigation} />
+          <Route path="/accept-token">
+            <AcceptToken onTokenUpdated={onTokenUpdated} />
+          </Route>
           {isAuthenticated && (
             <Switch>
               <Redirect

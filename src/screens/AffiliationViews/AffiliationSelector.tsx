@@ -27,12 +27,11 @@ const AffiliationSelector = ({
           {affiliations
             .sort((a1, a2) => a1.localeCompare(a2))
             .map(a => {
-              const selectAffiliation = () => onAffiliationSelected(a);
               return (
                 <Link
                   to={`/a/${a}/${match.params.screen}`}
                   key={a}
-                  onClick={selectAffiliation}
+                  onClick={() => onAffiliationSelected(a)}
                 >
                   <li>{a}</li>
                 </Link>
