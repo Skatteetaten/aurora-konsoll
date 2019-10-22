@@ -3,28 +3,27 @@ import styled from 'styled-components';
 
 import TextField from 'aurora-frontend-react-komponenter/TextField';
 
-import { IAuroraApiComponentProps, withAuroraApi } from 'components/AuroraApi';
 import LoadingButton from 'components/LoadingButton';
 import Spinner from 'components/Spinner';
 import { ICertificateResult, ICertificateView } from 'models/certificates';
 import CertificateService from 'services/CertificateService';
 import Table from './Table';
 
-export interface ICertificateProps extends IAuroraApiComponentProps {
+interface ICertificateProps {
   className?: string;
   isFetching: boolean;
   certificates: ICertificateResult;
   onFetch: () => void;
 }
 
-export interface ICertificateState {
+interface ICertificateState {
   filter: string;
   viewItems: ICertificateView[];
 }
 
 const certificateService = new CertificateService();
 
-export default class Certificate extends React.Component<
+class CertificateBase extends React.Component<
   ICertificateProps,
   ICertificateState
 > {
@@ -113,7 +112,7 @@ export default class Certificate extends React.Component<
   };
 }
 
-const StyledCertificate = styled(Certificate)`
+export const Certificate = styled(CertificateBase)`
   max-height: 100%;
   overflow-x: auto;
 
@@ -151,5 +150,3 @@ const StyledCertificate = styled(Certificate)`
       'table .';
   }
 `;
-
-export const CertificateWithApi = withAuroraApi(StyledCertificate);

@@ -1,7 +1,7 @@
 import { connect } from 'react-redux';
 
 import { RootState } from 'store/types';
-import { NetdebugWithApi } from './Netdebug';
+import { Netdebug } from './Netdebug';
 import { findNetdebugStatus } from './state/actions';
 import { INetdebugViewState } from './state/reducer';
 
@@ -20,4 +20,4 @@ export const NetdebugConnected = connect(
     findNetdebugStatus: (host: string, port: string) =>
       findNetdebugStatus(host, port)
   }
-)(NetdebugWithApi);
+)(Netdebug);
