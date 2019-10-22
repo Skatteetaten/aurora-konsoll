@@ -5,6 +5,7 @@ import { IImageTag } from 'services/auroraApiClients/imageRepositoryClient/query
 import { DeployButtonContainer } from '../containers/DeployButton/DeployButtonContainer';
 import { ITag } from 'models/Tag';
 import { WrongVersionCallout } from './WrongVersionCallout';
+import { getLocalDatetime } from 'utils/date';
 
 interface IRedeployRowProps {
   affiliation: string;
@@ -29,57 +30,42 @@ export const RedeployRow = ({
 
   return (
     <Wrapper>
-      <h3>Konfigurert versjon</h3>
-      <TableWrapper>
-        <table>
-          <thead>
-            <tr>
-              <th>Navn</th>
-              <th>Sist endret</th>
-              <th>Kjørede versjon</th>
-              <th></th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td>{version.name}</td>
-              <td>{version.image && version.image.buildTime}</td>
-              <td>{isDeployed ? 'Ja' : <WrongVersionCallout />}</td>
-              <td>
-                <DeployButtonContainer
-                  affiliation={affiliation}
-                  applicationId={applicationId}
-                  hasAccessToDeploy={hasAccessToDeploy}
-                  currentVersion={version}
-                  nextVersion={version}
-                />
-              </td>
-            </tr>
-          </tbody>
-        </table>
-      </TableWrapper>
+      {isDeployed && (
+        <WrongVersionCallout>
+          <h4>Til informasjon</h4>
+          <span>Ønsket versjon kjører ikke. Prøv å deploy på nytt.</span>
+        </WrongVersionCallout>
+      )}
+      <span>
+        Konfigurert versjon: <strong>{version.name}</strong> (bygget{' '}
+        {version.image && getLocalDatetime(version.image.buildTime)})
+      </span>
+      <DeployButtonContainer
+        affiliation={affiliation}
+        applicationId={applicationId}
+        hasAccessToDeploy={hasAccessToDeploy}
+        currentVersion={version}
+        nextVersion={version}
+      />
     </Wrapper>
   );
 };
 
 const Wrapper = styled.div`
-  h3 {
-    margin: 0;
-    margin-bottom: 4px;
-  }
+  display: flex;
+  align-items: center;
   margin-bottom: 12px;
-`;
-
-const TableWrapper = styled.div`
   background: rgb(249, 237, 226);
   padding: 8px 7px;
 
-  thead {
-    text-align: left;
+  button {
+    margin-right: 5px;
   }
 
-  th,
-  td {
-    padding: 0 5px;
+  h4 {
+    margin: 0;
+  }
+  p {
+    margin: 0;
   }
 `;
