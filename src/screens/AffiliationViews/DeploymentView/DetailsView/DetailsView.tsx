@@ -19,7 +19,7 @@ import { ApplicationDeploymentDetailsRoute } from '../../ApplicationDeploymentSe
 import DetailsActionBar from './DetailsActionBar';
 import InformationView from './InformationView/InformationView';
 import { VersionViewContainer } from './VersionView/VersionViewContainer';
-import { getVersionStatus } from './models/VersionStatus';
+import { getVersionStatus, VersionStatus } from './models/VersionStatus';
 
 interface IDetailsViewProps extends ApplicationDeploymentDetailsRoute {
   deployment: IApplicationDeployment;
@@ -73,6 +73,24 @@ export class DetailsView extends React.Component<IDetailsViewProps> {
     return undefined;
   }
 
+  public getVersionStatus(): VersionStatus {
+    const { deployment, deploymentDetails } = this.props;
+    const { pods, deploymentSpec } = deploymentDetails;
+    const { deployTag, releaseTo } = deployment.version;
+
+    const deploymentInProgress = !!deployment.status.reasons.find(
+      status => status.name === 'DeploymentInProgressCheck'
+    );
+
+    return getVersionStatus(
+      pods,
+      deployTag.name,
+      deploymentSpec && deploymentSpec.version,
+      releaseTo,
+      deploymentInProgress
+    );
+  }
+
   public async componentDidMount() {
     const { id } = this.props.deployment;
     const { findApplicationDeploymentDetails } = this.props;
@@ -92,17 +110,9 @@ export class DetailsView extends React.Component<IDetailsViewProps> {
       refreshApplicationDeployments
     } = this.props;
 
-    const { pods, deploymentSpec } = deploymentDetails;
-    const { deployTag, releaseTo } = deployment.version;
-
-    const versionStatus = getVersionStatus(
-      pods,
-      deployTag.name,
-      deploymentSpec && deploymentSpec.version,
-      releaseTo
-    );
-
     const unavailableMessage = this.getVersionViewUnavailableMessage();
+    const versionStatus = this.getVersionStatus();
+
     return (
       <DetailsViewGrid>
         <InitVersionsContainer

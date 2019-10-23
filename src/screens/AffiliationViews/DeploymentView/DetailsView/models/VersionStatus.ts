@@ -11,7 +11,8 @@ export function getVersionStatus(
   pods: IPodResource[],
   activeVersion: string,
   configuredVersion?: string,
-  releaseToVersion?: string
+  releaseToVersion?: string,
+  deploymentInProgress?: boolean
 ): VersionStatus {
   const isLatestDeployTag = areAnyPodsRunningWithLatestDeployTag(pods);
   const isCorrectDeploytag = isActiveTagSameAsAuroraConfigTag(
@@ -19,6 +20,10 @@ export function getVersionStatus(
     configuredVersion,
     releaseToVersion
   );
+
+  if (deploymentInProgress) {
+    return VersionStatus.OK;
+  }
 
   if (!isLatestDeployTag && !isCorrectDeploytag) {
     return VersionStatus.IS_NOT_LATEST_AND_DIFFER_FROM_AURORA_CONFIG;
