@@ -50,7 +50,7 @@ const MatrixView = ({
   updateQuickFilter
 }: IMatrixViewProps) => {
   const [expandApplicationName, setExpandApplicationName] = React.useState(
-    false
+    true
   );
 
   const filterChange = (
