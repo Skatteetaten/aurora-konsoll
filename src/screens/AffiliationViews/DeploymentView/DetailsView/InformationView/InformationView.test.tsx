@@ -15,6 +15,7 @@ import {
 
 import InformationView from './InformationView';
 import { IPodsStatus } from 'models/Pod';
+import { VersionStatus } from '../models/VersionStatus';
 
 describe('InformationView', () => {
   const downPod = podFactory.build({ phase: 'Down', latestDeployTag: true });
@@ -39,6 +40,10 @@ describe('InformationView', () => {
     it('Given startTime is not defined, should display startedDate as a dash', () => {
       const wrapper = mount(
         <InformationView
+          refreshApplicationDeployments={() => {}}
+          goToDeploymentsPage={() => {}}
+          deleteApplicationDeployment={() => {}}
+          versionStatus={VersionStatus.OK}
           deployment={deploymentFactory.build()}
           isFetchingDetails={false}
           isUpdating={false}
@@ -59,6 +64,10 @@ describe('InformationView', () => {
     it('Given none of the pods have latestDeployTag=true and phase=Running, do display warning message', () => {
       const wrapper = mount(
         <InformationView
+          refreshApplicationDeployments={() => {}}
+          goToDeploymentsPage={() => {}}
+          deleteApplicationDeployment={() => {}}
+          versionStatus={VersionStatus.IS_NOT_LATEST}
           deployment={deploymentFactory.build()}
           isFetchingDetails={false}
           isUpdating={false}
@@ -82,6 +91,10 @@ describe('InformationView', () => {
     it('Given one of the pods have latestDeployTag=true and phase=Running, do not display tooltip', () => {
       const wrapper = mount(
         <InformationView
+          refreshApplicationDeployments={() => {}}
+          goToDeploymentsPage={() => {}}
+          deleteApplicationDeployment={() => {}}
+          versionStatus={VersionStatus.OK}
           deployment={deploymentFactory.build()}
           isFetchingDetails={false}
           isUpdating={false}
@@ -97,9 +110,13 @@ describe('InformationView', () => {
     });
   });
   describe('isActiveTagSameAsAuroraConfigTag', () => {
-    it('Given one of the pods have latestDeployTag=true and phase=Running, do not display warning message', () => {
+    it('Given different version for active deployment and AuroraConfig, show warning message', () => {
       const wrapper = mount(
         <InformationView
+          refreshApplicationDeployments={() => {}}
+          goToDeploymentsPage={() => {}}
+          deleteApplicationDeployment={() => {}}
+          versionStatus={VersionStatus.DIFFER_FROM_AURORA_CONFIG}
           deployment={deploymentFactory.build({
             version: {
               deployTag: {
@@ -131,6 +148,10 @@ describe('InformationView', () => {
       const message = 'May the force be with you!';
       const wrapper = mount(
         <InformationView
+          refreshApplicationDeployments={() => {}}
+          goToDeploymentsPage={() => {}}
+          deleteApplicationDeployment={() => {}}
+          versionStatus={VersionStatus.OK}
           deployment={deploymentFactory.build({
             message
           })}
