@@ -49,52 +49,73 @@ const MatrixView = ({
   quickFilter,
   updateQuickFilter
 }: IMatrixViewProps) => {
-  
-  const filterChange = (ev: React.FormEvent<HTMLTextAreaElement | HTMLInputElement>, filter?: string) => {
-    if(filter !== undefined) {
+  const [expandApplicationName, setExpandApplicationName] = React.useState(
+    true
+  );
+
+  const filterChange = (
+    ev: React.FormEvent<HTMLTextAreaElement | HTMLInputElement>,
+    filter?: string
+  ) => {
+    if (filter !== undefined) {
       updateQuickFilter(filter);
-    }  
+    }
   };
 
-  
   return (
-  <div className={className}>
-    <ActionBar>
-      <StyledFilter>
-        <Filter
-          affiliation={affiliation}
-          updateFilter={updateFilter}
-          deleteFilter={deleteFilter}
-          allDeployments={allDeployments}
-          filters={filters}
-          allFilters={allFilters}
-        />
-        <div style={{ marginLeft: '15px' }}>
-          <TextField id="quick-filter" placeholder="Filtrer applikasjoner" onChange={filterChange} value={quickFilter} />
-        </div>
-        <Checkbox
-          boxSide={'start'}
-          label="Vis semantisk versjon"
-          checked={showSemanticVersion}
-          onChange={toggleShowSemanticVersion}
-          className="versionCheckbox"
-        />
-      </StyledFilter>
-      <StyledUpdate>
-        <TimeSince timeSince={time} />
-        <LoadingButton
-          style={{ minWidth: '141px' }}
-          loading={isRefreshing}
-          onClick={refreshApplicationDeployments}
-          icon="Update"
-        >
-          Oppdater
-        </LoadingButton>
-      </StyledUpdate>
-    </ActionBar>
-    <Matrix showSemanticVersion={showSemanticVersion} />
-  </div>
-)};
+    <div className={className}>
+      <ActionBar>
+        <StyledFilter>
+          <Filter
+            affiliation={affiliation}
+            updateFilter={updateFilter}
+            deleteFilter={deleteFilter}
+            allDeployments={allDeployments}
+            filters={filters}
+            allFilters={allFilters}
+          />
+          <div style={{ marginLeft: '15px' }}>
+            <TextField
+              id="quick-filter"
+              placeholder="Filtrer applikasjoner"
+              onChange={filterChange}
+              value={quickFilter}
+            />
+          </div>
+          <Checkbox
+            boxSide={'start'}
+            label="Vis semantisk versjon"
+            checked={showSemanticVersion}
+            onChange={toggleShowSemanticVersion}
+            className="versionCheckbox"
+          />
+          <Checkbox
+            boxSide={'start'}
+            label="Vis hele applikasjonsnavnet"
+            checked={expandApplicationName}
+            onChange={() => setExpandApplicationName(!expandApplicationName)}
+            className="versionCheckbox"
+          />
+        </StyledFilter>
+        <StyledUpdate>
+          <TimeSince timeSince={time} />
+          <LoadingButton
+            style={{ minWidth: '141px' }}
+            loading={isRefreshing}
+            onClick={refreshApplicationDeployments}
+            icon="Update"
+          >
+            Oppdater
+          </LoadingButton>
+        </StyledUpdate>
+      </ActionBar>
+      <Matrix
+        showSemanticVersion={showSemanticVersion}
+        expandApplicationName={expandApplicationName}
+      />
+    </div>
+  );
+};
 
 const ActionBar = styled.div`
   display: flex;
