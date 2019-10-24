@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React, { useState } from 'react';
 
 import styled from 'styled-components';
 
@@ -36,19 +36,6 @@ import DatabaseSchemaUpdateDialog from './DatabaseSchemaUpdateDialog';
 import DeletionSummary from './DeletionSummary';
 import { StyledPre } from 'components/StyledPre';
 
-export const renderDetailsListWithSchemaInfo = (schemas: IDatabaseSchema[]) => (
-  <StyledPre>
-    <DetailsList
-      columns={DatabaseSchemaService.DELETION_COLUMNS}
-      items={schemas.map(it => ({
-        application: it.application,
-        environment: it.environment,
-        discriminator: it.discriminator
-      }))}
-    />
-  </StyledPre>
-);
-
 export interface ISchemaProps {
   onFetch: (affiliations: string[]) => void;
   onUpdate: (databaseSchema: IUpdateDatabaseSchemaInputWithCreatedBy) => void;
@@ -78,7 +65,77 @@ interface ISchemaState {
   extendedInfo: IDatabaseSchema[];
   hasDeletionInformation: boolean;
   shouldResetSort: boolean;
+  confirmDeletionDialogVisible: boolean;
 }
+
+const SelectForDeletion: React.FC<{
+  deleteButtonEnabled: boolean;
+  onEnterDeleteMode: () => void;
+  onExitDeleteMode: () => void;
+  onConfirmDeleteClick: () => void;
+}> = ({
+  deleteButtonEnabled,
+  onEnterDeleteMode,
+  onExitDeleteMode,
+  onConfirmDeleteClick
+}) => {
+  const [deleteMode, setDeleteMode] = useState(false);
+
+  const onEnterDeleteModeClick = () => {
+    setDeleteMode(true);
+    onEnterDeleteMode();
+  };
+
+  const onExitDeleteModeClick = () => {
+    setDeleteMode(false);
+    onExitDeleteMode();
+  };
+
+  if (!deleteMode) {
+    return (
+      <ActionButton
+        iconSize={ActionButton.LARGE}
+        color="red"
+        icon="Delete"
+        style={{ minWidth: '120px', marginLeft: '15px', float: 'left' }}
+        onClick={onEnterDeleteModeClick}
+      >
+        Velg skjemaer for sletting
+      </ActionButton>
+    );
+  } else {
+    return (
+      <span>
+        <ActionButton
+          iconSize={ActionButton.LARGE}
+          color="green"
+          icon="Completed"
+          style={{
+            minWidth: '120px',
+            marginLeft: '15px',
+            float: 'left'
+          }}
+          onClick={onConfirmDeleteClick}
+          disabled={!deleteButtonEnabled}
+        >
+          Slett valgte
+        </ActionButton>
+        <ActionButton
+          iconSize={ActionButton.LARGE}
+          color="red"
+          icon="Cancel"
+          style={{
+            minWidth: '120px',
+            float: 'left'
+          }}
+          onClick={onExitDeleteModeClick}
+        >
+          Avbryt
+        </ActionButton>
+      </span>
+    );
+  }
+};
 
 export class Schema extends React.Component<ISchemaProps, ISchemaState> {
   public state: ISchemaState = {
@@ -90,7 +147,8 @@ export class Schema extends React.Component<ISchemaProps, ISchemaState> {
     deleteSelectionIds: [],
     extendedInfo: [],
     hasDeletionInformation: false,
-    shouldResetSort: false
+    shouldResetSort: false,
+    confirmDeletionDialogVisible: false
   };
   private databaseSchemaService = new DatabaseSchemaService();
 
@@ -225,91 +283,36 @@ export class Schema extends React.Component<ISchemaProps, ISchemaState> {
       extendedInfo,
       hasDeletionInformation: hasDeletionResponse,
       viewItems,
-      shouldResetSort
+      shouldResetSort,
+      confirmDeletionDialogVisible
     } = this.state;
 
-    const renderConfirmationOpenButton = (open: () => void) => {
-      const onClick = () => {
-        open();
-        this.getDatabaseSchemaInfoById();
-      };
-
-      return (
-        <ActionButton
-          iconSize={ActionButton.LARGE}
-          color="green"
-          icon="Completed"
-          style={{
-            minWidth: '120px',
-            marginLeft: '15px',
-            float: 'left'
-          }}
-          onClick={onClick}
-          disabled={!(deleteSelectionIds.length > 0)}
-        >
-          Slett valgte
-        </ActionButton>
-      );
+    const onCancelDeletionClick = () => {
+      this.setState({
+        extendedInfo: [],
+        hasDeletionInformation: false,
+        confirmDeletionDialogVisible: false
+      });
     };
 
-    const renderConfirmationFooterButtons = (close: () => void) => {
-      const onExit = () => {
-        onCancel();
-        onFetch([affiliation]);
-      };
+    const onDeleteSelectionConfirmed = () => {
+      this.getDatabaseSchemaInfoById();
+      this.setState({
+        confirmDeletionDialogVisible: true
+      });
+    };
 
-      const onCancel = () => {
-        this.setState({
-          extendedInfo: [],
-          hasDeletionInformation: false
-        });
-        close();
-      };
+    const onConfirmDeletionClick = () => {
+      if (deleteSelectionIds.length == 0) return;
 
-      const deleteSchemas = () => {
-        if (deleteSelectionIds.length > 0) {
-          onDeleteSchemas(deleteSelectionIds);
-          this.deselect();
-          this.setState({
-            extendedInfo: [],
-            hasDeletionInformation: true,
-            deleteSelectionIds: []
-          });
-        }
-      };
-      return (
-        <>
-          {hasDeletionResponse ? (
-            <ActionButton
-              onClick={onExit}
-              iconSize={ActionButton.LARGE}
-              icon="Completed"
-              color="black"
-            >
-              Avslutt
-            </ActionButton>
-          ) : (
-            <>
-              <ActionButton
-                onClick={deleteSchemas}
-                iconSize={ActionButton.LARGE}
-                icon="Check"
-                color="black"
-              >
-                Ja
-              </ActionButton>
-              <ActionButton
-                onClick={onCancel}
-                iconSize={ActionButton.LARGE}
-                icon="Cancel"
-                color="black"
-              >
-                Nei
-              </ActionButton>
-            </>
-          )}
-        </>
-      );
+      //onDeleteSchemas(deleteSelectionIds);
+      this.deselect();
+      this.setState({
+        extendedInfo: [],
+        hasDeletionInformation: true,
+        deleteSelectionIds: [],
+        confirmDeletionDialogVisible: false
+      });
     };
 
     return (
@@ -323,55 +326,12 @@ export class Schema extends React.Component<ISchemaProps, ISchemaState> {
                 value={filter}
               />
             </div>
-            {!deleteMode && (
-              <ActionButton
-                iconSize={ActionButton.LARGE}
-                color="red"
-                icon="Delete"
-                style={{ minWidth: '120px', marginLeft: '15px', float: 'left' }}
-                onClick={this.enterDeletionMode}
-              >
-                Velg skjemaer for sletting
-              </ActionButton>
-            )}
-            {deleteMode && (
-              <ConfirmDeletionDialog
-                title="Slett databaseskjemaer"
-                renderOpenDialogButton={renderConfirmationOpenButton}
-                renderFooterButtons={renderConfirmationFooterButtons}
-                isBlocking={true}
-              >
-                {hasDeletionResponse ? (
-                  <DeletionSummary
-                    deleteResponse={deleteResponse}
-                    items={items}
-                  />
-                ) : (
-                  <>
-                    {renderDetailsListWithSchemaInfo(extendedInfo)}
-                    <h4>
-                      {this.databaseSchemaService.getSelectionDetails(
-                        deleteSelectionIds
-                      )}
-                    </h4>
-                  </>
-                )}
-              </ConfirmDeletionDialog>
-            )}
-            {deleteMode && (
-              <ActionButton
-                iconSize={ActionButton.LARGE}
-                color="red"
-                icon="Cancel"
-                style={{
-                  minWidth: '120px',
-                  float: 'left'
-                }}
-                onClick={this.exitDeletionMode}
-              >
-                Avbryt
-              </ActionButton>
-            )}
+            <SelectForDeletion
+              deleteButtonEnabled={deleteSelectionIds.length > 0}
+              onEnterDeleteMode={this.enterDeletionMode}
+              onExitDeleteMode={this.exitDeletionMode}
+              onConfirmDeleteClick={onDeleteSelectionConfirmed}
+            />
           </div>
           <div className="styled-create">
             <DatabaseSchemaCreateDialog
@@ -419,6 +379,14 @@ export class Schema extends React.Component<ISchemaProps, ISchemaState> {
           onTestJdbcConnectionForId={onTestJdbcConnectionForId}
           testJdbcConnectionResponse={testJdbcConnectionResponse}
           createNewCopy={this.createNewCopy}
+        />
+        <ConfirmDeletionDialog
+          title="Slett databaseskjemaer"
+          visible={confirmDeletionDialogVisible}
+          isBlocking={true}
+          onOkClick={onConfirmDeletionClick}
+          onCancelClick={onCancelDeletionClick}
+          schemasToDelete={extendedInfo}
         />
       </div>
     );

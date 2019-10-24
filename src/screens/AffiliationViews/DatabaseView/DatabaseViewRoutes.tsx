@@ -21,6 +21,9 @@ export const DatabaseViewRoutes: React.FC<IDatabaseViewRoutesProps> = ({
       <Route path={`${match.url}/schemas`}>
         <SchemaConnected affiliation={affiliation} />
       </Route>
+      <Route path={`${match.url}/restorableSchemas`}>
+        <div> Hepp </div>
+      </Route>
     </Switch>
   );
 };

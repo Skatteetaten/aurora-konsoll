@@ -1,35 +1,116 @@
-import * as React from 'react';
-
+import ActionButton from 'aurora-frontend-react-komponenter/ActionButton';
 import InfoDialog from 'components/InfoDialog';
+import React, { useState } from 'react';
+import { IDatabaseSchema } from 'models/schemas';
+import { StyledPre } from 'components/StyledPre';
+import { DetailsList } from 'office-ui-fabric-react';
+import DatabaseSchemaService from 'services/DatabaseSchemaService';
 
 interface IConfirmDeletionDialogProps {
+  visible: boolean;
   title: string;
   isBlocking: boolean;
-  children: JSX.Element;
-  renderOpenDialogButton?: (openDialog: () => void) => JSX.Element;
-  renderFooterButtons?: (closeDialog: () => void) => JSX.Element;
+  schemasToDelete: IDatabaseSchema[];
+  onOkClick: () => void;
+  onCancelClick: () => void;
 }
 
-const ConfirmDeletionDialog = (props: IConfirmDeletionDialogProps) => {
+const ConfirmDeletionDialog: React.FC<IConfirmDeletionDialogProps> = props => {
   const {
+    visible,
     title,
-    renderOpenDialogButton,
-    renderFooterButtons,
     isBlocking,
-    children
+    schemasToDelete,
+    onOkClick,
+    onCancelClick
   } = props;
+  const createConfirmationMessage = (schemaCount: number): string => {
+    switch (schemaCount) {
+      case 1:
+        return `Vil du slette dette skjemaet?`;
+      default:
+        return `Vil du slette disse ${schemaCount} skjemaene?`;
+    }
+  };
 
   return (
     <InfoDialog
       title={title}
-      renderOpenDialogButton={renderOpenDialogButton}
-      renderFooterButtons={renderFooterButtons}
+      renderOpenDialogButton={dialogVisibilitySetter(visible)}
+      renderFooterButtons={renderFooterButtons(onOkClick, onCancelClick)}
       hideCloseButton={true}
       isBlocking={isBlocking}
     >
-      {children}
+      <>
+        <StyledPre>
+          <DetailsList
+            columns={DatabaseSchemaService.DELETION_COLUMNS}
+            items={schemasToDelete.map(it => ({
+              application: it.application,
+              environment: it.environment,
+              discriminator: it.discriminator
+            }))}
+          />
+        </StyledPre>
+        <h4>{createConfirmationMessage(schemasToDelete.length)}</h4>
+      </>
     </InfoDialog>
   );
+};
+
+const renderFooterButtons = (
+  onOkClick: () => void,
+  onCancelClick: () => void
+) => {
+  return (close: () => void) => {
+    const onOkClickInternal = () => {
+      close();
+      onOkClick();
+    };
+    const onCancelClickInternal = () => {
+      close();
+      onCancelClick();
+    };
+    return (
+      <>
+        <ActionButton
+          onClick={onOkClickInternal}
+          iconSize={ActionButton.LARGE}
+          icon="Check"
+          color="black"
+        >
+          Ja
+        </ActionButton>
+        <ActionButton
+          onClick={onCancelClickInternal}
+          iconSize={ActionButton.LARGE}
+          icon="Cancel"
+          color="black"
+        >
+          Nei
+        </ActionButton>
+      </>
+    );
+  };
+};
+
+const dialogVisibilitySetter = (visible: boolean) => {
+  let isVisible: boolean = false;
+  return (open: () => void) => {
+    if (visible) {
+      if (!isVisible) {
+        setTimeout(() => {
+          open();
+        }, 1);
+        isVisible = true;
+      }
+    } else {
+      if (isVisible) {
+        isVisible = false;
+      }
+    }
+    return <span />;
+  };
 };
 
 export default ConfirmDeletionDialog;
