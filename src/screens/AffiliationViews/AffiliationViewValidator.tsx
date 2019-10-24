@@ -1,40 +1,20 @@
 import React, { useEffect } from 'react';
 import { useRouteMatch, useHistory, Route, Switch } from 'react-router-dom';
 
-import {
-  IApplicationDeployment,
-  IUserAndAffiliations
-} from 'models/ApplicationDeployment';
-import { IUserSettings } from 'models/UserSettings';
-import { RouteComponentProps } from 'react-router-dom';
 import AffiliationSelector from './AffiliationSelector';
 import { DeploymentView } from './DeploymentView/DeploymentView';
 import { DatabaseViewRoutes } from './DatabaseView/DatabaseViewRoutes';
 import WebsealViewController from './WebsealView/WebsealViewController';
-
-export type AffiliationRouteProps = RouteComponentProps<{
-  affiliation: string;
-}>;
+import { AffiliationViewValidatorState } from './AffiliationViewValidatorConnected';
 
 interface IAffiliationViewValidatorProps {
   affiliation?: string;
   onAffiliationValidated: (affiliation: string) => void;
-  currentUser: IUserAndAffiliations;
-  isFetchingAffiliations: boolean;
-  refreshAffiliations: (affiliations: string[]) => void;
-  findAllApplicationDeployments: (affiliations: string[]) => void;
-  getUserSettings: () => void;
-  allApplicationDeployments: IApplicationDeployment[];
-  isFetchingAllApplicationDeployments: boolean;
-  updateUserSettings: (userSettings: IUserSettings) => void;
-  isUpdatingUserSettings: boolean;
-  userSettings: IUserSettings;
-  isRefreshingApplicationDeployment: boolean;
 }
 
-export const AffiliationViewValidator: React.FC<
-  IAffiliationViewValidatorProps
-> = ({
+type Props = IAffiliationViewValidatorProps & AffiliationViewValidatorState;
+
+export const AffiliationViewValidator: React.FC<Props> = ({
   affiliation,
   currentUser,
   refreshAffiliations,

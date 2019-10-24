@@ -55,7 +55,7 @@ export const getNextError: Thunk = () => (dispatch, getState) => {
   }
 };
 
-export const closeError: Thunk = (id: number) => (dispatch, getState) => {
+export const closeError = (id: number): StateThunk => (dispatch, getState) => {
   const state = Object.assign({}, getState().errors.errors);
   const err = state.allErrors.get(id);
   if (!err) {

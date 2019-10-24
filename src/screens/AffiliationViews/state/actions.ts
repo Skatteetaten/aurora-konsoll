@@ -12,7 +12,7 @@ import {
 } from 'screens/ErrorHandler/state/actions';
 import { IUserSettings } from 'models/UserSettings';
 import { createAction } from 'redux-ts-utils';
-import { Thunk, StateThunk } from 'store/types';
+import { StateThunk } from 'store/types';
 import { IPodResource } from 'models/Pod';
 import { stringContainsHtml } from 'utils/string';
 
@@ -58,11 +58,9 @@ export const deleteApplicationDeploymentResponse = createAction<boolean>(
   affiliationViewAction('DELETE_APPLICATION_DEPLOYMENT_RESPONSE')
 );
 
-export const refreshAffiliations: Thunk = (affiliations: string[]) => async (
-  dispatch,
-  getState,
-  { clients }
-) => {
+export const refreshAffiliations = (
+  affiliations: string[]
+): StateThunk => async (dispatch, getState, { clients }) => {
   dispatch(refreshAffiliationsRequest(true));
   const result = await clients.applicationDeploymentClient.refreshAffiliations(
     affiliations
@@ -123,38 +121,6 @@ export const findAllApplicationDeployments = (
   dispatch(findAllApplicationDeploymentsRequest(false));
 };
 
-export const getUserSettings: Thunk = () => async (
-  dispatch,
-  getState,
-  { clients }
-) => {
-  const result = await clients.userSettingsClient.getUserSettings();
-
-  dispatch(addCurrentErrors(result));
-  if (result && result.data) {
-    dispatch(userSettingsResponse(result.data.userSettings));
-  } else {
-    dispatch(userSettingsResponse({ applicationDeploymentFilters: [] }));
-  }
-};
-
-export const updateUserSettings: Thunk = (
-  userSettings: IUserSettings
-) => async (dispatch, getState, { clients }) => {
-  const result = await clients.userSettingsClient.updateUserSettings(
-    userSettings
-  );
-  dispatch(addCurrentErrors(result));
-
-  if (result && result.data) {
-    dispatch(userSettingsResponse(userSettings));
-    dispatch(updateUserSettingsRequest(result.data.updateUserSettings));
-  } else {
-    dispatch(addErrors([new Error('Feil ved sletting av filter')]));
-    dispatch(updateUserSettingsRequest(false));
-  }
-};
-
 export const refreshApplicationDeployment = (
   applicationDeploymentId: string,
   affiliation: string
@@ -175,10 +141,10 @@ export const refreshApplicationDeployment = (
   dispatch(refreshApplicationDeploymentRequest(false));
 };
 
-export const findApplicationDeploymentDetails: Thunk = (
+export const findApplicationDeploymentDetails = (
   id: string,
   withoutLoading?: boolean
-) => async (dispatch, getState, { clients }) => {
+): StateThunk => async (dispatch, getState, { clients }) => {
   if (!!!withoutLoading) {
     dispatch(fetchDetailsRequest(true));
   }
@@ -258,10 +224,10 @@ export const findApplicationDeploymentDetails: Thunk = (
   dispatch(fetchDetailsRequest(false));
 };
 
-export const deleteApplicationDeployment: Thunk = (
+export const deleteApplicationDeployment = (
   namespace: string,
   name: string
-) => async (dispatch, getState, { clients }) => {
+): StateThunk => async (dispatch, getState, { clients }) => {
   const result = await clients.applicationDeploymentClient.deleteApplicationDeployment(
     namespace,
     name
