@@ -2,13 +2,13 @@ import * as React from 'react';
 import { connect } from 'react-redux';
 import { useRouteMatch } from 'react-router-dom';
 import { RootState } from 'store/types';
-import { DetailsView } from './DeploymentView/DetailsView/DetailsView';
+import { DetailsView } from './DetailsView';
 import {
   refreshApplicationDeployment,
   findApplicationDeploymentDetails,
   findAllApplicationDeployments,
   deleteApplicationDeployment
-} from './state/actions';
+} from '../../state/actions';
 import {
   IApplicationDeploymentDetails,
   IApplicationDeployment

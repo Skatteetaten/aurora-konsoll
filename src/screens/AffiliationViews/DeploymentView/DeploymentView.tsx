@@ -8,7 +8,7 @@ import { Link } from 'react-router-dom';
 import DeploymentFilterService, {
   IFilter
 } from 'services/DeploymentFilterService';
-import { ApplicationDeploymentSelectorConnected } from '../ApplicationDeploymentSelector';
+import { ApplicationDeploymentSelectorConnected } from './DetailsView/ApplicationDeploymentSelector';
 import MatrixView from './MatrixView/MatrixView';
 import { DeploymentViewContainerState } from './DeploymentViewContainer';
 

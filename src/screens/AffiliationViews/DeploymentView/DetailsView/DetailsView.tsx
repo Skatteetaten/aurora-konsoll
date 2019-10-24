@@ -19,7 +19,7 @@ import DetailsActionBar from './DetailsActionBar';
 import InformationView from './InformationView/InformationView';
 import { VersionViewContainer } from './VersionView/VersionViewContainer';
 import { getVersionStatus, VersionStatus } from './models/VersionStatus';
-import { ApplicationDeploymentMatchParams } from 'screens/AffiliationViews/ApplicationDeploymentSelector';
+import { ApplicationDeploymentMatchParams } from 'screens/AffiliationViews/DeploymentView/DetailsView/ApplicationDeploymentSelector';
 
 interface IDetailsViewProps {
   deployment: IApplicationDeployment;
