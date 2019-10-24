@@ -1,35 +1,25 @@
 import ActionButton from 'aurora-frontend-react-komponenter/ActionButton';
 import InfoDialog from 'components/InfoDialog';
-import React, { useState } from 'react';
+import React from 'react';
 import { IDatabaseSchema } from 'models/schemas';
 import { StyledPre } from 'components/StyledPre';
 import { DetailsList } from 'office-ui-fabric-react';
-import DatabaseSchemaService from 'services/DatabaseSchemaService';
 
 interface IConfirmDeletionDialogProps {
   visible: boolean;
   title: string;
-  isBlocking: boolean;
   schemasToDelete: IDatabaseSchema[];
   onOkClick: () => void;
   onCancelClick: () => void;
 }
 
 const ConfirmDeletionDialog: React.FC<IConfirmDeletionDialogProps> = props => {
-  const {
-    visible,
-    title,
-    isBlocking,
-    schemasToDelete,
-    onOkClick,
-    onCancelClick
-  } = props;
+  const { visible, title, schemasToDelete, onOkClick, onCancelClick } = props;
   const createConfirmationMessage = (schemaCount: number): string => {
-    switch (schemaCount) {
-      case 1:
-        return `Vil du slette dette skjemaet?`;
-      default:
-        return `Vil du slette disse ${schemaCount} skjemaene?`;
+    if (schemaCount === 1) {
+      return `Vil du slette dette skjemaet?`;
+    } else {
+      return `Vil du slette disse ${schemaCount} skjemaene?`;
     }
   };
 
@@ -39,12 +29,37 @@ const ConfirmDeletionDialog: React.FC<IConfirmDeletionDialogProps> = props => {
       renderOpenDialogButton={dialogVisibilitySetter(visible)}
       renderFooterButtons={renderFooterButtons(onOkClick, onCancelClick)}
       hideCloseButton={true}
-      isBlocking={isBlocking}
+      isBlocking={true}
     >
       <>
         <StyledPre>
           <DetailsList
-            columns={DatabaseSchemaService.DELETION_COLUMNS}
+            columns={[
+              {
+                key: 'column1',
+                name: 'Applikasjon',
+                fieldName: 'application',
+                minWidth: 200,
+                maxWidth: 200,
+                isResizable: true
+              },
+              {
+                key: 'column2',
+                name: 'Miljø',
+                fieldName: 'environment',
+                minWidth: 200,
+                maxWidth: 200,
+                isResizable: true
+              },
+              {
+                key: 'column3',
+                name: 'Diskriminator',
+                fieldName: 'discriminator',
+                minWidth: 200,
+                maxWidth: 200,
+                isResizable: true
+              }
+            ]}
             items={schemasToDelete.map(it => ({
               application: it.application,
               environment: it.environment,
@@ -94,20 +109,16 @@ const renderFooterButtons = (
   };
 };
 
-const dialogVisibilitySetter = (visible: boolean) => {
+const dialogVisibilitySetter = (shouldBeVisible: boolean) => {
   let isVisible: boolean = false;
   return (open: () => void) => {
-    if (visible) {
-      if (!isVisible) {
-        setTimeout(() => {
-          open();
-        }, 1);
-        isVisible = true;
-      }
-    } else {
-      if (isVisible) {
-        isVisible = false;
-      }
+    if (shouldBeVisible && !isVisible) {
+      setTimeout(() => {
+        open();
+      }, 1);
+      isVisible = true;
+    } else if (!shouldBeVisible && isVisible) {
+      isVisible = false;
     }
     return <span />;
   };

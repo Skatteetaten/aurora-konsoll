@@ -8,33 +8,6 @@ import {
 } from 'models/schemas';
 import { IColumn } from 'office-ui-fabric-react/lib/DetailsList';
 
-const deletionDialogColumns = [
-  {
-    key: 'column1',
-    name: 'Applikasjon',
-    fieldName: 'application',
-    minWidth: 200,
-    maxWidth: 200,
-    isResizable: true
-  },
-  {
-    key: 'column2',
-    name: 'Miljø',
-    fieldName: 'environment',
-    minWidth: 200,
-    maxWidth: 200,
-    isResizable: true
-  },
-  {
-    key: 'column3',
-    name: 'Diskriminator',
-    fieldName: 'discriminator',
-    minWidth: 200,
-    maxWidth: 200,
-    isResizable: true
-  }
-];
-
 const defaultColumns: IColumn[] = [
   {
     fieldName: 'type',
@@ -147,7 +120,6 @@ export const filterDatabaseSchemaView = (filter: string) => {
 
 export default class DatabaseSchemaService {
   public static DEFAULT_COLUMNS: IColumn[] = defaultColumns;
-  public static DELETION_COLUMNS: IColumn[] = deletionDialogColumns;
 
   public trimJdbcUser = (
     jdbcUser: IJdbcUser | null | undefined
