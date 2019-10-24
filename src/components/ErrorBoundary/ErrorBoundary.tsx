@@ -1,7 +1,7 @@
 import * as React from 'react';
 import ErrorPopup from './ErrorPopup';
 import { IErrors, IAppError } from 'models/errors';
-import { logger } from 'services/LoggerService';
+import { Logger } from 'services/LoggerService';
 
 interface IErrorBoundaryProps {
   getNextError: () => void;
@@ -35,7 +35,10 @@ class ErrorBoundary extends React.Component<
       );
     };
     if (!isEqualErrorQueues() && errors.errorQueue.length > 0) {
-      logger(errors.errorQueue[0].error.message);
+      const err = errors.errorQueue[0].error;
+      Logger.error(err.message, {
+        location: window.location.pathname
+      });
       this.setState({
         errorQueue: Object.assign({}, this.props.errors.errorQueue)
       });
