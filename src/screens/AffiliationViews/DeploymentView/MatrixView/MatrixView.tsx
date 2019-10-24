@@ -9,12 +9,9 @@ import TimeSince from 'components/TimeSince';
 import { IApplicationDeployment } from 'models/ApplicationDeployment';
 import { IApplicationDeploymentFilters } from 'models/UserSettings';
 import { IFilter } from 'services/DeploymentFilterService';
-import withApplicationDeployments from '../../ApplicationDeploymentContext';
 import { styledFilterConnected as Filter } from './Filter/Filter';
-import { default as MatrixBase } from './Matrix';
+import Matrix from './Matrix';
 import TextField from 'aurora-frontend-react-komponenter/TextField';
-
-const Matrix = withApplicationDeployments(MatrixBase);
 
 interface IMatrixViewProps {
   time: string;
@@ -31,6 +28,11 @@ interface IMatrixViewProps {
   toggleShowSemanticVersion: () => void;
   quickFilter: string;
   updateQuickFilter: (filter: string) => void;
+  deployments: IApplicationDeployment[];
+  buildDeploymentLink: (
+    deployment: IApplicationDeployment
+  ) => React.ComponentType;
+  filterPathUrl: string;
 }
 
 const MatrixView = ({
@@ -47,7 +49,10 @@ const MatrixView = ({
   showSemanticVersion,
   toggleShowSemanticVersion,
   quickFilter,
-  updateQuickFilter
+  updateQuickFilter,
+  buildDeploymentLink,
+  deployments,
+  filterPathUrl
 }: IMatrixViewProps) => {
   const [expandApplicationName, setExpandApplicationName] = React.useState(
     true
@@ -110,6 +115,8 @@ const MatrixView = ({
         </StyledUpdate>
       </ActionBar>
       <Matrix
+        buildDeploymentLink={buildDeploymentLink}
+        deployments={deployments}
         showSemanticVersion={showSemanticVersion}
         expandApplicationName={expandApplicationName}
       />

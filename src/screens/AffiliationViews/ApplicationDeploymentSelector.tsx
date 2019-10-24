@@ -1,8 +1,7 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
-import { Route, RouteComponentProps } from 'react-router-dom';
+import { useRouteMatch } from 'react-router-dom';
 import { RootState } from 'store/types';
-import { IApplicationDeploymentContext } from './ApplicationDeploymentContext';
 import { DetailsView } from './DeploymentView/DetailsView/DetailsView';
 import {
   refreshApplicationDeployment,
@@ -10,7 +9,10 @@ import {
   findAllApplicationDeployments,
   deleteApplicationDeployment
 } from './state/actions';
-import { IApplicationDeploymentDetails } from 'models/ApplicationDeployment';
+import {
+  IApplicationDeploymentDetails,
+  IApplicationDeployment
+} from 'models/ApplicationDeployment';
 
 interface IApplicationDeploymentSelectorConnectedProps {
   refreshCurrentApplicationDeployment: (
@@ -24,20 +26,19 @@ interface IApplicationDeploymentSelectorConnectedProps {
   applicationDeploymentDetails: IApplicationDeploymentDetails;
   isApplicationDeploymentDeleted: boolean;
   deleteApplicationDeployment: (namespace: string, name: string) => void;
+  allDeployments: IApplicationDeployment[];
+  filterPathUrl: string;
+  affiliation: string;
+  refreshApplicationDeployments: () => void;
 }
-export type ApplicationDeploymentDetailsRoute = RouteComponentProps<{
+export type ApplicationDeploymentMatchParams = {
   affiliation: string;
   applicationDeploymentId: string;
-}>;
-
-type ApplicationDeploymentSelectorProps = IApplicationDeploymentContext &
-  ApplicationDeploymentDetailsRoute &
-  IApplicationDeploymentSelectorConnectedProps;
+};
 
 const ApplicationDeploymentSelector = ({
   allDeployments,
   getAllApplicationDeployments,
-  match,
   filterPathUrl,
   getApplicationDeploymentDetails,
   applicationDeploymentDetails,
@@ -48,7 +49,12 @@ const ApplicationDeploymentSelector = ({
   affiliation,
   isApplicationDeploymentDeleted,
   deleteApplicationDeployment
-}: ApplicationDeploymentSelectorProps) => {
+}: IApplicationDeploymentSelectorConnectedProps) => {
+  const match = useRouteMatch<ApplicationDeploymentMatchParams>();
+  if (!match) {
+    return null;
+  }
+
   const deployment = allDeployments.find(
     d => d.id === match.params.applicationDeploymentId
   );
@@ -57,9 +63,8 @@ const ApplicationDeploymentSelector = ({
     return <p>Fant ikke deployment</p>;
   }
 
-  const DetailsViewWithRoute = (props: ApplicationDeploymentDetailsRoute) => (
+  return (
     <DetailsView
-      {...props}
       deployment={deployment}
       getAllApplicationDeployments={getAllApplicationDeployments}
       filterPathUrl={filterPathUrl}
@@ -74,8 +79,6 @@ const ApplicationDeploymentSelector = ({
       deleteApplicationDeployment={deleteApplicationDeployment}
     />
   );
-
-  return <Route render={DetailsViewWithRoute} />;
 };
 
 export default ApplicationDeploymentSelector;

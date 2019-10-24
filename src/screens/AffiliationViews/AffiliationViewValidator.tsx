@@ -2,10 +2,10 @@ import React, { useEffect } from 'react';
 import { useRouteMatch, useHistory, Route, Switch } from 'react-router-dom';
 
 import AffiliationSelector from './AffiliationSelector';
-import { DeploymentView } from './DeploymentView/DeploymentView';
 import { DatabaseViewRoutes } from './DatabaseView/DatabaseViewRoutes';
 import WebsealViewController from './WebsealView/WebsealViewController';
 import { AffiliationViewValidatorState } from './AffiliationViewValidatorConnected';
+import { DeploymentViewContainer } from './DeploymentView/DeploymentViewContainer';
 
 interface IAffiliationViewValidatorProps {
   affiliation?: string;
@@ -17,15 +17,7 @@ type Props = IAffiliationViewValidatorProps & AffiliationViewValidatorState;
 export const AffiliationViewValidator: React.FC<Props> = ({
   affiliation,
   currentUser,
-  refreshAffiliations,
-  isFetchingAffiliations,
-  findAllApplicationDeployments,
-  allApplicationDeployments,
-  isFetchingAllApplicationDeployments,
-  getUserSettings,
-  updateUserSettings,
-  onAffiliationValidated,
-  userSettings
+  onAffiliationValidated
 }) => {
   const history = useHistory();
   const match = useRouteMatch<{ affiliation: string; screen: string }>();
@@ -69,21 +61,11 @@ export const AffiliationViewValidator: React.FC<Props> = ({
   return (
     <Switch>
       <Route path="/a/:affiliation/deployments">
-        <DeploymentView
+        <DeploymentViewContainer
           affiliation={affiliation}
           matchPath={match.path + '/deployments'}
           matchUrl={match.url + '/deployments'}
           updateUrlWithQuery={updateUrlWithQuery}
-          refreshAffiliations={refreshAffiliations}
-          isFetchingAffiliations={isFetchingAffiliations}
-          findAllApplicationDeployments={findAllApplicationDeployments}
-          allApplicationDeployments={allApplicationDeployments}
-          isFetchingAllApplicationDeployments={
-            isFetchingAllApplicationDeployments
-          }
-          getUserSettings={getUserSettings}
-          updateUserSettings={updateUserSettings}
-          userSettings={userSettings}
         />
       </Route>
       <Route path="/a/:affiliation/db">

@@ -9,6 +9,7 @@ import { startupReducer } from 'state/reducers';
 
 import { versionsReducer } from './state/versions/reducers';
 import { deployReducer } from './state/deploy/reducers';
+import { userSettingsReducer } from './state/userSettings/reducers';
 
 export const rootReducer = combineReducers({
   database: databaseReducer,
@@ -19,5 +20,6 @@ export const rootReducer = combineReducers({
   affiliationView: affiliationViewReducer,
   netdebug: netdebugViewReducer,
   versions: versionsReducer,
+  userSettings: userSettingsReducer,
   deploy: deployReducer
 });

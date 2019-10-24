@@ -16,6 +16,7 @@ import { DeployAction } from './state/deploy/actions';
 import { rootReducer } from './rootReducer';
 import { ResolveThunks } from 'react-redux';
 import { IApiClients } from 'models/AuroraApi';
+import { UserSettingsAction } from './state/userSettings/actions';
 
 export type RootState = StateType<typeof rootReducer>;
 
@@ -28,6 +29,7 @@ export type RootAction =
   | WebsealAction
   | ErrorsAction
   | AffiliationViewAction
+  | UserSettingsAction
   | NetdebugViewAction;
 
 interface IExtraArguments {

@@ -3,39 +3,23 @@ import { Route } from 'react-router';
 
 import Spinner from 'components/Spinner';
 import { IApplicationDeployment } from 'models/ApplicationDeployment';
-import {
-  IApplicationDeploymentFilters,
-  IUserSettings
-} from 'models/UserSettings';
+import { IApplicationDeploymentFilters } from 'models/UserSettings';
 import { Link } from 'react-router-dom';
 import DeploymentFilterService, {
   IFilter
 } from 'services/DeploymentFilterService';
-import {
-  ApplicationDeploymentProvider,
-  withApplicationDeployments
-} from '../ApplicationDeploymentContext';
 import { ApplicationDeploymentSelectorConnected } from '../ApplicationDeploymentSelector';
 import MatrixView from './MatrixView/MatrixView';
-
-const ApplicationDeploymentSelector = withApplicationDeployments(
-  ApplicationDeploymentSelectorConnected
-);
+import { DeploymentViewContainerState } from './DeploymentViewContainer';
 
 interface IDeploymentViewProps {
   affiliation: string;
   matchPath: string;
   matchUrl: string;
   updateUrlWithQuery: (query: string) => void;
-  refreshAffiliations: (affiliations: string[]) => void;
-  findAllApplicationDeployments: (affiliations: string[]) => void;
-  isFetchingAffiliations: boolean;
-  allApplicationDeployments: IApplicationDeployment[];
-  isFetchingAllApplicationDeployments: boolean;
-  getUserSettings: () => void;
-  userSettings: IUserSettings;
-  updateUserSettings: (userSettings: IUserSettings) => void;
 }
+
+type Props = IDeploymentViewProps & DeploymentViewContainerState;
 
 interface IDeploymentViewState {
   filter: IFilter;
@@ -46,7 +30,7 @@ interface IDeploymentViewState {
 }
 
 export class DeploymentView extends React.Component<
-  IDeploymentViewProps,
+  Props,
   IDeploymentViewState
 > {
   public state: IDeploymentViewState = {
@@ -146,10 +130,7 @@ export class DeploymentView extends React.Component<
     }
   }
 
-  public componentDidUpdate(
-    prevProps: IDeploymentViewProps,
-    prevState: IDeploymentViewState
-  ) {
+  public componentDidUpdate(prevProps: Props, prevState: IDeploymentViewState) {
     const paramsExists = this.deploymentFilterService.isParamsDefined();
     this.clearFilterOnAffiliationChange(prevProps.affiliation);
     this.updateQueryOnNewParams(prevState.filter);
@@ -196,7 +177,7 @@ export class DeploymentView extends React.Component<
       affiliation,
       filter
     );
-    if(filter.quickFilter) {
+    if (filter.quickFilter) {
       this.setState({
         filter
       });
@@ -235,19 +216,22 @@ export class DeploymentView extends React.Component<
   };
 
   public updateQuickFilter = (filter: string) => {
-    const { allApplicationDeployments } = this.props;
+    const { allApplicationDeploymentsResult } = this.props;
     this.setState({
       quickFilter: filter
     });
 
-    const filtered = allApplicationDeployments
-      .filter(deployment => deployment.name.includes(filter) || deployment.environment.includes(filter));
+    const filtered = allApplicationDeploymentsResult.filter(
+      deployment =>
+        deployment.name.includes(filter) ||
+        deployment.environment.includes(filter)
+    );
     this.updateFilter({
       quickFilter: true,
       applications: filtered.map(f => f.name),
       environments: filtered.map(f => f.environment)
     });
-  }
+  };
 
   public toggleShowSemanticVersion = () => {
     this.setState(state => ({
@@ -260,8 +244,8 @@ export class DeploymentView extends React.Component<
       matchPath,
       affiliation,
       isFetchingAllApplicationDeployments,
-      allApplicationDeployments,
-      isFetchingAffiliations
+      allApplicationDeploymentsResult,
+      isRefreshingAffiliations
     } = this.props;
     const {
       filterPathUrl,
@@ -273,44 +257,38 @@ export class DeploymentView extends React.Component<
 
     if (
       isFetchingAllApplicationDeployments &&
-      allApplicationDeployments.length === 0
+      allApplicationDeploymentsResult.length === 0
     ) {
       return <Spinner />;
     }
 
     const filteredDeployments = this.deploymentFilterService.filterDeployments(
       filter,
-      allApplicationDeployments
+      allApplicationDeploymentsResult
     );
 
     const time =
-      allApplicationDeployments.length > 0
-        ? allApplicationDeployments[0].time
+      allApplicationDeploymentsResult.length > 0
+        ? allApplicationDeploymentsResult[0].time
         : '';
     return (
-      <ApplicationDeploymentProvider
-        value={{
-          buildDeploymentLink: this.buildDeploymentLink,
-          allDeployments: allApplicationDeployments,
-          deployments: filteredDeployments,
-          filterPathUrl,
-          affiliation,
-          refreshApplicationDeployments: this.refreshApplicationDeployments
-        }}
-      >
+      <>
         <Route exact={true} path={matchPath}>
           {({ match }) =>
             match && (
               <MatrixView
                 time={time}
-                isRefreshing={isFetchingAffiliations}
+                buildDeploymentLink={this.buildDeploymentLink}
+                deployments={filteredDeployments}
+                filterPathUrl={filterPathUrl}
+                isRefreshing={isRefreshingAffiliations}
                 refreshApplicationDeployments={
                   this.refreshApplicationDeployments
                 }
                 affiliation={affiliation}
                 updateFilter={this.updateFilter}
                 deleteFilter={this.deleteFilter}
-                allDeployments={allApplicationDeployments}
+                allDeployments={allApplicationDeploymentsResult}
                 filters={filter}
                 allFilters={allFilters}
                 showSemanticVersion={showExactVersion}
@@ -321,11 +299,15 @@ export class DeploymentView extends React.Component<
             )
           }
         </Route>
-        <Route
-          path={`${matchPath}/:applicationDeploymentId`}
-          component={ApplicationDeploymentSelector}
-        />
-      </ApplicationDeploymentProvider>
+        <Route path={`${matchPath}/:applicationDeploymentId`}>
+          <ApplicationDeploymentSelectorConnected
+            allDeployments={allApplicationDeploymentsResult}
+            filterPathUrl={filterPathUrl}
+            refreshApplicationDeployments={this.refreshApplicationDeployments}
+            affiliation={affiliation}
+          />
+        </Route>
+      </>
     );
   }
 }

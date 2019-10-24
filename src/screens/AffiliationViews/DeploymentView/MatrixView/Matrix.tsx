@@ -1,12 +1,16 @@
 import * as React from 'react';
 import styled from 'styled-components';
-import { IApplicationDeploymentContext } from '../../ApplicationDeploymentContext';
 import Row, { IApplicationMap } from './Row';
+import { IApplicationDeployment } from 'models/ApplicationDeployment';
 
 interface IMatrixProps {
   className?: string;
   showSemanticVersion: boolean;
   expandApplicationName: boolean;
+  deployments: IApplicationDeployment[];
+  buildDeploymentLink: (
+    deployment: IApplicationDeployment
+  ) => React.ComponentType;
 }
 
 const Matrix = ({
@@ -14,7 +18,7 @@ const Matrix = ({
   buildDeploymentLink,
   className,
   showSemanticVersion: showExactVersion
-}: IApplicationDeploymentContext & IMatrixProps) => {
+}: IMatrixProps) => {
   const environments = deployments.reduce(
     (acc, app) => {
       if (acc.indexOf(app.environment) === -1) {
