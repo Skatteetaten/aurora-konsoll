@@ -14,42 +14,23 @@ export function getVersionStatus(
   releaseToVersion?: string,
   deploymentInProgress?: boolean
 ): VersionStatus {
-  const isLatestDeployTag = areAnyPodsRunningWithLatestDeployTag(pods);
-  const isCorrectDeploytag = isActiveTagSameAsAuroraConfigTag(
-    activeVersion,
-    configuredVersion,
-    releaseToVersion
-  );
+  const isLatestAvailableVersion = areAnyPodsRunningWithLatestVersion(pods);
+  const isActiveVersionSameAsConfigured =
+    configuredVersion === activeVersion || releaseToVersion === activeVersion;
 
   if (deploymentInProgress) {
     return VersionStatus.OK;
   }
 
-  if (!isLatestDeployTag && !isCorrectDeploytag) {
+  if (!isLatestAvailableVersion && !isActiveVersionSameAsConfigured) {
     return VersionStatus.IS_NOT_LATEST_AND_DIFFER_FROM_AURORA_CONFIG;
-  } else if (!isCorrectDeploytag) {
+  } else if (!isActiveVersionSameAsConfigured) {
     return VersionStatus.DIFFER_FROM_AURORA_CONFIG;
-  } else if (!isLatestDeployTag) {
+  } else if (!isLatestAvailableVersion) {
     return VersionStatus.IS_NOT_LATEST;
   } else {
     return VersionStatus.OK;
   }
-}
-
-function areAnyPodsRunningWithLatestDeployTag(pods: IPodResource[]): boolean {
-  return pods.reduce((a: boolean, pod: IPodResource) => {
-    return a || (pod.phase === 'Running' && pod.latestDeployTag);
-  }, false);
-}
-
-function isActiveTagSameAsAuroraConfigTag(
-  activeVersion: string,
-  configuredVersion?: string,
-  releaseToVersion?: string
-): boolean {
-  return (
-    configuredVersion === activeVersion || releaseToVersion === activeVersion
-  );
 }
 
 export const versionStatusMessage = (versionStatus: VersionStatus): string => {
@@ -71,3 +52,9 @@ export const versionStatusMessage = (versionStatus: VersionStatus): string => {
     }
   }
 };
+
+function areAnyPodsRunningWithLatestVersion(pods: IPodResource[]): boolean {
+  return pods.reduce((a: boolean, pod: IPodResource) => {
+    return a || (pod.phase === 'Running' && pod.latestDeployTag);
+  }, false);
+}
