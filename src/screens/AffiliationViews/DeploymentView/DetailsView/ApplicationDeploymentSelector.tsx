@@ -1,44 +1,30 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
 import { useRouteMatch } from 'react-router-dom';
-import { RootState } from 'store/types';
+import { RootState, ReduxProps } from 'store/types';
 import { DetailsView } from './DetailsView';
 import {
   refreshApplicationDeployment,
   findApplicationDeploymentDetails,
-  findAllApplicationDeployments,
   deleteApplicationDeployment
 } from '../../state/actions';
-import {
-  IApplicationDeploymentDetails,
-  IApplicationDeployment
-} from 'models/ApplicationDeployment';
 
-interface IApplicationDeploymentSelectorConnectedProps {
-  refreshCurrentApplicationDeployment: (
-    applicationDeploymentId: string,
-    affiliation: string
-  ) => void;
-  getAllApplicationDeployments: (affiliation: string) => void;
-  getApplicationDeploymentDetails: (id: string) => void;
-  isRefreshingApplicationDeployment: boolean;
-  isFetchingDetails: boolean;
-  applicationDeploymentDetails: IApplicationDeploymentDetails;
-  isApplicationDeploymentDeleted: boolean;
-  deleteApplicationDeployment: (namespace: string, name: string) => void;
-  allDeployments: IApplicationDeployment[];
-  filterPathUrl: string;
-  affiliation: string;
-  refreshApplicationDeployments: () => void;
-}
 export type ApplicationDeploymentMatchParams = {
   affiliation: string;
   applicationDeploymentId: string;
 };
 
+interface IApplicationDeploymentSelectorConnectedProps {
+  filterPathUrl: string;
+  affiliation: string;
+  refreshApplicationDeployments: () => void;
+}
+
+type Props = IApplicationDeploymentSelectorConnectedProps &
+  ApplicationDeploymentState;
+
 const ApplicationDeploymentSelector = ({
-  allDeployments,
-  getAllApplicationDeployments,
+  allApplicationDeploymentsResult,
   filterPathUrl,
   getApplicationDeploymentDetails,
   applicationDeploymentDetails,
@@ -47,15 +33,14 @@ const ApplicationDeploymentSelector = ({
   isFetchingDetails,
   isRefreshingApplicationDeployment,
   affiliation,
-  isApplicationDeploymentDeleted,
   deleteApplicationDeployment
-}: IApplicationDeploymentSelectorConnectedProps) => {
+}: Props) => {
   const match = useRouteMatch<ApplicationDeploymentMatchParams>();
   if (!match) {
     return null;
   }
 
-  const deployment = allDeployments.find(
+  const deployment = allApplicationDeploymentsResult.find(
     d => d.id === match.params.applicationDeploymentId
   );
 
@@ -66,7 +51,6 @@ const ApplicationDeploymentSelector = ({
   return (
     <DetailsView
       deployment={deployment}
-      getAllApplicationDeployments={getAllApplicationDeployments}
       filterPathUrl={filterPathUrl}
       findApplicationDeploymentDetails={getApplicationDeploymentDetails}
       deploymentDetails={applicationDeploymentDetails}
@@ -75,36 +59,38 @@ const ApplicationDeploymentSelector = ({
       isRefreshingApplicationDeployment={isRefreshingApplicationDeployment}
       affiliation={affiliation}
       isFetchingDetails={isFetchingDetails}
-      isApplicationDeploymentDeleted={isApplicationDeploymentDeleted}
       deleteApplicationDeployment={deleteApplicationDeployment}
     />
   );
 };
 
-export default ApplicationDeploymentSelector;
+const mapDispatchToProps = {
+  refreshCurrentApplicationDeployment: refreshApplicationDeployment,
+  getApplicationDeploymentDetails: findApplicationDeploymentDetails,
+  deleteApplicationDeployment
+};
 
-const mapStateToProps = (state: RootState) => ({
-  isRefreshingApplicationDeployment:
-    state.affiliationView.isRefreshingApplicationDeployment,
-  applicationDeploymentDetails:
-    state.affiliationView.applicationDeploymentDetails,
-  isFetchingDetails: state.affiliationView.isFetchingDetails,
-  isApplicationDeploymentDeleted:
-    state.affiliationView.isApplicationDeploymentDeleted
-});
+const mapStateToProps = ({ affiliationView }: RootState) => {
+  const {
+    isRefreshingApplicationDeployment,
+    applicationDeploymentDetails,
+    isFetchingDetails,
+    allApplicationDeploymentsResult
+  } = affiliationView;
+  return {
+    isRefreshingApplicationDeployment,
+    applicationDeploymentDetails,
+    isFetchingDetails,
+    allApplicationDeploymentsResult
+  };
+};
 
-export const ApplicationDeploymentSelectorConnected = connect(
+type ApplicationDeploymentState = ReduxProps<
+  typeof mapDispatchToProps,
+  typeof mapStateToProps
+>;
+
+export const ApplicationDeploymentSelectorContainer = connect(
   mapStateToProps,
-  {
-    refreshCurrentApplicationDeployment: (
-      applicationDeploymentId: string,
-      affiliation: string
-    ) => refreshApplicationDeployment(applicationDeploymentId, affiliation),
-    getApplicationDeploymentDetails: (id: string) =>
-      findApplicationDeploymentDetails(id),
-    getAllApplicationDeployments: (affiliation: string) =>
-      findAllApplicationDeployments([affiliation]),
-    deleteApplicationDeployment: (namespace: string, name: string) =>
-      deleteApplicationDeployment(namespace, name)
-  }
+  mapDispatchToProps
 )(ApplicationDeploymentSelector);

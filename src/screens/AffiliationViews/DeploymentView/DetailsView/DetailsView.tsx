@@ -23,7 +23,6 @@ import { ApplicationDeploymentMatchParams } from 'screens/AffiliationViews/Deplo
 
 interface IDetailsViewProps {
   deployment: IApplicationDeployment;
-  getAllApplicationDeployments: (affiliation: string) => void;
   filterPathUrl: string;
   findApplicationDeploymentDetails: (id: string) => void;
   deploymentDetails: IApplicationDeploymentDetails;
@@ -36,8 +35,8 @@ interface IDetailsViewProps {
   isRefreshingApplicationDeployment: boolean;
   isFetchingDetails: boolean;
   affiliation: string;
-  isApplicationDeploymentDeleted: boolean;
 }
+
 function getVersionViewUnavailableMessage(
   deploymentDetails: IApplicationDeploymentDetails
 ): IUnavailableServiceMessage | undefined {
@@ -104,7 +103,7 @@ export const DetailsView: React.FC<IDetailsViewProps> = ({
   const versionStatus = versionStatusMessage(deployment, deploymentDetails);
 
   const goToDeploymentsPage = () => {
-    history.push(`/a/${affiliation}/deployments/${filterPathUrl}`);
+    history.push(`/a/${affiliation}/deployments${filterPathUrl}`);
   };
 
   return (

@@ -1,7 +1,6 @@
 import { shallow } from 'enzyme';
 import * as React from 'react';
 
-import { IApplicationDeployment } from 'models/ApplicationDeployment';
 import { deploymentFactory } from 'testData/testDataBuilders';
 import Row, { IApplicationMap } from './Row';
 import Status from './Status';
@@ -23,15 +22,12 @@ describe('Row', () => {
     };
   };
 
-  const linkBuilder = (_: IApplicationDeployment) => () => <div />;
-
   it('Given undefined releaseTo do not add text to tooltip', () => {
     const wrapper = shallow(
       <Row
         name="app"
         environments={['test', 'dev']}
         apps={createApplicationMap()}
-        linkBuilder={linkBuilder}
         showSemanticVersion={false}
       />
     );
@@ -45,7 +41,6 @@ describe('Row', () => {
         name="app"
         environments={['test', 'dev']}
         apps={createApplicationMap('prod')}
-        linkBuilder={linkBuilder}
         showSemanticVersion={false}
       />
     );
@@ -61,7 +56,6 @@ describe('Row', () => {
         name="app"
         environments={['test', 'dev']}
         apps={createApplicationMap('prod')}
-        linkBuilder={linkBuilder}
         showSemanticVersion={true}
       />
     );

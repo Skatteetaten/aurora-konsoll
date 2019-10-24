@@ -1,14 +1,12 @@
 import * as React from 'react';
-import { Route } from 'react-router';
+import { Route, Switch } from 'react-router-dom';
 
 import Spinner from 'components/Spinner';
-import { IApplicationDeployment } from 'models/ApplicationDeployment';
 import { IApplicationDeploymentFilters } from 'models/UserSettings';
-import { Link } from 'react-router-dom';
 import DeploymentFilterService, {
   IFilter
 } from 'services/DeploymentFilterService';
-import { ApplicationDeploymentSelectorConnected } from './DetailsView/ApplicationDeploymentSelector';
+import { ApplicationDeploymentSelectorContainer } from './DetailsView/ApplicationDeploymentSelector';
 import MatrixView from './MatrixView/MatrixView';
 import { DeploymentViewContainerState } from './DeploymentViewContainer';
 
@@ -45,15 +43,6 @@ export class DeploymentView extends React.Component<
   };
 
   private deploymentFilterService = new DeploymentFilterService();
-
-  public buildDeploymentLink = (
-    deployment: IApplicationDeployment
-  ): React.StatelessComponent => {
-    const { matchUrl } = this.props;
-    return ({ children }) => (
-      <Link to={`${matchUrl}/${deployment.id}/info`}>{children}</Link>
-    );
-  };
 
   public fetchApplicationDeployments = async (affiliation: string) => {
     const { findAllApplicationDeployments } = this.props;
@@ -272,42 +261,34 @@ export class DeploymentView extends React.Component<
         ? allApplicationDeploymentsResult[0].time
         : '';
     return (
-      <>
+      <Switch>
         <Route exact={true} path={matchPath}>
-          {({ match }) =>
-            match && (
-              <MatrixView
-                time={time}
-                buildDeploymentLink={this.buildDeploymentLink}
-                deployments={filteredDeployments}
-                filterPathUrl={filterPathUrl}
-                isRefreshing={isRefreshingAffiliations}
-                refreshApplicationDeployments={
-                  this.refreshApplicationDeployments
-                }
-                affiliation={affiliation}
-                updateFilter={this.updateFilter}
-                deleteFilter={this.deleteFilter}
-                allDeployments={allApplicationDeploymentsResult}
-                filters={filter}
-                allFilters={allFilters}
-                showSemanticVersion={showExactVersion}
-                toggleShowSemanticVersion={this.toggleShowSemanticVersion}
-                quickFilter={quickFilter}
-                updateQuickFilter={this.updateQuickFilter}
-              />
-            )
+          <MatrixView
+            time={time}
+            deployments={filteredDeployments}
+            isRefreshing={isRefreshingAffiliations}
+            refreshApplicationDeployments={this.refreshApplicationDeployments}
+            affiliation={affiliation}
+            updateFilter={this.updateFilter}
+            deleteFilter={this.deleteFilter}
+            allDeployments={allApplicationDeploymentsResult}
+            filters={filter}
+            allFilters={allFilters}
+            showSemanticVersion={showExactVersion}
+            toggleShowSemanticVersion={this.toggleShowSemanticVersion}
+            quickFilter={quickFilter}
+            updateQuickFilter={this.updateQuickFilter}
+          />
           }
         </Route>
         <Route path={`${matchPath}/:applicationDeploymentId`}>
-          <ApplicationDeploymentSelectorConnected
-            allDeployments={allApplicationDeploymentsResult}
+          <ApplicationDeploymentSelectorContainer
             filterPathUrl={filterPathUrl}
             refreshApplicationDeployments={this.refreshApplicationDeployments}
             affiliation={affiliation}
           />
         </Route>
-      </>
+      </Switch>
     );
   }
 }

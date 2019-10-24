@@ -8,17 +8,13 @@ interface IMatrixProps {
   showSemanticVersion: boolean;
   expandApplicationName: boolean;
   deployments: IApplicationDeployment[];
-  buildDeploymentLink: (
-    deployment: IApplicationDeployment
-  ) => React.ComponentType;
 }
 
-const Matrix = ({
+const Matrix: React.FC<IMatrixProps> = ({
   deployments,
-  buildDeploymentLink,
   className,
   showSemanticVersion: showExactVersion
-}: IMatrixProps) => {
+}) => {
   const environments = deployments.reduce(
     (acc, app) => {
       if (acc.indexOf(app.environment) === -1) {
@@ -58,7 +54,6 @@ const Matrix = ({
                 name={name}
                 environments={environments}
                 apps={apps}
-                linkBuilder={buildDeploymentLink}
               />
             ))}
         </tbody>

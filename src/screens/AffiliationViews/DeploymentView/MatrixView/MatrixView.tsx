@@ -29,10 +29,6 @@ interface IMatrixViewProps {
   quickFilter: string;
   updateQuickFilter: (filter: string) => void;
   deployments: IApplicationDeployment[];
-  buildDeploymentLink: (
-    deployment: IApplicationDeployment
-  ) => React.ComponentType;
-  filterPathUrl: string;
 }
 
 const MatrixView = ({
@@ -50,9 +46,7 @@ const MatrixView = ({
   toggleShowSemanticVersion,
   quickFilter,
   updateQuickFilter,
-  buildDeploymentLink,
-  deployments,
-  filterPathUrl
+  deployments
 }: IMatrixViewProps) => {
   const [expandApplicationName, setExpandApplicationName] = React.useState(
     true
@@ -115,7 +109,6 @@ const MatrixView = ({
         </StyledUpdate>
       </ActionBar>
       <Matrix
-        buildDeploymentLink={buildDeploymentLink}
         deployments={deployments}
         showSemanticVersion={showSemanticVersion}
         expandApplicationName={expandApplicationName}
