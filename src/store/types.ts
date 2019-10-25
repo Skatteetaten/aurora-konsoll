@@ -8,7 +8,7 @@ import { CertificateAction } from 'screens/CertificateView/state/reducers';
 import { ErrorsAction } from 'screens/ErrorHandler/state/reducer';
 import { AffiliationViewAction } from 'screens/AffiliationViews/state/reducer';
 import { NetdebugViewAction } from 'screens/NetdebugView/state/reducer';
-import { StartupAction } from 'state/reducers';
+import { StartupAction } from 'store/state/startup/reducers';
 
 import { VersionsAction } from './state/versions/actions';
 import { DeployAction } from './state/deploy/actions';
@@ -17,6 +17,7 @@ import { rootReducer } from './rootReducer';
 import { ResolveThunks } from 'react-redux';
 import { IApiClients } from 'models/AuroraApi';
 import { UserSettingsAction } from './state/userSettings/actions';
+import { TsAction } from 'redux-ts-utils';
 
 export type RootState = StateType<typeof rootReducer>;
 
@@ -36,8 +37,12 @@ interface IExtraArguments {
   clients: IApiClients;
 }
 
-export type StateThunk = ThunkAction<
-  void,
+export type AsyncAction<T = void> = ActionCreator<
+  StateThunk<Promise<TsAction<T>>>
+>;
+
+export type StateThunk<T = void> = ThunkAction<
+  T,
   RootState,
   IExtraArguments,
   RootAction

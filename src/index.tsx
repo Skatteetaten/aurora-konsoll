@@ -19,8 +19,8 @@ import {
   WebsealClient
 } from 'services/auroraApiClients';
 import GoboClient from 'services/GoboClient';
-import { StartupConnected } from 'Startup';
 import createStoreWithApi from 'store';
+import { getCurrentUser } from 'store/state/startup/action.creators';
 import './index.css';
 
 async function init() {
@@ -61,17 +61,18 @@ async function init() {
     certificateClient: new CertificateClient(goboClient)
   };
 
+  const store = createStoreWithApi(clients);
+  store.dispatch(getCurrentUser());
+
   ReactDOM.render(
-    <Provider store={createStoreWithApi(clients)}>
-      <StartupConnected>
-        <BrowserRouter>
-          <App
-            tokenStore={tokenStore}
-            displayDatabaseView={config.DBH_ENABLED}
-            displaySkapViews={config.SKAP_ENABLED}
-          />
-        </BrowserRouter>
-      </StartupConnected>
+    <Provider store={store}>
+      <BrowserRouter>
+        <App
+          tokenStore={tokenStore}
+          displayDatabaseView={config.DBH_ENABLED}
+          displaySkapViews={config.SKAP_ENABLED}
+        />
+      </BrowserRouter>
     </Provider>,
     document.getElementById('root') as HTMLElement
   );

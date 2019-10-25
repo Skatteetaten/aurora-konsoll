@@ -7,7 +7,7 @@ import {
   IJdbcUser,
   IUpdateDatabaseSchemaInputWithCreatedBy
 } from 'models/schemas';
-import { IStartupState } from 'state/reducers';
+import { IStartupState } from 'store/state/startup/reducers';
 import { RootState } from 'store/types';
 import {
   createDatabaseSchema,

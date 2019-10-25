@@ -35,7 +35,7 @@ import { IWebsealReduxState } from 'screens/AffiliationViews/WebsealView/state/r
 import { ICertificateState } from 'screens/CertificateView/state/reducers';
 import { INetdebugResult } from 'services/auroraApiClients';
 import { IFilter } from 'services/DeploymentFilterService';
-import { IStartupState } from 'state/reducers';
+import { IStartupState } from 'store/state/startup/reducers';
 import { INetdebugViewState } from 'screens/NetdebugView/state/reducer';
 import { IErrorsState } from 'screens/ErrorHandler/state/reducer';
 import { IAffiliationViewState } from 'screens/AffiliationViews/state/reducer';

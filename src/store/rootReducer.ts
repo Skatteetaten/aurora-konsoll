@@ -5,7 +5,7 @@ import { affiliationViewReducer } from 'screens/AffiliationViews/state/reducer';
 import { websealReducer } from 'screens/AffiliationViews/WebsealView/state/reducers';
 import { certificateReducer } from 'screens/CertificateView/state/reducers';
 import { netdebugViewReducer } from 'screens/NetdebugView/state/reducer';
-import { startupReducer } from 'state/reducers';
+import { startupReducer } from 'store/state/startup/reducers';
 
 import { versionsReducer } from './state/versions/reducers';
 import { deployReducer } from './state/deploy/reducers';

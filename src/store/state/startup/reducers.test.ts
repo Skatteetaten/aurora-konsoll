@@ -2,13 +2,13 @@ import {
   startupFactory,
   userAndAffiliationsFactory
 } from 'testData/testDataBuilders';
-import { fetchCurrentUserResponse } from './actions';
+import { actions } from './actions';
 import { startupReducer } from './reducers';
 
 describe('startup actions', () => {
   it('should return type of action fetchCurrentUserResponse and payload', () => {
     expect(
-      fetchCurrentUserResponse(userAndAffiliationsFactory.build())
+      actions.fetchCurrentUserResponse(userAndAffiliationsFactory.build())
     ).toEqual({
       payload: userAndAffiliationsFactory.build(),
       type: 'currentUser/FETCHED_CURRENT_USER'
@@ -21,7 +21,7 @@ describe('startup reducer', () => {
     expect(
       startupReducer(
         startupFactory.build(),
-        fetchCurrentUserResponse(userAndAffiliationsFactory.build())
+        actions.fetchCurrentUserResponse(userAndAffiliationsFactory.build())
       )
     ).toEqual(
       startupFactory.build({
