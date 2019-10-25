@@ -33,13 +33,11 @@ export type RootAction =
   | UserSettingsAction
   | NetdebugViewAction;
 
-interface IExtraArguments {
+export interface IExtraArguments {
   clients: IApiClients;
 }
 
-export type AsyncAction<T = void> = ActionCreator<
-  StateThunk<Promise<TsAction<T>>>
->;
+export type AsyncAction<T = void> = StateThunk<Promise<TsAction<T>>>;
 
 export type StateThunk<T = void> = ThunkAction<
   T,

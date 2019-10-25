@@ -2,7 +2,8 @@ import { applyMiddleware, compose, createStore } from 'redux';
 import { rootReducer } from './rootReducer';
 
 import { IApiClients } from 'models/AuroraApi';
-import thunkMiddleware from 'redux-thunk';
+import thunkMiddleware, { ThunkMiddleware } from 'redux-thunk';
+import { RootState, RootAction, IExtraArguments } from './types';
 
 const composeEnhancers =
   typeof window === 'object' &&
@@ -16,11 +17,9 @@ const composeEnhancers =
 
 const createStoreWithApi = (clients: IApiClients, initialState: {} = {}) => {
   const enhancer = composeEnhancers(
-    applyMiddleware(
-      thunkMiddleware.withExtraArgument({
-        clients
-      })
-    )
+    applyMiddleware(thunkMiddleware.withExtraArgument({
+      clients
+    }) as ThunkMiddleware<RootState, RootAction, IExtraArguments>)
   );
   return createStore(rootReducer, initialState, enhancer);
 };

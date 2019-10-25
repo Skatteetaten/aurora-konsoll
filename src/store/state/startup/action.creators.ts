@@ -5,7 +5,7 @@ import { addCurrentErrors } from 'screens/ErrorHandler/state/actions';
 import { actions } from './actions';
 
 export function getCurrentUser(): AsyncAction<IUserAndAffiliations> {
-  return () => async (dispatch, getState, { clients }) => {
+  return async (dispatch, getState, { clients }) => {
     const result = await clients.applicationDeploymentClient.findUserAndAffiliations();
     dispatch(addCurrentErrors(result));
 
