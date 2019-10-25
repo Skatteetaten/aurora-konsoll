@@ -7,7 +7,7 @@ import DeploymentFilterService, {
   IFilter
 } from 'services/DeploymentFilterService';
 import { ApplicationDeploymentSelectorContainer } from './DetailsView/ApplicationDeploymentSelector';
-import MatrixView from './MatrixView/MatrixView';
+import { MatrixView } from './MatrixView/MatrixView';
 import { DeploymentViewContainerState } from './DeploymentViewContainer';
 
 interface IDeploymentViewProps {
