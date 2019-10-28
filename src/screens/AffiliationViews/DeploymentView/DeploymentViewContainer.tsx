@@ -1,32 +1,31 @@
 import { connect } from 'react-redux';
 import { DeploymentView } from './DeploymentView';
 import { RootState, ReduxProps } from 'store/types';
-import {
-  refreshAffiliations,
-  findAllApplicationDeployments
-} from '../state/actions';
+import { refreshAffiliations } from '../state/actions';
 
 import {
   updateUserSettings,
   getUserSettings
 } from 'store/state/userSettings/action.creators';
+import { fetchApplicationDeployments } from 'store/state/applicationDeployments/action.creators';
 
 const mapDispatchToProps = {
   refreshAffiliations,
-  findAllApplicationDeployments,
+  fetchApplicationDeployments,
   updateUserSettings,
   getUserSettings
 };
 
-const mapStateToProps = ({ affiliationView, userSettings }: RootState) => {
-  const {
-    isRefreshingAffiliations,
-    allApplicationDeploymentsResult,
-    isFetchingAllApplicationDeployments
-  } = affiliationView;
+const mapStateToProps = ({
+  affiliationView,
+  userSettings,
+  applications
+}: RootState) => {
+  const { isRefreshingAffiliations } = affiliationView;
+  const { applicationsConnection, isFetching } = applications;
   return {
-    allApplicationDeploymentsResult,
-    isFetchingAllApplicationDeployments,
+    applicationsConnection,
+    isFetchingAllApplicationDeployments: isFetching,
     isRefreshingAffiliations,
     userSettings: {
       applicationDeploymentFilters: userSettings.applicationDeploymentFilters

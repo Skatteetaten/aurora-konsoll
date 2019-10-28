@@ -1,39 +1,33 @@
-import { StateThunk } from 'store/types';
 import { actions } from './actions';
 import { IUserSettings } from 'models/UserSettings';
-import {
-  addCurrentErrors,
-  addErrors
-} from 'screens/ErrorHandler/state/actions';
+import { doAsyncActions } from 'utils/redux/action-utils';
 
-export const getUserSettings = (): StateThunk => async (
-  dispatch,
-  getState,
-  { clients }
-) => {
-  const result = await clients.userSettingsClient.getUserSettings();
-  dispatch(addCurrentErrors(result));
-
-  if (result && result.data) {
-    dispatch(actions.fetchUserSettings(result.data.userSettings));
-  } else {
-    dispatch(actions.fetchUserSettings({ applicationDeploymentFilters: [] }));
-  }
-};
-
-export const updateUserSettings = (
-  userSettings: IUserSettings
-): StateThunk => async (dispatch, getState, { clients }) => {
-  const result = await clients.userSettingsClient.updateUserSettings(
-    userSettings
+export function getUserSettings() {
+  return doAsyncActions(
+    [
+      actions.requestUserSettings,
+      actions.requestUserSettingsSuccess,
+      actions.requestUserSettingsFailure
+    ],
+    async clients => await clients.userSettingsClient.getUserSettings()
   );
-  dispatch(addCurrentErrors(result));
+}
 
-  if (result && result.data) {
-    dispatch(actions.fetchUserSettings(userSettings));
-    dispatch(actions.isUpdatingUserSettings(result.data.updateUserSettings));
-  } else {
-    dispatch(addErrors([new Error('Feil ved sletting av filter')]));
-    dispatch(actions.isUpdatingUserSettings(false));
-  }
-};
+export function updateUserSettings(userSettings: IUserSettings) {
+  return doAsyncActions(
+    [
+      actions.requestUpdateUserSettings,
+      actions.requestUpdateUserSettingsSuccess,
+      actions.requestUpdateUserSettingsFailure
+    ],
+    async (clients, getState, dispatch) => {
+      const result = await clients.userSettingsClient.updateUserSettings(
+        userSettings
+      );
+      if (result.data.updateUserSettings) {
+        await dispatch(getUserSettings());
+      }
+      return result;
+    }
+  );
+}

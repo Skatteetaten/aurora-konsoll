@@ -1,4 +1,4 @@
-import { GraphQLError, OperationDefinitionNode } from 'graphql';
+import { OperationDefinitionNode } from 'graphql';
 import { DefinitionNode, DocumentNode, print } from 'graphql/language';
 
 import { v4 as uuid } from 'uuid';
@@ -10,7 +10,7 @@ interface IVariables {
 export interface IGoboResult<T> {
   name: string;
   data: T;
-  errors?: GraphQLError[];
+  errors?: Error[];
 }
 
 interface IGoboClientOptions {
@@ -38,21 +38,21 @@ export default class GoboClient {
   public async query<T>({
     query,
     variables
-  }: IGoboQuery): Promise<IGoboResult<T> | undefined> {
+  }: IGoboQuery): Promise<IGoboResult<T>> {
     return await this.doRequest<T>(query, variables);
   }
 
   public async mutate<T>({
     mutation,
     variables
-  }: IGoboMutation): Promise<IGoboResult<T> | undefined> {
+  }: IGoboMutation): Promise<IGoboResult<T>> {
     return await this.doRequest<T>(mutation, variables);
   }
 
   private async doRequest<T>(
     document: DocumentNode,
     variables?: IVariables
-  ): Promise<IGoboResult<T> | undefined> {
+  ): Promise<IGoboResult<T>> {
     const res = await fetch(this.options.url, {
       method: 'POST',
       headers: {
@@ -76,7 +76,7 @@ export default class GoboClient {
         name: this.getDocumentName(document.definitions)
       };
     } catch (e) {
-      return;
+      return Promise.reject(e);
     }
   }
 

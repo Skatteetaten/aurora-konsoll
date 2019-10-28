@@ -4,7 +4,7 @@ import { IPodResource } from 'models/Pod';
 import { StatusCode } from 'models/Status';
 import { IImageTag } from '../imageRepositoryClient/query';
 
-export interface IApplicationsConnectionQuery {
+export interface IApplicationsConnectionData {
   applications?: {
     edges: IApplicationEdge[];
   };

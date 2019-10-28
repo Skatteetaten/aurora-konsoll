@@ -10,8 +10,6 @@ import actions, {
   findAllApplicationDeploymentsResponse,
   refreshAffiliationsRequest,
   refreshApplicationDeploymentRequest,
-  userSettingsResponse,
-  updateUserSettingsRequest,
   refreshApplicationDeploymentResponse,
   applicationDeploymentDetailsResponse,
   fetchDetailsRequest,
@@ -73,11 +71,6 @@ export const affiliationViewReducer = reduceReducers<IAffiliationViewState>(
     handleAction(
       findAllApplicationDeploymentsRequest,
       updateStateWithPayload('isFetchingAllApplicationDeployments')
-    ),
-    handleAction(userSettingsResponse, updateStateWithPayload('userSettings')),
-    handleAction(
-      updateUserSettingsRequest,
-      updateStateWithPayload('isUpdatingUserSettings')
     ),
     handleAction(
       refreshApplicationDeploymentResponse,

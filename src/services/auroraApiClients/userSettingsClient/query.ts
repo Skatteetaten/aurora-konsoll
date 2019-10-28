@@ -1,7 +1,7 @@
 import gql from 'graphql-tag';
 import { IApplicationDeploymentFilters } from 'models/UserSettings';
 
-export interface IUserSettingsQuery {
+export interface IUserSettingsData {
   userSettings: {
     applicationDeploymentFilters: IApplicationDeploymentFilters[];
   };

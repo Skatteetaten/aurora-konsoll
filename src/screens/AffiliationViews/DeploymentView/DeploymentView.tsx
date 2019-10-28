@@ -45,8 +45,8 @@ export class DeploymentView extends React.Component<
   private deploymentFilterService = new DeploymentFilterService();
 
   public fetchApplicationDeployments = async (affiliation: string) => {
-    const { findAllApplicationDeployments } = this.props;
-    await findAllApplicationDeployments([affiliation]);
+    const { fetchApplicationDeployments } = this.props;
+    await fetchApplicationDeployments([affiliation]);
   };
 
   public fetchApplicationDeploymentFilters = (paramsExists: any) => {
@@ -205,10 +205,12 @@ export class DeploymentView extends React.Component<
   };
 
   public updateQuickFilter = (filter: string) => {
-    const { allApplicationDeploymentsResult } = this.props;
+    const { applicationsConnection } = this.props;
     this.setState({
       quickFilter: filter
     });
+
+    const allApplicationDeploymentsResult = applicationsConnection.getApplicationDeployments();
 
     const filtered = allApplicationDeploymentsResult.filter(
       deployment =>
@@ -233,8 +235,8 @@ export class DeploymentView extends React.Component<
       matchPath,
       affiliation,
       isFetchingAllApplicationDeployments,
-      allApplicationDeploymentsResult,
-      isRefreshingAffiliations
+      isRefreshingAffiliations,
+      applicationsConnection
     } = this.props;
     const {
       filterPathUrl,
@@ -243,6 +245,8 @@ export class DeploymentView extends React.Component<
       showSemanticVersion: showExactVersion,
       quickFilter
     } = this.state;
+
+    const allApplicationDeploymentsResult = applicationsConnection.getApplicationDeployments();
 
     if (
       isFetchingAllApplicationDeployments &&
@@ -279,7 +283,6 @@ export class DeploymentView extends React.Component<
             quickFilter={quickFilter}
             updateQuickFilter={this.updateQuickFilter}
           />
-          }
         </Route>
         <Route path={`${matchPath}/:applicationDeploymentId`}>
           <ApplicationDeploymentSelectorContainer

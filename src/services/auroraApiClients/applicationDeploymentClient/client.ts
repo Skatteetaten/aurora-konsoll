@@ -10,7 +10,7 @@ import {
   APPLICATION_DEPLOYMENT_DETAILS_QUERY,
   APPLICATIONS_QUERY,
   IApplicationDeploymentDetailsQuery,
-  IApplicationsConnectionQuery,
+  IApplicationsConnectionData,
   IUserAffiliationsQuery,
   USER_AFFILIATIONS_QUERY
 } from './query';
@@ -71,7 +71,7 @@ export class ApplicationDeploymentClient {
 
   public async refreshAffiliations(
     affiliations: string[]
-  ): Promise<IGoboResult<{ affiliations: string[] }> | undefined> {
+  ): Promise<IGoboResult<{ affiliations: string[] }>> {
     return await this.client.mutate<{
       affiliations: string[];
     }>({
@@ -105,8 +105,8 @@ export class ApplicationDeploymentClient {
 
   public async findAllApplicationDeployments(
     affiliations: string[]
-  ): Promise<IGoboResult<IApplicationsConnectionQuery> | undefined> {
-    return await this.client.query<IApplicationsConnectionQuery>({
+  ): Promise<IGoboResult<IApplicationsConnectionData>> {
+    return await this.client.query<IApplicationsConnectionData>({
       query: APPLICATIONS_QUERY,
       variables: {
         affiliations

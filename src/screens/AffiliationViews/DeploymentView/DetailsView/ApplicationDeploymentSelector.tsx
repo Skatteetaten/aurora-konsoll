@@ -33,14 +33,17 @@ const ApplicationDeploymentSelector = ({
   isFetchingDetails,
   isRefreshingApplicationDeployment,
   affiliation,
-  deleteApplicationDeployment
+  deleteApplicationDeployment,
+  applicationsConnection
 }: Props) => {
   const match = useRouteMatch<ApplicationDeploymentMatchParams>();
   if (!match) {
     return null;
   }
 
-  const deployment = allApplicationDeploymentsResult.find(
+  const all = applicationsConnection.getApplicationDeployments();
+
+  const deployment = all.find(
     d => d.id === match.params.applicationDeploymentId
   );
 
@@ -70,14 +73,16 @@ const mapDispatchToProps = {
   deleteApplicationDeployment
 };
 
-const mapStateToProps = ({ affiliationView }: RootState) => {
+const mapStateToProps = ({ affiliationView, applications }: RootState) => {
   const {
     isRefreshingApplicationDeployment,
     applicationDeploymentDetails,
     isFetchingDetails,
     allApplicationDeploymentsResult
   } = affiliationView;
+  const { applicationsConnection } = applications;
   return {
+    applicationsConnection,
     isRefreshingApplicationDeployment,
     applicationDeploymentDetails,
     isFetchingDetails,

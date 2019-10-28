@@ -1,8 +1,6 @@
 import {
   refreshAffiliationsRequest,
   refreshApplicationDeploymentRequest,
-  userSettingsResponse,
-  updateUserSettingsRequest,
   refreshApplicationDeploymentResponse,
   applicationDeploymentDetailsResponse,
   findAllApplicationDeploymentsResponse,
@@ -47,24 +45,10 @@ describe('affiliation views actions', () => {
     });
   });
 
-  it('should return type of action userSettingsResponse and payload', () => {
-    expect(userSettingsResponse(userSettingsFactory.build())).toEqual({
-      payload: userSettingsFactory.build(),
-      type: 'affiliationView/USER_SETTINGS_RESPONSE'
-    });
-  });
-
   it('should return type of action fetchRequest and payload', () => {
     expect(fetchDetailsRequest(true)).toEqual({
       payload: true,
       type: 'affiliationView/FETCH_DETAILS_REQUEST'
-    });
-  });
-
-  it('should return type of action updateUserSettingsRequest and payload', () => {
-    expect(updateUserSettingsRequest(true)).toEqual({
-      payload: true,
-      type: 'affiliationView/UPDATE_USER_SETTINGS_REQUEST'
     });
   });
 

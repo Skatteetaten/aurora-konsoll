@@ -10,7 +10,6 @@ import {
   addErrors,
   addCurrentErrors
 } from 'screens/ErrorHandler/state/actions';
-import { IUserSettings } from 'models/UserSettings';
 import { createAction } from 'redux-ts-utils';
 import { StateThunk } from 'store/types';
 import { IPodResource } from 'models/Pod';
@@ -32,14 +31,6 @@ export const findAllApplicationDeploymentsRequest = createAction<boolean>(
 
 export const refreshApplicationDeploymentRequest = createAction<boolean>(
   affiliationViewAction('REFRESH_APPLICATION_DEPLOYMENT_REQUEST')
-);
-
-export const userSettingsResponse = createAction<IUserSettings>(
-  affiliationViewAction('USER_SETTINGS_RESPONSE')
-);
-
-export const updateUserSettingsRequest = createAction<boolean>(
-  affiliationViewAction('UPDATE_USER_SETTINGS_REQUEST')
 );
 
 export const refreshApplicationDeploymentResponse = createAction<boolean>(
@@ -246,8 +237,6 @@ export default {
   findAllApplicationDeploymentsResponse,
   findAllApplicationDeploymentsRequest,
   refreshApplicationDeploymentRequest,
-  userSettingsResponse,
-  updateUserSettingsRequest,
   refreshApplicationDeploymentResponse,
   applicationDeploymentDetailsResponse,
   deleteApplicationDeploymentResponse
