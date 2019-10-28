@@ -24,7 +24,7 @@ export function getLocalDate(time: string | number | Date): string {
 
 export function getLocalDatetime(
   date?: string | number | Date,
-  override: any = {}
+  override: Intl.DateTimeFormatOptions = {}
 ): string {
   if (date) {
     return new Date(date).toLocaleString('nb-NO', {

@@ -23,8 +23,8 @@ export interface IVersionsState {
   readonly isFetching: Record<ImageTagType, boolean>;
 }
 
-const createImageTagsConnection = (): ImageTagsConnection =>
-  new ImageTagsConnection(defaultImageTagsConnection);
+const createImageTagsConnection = (type: ImageTagType): ImageTagsConnection =>
+  new ImageTagsConnection(type, defaultImageTagsConnection);
 
 const initialState: IVersionsState = {
   isFetching: {
@@ -39,15 +39,17 @@ const initialState: IVersionsState = {
     [SEARCH]: false
   },
   types: {
-    [AURORA_SNAPSHOT_VERSION]: createImageTagsConnection(),
-    [AURORA_VERSION]: createImageTagsConnection(),
-    [BUGFIX]: createImageTagsConnection(),
-    [COMMIT_HASH]: createImageTagsConnection(),
-    [LATEST]: createImageTagsConnection(),
-    [MAJOR]: createImageTagsConnection(),
-    [MINOR]: createImageTagsConnection(),
-    [SNAPSHOT]: createImageTagsConnection(),
-    [SEARCH]: createImageTagsConnection()
+    [AURORA_SNAPSHOT_VERSION]: createImageTagsConnection(
+      AURORA_SNAPSHOT_VERSION
+    ),
+    [AURORA_VERSION]: createImageTagsConnection(AURORA_VERSION),
+    [BUGFIX]: createImageTagsConnection(BUGFIX),
+    [COMMIT_HASH]: createImageTagsConnection(COMMIT_HASH),
+    [LATEST]: createImageTagsConnection(LATEST),
+    [MAJOR]: createImageTagsConnection(MAJOR),
+    [MINOR]: createImageTagsConnection(MINOR),
+    [SNAPSHOT]: createImageTagsConnection(SNAPSHOT),
+    [SEARCH]: createImageTagsConnection(SEARCH)
   }
 };
 
@@ -76,7 +78,7 @@ export const versionsReducer = reduceReducers<IVersionsState>(
     }),
 
     handleAction(actions.clearStateForType, (state, { payload }) => {
-      state.types[payload] = createImageTagsConnection();
+      state.types[payload] = createImageTagsConnection(payload);
     })
   ],
   initialState

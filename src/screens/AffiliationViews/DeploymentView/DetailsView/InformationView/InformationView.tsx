@@ -16,8 +16,10 @@ import { ServiceLinks } from './ServiceLinks';
 import StatusCheckReportCard from './StatusCheckReportCard';
 import PodsStatus from './PodsStatus';
 import ConfirmationDialog from 'components/ConfirmationDialog';
+import { VersionStatus } from '../models/VersionStatus';
 
 interface IInformationViewProps {
+  versionStatus: VersionStatus;
   isFetchingDetails: boolean;
   deploymentDetails: IApplicationDeploymentDetails;
   deployment: IApplicationDeployment;
@@ -30,6 +32,7 @@ interface IInformationViewProps {
 }
 
 const InformationView = ({
+  versionStatus,
   isFetchingDetails,
   deploymentDetails,
   deployment,
@@ -102,7 +105,7 @@ const InformationView = ({
       <div className="info-grid">
         <div>
           <ActiveDeploymentInformation
-            pods={pods}
+            versionStatus={versionStatus}
             deployment={deployment}
             deploymentSpec={deploymentSpec}
             deploymentDetails={deploymentDetails}

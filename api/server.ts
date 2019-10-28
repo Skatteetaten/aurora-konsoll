@@ -1,6 +1,7 @@
 import express from 'express';
 import proxy from 'http-proxy-middleware';
 import * as tokenEncryption from './tokenEncryption';
+import { logger } from './logger';
 
 import {
   APPLICATION_NAME,
@@ -11,6 +12,7 @@ import {
   PORT,
   SKAP_ENABLED
 } from './config';
+import { managementInterfaceServer } from './ManagementInterface';
 
 const app = express();
 
@@ -47,7 +49,7 @@ app.get('/api/config', (req, res) => {
 });
 
 app.post('/api/log', (req, res) => {
-  console.log(req.body);
+  logger.log(req.body);
   return res.sendStatus(200);
 });
 
@@ -63,5 +65,9 @@ app.get('/api/accept-token', (req, res) => {
 });
 
 app.listen(PORT, () => {
-  console.log(`started on port ${PORT}`);
+  logger.info(`application server started on port ${PORT}`);
+});
+
+managementInterfaceServer.listen(8081, () => {
+  logger.info(`management interface server started on port ${8081}`);
 });

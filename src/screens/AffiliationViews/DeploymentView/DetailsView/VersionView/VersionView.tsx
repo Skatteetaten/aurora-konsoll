@@ -4,24 +4,26 @@ import styled from 'styled-components';
 import { ImageTagType } from 'models/ImageTagType';
 
 import { VersionTableContainer } from './containers/VersionTable/VersionTableContainer';
-import { IApplicationDeployment } from 'models/ApplicationDeployment';
 import { VersionTypeSelectorContainer } from './containers/VersionTypeSelector/VersionTypeSelectorContainer';
 import { VersionTableInformation } from './components/VersionTableInformation';
 import { ServerSideSearchContainer } from './containers/ServerSideSearch/ServerSideSearchContainer';
 import { PermissionToUpgradeInformation } from './components/PermissionToUpgradeInformation';
 import { FetchMoreVersionsContainer } from './containers/FetchMoreVersions/FetchMoreVersionsContainer';
+import { VersionViewProps } from './VersionView.state';
+import { RedeployRow } from './components/RedeployRow';
 
-interface IVersionViewProps {
-  affiliation: string;
-  deployment: IApplicationDeployment;
-}
-
-export const VersionView = ({ affiliation, deployment }: IVersionViewProps) => {
+export const VersionView = ({
+  versionStatus,
+  affiliation,
+  deployment,
+  imageTagsConnection,
+  tag
+}: VersionViewProps) => {
   const { id, version, imageRepository } = deployment;
 
   const [searchText, setSearchText] = useState<string | undefined>();
-  const [versionType, setVersionType] = useState(version.deployTag.type);
-
+  const [versionType, setVersionType] = useState(imageTagsConnection.getType());
+    
   useEffect(() => {
     setVersionType(version.deployTag.type);
   }, [version.deployTag.type]);
@@ -57,6 +59,14 @@ export const VersionView = ({ affiliation, deployment }: IVersionViewProps) => {
         />
       </ActionBar>
       <VersionTableInformation />
+      <RedeployRow
+        versionStatus={versionStatus}
+        affiliation={affiliation}
+        applicationId={id}
+        hasAccessToDeploy={hasAccessToDeploy}
+        activeVersion={version.deployTag}
+        version={tag}
+      />
       <VersionTableContainer
         hasAccessToDeploy={hasAccessToDeploy}
         affiliation={affiliation}

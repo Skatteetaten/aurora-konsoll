@@ -69,6 +69,7 @@ export const VersionTable = ({
   const index = imageTagsConnection.findVersionIndex(currentVersion.name);
 
   useEffect(() => {
+    // If configured version is not in the list, fetch more to find the version.
     if (index === -1 && !isFetching && versionType === currentVersion.type) {
       fetchVersions(repository, versionType, 100, true, searchText);
     }
@@ -84,6 +85,7 @@ export const VersionTable = ({
 
   const data = imageTagsConnection
     .getVersions()
+    .filter(it => it.name !== currentVersion.name)
     .map(it => {
       return {
         type: getOptionName(it.type),
@@ -99,23 +101,19 @@ export const VersionTable = ({
           />
         )
       };
-    })
-    .sort((t1, t2) => {
-      if (t1.lastModified === '' || t2.lastModified === '') return 0;
-      const date1 = new Date(t1.lastModified).getTime();
-      const date2 = new Date(t2.lastModified).getTime();
-      return date2 - date1;
     });
 
   return (
-    <TableWrapper currentVersionIndex={index + 1}>
+    <TableWrapper>
       <Table data={data} columns={columns} />
     </TableWrapper>
   );
 };
 
-type TableWrapperProps = { currentVersionIndex: number };
-const TableWrapper = styled.div<TableWrapperProps>`
+const TableWrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+  flex: 1;
   overflow-x: hidden;
   table {
     background-color: white;
@@ -137,12 +135,6 @@ const TableWrapper = styled.div<TableWrapperProps>`
       &:active,
       &:focus {
         background: #cde1f9 !important;
-        button {
-          opacity: 1;
-        }
-      }
-      &:nth-child(${props => props.currentVersionIndex}) {
-        background: rgb(249, 237, 226);
         button {
           opacity: 1;
         }
