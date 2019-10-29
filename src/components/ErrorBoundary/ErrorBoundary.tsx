@@ -17,8 +17,8 @@ interface IErrorBoundaryState {
 }
 
 class ErrorBoundary extends React.Component<
-  IErrorBoundaryProps,
-  IErrorBoundaryState
+IErrorBoundaryProps,
+IErrorBoundaryState
 > {
   public state: IErrorBoundaryState = {
     isExtraInfoVisible: false,
@@ -47,7 +47,7 @@ class ErrorBoundary extends React.Component<
       (errors.errorQueue.length > 0 && !nextError) ||
       (nextError && !nextError.isActive)
     ) {
-      await getNextError();
+      getNextError();
     }
   }
 
