@@ -2,6 +2,7 @@ import * as React from 'react';
 import styled from 'styled-components';
 
 import Button from 'aurora-frontend-react-komponenter/Button';
+import ActionButton from 'aurora-frontend-react-komponenter/ActionButton';
 import MessageBar from 'aurora-frontend-react-komponenter/MessageBar';
 import { IAppError } from 'models/errors';
 
@@ -44,17 +45,14 @@ const ErrorPopup = ({
           actions={
             <div className="action-bar">
               {(currentError.error.stack || currentError.error.name) && (
-                <>
-                  <Button
-                    buttonType="secondary"
-                    icon={!isExtraInfoVisible ? 'ChevronDown' : 'ChevronUp'}
-                    onClick={changeExtraInfoVisibility}
-                    color="black"
-                    className="expand-button"
-                  >
-                    {!isExtraInfoVisible ? 'Vis mer' : 'Skjul'}
-                  </Button>
-                </>
+                <ActionButton
+                  onClick={changeExtraInfoVisibility}
+                  iconSize={ActionButton.LARGE}
+                  icon={!isExtraInfoVisible ? 'ChevronDown' : 'ChevronUp'}
+                  className="expand-button"
+                >
+                  {!isExtraInfoVisible ? 'Vis mer' : 'Skjul'}
+                </ActionButton>
               )}
               <div className="close-button">
                 {hasMoreErrors && (
