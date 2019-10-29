@@ -4,6 +4,7 @@ import { IApplicationDeploymentFilters } from 'models/UserSettings';
 export interface IFilter {
   name?: string;
   default?: boolean;
+  quickFilter?: boolean;
   applications: string[];
   environments: string[];
 }

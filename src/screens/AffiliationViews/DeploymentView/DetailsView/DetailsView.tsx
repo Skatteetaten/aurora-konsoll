@@ -18,7 +18,8 @@ import {
 import { ApplicationDeploymentDetailsRoute } from '../../ApplicationDeploymentSelector';
 import DetailsActionBar from './DetailsActionBar';
 import InformationView from './InformationView/InformationView';
-import { VersionView } from './VersionView/VersionView';
+import { VersionViewContainer } from './VersionView/VersionViewContainer';
+import { getVersionStatus, VersionStatus } from './models/VersionStatus';
 
 interface IDetailsViewProps extends ApplicationDeploymentDetailsRoute {
   deployment: IApplicationDeployment;
@@ -72,6 +73,24 @@ export class DetailsView extends React.Component<IDetailsViewProps> {
     return undefined;
   }
 
+  public getVersionStatus(): VersionStatus {
+    const { deployment, deploymentDetails } = this.props;
+    const { pods, deploymentSpec } = deploymentDetails;
+    const { deployTag, releaseTo } = deployment.version;
+
+    const deploymentInProgress = !!deployment.status.reasons.find(
+      status => status.name === 'DeploymentInProgressCheck'
+    );
+
+    return getVersionStatus(
+      pods,
+      deployTag.name,
+      deploymentSpec && deploymentSpec.version,
+      releaseTo,
+      deploymentInProgress
+    );
+  }
+
   public async componentDidMount() {
     const { id } = this.props.deployment;
     const { findApplicationDeploymentDetails } = this.props;
@@ -92,6 +111,8 @@ export class DetailsView extends React.Component<IDetailsViewProps> {
     } = this.props;
 
     const unavailableMessage = this.getVersionViewUnavailableMessage();
+    const versionStatus = this.getVersionStatus();
+
     return (
       <DetailsViewGrid>
         <InitVersionsContainer
@@ -113,6 +134,7 @@ export class DetailsView extends React.Component<IDetailsViewProps> {
           <Switch>
             <Route path={`${match.path}/info`}>
               <InformationView
+                versionStatus={versionStatus}
                 isUpdating={isRefreshingApplicationDeployment}
                 deployment={deployment}
                 isFetchingDetails={isFetchingDetails}
@@ -127,7 +149,12 @@ export class DetailsView extends React.Component<IDetailsViewProps> {
               {unavailableMessage ? (
                 <UnavailableServiceMessage message={unavailableMessage} />
               ) : (
-                <VersionView
+                <VersionViewContainer
+                  versionStatus={versionStatus}
+                  configuredVersion={
+                    deploymentDetails.deploymentSpec &&
+                    deploymentDetails.deploymentSpec.version
+                  }
                   affiliation={affiliation}
                   deployment={deployment}
                 />

@@ -7,6 +7,7 @@ import {
   IImageTag,
   IPageInfo
 } from 'services/auroraApiClients/imageRepositoryClient/query';
+import { ImageTagType } from 'models/ImageTagType';
 
 export class ImageTagsConnection {
   [immerable] = true;
@@ -14,15 +15,21 @@ export class ImageTagsConnection {
   private edges: IImageTagEdge[];
   private totalCount: number;
   private pageInfo: IPageInfo;
+  private type: ImageTagType;
 
-  constructor(data: IImageTagsConnection) {
+  constructor(type: ImageTagType, data: IImageTagsConnection) {
+    this.type = type;
     this.edges = data.edges;
     this.totalCount = data.totalCount;
     this.pageInfo = data.pageInfo;
   }
 
+  public getType(): ImageTagType {
+    return this.type;
+  }
+
   public findVersionIndex(name: string): number {
-    return this.edges.findIndex(edge => edge.node.name === name);
+    return this.getVersions().findIndex(version => version.name === name);
   }
 
   public totalVersionsCount(): number {
@@ -34,7 +41,16 @@ export class ImageTagsConnection {
   }
 
   public getVersions(): IImageTag[] {
-    return this.edges.map(edge => edge.node);
+    return this.edges
+      .map(edge => edge.node)
+      .sort((t1, t2) => {
+        const t1LastModified = (t1.image && t1.image.buildTime) || 0;
+        const t2LastModified = (t2.image && t2.image.buildTime) || 0;
+
+        const date1 = new Date(t1LastModified).getTime();
+        const date2 = new Date(t2LastModified).getTime();
+        return date2 - date1;
+      });
   }
 
   public getCursor(): string {
