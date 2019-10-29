@@ -117,8 +117,6 @@ const dialogVisibilitySetter = (shouldBeVisible: boolean) => {
         open();
       }, 1);
       isVisible = true;
-    } else if (!shouldBeVisible && isVisible) {
-      isVisible = false;
     }
     return <span />;
   };

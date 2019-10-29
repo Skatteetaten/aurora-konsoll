@@ -8,7 +8,8 @@ import {
   CheckboxVisibility,
   IObjectWithKey,
   Selection,
-  SelectionMode
+  SelectionMode,
+  IColumn
 } from 'office-ui-fabric-react/lib/DetailsList';
 import { getLocalDate } from 'utils/date';
 
@@ -19,14 +20,11 @@ import {
   ICreateDatabaseSchemaResponse,
   IDatabaseSchema,
   IDatabaseSchemas,
-  IDatabaseSchemaView,
   IDeleteDatabaseSchemasResponse,
   IJdbcUser,
   IUpdateDatabaseSchemaInputWithCreatedBy
 } from 'models/schemas';
-import DatabaseSchemaService, {
-  filterDatabaseSchemaView
-} from 'services/DatabaseSchemaService';
+import DatabaseSchemaService from 'services/DatabaseSchemaService';
 import ConfirmDeletionDialog from './ConfirmDeletionDialog';
 import DatabaseSchemaCreateDialog from './DatabaseSchemaCreateDialog';
 import DatabaseSchemaUpdateDialog from './DatabaseSchemaUpdateDialog';
@@ -57,7 +55,6 @@ interface ISchemaState {
   selectedSchema?: IDatabaseSchema;
   schemaToCopy?: IDatabaseSchema;
   deleteMode: boolean;
-  deleteSelectionIds: string[];
   hasDeletionInformation: boolean;
   shouldResetSort: boolean;
   confirmDeletionDialogVisible: boolean;
@@ -70,20 +67,23 @@ export class Schema extends React.Component<ISchemaProps, ISchemaState> {
     selectedSchema: undefined,
     schemaToCopy: undefined,
     deleteMode: false,
-    deleteSelectionIds: [],
     hasDeletionInformation: false,
     shouldResetSort: false,
     confirmDeletionDialogVisible: false
   };
   private databaseSchemaService = new DatabaseSchemaService();
 
-  private selection = new Selection({
-    onSelectionChanged: () => {
-      this.state.deleteMode
-        ? this.onSelectRowClicked()
-        : this.onUpdateRowClicked();
-    }
-  });
+  private schemaSelection: SchemaSelection = new SchemaSelection(
+    new Selection({
+      onSelectionChanged: () => {
+        if (!this.state.deleteMode) {
+          this.onUpdateRowClicked();
+        } else {
+          this.setState({});
+        }
+      }
+    })
+  );
 
   public componentDidMount() {
     const { affiliation, onFetch } = this.props;
@@ -96,7 +96,7 @@ export class Schema extends React.Component<ISchemaProps, ISchemaState> {
     const { filter } = this.state;
 
     if (prevState.filter !== filter) {
-      this.deselect();
+      this.schemaSelection.clear();
     }
 
     if (prevProps.items !== items) {
@@ -118,51 +118,17 @@ export class Schema extends React.Component<ISchemaProps, ISchemaState> {
     }
   }
 
-  public onResetSort = () => {
-    this.setState({
-      shouldResetSort: false
-    });
-  };
-
   public handleFetchDatabaseSchemas = () => {
+    let viewItems: IDatabaseSchemaView[] = [];
+    this.schemaSelection.clear();
+
     const { items } = this.props;
-    let viewItems: IDatabaseSchemaView[];
-
     if (items.databaseSchemas && items.databaseSchemas.length > 0) {
-      viewItems = items.databaseSchemas.map(i => {
-        const getJdbcUrlText = (prefix: string) =>
-          i.jdbcUrl.substring(i.jdbcUrl.indexOf(prefix) + prefix.length);
-
-        const jdbcUrl = i.jdbcUrl.includes('@')
-          ? getJdbcUrlText('@')
-          : getJdbcUrlText('://');
-
-        return {
-          id: i.id,
-          environment: i.environment,
-          application: i.application,
-          createdDate: getLocalDate(i.createdDate),
-          lastUsedDate: i.lastUsedDate && getLocalDate(i.lastUsedDate),
-          discriminator: i.discriminator,
-          type: i.type,
-          applicationDeploymentsUses: i.applicationDeployments.length,
-          sizeInMb: i.sizeInMb,
-          createdBy: i.createdBy,
-          jdbcUrl: jdbcUrl
-        };
-      });
-    } else {
-      viewItems = [];
+      this.schemaSelection.setSchemas(items.databaseSchemas);
+      viewItems = items.databaseSchemas.map(i => toViewSchema(i));
     }
     this.setState({
       viewItems
-    });
-  };
-
-  public createNewCopy = () => {
-    const { selectedSchema } = this.state;
-    this.setState({
-      schemaToCopy: selectedSchema
     });
   };
 
@@ -179,46 +145,18 @@ export class Schema extends React.Component<ISchemaProps, ISchemaState> {
       affiliation,
       onTestJdbcConnectionForUser,
       onFetch,
-      currentUser,
-      deleteResponse,
-      onDeleteSchemas
+      currentUser
     } = this.props;
     const {
       filter,
       selectedSchema,
       schemaToCopy,
       deleteMode,
-      deleteSelectionIds,
       hasDeletionInformation: hasDeletionResponse,
       viewItems,
       shouldResetSort,
       confirmDeletionDialogVisible
     } = this.state;
-
-    const onCancelDeletionClick = () => {
-      this.setState({
-        hasDeletionInformation: false,
-        confirmDeletionDialogVisible: false
-      });
-    };
-
-    const onDeleteSelectionConfirmed = () => {
-      this.setState({
-        confirmDeletionDialogVisible: true
-      });
-    };
-
-    const onConfirmDeletionClick = () => {
-      if (deleteSelectionIds.length == 0) return;
-
-      //onDeleteSchemas(deleteSelectionIds);
-      this.deselect();
-      this.setState({
-        hasDeletionInformation: true,
-        deleteSelectionIds: [],
-        confirmDeletionDialogVisible: false
-      });
-    };
 
     return (
       <div className={className}>
@@ -232,13 +170,13 @@ export class Schema extends React.Component<ISchemaProps, ISchemaState> {
               />
             </div>
             <EnterModeThenConfirm
-              confirmButtonEnabled={deleteSelectionIds.length > 0}
+              confirmButtonEnabled={!this.schemaSelection.isEmpty()}
               confirmText="Slett valgte"
               inactiveIcon="Delete"
               inactiveText="Velg skjemaer for sletting"
               onEnterMode={this.onEnterDeletionMode}
               onExitMode={this.onExitDeletionMode}
-              onConfirmClick={onDeleteSelectionConfirmed}
+              onConfirmClick={this.onDeleteSelectionConfirmed}
             />
           </div>
           <div className="styled-create">
@@ -260,15 +198,15 @@ export class Schema extends React.Component<ISchemaProps, ISchemaState> {
         ) : (
           <div className="styledTable">
             <SortableDetailsList
-              columns={DatabaseSchemaService.DEFAULT_COLUMNS}
-              filterView={filterDatabaseSchemaView}
+              columns={this.defaultColumns}
+              filterView={this.filterDatabaseSchemaView}
               selectionMode={SelectionMode.multiple}
               filter={filter}
               isHeaderVisible={true}
               items={viewItems}
-              selection={this.selection}
+              selection={this.schemaSelection.getSelection()}
               shouldResetSort={shouldResetSort}
-              onResetSort={this.onResetSort}
+              onResetSort={this.onSchemaListSortReset}
               checkboxVisibility={
                 deleteMode
                   ? CheckboxVisibility.always
@@ -280,87 +218,272 @@ export class Schema extends React.Component<ISchemaProps, ISchemaState> {
 
         <DatabaseSchemaUpdateDialog
           schema={selectedSchema}
-          clearSelectedSchema={this.clearSelectedSchema}
+          clearSelectedSchema={this.onUpdateSchemaDialogClosed}
           onUpdate={onUpdate}
           onDelete={onDelete}
           databaseSchemaService={this.databaseSchemaService}
           onTestJdbcConnectionForId={onTestJdbcConnectionForId}
           testJdbcConnectionResponse={testJdbcConnectionResponse}
-          createNewCopy={this.createNewCopy}
+          createNewCopy={this.onCreateCopyConfirmed}
         />
         <ConfirmDeletionDialog
           title="Slett databaseskjemaer"
           visible={confirmDeletionDialogVisible}
-          onOkClick={onConfirmDeletionClick}
-          onCancelClick={onCancelDeletionClick}
-          schemasToDelete={this.getSchemasToDeleteFromSelectedIds()}
+          onOkClick={this.onConfirmDeletionClick}
+          onCancelClick={this.onCancelDeletionClick}
+          schemasToDelete={this.schemaSelection.getSelectedSchemas()}
         />
       </div>
     );
   }
 
-  public getSchemasToDeleteFromSelectedIds = () => {
-    const { items } = this.props;
-    const { deleteSelectionIds } = this.state;
+  private defaultColumns: IColumn[] = [
+    {
+      fieldName: 'type',
+      isResizable: true,
+      key: '0',
+      maxWidth: 85,
+      minWidth: 85,
+      name: 'Type',
+      iconName: ''
+    },
+    {
+      fieldName: 'environment',
+      isResizable: true,
+      key: '1',
+      maxWidth: 200,
+      minWidth: 200,
+      name: 'Miljø',
+      iconName: ''
+    },
+    {
+      fieldName: 'application',
+      isResizable: true,
+      key: '2',
+      maxWidth: 200,
+      minWidth: 200,
+      name: 'Applikasjon',
+      iconName: ''
+    },
+    {
+      fieldName: 'discriminator',
+      isResizable: true,
+      key: '3',
+      maxWidth: 200,
+      minWidth: 200,
+      name: 'Diskriminator',
+      iconName: ''
+    },
+    {
+      fieldName: 'createdDate',
+      isResizable: true,
+      key: '4',
+      maxWidth: 90,
+      minWidth: 90,
+      name: 'Opprettet',
+      iconName: ''
+    },
+    {
+      fieldName: 'lastUsedDate',
+      isResizable: true,
+      key: '5',
+      maxWidth: 90,
+      minWidth: 90,
+      name: 'Sist brukt',
+      iconName: ''
+    },
+    {
+      fieldName: 'sizeInMb',
+      isResizable: true,
+      key: '6',
+      maxWidth: 110,
+      minWidth: 110,
+      name: 'Størrelse (MB)',
+      iconName: ''
+    },
+    {
+      fieldName: 'createdBy',
+      isResizable: true,
+      key: '7',
+      maxWidth: 80,
+      minWidth: 80,
+      name: 'Bruker',
+      iconName: ''
+    },
+    {
+      fieldName: 'applicationDeploymentsUses',
+      isResizable: true,
+      key: '8',
+      maxWidth: 70,
+      minWidth: 70,
+      name: 'I bruk av',
+      iconName: ''
+    },
+    {
+      fieldName: 'jdbcUrl',
+      isResizable: true,
+      key: '9',
+      maxWidth: 280,
+      minWidth: 280,
+      name: 'JDBC url',
+      iconName: '',
+      className: 'jdbcurl-col'
+    }
+  ];
 
-    if (!items.databaseSchemas) return [];
-
-    return items.databaseSchemas.filter(
-      (it: IDatabaseSchema) => deleteSelectionIds.indexOf(it.id) > -1
-    );
+  private filterDatabaseSchemaView = (filter: string) => {
+    return (v: IDatabaseSchemaView) =>
+      v.createdBy.includes(filter) ||
+      v.application.includes(filter) ||
+      v.environment.includes(filter) ||
+      v.discriminator.includes(filter) ||
+      v.createdDate.includes(filter) ||
+      (!v.lastUsedDate || v.lastUsedDate === null
+        ? false
+        : v.lastUsedDate.includes(filter)) ||
+      v.sizeInMb.toString().includes(filter) ||
+      v.type.includes(filter) ||
+      v.jdbcUrl.includes(filter) ||
+      v.id.includes(filter);
   };
 
-  private deselect = () => this.selection.setAllSelected(false);
+  private onSchemaListSortReset = () => {
+    this.setState({ shouldResetSort: false });
+  };
+
+  private onCancelDeletionClick = () => {
+    this.setState({
+      hasDeletionInformation: false,
+      confirmDeletionDialogVisible: false
+    });
+  };
+
+  private onDeleteSelectionConfirmed = () => {
+    this.setState({ confirmDeletionDialogVisible: true });
+  };
+
+  private onConfirmDeletionClick = () => {
+    if (this.schemaSelection.isEmpty()) return;
+
+    // deleteResponse,
+    //   onDeleteSchemas
+
+    //onDeleteSchemas(deleteSelectionIds);
+    this.schemaSelection.clear();
+    this.setState({
+      hasDeletionInformation: true,
+      confirmDeletionDialogVisible: false
+    });
+  };
 
   private onExitDeletionMode = () => {
-    this.setState({
-      deleteMode: false,
-      deleteSelectionIds: []
-    });
-    this.deselect();
+    this.setState({ deleteMode: false });
+    this.schemaSelection.clear();
   };
 
   private onEnterDeletionMode = () => {
-    this.setState({
-      deleteMode: true
-    });
+    this.setState({ deleteMode: true });
   };
 
   private onFilterChange = (text: string) => {
-    this.setState({
-      filter: text
-    });
-  };
-
-  private onSelectRowClicked = () => {
-    const selected: IObjectWithKey[] = this.selection.getSelection();
-    const selectedIds = (selected as IDatabaseSchema[]).map(it => it.id);
-    this.setState({
-      deleteSelectionIds: selectedIds
-    });
+    this.setState({ filter: text });
   };
 
   private onUpdateRowClicked = () => {
-    const { items } = this.props;
-    const selected: IObjectWithKey[] = this.selection.getSelection();
-    let selectedSchema;
-    if (selected && selected.length > 0) {
-      const selectedId = (selected[0] as IDatabaseSchema).id;
-      selectedSchema =
-        items.databaseSchemas &&
-        items.databaseSchemas.find((i: IDatabaseSchema) => i.id === selectedId);
-    }
-    this.setState({
-      selectedSchema
-    });
+    const selectedSchema = this.schemaSelection.getSelectedSchema();
+    this.setState({ selectedSchema });
   };
-  private clearSelectedSchema = () => {
-    this.selection.setAllSelected(false);
-    this.setState({
-      selectedSchema: undefined
-    });
+
+  private onCreateCopyConfirmed = () => {
+    const { selectedSchema } = this.state;
+    this.setState({ schemaToCopy: selectedSchema });
+  };
+
+  private onUpdateSchemaDialogClosed = () => {
+    this.schemaSelection.clear();
+    this.setState({ selectedSchema: undefined });
   };
 }
+
+class SchemaSelection {
+  private readonly selection: Selection;
+  private schemas: IDatabaseSchema[] = [];
+
+  constructor(selection: Selection) {
+    this.selection = selection;
+  }
+
+  getSelection(): Selection {
+    return this.selection;
+  }
+
+  clear(): void {
+    this.selection.setAllSelected(false);
+  }
+
+  isEmpty(): boolean {
+    return this.selection.getSelectedCount() === 0;
+  }
+
+  setSchemas(schemas: IDatabaseSchema[]) {
+    this.schemas = schemas;
+  }
+
+  getSelectedSchema(): IDatabaseSchema | undefined {
+    if (!this.isEmpty()) {
+      return this.getSelectedSchemas()[0];
+    }
+    return undefined;
+  }
+
+  getSelectedSchemas(): IDatabaseSchema[] {
+    const selected: IObjectWithKey[] = this.selection.getSelection();
+    const selectedSchemas: IDatabaseSchemaView[] = selected.map(
+      it => it as IDatabaseSchemaView
+    );
+
+    return this.schemas.filter(
+      schema => selectedSchemas.find(it => it.id === schema.id) !== undefined
+    );
+  }
+}
+
+export interface IDatabaseSchemaView {
+  type: string;
+  application: string;
+  environment: string;
+  discriminator: string;
+  createdBy: string;
+  createdDate: string;
+  lastUsedDate?: string | null;
+  sizeInMb: number;
+  applicationDeploymentsUses: number;
+  id: string;
+  jdbcUrl: string;
+}
+
+const toViewSchema = (i: IDatabaseSchema): IDatabaseSchemaView => {
+  const getJdbcUrlText = (prefix: string) =>
+    i.jdbcUrl.substring(i.jdbcUrl.indexOf(prefix) + prefix.length);
+
+  const jdbcUrl = i.jdbcUrl.includes('@')
+    ? getJdbcUrlText('@')
+    : getJdbcUrlText('://');
+
+  return {
+    id: i.id,
+    environment: i.environment,
+    application: i.application,
+    createdDate: getLocalDate(i.createdDate),
+    lastUsedDate: i.lastUsedDate && getLocalDate(i.lastUsedDate),
+    discriminator: i.discriminator,
+    type: i.type,
+    applicationDeploymentsUses: i.applicationDeployments.length,
+    sizeInMb: i.sizeInMb,
+    createdBy: i.createdBy,
+    jdbcUrl: jdbcUrl
+  };
+};
 
 export default styled(Schema)`
   height: 100%;

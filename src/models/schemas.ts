@@ -38,19 +38,6 @@ export interface IDatabaseApplicationDeployment {
   };
 }
 
-export interface IDatabaseSchemaView {
-  type: string;
-  application: string;
-  environment: string;
-  discriminator: string;
-  createdBy: string;
-  createdDate: string;
-  lastUsedDate?: string | null;
-  sizeInMb: number;
-  applicationDeploymentsUses: number;
-  id: string;
-  jdbcUrl: string;
-}
 
 export interface IDatabaseSchemaInput {
   discriminator: string;
