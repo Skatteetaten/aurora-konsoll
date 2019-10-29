@@ -1,10 +1,7 @@
-import { ActionType } from 'typesafe-actions';
 import { actions } from './actions';
 
 import { IUserAndAffiliations } from 'models/ApplicationDeployment';
 import { handleAction, reduceReducers } from 'redux-ts-utils';
-
-export type StartupAction = ActionType<typeof actions>;
 
 export interface IStartupState {
   isLoading: boolean;
@@ -20,10 +17,10 @@ const initialState: IStartupState = {
 
 export const startupReducer = reduceReducers<IStartupState>(
   [
-    handleAction(actions.requestCurrentUser, state => {
+    handleAction(actions.fetchCurrentUser.request, state => {
       state.isLoading = true;
     }),
-    handleAction(actions.requestCurrentUserSuccess, (state, { payload }) => {
+    handleAction(actions.fetchCurrentUser.success, (state, { payload }) => {
       state.isLoading = false;
       if (payload.data) {
         const { affiliations, currentUser } = payload.data;
@@ -37,7 +34,7 @@ export const startupReducer = reduceReducers<IStartupState>(
         state.errors.push(...payload.errors);
       }
     }),
-    handleAction(actions.requestCurrentUserFailure, (state, { payload }) => {
+    handleAction(actions.fetchCurrentUser.failure, (state, { payload }) => {
       state.isLoading = false;
       state.errors.push(payload);
     })

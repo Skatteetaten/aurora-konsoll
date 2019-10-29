@@ -4,22 +4,18 @@ import { doAsyncActions } from 'utils/redux/action-utils';
 
 export function getUserSettings() {
   return doAsyncActions(
-    [
-      actions.requestUserSettings,
-      actions.requestUserSettingsSuccess,
-      actions.requestUserSettingsFailure
-    ],
+    actions.fetchUserSettings,
     async clients => await clients.userSettingsClient.getUserSettings()
   );
 }
 
 export function updateUserSettings(userSettings: IUserSettings) {
   return doAsyncActions(
-    [
-      actions.requestUpdateUserSettings,
-      actions.requestUserSettingsSuccess,
-      actions.requestUserSettingsFailure
-    ],
+    {
+      request: actions.updateUserSettingsRequest,
+      success: actions.fetchUserSettings.success,
+      failure: actions.fetchUserSettings.failure
+    },
     async clients =>
       await clients.userSettingsClient.updateUserSettings(userSettings)
   );

@@ -8,7 +8,6 @@ import { CertificateAction } from 'screens/CertificateView/state/reducers';
 import { ErrorsAction } from 'screens/ErrorHandler/state/reducer';
 import { AffiliationViewAction } from 'screens/AffiliationViews/state/reducer';
 import { NetdebugViewAction } from 'screens/NetdebugView/state/reducer';
-import { StartupAction } from 'store/state/startup/reducers';
 
 import { VersionsAction } from './state/versions/actions';
 import { DeployAction } from './state/deploy/actions';
@@ -18,6 +17,7 @@ import { ResolveThunks } from 'react-redux';
 import { IApiClients } from 'models/AuroraApi';
 import { UserSettingsAction } from './state/userSettings/actions';
 import { ApplicationsAction } from './state/applicationDeployments/actions';
+import { StartupAction } from './state/startup/actions';
 
 export type RootState = StateType<typeof rootReducer>;
 

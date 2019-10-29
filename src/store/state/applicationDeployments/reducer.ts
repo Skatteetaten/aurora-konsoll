@@ -20,10 +20,10 @@ const initialState: IApplicationsState = {
 
 export const applicationsReducer = reduceReducers<IApplicationsState>(
   [
-    handleAction(actions.requestApplications, state => {
+    handleAction(actions.fetchApplications.request, state => {
       state.isFetching = true;
     }),
-    handleAction(actions.requestApplicationsSuccess, (state, { payload }) => {
+    handleAction(actions.fetchApplications.success, (state, { payload }) => {
       state.isFetching = false;
       if (payload.data) {
         state.applicationsConnection.update(payload.data);
@@ -32,7 +32,7 @@ export const applicationsReducer = reduceReducers<IApplicationsState>(
         state.errors.requestApplications.push(...payload.errors);
       }
     }),
-    handleAction(actions.requestApplicationsFailure, (state, { payload }) => {
+    handleAction(actions.fetchApplications.failure, (state, { payload }) => {
       state.isFetching = false;
       state.errors.requestApplications.push(payload);
     })

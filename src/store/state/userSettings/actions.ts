@@ -6,23 +6,17 @@ import { createAction } from 'redux-ts-utils';
 
 const action = (action: string) => `userSettings/${action}`;
 
-const [
-  requestUserSettings,
-  requestUserSettingsSuccess,
-  requestUserSettingsFailure
-] = createAsyncActions<IDataAndErrors<IUserSettingsData>>(
-  action('REQUEST_USER_SETTINGS')
+const fetchUserSettings = createAsyncActions<IDataAndErrors<IUserSettingsData>>(
+  action('FETCH_USER_SETTINGS')
 );
 
-const requestUpdateUserSettings = createAction<void>(
+const updateUserSettingsRequest = createAction<void>(
   action('REQUEST_UPDATE_USER_SETTINGS')
 );
 
 export const actions = {
-  requestUpdateUserSettings,
-  requestUserSettings,
-  requestUserSettingsSuccess,
-  requestUserSettingsFailure
+  updateUserSettingsRequest,
+  fetchUserSettings
 };
 
 export type UserSettingsAction = ActionType<typeof actions>;
