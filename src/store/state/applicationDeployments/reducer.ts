@@ -25,14 +25,16 @@ export const applicationsReducer = reduceReducers<IApplicationsState>(
     }),
     handleAction(actions.requestApplicationsSuccess, (state, { payload }) => {
       state.isFetching = false;
-      state.applicationsConnection.update(payload.data);
+      if (payload.data) {
+        state.applicationsConnection.update(payload.data);
+      }
       if (payload.errors) {
-        state.errors.requestApplications = payload.errors;
+        state.errors.requestApplications.push(...payload.errors);
       }
     }),
     handleAction(actions.requestApplicationsFailure, (state, { payload }) => {
       state.isFetching = false;
-      state.errors.requestApplications = payload;
+      state.errors.requestApplications.push(payload);
     })
   ],
   initialState

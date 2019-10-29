@@ -1,4 +1,4 @@
-import GoboClient, { IGoboResult } from 'services/GoboClient';
+import GoboClient, { IDataAndErrors } from 'services/GoboClient';
 import { ITagsQuery, TAGS_QUERY } from './query';
 import { ImageTagType } from 'models/ImageTagType';
 
@@ -21,7 +21,7 @@ export class ImageRepositoryClient {
     first: number,
     filter: string,
     cursor?: string
-  ): Promise<IGoboResult<ITagsQuery> | undefined> {
+  ): Promise<IDataAndErrors<ITagsQuery> | undefined> {
     return await this.client.query<ITagsQuery>({
       query: TAGS_QUERY,
       variables: {
@@ -38,7 +38,7 @@ export class ImageRepositoryClient {
     type: string,
     first: number,
     cursor?: string
-  ): Promise<IGoboResult<ITagsQuery> | undefined> {
+  ): Promise<IDataAndErrors<ITagsQuery> | undefined> {
     const isSearch = type === ImageTagType.SEARCH;
     let variables: IImageTagsVariables = {
       cursor,

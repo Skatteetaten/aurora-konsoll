@@ -1,4 +1,4 @@
-import GoboClient, { IGoboResult } from 'services/GoboClient';
+import GoboClient, { IDataAndErrors } from 'services/GoboClient';
 
 import {
   ICreateDatabaseSchemaInput,
@@ -24,7 +24,7 @@ export class DatabaseClient {
 
   public async getSchemas(
     affiliations: string[]
-  ): Promise<IGoboResult<IDatabaseSchemasQuery> | undefined> {
+  ): Promise<IDataAndErrors<IDatabaseSchemasQuery> | undefined> {
     return await this.client.query<IDatabaseSchemasQuery>({
       query: DATABASE_SCHEMAS_QUERY,
       variables: {
@@ -36,7 +36,7 @@ export class DatabaseClient {
   public async updateSchema(
     databaseSchema: IUpdateDatabaseSchemaInputWithCreatedBy
   ): Promise<
-    IGoboResult<{ updateDatabaseSchema: { id: string } }> | undefined
+    IDataAndErrors<{ updateDatabaseSchema: { id: string } }> | undefined
   > {
     return await this.client.mutate<{ updateDatabaseSchema: { id: string } }>({
       mutation: UPDATE_DATABASESCHEMA_MUTATION,
@@ -49,7 +49,7 @@ export class DatabaseClient {
   public async deleteSchemas(
     ids: string[]
   ): Promise<
-    | IGoboResult<{
+    | IDataAndErrors<{
         deleteDatabaseSchemas: IDeleteDatabaseSchemasResponse;
       }>
     | undefined
@@ -69,7 +69,7 @@ export class DatabaseClient {
   public async testJdbcConnectionForId(
     id: string
   ): Promise<
-    | IGoboResult<{
+    | IDataAndErrors<{
         testJdbcConnectionForId: boolean;
       }>
     | undefined

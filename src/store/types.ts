@@ -17,7 +17,6 @@ import { rootReducer } from './rootReducer';
 import { ResolveThunks } from 'react-redux';
 import { IApiClients } from 'models/AuroraApi';
 import { UserSettingsAction } from './state/userSettings/actions';
-import { TsAction } from 'redux-ts-utils';
 import { ApplicationsAction } from './state/applicationDeployments/actions';
 
 export type RootState = StateType<typeof rootReducer>;
@@ -39,18 +38,14 @@ export interface IExtraArguments {
   clients: IApiClients;
 }
 
-export type AsyncAction<T = void> = StateThunk<
-  Promise<TsAction<T> | undefined>
->;
-
-export type StateThunk<T = void> = ThunkAction<
+export type AsyncAction<T = void> = ThunkAction<
   T,
   RootState,
   IExtraArguments,
   RootAction
 >;
 
-export type Thunk = ActionCreator<StateThunk>;
+export type Thunk = ActionCreator<AsyncAction>;
 
 /**
  * Usage ReduxProps<typeof mapDispatchToProps, typeof mapStateToProps>

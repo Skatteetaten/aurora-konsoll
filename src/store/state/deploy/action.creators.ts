@@ -1,4 +1,4 @@
-import { StateThunk } from 'store/types';
+import { AsyncAction } from 'store/types';
 
 import { actions } from './actions';
 import { addCurrentErrors } from 'screens/ErrorHandler/state/actions';
@@ -8,7 +8,7 @@ export const deploy = (
   affiliation: string,
   applicationDeploymentId: string,
   version: string
-): StateThunk => async (dispatch, getState, { clients }) => {
+): AsyncAction => async (dispatch, getState, { clients }) => {
   const client = clients.applicationDeploymentClient;
 
   dispatch(actions.isDeploying({ inProgress: true, version }));
@@ -26,7 +26,7 @@ export const deploy = (
     dispatch(
       actions.deployResult({
         version,
-        success: response.data.redeployWithVersion
+        success: (response.data && response.data.redeployWithVersion) || false
       })
     );
   }

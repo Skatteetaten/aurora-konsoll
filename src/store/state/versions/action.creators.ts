@@ -1,4 +1,4 @@
-import { StateThunk } from 'store/types';
+import { AsyncAction } from 'store/types';
 import { ImageTagType } from 'models/ImageTagType';
 import {
   IImageTagsConnection,
@@ -6,7 +6,7 @@ import {
 } from 'services/auroraApiClients/imageRepositoryClient/query';
 
 import { actions } from './actions';
-import { IGoboResult } from 'services/GoboClient';
+import { IDataAndErrors } from 'services/GoboClient';
 import { addCurrentErrors } from 'screens/ErrorHandler/state/actions';
 
 export const defaultImageTagsConnection: IImageTagsConnection = {
@@ -24,7 +24,7 @@ export const fetchVersions = (
   first: number,
   page: boolean = true,
   filter?: string
-): StateThunk => async (dispatch, getState, { clients }) => {
+): AsyncAction => async (dispatch, getState, { clients }) => {
   const client = clients.imageRepositoryClient;
   const { versions } = getState();
   const current = versions.types[type];
@@ -42,7 +42,7 @@ export const fetchVersions = (
 
   const cursor = page ? current.getCursor() : undefined;
 
-  let response: IGoboResult<ITagsQuery> | undefined;
+  let response: IDataAndErrors<ITagsQuery> | undefined;
   if (filter) {
     response = await client.searchTagsPaged(repository, first, filter, cursor);
   } else {
@@ -87,10 +87,10 @@ export const fetchVersions = (
   }, 50);
 };
 
-export function resetState(): StateThunk {
+export function resetState(): AsyncAction {
   return dispatch => dispatch(actions.reset());
 }
 
-export function clearStateForType(type: ImageTagType): StateThunk {
+export function clearStateForType(type: ImageTagType): AsyncAction {
   return dispatch => dispatch(actions.clearStateForType(type));
 }

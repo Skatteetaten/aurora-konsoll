@@ -7,9 +7,9 @@ interface IVariables {
   [key: string]: any;
 }
 
-export interface IGoboResult<T> {
+export interface IDataAndErrors<T> {
   name: string;
-  data: T;
+  data?: T;
   errors?: Error[];
 }
 
@@ -38,21 +38,21 @@ export default class GoboClient {
   public async query<T>({
     query,
     variables
-  }: IGoboQuery): Promise<IGoboResult<T>> {
+  }: IGoboQuery): Promise<IDataAndErrors<T>> {
     return await this.doRequest<T>(query, variables);
   }
 
   public async mutate<T>({
     mutation,
     variables
-  }: IGoboMutation): Promise<IGoboResult<T>> {
+  }: IGoboMutation): Promise<IDataAndErrors<T>> {
     return await this.doRequest<T>(mutation, variables);
   }
 
   private async doRequest<T>(
     document: DocumentNode,
     variables?: IVariables
-  ): Promise<IGoboResult<T>> {
+  ): Promise<IDataAndErrors<T>> {
     const res = await fetch(this.options.url, {
       method: 'POST',
       headers: {

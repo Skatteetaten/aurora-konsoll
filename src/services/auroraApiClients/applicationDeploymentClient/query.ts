@@ -200,7 +200,7 @@ export const APPLICATION_DEPLOYMENT_DETAILS_QUERY = gql`
   }
 `;
 
-export interface IUserAffiliationsQuery {
+export interface IUserAndAffiliationsData {
   currentUser: {
     name: string;
     id: string;

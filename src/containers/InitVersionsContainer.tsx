@@ -19,7 +19,6 @@ interface InitVersionsProps {
 
 type Props = ResolveThunks<typeof mapDispatchToProps> & InitVersionsProps;
 
-// TODO: Move to redux action creator when deployment is available in state.
 const InitVersions = ({
   imageRepository,
   fetchVersions,
@@ -46,6 +45,6 @@ const InitVersions = ({
 };
 
 export const InitVersionsContainer = connect(
-  () => ({}),
+  undefined,
   mapDispatchToProps
 )(InitVersions);

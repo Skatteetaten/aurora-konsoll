@@ -35,7 +35,6 @@ import { IWebsealReduxState } from 'screens/AffiliationViews/WebsealView/state/r
 import { ICertificateState } from 'screens/CertificateView/state/reducers';
 import { INetdebugResult } from 'services/auroraApiClients';
 import { IFilter } from 'services/DeploymentFilterService';
-import { IStartupState } from 'store/state/startup/reducers';
 import { INetdebugViewState } from 'screens/NetdebugView/state/reducer';
 import { IErrorsState } from 'screens/ErrorHandler/state/reducer';
 import { IAffiliationViewState } from 'screens/AffiliationViews/state/reducer';
@@ -348,10 +347,6 @@ export const errorsStateFactory = Factory.Sync.makeFactory<IErrorsState>({
   errorCount: 0,
   errors: errorStateFactory.build(),
   nextError: undefined
-});
-
-export const startupFactory = Factory.Sync.makeFactory<IStartupState>({
-  currentUser: userAndAffiliationsFactory.build()
 });
 
 export const aclFactory = Factory.Sync.makeFactory<IAcl>({

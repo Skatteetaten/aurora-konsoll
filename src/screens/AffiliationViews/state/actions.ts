@@ -11,7 +11,7 @@ import {
   addCurrentErrors
 } from 'screens/ErrorHandler/state/actions';
 import { createAction } from 'redux-ts-utils';
-import { StateThunk } from 'store/types';
+import { AsyncAction } from 'store/types';
 import { IPodResource } from 'models/Pod';
 import { stringContainsHtml } from 'utils/string';
 
@@ -51,7 +51,7 @@ export const deleteApplicationDeploymentResponse = createAction<boolean>(
 
 export const refreshAffiliations = (
   affiliations: string[]
-): StateThunk => async (dispatch, getState, { clients }) => {
+): AsyncAction => async (dispatch, getState, { clients }) => {
   dispatch(refreshAffiliationsRequest(true));
   const result = await clients.applicationDeploymentClient.refreshAffiliations(
     affiliations
@@ -62,7 +62,7 @@ export const refreshAffiliations = (
 
 export const findAllApplicationDeployments = (
   affiliations: string[]
-): StateThunk => async (dispatch, getState, { clients }) => {
+): AsyncAction => async (dispatch, getState, { clients }) => {
   dispatch(findAllApplicationDeploymentsRequest(true));
   const result = await clients.applicationDeploymentClient.findAllApplicationDeployments(
     affiliations
@@ -70,6 +70,7 @@ export const findAllApplicationDeployments = (
   dispatch(addCurrentErrors(result));
   if (
     result &&
+    result.data &&
     result.data.applications &&
     result.data.applications.edges.length > 0
   ) {
@@ -115,7 +116,7 @@ export const findAllApplicationDeployments = (
 export const refreshApplicationDeployment = (
   applicationDeploymentId: string,
   affiliation: string
-): StateThunk => async (dispatch, getState, { clients }) => {
+): AsyncAction => async (dispatch, getState, { clients }) => {
   dispatch(refreshApplicationDeploymentRequest(true));
   const result = await clients.applicationDeploymentClient.refreshApplicationDeployment(
     applicationDeploymentId
@@ -135,7 +136,7 @@ export const refreshApplicationDeployment = (
 export const findApplicationDeploymentDetails = (
   id: string,
   withoutLoading?: boolean
-): StateThunk => async (dispatch, getState, { clients }) => {
+): AsyncAction => async (dispatch, getState, { clients }) => {
   if (!!!withoutLoading) {
     dispatch(fetchDetailsRequest(true));
   }
@@ -218,7 +219,7 @@ export const findApplicationDeploymentDetails = (
 export const deleteApplicationDeployment = (
   namespace: string,
   name: string
-): StateThunk => async (dispatch, getState, { clients }) => {
+): AsyncAction => async (dispatch, getState, { clients }) => {
   const result = await clients.applicationDeploymentClient.deleteApplicationDeployment(
     namespace,
     name

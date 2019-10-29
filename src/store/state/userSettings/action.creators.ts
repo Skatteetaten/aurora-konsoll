@@ -17,17 +17,10 @@ export function updateUserSettings(userSettings: IUserSettings) {
   return doAsyncActions(
     [
       actions.requestUpdateUserSettings,
-      actions.requestUpdateUserSettingsSuccess,
-      actions.requestUpdateUserSettingsFailure
+      actions.requestUserSettingsSuccess,
+      actions.requestUserSettingsFailure
     ],
-    async (clients, getState, dispatch) => {
-      const result = await clients.userSettingsClient.updateUserSettings(
-        userSettings
-      );
-      if (result.data.updateUserSettings) {
-        await dispatch(getUserSettings());
-      }
-      return result;
-    }
+    async clients =>
+      await clients.userSettingsClient.updateUserSettings(userSettings)
   );
 }

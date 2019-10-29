@@ -1,12 +1,19 @@
-import { IUserAndAffiliations } from 'models/ApplicationDeployment';
-import { createAction } from 'redux-ts-utils';
+import { createAsyncActions } from 'utils/redux/action-utils';
+import { IDataAndErrors } from 'services/GoboClient';
+import { IUserAndAffiliationsData } from 'services/auroraApiClients/applicationDeploymentClient/query';
 
 const action = (action: string) => `currentUser/${action}`;
 
-const fetchCurrentUserResponse = createAction<IUserAndAffiliations>(
-  action('FETCHED_CURRENT_USER')
+const [
+  requestCurrentUser,
+  requestCurrentUserSuccess,
+  requestCurrentUserFailure
+] = createAsyncActions<IDataAndErrors<IUserAndAffiliationsData>>(
+  action('REQUEST_CURRENT_USER')
 );
 
 export const actions = {
-  fetchCurrentUserResponse
+  requestCurrentUser,
+  requestCurrentUserSuccess,
+  requestCurrentUserFailure
 };

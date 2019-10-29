@@ -1,7 +1,7 @@
 import { createAction } from 'redux-ts-utils';
-import { Thunk, StateThunk } from 'store/types';
+import { Thunk, AsyncAction } from 'store/types';
 import { IAppError, IErrors } from 'models/errors';
-import { IGoboResult } from 'services/GoboClient';
+import { IDataAndErrors } from 'services/GoboClient';
 
 const errors = (action: string) => `errors/${action}`;
 
@@ -16,14 +16,14 @@ export const nextErrorResponse = createAction<IAppError | undefined>(
 );
 
 export const addCurrentErrors = (
-  result: IGoboResult<any> | undefined
-): StateThunk => dispatch => {
+  result: IDataAndErrors<any> | undefined
+): AsyncAction => dispatch => {
   if (result && result.errors) {
     dispatch(addErrors(result.errors, result.name));
   }
 };
 
-export const addErrors = (errors: any[], name?: string): StateThunk => (
+export const addErrors = (errors: any[], name?: string): AsyncAction => (
   dispatch,
   getState
 ) => {
@@ -55,7 +55,7 @@ export const getNextError: Thunk = () => (dispatch, getState) => {
   }
 };
 
-export const closeError = (id: number): StateThunk => (dispatch, getState) => {
+export const closeError = (id: number): AsyncAction => (dispatch, getState) => {
   const state = Object.assign({}, getState().errors.errors);
   const err = state.allErrors.get(id);
   if (!err) {

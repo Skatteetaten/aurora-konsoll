@@ -1,4 +1,4 @@
-import GoboClient, { IGoboResult } from 'services/GoboClient';
+import GoboClient, { IDataAndErrors } from 'services/GoboClient';
 import {
   REDEPLOY_WITH_CURRENT_VERSION_MUTATION,
   REDEPLOY_WITH_VERSION_MUTATION,
@@ -11,7 +11,7 @@ import {
   APPLICATIONS_QUERY,
   IApplicationDeploymentDetailsQuery,
   IApplicationsConnectionData,
-  IUserAffiliationsQuery,
+  IUserAndAffiliationsData,
   USER_AFFILIATIONS_QUERY
 } from './query';
 
@@ -25,7 +25,7 @@ export class ApplicationDeploymentClient {
   public async redeployWithVersion(
     applicationDeploymentId: string,
     version: string
-  ): Promise<IGoboResult<{ redeployWithVersion: boolean }> | undefined> {
+  ): Promise<IDataAndErrors<{ redeployWithVersion: boolean }> | undefined> {
     return await this.client.mutate<{ redeployWithVersion: boolean }>({
       mutation: REDEPLOY_WITH_VERSION_MUTATION,
       variables: {
@@ -39,7 +39,9 @@ export class ApplicationDeploymentClient {
 
   public async redeployWithCurrentVersion(
     applicationDeploymentId: string
-  ): Promise<IGoboResult<{ redeployWithCurrentVersion: boolean }> | undefined> {
+  ): Promise<
+    IDataAndErrors<{ redeployWithCurrentVersion: boolean }> | undefined
+  > {
     return await this.client.mutate<{
       redeployWithCurrentVersion: boolean;
     }>({
@@ -55,7 +57,7 @@ export class ApplicationDeploymentClient {
   public async refreshApplicationDeployment(
     applicationDeploymentId: string
   ): Promise<
-    IGoboResult<{ refreshApplicationDeployment: string }> | undefined
+    IDataAndErrors<{ refreshApplicationDeployment: string }> | undefined
   > {
     return await this.client.mutate<{
       refreshApplicationDeployment: string;
@@ -71,7 +73,7 @@ export class ApplicationDeploymentClient {
 
   public async refreshAffiliations(
     affiliations: string[]
-  ): Promise<IGoboResult<{ affiliations: string[] }>> {
+  ): Promise<IDataAndErrors<{ affiliations: string[] }>> {
     return await this.client.mutate<{
       affiliations: string[];
     }>({
@@ -86,7 +88,7 @@ export class ApplicationDeploymentClient {
 
   public async findApplicationDeploymentDetails(
     id: string
-  ): Promise<IGoboResult<IApplicationDeploymentDetailsQuery> | undefined> {
+  ): Promise<IDataAndErrors<IApplicationDeploymentDetailsQuery> | undefined> {
     return await this.client.query<IApplicationDeploymentDetailsQuery>({
       query: APPLICATION_DEPLOYMENT_DETAILS_QUERY,
       variables: {
@@ -96,16 +98,16 @@ export class ApplicationDeploymentClient {
   }
 
   public async findUserAndAffiliations(): Promise<
-    IGoboResult<IUserAffiliationsQuery> | undefined
+    IDataAndErrors<IUserAndAffiliationsData>
   > {
-    return await this.client.query<IUserAffiliationsQuery>({
+    return await this.client.query<IUserAndAffiliationsData>({
       query: USER_AFFILIATIONS_QUERY
     });
   }
 
   public async findAllApplicationDeployments(
     affiliations: string[]
-  ): Promise<IGoboResult<IApplicationsConnectionData>> {
+  ): Promise<IDataAndErrors<IApplicationsConnectionData>> {
     return await this.client.query<IApplicationsConnectionData>({
       query: APPLICATIONS_QUERY,
       variables: {
@@ -118,7 +120,7 @@ export class ApplicationDeploymentClient {
     namespace: string,
     name: string
   ): Promise<
-    IGoboResult<{ deleteApplicationDeployment: boolean }> | undefined
+    IDataAndErrors<{ deleteApplicationDeployment: boolean }> | undefined
   > {
     return await this.client.mutate<{ deleteApplicationDeployment: boolean }>({
       mutation: DELETE_APPLICATION_DEPLOYMENT_MUTATION,

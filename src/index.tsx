@@ -20,7 +20,7 @@ import {
 } from 'services/auroraApiClients';
 import GoboClient from 'services/GoboClient';
 import createStoreWithApi from 'store';
-import { getCurrentUser } from 'store/state/startup/action.creators';
+import { requestCurrentUser } from 'store/state/startup/action.creators';
 import './index.css';
 
 async function init() {
@@ -62,7 +62,7 @@ async function init() {
   };
 
   const store = createStoreWithApi(clients);
-  store.dispatch(getCurrentUser());
+  store.dispatch(requestCurrentUser());
 
   ReactDOM.render(
     <Provider store={store}>

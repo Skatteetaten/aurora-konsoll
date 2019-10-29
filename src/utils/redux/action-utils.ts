@@ -1,57 +1,45 @@
 import { createAction, TsActionCreator } from 'redux-ts-utils';
 import { IApiClients } from 'models/AuroraApi';
-import {
-  RootState,
-  AsyncAction,
-  IExtraArguments,
-  RootAction
-} from 'store/types';
+import { RootState, AsyncAction } from 'store/types';
 import { addCurrentErrors } from 'screens/ErrorHandler/state/actions';
-import { IGoboResult } from 'services/GoboClient';
-import { ThunkDispatch } from 'redux-thunk';
-
-type Dispatch = ThunkDispatch<RootState, IExtraArguments, RootAction>;
+import { IDataAndErrors } from 'services/GoboClient';
 
 export type RequestActions<P, F = Error> = [
   TsActionCreator<void>,
   TsActionCreator<P>,
-  TsActionCreator<F[]>
+  TsActionCreator<F>
 ];
 
-export function createAsyncActions<R, S, F = Error>(
+export function createAsyncActions<P, F = Error>(
   type: string
-): [TsActionCreator<R>, TsActionCreator<S>, TsActionCreator<F[]>] {
+): [TsActionCreator<void>, TsActionCreator<P>, TsActionCreator<F>] {
   return [
-    createAction<R>(type),
-    createAction<S>(`${type}_SUCCESS`),
-    createAction<F[]>(`${type}_FAILURE`)
+    createAction<void>(type),
+    createAction<P>(`${type}_SUCCESS`),
+    createAction<F>(`${type}_FAILURE`)
   ];
 }
 
 export function doAsyncActions<P>(
   actions: RequestActions<P>,
-  fn: (
-    clients: IApiClients,
-    state: () => RootState,
-    dispatch: Dispatch
-  ) => Promise<P>
-): AsyncAction<P> {
+  fn: (clients: IApiClients, state: RootState) => Promise<P>
+): AsyncAction {
   return async (dispatch, getState, { clients }) => {
     const [request, success, failure] = actions;
     try {
       dispatch(request());
-      const result = await fn(clients, getState, dispatch);
-      // TODO: Remove?
+      const result = await fn(clients, getState());
+      // TODO: Remove
       if (isGoboResult(result)) {
         dispatch(addCurrentErrors(result));
       }
-      return dispatch(success(result));
+      dispatch(success(result));
     } catch (e) {
-      dispatch(failure([e]));
+      dispatch(failure(e));
     }
   };
 }
 
-function isGoboResult(result: any): result is IGoboResult<any> {
-  return (result as IGoboResult<any>).data !== undefined;
+function isGoboResult(result: any): result is IDataAndErrors<any> {
+  return (result as IDataAndErrors<any>).data !== undefined;
 }

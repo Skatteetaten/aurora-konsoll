@@ -24,7 +24,6 @@ type Props = IApplicationDeploymentSelectorConnectedProps &
   ApplicationDeploymentState;
 
 const ApplicationDeploymentSelector = ({
-  allApplicationDeploymentsResult,
   filterPathUrl,
   getApplicationDeploymentDetails,
   applicationDeploymentDetails,
@@ -77,16 +76,14 @@ const mapStateToProps = ({ affiliationView, applications }: RootState) => {
   const {
     isRefreshingApplicationDeployment,
     applicationDeploymentDetails,
-    isFetchingDetails,
-    allApplicationDeploymentsResult
+    isFetchingDetails
   } = affiliationView;
   const { applicationsConnection } = applications;
   return {
     applicationsConnection,
     isRefreshingApplicationDeployment,
     applicationDeploymentDetails,
-    isFetchingDetails,
-    allApplicationDeploymentsResult
+    isFetchingDetails
   };
 };
 
