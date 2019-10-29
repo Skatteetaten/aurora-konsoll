@@ -1,19 +1,13 @@
 import React from 'react';
+import { IObjectWithKey } from 'office-ui-fabric-react/lib/Utilities';
+import { Selection } from 'office-ui-fabric-react/lib/DetailsList';
 
 import styled from 'styled-components';
 import TextField from 'aurora-frontend-react-komponenter/TextField';
 
 import Spinner from 'components/Spinner';
-import {
-  CheckboxVisibility,
-  IObjectWithKey,
-  Selection,
-  SelectionMode,
-  IColumn
-} from 'office-ui-fabric-react/lib/DetailsList';
 import { getLocalDate } from 'utils/date';
 
-import SortableDetailsList from 'components/SortableDetailsList';
 import { IUserAndAffiliations } from 'models/ApplicationDeployment';
 import {
   ICreateDatabaseSchemaInput,
@@ -24,11 +18,14 @@ import {
   IJdbcUser,
   IUpdateDatabaseSchemaInputWithCreatedBy
 } from 'models/schemas';
-import DatabaseSchemaService from 'services/DatabaseSchemaService';
 import ConfirmDeletionDialog from './ConfirmDeletionDialog';
 import DatabaseSchemaCreateDialog from './DatabaseSchemaCreateDialog';
 import DatabaseSchemaUpdateDialog from './DatabaseSchemaUpdateDialog';
 import { EnterModeThenConfirm } from './EnterModeThenConfirm';
+import {
+  DatabaseSchemaTable,
+  IDatabaseSchemaView
+} from './DatabaseSchemaTable2';
 
 export interface ISchemaProps {
   onFetch: (affiliations: string[]) => void;
@@ -71,16 +68,15 @@ export class Schema extends React.Component<ISchemaProps, ISchemaState> {
     shouldResetSort: false,
     confirmDeletionDialogVisible: false
   };
-  private databaseSchemaService = new DatabaseSchemaService();
 
   private schemaSelection: SchemaSelection = new SchemaSelection(
     new Selection({
       onSelectionChanged: () => {
-        if (!this.state.deleteMode) {
-          this.onUpdateRowClicked();
-        } else {
-          this.setState({});
-        }
+        // if (!this.state.deleteMode) {
+        //   this.onUpdateRowClicked();
+        // } else {
+        //   this.setState({});
+        // }
       }
     })
   );
@@ -96,7 +92,7 @@ export class Schema extends React.Component<ISchemaProps, ISchemaState> {
     const { filter } = this.state;
 
     if (prevState.filter !== filter) {
-      this.schemaSelection.clear();
+      // this.schemaSelection.clear();
     }
 
     if (prevProps.items !== items) {
@@ -196,24 +192,15 @@ export class Schema extends React.Component<ISchemaProps, ISchemaState> {
         {isFetching ? (
           <Spinner />
         ) : (
-          <div className="styledTable">
-            <SortableDetailsList
-              columns={this.defaultColumns}
-              filterView={this.filterDatabaseSchemaView}
-              selectionMode={SelectionMode.multiple}
-              filter={filter}
-              isHeaderVisible={true}
-              items={viewItems}
-              selection={this.schemaSelection.getSelection()}
-              shouldResetSort={shouldResetSort}
-              onResetSort={this.onSchemaListSortReset}
-              checkboxVisibility={
-                deleteMode
-                  ? CheckboxVisibility.always
-                  : CheckboxVisibility.hidden
-              }
-            />
-          </div>
+          <DatabaseSchemaTable
+            filter={filter}
+            viewItems={viewItems}
+            shouldResetSort={shouldResetSort}
+            onSchemaListSortReset={this.onSchemaListSortReset}
+            multiSelect={deleteMode}
+            selection={this.schemaSelection.getSelection()}
+            // TODO: Make schema selection event based.
+          />
         )}
 
         <DatabaseSchemaUpdateDialog
@@ -221,7 +208,6 @@ export class Schema extends React.Component<ISchemaProps, ISchemaState> {
           clearSelectedSchema={this.onUpdateSchemaDialogClosed}
           onUpdate={onUpdate}
           onDelete={onDelete}
-          databaseSchemaService={this.databaseSchemaService}
           onTestJdbcConnectionForId={onTestJdbcConnectionForId}
           testJdbcConnectionResponse={testJdbcConnectionResponse}
           createNewCopy={this.onCreateCopyConfirmed}
@@ -236,116 +222,6 @@ export class Schema extends React.Component<ISchemaProps, ISchemaState> {
       </div>
     );
   }
-
-  private defaultColumns: IColumn[] = [
-    {
-      fieldName: 'type',
-      isResizable: true,
-      key: '0',
-      maxWidth: 85,
-      minWidth: 85,
-      name: 'Type',
-      iconName: ''
-    },
-    {
-      fieldName: 'environment',
-      isResizable: true,
-      key: '1',
-      maxWidth: 200,
-      minWidth: 200,
-      name: 'Miljø',
-      iconName: ''
-    },
-    {
-      fieldName: 'application',
-      isResizable: true,
-      key: '2',
-      maxWidth: 200,
-      minWidth: 200,
-      name: 'Applikasjon',
-      iconName: ''
-    },
-    {
-      fieldName: 'discriminator',
-      isResizable: true,
-      key: '3',
-      maxWidth: 200,
-      minWidth: 200,
-      name: 'Diskriminator',
-      iconName: ''
-    },
-    {
-      fieldName: 'createdDate',
-      isResizable: true,
-      key: '4',
-      maxWidth: 90,
-      minWidth: 90,
-      name: 'Opprettet',
-      iconName: ''
-    },
-    {
-      fieldName: 'lastUsedDate',
-      isResizable: true,
-      key: '5',
-      maxWidth: 90,
-      minWidth: 90,
-      name: 'Sist brukt',
-      iconName: ''
-    },
-    {
-      fieldName: 'sizeInMb',
-      isResizable: true,
-      key: '6',
-      maxWidth: 110,
-      minWidth: 110,
-      name: 'Størrelse (MB)',
-      iconName: ''
-    },
-    {
-      fieldName: 'createdBy',
-      isResizable: true,
-      key: '7',
-      maxWidth: 80,
-      minWidth: 80,
-      name: 'Bruker',
-      iconName: ''
-    },
-    {
-      fieldName: 'applicationDeploymentsUses',
-      isResizable: true,
-      key: '8',
-      maxWidth: 70,
-      minWidth: 70,
-      name: 'I bruk av',
-      iconName: ''
-    },
-    {
-      fieldName: 'jdbcUrl',
-      isResizable: true,
-      key: '9',
-      maxWidth: 280,
-      minWidth: 280,
-      name: 'JDBC url',
-      iconName: '',
-      className: 'jdbcurl-col'
-    }
-  ];
-
-  private filterDatabaseSchemaView = (filter: string) => {
-    return (v: IDatabaseSchemaView) =>
-      v.createdBy.includes(filter) ||
-      v.application.includes(filter) ||
-      v.environment.includes(filter) ||
-      v.discriminator.includes(filter) ||
-      v.createdDate.includes(filter) ||
-      (!v.lastUsedDate || v.lastUsedDate === null
-        ? false
-        : v.lastUsedDate.includes(filter)) ||
-      v.sizeInMb.toString().includes(filter) ||
-      v.type.includes(filter) ||
-      v.jdbcUrl.includes(filter) ||
-      v.id.includes(filter);
-  };
 
   private onSchemaListSortReset = () => {
     this.setState({ shouldResetSort: false });
@@ -446,20 +322,6 @@ class SchemaSelection {
       schema => selectedSchemas.find(it => it.id === schema.id) !== undefined
     );
   }
-}
-
-export interface IDatabaseSchemaView {
-  type: string;
-  application: string;
-  environment: string;
-  discriminator: string;
-  createdBy: string;
-  createdDate: string;
-  lastUsedDate?: string | null;
-  sizeInMb: number;
-  applicationDeploymentsUses: number;
-  id: string;
-  jdbcUrl: string;
 }
 
 const toViewSchema = (i: IDatabaseSchema): IDatabaseSchemaView => {

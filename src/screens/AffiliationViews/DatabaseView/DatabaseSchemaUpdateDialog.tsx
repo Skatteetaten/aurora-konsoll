@@ -28,7 +28,6 @@ export interface IDatabaseSchemaUpdateDialogProps {
   onUpdate: (databaseSchema: IUpdateDatabaseSchemaInputWithCreatedBy) => void;
   onDelete: (databaseSchema: IDatabaseSchema) => void;
   onTestJdbcConnectionForId: (id: string) => void;
-  databaseSchemaService: DatabaseSchemaService;
   testJdbcConnectionResponse: boolean;
   createNewCopy: () => void;
 }
@@ -49,6 +48,8 @@ class DatabaseSchemaUpdateDialog extends React.Component<
   IDatabaseSchemaUpdateDialogProps,
   IDatabaseSchemaUpdateDialogState
 > {
+  private databaseSchemaService = new DatabaseSchemaService();
+
   public state = {
     updatedSchemaValues: {
       id: '',
@@ -166,7 +167,6 @@ class DatabaseSchemaUpdateDialog extends React.Component<
     const {
       schema,
       className,
-      databaseSchemaService,
       testJdbcConnectionResponse,
       onTestJdbcConnectionForId
     } = this.props;
@@ -264,7 +264,7 @@ class DatabaseSchemaUpdateDialog extends React.Component<
               style={{ width: '120px' }}
               icon="Check"
               onClick={this.updateLabels}
-              disabled={databaseSchemaService.isUpdateButtonDisabled(
+              disabled={this.databaseSchemaService.isUpdateButtonDisabled(
                 updatedSchemaValues,
                 schema
               )}
