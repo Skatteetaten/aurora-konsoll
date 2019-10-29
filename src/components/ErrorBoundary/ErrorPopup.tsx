@@ -9,11 +9,9 @@ import { IAppError } from 'models/errors';
 interface IErrorPopupProps {
   currentError: IAppError;
   errorCount: number;
-  isExtraInfoVisible: boolean;
   className?: string;
   closeError: (id: number) => void;
   closeErrors: () => void;
-  changeExtraInfoVisibility: () => void;
 }
 
 const renderTableContent = (type: string): JSX.Element[] => {
@@ -31,10 +29,9 @@ const ErrorPopup = ({
   closeError,
   closeErrors,
   errorCount,
-  changeExtraInfoVisibility,
-  isExtraInfoVisible,
   className
 }: IErrorPopupProps) => {
+  const [expandMessageBar, setExpandMessageBar] = React.useState(false);
   const hasMoreErrors = errorCount > 0;
   return (
     <div className={className}>
@@ -46,12 +43,12 @@ const ErrorPopup = ({
             <div className="action-bar">
               {(currentError.error.stack || currentError.error.name) && (
                 <ActionButton
-                  onClick={changeExtraInfoVisibility}
+                  onClick={() => setExpandMessageBar(!expandMessageBar)}
                   iconSize={ActionButton.LARGE}
-                  icon={!isExtraInfoVisible ? 'ChevronDown' : 'ChevronUp'}
+                  icon={!expandMessageBar ? 'ChevronDown' : 'ChevronUp'}
                   className="expand-button"
                 >
-                  {!isExtraInfoVisible ? 'Vis mer' : 'Skjul'}
+                  {!expandMessageBar ? 'Vis info' : 'Skjul'}
                 </ActionButton>
               )}
               <div className="close-button">
@@ -66,7 +63,7 @@ const ErrorPopup = ({
           }
         >
           {currentError.error.message}
-          {isExtraInfoVisible && (
+          {expandMessageBar && (
             <table>
               <tbody>
                 {!!currentError.error.stack &&
@@ -87,7 +84,7 @@ export default styled(ErrorPopup)`
   z-index: 200;
   background: white;
   position: absolute;
-  width: 550px;
+  width: 100%;
   max-width: 550px;
   max-height: 600px;
   right: 20px;

@@ -12,16 +12,14 @@ interface IErrorBoundaryProps {
 }
 
 interface IErrorBoundaryState {
-  isExtraInfoVisible: boolean;
   errorQueue: IAppError[];
 }
 
 class ErrorBoundary extends React.Component<
-IErrorBoundaryProps,
-IErrorBoundaryState
+  IErrorBoundaryProps,
+  IErrorBoundaryState
 > {
   public state: IErrorBoundaryState = {
-    isExtraInfoVisible: false,
     errorQueue: []
   };
   public async componentDidUpdate() {
@@ -51,15 +49,9 @@ IErrorBoundaryState
     }
   }
 
-  public changeExtraInfoVisibility = () => {
-    this.setState(prevState => ({
-      isExtraInfoVisible: !prevState.isExtraInfoVisible
-    }));
-  };
-
   public render() {
     const { children, closeError, closeErrors, errors, nextError } = this.props;
-    const { isExtraInfoVisible } = this.state;
+
     return (
       <>
         {nextError && (
@@ -68,8 +60,6 @@ IErrorBoundaryState
             closeError={closeError}
             closeErrors={closeErrors}
             errorCount={errors.errorQueue.length}
-            isExtraInfoVisible={isExtraInfoVisible}
-            changeExtraInfoVisibility={this.changeExtraInfoVisibility}
           />
         )}
         {children}
