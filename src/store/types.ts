@@ -10,7 +10,6 @@ import { AffiliationViewAction } from 'screens/AffiliationViews/state/reducer';
 import { NetdebugViewAction } from 'screens/NetdebugView/state/reducer';
 
 import { VersionsAction } from './state/versions/actions';
-import { DeployAction } from './state/deploy/actions';
 
 import { rootReducer } from './rootReducer';
 import { ResolveThunks } from 'react-redux';
@@ -24,7 +23,6 @@ export type RootState = StateType<typeof rootReducer>;
 export type RootAction =
   | ApplicationsAction
   | VersionsAction
-  | DeployAction
   | DatabaseSchemasAction
   | StartupAction
   | CertificateAction

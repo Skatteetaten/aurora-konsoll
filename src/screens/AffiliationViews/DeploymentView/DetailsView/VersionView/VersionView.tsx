@@ -3,27 +3,26 @@ import styled from 'styled-components';
 
 import { ImageTagType } from 'models/ImageTagType';
 
-import { VersionTableContainer } from './containers/VersionTable/VersionTableContainer';
 import { VersionTypeSelectorContainer } from './containers/VersionTypeSelector/VersionTypeSelectorContainer';
 import { VersionTableInformation } from './components/VersionTableInformation';
 import { ServerSideSearchContainer } from './containers/ServerSideSearch/ServerSideSearchContainer';
 import { PermissionToUpgradeInformation } from './components/PermissionToUpgradeInformation';
 import { FetchMoreVersionsContainer } from './containers/FetchMoreVersions/FetchMoreVersionsContainer';
 import { VersionViewProps } from './VersionView.state';
-import { RedeployRow } from './components/RedeployRow';
+import { RedeployRowAndVersionTableContainer } from './containers/RedeployRowAndVersionTable/RedeployRowAndVersionTableContainer';
 
 export const VersionView = ({
   versionStatus,
   affiliation,
   deployment,
   imageTagsConnection,
-  tag
+  configuredVersionTag
 }: VersionViewProps) => {
   const { id, version, imageRepository } = deployment;
 
   const [searchText, setSearchText] = useState<string | undefined>();
   const [versionType, setVersionType] = useState(imageTagsConnection.getType());
-    
+
   useEffect(() => {
     setVersionType(version.deployTag.type);
   }, [version.deployTag.type]);
@@ -59,21 +58,15 @@ export const VersionView = ({
         />
       </ActionBar>
       <VersionTableInformation />
-      <RedeployRow
-        versionStatus={versionStatus}
+      <RedeployRowAndVersionTableContainer
         affiliation={affiliation}
         applicationId={id}
+        configuredVersionTag={configuredVersionTag}
+        deployedVersion={version.deployTag}
         hasAccessToDeploy={hasAccessToDeploy}
-        activeVersion={version.deployTag}
-        version={tag}
-      />
-      <VersionTableContainer
-        hasAccessToDeploy={hasAccessToDeploy}
-        affiliation={affiliation}
-        searchText={searchText}
-        currentVersion={version.deployTag}
-        applicationId={id}
         repository={imageRepository.repository}
+        searchText={searchText}
+        versionStatus={versionStatus}
         versionType={versionType}
       />
       <FetchMoreVersionsContainer
@@ -84,7 +77,6 @@ export const VersionView = ({
     </Wrapper>
   );
 };
-
 const Wrapper = styled.div`
   display: flex;
   flex-direction: column;

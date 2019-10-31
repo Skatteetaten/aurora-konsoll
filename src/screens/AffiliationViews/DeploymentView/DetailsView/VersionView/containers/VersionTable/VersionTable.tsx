@@ -1,10 +1,11 @@
 import * as React from 'react';
 import Table from 'aurora-frontend-react-komponenter/Table';
 import styled from 'styled-components';
-import { DeployButtonContainer } from '../DeployButton/DeployButtonContainer';
 import { ImageTagType } from 'models/ImageTagType';
 import { IVersionTableProps, VersionTableState } from './VersionTable.state';
 import { useEffect } from 'react';
+import { DeployButton } from '../../components/DeployButton';
+import { VersionInfo } from '../../components/VersionInfo';
 
 const columns = [
   {
@@ -55,8 +56,6 @@ function getOptionName(type: ImageTagType): string {
 type Props = IVersionTableProps & VersionTableState;
 
 export const VersionTable = ({
-  affiliation,
-  applicationId,
   currentVersion,
   imageTagsConnection,
   hasAccessToDeploy,
@@ -64,7 +63,9 @@ export const VersionTable = ({
   isFetching,
   repository,
   searchText,
-  versionType
+  versionType,
+  versionBeingDeployed,
+  onConfirmDeploy
 }: Props) => {
   const index = imageTagsConnection.findVersionIndex(currentVersion.name);
 
@@ -92,13 +93,21 @@ export const VersionTable = ({
         name: it.name,
         lastModified: it.image ? it.image.buildTime : '',
         deploy: (
-          <DeployButtonContainer
+          <DeployButton
+            isLoading={versionBeingDeployed === it.name}
+            buttonText="Deploy"
+            dialogTitle="Vil du endre versjonen?"
             hasAccessToDeploy={hasAccessToDeploy}
-            affiliation={affiliation}
-            applicationId={applicationId}
-            currentVersion={currentVersion}
-            nextVersion={it}
-          />
+            isOldVersion={!it.image}
+            onConfirmDeploy={() => onConfirmDeploy(it.name)}
+          >
+            <VersionInfo>
+              <p>Fra:</p> {currentVersion.name}
+            </VersionInfo>
+            <VersionInfo>
+              <p>Til:</p> {it.name}
+            </VersionInfo>
+          </DeployButton>
         )
       };
     });

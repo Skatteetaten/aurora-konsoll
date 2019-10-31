@@ -14,7 +14,7 @@ interface IVersionViewProps {
 
 interface IState {
   imageTagsConnection: ImageTagsConnection;
-  tag?: IImageTag;
+  configuredVersionTag?: IImageTag;
 }
 
 export const mapStateToProps = (
@@ -25,7 +25,7 @@ export const mapStateToProps = (
 
   const defaultState: IState = {
     imageTagsConnection: types[ImageTagType.MAJOR],
-    tag: undefined
+    configuredVersionTag: undefined
   };
 
   if (!configuredVersion) {
@@ -58,7 +58,7 @@ export const mapStateToProps = (
 
   return {
     imageTagsConnection: versions.types[obj.type],
-    tag: types[obj.type].getVersions()[obj.index]
+    configuredVersionTag: types[obj.type].getVersions()[obj.index]
   };
 };
 

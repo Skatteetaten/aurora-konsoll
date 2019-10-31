@@ -22,10 +22,30 @@ export class ApplicationDeploymentClient {
     this.client = client;
   }
 
+  public async redeployWithVersionAndRefreshDeployment(
+    affiliation: string,
+    applicationDeploymentId: string,
+    version: string
+  ): Promise<IDataAndErrors<IApplicationsConnectionData>> {
+    const redeployResult = await this.redeployWithVersion(
+      applicationDeploymentId,
+      version
+    );
+    if (redeployResult.data && redeployResult.data.redeployWithVersion) {
+      await this.refreshApplicationDeployment(applicationDeploymentId);
+      return await this.findAllApplicationDeployments([affiliation]);
+    } else {
+      return {
+        name: redeployResult.name,
+        errors: redeployResult.errors
+      };
+    }
+  }
+
   public async redeployWithVersion(
     applicationDeploymentId: string,
     version: string
-  ): Promise<IDataAndErrors<{ redeployWithVersion: boolean }> | undefined> {
+  ): Promise<IDataAndErrors<{ redeployWithVersion: boolean }>> {
     return await this.client.mutate<{ redeployWithVersion: boolean }>({
       mutation: REDEPLOY_WITH_VERSION_MUTATION,
       variables: {
@@ -56,9 +76,7 @@ export class ApplicationDeploymentClient {
 
   public async refreshApplicationDeployment(
     applicationDeploymentId: string
-  ): Promise<
-    IDataAndErrors<{ refreshApplicationDeployment: string }> | undefined
-  > {
+  ): Promise<IDataAndErrors<{ refreshApplicationDeployment: string }>> {
     return await this.client.mutate<{
       refreshApplicationDeployment: string;
     }>({

@@ -4,6 +4,7 @@ import { ApplicationsConnection } from 'models/immer/ApplicationsConnection';
 
 interface IApplicationsState {
   isFetching: boolean;
+  isDeploying: boolean;
   applicationsConnection: ApplicationsConnection;
   errors: {
     requestApplications: Error[];
@@ -12,6 +13,7 @@ interface IApplicationsState {
 
 const initialState: IApplicationsState = {
   isFetching: false,
+  isDeploying: false,
   applicationsConnection: new ApplicationsConnection({}),
   errors: {
     requestApplications: []
@@ -20,10 +22,15 @@ const initialState: IApplicationsState = {
 
 export const applicationsReducer = reduceReducers<IApplicationsState>(
   [
+    handleAction(actions.deployRequest, state => {
+      state.isDeploying = true;
+    }),
+
     handleAction(actions.fetchApplications.request, state => {
       state.isFetching = true;
     }),
     handleAction(actions.fetchApplications.success, (state, { payload }) => {
+      state.isDeploying = false;
       state.isFetching = false;
       if (payload.data) {
         state.applicationsConnection.update(payload.data);
@@ -33,6 +40,7 @@ export const applicationsReducer = reduceReducers<IApplicationsState>(
       }
     }),
     handleAction(actions.fetchApplications.failure, (state, { payload }) => {
+      state.isDeploying = false;
       state.isFetching = false;
       state.errors.requestApplications.push(payload);
     })
