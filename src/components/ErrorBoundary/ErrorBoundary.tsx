@@ -20,24 +20,14 @@ const ErrorBoundary = ({
   nextError,
   children
 }: IErrorBoundaryProps) => {
-  const [errorQueue, setErrorQueue] = React.useState<IAppError[]>([]);
-
   useEffect(() => {
-    const isEqualErrorQueues =
-      JSON.stringify({ ...errors.errorQueue }) ===
-      JSON.stringify({ ...errorQueue });
-
-    if (!isEqualErrorQueues && errors.errorQueue.length > 0) {
-      setErrorQueue({ ...errors.errorQueue });
+    if (
+      (errors.errorQueue.length > 0 && !nextError) ||
+      (nextError && !nextError.isActive)
+    ) {
+      getNextError();
     }
-  }, [errorQueue, errors.errorQueue]);
-
-  if (
-    (errors.errorQueue.length > 0 && !nextError) ||
-    (nextError && !nextError.isActive)
-  ) {
-    getNextError();
-  }
+  });
   return (
     <>
       {nextError && (
