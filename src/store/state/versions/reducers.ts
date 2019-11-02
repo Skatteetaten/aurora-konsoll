@@ -4,7 +4,10 @@ import { ImageTagType } from 'models/ImageTagType';
 import { ImageTagsConnection } from 'models/immer/ImageTagsConnection';
 
 import { actions } from './actions';
-import { IImageTagsConnection } from 'services/auroraApiClients/imageRepositoryClient/query';
+import {
+  IImageTagsConnection,
+  ITagsQuery
+} from 'services/auroraApiClients/imageRepositoryClient/query';
 
 export const defaultImageTagsConnection: IImageTagsConnection = {
   edges: [],
@@ -62,15 +65,10 @@ export const versionsReducer = reduceReducers<IVersionsState>(
       Object.keys(payload).forEach(key => {
         const type = key as ImageTagType;
         const response = payload[type];
-        const current = state.types[type];
+        const current = state.types[type] as ImageTagsConnection;
 
         if (response.data) {
-          const { imageRepositories } = response.data;
-          if (imageRepositories.length > 0) {
-            const repo = imageRepositories[0].tags;
-            current.setTotalCount(repo.totalCount);
-            current.addVersions(repo.edges);
-          }
+          updateImageTagsConnection(response.data, current, true);
         }
       });
     }),
@@ -87,18 +85,10 @@ export const versionsReducer = reduceReducers<IVersionsState>(
       state.isFetching = false;
 
       const { response, paged, type } = payload;
-      const current = state.types[type];
+      const current = state.types[type] as ImageTagsConnection;
 
       if (response.data) {
-        const { imageRepositories } = response.data;
-        if (imageRepositories.length > 0) {
-          const repo = imageRepositories[0].tags;
-          current.setTotalCount(repo.totalCount);
-          current.addVersions(repo.edges);
-          if (paged) {
-            current.setPageInfo(repo.pageInfo);
-          }
-        }
+        updateImageTagsConnection(response.data, current, paged);
       }
     }),
     handleAction(actions.fetchVersionsForType.failure, state => {
@@ -116,3 +106,19 @@ export const versionsReducer = reduceReducers<IVersionsState>(
   ],
   initialState
 );
+
+function updateImageTagsConnection(
+  data: ITagsQuery,
+  current: ImageTagsConnection,
+  paged: boolean
+) {
+  const { imageRepositories } = data;
+  if (imageRepositories.length > 0) {
+    const repo = imageRepositories[0].tags;
+    current.setTotalCount(repo.totalCount);
+    current.addVersions(repo.edges);
+    if (paged) {
+      current.setPageInfo(repo.pageInfo);
+    }
+  }
+}
