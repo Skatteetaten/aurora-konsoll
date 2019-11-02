@@ -1,13 +1,17 @@
-import * as React from 'react';
+import React, { useEffect } from 'react';
 import { connect } from 'react-redux';
 import { useRouteMatch } from 'react-router-dom';
 import { RootState, ReduxProps } from 'store/types';
 import { DetailsView } from './DetailsView';
 import {
   refreshApplicationDeployment,
-  findApplicationDeploymentDetails,
   deleteApplicationDeployment
 } from '../../state/actions';
+import {
+  fetchApplicationDeploymentWithDetails,
+  resetApplicationDeploymentState
+} from 'store/state/applicationDeployments/action.creators';
+import Spinner from 'components/Spinner';
 
 export type ApplicationDeploymentMatchParams = {
   affiliation: string;
@@ -17,7 +21,6 @@ export type ApplicationDeploymentMatchParams = {
 interface IApplicationDeploymentSelectorConnectedProps {
   filterPathUrl: string;
   affiliation: string;
-  refreshApplicationDeployments: () => void;
 }
 
 type Props = IApplicationDeploymentSelectorConnectedProps &
@@ -25,42 +28,47 @@ type Props = IApplicationDeploymentSelectorConnectedProps &
 
 const ApplicationDeploymentSelector = ({
   filterPathUrl,
-  getApplicationDeploymentDetails,
-  applicationDeploymentDetails,
   refreshCurrentApplicationDeployment,
-  refreshApplicationDeployments,
-  isFetchingDetails,
   isRefreshingApplicationDeployment,
   affiliation,
   deleteApplicationDeployment,
-  applicationsConnection
+  applicationDeployment,
+  fetchApplicationDeploymentWithDetails,
+  isFetching,
+  resetApplicationDeploymentState
 }: Props) => {
   const match = useRouteMatch<ApplicationDeploymentMatchParams>();
-  if (!match) {
-    return null;
+
+  const id = (match && match.params.applicationDeploymentId) || undefined;
+
+  useEffect(() => {
+    if (id) {
+      fetchApplicationDeploymentWithDetails(id);
+    }
+    return () => {
+      resetApplicationDeploymentState();
+    };
+  }, [
+    id,
+    resetApplicationDeploymentState,
+    fetchApplicationDeploymentWithDetails
+  ]);
+
+  if (isFetching) {
+    return <Spinner />;
   }
 
-  const all = applicationsConnection.getApplicationDeployments();
-
-  const deployment = all.find(
-    d => d.id === match.params.applicationDeploymentId
-  );
-
-  if (!deployment) {
+  if (!applicationDeployment) {
     return <p>Fant ikke deployment</p>;
   }
 
   return (
     <DetailsView
-      deployment={deployment}
+      deployment={applicationDeployment}
       filterPathUrl={filterPathUrl}
-      findApplicationDeploymentDetails={getApplicationDeploymentDetails}
-      deploymentDetails={applicationDeploymentDetails}
       refreshApplicationDeployment={refreshCurrentApplicationDeployment}
-      refreshApplicationDeployments={refreshApplicationDeployments}
       isRefreshingApplicationDeployment={isRefreshingApplicationDeployment}
       affiliation={affiliation}
-      isFetchingDetails={isFetchingDetails}
       deleteApplicationDeployment={deleteApplicationDeployment}
     />
   );
@@ -68,22 +76,18 @@ const ApplicationDeploymentSelector = ({
 
 const mapDispatchToProps = {
   refreshCurrentApplicationDeployment: refreshApplicationDeployment,
-  getApplicationDeploymentDetails: findApplicationDeploymentDetails,
-  deleteApplicationDeployment
+  deleteApplicationDeployment,
+  fetchApplicationDeploymentWithDetails,
+  resetApplicationDeploymentState
 };
 
 const mapStateToProps = ({ affiliationView, applications }: RootState) => {
-  const {
-    isRefreshingApplicationDeployment,
-    applicationDeploymentDetails,
-    isFetchingDetails
-  } = affiliationView;
-  const { applicationsConnection } = applications;
+  const { isRefreshingApplicationDeployment } = affiliationView;
+  const { applicationDeployment, isFetching } = applications;
   return {
-    applicationsConnection,
-    isRefreshingApplicationDeployment,
-    applicationDeploymentDetails,
-    isFetchingDetails
+    isFetching,
+    applicationDeployment,
+    isRefreshingApplicationDeployment
   };
 };
 

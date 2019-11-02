@@ -28,7 +28,7 @@ export const RedeployRowAndVersionTable: React.FC<Props> = ({
 
   const onConfirmDeploy = (version: string) => {
     if (hasAccessToDeploy) {
-      deploy(affiliation, applicationId, version);
+      deploy(applicationId, version);
       setVersionBeingDeploy(version);
     }
   };

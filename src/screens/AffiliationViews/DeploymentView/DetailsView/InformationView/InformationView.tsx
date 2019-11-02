@@ -3,11 +3,6 @@ import styled from 'styled-components';
 
 import Button from 'aurora-frontend-react-komponenter/Button';
 import ActionButton from 'aurora-frontend-react-komponenter/ActionButton';
-import Spinner from 'components/Spinner';
-import {
-  IApplicationDeployment,
-  IApplicationDeploymentDetails
-} from 'models/ApplicationDeployment';
 import { ActiveDeploymentInformation } from './ActiveDeploymentInformation';
 import { DeploymentSpecInformation } from './DeploymentSpecInformation';
 import { GitAndBuildInformation } from './GitAndBuildInformation';
@@ -17,37 +12,28 @@ import StatusCheckReportCard from './StatusCheckReportCard';
 import PodsStatus from './PodsStatus';
 import ConfirmationDialog from 'components/ConfirmationDialog';
 import { VersionStatus } from '../models/VersionStatus';
+import { ApplicationDeployment } from 'models/immer/ApplicationDeployment';
 
 interface IInformationViewProps {
   versionStatus: VersionStatus;
-  isFetchingDetails: boolean;
-  deploymentDetails: IApplicationDeploymentDetails;
-  deployment: IApplicationDeployment;
+  deployment: ApplicationDeployment;
   className?: string;
   isUpdating: boolean;
   refreshApplicationDeployment: () => void;
-  refreshApplicationDeployments: () => void;
   deleteApplicationDeployment: (namespace: string, name: string) => void;
   goToDeploymentsPage: () => void;
 }
 
 const InformationView = ({
   versionStatus,
-  isFetchingDetails,
-  deploymentDetails,
   deployment,
   className,
   refreshApplicationDeployment,
-  refreshApplicationDeployments,
   isUpdating,
   deleteApplicationDeployment,
   goToDeploymentsPage
 }: IInformationViewProps) => {
-  const { deploymentSpec, pods } = deploymentDetails;
-  if (isFetchingDetails) {
-    return <Spinner />;
-  }
-
+  const { deploymentSpec, pods } = deployment.details;
   const hasManagementInterface =
     !!deploymentSpec && !!deploymentSpec.management;
 
@@ -75,7 +61,6 @@ const InformationView = ({
       deleteApplicationDeployment(deployment.namespace, deployment.name);
       close();
       goToDeploymentsPage();
-      refreshApplicationDeployments();
     };
 
     return (
@@ -107,16 +92,14 @@ const InformationView = ({
           <ActiveDeploymentInformation
             versionStatus={versionStatus}
             deployment={deployment}
-            deploymentSpec={deploymentSpec}
-            deploymentDetails={deploymentDetails}
           />
           <DeploymentSpecInformation deploymentSpec={deploymentSpec} />
-          <GitAndBuildInformation deploymentDetails={deploymentDetails} />
+          <GitAndBuildInformation deploymentDetails={deployment.details} />
         </div>
         <div>
           <h3>AuroraStatus for deployment</h3>
           <StatusCheckReportCard deployment={deployment} />
-          <ServiceLinks serviceLinks={deploymentDetails.serviceLinks} />
+          <ServiceLinks serviceLinks={deployment.details.serviceLinks} />
           <br />
           <ConfirmationDialog
             title="Slett applikasjon"
@@ -128,7 +111,7 @@ const InformationView = ({
         <div>
           <ManagementInterface
             hasManagementInterface={hasManagementInterface}
-            details={deploymentDetails}
+            details={deployment.details}
           />
         </div>
       </div>
@@ -144,7 +127,7 @@ const InformationView = ({
           <PodsStatus
             isUpdating={isUpdating}
             refreshApplicationDeployment={refreshApplicationDeployment}
-            details={deploymentDetails}
+            details={deployment.details}
           />
         )}
       </div>

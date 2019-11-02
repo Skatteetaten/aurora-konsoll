@@ -9,6 +9,18 @@ interface IImageTagsVariables {
   types?: string[];
 }
 
+const {
+  AURORA_SNAPSHOT_VERSION,
+  AURORA_VERSION,
+  BUGFIX,
+  COMMIT_HASH,
+  LATEST,
+  MAJOR,
+  MINOR,
+  SEARCH,
+  SNAPSHOT
+} = ImageTagType;
+
 export class ImageRepositoryClient {
   private client: GoboClient;
 
@@ -21,7 +33,7 @@ export class ImageRepositoryClient {
     first: number,
     filter: string,
     cursor?: string
-  ): Promise<IDataAndErrors<ITagsQuery> | undefined> {
+  ): Promise<IDataAndErrors<ITagsQuery>> {
     return await this.client.query<ITagsQuery>({
       query: TAGS_QUERY,
       variables: {
@@ -38,8 +50,8 @@ export class ImageRepositoryClient {
     type: string,
     first: number,
     cursor?: string
-  ): Promise<IDataAndErrors<ITagsQuery> | undefined> {
-    const isSearch = type === ImageTagType.SEARCH;
+  ): Promise<IDataAndErrors<ITagsQuery>> {
+    const isSearch = type === SEARCH;
     let variables: IImageTagsVariables = {
       cursor,
       first,
@@ -54,5 +66,41 @@ export class ImageRepositoryClient {
       query: TAGS_QUERY,
       variables
     });
+  }
+
+  public async fetchInitVersions(
+    repository: string
+  ): Promise<Record<ImageTagType, IDataAndErrors<ITagsQuery>>> {
+    const [
+      major,
+      minor,
+      bugfix,
+      latest,
+      snapshot,
+      commitHash,
+      uniqueSnapshot,
+      auroraVersion
+    ] = await Promise.all([
+      this.findTagsPaged(repository, MAJOR, 15),
+      this.findTagsPaged(repository, MINOR, 15),
+      this.findTagsPaged(repository, BUGFIX, 15),
+      this.findTagsPaged(repository, LATEST, 1),
+      this.findTagsPaged(repository, SNAPSHOT, 15),
+      this.findTagsPaged(repository, COMMIT_HASH, 15),
+      this.findTagsPaged(repository, AURORA_SNAPSHOT_VERSION, 15),
+      this.findTagsPaged(repository, AURORA_VERSION, 15)
+    ]);
+
+    return {
+      [MAJOR]: major,
+      [MINOR]: minor,
+      [BUGFIX]: bugfix,
+      [LATEST]: latest,
+      [SNAPSHOT]: snapshot,
+      [COMMIT_HASH]: commitHash,
+      [AURORA_VERSION]: auroraVersion,
+      [AURORA_SNAPSHOT_VERSION]: uniqueSnapshot,
+      [SEARCH]: { name: 'search' }
+    };
   }
 }

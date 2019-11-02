@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { Route, Switch, useRouteMatch, useHistory } from 'react-router-dom';
 import styled from 'styled-components';
 
@@ -10,30 +10,24 @@ import {
   IUnavailableServiceMessage,
   unavailableServiceMessageCreator
 } from 'models/UnavailableServiceMessage';
-import {
-  IApplicationDeployment,
-  IApplicationDeploymentDetails
-} from 'models/ApplicationDeployment';
+import { IApplicationDeploymentDetails } from 'models/ApplicationDeployment';
 
 import DetailsActionBar from './DetailsActionBar';
 import InformationView from './InformationView/InformationView';
 import { VersionViewContainer } from './VersionView/VersionViewContainer';
 import { getVersionStatus, VersionStatus } from './models/VersionStatus';
 import { ApplicationDeploymentMatchParams } from 'screens/AffiliationViews/DeploymentView/DetailsView/ApplicationDeploymentSelector';
+import { ApplicationDeployment } from 'models/immer/ApplicationDeployment';
 
 interface IDetailsViewProps {
-  deployment: IApplicationDeployment;
+  deployment: ApplicationDeployment;
   filterPathUrl: string;
-  findApplicationDeploymentDetails: (id: string) => void;
-  deploymentDetails: IApplicationDeploymentDetails;
   refreshApplicationDeployment: (
     applicationDeploymentId: string,
     affiliation: string
   ) => void;
-  refreshApplicationDeployments: () => void;
   deleteApplicationDeployment: (namespace: string, name: string) => void;
   isRefreshingApplicationDeployment: boolean;
-  isFetchingDetails: boolean;
   affiliation: string;
 }
 
@@ -56,10 +50,9 @@ function getVersionViewUnavailableMessage(
 }
 
 function versionStatusMessage(
-  deployment: IApplicationDeployment,
-  deploymentDetails: IApplicationDeploymentDetails
+  deployment: ApplicationDeployment
 ): VersionStatus {
-  const { pods, deploymentSpec } = deploymentDetails;
+  const { pods, deploymentSpec } = deployment.details;
   const { deployTag, releaseTo } = deployment.version;
 
   const deploymentInProgress = !!deployment.status.reasons.find(
@@ -79,28 +72,21 @@ export const DetailsView: React.FC<IDetailsViewProps> = ({
   filterPathUrl,
   affiliation,
   deployment,
-  deploymentDetails,
-  isFetchingDetails,
   isRefreshingApplicationDeployment,
   deleteApplicationDeployment,
-  refreshApplicationDeployments,
-  refreshApplicationDeployment,
-  findApplicationDeploymentDetails
+  refreshApplicationDeployment
 }) => {
   const match = useRouteMatch<ApplicationDeploymentMatchParams>();
   const history = useHistory();
-  useEffect(() => {
-    findApplicationDeploymentDetails(deployment.id);
-  }, [deployment.id, findApplicationDeploymentDetails]);
 
   if (!match) {
     return null;
   }
 
   const unavailableMessage = getVersionViewUnavailableMessage(
-    deploymentDetails
+    deployment.details
   );
-  const versionStatus = versionStatusMessage(deployment, deploymentDetails);
+  const versionStatus = versionStatusMessage(deployment);
 
   const goToDeploymentsPage = () => {
     history.push(`/a/${affiliation}/deployments${filterPathUrl}`);
@@ -132,12 +118,9 @@ export const DetailsView: React.FC<IDetailsViewProps> = ({
               versionStatus={versionStatus}
               isUpdating={isRefreshingApplicationDeployment}
               deployment={deployment}
-              isFetchingDetails={isFetchingDetails}
-              deploymentDetails={deploymentDetails}
               refreshApplicationDeployment={() =>
                 refreshApplicationDeployment(deployment.id, affiliation)
               }
-              refreshApplicationDeployments={refreshApplicationDeployments}
               deleteApplicationDeployment={deleteApplicationDeployment}
               goToDeploymentsPage={goToDeploymentsPage}
             />
@@ -149,8 +132,8 @@ export const DetailsView: React.FC<IDetailsViewProps> = ({
               <VersionViewContainer
                 versionStatus={versionStatus}
                 configuredVersion={
-                  deploymentDetails.deploymentSpec &&
-                  deploymentDetails.deploymentSpec.version
+                  deployment.details.deploymentSpec &&
+                  deployment.details.deploymentSpec.version
                 }
                 affiliation={affiliation}
                 deployment={deployment}

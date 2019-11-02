@@ -22,7 +22,7 @@ export const mapStateToProps = (
   { versionType }: IVersionTableProps
 ) => ({
   imageTagsConnection: versions.types[versionType],
-  isFetching: versions.isFetching[versionType]
+  isFetching: versions.isFetching
 });
 
 export type VersionTableState = ReduxProps<

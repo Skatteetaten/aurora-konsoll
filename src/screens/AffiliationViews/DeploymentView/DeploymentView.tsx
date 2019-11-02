@@ -1,7 +1,6 @@
 import * as React from 'react';
 import { Route, Switch } from 'react-router-dom';
 
-import Spinner from 'components/Spinner';
 import { IApplicationDeploymentFilters } from 'models/UserSettings';
 import DeploymentFilterService, {
   IFilter
@@ -234,7 +233,6 @@ export class DeploymentView extends React.Component<
     const {
       matchPath,
       affiliation,
-      isFetchingAllApplicationDeployments,
       isRefreshingAffiliations,
       applicationsConnection
     } = this.props;
@@ -247,13 +245,6 @@ export class DeploymentView extends React.Component<
     } = this.state;
 
     const allApplicationDeploymentsResult = applicationsConnection.getApplicationDeployments();
-
-    if (
-      isFetchingAllApplicationDeployments &&
-      allApplicationDeploymentsResult.length === 0
-    ) {
-      return <Spinner />;
-    }
 
     const filteredDeployments = this.deploymentFilterService.filterDeployments(
       filter,
@@ -287,7 +278,6 @@ export class DeploymentView extends React.Component<
         <Route path={`${matchPath}/:applicationDeploymentId`}>
           <ApplicationDeploymentSelectorContainer
             filterPathUrl={filterPathUrl}
-            refreshApplicationDeployments={this.refreshApplicationDeployments}
             affiliation={affiliation}
           />
         </Route>

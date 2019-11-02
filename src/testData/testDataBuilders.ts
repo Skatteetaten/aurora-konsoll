@@ -24,7 +24,6 @@ import {
   IUpdateDatabaseSchemaInputWithCreatedBy
 } from 'models/schemas';
 import { StatusCode } from 'models/Status';
-import { ITag } from 'models/Tag';
 import {
   IApplicationDeploymentFilters,
   IUserSettings
@@ -40,6 +39,7 @@ import { IErrorsState } from 'screens/ErrorHandler/state/reducer';
 import { IAffiliationViewState } from 'screens/AffiliationViews/state/reducer';
 import { IErrors, IAppError } from 'models/errors';
 import { IIconLinkData } from 'components/IconLink';
+import { IImageTag } from 'services/auroraApiClients/imageRepositoryClient/query';
 
 const mountFactory = Factory.Sync.makeFactory<IMount>({
   exist: true,
@@ -131,7 +131,6 @@ export const deploymentFactory = Factory.Sync.makeFactory<
   version: {
     auroraVersion: '2.0.14-b1.17.0-flange-8.181.1',
     deployTag: {
-      lastModified: '',
       name: 'latest',
       type: ImageTagType.AURORA_VERSION
     },
@@ -206,8 +205,10 @@ export const databaseSchemaFactory = Factory.Sync.makeFactory<IDatabaseSchema>({
   users: []
 });
 
-export const tagFactory = Factory.Sync.makeFactory<ITag>({
-  lastModified: '2019-08-13T14:06:23.825Z',
+export const tagFactory = Factory.Sync.makeFactory<IImageTag>({
+  image: {
+    buildTime: '2019-08-13T14:06:23.825Z'
+  },
   name: '1.0',
   type: ImageTagType.MINOR
 });

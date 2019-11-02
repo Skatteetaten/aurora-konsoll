@@ -22,10 +22,9 @@ const mapStateToProps = ({
   applications
 }: RootState) => {
   const { isRefreshingAffiliations } = affiliationView;
-  const { applicationsConnection, isFetching } = applications;
+  const { applicationsConnection } = applications;
   return {
     applicationsConnection,
-    isFetchingAllApplicationDeployments: isFetching,
     isRefreshingAffiliations,
     userSettings: {
       applicationDeploymentFilters: userSettings.applicationDeploymentFilters

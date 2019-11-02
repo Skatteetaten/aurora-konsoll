@@ -4,7 +4,16 @@ import { ImageTagType } from 'models/ImageTagType';
 import { ImageTagsConnection } from 'models/immer/ImageTagsConnection';
 
 import { actions } from './actions';
-import { defaultImageTagsConnection } from './action.creators';
+import { IImageTagsConnection } from 'services/auroraApiClients/imageRepositoryClient/query';
+
+export const defaultImageTagsConnection: IImageTagsConnection = {
+  edges: [],
+  pageInfo: {
+    endCursor: '',
+    hasNextPage: true
+  },
+  totalCount: 0
+};
 
 const {
   AURORA_SNAPSHOT_VERSION,
@@ -19,25 +28,15 @@ const {
 } = ImageTagType;
 
 export interface IVersionsState {
-  readonly types: Record<ImageTagType, ImageTagsConnection>;
-  readonly isFetching: Record<ImageTagType, boolean>;
+  types: Record<ImageTagType, ImageTagsConnection>;
+  isFetching: boolean;
 }
 
 const createImageTagsConnection = (type: ImageTagType): ImageTagsConnection =>
   new ImageTagsConnection(type, defaultImageTagsConnection);
 
 const initialState: IVersionsState = {
-  isFetching: {
-    [AURORA_SNAPSHOT_VERSION]: false,
-    [AURORA_VERSION]: false,
-    [BUGFIX]: false,
-    [COMMIT_HASH]: false,
-    [LATEST]: false,
-    [MAJOR]: false,
-    [MINOR]: false,
-    [SNAPSHOT]: false,
-    [SEARCH]: false
-  },
+  isFetching: false,
   types: {
     [AURORA_SNAPSHOT_VERSION]: createImageTagsConnection(
       AURORA_SNAPSHOT_VERSION
@@ -55,29 +54,63 @@ const initialState: IVersionsState = {
 
 export const versionsReducer = reduceReducers<IVersionsState>(
   [
-    handleAction(actions.fetchVersionsForType, (state, { payload }) => {
-      const { data, paged, type } = payload;
+    handleAction(actions.fetchInitVersions.request, state => {
+      state.isFetching = true;
+    }),
+    handleAction(actions.fetchInitVersions.success, (state, { payload }) => {
+      state.isFetching = false;
+      Object.keys(payload).forEach(key => {
+        const type = key as ImageTagType;
+        const response = payload[type];
+        const current = state.types[type];
+
+        if (response.data) {
+          const { imageRepositories } = response.data;
+          if (imageRepositories.length > 0) {
+            const repo = imageRepositories[0].tags;
+            current.setTotalCount(repo.totalCount);
+            current.addVersions(repo.edges);
+          }
+        }
+      });
+    }),
+
+    handleAction(actions.fetchInitVersions.failure, state => {
+      state.isFetching = false;
+    }),
+
+    handleAction(actions.fetchVersionsForType.request, state => {
+      state.isFetching = true;
+    }),
+
+    handleAction(actions.fetchVersionsForType.success, (state, { payload }) => {
+      state.isFetching = false;
+
+      const { response, paged, type } = payload;
       const current = state.types[type];
 
-      current.setTotalCount(data.totalCount);
-      current.addVersions(data.edges);
-
-      if (paged) {
-        current.setPageInfo(data.pageInfo);
+      if (response.data) {
+        const { imageRepositories } = response.data;
+        if (imageRepositories.length > 0) {
+          const repo = imageRepositories[0].tags;
+          current.setTotalCount(repo.totalCount);
+          current.addVersions(repo.edges);
+          if (paged) {
+            current.setPageInfo(repo.pageInfo);
+          }
+        }
       }
     }),
-
-    handleAction(actions.isFetching, (state, { payload }) => {
-      const { isFetching, type } = payload;
-      state.isFetching[type] = isFetching;
+    handleAction(actions.fetchVersionsForType.failure, state => {
+      state.isFetching = false;
     }),
 
-    handleAction(actions.reset, (state, result) => {
+    handleAction(actions.resetState, (state, result) => {
       state.isFetching = initialState.isFetching;
       state.types = initialState.types;
     }),
 
-    handleAction(actions.clearStateForType, (state, { payload }) => {
+    handleAction(actions.resetStateForType, (state, { payload }) => {
       state.types[payload] = createImageTagsConnection(payload);
     })
   ],

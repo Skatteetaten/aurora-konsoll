@@ -12,7 +12,9 @@ import {
   IApplicationDeploymentDetailsQuery,
   IApplicationsConnectionData,
   IUserAndAffiliationsData,
-  USER_AFFILIATIONS_QUERY
+  USER_AFFILIATIONS_QUERY,
+  IApplicationDeploymentWithDetailsData,
+  APPLICATION_DEPLOYMENT_WITH_DETAILS_QUERY
 } from './query';
 
 export class ApplicationDeploymentClient {
@@ -23,23 +25,35 @@ export class ApplicationDeploymentClient {
   }
 
   public async redeployWithVersionAndRefreshDeployment(
-    affiliation: string,
     applicationDeploymentId: string,
     version: string
-  ): Promise<IDataAndErrors<IApplicationsConnectionData>> {
+  ): Promise<IDataAndErrors<IApplicationDeploymentWithDetailsData>> {
     const redeployResult = await this.redeployWithVersion(
       applicationDeploymentId,
       version
     );
     if (redeployResult.data && redeployResult.data.redeployWithVersion) {
       await this.refreshApplicationDeployment(applicationDeploymentId);
-      return await this.findAllApplicationDeployments([affiliation]);
+      return await this.fetchApplicationDeploymentWithDetails(
+        applicationDeploymentId
+      );
     } else {
       return {
         name: redeployResult.name,
         errors: redeployResult.errors
       };
     }
+  }
+
+  public async fetchApplicationDeploymentWithDetails(
+    applicationDeploymentId: string
+  ): Promise<IDataAndErrors<IApplicationDeploymentWithDetailsData>> {
+    return await this.client.query<IApplicationDeploymentWithDetailsData>({
+      query: APPLICATION_DEPLOYMENT_WITH_DETAILS_QUERY,
+      variables: {
+        id: applicationDeploymentId
+      }
+    });
   }
 
   public async redeployWithVersion(
@@ -134,6 +148,7 @@ export class ApplicationDeploymentClient {
     });
   }
 
+  // Todo: Refresh applicationDeployments for affiliation.
   public async deleteApplicationDeployment(
     namespace: string,
     name: string

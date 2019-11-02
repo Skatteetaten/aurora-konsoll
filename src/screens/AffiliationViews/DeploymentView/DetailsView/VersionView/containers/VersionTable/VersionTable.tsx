@@ -68,13 +68,20 @@ export const VersionTable = ({
   onConfirmDeploy
 }: Props) => {
   const index = imageTagsConnection.findVersionIndex(currentVersion.name);
+  const hasVersions = imageTagsConnection.totalVersionsCount() > 0;
 
   useEffect(() => {
     // If configured version is not in the list, fetch more to find the version.
-    if (index === -1 && !isFetching && versionType === currentVersion.type) {
+    if (
+      hasVersions &&
+      index === -1 &&
+      !isFetching &&
+      versionType === currentVersion.type
+    ) {
       fetchVersions(repository, versionType, 100, true, searchText);
     }
   }, [
+    hasVersions,
     currentVersion.type,
     fetchVersions,
     index,

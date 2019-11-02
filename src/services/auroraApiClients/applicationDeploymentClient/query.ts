@@ -126,16 +126,18 @@ export const APPLICATIONS_QUERY = gql`
 `;
 
 export interface IApplicationDeploymentDetailsQuery {
-  applicationDeploymentDetails?: {
-    updatedBy?: string;
-    buildTime?: string;
-    gitInfo?: IGitInfo;
-    serviceLinks: ILink[];
-    podResources: IPodResource[];
-    deploymentSpecs: {
-      current?: {
-        jsonRepresentation: string;
-      };
+  applicationDeploymentDetails?: IApplicationDeploymentDetails;
+}
+
+export interface IApplicationDeploymentDetails {
+  updatedBy?: string;
+  buildTime?: string;
+  gitInfo?: IGitInfo;
+  serviceLinks: ILink[];
+  podResources: IPodResource[];
+  deploymentSpecs: {
+    current?: {
+      jsonRepresentation: string;
     };
   };
 }
@@ -226,6 +228,124 @@ export const USER_AFFILIATIONS_QUERY = gql`
           name
         }
       }
+    }
+  }
+`;
+
+export interface IApplicationDeploymentWithDetails
+  extends IApplicationDeployment {
+  details: IApplicationDeploymentDetails;
+}
+
+export interface IApplicationDeploymentWithDetailsData {
+  applicationDeployment: IApplicationDeploymentWithDetails;
+}
+
+export const APPLICATION_DEPLOYMENT_WITH_DETAILS_QUERY = gql`
+  query getDeployment($id: String!) {
+    applicationDeployment(id: $id) {
+      id
+      name
+      imageRepository {
+        repository
+        guiUrl
+      }
+      id
+      name
+      affiliation {
+        name
+      }
+      environment
+      namespace {
+        name
+        permission {
+          paas {
+            view
+            admin
+          }
+        }
+      }
+      status {
+        code
+        reasons {
+          ...statusCheck
+        }
+        reports {
+          ...statusCheck
+        }
+      }
+      version {
+        auroraVersion
+        deployTag {
+          name
+          type
+        }
+        releaseTo
+      }
+      time
+      message
+      details {
+        updatedBy
+        buildTime
+        gitInfo {
+          commitId
+          commitTime
+        }
+        serviceLinks {
+          name
+          url
+        }
+        podResources {
+          name
+          phase
+          restartCount
+          ready
+          startTime
+          latestDeployTag
+          managementResponses {
+            links {
+              error {
+                code
+                message
+              }
+            }
+            health {
+              ...managementResponse
+            }
+            env {
+              ...managementResponse
+            }
+          }
+          links {
+            name
+            url
+          }
+        }
+        deploymentSpecs {
+          current {
+            jsonRepresentation
+          }
+        }
+      }
+    }
+  }
+
+  fragment statusCheck on StatusCheck {
+    name
+    description
+    failLevel
+    hasFailed
+  }
+
+  fragment managementResponse on ManagementEndpointResponse {
+    hasResponse
+    textResponse
+    createdAt
+    httpCode
+    url
+    error {
+      code
+      message
     }
   }
 `;

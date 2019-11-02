@@ -1,96 +1,53 @@
 import { AsyncAction } from 'store/types';
 import { ImageTagType } from 'models/ImageTagType';
-import {
-  IImageTagsConnection,
-  ITagsQuery
-} from 'services/auroraApiClients/imageRepositoryClient/query';
 
 import { actions } from './actions';
-import { IDataAndErrors } from 'services/GoboClient';
-import { addCurrentErrors } from 'screens/ErrorHandler/state/actions';
+import { doAsyncActions } from 'utils/redux/action-utils';
 
-export const defaultImageTagsConnection: IImageTagsConnection = {
-  edges: [],
-  pageInfo: {
-    endCursor: '',
-    hasNextPage: true
-  },
-  totalCount: 0
-};
+export function fetchInitVersions(repository: string) {
+  return doAsyncActions(actions.fetchInitVersions, async clients => {
+    return await clients.imageRepositoryClient.fetchInitVersions(repository);
+  });
+}
 
-export const fetchVersions = (
+export function fetchVersions(
   repository: string,
   type: ImageTagType,
   first: number,
   page: boolean = true,
   filter?: string
-): AsyncAction => async (dispatch, getState, { clients }) => {
-  const client = clients.imageRepositoryClient;
-  const { versions } = getState();
-  const current = versions.types[type];
-
-  if (page && !current.hasNextPage() && !filter) {
-    return;
-  }
-
-  dispatch(
-    actions.isFetching({
-      isFetching: true,
-      type
-    })
+) {
+  const defaultResponse = {
+    paged: page,
+    type,
+    response: {
+      name: ''
+    }
+  };
+  return doAsyncActions(
+    actions.fetchVersionsForType,
+    async (clients, { versions }) => {
+      const client = clients.imageRepositoryClient;
+      const current = versions.types[type];
+      if (page && !current.hasNextPage() && !filter) {
+        return defaultResponse;
+      }
+      const cursor = page ? current.getCursor() : undefined;
+      const response = filter
+        ? await client.searchTagsPaged(repository, first, filter, cursor)
+        : await client.findTagsPaged(repository, type, first, cursor);
+      return {
+        ...defaultResponse,
+        response
+      };
+    }
   );
-
-  const cursor = page ? current.getCursor() : undefined;
-
-  let response: IDataAndErrors<ITagsQuery> | undefined;
-  if (filter) {
-    response = await client.searchTagsPaged(repository, first, filter, cursor);
-  } else {
-    response = await client.findTagsPaged(repository, type, first, cursor);
-  }
-
-  dispatch(addCurrentErrors(response));
-
-  if (
-    !(
-      response &&
-      response.data &&
-      response.data.imageRepositories &&
-      response.data.imageRepositories.length > 0
-    )
-  ) {
-    dispatch(
-      actions.fetchVersionsForType({
-        type,
-        data: defaultImageTagsConnection,
-        paged: false
-      })
-    );
-  } else {
-    const { imageRepositories } = response.data;
-    dispatch(
-      actions.fetchVersionsForType({
-        type,
-        data: imageRepositories[0].tags,
-        paged: page
-      })
-    );
-  }
-
-  setTimeout(() => {
-    dispatch(
-      actions.isFetching({
-        isFetching: false,
-        type
-      })
-    );
-  }, 50);
-};
+}
 
 export function resetState(): AsyncAction {
-  return dispatch => dispatch(actions.reset());
+  return dispatch => dispatch(actions.resetState());
 }
 
 export function clearStateForType(type: ImageTagType): AsyncAction {
-  return dispatch => dispatch(actions.clearStateForType(type));
+  return dispatch => dispatch(actions.resetStateForType(type));
 }
