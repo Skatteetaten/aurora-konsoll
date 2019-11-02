@@ -36,7 +36,6 @@ import { INetdebugResult } from 'services/auroraApiClients';
 import { IFilter } from 'services/DeploymentFilterService';
 import { INetdebugViewState } from 'screens/NetdebugView/state/reducer';
 import { IErrorsState } from 'screens/ErrorHandler/state/reducer';
-import { IAffiliationViewState } from 'screens/AffiliationViews/state/reducer';
 import { IErrors, IAppError } from 'models/errors';
 import { IIconLinkData } from 'components/IconLink';
 import { IImageTag } from 'services/auroraApiClients/imageRepositoryClient/query';
@@ -387,20 +386,6 @@ export const websealReduxStateFactory = Factory.Sync.makeFactory<
 
 export const userSettingsFactory = Factory.Sync.makeFactory<IUserSettings>({
   applicationDeploymentFilters: [applicationDeploymentFilterFactory.build()]
-});
-
-export const affiliationViewStateFactory = Factory.Sync.makeFactory<
-  IAffiliationViewState
->({
-  allApplicationDeploymentsResult: [deploymentFactory.build()],
-  applicationDeploymentDetails: deploymentDetailsFactory.build(),
-  isFetchingAllApplicationDeployments: false,
-  isRefreshingAffiliations: false,
-  isRefreshingApplicationDeployment: false,
-  isUpdatingUserSettings: false,
-  userSettings: userSettingsFactory.build(),
-  isFetchingDetails: false,
-  isApplicationDeploymentDeleted: false
 });
 
 export const iconLinkDataFactory = Factory.Sync.makeFactory<IIconLinkData>({

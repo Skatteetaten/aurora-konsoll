@@ -6,6 +6,8 @@ import { ApplicationDeployment } from 'models/immer/ApplicationDeployment';
 interface IApplicationsState {
   isFetching: boolean;
   isDeploying: boolean;
+  isRefreshing: boolean;
+  isRefreshingForAffiliation: boolean;
   applicationsConnection: ApplicationsConnection;
   applicationDeployment?: ApplicationDeployment;
   errors: {
@@ -17,6 +19,8 @@ interface IApplicationsState {
 const initialState: IApplicationsState = {
   isFetching: false,
   isDeploying: false,
+  isRefreshing: false,
+  isRefreshingForAffiliation: false,
   applicationsConnection: new ApplicationsConnection({}),
   errors: {
     requestApplications: [],
@@ -26,6 +30,12 @@ const initialState: IApplicationsState = {
 
 export const applicationsReducer = reduceReducers<IApplicationsState>(
   [
+    handleAction(actions.refreshAllDeploymentsForAffiliation, state => {
+      state.isRefreshingForAffiliation = true;
+    }),
+    handleAction(actions.refreshApplicationDeployment, state => {
+      state.isRefreshing = true;
+    }),
     handleAction(actions.resetApplicationDeploymentState, state => {
       state.applicationDeployment = undefined;
     }),
@@ -41,7 +51,9 @@ export const applicationsReducer = reduceReducers<IApplicationsState>(
     handleAction(
       actions.fetchApplicationDeploymentWithDetails.success,
       (state, { payload }) => {
+        state.isDeploying = false;
         state.isFetching = false;
+        state.isRefreshing = false;
         if (payload.data) {
           state.applicationDeployment = new ApplicationDeployment(payload.data);
         }
@@ -53,7 +65,9 @@ export const applicationsReducer = reduceReducers<IApplicationsState>(
     handleAction(
       actions.fetchApplicationDeploymentWithDetails.failure,
       (state, { payload }) => {
+        state.isDeploying = false;
         state.isFetching = false;
+        state.isRefreshing = false;
         state.errors.requestApplicationDeployment.push(payload);
       }
     ),
@@ -62,8 +76,8 @@ export const applicationsReducer = reduceReducers<IApplicationsState>(
       state.isFetching = true;
     }),
     handleAction(actions.fetchApplications.success, (state, { payload }) => {
-      state.isDeploying = false;
       state.isFetching = false;
+      state.isRefreshingForAffiliation = false;
       if (payload.data) {
         state.applicationsConnection.update(payload.data);
       }
@@ -72,8 +86,8 @@ export const applicationsReducer = reduceReducers<IApplicationsState>(
       }
     }),
     handleAction(actions.fetchApplications.failure, (state, { payload }) => {
-      state.isDeploying = false;
       state.isFetching = false;
+      state.isRefreshingForAffiliation = false;
       state.errors.requestApplications.push(payload);
     })
   ],

@@ -5,8 +5,8 @@ import { actions } from './actions';
 import { doAsyncActions } from 'utils/redux/action-utils';
 
 export function fetchInitVersions(repository: string) {
-  return doAsyncActions(actions.fetchInitVersions, async clients => {
-    return await clients.imageRepositoryClient.fetchInitVersions(repository);
+  return doAsyncActions(actions.fetchInitVersions, clients => {
+    return clients.imageRepositoryClient.fetchInitVersions(repository);
   });
 }
 

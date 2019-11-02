@@ -1,7 +1,6 @@
 import { errorsReducer } from 'screens/ErrorHandler/state/reducer';
 import { combineReducers } from 'redux';
 import { databaseReducer } from 'screens/AffiliationViews/DatabaseView/state/reducers';
-import { affiliationViewReducer } from 'screens/AffiliationViews/state/reducer';
 import { websealReducer } from 'screens/AffiliationViews/WebsealView/state/reducers';
 import { certificateReducer } from 'screens/CertificateView/state/reducers';
 import { netdebugViewReducer } from 'screens/NetdebugView/state/reducer';
@@ -17,7 +16,6 @@ export const rootReducer = combineReducers({
   webseal: websealReducer,
   certificate: certificateReducer,
   errors: errorsReducer,
-  affiliationView: affiliationViewReducer,
   netdebug: netdebugViewReducer,
   versions: versionsReducer,
   userSettings: userSettingsReducer,

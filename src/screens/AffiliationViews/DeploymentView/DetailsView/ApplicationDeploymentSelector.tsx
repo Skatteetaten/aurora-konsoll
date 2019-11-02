@@ -4,10 +4,8 @@ import { useRouteMatch } from 'react-router-dom';
 import { RootState, ReduxProps } from 'store/types';
 import { DetailsView } from './DetailsView';
 import {
+  deleteAndRefreshApplications,
   refreshApplicationDeployment,
-  deleteApplicationDeployment
-} from '../../state/actions';
-import {
   fetchApplicationDeploymentWithDetails,
   resetApplicationDeploymentState
 } from 'store/state/applicationDeployments/action.creators';
@@ -28,12 +26,12 @@ type Props = IApplicationDeploymentSelectorConnectedProps &
 
 const ApplicationDeploymentSelector = ({
   filterPathUrl,
-  refreshCurrentApplicationDeployment,
-  isRefreshingApplicationDeployment,
+  refreshApplicationDeployment,
   affiliation,
-  deleteApplicationDeployment,
+  deleteAndRefreshApplications,
   applicationDeployment,
   fetchApplicationDeploymentWithDetails,
+  isRefreshing,
   isFetching,
   resetApplicationDeploymentState
 }: Props) => {
@@ -66,28 +64,27 @@ const ApplicationDeploymentSelector = ({
     <DetailsView
       deployment={applicationDeployment}
       filterPathUrl={filterPathUrl}
-      refreshApplicationDeployment={refreshCurrentApplicationDeployment}
-      isRefreshingApplicationDeployment={isRefreshingApplicationDeployment}
+      refreshApplicationDeployment={refreshApplicationDeployment}
+      isRefreshing={isRefreshing}
       affiliation={affiliation}
-      deleteApplicationDeployment={deleteApplicationDeployment}
+      deleteAndRefreshApplications={deleteAndRefreshApplications}
     />
   );
 };
 
 const mapDispatchToProps = {
-  refreshCurrentApplicationDeployment: refreshApplicationDeployment,
-  deleteApplicationDeployment,
+  refreshApplicationDeployment,
+  deleteAndRefreshApplications,
   fetchApplicationDeploymentWithDetails,
   resetApplicationDeploymentState
 };
 
-const mapStateToProps = ({ affiliationView, applications }: RootState) => {
-  const { isRefreshingApplicationDeployment } = affiliationView;
-  const { applicationDeployment, isFetching } = applications;
+const mapStateToProps = ({ applications }: RootState) => {
+  const { applicationDeployment, isFetching, isRefreshing } = applications;
   return {
+    isRefreshing,
     isFetching,
-    applicationDeployment,
-    isRefreshingApplicationDeployment
+    applicationDeployment
   };
 };
 

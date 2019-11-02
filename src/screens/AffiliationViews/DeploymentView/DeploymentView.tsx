@@ -69,10 +69,9 @@ export class DeploymentView extends React.Component<
     }
   };
 
-  public refreshApplicationDeployments = async () => {
-    const { affiliation, refreshAffiliations } = this.props;
-    await refreshAffiliations([affiliation]);
-    await this.fetchApplicationDeployments(affiliation);
+  public refreshApplicationDeployments = () => {
+    const { affiliation, refreshAllDeploymentsForAffiliation } = this.props;
+    refreshAllDeploymentsForAffiliation(affiliation);
   };
 
   public clearFilterOnAffiliationChange(prevAffiliation: string) {
@@ -233,7 +232,7 @@ export class DeploymentView extends React.Component<
     const {
       matchPath,
       affiliation,
-      isRefreshingAffiliations,
+      isRefreshingForAffiliation,
       applicationsConnection
     } = this.props;
     const {
@@ -261,7 +260,7 @@ export class DeploymentView extends React.Component<
           <MatrixView
             time={time}
             deployments={filteredDeployments}
-            isRefreshing={isRefreshingAffiliations}
+            isRefreshing={isRefreshingForAffiliation}
             refreshApplicationDeployments={this.refreshApplicationDeployments}
             affiliation={affiliation}
             updateFilter={this.updateFilter}

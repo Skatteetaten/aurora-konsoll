@@ -45,6 +45,46 @@ export class ApplicationDeploymentClient {
     }
   }
 
+  public async deleteAndRefreshApplications(
+    affiliation: string,
+    namespace: string,
+    name: string
+  ): Promise<IDataAndErrors<IApplicationsConnectionData>> {
+    const deleteResponse = await this.deleteApplicationDeployment(
+      namespace,
+      name
+    );
+    if (
+      deleteResponse.data &&
+      deleteResponse.data.deleteApplicationDeployment
+    ) {
+      return await this.refreshAndFetchApplications([affiliation]);
+    } else {
+      return {
+        name: deleteResponse.name,
+        errors: deleteResponse.errors
+      };
+    }
+  }
+
+  public async refreshAndFetchApplicationDeployment(
+    applicationDeploymentId: string
+  ): Promise<IDataAndErrors<IApplicationDeploymentWithDetailsData>> {
+    const refreshResult = await this.refreshApplicationDeployment(
+      applicationDeploymentId
+    );
+    if (refreshResult.data && refreshResult.data.refreshApplicationDeployment) {
+      return await this.fetchApplicationDeploymentWithDetails(
+        applicationDeploymentId
+      );
+    } else {
+      return {
+        name: refreshResult.name,
+        errors: refreshResult.errors
+      };
+    }
+  }
+
   public async fetchApplicationDeploymentWithDetails(
     applicationDeploymentId: string
   ): Promise<IDataAndErrors<IApplicationDeploymentWithDetailsData>> {
@@ -103,11 +143,28 @@ export class ApplicationDeploymentClient {
     });
   }
 
+  public async refreshAndFetchApplications(
+    affiliations: string[]
+  ): Promise<IDataAndErrors<IApplicationsConnectionData>> {
+    const refreshResponse = await this.refreshAffiliations(affiliations);
+    if (
+      refreshResponse.data &&
+      refreshResponse.data.refreshApplicationDeployments
+    ) {
+      return await this.findAllApplicationDeployments(affiliations);
+    } else {
+      return {
+        name: refreshResponse.name,
+        errors: refreshResponse.errors
+      };
+    }
+  }
+
   public async refreshAffiliations(
     affiliations: string[]
-  ): Promise<IDataAndErrors<{ affiliations: string[] }>> {
+  ): Promise<IDataAndErrors<{ refreshApplicationDeployments: boolean }>> {
     return await this.client.mutate<{
-      affiliations: string[];
+      refreshApplicationDeployments: boolean;
     }>({
       mutation: REFRESH_APPLICATION_DEPLOYMENTS_MUTATION,
       variables: {
@@ -148,13 +205,10 @@ export class ApplicationDeploymentClient {
     });
   }
 
-  // Todo: Refresh applicationDeployments for affiliation.
   public async deleteApplicationDeployment(
     namespace: string,
     name: string
-  ): Promise<
-    IDataAndErrors<{ deleteApplicationDeployment: boolean }> | undefined
-  > {
+  ): Promise<IDataAndErrors<{ deleteApplicationDeployment: boolean }>> {
     return await this.client.mutate<{ deleteApplicationDeployment: boolean }>({
       mutation: DELETE_APPLICATION_DEPLOYMENT_MUTATION,
       variables: {

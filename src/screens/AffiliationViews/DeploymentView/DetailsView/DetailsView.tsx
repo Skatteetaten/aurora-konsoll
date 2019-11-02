@@ -26,8 +26,12 @@ interface IDetailsViewProps {
     applicationDeploymentId: string,
     affiliation: string
   ) => void;
-  deleteApplicationDeployment: (namespace: string, name: string) => void;
-  isRefreshingApplicationDeployment: boolean;
+  deleteAndRefreshApplications: (
+    affiliation: string,
+    namespace: string,
+    name: string
+  ) => void;
+  isRefreshing: boolean;
   affiliation: string;
 }
 
@@ -72,8 +76,8 @@ export const DetailsView: React.FC<IDetailsViewProps> = ({
   filterPathUrl,
   affiliation,
   deployment,
-  isRefreshingApplicationDeployment,
-  deleteApplicationDeployment,
+  isRefreshing,
+  deleteAndRefreshApplications,
   refreshApplicationDeployment
 }) => {
   const match = useRouteMatch<ApplicationDeploymentMatchParams>();
@@ -100,7 +104,7 @@ export const DetailsView: React.FC<IDetailsViewProps> = ({
       />
       <DetailsActionBar
         title={`${deployment.environment}/${deployment.name}`}
-        isRefreshing={isRefreshingApplicationDeployment}
+        isRefreshing={isRefreshing}
         updatedTime={deployment.time}
         goToDeploymentsPage={goToDeploymentsPage}
         refreshApplicationDeployment={() =>
@@ -116,12 +120,14 @@ export const DetailsView: React.FC<IDetailsViewProps> = ({
           <Route path={`${match.path}/info`}>
             <InformationView
               versionStatus={versionStatus}
-              isUpdating={isRefreshingApplicationDeployment}
+              isUpdating={isRefreshing}
               deployment={deployment}
               refreshApplicationDeployment={() =>
                 refreshApplicationDeployment(deployment.id, affiliation)
               }
-              deleteApplicationDeployment={deleteApplicationDeployment}
+              deleteApplicationDeployment={(namespace, name) =>
+                deleteAndRefreshApplications(affiliation, namespace, name)
+              }
               goToDeploymentsPage={goToDeploymentsPage}
             />
           </Route>

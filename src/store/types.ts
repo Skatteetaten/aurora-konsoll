@@ -6,7 +6,6 @@ import { DatabaseSchemasAction } from 'screens/AffiliationViews/DatabaseView/sta
 import { WebsealAction } from 'screens/AffiliationViews/WebsealView/state/reducers';
 import { CertificateAction } from 'screens/CertificateView/state/reducers';
 import { ErrorsAction } from 'screens/ErrorHandler/state/reducer';
-import { AffiliationViewAction } from 'screens/AffiliationViews/state/reducer';
 import { NetdebugViewAction } from 'screens/NetdebugView/state/reducer';
 
 import { VersionsAction } from './state/versions/actions';
@@ -28,7 +27,6 @@ export type RootAction =
   | CertificateAction
   | WebsealAction
   | ErrorsAction
-  | AffiliationViewAction
   | UserSettingsAction
   | NetdebugViewAction;
 
