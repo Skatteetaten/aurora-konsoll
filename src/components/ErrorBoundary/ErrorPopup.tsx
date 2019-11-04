@@ -2,30 +2,26 @@ import * as React from 'react';
 import styled from 'styled-components';
 
 import Button from 'aurora-frontend-react-komponenter/Button';
+import ActionButton from 'aurora-frontend-react-komponenter/ActionButton';
 import MessageBar from 'aurora-frontend-react-komponenter/MessageBar';
 import { IAppError } from 'models/errors';
 
 interface IErrorPopupProps {
   currentError: IAppError;
+  errorCount: number;
+  className?: string;
   closeError: (id: number) => void;
   closeErrors: () => void;
-  errorCount: number;
-  isExtraInfoVisible: boolean;
-  changeExtraInfoVisibility: () => void;
-  className?: string;
 }
 
-const renderTableContent = (type: string) => {
+const renderTableContent = (type: string): JSX.Element[] => {
   const parsedType = JSON.parse(type);
-  const tableContents = Object.keys(parsedType).map(it => {
-    return (
-      <tr style={{ display: 'block' }} key={`${it}`}>
-        <th style={{ textTransform: 'capitalize' }}>{`${it}:`}</th>
-        <td>{parsedType[it]}</td>
-      </tr>
-    );
-  });
-  return tableContents;
+  return Object.keys(parsedType).map(it => (
+    <tr key={`${it}`}>
+      <th>{`${it}:`}</th>
+      <td>{parsedType[it]}</td>
+    </tr>
+  ));
 };
 
 const ErrorPopup = ({
@@ -33,74 +29,90 @@ const ErrorPopup = ({
   closeError,
   closeErrors,
   errorCount,
-  changeExtraInfoVisibility,
-  isExtraInfoVisible
+  className
 }: IErrorPopupProps) => {
-  const close = () => {
-    closeError(currentError.id);
-  };
-  const closeAll = () => {
-    closeErrors();
-  };
-
+  const [expandMessageBar, setExpandMessageBar] = React.useState(false);
   const hasMoreErrors = errorCount > 0;
   return (
-    <ErrorModal>
-      <MessageBar
-        type={MessageBar.Type.error}
-        isMultiline={true}
-        actions={
-          <div style={{ alignItems: 'inherit', width: '100%' }}>
-            {(currentError.error.stack || currentError.error.name) && (
-              <Button
-                buttonType="secondary"
-                icon="helpFilled"
-                onClick={changeExtraInfoVisibility}
-                color="black"
-                style={{ paddingLeft: '14px' }}
-              >
-                Vis mer informasjon
-              </Button>
-            )}
-            <div style={{ float: 'right' }}>
-              {hasMoreErrors && (
-                <MessageBar.Button onClick={closeAll}>
-                  Lukk alle
-                </MessageBar.Button>
+    <div className={className}>
+      <div className="errorModal">
+        <MessageBar
+          type={MessageBar.Type.error}
+          isMultiline={true}
+          actions={
+            <div className="action-bar">
+              {(currentError.error.stack || currentError.error.name) && (
+                <ActionButton
+                  onClick={() => setExpandMessageBar(!expandMessageBar)}
+                  iconSize={ActionButton.LARGE}
+                  icon={!expandMessageBar ? 'ChevronDown' : 'ChevronUp'}
+                  className="expand-button"
+                >
+                  {!expandMessageBar ? 'Vis info' : 'Skjul'}
+                </ActionButton>
               )}
-              <MessageBar.Button onClick={close}>
-                {hasMoreErrors ? 'Neste' : 'Lukk'}
-              </MessageBar.Button>
+              <div className="close-button">
+                {hasMoreErrors && (
+                  <Button onClick={() => closeErrors()}>Lukk alle</Button>
+                )}
+                <Button onClick={() => closeError(currentError.id)}>
+                  {hasMoreErrors ? 'Neste' : 'Lukk'}
+                </Button>
+              </div>
             </div>
-          </div>
-        }
-      >
-        {currentError.error.message}
-        {isExtraInfoVisible && (
-          <table>
-            <tbody>
-              {!!currentError.error.stack &&
-                renderTableContent(currentError.error.stack)}
-              {!!currentError.error.name &&
-                renderTableContent(currentError.error.name)}
-            </tbody>
-          </table>
-        )}
-        {hasMoreErrors && <p>Nye feil: {errorCount}</p>}
-      </MessageBar>
-    </ErrorModal>
+          }
+        >
+          {currentError.error.message}
+          {expandMessageBar && (
+            <table>
+              <tbody>
+                {!!currentError.error.stack &&
+                  renderTableContent(currentError.error.stack)}
+                {!!currentError.error.name &&
+                  renderTableContent(currentError.error.name)}
+              </tbody>
+            </table>
+          )}
+          {hasMoreErrors && <p>Nye feil: {errorCount}</p>}
+        </MessageBar>
+      </div>
+    </div>
   );
 };
 
-const ErrorModal = styled.div`
+export default styled(ErrorPopup)`
   z-index: 200;
   background: white;
   position: absolute;
-  min-width: 400px;
-  max-width: 600px;
-  max-height: 300px;
+  width: 100%;
+  max-width: 550px;
+  max-height: 600px;
   right: 20px;
   bottom: 20px;
-`;
 
-export default ErrorPopup;
+  .action-bar {
+    align-items: inherit;
+    width: 100%;
+    .expand-button {
+      padding-left: 14px;
+    }
+    .close-button {
+      float: right;
+    }
+  }
+
+  table {
+    overflow: auto;
+    display: block;
+    max-height: 200px;
+
+    tr {
+      overflow: hidden;
+      display: block;
+    }
+    th {
+      text-transform: capitalize;
+      white-space: nowrap;
+    }
+  }
+`;
