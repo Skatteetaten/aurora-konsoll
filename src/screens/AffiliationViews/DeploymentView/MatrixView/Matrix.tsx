@@ -2,19 +2,25 @@ import * as React from 'react';
 import styled from 'styled-components';
 import Row, { IApplicationMap } from './components/Row';
 import { IApplicationDeployment } from 'models/ApplicationDeployment';
+import Spinner from 'components/Spinner';
 
 interface IMatrixProps {
-  className?: string;
   showSemanticVersion: boolean;
   expandApplicationName: boolean;
+  isFetching: boolean;
   deployments: IApplicationDeployment[];
 }
 
-const Matrix: React.FC<IMatrixProps> = ({
+export const Matrix: React.FC<IMatrixProps> = ({
   deployments,
-  className,
+  isFetching,
+  expandApplicationName,
   showSemanticVersion: showExactVersion
 }) => {
+  if (isFetching) {
+    return <Spinner />;
+  }
+
   const environments = deployments.reduce(
     (acc, app) => {
       if (acc.indexOf(app.environment) === -1) {
@@ -35,7 +41,7 @@ const Matrix: React.FC<IMatrixProps> = ({
   }, {});
 
   return (
-    <div className={className}>
+    <Wrapper expandApplicationName={expandApplicationName}>
       <table>
         <thead>
           <tr>
@@ -58,11 +64,11 @@ const Matrix: React.FC<IMatrixProps> = ({
             ))}
         </tbody>
       </table>
-    </div>
+    </Wrapper>
   );
 };
 
-export default styled(Matrix)`
+const Wrapper = styled.div<{ expandApplicationName: boolean }>`
   flex: 1;
   position: relative;
   overflow: auto;

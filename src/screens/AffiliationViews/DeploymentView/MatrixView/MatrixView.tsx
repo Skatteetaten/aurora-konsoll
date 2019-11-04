@@ -4,7 +4,7 @@ import styled from 'styled-components';
 import { IApplicationDeployment } from 'models/ApplicationDeployment';
 import { IApplicationDeploymentFilters } from 'models/UserSettings';
 import { IFilter } from 'services/DeploymentFilterService';
-import Matrix from './Matrix';
+import { Matrix } from './Matrix';
 import { ActionBar } from './ActionBar';
 
 interface IMatrixViewProps {
@@ -22,11 +22,13 @@ interface IMatrixViewProps {
   quickFilter: string;
   updateQuickFilter: (filter: string) => void;
   deployments: IApplicationDeployment[];
+  isFetching: boolean;
 }
 
 export const MatrixView = ({
   showSemanticVersion,
   deployments,
+  isFetching,
   ...actionBarProps
 }: IMatrixViewProps) => {
   const [expandApplicationName, setExpandApplicationName] = React.useState(
@@ -42,6 +44,7 @@ export const MatrixView = ({
         setExpandApplicationName={setExpandApplicationName}
       />
       <Matrix
+        isFetching={isFetching}
         deployments={deployments}
         showSemanticVersion={showSemanticVersion}
         expandApplicationName={expandApplicationName}

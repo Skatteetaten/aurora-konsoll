@@ -233,7 +233,8 @@ export class DeploymentView extends React.Component<
       matchPath,
       affiliation,
       isRefreshingForAffiliation,
-      applicationsConnection
+      applicationsConnection,
+      isFetching
     } = this.props;
     const {
       filterPathUrl,
@@ -259,6 +260,7 @@ export class DeploymentView extends React.Component<
         <Route exact={true} path={matchPath}>
           <MatrixView
             time={time}
+            isFetching={isFetching}
             deployments={filteredDeployments}
             isRefreshing={isRefreshingForAffiliation}
             refreshApplicationDeployments={this.refreshApplicationDeployments}

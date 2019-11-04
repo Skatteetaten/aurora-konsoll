@@ -23,15 +23,19 @@ export function createAsyncActions<P, F = Error>(
 export function doAsyncActions<P>(
   requestActions: RequestActions<P>,
   fn: (clients: IApiClients, state: RootState) => Promise<P>
-): AsyncAction {
+): AsyncAction<Promise<void>> {
   return async (dispatch, getState, { clients }) => {
     const { request, success, failure } = requestActions;
     try {
       dispatch(request());
       const result = await fn(clients, getState());
-      // TODO: Remove
-      if (isGoboResult(result)) {
+      // TODO: Remove, use errors in reducer.
+      if (isDataAndErrors(result)) {
         dispatch(addCurrentErrors(result));
+      } else if (isDataAndErrorsMap(result)) {
+        Object.values(result).forEach(val => {
+          dispatch(addCurrentErrors(val));
+        });
       }
       dispatch(success(result));
     } catch (e) {
@@ -40,6 +44,16 @@ export function doAsyncActions<P>(
   };
 }
 
-function isGoboResult(result: any): result is IDataAndErrors<any> {
+function isDataAndErrors(result: any): result is IDataAndErrors<any> {
   return (result as IDataAndErrors<any>).name !== undefined;
+}
+
+// This is just for fetchVersions
+function isDataAndErrorsMap(
+  result: any
+): result is Record<string, IDataAndErrors<any>> {
+  return Object.values(result).reduce<boolean>(
+    (result, val) => result && isDataAndErrors(val),
+    false
+  );
 }

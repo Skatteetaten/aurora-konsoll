@@ -25,12 +25,12 @@ interface IDetailsViewProps {
   refreshApplicationDeployment: (
     applicationDeploymentId: string,
     affiliation: string
-  ) => void;
+  ) => Promise<void>;
   deleteAndRefreshApplications: (
     affiliation: string,
     namespace: string,
     name: string
-  ) => void;
+  ) => Promise<void>;
   isRefreshing: boolean;
   affiliation: string;
 }
