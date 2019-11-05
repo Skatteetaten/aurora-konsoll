@@ -53,22 +53,22 @@ export default class GoboClient {
     document: DocumentNode,
     variables?: IVariables
   ): Promise<IDataAndErrors<T>> {
-    const res = await fetch(this.options.url, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        Korrelasjonsid: uuid(),
-        Accept: '*/*',
-        ...this.options.headers
-      },
-      body: JSON.stringify({
-        operationName: this.getDocumentName(document.definitions),
-        query: print(document),
-        variables
-      })
-    });
-
     try {
+      const res = await fetch(this.options.url, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Korrelasjonsid: uuid(),
+          Accept: '*/*',
+          ...this.options.headers
+        },
+        body: JSON.stringify({
+          operationName: this.getDocumentName(document.definitions),
+          query: print(document),
+          variables
+        })
+      });
+
       const data = await res.json();
       return {
         data: data.data,

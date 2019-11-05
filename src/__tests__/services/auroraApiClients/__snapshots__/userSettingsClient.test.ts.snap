@@ -27,9 +27,23 @@ Object {
 exports[`updateUserSettings should update user settings to GraphQL server 1`] = `
 Object {
   "data": Object {
-    "updateUserSettings": true,
+    "userSettings": Object {
+      "applicationDeploymentFilters": Array [
+        Object {
+          "affiliation": "aurora",
+          "applications": Array [
+            "ao",
+          ],
+          "default": true,
+          "environments": Array [
+            "dev",
+          ],
+          "name": "testing",
+        },
+      ],
+    },
   },
   "errors": undefined,
-  "name": "updateUserSettings",
+  "name": "getUserSettingsForAllAffiliations",
 }
 `;

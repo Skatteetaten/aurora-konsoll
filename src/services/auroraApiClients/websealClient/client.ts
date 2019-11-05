@@ -11,7 +11,7 @@ export class WebsealClient {
 
   public async getWebsealStates(
     affiliation: string
-  ): Promise<IDataAndErrors<IWebsealAffiliationQuery> | undefined> {
+  ): Promise<IDataAndErrors<IWebsealAffiliationQuery>> {
     return await this.client.query<IWebsealAffiliationQuery>({
       query: WEBSEAL_STATES_QUERY,
       variables: { affiliation }

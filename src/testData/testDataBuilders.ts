@@ -39,6 +39,7 @@ import { IErrorsState } from 'screens/ErrorHandler/state/reducer';
 import { IErrors, IAppError } from 'models/errors';
 import { IIconLinkData } from 'components/IconLink';
 import { IImageTag } from 'services/auroraApiClients/imageRepositoryClient/query';
+import { ApplicationDeployment } from 'models/immer/ApplicationDeployment';
 
 const mountFactory = Factory.Sync.makeFactory<IMount>({
   exist: true,
@@ -111,37 +112,52 @@ export const podFactory = Factory.Sync.makeFactory<IPodResource>({
 });
 
 export const deploymentFactory = Factory.Sync.makeFactory<
-  IApplicationDeployment
->({
-  id: 'c10010e594f229649437240f24f231343d62f8fa',
-  affiliation: 'paas',
-  environment: 'martin-dev',
-  name: 'martin-test-applikasjon',
-  namespace: 'paas-martin-dev',
-  imageRepository: {
-    repository: 'localhost/"martin-test-applikasjon'
-  },
-  status: {
-    code: StatusCode.OBSERVE,
-    reasons: [],
-    reports: []
-  },
-  time: '2018-12-07T11:48:34.230Z',
-  version: {
-    auroraVersion: '2.0.14-b1.17.0-flange-8.181.1',
-    deployTag: {
-      name: 'latest',
-      type: ImageTagType.AURORA_VERSION
-    },
-    releaseTo: undefined
-  },
-  permission: {
-    paas: {
-      admin: false,
-      view: true
+  ApplicationDeployment
+>(
+  new ApplicationDeployment({
+    applicationDeployment: {
+      id: 'c10010e594f229649437240f24f231343d62f8fa',
+      affiliation: {
+        name: 'paas'
+      },
+      environment: 'martin-dev',
+      name: 'martin-test-applikasjon',
+      namespace: {
+        name: 'paas-martin-dev',
+        permission: {
+          paas: {
+            admin: false,
+            view: true
+          }
+        }
+      },
+      imageRepository: {
+        repository: 'localhost/"martin-test-applikasjon'
+      },
+      status: {
+        code: StatusCode.OBSERVE,
+        reasons: [],
+        reports: []
+      },
+      time: '2018-12-07T11:48:34.230Z',
+      version: {
+        auroraVersion: '2.0.14-b1.17.0-flange-8.181.1',
+        deployTag: {
+          name: 'latest',
+          type: ImageTagType.AURORA_VERSION
+        },
+        releaseTo: undefined
+      },
+      details: {
+        buildTime: '2019-08-13T14:06:23.825Z',
+        podResources: [podFactory.build()],
+        updatedBy: 'linus',
+        serviceLinks: [],
+        deploymentSpecs: {}
+      }
     }
-  }
-});
+  })
+);
 
 export const deploymentDetailsFactory = Factory.Sync.makeFactory<
   IApplicationDeploymentDetails

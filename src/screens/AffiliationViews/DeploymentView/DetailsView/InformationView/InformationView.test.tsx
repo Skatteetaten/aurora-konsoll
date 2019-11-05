@@ -6,52 +6,32 @@ import DetailsList from 'aurora-frontend-react-komponenter/DetailsList';
 
 import { mount } from 'enzyme';
 
-import {
-  deploymentDetailsFactory,
-  deploymentFactory,
-  deploymentSpecFactory,
-  podFactory
-} from 'testData/testDataBuilders';
+import { deploymentFactory } from 'testData/testDataBuilders';
 
 import InformationView from './InformationView';
 import { IPodsStatus } from 'models/Pod';
 import { VersionStatus } from '../models/VersionStatus';
 
 describe('InformationView', () => {
-  const downPod = podFactory.build({ phase: 'Down', latestDeployTag: true });
-  const runningLatestPod = podFactory.build({
-    phase: 'Running',
-    latestDeployTag: true
-  });
-  const runningNotLatestPod = podFactory.build({
-    phase: 'Running',
-    latestDeployTag: false
-  });
-
-  const podWithUndefinedStartTime = podFactory.build({
-    startTime: undefined
-  });
-
   const refreshApplicationDeployment = () => {
     return;
   };
 
   describe('AreAnyPodsRunningWithLatestDeployTag', () => {
     it('Given startTime is not defined, should display startedDate as a dash', () => {
+      const deployment = deploymentFactory.build();
+      deployment.details.pods = deployment.details.pods.map(pod => ({
+        ...pod,
+        startTime: undefined
+      }));
       const wrapper = mount(
         <InformationView
-          refreshApplicationDeployments={() => {}}
           goToDeploymentsPage={() => {}}
           deleteApplicationDeployment={() => {}}
           versionStatus={VersionStatus.OK}
-          deployment={deploymentFactory.build()}
-          isFetchingDetails={false}
+          deployment={deployment}
           isUpdating={false}
           refreshApplicationDeployment={refreshApplicationDeployment}
-          deploymentDetails={deploymentDetailsFactory.build({
-            pods: [podWithUndefinedStartTime],
-            deploymentSpec: deploymentSpecFactory.build()
-          })}
         />
       );
       const items: IPodsStatus[] = wrapper
@@ -64,18 +44,12 @@ describe('InformationView', () => {
     it('Given none of the pods have latestDeployTag=true and phase=Running, do display warning message', () => {
       const wrapper = mount(
         <InformationView
-          refreshApplicationDeployments={() => {}}
           goToDeploymentsPage={() => {}}
           deleteApplicationDeployment={() => {}}
           versionStatus={VersionStatus.IS_NOT_LATEST}
           deployment={deploymentFactory.build()}
-          isFetchingDetails={false}
           isUpdating={false}
           refreshApplicationDeployment={refreshApplicationDeployment}
-          deploymentDetails={deploymentDetailsFactory.build({
-            pods: [downPod, runningNotLatestPod],
-            deploymentSpec: deploymentSpecFactory.build()
-          })}
         />
       );
       const tooltip = wrapper.find(Tooltip);
@@ -91,18 +65,12 @@ describe('InformationView', () => {
     it('Given one of the pods have latestDeployTag=true and phase=Running, do not display tooltip', () => {
       const wrapper = mount(
         <InformationView
-          refreshApplicationDeployments={() => {}}
           goToDeploymentsPage={() => {}}
           deleteApplicationDeployment={() => {}}
           versionStatus={VersionStatus.OK}
           deployment={deploymentFactory.build()}
-          isFetchingDetails={false}
           isUpdating={false}
           refreshApplicationDeployment={refreshApplicationDeployment}
-          deploymentDetails={deploymentDetailsFactory.build({
-            pods: [downPod, runningLatestPod],
-            deploymentSpec: deploymentSpecFactory.build()
-          })}
         />
       );
       const tooltip = wrapper.find(Tooltip);
@@ -113,7 +81,6 @@ describe('InformationView', () => {
     it('Given different version for active deployment and AuroraConfig, show warning message', () => {
       const wrapper = mount(
         <InformationView
-          refreshApplicationDeployments={() => {}}
           goToDeploymentsPage={() => {}}
           deleteApplicationDeployment={() => {}}
           versionStatus={VersionStatus.DIFFER_FROM_AURORA_CONFIG}
@@ -124,13 +91,8 @@ describe('InformationView', () => {
               }
             }
           })}
-          isFetchingDetails={false}
           isUpdating={false}
           refreshApplicationDeployment={refreshApplicationDeployment}
-          deploymentDetails={deploymentDetailsFactory.build({
-            pods: [downPod, runningLatestPod],
-            deploymentSpec: deploymentSpecFactory.build()
-          })}
         />
       );
       const tooltip = wrapper.find(Tooltip);
@@ -148,20 +110,14 @@ describe('InformationView', () => {
       const message = 'May the force be with you!';
       const wrapper = mount(
         <InformationView
-          refreshApplicationDeployments={() => {}}
           goToDeploymentsPage={() => {}}
           deleteApplicationDeployment={() => {}}
           versionStatus={VersionStatus.OK}
           deployment={deploymentFactory.build({
             message
           })}
-          isFetchingDetails={false}
           isUpdating={false}
           refreshApplicationDeployment={refreshApplicationDeployment}
-          deploymentDetails={deploymentDetailsFactory.build({
-            pods: [downPod, runningLatestPod],
-            deploymentSpec: deploymentSpecFactory.build()
-          })}
         />
       );
       const info = wrapper.find(InfoContent).find('div#active-deployment');

@@ -31,8 +31,6 @@ Object {
 }
 `;
 
-exports[`getNetdebugStatus should handle netdebug result when response is only null 1`] = `undefined`;
-
 exports[`getNetdebugStatus should handle netdebug result when scan is null 1`] = `
 Object {
   "data": Object {

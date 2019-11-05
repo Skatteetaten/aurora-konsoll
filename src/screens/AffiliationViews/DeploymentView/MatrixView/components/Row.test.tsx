@@ -1,9 +1,10 @@
-import { shallow } from 'enzyme';
+import { mount } from 'enzyme';
 import * as React from 'react';
 
 import { deploymentFactory } from 'testData/testDataBuilders';
 import Row, { IApplicationMap } from './Row';
 import Status from './Status';
+import { MemoryRouter } from 'react-router';
 
 describe('Row', () => {
   const createApplicationMap = (releaseToParam?: string): IApplicationMap => {
@@ -23,26 +24,38 @@ describe('Row', () => {
   };
 
   it('Given undefined releaseTo do not add text to tooltip', () => {
-    const wrapper = shallow(
-      <Row
-        name="app"
-        environments={['test', 'dev']}
-        apps={createApplicationMap()}
-        showSemanticVersion={false}
-      />
+    const wrapper = mount(
+      <MemoryRouter>
+        <table>
+          <tbody>
+            <Row
+              name="app"
+              environments={['test', 'dev']}
+              apps={createApplicationMap()}
+              showSemanticVersion={false}
+            />
+          </tbody>
+        </table>
+      </MemoryRouter>
     );
     const status = wrapper.find(Status);
     expect(status.props().title).toEqual('version');
   });
 
   it('Given releaseTo do add text to tooltip', () => {
-    const wrapper = shallow(
-      <Row
-        name="app"
-        environments={['test', 'dev']}
-        apps={createApplicationMap('prod')}
-        showSemanticVersion={false}
-      />
+    const wrapper = mount(
+      <MemoryRouter>
+        <table>
+          <tbody>
+            <Row
+              name="app"
+              environments={['test', 'dev']}
+              apps={createApplicationMap('prod')}
+              showSemanticVersion={false}
+            />
+          </tbody>
+        </table>
+      </MemoryRouter>
     );
 
     const status = wrapper.find(Status);
@@ -51,13 +64,19 @@ describe('Row', () => {
   });
 
   it('Given showSemanticVersion is true, add a new line with semantic version', () => {
-    const wrapper = shallow(
-      <Row
-        name="app"
-        environments={['test', 'dev']}
-        apps={createApplicationMap('prod')}
-        showSemanticVersion={true}
-      />
+    const wrapper = mount(
+      <MemoryRouter>
+        <table>
+          <tbody>
+            <Row
+              name="app"
+              environments={['test', 'dev']}
+              apps={createApplicationMap('prod')}
+              showSemanticVersion={true}
+            />
+          </tbody>
+        </table>
+      </MemoryRouter>
     );
 
     const span = wrapper.find('span');

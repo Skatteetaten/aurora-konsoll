@@ -23,7 +23,7 @@ export class NetdebugClient {
   public async findNetdebugStatus(
     host: string,
     port: string
-  ): Promise<IDataAndErrors<IScanQuery> | undefined> {
+  ): Promise<IDataAndErrors<IScanQuery>> {
     return await this.client.query<IScanQuery>({
       query: NETDEBUG_QUERY,
       variables: {
