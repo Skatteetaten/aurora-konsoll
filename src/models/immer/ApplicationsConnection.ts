@@ -19,6 +19,13 @@ export class ApplicationsConnection {
     return this.applicationDeployments;
   }
 
+  public getCacheTime(): string {
+    if (this.applicationDeployments.length > 0) {
+      return this.applicationDeployments[0].time;
+    }
+    return '';
+  }
+
   private toApplicationDeployments(
     data: IApplicationsConnectionData
   ): IApplicationDeployment[] {

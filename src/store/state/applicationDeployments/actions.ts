@@ -10,7 +10,7 @@ import { createAction } from 'redux-ts-utils';
 
 const action = (action: string) => `applicationDeployments/${action}`;
 
-const fetchApplications = createAsyncActions<
+const fetchApplicationDeployments = createAsyncActions<
   IDataAndErrors<IApplicationsConnectionData>
 >(action('REQUEST_APPLICATIONS'));
 
@@ -38,7 +38,7 @@ const deleteApplicationDeploymentRequest = createAction<void>(
 
 export const actions = {
   deployRequest,
-  fetchApplications,
+  fetchApplicationDeployments,
   refreshAllDeploymentsForAffiliation,
   fetchApplicationDeploymentWithDetails,
   resetApplicationDeploymentState,

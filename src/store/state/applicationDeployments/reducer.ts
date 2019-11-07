@@ -32,6 +32,7 @@ export const applicationsReducer = reduceReducers<IApplicationsState>(
   [
     handleAction(actions.refreshAllDeploymentsForAffiliation, state => {
       state.isRefreshingForAffiliation = true;
+      state.isFetching = true;
     }),
     handleAction(actions.refreshApplicationDeployment, state => {
       state.isRefreshing = true;
@@ -72,24 +73,30 @@ export const applicationsReducer = reduceReducers<IApplicationsState>(
       }
     ),
 
-    handleAction(actions.fetchApplications.request, state => {
+    handleAction(actions.fetchApplicationDeployments.request, state => {
       state.isFetching = true;
     }),
-    handleAction(actions.fetchApplications.success, (state, { payload }) => {
-      state.isFetching = false;
-      state.isRefreshingForAffiliation = false;
-      if (payload.data) {
-        state.applicationsConnection.update(payload.data);
+    handleAction(
+      actions.fetchApplicationDeployments.success,
+      (state, { payload }) => {
+        state.isFetching = false;
+        state.isRefreshingForAffiliation = false;
+        if (payload.data) {
+          state.applicationsConnection.update(payload.data);
+        }
+        if (payload.errors) {
+          state.errors.requestApplications.push(...payload.errors);
+        }
       }
-      if (payload.errors) {
-        state.errors.requestApplications.push(...payload.errors);
+    ),
+    handleAction(
+      actions.fetchApplicationDeployments.failure,
+      (state, { payload }) => {
+        state.isFetching = false;
+        state.isRefreshingForAffiliation = false;
+        state.errors.requestApplications.push(payload);
       }
-    }),
-    handleAction(actions.fetchApplications.failure, (state, { payload }) => {
-      state.isFetching = false;
-      state.isRefreshingForAffiliation = false;
-      state.errors.requestApplications.push(payload);
-    })
+    )
   ],
   initialState
 );

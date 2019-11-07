@@ -1,6 +1,5 @@
 import * as Factory from 'factory.ts';
 import {
-  IApplicationDeployment,
   IApplicationDeploymentDetails,
   IUserAndAffiliations
 } from 'models/ApplicationDeployment';
@@ -40,6 +39,7 @@ import { IErrors, IAppError } from 'models/errors';
 import { IIconLinkData } from 'components/IconLink';
 import { IImageTag } from 'services/auroraApiClients/imageRepositoryClient/query';
 import { ApplicationDeployment } from 'models/immer/ApplicationDeployment';
+import { IApplicationDeploymentData } from 'services/auroraApiClients/applicationDeploymentClient/query';
 
 const mountFactory = Factory.Sync.makeFactory<IMount>({
   exist: true,
@@ -408,4 +408,40 @@ export const iconLinkDataFactory = Factory.Sync.makeFactory<IIconLinkData>({
   name: 'test',
   title: 'title',
   href: 'http://test.no'
+});
+
+export const applicationDeploymentFactory = Factory.Sync.makeFactory<
+  IApplicationDeploymentData
+>({
+  affiliation: {
+    name: 'aurora'
+  },
+  environment: 'dev',
+  id: Factory.each(i => `${i}`),
+  imageRepository: {
+    guiUrl: 'http://localhost',
+    repository: 'no.skatteetaten.aurora.mokey'
+  },
+  name: 'mokey',
+  namespace: {
+    name: 'aurora-dev',
+    permission: {
+      paas: {
+        admin: true,
+        view: true
+      }
+    }
+  },
+  status: {
+    code: StatusCode.HEALTHY,
+    reasons: [],
+    reports: []
+  },
+  time: '2019-11-06T12:54:00.707621Z',
+  version: {
+    deployTag: {
+      name: 'latest',
+      type: ImageTagType.LATEST
+    }
+  }
 });

@@ -251,15 +251,11 @@ export class DeploymentView extends React.Component<
       allApplicationDeploymentsResult
     );
 
-    const time =
-      allApplicationDeploymentsResult.length > 0
-        ? allApplicationDeploymentsResult[0].time
-        : '';
     return (
       <Switch>
         <Route exact={true} path={matchPath}>
           <MatrixView
-            time={time}
+            time={applicationsConnection.getCacheTime()}
             isFetching={isFetching}
             deployments={filteredDeployments}
             isRefreshing={isRefreshingForAffiliation}

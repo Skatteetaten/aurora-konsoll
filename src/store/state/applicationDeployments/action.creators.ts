@@ -10,8 +10,8 @@ export function deleteAndRefreshApplications(
   return doAsyncActions(
     {
       request: actions.deleteApplicationDeploymentRequest,
-      success: actions.fetchApplications.success,
-      failure: actions.fetchApplications.failure
+      success: actions.fetchApplicationDeployments.success,
+      failure: actions.fetchApplicationDeployments.failure
     },
     clients =>
       clients.applicationDeploymentClient.deleteAndRefreshApplications(
@@ -26,8 +26,8 @@ export function refreshAllDeploymentsForAffiliation(affiliation: string) {
   return doAsyncActions(
     {
       request: actions.refreshAllDeploymentsForAffiliation,
-      success: actions.fetchApplications.success,
-      failure: actions.fetchApplications.failure
+      success: actions.fetchApplicationDeployments.success,
+      failure: actions.fetchApplicationDeployments.failure
     },
     clients =>
       clients.applicationDeploymentClient.refreshAndFetchApplications([
@@ -51,7 +51,7 @@ export function refreshApplicationDeployment(applicationDeploymentId: string) {
 }
 
 export function fetchApplicationDeployments(affiliations: string[]) {
-  return doAsyncActions(actions.fetchApplications, clients =>
+  return doAsyncActions(actions.fetchApplicationDeployments, clients =>
     clients.applicationDeploymentClient.findAllApplicationDeployments(
       affiliations
     )

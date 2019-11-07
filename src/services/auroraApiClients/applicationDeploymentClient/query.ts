@@ -10,13 +10,13 @@ export interface IApplicationsConnectionData {
   };
 }
 
-interface IApplicationEdge {
+export interface IApplicationEdge {
   node: IApplication;
 }
 
-interface IApplication {
+export interface IApplication {
   name: string;
-  applicationDeployments: IApplicationDeployment[];
+  applicationDeployments: IApplicationDeploymentData[];
 }
 
 export interface IImageRepository {
@@ -40,7 +40,7 @@ export interface IStatusCheck {
   hasFailed: boolean;
 }
 
-interface IApplicationDeployment {
+export interface IApplicationDeploymentData {
   id: string;
   name: string;
   imageRepository?: IImageRepository;
@@ -233,7 +233,7 @@ export const USER_AFFILIATIONS_QUERY = gql`
 `;
 
 export interface IApplicationDeploymentWithDetails
-  extends IApplicationDeployment {
+  extends IApplicationDeploymentData {
   details: IApplicationDeploymentDetails;
 }
 

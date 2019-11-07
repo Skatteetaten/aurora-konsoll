@@ -130,9 +130,9 @@ export class ApplicationDeploymentClient {
 
   public async refreshApplicationDeployment(
     applicationDeploymentId: string
-  ): Promise<IDataAndErrors<{ refreshApplicationDeployment: string }>> {
+  ): Promise<IDataAndErrors<{ refreshApplicationDeployment: boolean }>> {
     return await this.client.mutate<{
-      refreshApplicationDeployment: string;
+      refreshApplicationDeployment: boolean;
     }>({
       mutation: REFRESH_APPLICATION_DEPLOYMENT_MUTATION,
       variables: {
