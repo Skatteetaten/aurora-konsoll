@@ -30,6 +30,10 @@ const initialState: IApplicationsState = {
 
 export const applicationsReducer = reduceReducers<IApplicationsState>(
   [
+    handleAction(actions.deleteApplicationDeploymentRequest, state => {
+      state.isRefreshingForAffiliation = true;
+      state.isFetching = true;
+    }),
     handleAction(actions.refreshAllDeploymentsForAffiliation, state => {
       state.isRefreshingForAffiliation = true;
       state.isFetching = true;

@@ -5,7 +5,8 @@ import { applicationDeploymentFactory } from 'testData/testDataBuilders';
 import { actions } from './actions';
 import {
   fetchApplicationDeployments,
-  refreshAllDeploymentsForAffiliation
+  refreshAllDeploymentsForAffiliation,
+  deleteAndRefreshApplications
 } from './action.creators';
 import {
   IApplicationDeploymentData,
@@ -56,6 +57,12 @@ beforeAll(() => {
       refreshApplicationDeployments: true
     }
   });
+
+  server.putResponse('deleteApplicationDeployment', {
+    data: {
+      deleteApplicationDeployment: true
+    }
+  });
 });
 
 afterAll(() => {
@@ -83,6 +90,8 @@ describe('applicationDeployments', () => {
         expect(applications).toMatchSnapshot();
       }
     );
+
+    expect(getActionQueue()).toHaveLength(0);
   });
 
   it('should refresh and then fetch applications', async () => {
@@ -90,7 +99,7 @@ describe('applicationDeployments', () => {
     await dispatch(fetchApplicationDeployments(['aurora']));
     skipActions(getActionQueue().length);
 
-    // Simulate response after refresh, updated cache time.
+    // Simulate response after refresh with updated cache time.
     server.putResponse(
       'getApplicationDeployments',
       createApplicationConnectionData(
@@ -121,5 +130,39 @@ describe('applicationDeployments', () => {
         );
       }
     );
+
+    expect(getActionQueue()).toHaveLength(0);
+  });
+
+  it('should delete application deployment and then fetch applications', async () => {
+    // Adding application deployments to state
+    await dispatch(fetchApplicationDeployments(['aurora']));
+    skipActions(getActionQueue().length);
+
+    // Simulate response after delete with no applications
+    server.putResponse(
+      'getApplicationDeployments',
+      createApplicationConnectionData([])
+    );
+
+    await dispatch(
+      deleteAndRefreshApplications('aurora', 'aurora-dev', 'mokey')
+    );
+
+    nextAction(
+      actions.deleteApplicationDeploymentRequest,
+      ({ applications }) => {
+        expect(applications).toMatchSnapshot();
+      }
+    );
+
+    nextAction(
+      actions.fetchApplicationDeployments.success,
+      ({ applications }) => {
+        expect(applications).toMatchSnapshot();
+      }
+    );
+
+    expect(getActionQueue()).toHaveLength(0);
   });
 });

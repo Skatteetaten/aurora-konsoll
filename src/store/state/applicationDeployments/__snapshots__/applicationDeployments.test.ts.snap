@@ -1,5 +1,73 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
+exports[`applicationDeployments should delete application deployment and then fetch applications 1`] = `
+Object {
+  "applicationsConnection": ApplicationsConnection {
+    "applicationDeployments": Array [
+      Object {
+        "affiliation": "aurora",
+        "environment": "dev",
+        "id": "1",
+        "imageRepository": Object {
+          "guiUrl": "http://localhost",
+          "repository": "no.skatteetaten.aurora.mokey",
+        },
+        "message": undefined,
+        "name": "mokey",
+        "namespace": "aurora-dev",
+        "permission": Object {
+          "paas": Object {
+            "admin": true,
+            "view": true,
+          },
+        },
+        "status": Object {
+          "code": "HEALTHY",
+          "reasons": Array [],
+          "reports": Array [],
+        },
+        "time": "2019-11-06T12:56:00.707621Z",
+        "version": Object {
+          "auroraVersion": undefined,
+          "deployTag": Object {
+            "lastModified": "",
+            "name": "latest",
+            "type": "LATEST",
+          },
+          "releaseTo": undefined,
+        },
+      },
+    ],
+    Symbol(immer-draftable): true,
+  },
+  "errors": Object {
+    "requestApplicationDeployment": Array [],
+    "requestApplications": Array [],
+  },
+  "isDeploying": false,
+  "isFetching": true,
+  "isRefreshing": false,
+  "isRefreshingForAffiliation": true,
+}
+`;
+
+exports[`applicationDeployments should delete application deployment and then fetch applications 2`] = `
+Object {
+  "applicationsConnection": ApplicationsConnection {
+    "applicationDeployments": Array [],
+    Symbol(immer-draftable): true,
+  },
+  "errors": Object {
+    "requestApplicationDeployment": Array [],
+    "requestApplications": Array [],
+  },
+  "isDeploying": false,
+  "isFetching": false,
+  "isRefreshing": false,
+  "isRefreshingForAffiliation": false,
+}
+`;
+
 exports[`applicationDeployments should fetch applications 1`] = `
 Object {
   "applicationsConnection": ApplicationsConnection {
