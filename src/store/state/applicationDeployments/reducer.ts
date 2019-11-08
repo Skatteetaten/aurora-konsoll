@@ -60,7 +60,11 @@ export const applicationsReducer = reduceReducers<IApplicationsState>(
         state.isFetching = false;
         state.isRefreshing = false;
         if (payload.data) {
-          state.applicationDeployment = new ApplicationDeployment(payload.data);
+          const newDeployment = new ApplicationDeployment(payload.data);
+          state.applicationDeployment = newDeployment;
+          state.applicationsConnection.updateApplicationDeployment(
+            newDeployment
+          );
         }
         if (payload.errors) {
           state.errors.requestApplicationDeployment.push(...payload.errors);

@@ -26,6 +26,19 @@ export class ApplicationsConnection {
     return '';
   }
 
+  public updateApplicationDeployment(deployment: IApplicationDeployment) {
+    this.applicationDeployments = this.applicationDeployments.map(app => {
+      if (
+        app.name === deployment.name &&
+        app.namespace === deployment.namespace
+      ) {
+        return deployment;
+      } else {
+        return app;
+      }
+    });
+  }
+
   private toApplicationDeployments(
     data: IApplicationsConnectionData
   ): IApplicationDeployment[] {
