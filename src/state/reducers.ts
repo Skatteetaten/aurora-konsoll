@@ -1,18 +1,13 @@
 import { ActionType } from 'typesafe-actions';
-import actions, {
-  fetchCurrentUserResponse,
-  fetchGoboUsersResponse
-} from './actions';
+import actions, { fetchCurrentUserResponse } from './actions';
 
 import { IUserAndAffiliations } from 'models/ApplicationDeployment';
 import { handleAction, reduceReducers } from 'redux-ts-utils';
-import { IGoboUser } from 'services/auroraApiClients/goboUsageClient/query';
 
 export type StartupAction = ActionType<typeof actions>;
 
 export interface IStartupState {
   readonly currentUser: IUserAndAffiliations;
-  readonly goboUsers: IGoboUser[];
 }
 
 function updateStateWithPayload(name: string) {
@@ -22,8 +17,7 @@ function updateStateWithPayload(name: string) {
 }
 
 const initialState: IStartupState = {
-  currentUser: { id: '', user: '', affiliations: [] },
-  goboUsers: []
+  currentUser: { id: '', user: '', affiliations: [] }
 };
 
 export const startupReducer = reduceReducers<IStartupState>(
@@ -31,8 +25,7 @@ export const startupReducer = reduceReducers<IStartupState>(
     handleAction(
       fetchCurrentUserResponse,
       updateStateWithPayload('currentUser')
-    ),
-    handleAction(fetchGoboUsersResponse, updateStateWithPayload('goboUsers'))
+    )
   ],
   initialState
 );

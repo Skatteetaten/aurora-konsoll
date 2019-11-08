@@ -24,7 +24,7 @@ import {
   IUpdateDatabaseSchemaInputWithCreatedBy
 } from 'models/schemas';
 import { StatusCode } from 'models/Status';
-import { ITagsPagedGroup, ITagsPaged, ITag } from 'models/Tag';
+import { ITag } from 'models/Tag';
 import {
   IApplicationDeploymentFilters,
   IUserSettings
@@ -39,7 +39,6 @@ import { IStartupState } from 'state/reducers';
 import { INetdebugViewState } from 'screens/NetdebugView/state/reducer';
 import { IErrorsState } from 'screens/ErrorHandler/state/reducer';
 import { IAffiliationViewState } from 'screens/AffiliationViews/state/reducer';
-import { IGoboUser } from 'services/auroraApiClients/goboUsageClient/query';
 import { IErrors, IAppError } from 'models/errors';
 import { IIconLinkData } from 'components/IconLink';
 
@@ -208,116 +207,10 @@ export const databaseSchemaFactory = Factory.Sync.makeFactory<IDatabaseSchema>({
   users: []
 });
 
-export const tagsPagedGroupFactory = Factory.Sync.makeFactory<ITagsPagedGroup>({
-  auroraSnapshotVersion: {
-    tags: [
-      {
-        name: 'aurora-versjon-test',
-        lastModified: '',
-        type: ImageTagType.AURORA_SNAPSHOT_VERSION
-      }
-    ],
-    endCursor: '',
-    hasNextPage: false,
-    totalCount: 0
-  },
-  auroraVersion: {
-    tags: [
-      {
-        name: 'aurora-versjon-test',
-        lastModified: '',
-        type: ImageTagType.AURORA_VERSION
-      }
-    ],
-    endCursor: '',
-    hasNextPage: false,
-    totalCount: 0
-  },
-  bugfix: {
-    tags: [
-      {
-        name: '0.1.5',
-        lastModified: '',
-        type: ImageTagType.BUGFIX
-      }
-    ],
-    endCursor: '',
-    hasNextPage: false,
-    totalCount: 0
-  },
-  commitHash: {
-    tags: [],
-    endCursor: '',
-    hasNextPage: false,
-    totalCount: 0
-  },
-  latest: {
-    tags: [
-      {
-        name: 'latest',
-        lastModified: '',
-        type: ImageTagType.LATEST
-      }
-    ],
-    endCursor: '',
-    hasNextPage: false,
-    totalCount: 0
-  },
-  major: {
-    tags: [
-      {
-        name: '0',
-        lastModified: '',
-        type: ImageTagType.MAJOR
-      }
-    ],
-    endCursor: '',
-    hasNextPage: false,
-    totalCount: 0
-  },
-  minor: {
-    tags: [
-      {
-        name: '0.1',
-        lastModified: '',
-        type: ImageTagType.MINOR
-      }
-    ],
-    endCursor: '',
-    hasNextPage: false,
-    totalCount: 0
-  },
-  snapshot: {
-    tags: [
-      {
-        name: 'feature-aurora-versjon123',
-        lastModified: '',
-        type: ImageTagType.SNAPSHOT
-      }
-    ],
-    endCursor: '',
-    hasNextPage: false,
-    totalCount: 0
-  },
-  search: {
-    tags: [],
-    endCursor: '',
-    hasNextPage: false,
-    totalCount: 0
-  }
-});
-
 export const tagFactory = Factory.Sync.makeFactory<ITag>({
   lastModified: '2019-08-13T14:06:23.825Z',
   name: '1.0',
   type: ImageTagType.MINOR
-});
-
-export const tagsPagedFactory = Factory.Sync.makeFactory<ITagsPaged>({
-  endCursor: 'test',
-  hasNextPage: false,
-  tags: [],
-  totalCount: 0
 });
 
 export const databaseSchemaInputFactory = Factory.Sync.makeFactory<
@@ -457,14 +350,8 @@ export const errorsStateFactory = Factory.Sync.makeFactory<IErrorsState>({
   nextError: undefined
 });
 
-export const goboUsersFactory = Factory.Sync.makeFactory<IGoboUser>({
-  count: 1,
-  name: 'Bob'
-});
-
 export const startupFactory = Factory.Sync.makeFactory<IStartupState>({
-  currentUser: userAndAffiliationsFactory.build(),
-  goboUsers: [goboUsersFactory.build()]
+  currentUser: userAndAffiliationsFactory.build()
 });
 
 export const aclFactory = Factory.Sync.makeFactory<IAcl>({
@@ -502,11 +389,6 @@ export const websealReduxStateFactory = Factory.Sync.makeFactory<
   websealStates: []
 });
 
-export const goboUserFactory = Factory.Sync.makeFactory<IGoboUser>({
-  count: 1,
-  name: 'Bob'
-});
-
 export const userSettingsFactory = Factory.Sync.makeFactory<IUserSettings>({
   applicationDeploymentFilters: [applicationDeploymentFilterFactory.build()]
 });
@@ -516,16 +398,11 @@ export const affiliationViewStateFactory = Factory.Sync.makeFactory<
 >({
   allApplicationDeploymentsResult: [deploymentFactory.build()],
   applicationDeploymentDetails: deploymentDetailsFactory.build(),
-  findGroupedTagsPagedResult: tagsPagedGroupFactory.build(),
-  findTagsPagedResult: tagsPagedFactory.build(),
   isFetchingAllApplicationDeployments: false,
   isRefreshingAffiliations: false,
   isRefreshingApplicationDeployment: false,
   isUpdatingUserSettings: false,
   userSettings: userSettingsFactory.build(),
-  isRedeploying: false,
-  isFetchingTags: false,
-  isFetchingGroupedTags: false,
   isFetchingDetails: false,
   isApplicationDeploymentDeleted: false
 });

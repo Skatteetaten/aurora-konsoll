@@ -1,6 +1,6 @@
 import { connect } from 'react-redux';
 import { RootState } from 'store/types';
-import { CertificateWithApi } from './Certificate';
+import { Certificate } from './Certificate';
 import { fetchCertificates } from './state/actions';
 import { ICertificateState } from './state/reducers';
 
@@ -19,4 +19,4 @@ export const CertificateConnected = connect(
   {
     onFetch: () => fetchCertificates()
   }
-)(CertificateWithApi);
+)(Certificate);

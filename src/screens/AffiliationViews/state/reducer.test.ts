@@ -3,8 +3,6 @@ import {
   affiliationViewStateFactory,
   userSettingsFactory,
   deploymentDetailsFactory,
-  tagsPagedFactory,
-  tagsPagedGroupFactory,
   deploymentFactory
 } from 'testData/testDataBuilders';
 import {
@@ -14,13 +12,8 @@ import {
   refreshApplicationDeploymentResponse,
   updateUserSettingsRequest,
   applicationDeploymentDetailsResponse,
-  findTagsPagedResponse,
-  findGroupedTagsPagedResponse,
   findAllApplicationDeploymentsResponse,
-  redeployRequest,
-  fetchTagsRequest,
   fetchDetailsRequest,
-  fetchGroupedTagsRequest,
   deleteApplicationDeploymentResponse
 } from './actions';
 import { affiliationViewReducer } from './reducer';
@@ -42,19 +35,6 @@ describe('AffiliationView reducer', () => {
     ],
     [
       {
-        name: 'redeployRequest',
-        item: affiliationViewStateFactory.build()
-      },
-      {
-        name: 'isRedeploying',
-        item: redeployRequest(true)
-      },
-      affiliationViewStateFactory.build({
-        isRedeploying: true
-      })
-    ],
-    [
-      {
         name: 'refreshApplicationDeploymentRequest',
         item: affiliationViewStateFactory.build()
       },
@@ -64,32 +44,6 @@ describe('AffiliationView reducer', () => {
       },
       affiliationViewStateFactory.build({
         isRefreshingApplicationDeployment: true
-      })
-    ],
-    [
-      {
-        name: 'fetchTagsRequest',
-        item: affiliationViewStateFactory.build()
-      },
-      {
-        name: 'isFetchingTags',
-        item: fetchTagsRequest(true)
-      },
-      affiliationViewStateFactory.build({
-        isFetchingTags: true
-      })
-    ],
-    [
-      {
-        name: 'fetchTagsRequest',
-        item: affiliationViewStateFactory.build()
-      },
-      {
-        name: 'isFetchingGroupedTags',
-        item: fetchGroupedTagsRequest(true)
-      },
-      affiliationViewStateFactory.build({
-        isFetchingGroupedTags: true
       })
     ],
     [
@@ -157,32 +111,6 @@ describe('AffiliationView reducer', () => {
       },
       affiliationViewStateFactory.build({
         applicationDeploymentDetails: deploymentDetailsFactory.build()
-      })
-    ],
-    [
-      {
-        name: 'findTagsPagedResponse',
-        item: affiliationViewStateFactory.build()
-      },
-      {
-        name: 'findTagsPagedResult',
-        item: findTagsPagedResponse(tagsPagedFactory.build())
-      },
-      affiliationViewStateFactory.build({
-        findTagsPagedResult: tagsPagedFactory.build()
-      })
-    ],
-    [
-      {
-        name: 'findGroupedTagsPagedResponse',
-        item: affiliationViewStateFactory.build()
-      },
-      {
-        name: 'findGroupedTagsPagedResult',
-        item: findGroupedTagsPagedResponse(tagsPagedGroupFactory.build())
-      },
-      affiliationViewStateFactory.build({
-        findGroupedTagsPagedResult: tagsPagedGroupFactory.build()
       })
     ],
     [

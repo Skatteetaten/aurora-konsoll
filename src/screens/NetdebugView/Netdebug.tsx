@@ -10,8 +10,6 @@ import Table from './Table';
 
 import { INetdebugResult } from 'services/auroraApiClients';
 
-import { IAuroraApiComponentProps, withAuroraApi } from 'components/AuroraApi';
-
 const hostnameValidator = /(^|\s)([\w-]+(\.[\w-]+)+\.?(:\d+)?(\/\S*)?)/gi;
 const portValidator = /^(6553[0-5]|655[0-2]\d|65[0-4]\d\d|6[0-4]\d{3}|[1-5]\d{4}|[1-9]\d{0,3}|0)$/gi;
 
@@ -30,14 +28,14 @@ interface INetdebugState {
   };
 }
 
-interface INetdebugProps extends IAuroraApiComponentProps {
+interface INetdebugProps {
   className?: string;
   findNetdebugStatus: (host: string, port: string) => void;
   isFetching: boolean;
   netdebugStatus: INetdebugResult;
 }
 
-class Netdebug extends React.Component<INetdebugProps, INetdebugState> {
+class NetdebugBase extends React.Component<INetdebugProps, INetdebugState> {
   public state: INetdebugState = {
     hostnameValue: '',
     lastScan: '',
@@ -174,7 +172,7 @@ class Netdebug extends React.Component<INetdebugProps, INetdebugState> {
   }
 }
 
-const StyledNetdebug = styled(Netdebug)`
+export const Netdebug = styled(NetdebugBase)`
   max-height: 100%;
   overflow-x: auto;
 
@@ -210,7 +208,3 @@ const StyledNetdebug = styled(Netdebug)`
     margin: 20px 0 0 0;
   }
 `;
-
-export const NetdebugWithApi = withAuroraApi(StyledNetdebug);
-
-export default StyledNetdebug;

@@ -1,6 +1,6 @@
 import FilterService from './FilterService';
 
-import { SelectionType } from 'screens/AffiliationViews/MatrixView/Filter/Filter';
+import { SelectionType } from 'screens/AffiliationViews/DeploymentView/MatrixView/Filter/Filter';
 import {
   applicationDeploymentFilterFactory,
   deploymentFactory

@@ -14,17 +14,10 @@ import actions, {
   updateUserSettingsRequest,
   refreshApplicationDeploymentResponse,
   applicationDeploymentDetailsResponse,
-  searchTagsPagedResponse,
-  findTagsPagedResponse,
-  findGroupedTagsPagedResponse,
-  redeployRequest,
   fetchDetailsRequest,
-  fetchTagsRequest,
-  fetchGroupedTagsRequest,
   deleteApplicationDeploymentResponse
 } from './actions';
 import { IUserSettings } from 'models/UserSettings';
-import { ITagsPaged, ITagsPagedGroup, defaultTagsPagedGroup } from 'models/Tag';
 
 export type AffiliationViewAction = ActionType<typeof actions>;
 
@@ -32,32 +25,22 @@ export interface IAffiliationViewState {
   readonly isRefreshingAffiliations: boolean;
   readonly allApplicationDeploymentsResult: IApplicationDeployment[];
   readonly isFetchingAllApplicationDeployments: boolean;
-  readonly isFetchingTags: boolean;
-  readonly isFetchingGroupedTags: boolean;
   readonly userSettings: IUserSettings;
   readonly isUpdatingUserSettings: boolean;
   readonly isRefreshingApplicationDeployment: boolean;
-  readonly isRedeploying: boolean;
   readonly applicationDeploymentDetails: IApplicationDeploymentDetails;
   readonly isFetchingDetails: boolean;
-  readonly findTagsPagedResult: ITagsPaged;
-  readonly findGroupedTagsPagedResult: ITagsPagedGroup;
   readonly isApplicationDeploymentDeleted: boolean;
 }
 
 const initialState = (): IAffiliationViewState => {
   return {
     isRefreshingAffiliations: false,
-    isFetchingTags: false,
-    isFetchingGroupedTags: false,
     allApplicationDeploymentsResult: [],
     isFetchingAllApplicationDeployments: false,
     userSettings: { applicationDeploymentFilters: [] },
     isUpdatingUserSettings: false,
     isRefreshingApplicationDeployment: false,
-    isRedeploying: false,
-    findGroupedTagsPagedResult: defaultTagsPagedGroup(),
-    findTagsPagedResult: defaultTagsPagedGroup()[''],
     isFetchingDetails: false,
     applicationDeploymentDetails: {
       pods: [],
@@ -103,24 +86,6 @@ export const affiliationViewReducer = reduceReducers<IAffiliationViewState>(
     handleAction(
       applicationDeploymentDetailsResponse,
       updateStateWithPayload('applicationDeploymentDetails')
-    ),
-    handleAction(redeployRequest, updateStateWithPayload('isRedeploying')),
-    handleAction(
-      searchTagsPagedResponse,
-      updateStateWithPayload('searchTagsPagedResult')
-    ),
-    handleAction(
-      findTagsPagedResponse,
-      updateStateWithPayload('findTagsPagedResult')
-    ),
-    handleAction(
-      findGroupedTagsPagedResponse,
-      updateStateWithPayload('findGroupedTagsPagedResult')
-    ),
-    handleAction(fetchTagsRequest, updateStateWithPayload('isFetchingTags')),
-    handleAction(
-      fetchGroupedTagsRequest,
-      updateStateWithPayload('isFetchingGroupedTags')
     ),
     handleAction(
       fetchDetailsRequest,

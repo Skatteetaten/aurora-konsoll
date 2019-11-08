@@ -1,7 +1,7 @@
-import * as React from 'react';
-import ErrorPopup from './ErrorPopup';
+import React, { useEffect } from 'react';
+
 import { IErrors, IAppError } from 'models/errors';
-import { logger } from 'services/LoggerService';
+import ErrorPopup from './ErrorPopup';
 
 interface IErrorBoundaryProps {
   getNextError: () => void;
@@ -9,70 +9,38 @@ interface IErrorBoundaryProps {
   closeErrors: () => void;
   errors: IErrors;
   nextError?: IAppError;
+  children: React.ReactNode;
 }
 
-interface IErrorBoundaryState {
-  isExtraInfoVisible: boolean;
-  errorQueue: IAppError[];
-}
-
-class ErrorBoundary extends React.Component<
-  IErrorBoundaryProps,
-  IErrorBoundaryState
-> {
-  public state: IErrorBoundaryState = {
-    isExtraInfoVisible: false,
-    errorQueue: []
-  };
-  public async componentDidUpdate() {
-    const { errors, getNextError, nextError } = this.props;
-    const { errorQueue } = this.state;
-
-    const isEqualErrorQueues = () => {
-      return (
-        JSON.stringify(Object.assign({}, errors.errorQueue)) ===
-        JSON.stringify(Object.assign({}, errorQueue))
-      );
-    };
-    if (!isEqualErrorQueues() && errors.errorQueue.length > 0) {
-      logger(errors.errorQueue[0].error.message);
-      this.setState({
-        errorQueue: Object.assign({}, this.props.errors.errorQueue)
-      });
-    }
+const ErrorBoundary = ({
+  getNextError,
+  closeError,
+  closeErrors,
+  errors,
+  nextError,
+  children
+}: IErrorBoundaryProps) => {
+  useEffect(() => {
     if (
       (errors.errorQueue.length > 0 && !nextError) ||
       (nextError && !nextError.isActive)
     ) {
-      await getNextError();
+      getNextError();
     }
-  }
-
-  public changeExtraInfoVisibility = () => {
-    this.setState(prevState => ({
-      isExtraInfoVisible: !prevState.isExtraInfoVisible
-    }));
-  };
-
-  public render() {
-    const { children, closeError, closeErrors, errors, nextError } = this.props;
-    const { isExtraInfoVisible } = this.state;
-    return (
-      <>
-        {nextError && (
-          <ErrorPopup
-            currentError={nextError}
-            closeError={closeError}
-            closeErrors={closeErrors}
-            errorCount={errors.errorQueue.length}
-            isExtraInfoVisible={isExtraInfoVisible}
-            changeExtraInfoVisibility={this.changeExtraInfoVisibility}
-          />
-        )}
-        {children}
-      </>
-    );
-  }
-}
+  });
+  return (
+    <>
+      {nextError && (
+        <ErrorPopup
+          currentError={nextError}
+          closeError={closeError}
+          closeErrors={closeErrors}
+          errorCount={errors.errorQueue.length}
+        />
+      )}
+      {children}
+    </>
+  );
+};
 
 export default ErrorBoundary;
