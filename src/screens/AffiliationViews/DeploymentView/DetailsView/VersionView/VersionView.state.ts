@@ -7,7 +7,6 @@ import { VersionStatus } from '../models/VersionStatus';
 
 interface IVersionViewProps {
   versionStatus: VersionStatus;
-  affiliation: string;
   deployment: IApplicationDeployment;
   configuredVersion?: string;
 }

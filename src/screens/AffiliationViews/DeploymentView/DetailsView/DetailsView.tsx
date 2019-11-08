@@ -141,7 +141,6 @@ export const DetailsView: React.FC<IDetailsViewProps> = ({
                   deployment.details.deploymentSpec &&
                   deployment.details.deploymentSpec.version
                 }
-                affiliation={affiliation}
                 deployment={deployment}
               />
             )}

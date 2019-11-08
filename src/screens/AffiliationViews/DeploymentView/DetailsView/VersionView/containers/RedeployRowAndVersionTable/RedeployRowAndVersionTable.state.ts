@@ -7,7 +7,6 @@ import { ReduxProps, RootState } from 'store/types';
 export interface IRedeployRowAndVersionTableProps {
   versionType: ImageTagType;
   applicationId: string;
-  affiliation: string;
   hasAccessToDeploy: boolean;
   versionStatus: VersionStatus;
   configuredVersionTag?: IImageTag;

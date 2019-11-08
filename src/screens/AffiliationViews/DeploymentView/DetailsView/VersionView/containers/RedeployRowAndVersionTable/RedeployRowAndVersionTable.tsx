@@ -10,7 +10,6 @@ type Props = IRedeployRowAndVersionTableProps &
   IRedeployRowAndVersionTableState;
 
 export const RedeployRowAndVersionTable: React.FC<Props> = ({
-  affiliation,
   applicationId,
   hasAccessToDeploy,
   versionStatus,

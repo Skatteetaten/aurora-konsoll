@@ -13,7 +13,6 @@ import { RedeployRowAndVersionTableContainer } from './containers/RedeployRowAnd
 
 export const VersionView = ({
   versionStatus,
-  affiliation,
   deployment,
   imageTagsConnection,
   configuredVersionTag
@@ -58,7 +57,6 @@ export const VersionView = ({
       </ActionBar>
       <VersionTableInformation />
       <RedeployRowAndVersionTableContainer
-        affiliation={affiliation}
         applicationId={id}
         configuredVersionTag={configuredVersionTag}
         deployedVersion={version.deployTag}
