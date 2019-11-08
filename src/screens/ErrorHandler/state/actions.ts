@@ -2,6 +2,7 @@ import { createAction } from 'redux-ts-utils';
 import { Thunk, AsyncAction } from 'store/types';
 import { IAppError, IErrors } from 'models/errors';
 import { IDataAndErrors } from 'services/GoboClient';
+import { Logger } from 'services/LoggerService';
 
 const errors = (action: string) => `errors/${action}`;
 
@@ -29,6 +30,9 @@ export const addErrors = (errors: any[], name?: string): AsyncAction => (
 ) => {
   const state = Object.assign({}, getState().errors.errors);
   errors.forEach(e => {
+    Logger.error(e.message, {
+      location: window.location.pathname
+    });
     dispatch(incrementErrorId());
     state.errorQueue.push({
       error: {
