@@ -8,6 +8,7 @@ import Spinner from 'aurora-frontend-react-komponenter/Spinner';
 export interface IDeployButtonProps {
   isLoading: boolean;
   isOldVersion: boolean;
+  disabled: boolean;
   hasAccessToDeploy: boolean;
   dialogTitle: string;
   buttonText: string;
@@ -20,6 +21,7 @@ export const DeployButton: React.FC<IDeployButtonProps> = ({
   dialogTitle,
   isOldVersion,
   buttonText,
+  disabled,
   hasAccessToDeploy,
   children
 }) => {
@@ -29,7 +31,7 @@ export const DeployButton: React.FC<IDeployButtonProps> = ({
   return (
     <>
       <ActionButton
-        disabled={isLoading || !hasAccessToDeploy}
+        disabled={isLoading || disabled || !hasAccessToDeploy}
         onClick={open}
         icon="Deploy"
         style={{ opacity: isLoading ? 1 : undefined }}

@@ -102,6 +102,7 @@ export const VersionTable = ({
         deploy: (
           <DeployButton
             isLoading={versionBeingDeployed === it.name}
+            disabled={versionBeingDeployed !== undefined}
             buttonText="Deploy"
             dialogTitle="Vil du endre versjonen?"
             hasAccessToDeploy={hasAccessToDeploy}

@@ -51,6 +51,7 @@ export const RedeployRow = ({
       </span>
       <DeployButton
         isLoading={isLoading}
+        disabled={versionBeingDeployed !== undefined}
         buttonText="Redeploy"
         dialogTitle="Vil du gjøre en redeploy?"
         isOldVersion={!configuredVersionTag.image}
