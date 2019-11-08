@@ -1,5 +1,5 @@
 import { connect } from 'react-redux';
-import Schema from './DatabaseSchemaTable';
+import Schema from './Schema';
 
 import {
   ICreateDatabaseSchemaInput,
