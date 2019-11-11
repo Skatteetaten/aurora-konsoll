@@ -8,6 +8,7 @@ import DeploymentFilterService, {
 import { ApplicationDeploymentSelectorContainer } from './DetailsView/ApplicationDeploymentSelector';
 import { MatrixView } from './MatrixView/MatrixView';
 import { DeploymentViewContainerState } from './DeploymentViewContainer';
+import { isEqualObjects } from 'utils/string';
 
 interface IDeploymentViewProps {
   affiliation: string;
@@ -121,7 +122,7 @@ export class DeploymentView extends React.Component<
     const paramsExists = this.deploymentFilterService.isParamsDefined();
     this.clearFilterOnAffiliationChange(prevProps.affiliation);
     this.updateQueryOnNewParams(prevState.filter);
-    if (prevProps.userSettings !== this.props.userSettings) {
+    if (!isEqualObjects(prevProps.userSettings, this.props.userSettings)) {
       this.fetchApplicationDeploymentFilters(paramsExists);
     }
   }
