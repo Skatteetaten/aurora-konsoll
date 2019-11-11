@@ -35,8 +35,7 @@ export const RedeployRow = ({
     <Wrapper>
       {versionStatus !== VersionStatus.OK && (
         <WrongVersionCallout>
-          <h4>Til informasjon</h4>
-          <span>{versionStatusMessage(versionStatus)}</span>
+          <p>{versionStatusMessage(versionStatus)}</p>
         </WrongVersionCallout>
       )}
       <span>
