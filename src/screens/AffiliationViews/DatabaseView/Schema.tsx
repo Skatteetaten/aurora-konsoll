@@ -67,7 +67,6 @@ export class Schema extends React.Component<ISchemaProps, ISchemaState> {
 
   public componentDidUpdate(prevProps: ISchemaProps, prevState: ISchemaState) {
     const { affiliation, items, onFetch } = this.props;
-    const { filter } = this.state;
 
     if (
       prevProps.affiliation !== affiliation ||

@@ -4,13 +4,19 @@ import {CheckboxVisibility, IColumn, Selection, SelectionMode} from 'office-ui-f
 import {IDatabaseSchema} from "../../../models/schemas";
 import {getLocalDate} from "../../../utils/date";
 
+declare global {
+  interface Window {
+    debug: any;
+  }
+}
+
 export class DatabaseSchemaTable extends Component<{
-    filter: string;
-    schemas: IDatabaseSchema[];
-    multiSelect: boolean;
-    onSingleSchemaSelected: (schema: IDatabaseSchema) => void;
-    onSchemaSelectionChange: (schemas: IDatabaseSchema[]) => void;
-  }, {} > {
+  filter: string;
+  schemas: IDatabaseSchema[];
+  multiSelect: boolean;
+  onSingleSchemaSelected: (schema: IDatabaseSchema) => void;
+  onSchemaSelectionChange: (schemas: IDatabaseSchema[]) => void;
+}, {}> {
   public state = {};
 
   private columns: IColumn[] = [
@@ -125,6 +131,7 @@ export class DatabaseSchemaTable extends Component<{
 
   private selection = new Selection({
     onSelectionChanged: () => {
+      window.debug = {selection: this.selection};
       if (this.props.multiSelect) {
         this.onSchemaSelectionChange();
       } else {
@@ -141,10 +148,15 @@ export class DatabaseSchemaTable extends Component<{
     }>,
     prevState: Readonly<{}>,
     snapshot?: any
-  ): void {}
+  ): void {
+    if (this.props.multiSelect && prevProps.multiSelect !== this.props.multiSelect) {
+      // TODO: This does not seem to work. Must fix.
+      this.selection.setAllSelected(false);
+    }
+  }
 
   public render() {
-    const { filter, schemas, multiSelect } = this.props;
+    const {filter, schemas, multiSelect} = this.props;
     let viewItems = toViewSchemas(schemas || []);
 
     return (
@@ -166,15 +178,16 @@ export class DatabaseSchemaTable extends Component<{
   }
 
   private onSchemaSelectionChange() {
-    const selected: IDatabaseSchemaView[] = this.selection.getSelection().map( it => it as IDatabaseSchemaView );
+    const selected: IDatabaseSchemaView[] = this.selection.getSelection().map(it => it as IDatabaseSchemaView);
     const databaseSchemas = this.props.schemas || [];
-    const selectedSchemas = databaseSchemas.filter( schema => selected.find(it => it.id === schema.id) !== undefined );
+    const selectedSchemas = databaseSchemas.filter(schema => selected.find(it => it.id === schema.id) !== undefined);
 
     this.props.onSchemaSelectionChange(selectedSchemas);
   }
 
   private onSingleSchemaSelected() {
-    const selected: IDatabaseSchemaView = this.selection.getSelection().map( it => it as IDatabaseSchemaView )[0];
+    const selected: IDatabaseSchemaView = this.selection.getSelection().map(it => it as IDatabaseSchemaView)[0];
+    if (!selected) return;
     const databaseSchemas = this.props.schemas || [];
     const selectedSchema = databaseSchemas.find(schema => schema.id === selected.id);
 
