@@ -1,11 +1,11 @@
-import React, { createRef } from 'react';
+import React from 'react';
 
 import styled from 'styled-components';
 import TextField from 'aurora-frontend-react-komponenter/TextField';
 
 import Spinner from 'components/Spinner';
 
-import { IUserAndAffiliations } from 'models/ApplicationDeployment';
+import {IUserAndAffiliations} from 'models/ApplicationDeployment';
 import {
   ICreateDatabaseSchemaInput,
   ICreateDatabaseSchemaResponse,
@@ -18,8 +18,8 @@ import {
 import ConfirmDeletionDialog from './ConfirmDeletionDialog';
 import DatabaseSchemaCreateDialog from './DatabaseSchemaCreateDialog';
 import DatabaseSchemaUpdateDialog from './DatabaseSchemaUpdateDialog';
-import { EnterModeThenConfirm } from './EnterModeThenConfirm';
-import { DatabaseSchemaTable } from './DatabaseSchemaTable';
+import {EnterModeThenConfirm} from './EnterModeThenConfirm';
+import {DatabaseSchemaTable} from './DatabaseSchemaTable';
 
 export interface ISchemaProps {
   onFetch: (affiliations: string[]) => void;
@@ -61,12 +61,12 @@ export class Schema extends React.Component<ISchemaProps, ISchemaState> {
   };
 
   public componentDidMount() {
-    const { affiliation, onFetch } = this.props;
+    const {affiliation, onFetch} = this.props;
     onFetch([affiliation]);
   }
 
   public componentDidUpdate(prevProps: ISchemaProps, prevState: ISchemaState) {
-    const { affiliation, items, onFetch } = this.props;
+    const {affiliation, items, onFetch} = this.props;
 
     if (
       prevProps.affiliation !== affiliation ||
@@ -143,7 +143,7 @@ export class Schema extends React.Component<ISchemaProps, ISchemaState> {
           </div>
         </div>
         {isFetching ? (
-          <Spinner />
+          <Spinner/>
         ) : (
           <DatabaseSchemaTable
             filter={filter}
@@ -174,11 +174,11 @@ export class Schema extends React.Component<ISchemaProps, ISchemaState> {
   }
 
   private onSingleSchemaSelected(selectedSchema: IDatabaseSchema) {
-    this.setState({ selectedSchema });
+    this.setState({selectedSchema});
   }
 
   private onSchemaSelectionChange(selectedSchemas: IDatabaseSchema[]) {
-    this.setState({ selectedSchemas });
+    this.setState({selectedSchemas});
   }
 
   private onCancelDeletionClick = () => {
@@ -189,7 +189,7 @@ export class Schema extends React.Component<ISchemaProps, ISchemaState> {
   };
 
   private onDeleteSelectionConfirmed = () => {
-    this.setState({ confirmDeletionDialogVisible: true });
+    this.setState({confirmDeletionDialogVisible: true});
   };
 
   private onConfirmDeletionClick = () => {
@@ -205,24 +205,24 @@ export class Schema extends React.Component<ISchemaProps, ISchemaState> {
   };
 
   private onExitDeletionMode = () => {
-    this.setState({ deleteMode: false });
+    this.setState({deleteMode: false});
   };
 
   private onEnterDeletionMode = () => {
-    this.setState({ deleteMode: true });
+    this.setState({deleteMode: true});
   };
 
   private onFilterChange = (text: string) => {
-    this.setState({ filter: text });
+    this.setState({filter: text});
   };
 
   private onCreateCopyConfirmed = () => {
-    const { selectedSchema } = this.state;
-    this.setState({ schemaToCopy: selectedSchema });
+    const {selectedSchema} = this.state;
+    this.setState({schemaToCopy: selectedSchema});
   };
 
   private onUpdateSchemaDialogClosed = () => {
-    this.setState({ selectedSchema: undefined });
+    this.setState({selectedSchema: undefined});
   };
 }
 
