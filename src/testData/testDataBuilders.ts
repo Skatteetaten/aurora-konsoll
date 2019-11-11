@@ -18,7 +18,6 @@ import {
   IDatabaseSchema,
   IDatabaseSchemaInput,
   IDatabaseSchemas,
-  IDatabaseSchemaView,
   IDeleteDatabaseSchemasResponse,
   IJdbcUser,
   IUpdateDatabaseSchemaInputWithCreatedBy
@@ -41,6 +40,7 @@ import { IErrorsState } from 'screens/ErrorHandler/state/reducer';
 import { IAffiliationViewState } from 'screens/AffiliationViews/state/reducer';
 import { IErrors, IAppError } from 'models/errors';
 import { IIconLinkData } from 'components/IconLink';
+import { IDatabaseSchemaView } from "../screens/AffiliationViews/DatabaseView/DatabaseSchemaTable";
 
 const mountFactory = Factory.Sync.makeFactory<IMount>({
   exist: true,
