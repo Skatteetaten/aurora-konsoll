@@ -1,6 +1,6 @@
 import * as React from 'react';
 
-import Grid from 'aurora-frontend-react-komponenter/Grid';
+import Grid from '@skatteetaten/frontend-components/Grid';
 import { ICreateDatabaseSchemaInput, IJdbcUser } from 'models/schemas';
 import DatabaseSchemaService from 'services/DatabaseSchemaService';
 import JdbcConnection from '../JdbcConnection';

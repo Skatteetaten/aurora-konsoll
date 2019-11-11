@@ -1,11 +1,11 @@
 import * as React from 'react';
 import styled from 'styled-components';
 
-import ActionButton from 'aurora-frontend-react-komponenter/ActionButton';
-import Button from 'aurora-frontend-react-komponenter/Button';
-import Dialog from 'aurora-frontend-react-komponenter/Dialog';
-import Grid from 'aurora-frontend-react-komponenter/Grid';
-import palette from 'aurora-frontend-react-komponenter/utils/palette';
+import ActionButton from '@skatteetaten/frontend-components/ActionButton';
+import Button from '@skatteetaten/frontend-components/Button';
+import Dialog from '@skatteetaten/frontend-components/Dialog';
+import Grid from '@skatteetaten/frontend-components/Grid';
+import palette from '@skatteetaten/frontend-components/utils/palette';
 
 import ConfirmationDialog from 'components/ConfirmationDialog';
 import SkeLink from 'components/SkeLink';

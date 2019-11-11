@@ -1,6 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
-import ComboBox from 'aurora-frontend-react-komponenter/ComboBox';
+import ComboBox from '@skatteetaten/frontend-components/ComboBox';
 
 import { ImageTagType } from 'models/ImageTagType';
 

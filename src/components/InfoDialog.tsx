@@ -1,8 +1,8 @@
 import * as React from 'react';
 
-import ActionButton from 'aurora-frontend-react-komponenter/ActionButton';
-import Button from 'aurora-frontend-react-komponenter/Button';
-import Dialog from 'aurora-frontend-react-komponenter/Dialog';
+import ActionButton from '@skatteetaten/frontend-components/ActionButton';
+import Button from '@skatteetaten/frontend-components/Button';
+import Dialog from '@skatteetaten/frontend-components/Dialog';
 
 interface InfoDialogProps {
   title: string;

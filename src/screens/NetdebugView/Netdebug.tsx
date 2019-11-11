@@ -1,9 +1,9 @@
 import * as React from 'react';
 import styled from 'styled-components';
 
-import Button from 'aurora-frontend-react-komponenter/Button';
-import Spinner from 'aurora-frontend-react-komponenter/Spinner';
-import TextField from 'aurora-frontend-react-komponenter/TextField';
+import Button from '@skatteetaten/frontend-components/Button';
+import Spinner from '@skatteetaten/frontend-components/Spinner';
+import TextField from '@skatteetaten/frontend-components/TextField';
 
 import CardInfo from './CardInfo';
 import Table from './Table';

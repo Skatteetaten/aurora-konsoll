@@ -4,11 +4,11 @@ import styled from 'styled-components';
 
 import Dropdown from 'components/DropdownMenu';
 
-import Icon from 'aurora-frontend-react-komponenter/Icon';
-import Image from 'aurora-frontend-react-komponenter/Image';
-import separatorImg from 'aurora-frontend-react-komponenter/TopBanner/assets/separator.png';
-import Logo from 'aurora-frontend-react-komponenter/TopBanner/assets/ske-logo.svg';
-import palette from 'aurora-frontend-react-komponenter/utils/palette';
+import Icon from '@skatteetaten/frontend-components/Icon';
+import Image from '@skatteetaten/frontend-components/Image';
+import separatorImg from '@skatteetaten/frontend-components/TopBanner/assets/separator.png';
+import Logo from '@skatteetaten/frontend-components/TopBanner/assets/ske-logo.svg';
+import palette from '@skatteetaten/frontend-components/utils/palette';
 import { IUserAndAffiliations } from 'models/ApplicationDeployment';
 import { ButtonLink } from 'components/ButtonLink';
 

@@ -6,8 +6,8 @@ import ReactSelect from 'components/Select';
 
 import { IApplicationDeployment } from 'models/ApplicationDeployment';
 
-import ActionButton from 'aurora-frontend-react-komponenter/ActionButton';
-import Checkbox from 'aurora-frontend-react-komponenter/Checkbox';
+import ActionButton from '@skatteetaten/frontend-components/ActionButton';
+import Checkbox from '@skatteetaten/frontend-components/Checkbox';
 import { IApplicationDeploymentFilters } from 'models/UserSettings';
 import { IFilter } from 'services/DeploymentFilterService';
 import FilterService from 'services/FilterService';

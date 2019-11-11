@@ -1,6 +1,6 @@
 import React from 'react';
-import Button from 'aurora-frontend-react-komponenter/Button';
-import Spinner from 'aurora-frontend-react-komponenter/Spinner';
+import Button from '@skatteetaten/frontend-components/Button';
+import Spinner from '@skatteetaten/frontend-components/Spinner';
 
 import { FetchVersionsInformation } from '../../components/FetchVersionsInformation';
 import {

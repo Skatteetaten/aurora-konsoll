@@ -1,9 +1,9 @@
 import * as React from 'react';
 import styled from 'styled-components';
 
-import palette from 'aurora-frontend-react-komponenter/utils/palette';
+import palette from '@skatteetaten/frontend-components/utils/palette';
 
-import NavigationTile from 'aurora-frontend-react-komponenter/NavigationTile';
+import NavigationTile from '@skatteetaten/frontend-components/NavigationTile';
 import { Step } from 'models/schemas';
 import { ButtonLink } from 'components/ButtonLink';
 

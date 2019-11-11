@@ -1,8 +1,8 @@
 import * as React from 'react';
 import styled from 'styled-components';
 
-import palette from 'aurora-frontend-react-komponenter/utils/palette';
-import Button from 'aurora-frontend-react-komponenter/Button';
+import palette from '@skatteetaten/frontend-components/utils/palette';
+import Button from '@skatteetaten/frontend-components/Button';
 
 import { INetdebugResult } from 'services/auroraApiClients';
 

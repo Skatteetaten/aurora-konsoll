@@ -1,6 +1,6 @@
 import * as React from 'react';
 
-import Button from 'aurora-frontend-react-komponenter/Button';
+import Button from '@skatteetaten/frontend-components/Button';
 import Spinner from './Spinner';
 
 interface ILoadingButtonProps {

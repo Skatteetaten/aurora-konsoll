@@ -1,7 +1,7 @@
 import * as React from 'react';
 import styled from 'styled-components';
 
-import TextField from 'aurora-frontend-react-komponenter/TextField';
+import TextField from '@skatteetaten/frontend-components/TextField';
 
 interface ILabelsProps {
   className?: string;

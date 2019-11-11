@@ -9,7 +9,7 @@ import {
 } from 'react-router-dom';
 import styled from 'styled-components';
 
-import SkeBasis from 'aurora-frontend-react-komponenter/SkeBasis';
+import SkeBasis from '@skatteetaten/frontend-components/SkeBasis';
 
 import { ITokenStore } from 'services/TokenStore';
 

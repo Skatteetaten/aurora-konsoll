@@ -1,8 +1,8 @@
 import * as React from 'react';
 import styled from 'styled-components';
 
-import Button from 'aurora-frontend-react-komponenter/Button';
-import ActionButton from 'aurora-frontend-react-komponenter/ActionButton';
+import Button from '@skatteetaten/frontend-components/Button';
+import ActionButton from '@skatteetaten/frontend-components/ActionButton';
 import { ActiveDeploymentInformation } from './ActiveDeploymentInformation';
 import { DeploymentSpecInformation } from './DeploymentSpecInformation';
 import { GitAndBuildInformation } from './GitAndBuildInformation';

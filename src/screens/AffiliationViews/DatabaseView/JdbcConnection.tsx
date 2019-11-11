@@ -1,8 +1,8 @@
 import * as React from 'react';
 
-import Icon from 'aurora-frontend-react-komponenter/Icon';
-import TextField from 'aurora-frontend-react-komponenter/TextField';
-import palette from 'aurora-frontend-react-komponenter/utils/palette';
+import Icon from '@skatteetaten/frontend-components/Icon';
+import TextField from '@skatteetaten/frontend-components/TextField';
+import palette from '@skatteetaten/frontend-components/utils/palette';
 import LoadingButton from 'components/LoadingButton';
 import { IJdbcUser } from 'models/schemas';
 import styled from 'styled-components';

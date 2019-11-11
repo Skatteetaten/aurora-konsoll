@@ -1,7 +1,7 @@
 import * as React from 'react';
 import styled from 'styled-components';
 
-import ActionButton from 'aurora-frontend-react-komponenter/ActionButton';
+import ActionButton from '@skatteetaten/frontend-components/ActionButton';
 import { SelectionType } from './Filter';
 
 interface ISelectionButtonsProps {

@@ -1,4 +1,4 @@
-import { default as AuroraSpinner } from 'aurora-frontend-react-komponenter/Spinner';
+import { default as AuroraSpinner } from '@skatteetaten/frontend-components/Spinner';
 import * as React from 'react';
 import styled from 'styled-components';
 

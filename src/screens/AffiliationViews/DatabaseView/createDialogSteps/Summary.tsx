@@ -1,8 +1,8 @@
 import * as React from 'react';
 import styled from 'styled-components';
 
-import Card from 'aurora-frontend-react-komponenter/Card';
-import Grid from 'aurora-frontend-react-komponenter/Grid';
+import Card from '@skatteetaten/frontend-components/Card';
+import Grid from '@skatteetaten/frontend-components/Grid';
 import { ICreateDatabaseSchemaResponse } from 'models/schemas';
 
 interface ISummaryProps {

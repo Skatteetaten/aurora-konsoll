@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 
 import Dropdown, {
   IDropdownOption
-} from 'aurora-frontend-react-komponenter/Dropdown';
+} from '@skatteetaten/frontend-components/Dropdown';
 
 import { toDropdownOptions } from 'utils/aurora-frontend';
 

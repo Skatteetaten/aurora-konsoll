@@ -1,4 +1,4 @@
-import palette from 'aurora-frontend-react-komponenter/utils/palette';
+import palette from '@skatteetaten/frontend-components/utils/palette';
 import { NavLink } from 'react-router-dom';
 import styled from 'styled-components';
 

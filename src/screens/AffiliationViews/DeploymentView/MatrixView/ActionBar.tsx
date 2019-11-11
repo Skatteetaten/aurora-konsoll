@@ -1,7 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
-import Checkbox from 'aurora-frontend-react-komponenter/Checkbox';
-import TextField from 'aurora-frontend-react-komponenter/TextField';
+import Checkbox from '@skatteetaten/frontend-components/Checkbox';
+import TextField from '@skatteetaten/frontend-components/TextField';
 
 import LoadingButton from 'components/LoadingButton';
 import TimeSince from 'components/TimeSince';

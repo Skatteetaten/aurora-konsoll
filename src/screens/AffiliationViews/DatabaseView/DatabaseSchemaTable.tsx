@@ -2,9 +2,9 @@ import * as React from 'react';
 
 import styled from 'styled-components';
 
-import ActionButton from 'aurora-frontend-react-komponenter/ActionButton';
-import DetailsList from 'aurora-frontend-react-komponenter/DetailsList';
-import TextField from 'aurora-frontend-react-komponenter/TextField';
+import ActionButton from '@skatteetaten/frontend-components/ActionButton';
+import DetailsList from '@skatteetaten/frontend-components/DetailsList';
+import TextField from '@skatteetaten/frontend-components/TextField';
 
 import Spinner from 'components/Spinner';
 import {

@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
 
-import Dialog from 'aurora-frontend-react-komponenter/Dialog';
-import MessageBar from 'aurora-frontend-react-komponenter/MessageBar';
-import ActionButton from 'aurora-frontend-react-komponenter/ActionButton';
-import Spinner from 'aurora-frontend-react-komponenter/Spinner';
+import Dialog from '@skatteetaten/frontend-components/Dialog';
+import MessageBar from '@skatteetaten/frontend-components/MessageBar';
+import ActionButton from '@skatteetaten/frontend-components/ActionButton';
+import Spinner from '@skatteetaten/frontend-components/Spinner';
 
 export interface IDeployButtonProps {
   isLoading: boolean;

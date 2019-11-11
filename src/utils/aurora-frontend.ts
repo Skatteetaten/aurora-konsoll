@@ -1,4 +1,4 @@
-import { IDropdownOption } from 'aurora-frontend-react-komponenter/Dropdown';
+import { IDropdownOption } from '@skatteetaten/frontend-components/Dropdown';
 
 function toDropdownOptions(names: string[]): IDropdownOption[] {
   const dropdownNames = names

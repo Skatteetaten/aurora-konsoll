@@ -1,9 +1,9 @@
 import * as React from 'react';
 import { IFilterChange } from './Filter';
 
-import ActionButton from 'aurora-frontend-react-komponenter/ActionButton';
-import RadioButtonGroup from 'aurora-frontend-react-komponenter/RadioButtonGroup';
-import TextField from 'aurora-frontend-react-komponenter/TextField';
+import ActionButton from '@skatteetaten/frontend-components/ActionButton';
+import RadioButtonGroup from '@skatteetaten/frontend-components/RadioButtonGroup';
+import TextField from '@skatteetaten/frontend-components/TextField';
 
 export enum FilterMode {
   Create,

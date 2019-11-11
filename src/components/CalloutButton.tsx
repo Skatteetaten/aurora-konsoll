@@ -1,7 +1,7 @@
 import React, { useState, useRef } from 'react';
 
-import Callout from 'aurora-frontend-react-komponenter/Callout';
-import Button from 'aurora-frontend-react-komponenter/Button';
+import Callout from '@skatteetaten/frontend-components/Callout';
+import Button from '@skatteetaten/frontend-components/Button';
 
 interface ICalloutProps extends React.ComponentProps<'div'> {
   title: string;

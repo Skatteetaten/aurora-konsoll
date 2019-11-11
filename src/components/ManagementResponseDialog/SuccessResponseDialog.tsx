@@ -4,8 +4,8 @@ import InfoDialog from 'components/InfoDialog';
 import { IManagementEndpointResponse } from 'models/Pod';
 import { prettifyJSON } from 'utils/string';
 import { StyledPre } from '../StyledPre';
-import Icon from 'aurora-frontend-react-komponenter/Icon';
-import palette from 'aurora-frontend-react-komponenter/utils/palette';
+import Icon from '@skatteetaten/frontend-components/Icon';
+import palette from '@skatteetaten/frontend-components/utils/palette';
 
 const { skeColor } = palette;
 

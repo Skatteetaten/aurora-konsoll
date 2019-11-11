@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import TextField from 'aurora-frontend-react-komponenter/TextField';
+import TextField from '@skatteetaten/frontend-components/TextField';
 import { ITextField } from 'office-ui-fabric-react';
 import { ImageTagType } from 'models/ImageTagType';
 import {

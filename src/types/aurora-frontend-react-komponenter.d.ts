@@ -1,5 +1,5 @@
-declare module 'aurora-frontend-react-komponenter/*';
-declare module 'aurora-frontend-react-komponenter/Dropdown' {
+declare module '@skatteetaten/frontend-components/*';
+declare module '@skatteetaten/frontend-components/Dropdown' {
   let Dropdown: any;
   export interface IDropdownOption {
     key: string;
