@@ -84,7 +84,7 @@ class CertificateBase extends React.Component<
             <TextField
               placeholder="Søk etter sertifikat"
               value={filter}
-              onChanged={this.onFilterChange}
+              onChange={this.onFilterChange}
             />
           </div>
           <div className="certificate-grid">
@@ -105,7 +105,7 @@ class CertificateBase extends React.Component<
     );
   }
 
-  private onFilterChange = (text: string): void => {
+  private onFilterChange = (e: Event, text: string): void => {
     this.setState({
       filter: text
     });

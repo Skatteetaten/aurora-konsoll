@@ -19,7 +19,7 @@ export interface IFilterOption {
 
 interface IFilterModeSelectProps {
   setMode: (mode: FilterMode) => void;
-  setCurrentFilterName: (filterName: string) => void;
+  setCurrentFilterName: (e: Event, filterName: string) => void;
   filterOptions: IFilterOption[];
   selectedFilterKey?: string;
   deleteFilter: () => void;
@@ -54,7 +54,7 @@ const FilterModeSelect = ({
       <TextField
         style={{ width: '190px' }}
         placeholder={'Navn'}
-        onChanged={setCurrentFilterName}
+        onChange={setCurrentFilterName}
       />
     </>
   );

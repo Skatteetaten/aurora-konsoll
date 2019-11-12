@@ -91,7 +91,7 @@ class DatabaseSchemaUpdateDialog extends React.Component<
     this.hideDialog();
   };
 
-  public handleLabelChange = (field: string) => (value: string) => {
+  public handleLabelChange = (field: string) => (e: Event, value: string) => {
     this.setState(state => ({
       updatedSchemaValues: {
         ...state.updatedSchemaValues,

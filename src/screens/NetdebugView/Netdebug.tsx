@@ -72,13 +72,13 @@ class NetdebugBase extends React.Component<INetdebugProps, INetdebugState> {
     this.setState(prevState => ({ showTable: !prevState.showTable }));
   };
 
-  public handleHostnameValue = (hostname: string) => {
+  public handleHostnameValue = (e: Event, hostname: string) => {
     this.setState({
       hostnameValue: hostname
     });
   };
 
-  public handlePortValue = (port: string) => {
+  public handlePortValue = (e: Event, port: string) => {
     this.setState(state => ({
       portValue: port,
       validateErrors: {
@@ -129,7 +129,7 @@ class NetdebugBase extends React.Component<INetdebugProps, INetdebugState> {
                   name="hostName"
                   label="Hostname"
                   onBlur={this.validateHostname}
-                  onChanged={this.handleHostnameValue}
+                  onChange={this.handleHostnameValue}
                   errorMessage={hostnameError}
                 />
               </div>
@@ -137,7 +137,7 @@ class NetdebugBase extends React.Component<INetdebugProps, INetdebugState> {
                 <TextField
                   name="portName"
                   label="Port"
-                  onChanged={this.handlePortValue}
+                  onChange={this.handlePortValue}
                   errorMessage={portError}
                 />
               </div>

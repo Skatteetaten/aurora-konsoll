@@ -25,14 +25,14 @@ const External = ({
   databaseSchemaService,
   setJdbcUserInput
 }: IExternalProps) => {
-  const handleLabelChange = (field: string) => (value: string) => {
+  const handleLabelChange = (field: string) => (e: Event, value: string) => {
     setDatabaseSchemaInput({
       ...databaseSchemaInput,
       [field]: value
     });
   };
 
-  const handleJdbcChange = (field: string) => (value: string) => {
+  const handleJdbcChange = (field: string) => (e: Event, value: string) => {
     setJdbcUserInput({
       ...databaseSchemaInput.jdbcUser,
       [field]: value

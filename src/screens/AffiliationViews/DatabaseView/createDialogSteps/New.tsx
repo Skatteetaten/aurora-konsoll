@@ -15,7 +15,7 @@ const New = ({
   setDatabaseSchemaInput,
   className
 }: INewProps) => {
-  const handleLabelChange = (field: string) => (value: string) => {
+  const handleLabelChange = (field: string) => (e: Event, value: string) => {
     setDatabaseSchemaInput({
       ...databaseSchemaInput,
       [field]: value

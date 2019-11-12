@@ -296,7 +296,7 @@ export class Filter extends React.Component<IFilterProps, IFilterState> {
     );
   };
 
-  public setCurrentFilterName = (filterName: string) => {
+  public setCurrentFilterName = (e: Event, filterName: string) => {
     if (!filterName) {
       this.setState({
         isDefaultCheckedForCreate: false

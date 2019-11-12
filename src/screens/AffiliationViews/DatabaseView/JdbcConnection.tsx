@@ -27,7 +27,7 @@ export interface IJdbcConnectionProps {
   className?: string;
   hasPasswordField: boolean;
   canNotTest: boolean;
-  handleJdbcChange?: (field: string) => (value: string) => void;
+  handleJdbcChange?: (field: string) => (e: Event, value: string) => void;
 }
 
 export interface IJdbcConnectionState {
@@ -104,7 +104,7 @@ class JdbcConnection extends React.Component<
           label={'Brukernavn'}
           value={username}
           disabled={isDisabledFields}
-          onChanged={handleJdbcChange && handleJdbcChange('username')}
+          onChange={handleJdbcChange && handleJdbcChange('username')}
         />
         {hasPasswordField && (
           <TextField
@@ -112,7 +112,7 @@ class JdbcConnection extends React.Component<
             label={'Passord'}
             value={password}
             disabled={isDisabledFields}
-            onChanged={handleJdbcChange && handleJdbcChange('password')}
+            onChange={handleJdbcChange && handleJdbcChange('password')}
             type="password"
           />
         )}
@@ -122,7 +122,7 @@ class JdbcConnection extends React.Component<
           value={jdbcUrl}
           disabled={isDisabledFields}
           help="jdbc:oracle:thin:@<db server>.skead.no:<port>/<sid>"
-          onChanged={handleJdbcChange && handleJdbcChange('jdbcUrl')}
+          onChange={handleJdbcChange && handleJdbcChange('jdbcUrl')}
         />
         <div className="styled-jdbc">
           <LoadingButton

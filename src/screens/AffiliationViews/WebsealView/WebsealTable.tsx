@@ -166,7 +166,7 @@ class Webseal extends React.Component<IWebsealTableProps, IWebsealTableState> {
           <div className="styled-input">
             <TextField
               placeholder="Søk etter host eller rolle"
-              onChanged={this.onFilterChange}
+              onChange={this.onFilterChange}
               value={filter}
             />
           </div>
@@ -180,7 +180,7 @@ class Webseal extends React.Component<IWebsealTableProps, IWebsealTableState> {
     );
   }
 
-  private onFilterChange = (text: string) => {
+  private onFilterChange = (e: Event, text: string) => {
     this.setState({
       filter: text
     });

@@ -319,7 +319,7 @@ export class Schema extends React.Component<ISchemaProps, ISchemaState> {
             <div className="styled-input">
               <TextField
                 placeholder="Søk etter skjema"
-                onChanged={this.onFilterChange}
+                onChange={this.onFilterChange}
                 value={filter}
               />
             </div>
@@ -440,7 +440,7 @@ export class Schema extends React.Component<ISchemaProps, ISchemaState> {
     });
   };
 
-  private onFilterChange = (text: string) => {
+  private onFilterChange = (e: Event, text: string) => {
     this.setState({
       filter: text
     });

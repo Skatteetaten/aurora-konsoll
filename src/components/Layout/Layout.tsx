@@ -47,7 +47,11 @@ const Layout = ({
   displaySkapViews,
   currentUser = defaultUser
 }: ILayoutProps) => {
-  const onAffiliationChanged = (item: IDropdownOption, index: number) => {
+  const onAffiliationChanged = (
+    e: Event,
+    item: IDropdownOption,
+    index: number
+  ) => {
     if (index > 0) {
       onAffiliationChange(item.text);
     }
@@ -112,7 +116,7 @@ const Layout = ({
           <Dropdown
             placeholder="Velg tilhørighet"
             options={toDropdownOptions(currentUser.affiliations)}
-            onChanged={onAffiliationChanged}
+            onChange={onAffiliationChanged}
             selectedKey={affiliation}
           />
         )}
