@@ -51,7 +51,7 @@ function getIconStatusStyle(
 
 function getStatusIcon(hasFailed: boolean, level: StatusCode): string {
   if (!hasFailed) {
-    return 'Done';
+    return 'Check';
   }
   switch (level) {
     case StatusCode.DOWN:
@@ -61,7 +61,7 @@ function getStatusIcon(hasFailed: boolean, level: StatusCode): string {
     case StatusCode.OFF:
       return 'Info';
     case StatusCode.HEALTHY:
-      return 'Done';
+      return 'Check';
     default:
       return '';
   }
