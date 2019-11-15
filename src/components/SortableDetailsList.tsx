@@ -106,7 +106,7 @@ class SortableDetailsList extends React.Component<
   public resetColumns() {
     const { columns } = this.props;
     if (columns) {
-      columns.forEach(col => (col.iconName = ''));
+      columns.forEach(col => (col.isSorted = false));
     }
   }
 
@@ -124,13 +124,14 @@ class SortableDetailsList extends React.Component<
       // Reset icons, only one column should be sortet at the time.
       this.resetColumns();
       const currentCol = columns[index];
+      currentCol.isSorted = true;
       if (
         sortDirection === SortDirection.NONE ||
         sortDirection === SortDirection.DESC
       ) {
-        currentCol.iconName = 'Down';
+        currentCol.isSortedDescending = true;
       } else if (sortDirection === SortDirection.ASC) {
-        currentCol.iconName = 'Up';
+        currentCol.isSortedDescending = false;
       }
     }
     return columns;
