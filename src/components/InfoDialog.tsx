@@ -9,14 +9,7 @@ interface InfoDialogProps {
   subText?: string;
   buttonText?: string;
   isBlocking?: boolean;
-  buttonStyle?:
-    | 'primary'
-    | 'primaryRounded'
-    | 'primaryRoundedFilled'
-    | 'warning'
-    | 'primaryLarge'
-    | 'secondary'
-    | undefined;
+  buttonStyle?: ButtonProps['buttonStyle'];
   children?: JSX.Element;
   renderOpenDialogButton?: (openDialog: () => void) => JSX.Element;
   renderFooterButtons?: (closeDialog: () => void) => JSX.Element;
