@@ -127,9 +127,9 @@ class SortableDetailsList extends React.Component<
         sortDirection === SortDirection.NONE ||
         sortDirection === SortDirection.DESC
       ) {
-        currentCol.iconName = 'Down';
+        currentCol.iconName = 'ArrowDown';
       } else if (sortDirection === SortDirection.ASC) {
-        currentCol.iconName = 'Up';
+        currentCol.iconName = 'ArrowUp';
       }
     }
     return columns;
