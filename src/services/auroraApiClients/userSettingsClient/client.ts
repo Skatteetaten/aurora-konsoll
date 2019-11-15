@@ -1,7 +1,7 @@
 import { IUserSettings } from 'models/UserSettings';
-import GoboClient, { IGoboResult } from 'services/GoboClient';
+import GoboClient, { IDataAndErrors } from 'services/GoboClient';
 import { UPDATE_USERSETTINGS_MUTATION } from './mutation';
-import { IUserSettingsQuery, USERSETTINGS_QUERY } from './query';
+import { IUserSettingsData, USERSETTINGS_QUERY } from './query';
 
 export class UserSettingsClient {
   private client: GoboClient;
@@ -10,18 +10,16 @@ export class UserSettingsClient {
     this.client = client;
   }
 
-  public async getUserSettings(): Promise<
-    IGoboResult<IUserSettingsQuery> | undefined
-  > {
-    return await this.client.query<IUserSettingsQuery>({
+  public async getUserSettings(): Promise<IDataAndErrors<IUserSettingsData>> {
+    return await this.client.query<IUserSettingsData>({
       query: USERSETTINGS_QUERY
     });
   }
 
   public async updateUserSettings(
     userSettings: IUserSettings
-  ): Promise<IGoboResult<{ updateUserSettings: boolean }> | undefined> {
-    return await this.client.mutate<{
+  ): Promise<IDataAndErrors<IUserSettingsData>> {
+    const result = await this.client.mutate<{
       updateUserSettings: boolean;
     }>({
       mutation: UPDATE_USERSETTINGS_MUTATION,
@@ -29,5 +27,14 @@ export class UserSettingsClient {
         input: userSettings
       }
     });
+
+    if (result.data && result.data.updateUserSettings) {
+      return await this.getUserSettings();
+    } else {
+      return {
+        name: result.name,
+        errors: result.errors
+      };
+    }
   }
 }

@@ -4,13 +4,13 @@ import { ReduxProps, RootState } from 'store/types';
 import { fetchVersions } from 'store/state/versions/action.creators';
 
 export interface IVersionTableProps {
+  onConfirmDeploy: (version: string) => void;
   hasAccessToDeploy: boolean;
-  affiliation: string;
   versionType: ImageTagType;
   searchText?: string;
   repository: string;
-  applicationId: string;
   currentVersion: IImageTag;
+  versionBeingDeployed?: string;
 }
 
 export const mapDispatchToProps = {
@@ -22,7 +22,7 @@ export const mapStateToProps = (
   { versionType }: IVersionTableProps
 ) => ({
   imageTagsConnection: versions.types[versionType],
-  isFetching: versions.isFetching[versionType]
+  isFetching: versions.isFetching
 });
 
 export type VersionTableState = ReduxProps<

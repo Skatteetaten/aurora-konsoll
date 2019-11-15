@@ -100,4 +100,4 @@ Object {
 }
 `;
 
-exports[`getWebsealStates should return empty list given null from GraphQl server 1`] = `undefined`;
+exports[`getWebsealStates should throw error given null from GraphQl server 1`] = `[SyntaxError: Unexpected token N in JSON at position 0]`;

@@ -1,6 +1,6 @@
 import { IApplicationDeployment } from 'models/ApplicationDeployment';
 import { IApplicationDeploymentFilters } from 'models/UserSettings';
-import { SelectionType } from 'screens/AffiliationViews/DeploymentView/MatrixView/Filter/Filter';
+import { SelectionType } from 'screens/AffiliationViews/DeploymentView/MatrixView/components/Filter/Filter';
 
 export interface IUniqueSelectionNames {
   applications: string[];

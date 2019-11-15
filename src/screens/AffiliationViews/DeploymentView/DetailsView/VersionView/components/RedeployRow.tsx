@@ -2,53 +2,66 @@ import React from 'react';
 import styled from 'styled-components';
 
 import { IImageTag } from 'services/auroraApiClients/imageRepositoryClient/query';
-import { DeployButtonContainer } from '../containers/DeployButton/DeployButtonContainer';
-import { ITag } from 'models/Tag';
 import { WrongVersionCallout } from './WrongVersionCallout';
 import { getLocalDatetime } from 'utils/date';
 import {
   VersionStatus,
   versionStatusMessage
 } from '../../models/VersionStatus';
+import { DeployButton } from './DeployButton';
+import { VersionInfo } from './VersionInfo';
 
 interface IRedeployRowProps {
-  versionStatus: VersionStatus;
-  affiliation: string;
-  applicationId: string;
   hasAccessToDeploy: boolean;
-  activeVersion?: ITag;
-  version?: IImageTag;
+  versionStatus: VersionStatus;
+  configuredVersionTag?: IImageTag;
+  versionBeingDeployed?: string;
+  onConfirmDeploy: (version: string) => void;
 }
 
 export const RedeployRow = ({
-  versionStatus,
-  version,
-  affiliation,
   hasAccessToDeploy,
-  applicationId
+  versionStatus,
+  configuredVersionTag,
+  versionBeingDeployed,
+  onConfirmDeploy
 }: IRedeployRowProps) => {
-  if (!version) {
+  if (!configuredVersionTag) {
     return null;
   }
+
+  const isLoading =
+    versionBeingDeployed ===
+    (configuredVersionTag && configuredVersionTag.name);
 
   return (
     <Wrapper>
       {versionStatus !== VersionStatus.OK && (
         <WrongVersionCallout>
-          <p>{versionStatusMessage(versionStatus)}</p>
+          <h4>Til informasjon</h4>
+          <span>{versionStatusMessage(versionStatus)}</span>
         </WrongVersionCallout>
       )}
       <span>
-        Konfigurert versjon: <strong>{version.name}</strong> (bygget{' '}
-        {version.image && getLocalDatetime(version.image.buildTime)})
+        Konfigurert versjon: <strong>{configuredVersionTag.name}</strong>{' '}
+        (bygget{' '}
+        {configuredVersionTag.image &&
+          getLocalDatetime(configuredVersionTag.image.buildTime)}
+        )
       </span>
-      <DeployButtonContainer
-        affiliation={affiliation}
-        applicationId={applicationId}
+      <DeployButton
+        isLoading={isLoading}
+        disabled={versionBeingDeployed !== undefined}
+        buttonText="Redeploy"
+        dialogTitle="Vil du gjøre en redeploy?"
+        isOldVersion={!configuredVersionTag.image}
         hasAccessToDeploy={hasAccessToDeploy}
-        currentVersion={version}
-        nextVersion={version}
-      />
+        onConfirmDeploy={() => onConfirmDeploy(configuredVersionTag.name)}
+      >
+        <VersionInfo>
+          <p>Versjon:</p> {configuredVersionTag.name}
+        </VersionInfo>
+      </DeployButton>
     </Wrapper>
   );
 };

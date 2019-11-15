@@ -1,28 +1,20 @@
 import * as React from 'react';
 
 import InfoContent from 'components/InfoContent';
-import {
-  IApplicationDeployment,
-  IApplicationDeploymentDetails
-} from 'models/ApplicationDeployment';
-import { IDeploymentSpec } from 'models/DeploymentSpec';
 import { InfoContentValues } from 'models/InfoContentValues';
 import { DifferentVersionTooltip } from './DifferentVersionTooltip';
 import { IImageRepository } from 'services/auroraApiClients/applicationDeploymentClient/query';
 import { VersionStatus } from '../models/VersionStatus';
+import { ApplicationDeployment } from 'models/immer/ApplicationDeployment';
 
 interface IActiveDeploymentInformationProps {
   versionStatus: VersionStatus;
-  deploymentSpec?: IDeploymentSpec;
-  deployment: IApplicationDeployment;
-  deploymentDetails: IApplicationDeploymentDetails;
+  deployment: ApplicationDeployment;
 }
 
 export const ActiveDeploymentInformation = ({
   versionStatus,
-  deployment,
-  deploymentDetails,
-  deploymentSpec
+  deployment
 }: IActiveDeploymentInformationProps) => {
   const values = new InfoContentValues();
 
@@ -46,7 +38,8 @@ export const ActiveDeploymentInformation = ({
 
   values.addFrom(deployment, add => {
     const getImageRepository =
-      deploymentSpec && deploymentSpec.type === 'deploy'
+      deployment.details.deploymentSpec &&
+      deployment.details.deploymentSpec.type === 'deploy'
         ? (repo: IImageRepository) => ({
             value: removeFirstPath(repo.repository),
             link: `${repo.guiUrl}${deployment.version.deployTag.name}`
@@ -55,7 +48,7 @@ export const ActiveDeploymentInformation = ({
     add('imageRepository', 'Image repository', getImageRepository);
   });
 
-  values.addFrom(deploymentDetails, add => {
+  values.addFrom(deployment.details, add => {
     add('updatedBy', 'Oppdatert av');
   });
 

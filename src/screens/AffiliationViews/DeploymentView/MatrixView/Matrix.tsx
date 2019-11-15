@@ -1,20 +1,26 @@
 import * as React from 'react';
 import styled from 'styled-components';
-import { IApplicationDeploymentContext } from '../../ApplicationDeploymentContext';
-import Row, { IApplicationMap } from './Row';
+import Row, { IApplicationMap } from './components/Row';
+import { IApplicationDeployment } from 'models/ApplicationDeployment';
+import Spinner from 'components/Spinner';
 
 interface IMatrixProps {
-  className?: string;
   showSemanticVersion: boolean;
   expandApplicationName: boolean;
+  isFetching: boolean;
+  deployments: IApplicationDeployment[];
 }
 
-const Matrix = ({
+export const Matrix: React.FC<IMatrixProps> = ({
   deployments,
-  buildDeploymentLink,
-  className,
+  isFetching,
+  expandApplicationName,
   showSemanticVersion: showExactVersion
-}: IApplicationDeploymentContext & IMatrixProps) => {
+}) => {
+  if (isFetching) {
+    return <Spinner />;
+  }
+
   const environments = deployments.reduce(
     (acc, app) => {
       if (acc.indexOf(app.environment) === -1) {
@@ -35,7 +41,7 @@ const Matrix = ({
   }, {});
 
   return (
-    <div className={className}>
+    <Wrapper expandApplicationName={expandApplicationName}>
       <table>
         <thead>
           <tr>
@@ -54,16 +60,15 @@ const Matrix = ({
                 name={name}
                 environments={environments}
                 apps={apps}
-                linkBuilder={buildDeploymentLink}
               />
             ))}
         </tbody>
       </table>
-    </div>
+    </Wrapper>
   );
 };
 
-export default styled(Matrix)`
+const Wrapper = styled.div<{ expandApplicationName: boolean }>`
   flex: 1;
   position: relative;
   overflow: auto;

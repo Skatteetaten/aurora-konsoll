@@ -19,10 +19,13 @@ describe('getWebsealStates', () => {
     expect(result).toMatchSnapshot();
   });
 
-  it('should return empty list given null from GraphQl server', async () => {
+  it('should throw error given null from GraphQl server', async () => {
     serverMock.putResponse('getWebsealStates', null);
 
-    const result = await websealClient.getWebsealStates('paas');
-    expect(result).toMatchSnapshot();
+    try {
+      await websealClient.getWebsealStates('paas');
+    } catch (e) {
+      expect(e).toMatchSnapshot();
+    }
   });
 });

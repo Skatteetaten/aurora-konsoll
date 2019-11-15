@@ -1,4 +1,4 @@
-import GoboClient, { IGoboResult } from 'services/GoboClient';
+import GoboClient, { IDataAndErrors } from 'services/GoboClient';
 import { IScanQuery, NETDEBUG_QUERY } from './query';
 
 export interface INetdebugResult {
@@ -23,7 +23,7 @@ export class NetdebugClient {
   public async findNetdebugStatus(
     host: string,
     port: string
-  ): Promise<IGoboResult<IScanQuery> | undefined> {
+  ): Promise<IDataAndErrors<IScanQuery>> {
     return await this.client.query<IScanQuery>({
       query: NETDEBUG_QUERY,
       variables: {

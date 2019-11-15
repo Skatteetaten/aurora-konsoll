@@ -1,4 +1,4 @@
-import GoboClient, { IGoboResult } from 'services/GoboClient';
+import GoboClient, { IDataAndErrors } from 'services/GoboClient';
 
 import { IWebsealAffiliationQuery, WEBSEAL_STATES_QUERY } from './query';
 
@@ -11,7 +11,7 @@ export class WebsealClient {
 
   public async getWebsealStates(
     affiliation: string
-  ): Promise<IGoboResult<IWebsealAffiliationQuery> | undefined> {
+  ): Promise<IDataAndErrors<IWebsealAffiliationQuery>> {
     return await this.client.query<IWebsealAffiliationQuery>({
       query: WEBSEAL_STATES_QUERY,
       variables: { affiliation }

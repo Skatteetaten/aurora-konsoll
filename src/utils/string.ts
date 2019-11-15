@@ -20,7 +20,11 @@ function parseAndStringify(value: string | object): string {
   }
 }
 
-function stringify(value: any): string {
+export function isEqualObjects(obj1: any, obj2: any): boolean {
+  return stringify(obj1) === stringify(obj2);
+}
+
+export function stringify(value: any): string {
   return JSON.stringify(value, undefined, '  ');
 }
 

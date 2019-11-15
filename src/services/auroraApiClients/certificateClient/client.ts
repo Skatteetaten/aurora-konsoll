@@ -1,5 +1,5 @@
 import { ICertificatesQuery } from 'models/certificates';
-import GoboClient, { IGoboResult } from 'services/GoboClient';
+import GoboClient, { IDataAndErrors } from 'services/GoboClient';
 import { CERTIFICATES_QUERY } from './query';
 
 export class CertificateClient {
@@ -9,7 +9,7 @@ export class CertificateClient {
     this.client = client;
   }
   public async getCertificates(): Promise<
-    IGoboResult<ICertificatesQuery> | undefined
+    IDataAndErrors<ICertificatesQuery> | undefined
   > {
     return await this.client.query<ICertificatesQuery>({
       query: CERTIFICATES_QUERY
