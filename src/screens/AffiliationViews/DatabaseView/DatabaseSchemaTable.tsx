@@ -12,7 +12,7 @@ import {
   IObjectWithKey,
   Selection,
   SelectionMode
-} from 'office-ui-fabric-react/lib/DetailsList';
+} from 'office-ui-fabric-react/lib-commonjs';
 import { getLocalDate } from 'utils/date';
 
 import SortableDetailsList from 'components/SortableDetailsList';
@@ -35,6 +35,7 @@ import DatabaseSchemaCreateDialog from './DatabaseSchemaCreateDialog';
 import DatabaseSchemaUpdateDialog from './DatabaseSchemaUpdateDialog';
 import DeletionSummary from './DeletionSummary';
 import { StyledPre } from 'components/StyledPre';
+import { TextFieldEvent } from 'types/react';
 
 export const renderDetailsListWithSchemaInfo = (schemas: IDatabaseSchema[]) => (
   <StyledPre>
@@ -440,9 +441,9 @@ export class Schema extends React.Component<ISchemaProps, ISchemaState> {
     });
   };
 
-  private onFilterChange = (e: Event, text: string) => {
+  private onFilterChange = (event: TextFieldEvent, newValue?: string) => {
     this.setState({
-      filter: text
+      filter: newValue || ''
     });
   };
 

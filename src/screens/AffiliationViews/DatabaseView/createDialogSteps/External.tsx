@@ -5,6 +5,7 @@ import { ICreateDatabaseSchemaInput, IJdbcUser } from 'models/schemas';
 import DatabaseSchemaService from 'services/DatabaseSchemaService';
 import JdbcConnection from '../JdbcConnection';
 import Labels from '../Labels';
+import { TextFieldEvent } from 'types/react';
 
 interface IExternalProps {
   setDatabaseSchemaInput: (
@@ -25,17 +26,23 @@ const External = ({
   databaseSchemaService,
   setJdbcUserInput
 }: IExternalProps) => {
-  const handleLabelChange = (field: string) => (e: Event, value: string) => {
+  const handleLabelChange = (field: string) => (
+    event: TextFieldEvent,
+    newValue?: string
+  ) => {
     setDatabaseSchemaInput({
       ...databaseSchemaInput,
-      [field]: value
+      [field]: newValue
     });
   };
 
-  const handleJdbcChange = (field: string) => (e: Event, value: string) => {
+  const handleJdbcChange = (field: string) => (
+    event: TextFieldEvent,
+    newValue?: string
+  ) => {
     setJdbcUserInput({
       ...databaseSchemaInput.jdbcUser,
-      [field]: value
+      [field]: newValue
     } as IJdbcUser);
   };
 

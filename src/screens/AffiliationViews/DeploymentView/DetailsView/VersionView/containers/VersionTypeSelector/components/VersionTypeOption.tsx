@@ -1,8 +1,15 @@
 import React from 'react';
-import { IComboBoxOption } from 'office-ui-fabric-react';
+import {
+  IRenderFunction,
+  ISelectableOption
+} from 'office-ui-fabric-react/lib-commonjs';
 import styled from 'styled-components';
 
-export const onRenderOption = (item: IComboBoxOption): JSX.Element => {
+export const onRenderOption: IRenderFunction<ISelectableOption> = item => {
+  if (!item) {
+    return null;
+  }
+
   const option = item.text;
   return (
     <StyledOptions>

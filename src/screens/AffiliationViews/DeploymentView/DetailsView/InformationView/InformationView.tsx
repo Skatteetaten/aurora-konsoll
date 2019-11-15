@@ -48,7 +48,7 @@ const InformationView = ({
   const renderConfirmationOpenButton = (open: () => void) => (
     <Button
       icon="Delete"
-      buttonType="primaryRoundedFilled"
+      buttonStyle="primaryRoundedFilled"
       onClick={open}
       disabled={!deployment.permission.paas.admin}
     >

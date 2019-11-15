@@ -91,8 +91,8 @@ class WebsealDialog extends React.Component<
 
     return (
       <Dialog
-        dialogMinWidth="1000px"
-        dialogMaxWidth="90%"
+        minWidth="1000px"
+        maxWidth="90%"
         title={selectedWebsealState && selectedWebsealState.name}
         hidden={!!!selectedWebsealState}
         onDismiss={deselectWebsealState}

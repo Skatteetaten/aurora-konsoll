@@ -1,21 +1,22 @@
 import * as React from 'react';
 
-import DetailsList from '@skatteetaten/frontend-components/DetailsList';
+import DetailsList, {
+  DetailsListProps
+} from '@skatteetaten/frontend-components/DetailsList';
 import { SortDirection } from 'models/SortDirection';
 import { createDate, dateValidation } from 'utils/date';
 
+import * as util from 'util';
 import {
   CheckboxVisibility,
-  IColumn,
-  IDetailsListProps,
   ISelection,
-  SelectionMode
-} from 'office-ui-fabric-react/lib/DetailsList';
-import * as util from 'util';
+  SelectionMode,
+  IColumn
+} from 'office-ui-fabric-react/lib-commonjs';
 
 export let selectedIndices: number[] = [];
 
-export interface ISortableDetailsListProps extends IDetailsListProps {
+export interface ISortableDetailsListProps extends DetailsListProps {
   filterView: (filter: string) => (v: any) => boolean;
   filter: string;
   shouldResetSort?: boolean;
@@ -135,15 +136,16 @@ class SortableDetailsList extends React.Component<
     return columns;
   }
 
-  public sortByColumn = (
-    ev: React.MouseEvent<HTMLElement>,
-    column: {
-      key: number;
-      fieldName: string;
-    }
+  public sortByColumn: DetailsListProps['onColumnHeaderClick'] = (
+    ev,
+    column
   ): void => {
     const { columnSortDirections } = this.state;
     const { items } = this.props;
+
+    if (!column) {
+      return;
+    }
 
     const name = column.fieldName! as keyof any;
     const newSortDirections = this.createDefaultSortDirections();
@@ -159,7 +161,7 @@ class SortableDetailsList extends React.Component<
     this.setState({
       currentViewItems: sortedItems,
       columnSortDirections: newSortDirections,
-      selectedColumnIndex: column.key,
+      selectedColumnIndex: Number(column.key),
       prevIndices: selectedIndices
     });
   };

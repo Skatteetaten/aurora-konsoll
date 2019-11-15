@@ -5,16 +5,18 @@ import palette from '@skatteetaten/frontend-components/utils/palette';
 
 import NavigationTile from '@skatteetaten/frontend-components/NavigationTile';
 import { Step } from 'models/schemas';
-import { ButtonLink } from 'components/ButtonLink';
+// import { ButtonLink } from 'components/ButtonLink';
 
 const contents = [
   {
+    key: '1',
     to: Step.NEW.toString(),
     title: 'Nytt skjema',
     description: 'Oppretter et internt databaseskjema',
     icon: 'add'
   },
   {
+    key: '2',
     to: Step.EXTERNAL.toString(),
     title: 'Eksternt skjema',
     description: 'Oppretter tilkoblingen for et eksternt databaseskjema',
@@ -28,19 +30,21 @@ interface ITypeProps {
 }
 
 const Type = ({ setStep, className }: ITypeProps) => {
-  const renderContent = (to: string, content: JSX.Element) => {
-    const handleStepChange = () => {
-      setStep(Number(to));
-    };
-    return <ButtonLink onClick={handleStepChange}>{content}</ButtonLink>;
-  };
+  // TODO: Add renderContent to Designsystem
+  // const renderContent = (to: string, content: JSX.Element) => {
+  //   const handleStepChange = () => {
+  //     setStep(Number(to));
+  //   };
+  //   return <ButtonLink onClick={handleStepChange}>{content}</ButtonLink>;
+  // };
 
   return (
     <div className={className}>
       <NavigationTile
         contents={contents}
         className="styled-tile"
-        renderContent={renderContent}
+        // TODO: Add renderContent to Designsystem
+        // renderContent={renderContent}
       />
     </div>
   );

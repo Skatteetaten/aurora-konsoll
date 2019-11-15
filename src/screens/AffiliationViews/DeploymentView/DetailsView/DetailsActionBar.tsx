@@ -25,7 +25,7 @@ const DetailsActionBar = ({
   <div className={className}>
     <ActionButton
       className="back-button"
-      buttonType="primary"
+      buttonStyle="primary"
       color="black"
       icon="Back"
       onClick={goToDeploymentsPage}

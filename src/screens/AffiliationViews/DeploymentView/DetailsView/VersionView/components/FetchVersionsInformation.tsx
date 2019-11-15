@@ -12,7 +12,7 @@ export const FetchVersionsInformation = () => (
     }}
     buttonProps={{
       icon: 'info',
-      buttonType: 'secondary'
+      buttonStyle: 'secondary'
     }}
     title="Vis info"
     content={

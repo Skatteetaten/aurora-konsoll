@@ -42,8 +42,8 @@ export const DeployButton: React.FC<IDeployButtonProps> = ({
         hidden={hidden}
         onDismiss={close}
         title={dialogTitle}
-        dialogMinWidth="500px"
-        dialogMaxWidth="800px"
+        minWidth="500px"
+        maxWidth="800px"
       >
         {isOldVersion && (
           <MessageBar style={{ maxWidth: '600px' }}>

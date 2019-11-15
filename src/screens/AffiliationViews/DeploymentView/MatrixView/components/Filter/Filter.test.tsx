@@ -1,7 +1,7 @@
 import { shallow } from 'enzyme';
 import * as React from 'react';
 
-import Checkbox from 'aurora-frontend-react-komponenter/Checkbox';
+import Checkbox from '@skatteetaten/frontend-components/CheckBox';
 import { IApplicationDeployment } from 'models/ApplicationDeployment';
 import { ImageTagType } from 'models/ImageTagType';
 

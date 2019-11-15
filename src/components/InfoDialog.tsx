@@ -1,7 +1,7 @@
 import * as React from 'react';
 
 import ActionButton from '@skatteetaten/frontend-components/ActionButton';
-import Button from '@skatteetaten/frontend-components/Button';
+import Button, { ButtonProps } from '@skatteetaten/frontend-components/Button';
 import Dialog from '@skatteetaten/frontend-components/Dialog';
 
 interface InfoDialogProps {
@@ -14,7 +14,9 @@ interface InfoDialogProps {
     | 'primaryRounded'
     | 'primaryRoundedFilled'
     | 'warning'
-    | 'secondary';
+    | 'primaryLarge'
+    | 'secondary'
+    | undefined;
   children?: JSX.Element;
   renderOpenDialogButton?: (openDialog: () => void) => JSX.Element;
   renderFooterButtons?: (closeDialog: () => void) => JSX.Element;
@@ -27,11 +29,11 @@ interface InfoDialogState {
 
 function renderDefaultOpenDialogButton(
   title: string,
-  buttonStyle: string,
+  buttonStyle: ButtonProps['buttonStyle'],
   openDialog: () => void
 ) {
   return (
-    <Button buttonType={buttonStyle} onClick={openDialog}>
+    <Button buttonStyle={buttonStyle} onClick={openDialog}>
       {title}
     </Button>
   );
@@ -79,8 +81,8 @@ class InfoDialog extends React.Component<InfoDialogProps, InfoDialogState> {
             onDismiss={close}
             title={title}
             helpText={subText}
-            dialogMinWidth="500px"
-            dialogMaxWidth="90%"
+            minWidth="500px"
+            maxWidth="90%"
             isBlocking={!!isBlocking}
           >
             {children}

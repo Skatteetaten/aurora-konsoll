@@ -8,6 +8,7 @@ import Spinner from 'components/Spinner';
 import { ICertificateResult, ICertificateView } from 'models/certificates';
 import CertificateService from 'services/CertificateService';
 import Table from './Table';
+import { TextFieldEvent } from 'types/react';
 
 interface ICertificateProps {
   className?: string;
@@ -105,10 +106,12 @@ class CertificateBase extends React.Component<
     );
   }
 
-  private onFilterChange = (e: Event, text: string): void => {
-    this.setState({
-      filter: text
-    });
+  private onFilterChange = (event: TextFieldEvent, newValue?: string) => {
+    if (newValue) {
+      this.setState({
+        filter: newValue
+      });
+    }
   };
 }
 

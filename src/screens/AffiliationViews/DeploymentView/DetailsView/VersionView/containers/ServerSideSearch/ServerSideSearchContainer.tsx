@@ -1,6 +1,6 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, KeyboardEvent, createRef } from 'react';
 import TextField from '@skatteetaten/frontend-components/TextField';
-import { ITextField } from 'office-ui-fabric-react';
+import { ITextField } from 'office-ui-fabric-react/lib-commonjs';
 import { ImageTagType } from 'models/ImageTagType';
 import {
   fetchVersions,
@@ -45,19 +45,23 @@ const ServerSideSearch = ({
   isFetchingVersions,
   clearStateForType
 }: Props) => {
-  let searchRef: ITextField | undefined;
+  const ref = createRef<ITextField>();
   useEffect(() => {
-    if (searchRef) {
-      searchRef.focus();
+    console.log(ref);
+    if (ref.current) {
+      ref.current.focus();
     }
-  }, [searchRef]);
+  }, [ref]);
 
-  const searchOnEnterPress = (e: React.KeyboardEvent<InputEvent>) => {
+  const searchOnEnterPress = (
+    e: KeyboardEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => {
+    console.log('keypress');
     if (selectedVersionType !== ImageTagType.SEARCH) {
       handleSelectVersionType(ImageTagType.SEARCH);
     }
     if (e.charCode === ENTER_KEY && !isFetchingVersions) {
-      const text = searchRef ? searchRef.value : undefined;
+      const text = ref.current ? ref.current.value : undefined;
       if (text) {
         handleSetSearchText(text);
         clearStateForType(ImageTagType.SEARCH);
@@ -68,11 +72,7 @@ const ServerSideSearch = ({
   return (
     <div style={{ width: 300, marginLeft: 20, marginRight: 6 }}>
       <TextField
-        componentRef={(value: ITextField) => {
-          if (!searchRef) {
-            searchRef = value;
-          }
-        }}
+        componentRef={ref}
         value={searchText}
         disabled={isFetchingVersions}
         placeholder="Søk etter versjon"

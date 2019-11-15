@@ -13,7 +13,7 @@ const LoadingButton = ({
   loading,
   ...props
 }: ILoadingButtonProps) => (
-  <Button buttonType="primaryRoundedFilled" disabled={loading} {...props}>
+  <Button buttonStyle="primaryRoundedFilled" disabled={loading} {...props}>
     {loading ? <Spinner /> : children}
   </Button>
 );
