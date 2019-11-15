@@ -12,7 +12,7 @@
     "metadata"
   ],
   "dependencies": {
-    "@skatteetaten/frontend-components": "2.0.0-c-87316b7.feature-MEMO-183-typescript-fixes-SNAPSHOT",
+    "@skatteetaten/frontend-components": "2.0.0-c-3650238.feature-MEMO-183-typescript-fixes-SNAPSHOT",
     "aurora-management-interface": "0.5.4",
     "cors": "2.8.5",
     "express": "4.17.1",
