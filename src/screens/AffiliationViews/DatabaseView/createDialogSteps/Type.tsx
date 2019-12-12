@@ -4,25 +4,9 @@ import styled from 'styled-components';
 import palette from '@skatteetaten/frontend-components/utils/palette';
 
 import NavigationTile from '@skatteetaten/frontend-components/NavigationTile';
+import NavigationContent from '@skatteetaten/frontend-components/NavigationTile/NavigationContent';
 import { Step } from 'models/schemas';
-// import { ButtonLink } from 'components/ButtonLink';
-
-const contents = [
-  {
-    key: '1',
-    to: Step.NEW.toString(),
-    title: 'Nytt skjema',
-    description: 'Oppretter et internt databaseskjema',
-    icon: 'add'
-  },
-  {
-    key: '2',
-    to: Step.EXTERNAL.toString(),
-    title: 'Eksternt skjema',
-    description: 'Oppretter tilkoblingen for et eksternt databaseskjema',
-    icon: 'openInNew'
-  }
-];
+import { ButtonLink } from 'components/ButtonLink';
 
 interface ITypeProps {
   setStep: (step: Step) => void;
@@ -30,22 +14,31 @@ interface ITypeProps {
 }
 
 const Type = ({ setStep, className }: ITypeProps) => {
-  // TODO: Add renderContent to Designsystem
-  // const renderContent = (to: string, content: JSX.Element) => {
-  //   const handleStepChange = () => {
-  //     setStep(Number(to));
-  //   };
-  //   return <ButtonLink onClick={handleStepChange}>{content}</ButtonLink>;
-  // };
+  const renderContent = (to: string, content: JSX.Element) => {
+    const handleStepChange = () => {
+      setStep(Number(to));
+    };
+    return <ButtonLink onClick={handleStepChange}>{content}</ButtonLink>;
+  };
 
   return (
     <div className={className}>
-      <NavigationTile
-        contents={contents}
-        className="styled-tile"
-        // TODO: Add renderContent to Designsystem
-        // renderContent={renderContent}
-      />
+      <NavigationTile className="styled-tile">
+        <NavigationContent
+          to={Step.NEW.toString()}
+          heading="Nytt skjema"
+          description="Oppretter et internt databaseskjema"
+          icon="add"
+          renderContent={renderContent}
+        />
+        <NavigationContent
+          to={Step.EXTERNAL.toString()}
+          heading="Eksternt skjema"
+          description="Oppretter tilkoblingen for et eksternt databaseskjema"
+          icon="openInNew"
+          renderContent={renderContent}
+        />
+      </NavigationTile>
     </div>
   );
 };
