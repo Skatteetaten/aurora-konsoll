@@ -3,6 +3,19 @@ import * as React from 'react';
 import ActionButton from '@skatteetaten/frontend-components/ActionButton';
 import Button, { ButtonProps } from '@skatteetaten/frontend-components/Button';
 import Dialog from '@skatteetaten/frontend-components/Dialog';
+import styled from 'styled-components';
+
+const DialogSubText = styled<React.FC<{ className?: string }>>(
+  ({ children, className }) => <div className={className}>{children}</div>
+)`
+  font-size: 16px;
+  position: relative;
+  margin: 0;
+  display: inline-block;
+  height: 40px;
+  float: left;
+  top: 10px;
+`;
 
 interface InfoDialogProps {
   title: string;
@@ -73,13 +86,13 @@ class InfoDialog extends React.Component<InfoDialogProps, InfoDialogState> {
             hidden={!isOpen}
             onDismiss={close}
             title={title}
-            helpText={subText}
             minWidth="500px"
             maxWidth="90%"
             isBlocking={!!isBlocking}
           >
             {children}
             <Dialog.Footer>
+              <DialogSubText>{subText}</DialogSubText>
               {renderFooterButtons && renderFooterButtons(close)}
               {!hideCloseButton && (
                 <ActionButton onClick={close}>Lukk</ActionButton>
