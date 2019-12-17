@@ -15,7 +15,7 @@ export const VersionTableInformation = () => (
     }}
     buttonProps={{
       icon: 'info',
-      buttonType: 'secondary'
+      buttonStyle: 'secondary'
     }}
     title="Finner du ikke versjoner du leter etter?"
     content={

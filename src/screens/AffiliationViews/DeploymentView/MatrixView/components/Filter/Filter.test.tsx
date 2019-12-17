@@ -1,7 +1,7 @@
 import { shallow } from 'enzyme';
 import * as React from 'react';
 
-import Checkbox from '@skatteetaten/frontend-components/Checkbox';
+import Checkbox from '@skatteetaten/frontend-components/CheckBox';
 import { IApplicationDeployment } from 'models/ApplicationDeployment';
 import { ImageTagType } from 'models/ImageTagType';
 

@@ -1,6 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
-import Checkbox from '@skatteetaten/frontend-components/Checkbox';
+import Checkbox from '@skatteetaten/frontend-components/CheckBox';
 import TextField from '@skatteetaten/frontend-components/TextField';
 
 import LoadingButton from 'components/LoadingButton';
@@ -10,6 +10,7 @@ import { styledFilterConnected as Filter } from './components/Filter/Filter';
 import { IFilter } from 'services/DeploymentFilterService';
 import { IApplicationDeployment } from 'models/ApplicationDeployment';
 import { IApplicationDeploymentFilters } from 'models/UserSettings';
+import { TextFieldEvent } from 'types/react';
 
 interface IActionBarProps {
   time: string;
@@ -47,10 +48,7 @@ export const ActionBar: React.FC<IActionBarProps> = ({
   expandApplicationName,
   setExpandApplicationName
 }) => {
-  const filterChange = (
-    ev: React.FormEvent<HTMLTextAreaElement | HTMLInputElement>,
-    filter?: string
-  ) => {
+  const filterChange = (ev: TextFieldEvent, filter?: string) => {
     if (filter !== undefined) {
       updateQuickFilter(filter);
     }

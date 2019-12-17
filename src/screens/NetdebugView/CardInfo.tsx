@@ -51,7 +51,7 @@ const CardInfo = ({
       <article>
         {netdebugStatus === 'OPEN' && <>Kan nåes fra alle noder.</>}
         <br />
-        <Button buttonType="secondary" onClick={displayTableOnClicked}>
+        <Button buttonStyle="secondary" onClick={displayTableOnClicked}>
           Klikk her for mer informasjon
         </Button>
       </article>

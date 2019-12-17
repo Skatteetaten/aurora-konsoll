@@ -7,15 +7,13 @@ import LoadingButton from 'components/LoadingButton';
 import SortableDetailsList from 'components/SortableDetailsList';
 import Spinner from 'components/Spinner';
 import { IWebsealState } from 'models/Webseal';
-import {
-  IObjectWithKey,
-  Selection
-} from 'office-ui-fabric-react/lib/DetailsList';
+import { IObjectWithKey, Selection } from 'office-ui-fabric-react/lib-commonjs';
 import WebsealService, {
   filterWebsealView,
   IWebsealTableColumns
 } from 'services/WebsealService';
 import WebsealDialog from './WebstealDialog';
+import { TextFieldEvent } from 'types/react';
 
 interface IWebsealTableProps {
   className?: string;
@@ -180,10 +178,12 @@ class Webseal extends React.Component<IWebsealTableProps, IWebsealTableState> {
     );
   }
 
-  private onFilterChange = (e: Event, text: string) => {
-    this.setState({
-      filter: text
-    });
+  private onFilterChange = (event: TextFieldEvent, newValue?: string) => {
+    if (newValue) {
+      this.setState({
+        filter: newValue
+      });
+    }
   };
 }
 

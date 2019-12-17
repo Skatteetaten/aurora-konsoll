@@ -6,6 +6,7 @@ import palette from '@skatteetaten/frontend-components/utils/palette';
 import LoadingButton from 'components/LoadingButton';
 import { IJdbcUser } from 'models/schemas';
 import styled from 'styled-components';
+import { TextFieldEvent } from 'types/react';
 
 const { skeColor } = palette;
 
@@ -27,7 +28,9 @@ export interface IJdbcConnectionProps {
   className?: string;
   hasPasswordField: boolean;
   canNotTest: boolean;
-  handleJdbcChange?: (field: string) => (e: Event, value: string) => void;
+  handleJdbcChange?: (
+    field: string
+  ) => (event: TextFieldEvent, newValue?: string) => void;
 }
 
 export interface IJdbcConnectionState {
@@ -127,7 +130,7 @@ class JdbcConnection extends React.Component<
         <div className="styled-jdbc">
           <LoadingButton
             onClick={this.handleTestJdbcConnection}
-            buttonType="primary"
+            buttonStyle="primary"
             style={{ width: '100%' }}
             loading={jdcbTestState === JdcbTestState.LOADING}
             disabled={canNotTest}

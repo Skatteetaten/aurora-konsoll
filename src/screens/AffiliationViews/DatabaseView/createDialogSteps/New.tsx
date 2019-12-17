@@ -3,6 +3,7 @@ import styled from 'styled-components';
 
 import { ICreateDatabaseSchemaInput } from 'models/schemas';
 import Labels from '../Labels';
+import { TextFieldEvent } from 'types/react';
 
 export interface INewProps {
   databaseSchemaInput: ICreateDatabaseSchemaInput;
@@ -15,10 +16,13 @@ const New = ({
   setDatabaseSchemaInput,
   className
 }: INewProps) => {
-  const handleLabelChange = (field: string) => (e: Event, value: string) => {
+  const handleLabelChange = (field: string) => (
+    event: TextFieldEvent,
+    newValue?: string
+  ) => {
     setDatabaseSchemaInput({
       ...databaseSchemaInput,
-      [field]: value
+      [field]: newValue
     });
   };
 

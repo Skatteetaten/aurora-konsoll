@@ -1,7 +1,7 @@
 import * as React from 'react';
 import styled from 'styled-components';
 
-import Card from '@skatteetaten/frontend-components/Card';
+import Card, { CardColor } from '@skatteetaten/frontend-components/Card';
 import Grid from '@skatteetaten/frontend-components/Grid';
 import {
   IDatabaseSchemas,
@@ -43,7 +43,7 @@ const DeletionSummary = ({
 
   return (
     <div className={className}>
-      <Card color={Card.GREEN}>
+      <Card color={CardColor.GREEN}>
         <Grid>
           {createRows(
             'Følgende databaseskjemaer ble slettet:',

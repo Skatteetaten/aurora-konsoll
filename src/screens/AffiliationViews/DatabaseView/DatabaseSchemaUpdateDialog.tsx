@@ -18,6 +18,7 @@ import DatabaseSchemaService from 'services/DatabaseSchemaService';
 import { getLocalDatetime } from 'utils/date';
 import JdbcConnection from './JdbcConnection';
 import Labels from './Labels';
+import { TextFieldEvent } from 'types/react';
 
 const { skeColor } = palette;
 
@@ -91,11 +92,14 @@ class DatabaseSchemaUpdateDialog extends React.Component<
     this.hideDialog();
   };
 
-  public handleLabelChange = (field: string) => (e: Event, value: string) => {
+  public handleLabelChange = (field: string) => (
+    event: TextFieldEvent,
+    newValue?: string
+  ) => {
     this.setState(state => ({
       updatedSchemaValues: {
         ...state.updatedSchemaValues,
-        [field]: value
+        [field]: newValue
       }
     }));
   };
@@ -183,8 +187,8 @@ class DatabaseSchemaUpdateDialog extends React.Component<
       <Dialog
         hidden={!!!schema}
         onDismiss={this.hideDialog}
-        dialogMinWidth="1000px"
-        dialogMaxWidth="90%"
+        minWidth="1000px"
+        maxWidth="90%"
       >
         <div className={className}>
           <Grid>
@@ -244,7 +248,7 @@ class DatabaseSchemaUpdateDialog extends React.Component<
               renderFooterButtons={this.renderConfirmationFooterButtons}
             />
             <Button
-              buttonType="primaryRoundedFilled"
+              buttonStyle="primaryRoundedFilled"
               style={{ width: '162px', marginRight: '10px' }}
               icon="Copy"
               onClick={this.createNewCopy}
@@ -252,7 +256,7 @@ class DatabaseSchemaUpdateDialog extends React.Component<
               Lag ny kopi
             </Button>
             <Button
-              buttonType="primaryRoundedFilled"
+              buttonStyle="primaryRoundedFilled"
               style={{ width: '120px', marginRight: '10px' }}
               icon="Clear"
               onClick={this.hideDialog}
@@ -260,7 +264,7 @@ class DatabaseSchemaUpdateDialog extends React.Component<
               Avbryt
             </Button>
             <Button
-              buttonType="primaryRoundedFilled"
+              buttonStyle="primaryRoundedFilled"
               style={{ width: '120px' }}
               icon="Check"
               onClick={this.updateLabels}

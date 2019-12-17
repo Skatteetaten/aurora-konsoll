@@ -27,7 +27,7 @@ export const FetchMoreVersions = ({
         </p>
         <Button
           icon="History"
-          buttonType="primaryRoundedFilled"
+          buttonStyle="primaryRoundedFilled"
           disabled={isFetching}
           onClick={() => {
             // Check for new tags
@@ -41,7 +41,7 @@ export const FetchMoreVersions = ({
           }}
         >
           {isFetching ? (
-            <Spinner size={Spinner.Size.large} />
+            <Spinner size={Spinner.Size && Spinner.Size['large']} />
           ) : (
             'Hent flere versjoner'
           )}

@@ -9,6 +9,7 @@ import CardInfo from './CardInfo';
 import Table from './Table';
 
 import { INetdebugResult } from 'services/auroraApiClients';
+import { TextFieldEvent } from 'types/react';
 
 const hostnameValidator = /(^|\s)([\w-]+(\.[\w-]+)+\.?(:\d+)?(\/\S*)?)/gi;
 const portValidator = /^(6553[0-5]|655[0-2]\d|65[0-4]\d\d|6[0-4]\d{3}|[1-5]\d{4}|[1-9]\d{0,3}|0)$/gi;
@@ -72,20 +73,24 @@ class NetdebugBase extends React.Component<INetdebugProps, INetdebugState> {
     this.setState(prevState => ({ showTable: !prevState.showTable }));
   };
 
-  public handleHostnameValue = (e: Event, hostname: string) => {
-    this.setState({
-      hostnameValue: hostname
-    });
+  public handleHostnameValue = (event: TextFieldEvent, newValue?: string) => {
+    if (newValue) {
+      this.setState({
+        hostnameValue: newValue
+      });
+    }
   };
 
-  public handlePortValue = (e: Event, port: string) => {
-    this.setState(state => ({
-      portValue: port,
-      validateErrors: {
-        ...state.validateErrors,
-        port: !!port && !port.match(portValidator)
-      }
-    }));
+  public handlePortValue = (event: TextFieldEvent, newValue?: string) => {
+    if (newValue) {
+      this.setState(state => ({
+        portValue: newValue,
+        validateErrors: {
+          ...state.validateErrors,
+          port: !newValue.match(portValidator)
+        }
+      }));
+    }
   };
 
   public validateHostname = () => {
@@ -143,7 +148,7 @@ class NetdebugBase extends React.Component<INetdebugProps, INetdebugState> {
               </div>
               <Button
                 style={{ minWidth: '100px' }}
-                buttonType="primary"
+                buttonStyle="primary"
                 onClick={this.onScanClicked}
                 disabled={!canScan}
               >

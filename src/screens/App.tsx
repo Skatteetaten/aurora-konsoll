@@ -67,7 +67,7 @@ export const App: React.FC<IAppProps> = ({
   const isAuthenticated = tokenStore.isTokenValid();
 
   return (
-    <StyledSkeBasis menuExpanded={isMenuExpanded}>
+    <StyledSkeBasis>
       <ErrorBoundaryConnected>
         <LayoutConnected
           isMenuExpanded={isMenuExpanded}

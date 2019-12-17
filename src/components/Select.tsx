@@ -4,6 +4,7 @@ import ReactSelect from 'react-select';
 import { Theme } from 'react-select/src/types';
 
 import palette from '@skatteetaten/frontend-components/utils/palette';
+import { RadioButtonGroupProps } from '@skatteetaten/frontend-components/RadioButtonGroup';
 
 const { skeColor } = palette;
 
@@ -14,7 +15,7 @@ interface ISelectProps {
   }>;
   placeholder: string;
   selectedKey?: string;
-  handleChange: (option: any) => void;
+  handleChange: RadioButtonGroupProps['onChange'];
   isClearable: boolean;
   className: string;
 }
@@ -42,6 +43,12 @@ const Select = ({
 
   const noOptionsMessage = () => 'Ingen';
 
+  const onChange = (option: any) => {
+    if (handleChange) {
+      handleChange(undefined, option);
+    }
+  };
+
   return (
     <ReactSelect
       options={options}
@@ -50,7 +57,7 @@ const Select = ({
       isClearable={isClearable}
       noOptionsMessage={noOptionsMessage}
       value={getValue(selectedKey)}
-      onChange={handleChange}
+      onChange={onChange}
       className={className}
     />
   );

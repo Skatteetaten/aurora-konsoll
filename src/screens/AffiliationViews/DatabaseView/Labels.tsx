@@ -2,6 +2,7 @@ import * as React from 'react';
 import styled from 'styled-components';
 
 import TextField from '@skatteetaten/frontend-components/TextField';
+import { TextFieldEvent } from 'types/react';
 
 interface ILabelsProps {
   className?: string;
@@ -11,7 +12,9 @@ interface ILabelsProps {
   createdBy?: string;
   description?: string;
   displayCreatedByField: boolean;
-  handleLabelChange: (field: string) => (e: Event, value: string) => void;
+  handleLabelChange: (
+    field: string
+  ) => (event: TextFieldEvent, newValue?: string) => void;
 }
 
 const Labels = ({

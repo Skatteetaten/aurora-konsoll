@@ -8,7 +8,7 @@ interface ISpinnerProps {
 
 const Spinner = ({ className }: ISpinnerProps) => (
   <div className={className}>
-    <AuroraSpinner size={AuroraSpinner.Size.large} />
+    <AuroraSpinner size={AuroraSpinner.Size && AuroraSpinner.Size['large']} />
   </div>
 );
 

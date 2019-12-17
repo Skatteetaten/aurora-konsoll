@@ -229,7 +229,7 @@ class DatabaseSchemaCreateDialog extends React.Component<
     return (
       <>
         <Button
-          buttonType="primaryRoundedFilled"
+          buttonStyle="primaryRoundedFilled"
           icon="AddOutline"
           onClick={open}
         >
@@ -246,9 +246,8 @@ class DatabaseSchemaCreateDialog extends React.Component<
         <Dialog
           title={getTitle()}
           hidden={!isOpen}
-          dialogMinWidth="1000px"
-          dialogMaxWidth="90%"
-          dialogMinHeight="1000px"
+          minWidth="1000px"
+          maxWidth="90%"
           onDismiss={close}
           isBlocking={!isType}
         >
@@ -287,7 +286,7 @@ class DatabaseSchemaCreateDialog extends React.Component<
                 </ActionButton>
                 <Button
                   onClick={back}
-                  buttonType="primaryRoundedFilled"
+                  buttonStyle="primaryRoundedFilled"
                   style={{ width: '120px', marginRight: '10px' }}
                   icon="ArrowBack"
                 >
@@ -299,7 +298,7 @@ class DatabaseSchemaCreateDialog extends React.Component<
               <>
                 <Button
                   onClick={back}
-                  buttonType="primaryRoundedFilled"
+                  buttonStyle="primaryRoundedFilled"
                   style={{ width: '162px', marginRight: '10px' }}
                   icon="Copy"
                   title="Lag nytt databaseskjema med eksisterende verdier"
@@ -308,7 +307,7 @@ class DatabaseSchemaCreateDialog extends React.Component<
                 </Button>
                 <Button
                   onClick={closeAndFetch}
-                  buttonType="primaryRoundedFilled"
+                  buttonStyle="primaryRoundedFilled"
                   style={{ width: '120px' }}
                   icon="Completed"
                 >
@@ -319,7 +318,7 @@ class DatabaseSchemaCreateDialog extends React.Component<
             {isNew && (
               <LoadingButton
                 onClick={this.createDatabaseSchema}
-                buttonType="primaryRoundedFilled"
+                buttonStyle="primaryRoundedFilled"
                 style={{ width: '120px' }}
                 icon="Check"
                 loading={isLoading}
@@ -335,7 +334,7 @@ class DatabaseSchemaCreateDialog extends React.Component<
             {isExternal && (
               <LoadingButton
                 onClick={this.createDatabaseSchema}
-                buttonType="primaryRoundedFilled"
+                buttonStyle="primaryRoundedFilled"
                 style={{ width: '120px' }}
                 icon="Check"
                 loading={isLoading}
