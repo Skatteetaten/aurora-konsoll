@@ -4,6 +4,8 @@ import Dialog from '@skatteetaten/frontend-components/Dialog';
 import MessageBar from '@skatteetaten/frontend-components/MessageBar';
 import ActionButton from '@skatteetaten/frontend-components/ActionButton';
 import Spinner from '@skatteetaten/frontend-components/Spinner';
+import { IImageTag } from 'services/auroraApiClients/imageRepositoryClient/query';
+import { ReleaseToInformation } from './ReleaseToInformation';
 
 export interface IDeployButtonProps {
   isLoading: boolean;
@@ -12,6 +14,8 @@ export interface IDeployButtonProps {
   hasAccessToDeploy: boolean;
   dialogTitle: string;
   buttonText: string;
+  releaseTo?: string;
+  currentVersion: IImageTag;
   onConfirmDeploy: () => void;
 }
 
@@ -23,6 +27,8 @@ export const DeployButton: React.FC<IDeployButtonProps> = ({
   buttonText,
   disabled,
   hasAccessToDeploy,
+  releaseTo,
+  currentVersion,
   children
 }) => {
   const [hidden, setHidden] = useState(true);
@@ -52,6 +58,7 @@ export const DeployButton: React.FC<IDeployButtonProps> = ({
             kan vi oppgradere den manuelt for deg.
           </MessageBar>
         )}
+        {releaseTo && <ReleaseToInformation currentVersion={currentVersion} />}
         {children}
         <Dialog.Footer>
           <ActionButton

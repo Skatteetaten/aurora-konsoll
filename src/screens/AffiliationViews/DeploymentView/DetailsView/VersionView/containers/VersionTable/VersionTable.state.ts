@@ -11,6 +11,8 @@ export interface IVersionTableProps {
   repository: string;
   currentVersion: IImageTag;
   versionBeingDeployed?: string;
+  configuredVersionTag?: IImageTag;
+  releaseTo?: string;
 }
 
 export const mapDispatchToProps = {

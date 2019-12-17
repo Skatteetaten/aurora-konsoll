@@ -10,12 +10,15 @@ import {
 } from '../../models/VersionStatus';
 import { DeployButton } from './DeployButton';
 import { VersionInfo } from './VersionInfo';
+import { ReleaseToInformation } from './ReleaseToInformation';
 
 interface IRedeployRowProps {
   hasAccessToDeploy: boolean;
   versionStatus: VersionStatus;
   configuredVersionTag?: IImageTag;
   versionBeingDeployed?: string;
+  currentVersion: IImageTag;
+  releaseTo?: string;
   onConfirmDeploy: (version: string) => void;
 }
 
@@ -24,7 +27,9 @@ export const RedeployRow = ({
   versionStatus,
   configuredVersionTag,
   versionBeingDeployed,
-  onConfirmDeploy
+  onConfirmDeploy,
+  releaseTo,
+  currentVersion
 }: IRedeployRowProps) => {
   if (!configuredVersionTag) {
     return null;
@@ -56,11 +61,17 @@ export const RedeployRow = ({
         dialogTitle="Vil du gjøre en redeploy?"
         isOldVersion={!configuredVersionTag.image}
         hasAccessToDeploy={hasAccessToDeploy}
+        currentVersion={currentVersion}
         onConfirmDeploy={() => onConfirmDeploy(configuredVersionTag.name)}
       >
-        <VersionInfo>
-          <p>Versjon:</p> {configuredVersionTag.name}
-        </VersionInfo>
+        <>
+          {releaseTo && (
+            <ReleaseToInformation currentVersion={currentVersion} />
+          )}
+          <VersionInfo>
+            <p>Versjon:</p> {configuredVersionTag.name}
+          </VersionInfo>
+        </>
       </DeployButton>
     </Wrapper>
   );
