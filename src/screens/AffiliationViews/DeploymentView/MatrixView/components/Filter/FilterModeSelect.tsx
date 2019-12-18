@@ -29,11 +29,6 @@ interface IFilterModeSelectProps {
   handleFilterChange: RadioButtonGroupProps['onChange'];
 }
 
-interface IModeChange {
-  key: FilterMode;
-  text: string;
-}
-
 const FilterModeSelect = ({
   setMode,
   setCurrentFilterName,
@@ -47,10 +42,6 @@ const FilterModeSelect = ({
     if (option) {
       setMode(Number(option.key) as FilterMode);
     }
-  };
-    
-  const handleRadioButtonChange = (e: Event, option: IFilterChange) => {
-    handleFilterChange(option);
   };
 
   const newFilter = (
@@ -69,7 +60,7 @@ const FilterModeSelect = ({
       <div className="saved-filters">
         <RadioButtonGroup
           options={filterOptions}
-          onChange={handleRadioButtonChange}
+          onChange={handleFilterChange}
           selectedKey={selectedFilterKey}
           warning=""
           errorMessage=""
