@@ -48,6 +48,10 @@ const FilterModeSelect = ({
       setMode(Number(option.key) as FilterMode);
     }
   };
+    
+  const handleRadioButtonChange = (e: Event, option: IFilterChange) => {
+    handleFilterChange(option);
+  };
 
   const newFilter = (
     <>
@@ -65,7 +69,7 @@ const FilterModeSelect = ({
       <div className="saved-filters">
         <RadioButtonGroup
           options={filterOptions}
-          onChange={handleFilterChange}
+          onChange={handleRadioButtonChange}
           selectedKey={selectedFilterKey}
           warning=""
           errorMessage=""
