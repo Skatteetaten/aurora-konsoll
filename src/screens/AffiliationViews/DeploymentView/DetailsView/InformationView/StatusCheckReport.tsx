@@ -1,6 +1,6 @@
-import DetailsList from 'aurora-frontend-react-komponenter/DetailsList';
-import Icon from 'aurora-frontend-react-komponenter/Icon';
-import palette from 'aurora-frontend-react-komponenter/utils/palette';
+import DetailsList from '@skatteetaten/frontend-components/DetailsList';
+import Icon from '@skatteetaten/frontend-components/Icon';
+import palette from '@skatteetaten/frontend-components/utils/palette';
 import * as React from 'react';
 
 import Collapse from 'components/Collapse';
@@ -51,7 +51,7 @@ function getIconStatusStyle(
 
 function getStatusIcon(hasFailed: boolean, level: StatusCode): string {
   if (!hasFailed) {
-    return 'Done';
+    return 'Check';
   }
   switch (level) {
     case StatusCode.DOWN:
@@ -61,7 +61,7 @@ function getStatusIcon(hasFailed: boolean, level: StatusCode): string {
     case StatusCode.OFF:
       return 'Info';
     case StatusCode.HEALTHY:
-      return 'Done';
+      return 'Check';
     default:
       return '';
   }

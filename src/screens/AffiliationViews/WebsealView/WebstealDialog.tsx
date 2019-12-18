@@ -1,12 +1,12 @@
 import * as React from 'react';
 
-import ActionButton from 'aurora-frontend-react-komponenter/ActionButton';
-import Dialog from 'aurora-frontend-react-komponenter/Dialog';
-import Grid from 'aurora-frontend-react-komponenter/Grid';
-import Tabs from 'aurora-frontend-react-komponenter/Tabs';
-import TabItem from 'aurora-frontend-react-komponenter/Tabs/TabItem';
+import ActionButton from '@skatteetaten/frontend-components/ActionButton';
+import Dialog from '@skatteetaten/frontend-components/Dialog';
+import Grid from '@skatteetaten/frontend-components/Grid';
+import Tabs from '@skatteetaten/frontend-components/Tabs';
+import TabItem from '@skatteetaten/frontend-components/Tabs/TabItem';
 
-import DetailsList from 'aurora-frontend-react-komponenter/DetailsList';
+import DetailsList from '@skatteetaten/frontend-components/DetailsList';
 import { IWebsealState } from 'models/Webseal';
 import WebsealService from 'services/WebsealService';
 import styled from 'styled-components';
@@ -91,8 +91,8 @@ class WebsealDialog extends React.Component<
 
     return (
       <Dialog
-        dialogMinWidth="1000px"
-        dialogMaxWidth="90%"
+        minWidth="1000px"
+        maxWidth="90%"
         title={selectedWebsealState && selectedWebsealState.name}
         hidden={!!!selectedWebsealState}
         onDismiss={deselectWebsealState}

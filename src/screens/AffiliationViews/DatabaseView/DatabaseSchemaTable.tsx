@@ -2,9 +2,9 @@ import * as React from 'react';
 
 import styled from 'styled-components';
 
-import ActionButton from 'aurora-frontend-react-komponenter/ActionButton';
-import DetailsList from 'aurora-frontend-react-komponenter/DetailsList';
-import TextField from 'aurora-frontend-react-komponenter/TextField';
+import ActionButton from '@skatteetaten/frontend-components/ActionButton';
+import DetailsList from '@skatteetaten/frontend-components/DetailsList';
+import TextField from '@skatteetaten/frontend-components/TextField';
 
 import Spinner from 'components/Spinner';
 import {
@@ -12,7 +12,7 @@ import {
   IObjectWithKey,
   Selection,
   SelectionMode
-} from 'office-ui-fabric-react/lib/DetailsList';
+} from 'office-ui-fabric-react/lib-commonjs';
 import { getLocalDate } from 'utils/date';
 
 import SortableDetailsList from 'components/SortableDetailsList';
@@ -35,6 +35,7 @@ import DatabaseSchemaCreateDialog from './DatabaseSchemaCreateDialog';
 import DatabaseSchemaUpdateDialog from './DatabaseSchemaUpdateDialog';
 import DeletionSummary from './DeletionSummary';
 import { StyledPre } from 'components/StyledPre';
+import { TextFieldEvent } from 'types/react';
 
 export const renderDetailsListWithSchemaInfo = (schemas: IDatabaseSchema[]) => (
   <StyledPre>
@@ -319,7 +320,7 @@ export class Schema extends React.Component<ISchemaProps, ISchemaState> {
             <div className="styled-input">
               <TextField
                 placeholder="Søk etter skjema"
-                onChanged={this.onFilterChange}
+                onChange={this.onFilterChange}
                 value={filter}
               />
             </div>
@@ -440,9 +441,9 @@ export class Schema extends React.Component<ISchemaProps, ISchemaState> {
     });
   };
 
-  private onFilterChange = (text: string) => {
+  private onFilterChange = (event: TextFieldEvent, newValue?: string) => {
     this.setState({
-      filter: text
+      filter: newValue || ''
     });
   };
 

@@ -1,13 +1,14 @@
 import * as React from 'react';
 import styled from 'styled-components';
 
-import TextField from 'aurora-frontend-react-komponenter/TextField';
+import TextField from '@skatteetaten/frontend-components/TextField';
 
 import LoadingButton from 'components/LoadingButton';
 import Spinner from 'components/Spinner';
 import { ICertificateResult, ICertificateView } from 'models/certificates';
 import CertificateService from 'services/CertificateService';
 import Table from './Table';
+import { TextFieldEvent } from 'types/react';
 
 interface ICertificateProps {
   className?: string;
@@ -84,7 +85,7 @@ class CertificateBase extends React.Component<
             <TextField
               placeholder="Søk etter sertifikat"
               value={filter}
-              onChanged={this.onFilterChange}
+              onChange={this.onFilterChange}
             />
           </div>
           <div className="certificate-grid">
@@ -105,10 +106,12 @@ class CertificateBase extends React.Component<
     );
   }
 
-  private onFilterChange = (text: string): void => {
-    this.setState({
-      filter: text
-    });
+  private onFilterChange = (event: TextFieldEvent, newValue?: string) => {
+    if (newValue) {
+      this.setState({
+        filter: newValue
+      });
+    }
   };
 }
 

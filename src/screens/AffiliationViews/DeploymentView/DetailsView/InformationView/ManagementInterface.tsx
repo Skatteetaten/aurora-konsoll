@@ -1,6 +1,6 @@
 import * as React from 'react';
 
-import MessageBar from 'aurora-frontend-react-komponenter/MessageBar';
+import MessageBar from '@skatteetaten/frontend-components/MessageBar';
 
 import { IApplicationDeploymentDetails } from 'models/ApplicationDeployment';
 

@@ -1,4 +1,4 @@
-import { IColumn } from 'office-ui-fabric-react/lib/DetailsList';
+import { IColumn } from 'office-ui-fabric-react/lib-commonjs';
 
 const websealTableColumns: IColumn[] = [
   {
@@ -50,10 +50,8 @@ export const filterWebsealView = (filter: string) => {
 };
 
 class WebsealService {
-  public static DEFAULT_COLUMNS: IColumn[] = websealTableColumns;
-  public static JUNCTION_COLUMNS: (
-    onRender: ColumnRenderFunc
-  ) => IColumn[] = websealDialogColumns;
+  public static DEFAULT_COLUMNS = websealTableColumns;
+  public static JUNCTION_COLUMNS = websealDialogColumns;
 
   public addProperties = (type: string): any[] => {
     const parsedType = JSON.parse(type);

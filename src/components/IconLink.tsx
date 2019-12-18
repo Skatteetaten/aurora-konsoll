@@ -1,8 +1,8 @@
 import * as React from 'react';
 
-import Icon from 'aurora-frontend-react-komponenter/Icon';
+import Icon from '@skatteetaten/frontend-components/Icon';
 import styled, { css } from 'styled-components';
-import palette from 'aurora-frontend-react-komponenter/utils/palette';
+import palette from '@skatteetaten/frontend-components/utils/palette';
 
 const { skeColor } = palette;
 

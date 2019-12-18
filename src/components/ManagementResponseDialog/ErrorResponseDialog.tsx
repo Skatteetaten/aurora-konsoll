@@ -1,7 +1,7 @@
 import * as React from 'react';
 
-import ActionButton from 'aurora-frontend-react-komponenter/ActionButton';
-import MessageBar from 'aurora-frontend-react-komponenter/MessageBar';
+import ActionButton from '@skatteetaten/frontend-components/ActionButton';
+import MessageBar from '@skatteetaten/frontend-components/MessageBar';
 import InfoDialog from 'components/InfoDialog';
 import { IManagementEndpointResponse } from 'models/Pod';
 import styled from 'styled-components';

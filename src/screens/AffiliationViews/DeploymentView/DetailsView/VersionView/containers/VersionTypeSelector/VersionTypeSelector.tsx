@@ -1,15 +1,16 @@
-import React from 'react';
+import React, { FormEvent } from 'react';
 import styled from 'styled-components';
-import ComboBox from 'aurora-frontend-react-komponenter/ComboBox';
+import ComboBox from '@skatteetaten/frontend-components/ComboBox';
 
 import { ImageTagType } from 'models/ImageTagType';
 
-import {
-  getVersionTypeSelectorOptions,
-  IImageTagTypeOption
-} from './utils/options';
+import { getVersionTypeSelectorOptions } from './utils/options';
 import { onRenderOption } from './components/VersionTypeOption';
 import { VersionTypeSelectorState } from './VersionTypeSelector.state';
+import {
+  IComboBox,
+  IComboBoxOption
+} from 'office-ui-fabric-react/lib-commonjs';
 
 interface IVersionTypeSelectorProps {
   onSelect: (type: ImageTagType) => void;
@@ -26,9 +27,14 @@ export const VersionTypeSelector = ({
   className,
   clearStateForType
 }: Props) => {
-  const onTagTypeChanged = (e: Event, option: IImageTagTypeOption) => {
+  const onTagTypeChanged = (
+    event: FormEvent<IComboBox>,
+    option?: IComboBoxOption
+  ) => {
     clearStateForType(ImageTagType.SEARCH);
-    onSelect(option.key);
+    if (option) {
+      onSelect(option.key as ImageTagType);
+    }
   };
 
   return (

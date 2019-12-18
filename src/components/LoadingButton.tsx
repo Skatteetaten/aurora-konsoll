@@ -1,6 +1,6 @@
 import * as React from 'react';
 
-import Button from 'aurora-frontend-react-komponenter/Button';
+import Button from '@skatteetaten/frontend-components/Button';
 import Spinner from './Spinner';
 
 interface ILoadingButtonProps {
@@ -13,7 +13,7 @@ const LoadingButton = ({
   loading,
   ...props
 }: ILoadingButtonProps) => (
-  <Button buttonType="primaryRoundedFilled" disabled={loading} {...props}>
+  <Button buttonStyle="primaryRoundedFilled" disabled={loading} {...props}>
     {loading ? <Spinner /> : children}
   </Button>
 );

@@ -1,5 +1,5 @@
 import React from 'react';
-import Callout from 'aurora-frontend-react-komponenter/Callout';
+import Callout from '@skatteetaten/frontend-components/Callout';
 
 import CalloutButton from 'components/CalloutButton';
 
@@ -15,7 +15,7 @@ export const VersionTableInformation = () => (
     }}
     buttonProps={{
       icon: 'info',
-      buttonType: 'secondary'
+      buttonStyle: 'secondary'
     }}
     title="Finner du ikke versjoner du leter etter?"
     content={

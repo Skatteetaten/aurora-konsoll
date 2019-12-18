@@ -2,9 +2,7 @@ import * as React from 'react';
 
 import { connect } from 'react-redux';
 
-import Dropdown, {
-  IDropdownOption
-} from 'aurora-frontend-react-komponenter/Dropdown';
+import Dropdown from '@skatteetaten/frontend-components/Dropdown';
 
 import { toDropdownOptions } from 'utils/aurora-frontend';
 
@@ -15,6 +13,7 @@ import Header from './Header';
 import Menu from './Menu';
 import MenuCollapseButton from './MenuCollapseButton';
 import MenuNavLink, { IMenuNavLinkData } from './MenuNavLink';
+import { IDropdownOption } from 'office-ui-fabric-react/lib-commonjs';
 
 interface ILayoutProps {
   affiliation?: string;
@@ -47,8 +46,12 @@ const Layout = ({
   displaySkapViews,
   currentUser = defaultUser
 }: ILayoutProps) => {
-  const onAffiliationChanged = (item: IDropdownOption, index: number) => {
-    if (index > 0) {
+  const onAffiliationChanged = (
+    e: React.FormEvent<HTMLDivElement>,
+    item?: IDropdownOption,
+    index?: number
+  ) => {
+    if (index && index > 0 && item) {
       onAffiliationChange(item.text);
     }
   };
@@ -112,7 +115,7 @@ const Layout = ({
           <Dropdown
             placeholder="Velg tilhørighet"
             options={toDropdownOptions(currentUser.affiliations)}
-            onChanged={onAffiliationChanged}
+            onChange={onAffiliationChanged}
             selectedKey={affiliation}
           />
         )}

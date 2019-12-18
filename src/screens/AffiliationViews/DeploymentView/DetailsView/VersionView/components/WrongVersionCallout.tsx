@@ -1,6 +1,6 @@
 import React, { useState, useRef, FC } from 'react';
-import Callout from 'aurora-frontend-react-komponenter/Callout';
-import IconButton from 'aurora-frontend-react-komponenter/IconButton';
+import Callout from '@skatteetaten/frontend-components/Callout';
+import IconButton from '@skatteetaten/frontend-components/IconButton';
 
 export const WrongVersionCallout: FC = ({ children }) => {
   const [open, setOpen] = useState(false);

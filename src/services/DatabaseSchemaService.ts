@@ -6,9 +6,9 @@ import {
   IJdbcUser,
   IUpdateDatabaseSchemaInputWithCreatedBy
 } from 'models/schemas';
-import { IColumn } from 'office-ui-fabric-react/lib/DetailsList';
+import { IColumn } from 'office-ui-fabric-react/lib-commonjs';
 
-const deletionDialogColumns = [
+const deletionDialogColumns: IColumn[] = [
   {
     key: 'column1',
     name: 'Applikasjon',
@@ -146,8 +146,8 @@ export const filterDatabaseSchemaView = (filter: string) => {
 };
 
 export default class DatabaseSchemaService {
-  public static DEFAULT_COLUMNS: IColumn[] = defaultColumns;
-  public static DELETION_COLUMNS: IColumn[] = deletionDialogColumns;
+  public static DEFAULT_COLUMNS = defaultColumns;
+  public static DELETION_COLUMNS = deletionDialogColumns;
 
   public trimJdbcUser = (
     jdbcUser: IJdbcUser | null | undefined

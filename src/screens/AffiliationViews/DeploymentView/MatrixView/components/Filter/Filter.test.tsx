@@ -1,7 +1,7 @@
 import { shallow } from 'enzyme';
 import * as React from 'react';
 
-import Checkbox from 'aurora-frontend-react-komponenter/Checkbox';
+import Checkbox from '@skatteetaten/frontend-components/CheckBox';
 import { IApplicationDeployment } from 'models/ApplicationDeployment';
 import { ImageTagType } from 'models/ImageTagType';
 
@@ -19,6 +19,7 @@ describe('Filter', () => {
       affiliation: 'paas',
       name: 'app1',
       environment: 'env1',
+      namespace: 'paas-env1',
       status: {
         code: StatusCode.HEALTHY,
         reasons: [],
@@ -28,8 +29,7 @@ describe('Filter', () => {
         auroraVersion: '',
         deployTag: {
           name: 'version',
-          type: ImageTagType.AURORA_SNAPSHOT_VERSION,
-          lastModified: ''
+          type: ImageTagType.AURORA_SNAPSHOT_VERSION
         },
         releaseTo: ''
       },
@@ -39,7 +39,6 @@ describe('Filter', () => {
           view: true
         }
       },
-      repository: '',
       time: ''
     },
     {
@@ -47,6 +46,7 @@ describe('Filter', () => {
       affiliation: 'paas',
       name: 'app2',
       environment: 'env2',
+      namespace: 'paas-env2',
       status: {
         code: StatusCode.HEALTHY,
         reasons: [],
@@ -56,8 +56,7 @@ describe('Filter', () => {
         auroraVersion: '',
         deployTag: {
           name: 'version',
-          type: ImageTagType.AURORA_SNAPSHOT_VERSION,
-          lastModified: ''
+          type: ImageTagType.AURORA_SNAPSHOT_VERSION
         },
         releaseTo: ''
       },
@@ -67,7 +66,6 @@ describe('Filter', () => {
           view: true
         }
       },
-      repository: '',
       time: ''
     }
   ];
@@ -86,6 +84,7 @@ describe('Filter', () => {
         filters={emptyFilter}
         allFilters={[]}
         deleteFilter={deleteFilter}
+        addErrors={() => {}}
       />
     );
     const checkbox = wrapper.find(Checkbox);
@@ -106,6 +105,7 @@ describe('Filter', () => {
         filters={emptyFilter}
         allFilters={[]}
         deleteFilter={deleteFilter}
+        addErrors={() => {}}
       />
     );
     const checkbox = wrapper.find(Checkbox);
@@ -126,6 +126,7 @@ describe('Filter', () => {
         filters={{ applications: ['app1'], environments: [] }}
         allFilters={[]}
         deleteFilter={deleteFilter}
+        addErrors={() => {}}
       />
     );
     const applications = wrapper.state('applications');
@@ -145,6 +146,7 @@ describe('Filter', () => {
         filters={{ applications: ['app1'], environments: ['env1'] }}
         allFilters={[]}
         deleteFilter={deleteFilter}
+        addErrors={() => {}}
       />
     );
     wrapper.setProps({ affiliation: 'aurora' });
@@ -167,6 +169,7 @@ describe('Filter', () => {
         }}
         allFilters={[]}
         deleteFilter={deleteFilter}
+        addErrors={() => {}}
       />
     );
 
@@ -201,6 +204,7 @@ describe('Filter', () => {
         }}
         allFilters={[]}
         deleteFilter={deleteFilter}
+        addErrors={() => {}}
       />
     );
 

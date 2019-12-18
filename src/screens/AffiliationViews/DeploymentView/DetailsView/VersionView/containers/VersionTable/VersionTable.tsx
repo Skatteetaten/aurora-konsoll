@@ -1,5 +1,5 @@
 import * as React from 'react';
-import Table from 'aurora-frontend-react-komponenter/Table';
+import Table from '@skatteetaten/frontend-components/Table';
 import styled from 'styled-components';
 import { ImageTagType } from 'models/ImageTagType';
 import { IVersionTableProps, VersionTableState } from './VersionTable.state';

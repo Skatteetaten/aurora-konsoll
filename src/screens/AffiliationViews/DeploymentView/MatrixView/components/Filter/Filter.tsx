@@ -6,8 +6,8 @@ import ReactSelect from 'components/Select';
 
 import { IApplicationDeployment } from 'models/ApplicationDeployment';
 
-import ActionButton from 'aurora-frontend-react-komponenter/ActionButton';
-import Checkbox from 'aurora-frontend-react-komponenter/Checkbox';
+import ActionButton from '@skatteetaten/frontend-components/ActionButton';
+import Checkbox from '@skatteetaten/frontend-components/CheckBox';
 import { IApplicationDeploymentFilters } from 'models/UserSettings';
 import { IFilter } from 'services/DeploymentFilterService';
 import FilterService from 'services/FilterService';
@@ -16,6 +16,8 @@ import FooterText from './FooterText';
 import SelectionButtons from './SelectionButtons';
 import { connect } from 'react-redux';
 import { addErrors } from 'screens/ErrorHandler/state/actions';
+import { RadioButtonGroupProps } from '@skatteetaten/frontend-components/RadioButtonGroup';
+import { TextFieldEvent } from 'types/react';
 
 export enum SelectionType {
   Applications,
@@ -296,26 +298,29 @@ export class Filter extends React.Component<IFilterProps, IFilterState> {
     );
   };
 
-  public setCurrentFilterName = (filterName: string) => {
-    if (!filterName) {
+  public setCurrentFilterName = (event: TextFieldEvent, newValue?: string) => {
+    if (!newValue) {
       this.setState({
         isDefaultCheckedForCreate: false
       });
     }
     this.setState({
-      currentFilterName: filterName
+      currentFilterName: newValue
     });
   };
 
-  public handleFilterChange = (option: IFilterChange) => {
+  public handleFilterChange: RadioButtonGroupProps['onChange'] = (
+    ev,
+    option
+  ) => {
     const { allFilters, updateFilter } = this.props;
     if (option) {
       this.setState({
-        selectedFilterKey: option.label,
+        selectedFilterKey: option.text,
         mode: FilterMode.Edit
       });
       const currentFilter = allFilters.find(
-        filter => filter.name === option.label
+        filter => filter.name === option.text
       );
       if (currentFilter) {
         this.setState({
@@ -430,7 +435,8 @@ export class Filter extends React.Component<IFilterProps, IFilterState> {
                 <FilterModeSelect
                   setMode={setMode}
                   setCurrentFilterName={this.setCurrentFilterName}
-                  filterOptions={filterOptions}
+                  // TODO: Fix type
+                  filterOptions={filterOptions as any}
                   selectedFilterKey={selectedFilterKey}
                   deleteFilter={this.deleteFilter}
                   mode={mode}
@@ -486,7 +492,8 @@ export class Filter extends React.Component<IFilterProps, IFilterState> {
         </InfoDialog>
         <div className={className}>
           <ReactSelect
-            options={filterOptions}
+            // TODO: Fix type
+            options={filterOptions as any}
             placeholder={'Velg filter'}
             selectedKey={selectedFilterKey}
             handleChange={this.handleFilterChange}

@@ -1,4 +1,4 @@
-import Icon from 'aurora-frontend-react-komponenter/Icon';
+import Icon from '@skatteetaten/frontend-components/Icon';
 import * as React from 'react';
 import { NavLink } from 'react-router-dom';
 import styled from 'styled-components';

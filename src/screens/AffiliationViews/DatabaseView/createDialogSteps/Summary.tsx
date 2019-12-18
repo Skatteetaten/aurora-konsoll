@@ -1,8 +1,8 @@
 import * as React from 'react';
 import styled from 'styled-components';
 
-import Card from 'aurora-frontend-react-komponenter/Card';
-import Grid from 'aurora-frontend-react-komponenter/Grid';
+import Card, { CardColor } from '@skatteetaten/frontend-components/Card';
+import Grid from '@skatteetaten/frontend-components/Grid';
 import { ICreateDatabaseSchemaResponse } from 'models/schemas';
 
 interface ISummaryProps {
@@ -25,7 +25,7 @@ const Summary = ({ createResponse, className }: ISummaryProps) => {
 
   return (
     <div className={className}>
-      <Card color={Card.GREEN}>
+      <Card color={CardColor.GREEN}>
         <Grid>
           {createRow('Database ID:', createResponse.id)}
           {createRow('JDBC url:', createResponse.jdbcUser.jdbcUrl)}

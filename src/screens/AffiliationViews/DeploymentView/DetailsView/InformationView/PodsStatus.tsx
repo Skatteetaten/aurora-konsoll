@@ -7,12 +7,12 @@ import PodsStatusService, {
   filterPodsStatus
 } from 'services/PodsStatusService';
 import { IApplicationDeploymentDetails } from 'models/ApplicationDeployment';
-import Icon from 'aurora-frontend-react-komponenter/Icon';
+import Icon from '@skatteetaten/frontend-components/Icon';
 import { getLocalDatetime } from 'utils/date';
 import IconLink from 'components/IconLink';
-import Callout from 'aurora-frontend-react-komponenter/Callout';
-import DetailsList from 'aurora-frontend-react-komponenter/DetailsList';
-import ActionButton from 'aurora-frontend-react-komponenter/ActionButton';
+import Callout from '@skatteetaten/frontend-components/Callout';
+import DetailsList from '@skatteetaten/frontend-components/DetailsList';
+import ActionButton from '@skatteetaten/frontend-components/ActionButton';
 import ManagementResponseDialogSelector from 'components/ManagementResponseDialog';
 
 interface IPodsStatusProps {

@@ -1,11 +1,12 @@
 import * as React from 'react';
 
-import Icon from 'aurora-frontend-react-komponenter/Icon';
-import TextField from 'aurora-frontend-react-komponenter/TextField';
-import palette from 'aurora-frontend-react-komponenter/utils/palette';
+import Icon from '@skatteetaten/frontend-components/Icon';
+import TextField from '@skatteetaten/frontend-components/TextField';
+import palette from '@skatteetaten/frontend-components/utils/palette';
 import LoadingButton from 'components/LoadingButton';
 import { IJdbcUser } from 'models/schemas';
 import styled from 'styled-components';
+import { TextFieldEvent } from 'types/react';
 
 const { skeColor } = palette;
 
@@ -27,7 +28,9 @@ export interface IJdbcConnectionProps {
   className?: string;
   hasPasswordField: boolean;
   canNotTest: boolean;
-  handleJdbcChange?: (field: string) => (value: string) => void;
+  handleJdbcChange?: (
+    field: string
+  ) => (event: TextFieldEvent, newValue?: string) => void;
 }
 
 export interface IJdbcConnectionState {
@@ -104,7 +107,7 @@ class JdbcConnection extends React.Component<
           label={'Brukernavn'}
           value={username}
           disabled={isDisabledFields}
-          onChanged={handleJdbcChange && handleJdbcChange('username')}
+          onChange={handleJdbcChange && handleJdbcChange('username')}
         />
         {hasPasswordField && (
           <TextField
@@ -112,7 +115,7 @@ class JdbcConnection extends React.Component<
             label={'Passord'}
             value={password}
             disabled={isDisabledFields}
-            onChanged={handleJdbcChange && handleJdbcChange('password')}
+            onChange={handleJdbcChange && handleJdbcChange('password')}
             type="password"
           />
         )}
@@ -122,12 +125,12 @@ class JdbcConnection extends React.Component<
           value={jdbcUrl}
           disabled={isDisabledFields}
           help="jdbc:oracle:thin:@<db server>.skead.no:<port>/<sid>"
-          onChanged={handleJdbcChange && handleJdbcChange('jdbcUrl')}
+          onChange={handleJdbcChange && handleJdbcChange('jdbcUrl')}
         />
         <div className="styled-jdbc">
           <LoadingButton
             onClick={this.handleTestJdbcConnection}
-            buttonType="primary"
+            buttonStyle="primary"
             style={{ width: '100%' }}
             loading={jdcbTestState === JdcbTestState.LOADING}
             disabled={canNotTest}

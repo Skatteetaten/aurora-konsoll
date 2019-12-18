@@ -1,9 +1,11 @@
 import * as React from 'react';
-import { IFilterChange } from './Filter';
 
-import ActionButton from 'aurora-frontend-react-komponenter/ActionButton';
-import RadioButtonGroup from 'aurora-frontend-react-komponenter/RadioButtonGroup';
-import TextField from 'aurora-frontend-react-komponenter/TextField';
+import ActionButton from '@skatteetaten/frontend-components/ActionButton';
+import RadioButtonGroup, {
+  RadioButtonGroupProps
+} from '@skatteetaten/frontend-components/RadioButtonGroup';
+import TextField from '@skatteetaten/frontend-components/TextField';
+import { TextFieldEvent } from 'types/react';
 
 export enum FilterMode {
   Create,
@@ -19,17 +21,12 @@ export interface IFilterOption {
 
 interface IFilterModeSelectProps {
   setMode: (mode: FilterMode) => void;
-  setCurrentFilterName: (filterName: string) => void;
-  filterOptions: IFilterOption[];
+  setCurrentFilterName: (event: TextFieldEvent, newValue?: string) => void;
+  filterOptions: RadioButtonGroupProps['options'];
   selectedFilterKey?: string;
   deleteFilter: () => void;
   mode: FilterMode;
-  handleFilterChange: (option: IFilterChange) => void;
-}
-
-interface IModeChange {
-  key: FilterMode;
-  text: string;
+  handleFilterChange: RadioButtonGroupProps['onChange'];
 }
 
 const FilterModeSelect = ({
@@ -41,11 +38,10 @@ const FilterModeSelect = ({
   mode,
   handleFilterChange
 }: IFilterModeSelectProps) => {
-  const handleRadioButtonChange = (e: Event, option: IFilterChange) => {
-    handleFilterChange(option);
-  };
-  const changeMode = (e: Event, option: IModeChange) => {
-    setMode(option.key);
+  const changeMode: RadioButtonGroupProps['onChange'] = (ev, option) => {
+    if (option) {
+      setMode(Number(option.key) as FilterMode);
+    }
   };
 
   const newFilter = (
@@ -54,7 +50,7 @@ const FilterModeSelect = ({
       <TextField
         style={{ width: '190px' }}
         placeholder={'Navn'}
-        onChanged={setCurrentFilterName}
+        onChange={setCurrentFilterName}
       />
     </>
   );
@@ -63,10 +59,11 @@ const FilterModeSelect = ({
       <h3>Lagrede filtre:</h3>
       <div className="saved-filters">
         <RadioButtonGroup
-          boxSide={'start'}
           options={filterOptions}
-          onChange={handleRadioButtonChange}
+          onChange={handleFilterChange}
           selectedKey={selectedFilterKey}
+          warning=""
+          errorMessage=""
         />
       </div>
       <ActionButton color="red" icon="Delete" onClick={deleteFilter}>
@@ -77,21 +74,22 @@ const FilterModeSelect = ({
   return (
     <>
       <RadioButtonGroup
-        boxSide={'start'}
-        defaultSelectedKey={mode}
+        defaultSelectedKey={mode.toString()}
         onChange={changeMode}
         options={[
           {
-            key: FilterMode.Create,
+            key: FilterMode.Create.toString(),
             text: 'Nytt',
             iconProps: { iconName: 'AddOutline' }
           },
           {
-            key: FilterMode.Edit,
+            key: FilterMode.Edit.toString(),
             text: 'Rediger',
             iconProps: { iconName: 'Edit' }
           }
         ]}
+        warning=""
+        errorMessage=""
       />
       {mode === FilterMode.Create ? newFilter : editFilter}
     </>

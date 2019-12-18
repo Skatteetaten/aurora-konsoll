@@ -1,7 +1,7 @@
 import * as React from 'react';
 import styled from 'styled-components';
 
-import palette from 'aurora-frontend-react-komponenter/utils/palette';
+import palette from '@skatteetaten/frontend-components/utils/palette';
 
 const { skeColor } = palette;
 
