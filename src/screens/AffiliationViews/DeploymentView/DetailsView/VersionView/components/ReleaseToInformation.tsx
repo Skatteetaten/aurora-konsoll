@@ -1,16 +1,24 @@
 import React from 'react';
 import MessageBar from '@skatteetaten/frontend-components/MessageBar';
 import { IImageTag } from 'services/auroraApiClients/imageRepositoryClient/query';
+import { ExternalLink } from 'components/ExternalLink';
 
-export interface ReleaseToInformationProps {
-  currentVersion: IImageTag;
-}
+const auroraConfigDocumentation =
+  'https://skatteetaten.github.io/aurora/documentation/aurora-config/#configuration-for-deployment-types-deploy-and-development';
 
-export const ReleaseToInformation: React.FC<ReleaseToInformationProps> = ({
+export const ReleaseToInformation: React.FC<{ currentVersion: IImageTag }> = ({
   currentVersion
 }) => (
   <MessageBar style={{ maxWidth: '600px' }}>
-    releaseTo er konfigurert til <strong>{currentVersion.name}</strong> i
-    denne applikasjonen.
+    <ExternalLink
+      href={auroraConfigDocumentation}
+      target="_blank"
+      rel="noopener noreferrer"
+      title="Les mer om releaseTo"
+    >
+      releaseTo
+    </ExternalLink>{' '}
+    er konfigurert til <strong>{currentVersion.name}</strong> i denne
+    applikasjonen.
   </MessageBar>
 );

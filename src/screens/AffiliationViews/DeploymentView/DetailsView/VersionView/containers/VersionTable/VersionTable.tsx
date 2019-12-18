@@ -120,9 +120,7 @@ export const VersionTable = ({
           >
             <VersionInfo>
               <p>Fra:</p>{' '}
-              {!releaseTo
-                ? currentVersion.name
-                : configuredVersionTag && configuredVersionTag.name}
+              {!releaseTo ? currentVersion.name : configuredVersionTag?.name}
             </VersionInfo>
             <VersionInfo>
               <p>Til:</p> {it.name}
