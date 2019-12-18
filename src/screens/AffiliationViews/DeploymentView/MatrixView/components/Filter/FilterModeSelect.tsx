@@ -29,11 +29,6 @@ interface IFilterModeSelectProps {
   handleFilterChange: RadioButtonGroupProps['onChange'];
 }
 
-interface IModeChange {
-  key: FilterMode;
-  text: string;
-}
-
 const FilterModeSelect = ({
   setMode,
   setCurrentFilterName,
