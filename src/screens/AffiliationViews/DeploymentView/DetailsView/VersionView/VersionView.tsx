@@ -15,7 +15,7 @@ export const VersionView = ({
   versionStatus,
   deployment,
   imageTagsConnection,
-  configuredVersionTag
+  configuredVersion
 }: VersionViewProps) => {
   const { id, version, imageRepository } = deployment;
 
@@ -58,10 +58,10 @@ export const VersionView = ({
       <VersionTableInformation />
       <RedeployRowAndVersionTableContainer
         applicationId={id}
-        configuredVersionTag={configuredVersionTag}
         deployedVersion={version.deployTag}
         hasAccessToDeploy={hasAccessToDeploy}
         repository={imageRepository.repository}
+        configuredVersion={configuredVersion}
         searchText={searchText}
         versionStatus={versionStatus}
         versionType={versionType}

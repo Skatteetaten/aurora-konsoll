@@ -13,13 +13,15 @@ export const RedeployRowAndVersionTable: React.FC<Props> = ({
   applicationId,
   hasAccessToDeploy,
   versionStatus,
-  configuredVersionTag,
   deployedVersion,
   repository,
   versionType,
   searchText,
   deploy,
-  isDeploying
+  isDeploying,
+  configuredVersion,
+  fetchVersion,
+  configuredVersionTag
 }) => {
   const [versionBeingDeploy, setVersionBeingDeploy] = useState<
     string | undefined
@@ -37,6 +39,12 @@ export const RedeployRowAndVersionTable: React.FC<Props> = ({
       setVersionBeingDeploy(undefined);
     }
   }, [isDeploying]);
+
+  useEffect(() => {
+    if (configuredVersion) {
+      fetchVersion(repository, configuredVersion);
+    }
+  }, [configuredVersion, fetchVersion, repository]);
 
   return (
     <>
