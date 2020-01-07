@@ -6,7 +6,8 @@ import { ImageTagsConnection } from 'models/immer/ImageTagsConnection';
 import { actions } from './actions';
 import {
   IImageTagsConnection,
-  ITagsQuery
+  ITagsQuery,
+  IImageTag
 } from 'services/auroraApiClients/imageRepositoryClient/query';
 
 export const defaultImageTagsConnection: IImageTagsConnection = {
@@ -33,6 +34,7 @@ const {
 export interface IVersionsState {
   types: Record<ImageTagType, ImageTagsConnection>;
   isFetching: boolean;
+  configuredVersion?: IImageTag;
 }
 
 const createImageTagsConnection = (type: ImageTagType): ImageTagsConnection =>
@@ -102,6 +104,12 @@ export const versionsReducer = reduceReducers<IVersionsState>(
 
     handleAction(actions.resetStateForType, (state, { payload }) => {
       state.types[payload] = createImageTagsConnection(payload);
+    }),
+
+    handleAction(actions.fetchVersion.success, (state, { payload }) => {
+      if (payload.data) {
+        state.configuredVersion = payload.data.tag;
+      }
     })
   ],
   initialState

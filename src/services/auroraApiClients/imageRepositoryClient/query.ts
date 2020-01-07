@@ -7,6 +7,10 @@ export interface ITagsQuery {
   }>;
 }
 
+export interface ITagQuery {
+  tag: IImageTag;
+}
+
 export interface IPageInfo {
   endCursor: string;
   hasNextPage: boolean;
@@ -53,6 +57,20 @@ export const TAGS_QUERY = gql`
               buildTime
             }
           }
+        }
+      }
+    }
+  }
+`;
+
+export const TAG_QUERY = gql`
+  query getTag($repositories: [String!]!, $names: [String!]!) {
+    imageRepositories(repositories: $repositories) {
+      tag(names: $names) {
+        name
+        type
+        image {
+          buildTime
         }
       }
     }
