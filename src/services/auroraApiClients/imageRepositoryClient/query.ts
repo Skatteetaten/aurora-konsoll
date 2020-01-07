@@ -8,7 +8,9 @@ export interface ITagsQuery {
 }
 
 export interface ITagQuery {
-  tag: IImageTag;
+  imageRepositories: Array<{
+    tag: IImageTag[];
+  }>;
 }
 
 export interface IPageInfo {

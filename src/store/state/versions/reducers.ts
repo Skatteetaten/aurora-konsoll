@@ -34,7 +34,7 @@ const {
 export interface IVersionsState {
   types: Record<ImageTagType, ImageTagsConnection>;
   isFetching: boolean;
-  configuredVersion?: IImageTag;
+  configuredVersionTag?: IImageTag;
 }
 
 const createImageTagsConnection = (type: ImageTagType): ImageTagsConnection =>
@@ -107,8 +107,8 @@ export const versionsReducer = reduceReducers<IVersionsState>(
     }),
 
     handleAction(actions.fetchVersion.success, (state, { payload }) => {
-      if (payload.data) {
-        state.configuredVersion = payload.data.tag;
+      if ((payload.data?.imageRepositories?.length ?? 0) > 0) {
+        state.configuredVersionTag = payload.data?.imageRepositories[0].tag[0];
       }
     })
   ],
