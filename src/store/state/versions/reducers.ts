@@ -100,6 +100,7 @@ export const versionsReducer = reduceReducers<IVersionsState>(
     handleAction(actions.resetState, (state, result) => {
       state.isFetching = initialState.isFetching;
       state.types = initialState.types;
+      state.configuredVersionTag = undefined;
     }),
 
     handleAction(actions.resetStateForType, (state, { payload }) => {
