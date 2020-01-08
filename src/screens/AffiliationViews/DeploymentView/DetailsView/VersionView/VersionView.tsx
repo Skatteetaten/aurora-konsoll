@@ -61,7 +61,7 @@ export const VersionView = ({
         deployedVersion={version.deployTag}
         hasAccessToDeploy={hasAccessToDeploy}
         repository={imageRepository.repository}
-        deploymentSpecVersion={deploymentSpecVersion}
+        deploymentSpecVersion={deploymentSpecVersion ?? version.deployTag.name}
         versionStatus={versionStatus}
         versionType={versionType}
       />
