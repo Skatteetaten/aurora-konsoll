@@ -18,7 +18,7 @@ export const ReleaseToInformation: React.FC<{ currentVersion: IImageTag }> = ({
     >
       releaseTo
     </ExternalLink>{' '}
-    er konfigurert til <strong>{currentVersion.name}</strong> i denne
-    applikasjonen.
+    er konfigurert i denne applikasjonen. <strong>{currentVersion.name}</strong>{' '}
+    vil bli oppdatert.
   </MessageBar>
 );
