@@ -10,7 +10,7 @@ export interface IRedeployRowAndVersionTableProps {
   applicationId: string;
   hasAccessToDeploy: boolean;
   versionStatus: VersionStatus;
-  configuredVersion?: string;
+  deploymentSpecVersion?: string;
   searchText?: string;
   deployedVersion: IImageTag;
   repository: string;

@@ -19,7 +19,7 @@ export const RedeployRowAndVersionTable: React.FC<Props> = ({
   searchText,
   deploy,
   isDeploying,
-  configuredVersion,
+  deploymentSpecVersion,
   fetchVersion,
   configuredVersionTag
 }) => {
@@ -41,10 +41,10 @@ export const RedeployRowAndVersionTable: React.FC<Props> = ({
   }, [isDeploying]);
 
   useEffect(() => {
-    if (configuredVersion) {
-      fetchVersion(repository, configuredVersion);
+    if (deploymentSpecVersion) {
+      fetchVersion(repository, deploymentSpecVersion);
     }
-  }, [configuredVersion, fetchVersion, repository]);
+  }, [deploymentSpecVersion, fetchVersion, repository]);
 
   return (
     <>
