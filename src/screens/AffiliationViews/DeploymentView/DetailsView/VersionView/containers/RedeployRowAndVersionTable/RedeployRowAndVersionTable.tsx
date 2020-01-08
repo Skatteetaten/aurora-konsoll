@@ -17,7 +17,6 @@ export const RedeployRowAndVersionTable: React.FC<Props> = ({
   deployedVersion,
   repository,
   versionType,
-  searchText,
   deploy,
   isDeploying,
   deploymentSpecVersion,
@@ -56,12 +55,10 @@ export const RedeployRowAndVersionTable: React.FC<Props> = ({
         onConfirmDeploy={onConfirmDeploy}
       />
       <VersionTableContainer
-        repository={repository}
         versionType={versionType}
         versionBeingDeployed={versionBeingDeploy}
         onConfirmDeploy={onConfirmDeploy}
         hasAccessToDeploy={hasAccessToDeploy}
-        searchText={searchText}
         currentVersion={deployedVersion}
       />
     </>
