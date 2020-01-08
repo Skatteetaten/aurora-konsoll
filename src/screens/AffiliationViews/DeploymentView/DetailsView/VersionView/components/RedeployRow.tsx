@@ -10,7 +10,6 @@ import {
 } from '../../models/VersionStatus';
 import { DeployButton } from './DeployButton';
 import { VersionInfo } from './VersionInfo';
-import { ReleaseToInformation } from './ReleaseToInformation';
 
 interface IRedeployRowProps {
   hasAccessToDeploy: boolean;
@@ -63,15 +62,11 @@ export const RedeployRow = ({
         hasAccessToDeploy={hasAccessToDeploy}
         currentVersion={currentVersion}
         onConfirmDeploy={() => onConfirmDeploy(configuredVersionTag.name)}
+        releaseTo={releaseTo}
       >
-        <>
-          {releaseTo && (
-            <ReleaseToInformation currentVersion={currentVersion} />
-          )}
-          <VersionInfo>
-            <p>Versjon:</p> {configuredVersionTag.name}
-          </VersionInfo>
-        </>
+        <VersionInfo>
+          <p>Versjon:</p> {configuredVersionTag.name}
+        </VersionInfo>
       </DeployButton>
     </Wrapper>
   );
