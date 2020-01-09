@@ -27,6 +27,7 @@ interface InfoDialogProps {
   renderOpenDialogButton?: (openDialog: () => void) => JSX.Element;
   renderFooterButtons?: (closeDialog: () => void) => JSX.Element;
   hideCloseButton?: boolean;
+  infoDialogStyle?: React.CSSProperties;
 }
 
 interface InfoDialogState {
@@ -67,12 +68,13 @@ class InfoDialog extends React.Component<InfoDialogProps, InfoDialogState> {
       title,
       subText,
       buttonText,
-      buttonStyle = 'secondary'
+      buttonStyle = 'secondary',
+      infoDialogStyle
     } = this.props;
     const close = this.toggleDialog(false);
     const open = this.toggleDialog(true);
     return (
-      <>
+      <div style={infoDialogStyle}>
         {renderOpenDialogButton
           ? renderOpenDialogButton(open)
           : renderDefaultOpenDialogButton(
@@ -100,7 +102,7 @@ class InfoDialog extends React.Component<InfoDialogProps, InfoDialogState> {
             </Dialog.Footer>
           </Dialog>
         )}
-      </>
+      </div>
     );
   }
 }
