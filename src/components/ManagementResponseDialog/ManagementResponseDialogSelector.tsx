@@ -47,6 +47,7 @@ const ManagementResponseDialogSelector = ({
     <ErrorResponseDialog
       icon={icon}
       createdAtTime={createdAtTime}
+      title={title}
       response={response}
       renderRefreshButton={renderRefreshButton}
     />
