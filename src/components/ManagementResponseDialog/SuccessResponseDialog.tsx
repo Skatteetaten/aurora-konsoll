@@ -52,7 +52,6 @@ const SuccessResponseDialog = ({
       title={title + status}
       buttonText={title}
       subText={createdAtTime}
-      infoDialogStyle={{ display: 'inline-flex' }}
     >
       <StyledPre>{text}</StyledPre>
     </InfoDialog>

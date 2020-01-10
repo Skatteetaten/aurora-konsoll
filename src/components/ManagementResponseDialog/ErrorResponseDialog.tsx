@@ -49,7 +49,6 @@ const ErrorResponseDialog = ({
       renderOpenDialogButton={renderOpenErrorButton}
       title={'Feil fra endepunkt' + status}
       subText={createdAtTime}
-      infoDialogStyle={{ display: 'inline-flex' }}
     >
       <>
         {error && <ErrorContent code={error.code} message={error.message} />}

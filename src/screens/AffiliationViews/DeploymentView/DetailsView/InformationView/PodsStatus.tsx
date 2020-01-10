@@ -98,7 +98,7 @@ class PodsStatus extends React.Component<IPodsStatusProps, IPodsStatusState> {
       return null;
     }
 
-    return <div>{buttons}</div>;
+    return <div style={{ display: 'inline-flex' }}>{buttons}</div>;
   };
 
   public getItemsFromChildComp = (currentViewItems: any) => {
