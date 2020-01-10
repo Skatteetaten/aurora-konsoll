@@ -13,6 +13,7 @@ export interface IRedeployRowAndVersionTableProps {
   deploymentSpecVersion?: string;
   deployedVersion: IImageTag;
   repository: string;
+  releaseTo?: string;
 }
 
 export const mapDispatchToProps = {

@@ -59,11 +59,18 @@ export const VersionTable = ({
   imageTagsConnection,
   hasAccessToDeploy,
   versionBeingDeployed,
-  onConfirmDeploy
+  onConfirmDeploy,
+  configuredVersionTag,
+  releaseTo
 }: Props) => {
+  const versionToFilter: string =
+    releaseTo && configuredVersionTag
+      ? configuredVersionTag.name
+      : currentVersion.name;
+
   const data = imageTagsConnection
     .getVersions()
-    .filter(it => it.name !== currentVersion.name)
+    .filter(it => it.name !== versionToFilter)
     .map(it => {
       return {
         type: getOptionName(it.type),
@@ -78,9 +85,12 @@ export const VersionTable = ({
             hasAccessToDeploy={hasAccessToDeploy}
             isOldVersion={!it.image}
             onConfirmDeploy={() => onConfirmDeploy(it.name)}
+            releaseTo={releaseTo}
+            currentVersion={currentVersion}
           >
             <VersionInfo>
-              <p>Fra:</p> {currentVersion.name}
+              <p>Fra:</p>{' '}
+              {!releaseTo ? currentVersion.name : configuredVersionTag?.name}
             </VersionInfo>
             <VersionInfo>
               <p>Til:</p> {it.name}

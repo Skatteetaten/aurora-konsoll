@@ -35,11 +35,10 @@ const SuccessResponseDialog = ({
         iconName={icon}
         title={title}
         style={{
-          fontSize: '23px',
+          fontSize: '25px',
           cursor: 'pointer',
           color: `${skeColor.blue}`,
           float: 'none',
-          marginBottom: '2px',
           marginLeft: '4px'
         }}
       />

@@ -20,7 +20,8 @@ export const RedeployRowAndVersionTable: React.FC<Props> = ({
   deploy,
   isDeploying,
   deploymentSpecVersion,
-  fetchVersion
+  fetchVersion,
+  releaseTo
 }) => {
   const [versionBeingDeploy, setVersionBeingDeploy] = useState<
     string | undefined
@@ -53,6 +54,8 @@ export const RedeployRowAndVersionTable: React.FC<Props> = ({
         configuredVersionTag={configuredVersionTag}
         versionBeingDeployed={versionBeingDeploy}
         onConfirmDeploy={onConfirmDeploy}
+        currentVersion={deployedVersion}
+        releaseTo={releaseTo}
       />
       <VersionTableContainer
         versionType={versionType}
@@ -60,6 +63,8 @@ export const RedeployRowAndVersionTable: React.FC<Props> = ({
         onConfirmDeploy={onConfirmDeploy}
         hasAccessToDeploy={hasAccessToDeploy}
         currentVersion={deployedVersion}
+        configuredVersionTag={configuredVersionTag}
+        releaseTo={releaseTo}
       />
     </>
   );

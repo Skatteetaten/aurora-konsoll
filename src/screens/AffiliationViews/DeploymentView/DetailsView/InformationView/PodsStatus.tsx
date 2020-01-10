@@ -98,7 +98,7 @@ class PodsStatus extends React.Component<IPodsStatusProps, IPodsStatusState> {
       return null;
     }
 
-    return <div>{buttons}</div>;
+    return <>{buttons}</>;
   };
 
   public getItemsFromChildComp = (currentViewItems: any) => {
@@ -265,5 +265,8 @@ export default styled(PodsStatus)`
   .ms-DetailsRow-cell:nth-child(3),
   .ms-DetailsRow-cell:nth-child(4) {
     margin-top: 4px;
+  }
+  .ms-DetailsRow-cell:nth-child(5) {
+    text-decoration: none !important;
   }
 `;

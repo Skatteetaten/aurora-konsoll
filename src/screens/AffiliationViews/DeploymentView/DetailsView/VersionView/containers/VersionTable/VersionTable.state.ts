@@ -8,6 +8,8 @@ export interface IVersionTableProps {
   versionType: ImageTagType;
   currentVersion: IImageTag;
   versionBeingDeployed?: string;
+  configuredVersionTag?: IImageTag;
+  releaseTo?: string;
 }
 
 export const mapStateToProps = (

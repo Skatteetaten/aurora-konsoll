@@ -1,6 +1,5 @@
 import React from 'react';
 import styled from 'styled-components';
-
 import Checkbox from '@skatteetaten/frontend-components/CheckBox';
 import TextField from '@skatteetaten/frontend-components/TextField';
 
