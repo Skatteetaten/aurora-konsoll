@@ -34,6 +34,7 @@ const {
 export interface IVersionsState {
   types: Record<ImageTagType, ImageTagsConnection>;
   isFetching: boolean;
+  isFetchingConfiguredVersionTag: boolean;
   configuredVersionTag?: IImageTag;
 }
 
@@ -42,6 +43,7 @@ const createImageTagsConnection = (type: ImageTagType): ImageTagsConnection =>
 
 const initialState: IVersionsState = {
   isFetching: false,
+  isFetchingConfiguredVersionTag: false,
   types: {
     [AURORA_SNAPSHOT_VERSION]: createImageTagsConnection(
       AURORA_SNAPSHOT_VERSION
@@ -107,10 +109,19 @@ export const versionsReducer = reduceReducers<IVersionsState>(
       state.types[payload] = createImageTagsConnection(payload);
     }),
 
+    handleAction(actions.fetchVersion.request, state => {
+      state.isFetchingConfiguredVersionTag = true;
+    }),
+
     handleAction(actions.fetchVersion.success, (state, { payload }) => {
+      state.isFetchingConfiguredVersionTag = false;
       if ((payload.data?.imageRepositories?.length ?? 0) > 0) {
         state.configuredVersionTag = payload.data?.imageRepositories[0].tag[0];
       }
+    }),
+
+    handleAction(actions.fetchVersion.failure, state => {
+      state.isFetchingConfiguredVersionTag = false;
     })
   ],
   initialState

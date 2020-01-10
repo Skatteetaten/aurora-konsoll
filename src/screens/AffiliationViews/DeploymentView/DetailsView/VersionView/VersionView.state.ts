@@ -1,8 +1,10 @@
 import { IApplicationDeployment } from 'models/ApplicationDeployment';
-import { RootState } from 'store/types';
+import { RootState, ReduxProps } from 'store/types';
 import { ImageTagType } from 'models/ImageTagType';
-import { ImageTagsConnection } from 'models/immer/ImageTagsConnection';
 import { VersionStatus } from '../models/VersionStatus';
+import { fetchVersion } from 'store/state/versions/action.creators';
+import { ImageTagsConnection } from 'models/immer/ImageTagsConnection';
+import { IImageTag } from 'services/auroraApiClients/imageRepositoryClient/query';
 
 interface IVersionViewProps {
   versionStatus: VersionStatus;
@@ -10,8 +12,13 @@ interface IVersionViewProps {
   deploymentSpecVersion?: string;
 }
 
+export const mapDispatchToProps = {
+  fetchVersion
+};
+
 interface IState {
   imageTagsConnection: ImageTagsConnection;
+  configuredVersionTag?: IImageTag;
 }
 
 export const mapStateToProps = ({ versions }: RootState): IState => {
@@ -24,8 +31,10 @@ export const mapStateToProps = ({ versions }: RootState): IState => {
   }
 
   return {
-    imageTagsConnection: versions.types[configuredVersionTag.type]
+    imageTagsConnection: versions.types[configuredVersionTag.type],
+    configuredVersionTag
   };
 };
 
-export type VersionViewProps = IVersionViewProps & IState;
+export type VersionViewProps = IVersionViewProps &
+  ReduxProps<typeof mapDispatchToProps, typeof mapStateToProps>;
