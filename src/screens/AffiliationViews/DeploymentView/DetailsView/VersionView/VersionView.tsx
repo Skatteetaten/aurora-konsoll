@@ -21,9 +21,15 @@ export const VersionView = ({
 
   const [searchText, setSearchText] = useState<string | undefined>();
   const [versionType, setVersionType] = useState(imageTagsConnection.getType());
+
+  const initVersionType =
+    configuredVersionTag && version.releaseTo
+      ? configuredVersionTag.type
+      : version.deployTag.type;
+
   useEffect(() => {
-    setVersionType(version.deployTag.type);
-  }, [version.deployTag.type]);
+    setVersionType(initVersionType);
+  }, [initVersionType]);
 
   if (!imageRepository) {
     // TODO: Bedre feilmelding
@@ -65,6 +71,7 @@ export const VersionView = ({
         searchText={searchText}
         versionStatus={versionStatus}
         versionType={versionType}
+        releaseTo={deployment.version.releaseTo}
       />
       <FetchMoreVersionsContainer
         searchText={searchText}
