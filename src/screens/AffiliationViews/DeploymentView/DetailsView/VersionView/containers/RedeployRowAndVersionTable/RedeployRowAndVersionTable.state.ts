@@ -9,10 +9,7 @@ export interface IRedeployRowAndVersionTableProps {
   applicationId: string;
   hasAccessToDeploy: boolean;
   versionStatus: VersionStatus;
-  configuredVersionTag?: IImageTag;
-  searchText?: string;
   deployedVersion: IImageTag;
-  repository: string;
   releaseTo?: string;
 }
 
@@ -20,10 +17,13 @@ export const mapDispatchToProps = {
   deploy
 };
 
-export const mapStateToProps = ({ applications }: RootState) => {
+export const mapStateToProps = ({ applications, versions }: RootState) => {
   const { isDeploying } = applications;
+  const { configuredVersionTag, isFetchingConfiguredVersionTag } = versions;
   return {
-    isDeploying
+    isDeploying,
+    configuredVersionTag,
+    isFetchingConfiguredVersionTag
   };
 };
 

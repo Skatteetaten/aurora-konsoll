@@ -1,5 +1,5 @@
 import GoboClient, { IDataAndErrors } from 'services/GoboClient';
-import { ITagsQuery, TAGS_QUERY } from './query';
+import { ITagsQuery, TAGS_QUERY, ITagQuery, TAG_QUERY } from './query';
 import { ImageTagType } from 'models/ImageTagType';
 
 interface IImageTagsVariables {
@@ -26,6 +26,19 @@ export class ImageRepositoryClient {
 
   constructor(client: GoboClient) {
     this.client = client;
+  }
+
+  public async fetchTag(
+    repository: string,
+    tagName: string
+  ): Promise<IDataAndErrors<ITagQuery>> {
+    return await this.client.query<ITagQuery>({
+      query: TAG_QUERY,
+      variables: {
+        repositories: [repository],
+        names: [tagName]
+      }
+    });
   }
 
   public async searchTagsPaged(

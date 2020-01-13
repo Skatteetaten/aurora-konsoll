@@ -10,6 +10,12 @@ export function fetchInitVersions(repository: string) {
   });
 }
 
+export function fetchVersion(repository: string, tagName: string) {
+  return doAsyncActions(actions.fetchVersion, clients => {
+    return clients.imageRepositoryClient.fetchTag(repository, tagName);
+  });
+}
+
 export function fetchVersions(
   repository: string,
   type: ImageTagType,

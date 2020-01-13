@@ -15,12 +15,22 @@ export const VersionView = ({
   versionStatus,
   deployment,
   imageTagsConnection,
-  configuredVersionTag
+  deploymentSpecVersion,
+  configuredVersionTag,
+  fetchVersion
 }: VersionViewProps) => {
   const { id, version, imageRepository } = deployment;
 
   const [searchText, setSearchText] = useState<string | undefined>();
   const [versionType, setVersionType] = useState(imageTagsConnection.getType());
+
+  useEffect(() => {
+    if (imageRepository) {
+      if (deploymentSpecVersion) {
+        fetchVersion(imageRepository.repository, deploymentSpecVersion);
+      }
+    }
+  }, [deploymentSpecVersion, fetchVersion, imageRepository]);
 
   const initVersionType =
     configuredVersionTag && version.releaseTo
@@ -64,11 +74,8 @@ export const VersionView = ({
       <VersionTableInformation />
       <RedeployRowAndVersionTableContainer
         applicationId={id}
-        configuredVersionTag={configuredVersionTag}
         deployedVersion={version.deployTag}
         hasAccessToDeploy={hasAccessToDeploy}
-        repository={imageRepository.repository}
-        searchText={searchText}
         versionStatus={versionStatus}
         versionType={versionType}
         releaseTo={deployment.version.releaseTo}

@@ -6,7 +6,8 @@ import { ImageTagsConnection } from 'models/immer/ImageTagsConnection';
 import { actions } from './actions';
 import {
   IImageTagsConnection,
-  ITagsQuery
+  ITagsQuery,
+  IImageTag
 } from 'services/auroraApiClients/imageRepositoryClient/query';
 
 export const defaultImageTagsConnection: IImageTagsConnection = {
@@ -33,6 +34,8 @@ const {
 export interface IVersionsState {
   types: Record<ImageTagType, ImageTagsConnection>;
   isFetching: boolean;
+  isFetchingConfiguredVersionTag: boolean;
+  configuredVersionTag?: IImageTag;
 }
 
 const createImageTagsConnection = (type: ImageTagType): ImageTagsConnection =>
@@ -40,6 +43,7 @@ const createImageTagsConnection = (type: ImageTagType): ImageTagsConnection =>
 
 const initialState: IVersionsState = {
   isFetching: false,
+  isFetchingConfiguredVersionTag: false,
   types: {
     [AURORA_SNAPSHOT_VERSION]: createImageTagsConnection(
       AURORA_SNAPSHOT_VERSION
@@ -98,10 +102,26 @@ export const versionsReducer = reduceReducers<IVersionsState>(
     handleAction(actions.resetState, (state, result) => {
       state.isFetching = initialState.isFetching;
       state.types = initialState.types;
+      state.configuredVersionTag = undefined;
     }),
 
     handleAction(actions.resetStateForType, (state, { payload }) => {
       state.types[payload] = createImageTagsConnection(payload);
+    }),
+
+    handleAction(actions.fetchVersion.request, state => {
+      state.isFetchingConfiguredVersionTag = true;
+    }),
+
+    handleAction(actions.fetchVersion.success, (state, { payload }) => {
+      state.isFetchingConfiguredVersionTag = false;
+      if ((payload.data?.imageRepositories?.length ?? 0) > 0) {
+        state.configuredVersionTag = payload.data?.imageRepositories[0].tag[0];
+      }
+    }),
+
+    handleAction(actions.fetchVersion.failure, state => {
+      state.isFetchingConfiguredVersionTag = false;
     })
   ],
   initialState

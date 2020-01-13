@@ -1,6 +1,8 @@
 import React from 'react';
 import styled from 'styled-components';
 
+import Spinner from '@skatteetaten/frontend-components/Spinner';
+
 import { IImageTag } from 'services/auroraApiClients/imageRepositoryClient/query';
 import { WrongVersionCallout } from './WrongVersionCallout';
 import { getLocalDatetime } from 'utils/date';
@@ -10,8 +12,10 @@ import {
 } from '../../models/VersionStatus';
 import { DeployButton } from './DeployButton';
 import { VersionInfo } from './VersionInfo';
+import { SpinnerSize } from 'office-ui-fabric-react/lib-commonjs';
 
 interface IRedeployRowProps {
+  isFetchingConfiguredVersionTag: boolean;
   hasAccessToDeploy: boolean;
   versionStatus: VersionStatus;
   configuredVersionTag?: IImageTag;
@@ -28,10 +32,26 @@ export const RedeployRow = ({
   versionBeingDeployed,
   onConfirmDeploy,
   releaseTo,
-  currentVersion
+  currentVersion,
+  isFetchingConfiguredVersionTag
 }: IRedeployRowProps) => {
+  if (isFetchingConfiguredVersionTag) {
+    return (
+      <Wrapper>
+        <Spinner size={SpinnerSize.large} style={{ margin: '0 auto' }} />
+      </Wrapper>
+    );
+  }
+
   if (!configuredVersionTag) {
-    return null;
+    return (
+      <Wrapper>
+        <p>
+          Finner ikke konfigurert versjon. Finnes konfigurasjonsfilen for
+          applikasjonen i AuroraConfig?
+        </p>
+      </Wrapper>
+    );
   }
 
   const isLoading =

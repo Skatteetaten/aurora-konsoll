@@ -137,7 +137,7 @@ export const DetailsView: React.FC<IDetailsViewProps> = ({
             ) : (
               <VersionViewContainer
                 versionStatus={versionStatus}
-                configuredVersion={
+                deploymentSpecVersion={
                   deployment.details.deploymentSpec &&
                   deployment.details.deploymentSpec.version
                 }

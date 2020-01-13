@@ -3,7 +3,6 @@ import Table from '@skatteetaten/frontend-components/Table';
 import styled from 'styled-components';
 import { ImageTagType } from 'models/ImageTagType';
 import { IVersionTableProps, VersionTableState } from './VersionTable.state';
-import { useEffect } from 'react';
 import { DeployButton } from '../../components/DeployButton';
 import { VersionInfo } from '../../components/VersionInfo';
 
@@ -59,40 +58,11 @@ export const VersionTable = ({
   currentVersion,
   imageTagsConnection,
   hasAccessToDeploy,
-  fetchVersions,
-  isFetching,
-  repository,
-  searchText,
-  versionType,
   versionBeingDeployed,
   onConfirmDeploy,
   configuredVersionTag,
   releaseTo
 }: Props) => {
-  const index = imageTagsConnection.findVersionIndex(currentVersion.name);
-  const hasVersions = imageTagsConnection.totalVersionsCount() > 0;
-
-  useEffect(() => {
-    // If configured version is not in the list, fetch more to find the version.
-    if (
-      hasVersions &&
-      index === -1 &&
-      !isFetching &&
-      versionType === currentVersion.type
-    ) {
-      fetchVersions(repository, versionType, 100, true, searchText);
-    }
-  }, [
-    hasVersions,
-    currentVersion.type,
-    fetchVersions,
-    index,
-    isFetching,
-    repository,
-    searchText,
-    versionType
-  ]);
-
   const versionToFilter: string =
     releaseTo && configuredVersionTag
       ? configuredVersionTag.name
