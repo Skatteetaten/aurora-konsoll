@@ -163,9 +163,6 @@ const mapStateToProps = (state: RootState) => ({
   currentUser: state.startup.currentUser
 });
 
-const LayoutConnected = connect(
-  mapStateToProps,
-  null
-)(StyledLayout);
+const LayoutConnected = connect(mapStateToProps, null)(StyledLayout);
 
 export default LayoutConnected;

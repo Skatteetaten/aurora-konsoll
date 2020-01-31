@@ -24,9 +24,11 @@ const resetStoreStateAction: Action = {
 
 const createStoreWithApi = (clients: IApiClients, initialState: {} = {}) => {
   const enhancer = compose(
-    applyMiddleware(thunkMiddleware.withExtraArgument({
-      clients
-    }) as ThunkMiddleware<RootState, RootAction, IExtraArguments>)
+    applyMiddleware(
+      thunkMiddleware.withExtraArgument({
+        clients
+      }) as ThunkMiddleware<RootState, RootAction, IExtraArguments>
+    )
   );
 
   const reducer: Reducer = (state: RootState, action: AnyAction) => {

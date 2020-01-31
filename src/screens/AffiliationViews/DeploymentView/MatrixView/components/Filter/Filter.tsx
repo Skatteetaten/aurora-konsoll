@@ -128,7 +128,7 @@ export class Filter extends React.Component<IFilterProps, IFilterState> {
     this.clearOnAffiliationChange(prevProps.affiliation);
     if (
       prevProps.filters !== filters &&
-      (applications.length === 0 && environments.length === 0)
+      applications.length === 0 && environments.length === 0
     ) {
       this.setState({
         applications: this.props.filters.applications,
@@ -556,9 +556,6 @@ const styledFilter = styled(Filter)`
 
 export default styledFilter;
 
-export const styledFilterConnected = connect(
-  null,
-  {
-    addErrors: (errors: any[]) => addErrors(errors)
-  }
-)(styledFilter);
+export const styledFilterConnected = connect(null, {
+  addErrors: (errors: any[]) => addErrors(errors)
+})(styledFilter);

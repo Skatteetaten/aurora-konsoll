@@ -14,10 +14,7 @@ const mapStateToProps = (state: RootState) => ({
   netdebugStatus: getItems(state.netdebug)
 });
 
-export const NetdebugConnected = connect(
-  mapStateToProps,
-  {
-    findNetdebugStatus: (host: string, port: string) =>
-      findNetdebugStatus(host, port)
-  }
-)(Netdebug);
+export const NetdebugConnected = connect(mapStateToProps, {
+  findNetdebugStatus: (host: string, port: string) =>
+    findNetdebugStatus(host, port)
+})(Netdebug);
