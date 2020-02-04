@@ -17,9 +17,11 @@ const composeEnhancers =
 
 const createStoreWithApi = (clients: IApiClients, initialState: {} = {}) => {
   const enhancer = composeEnhancers(
-    applyMiddleware(thunkMiddleware.withExtraArgument({
-      clients
-    }) as ThunkMiddleware<RootState, RootAction, IExtraArguments>)
+    applyMiddleware(
+      thunkMiddleware.withExtraArgument({
+        clients
+      }) as ThunkMiddleware<RootState, RootAction, IExtraArguments>
+    )
   );
   return createStore(rootReducer, initialState, enhancer);
 };

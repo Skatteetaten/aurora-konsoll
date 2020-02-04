@@ -64,7 +64,6 @@ export const VersionView = ({
           onSelect={onSelectType}
         />
         <ServerSideSearchContainer
-          searchText={searchText}
           handleSelectVersionType={setVersionType}
           handleSetSearchText={setSearchText}
           repository={imageRepository.repository}

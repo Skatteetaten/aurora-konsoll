@@ -40,18 +40,15 @@ const mapStateToProps = (state: RootState) => ({
   deleteResponse: getDeletionInfo(state.database)
 });
 
-export const SchemaConnected = connect(
-  mapStateToProps,
-  {
-    onFetch: (affiliations: string[]) => fetchSchemas(affiliations),
-    onUpdate: (databaseSchema: IUpdateDatabaseSchemaInputWithCreatedBy) =>
-      updateSchema(databaseSchema),
-    onDelete: (databaseSchema: IDatabaseSchema) => deleteSchema(databaseSchema),
-    onTestJdbcConnectionForId: (id: string) => testJdbcConnectionForId(id),
-    onTestJdbcConnectionForUser: (jdbcUser: IJdbcUser) =>
-      testJdbcConnectionForJdbcUser(jdbcUser),
-    onCreate: (databaseSchema: ICreateDatabaseSchemaInput) =>
-      createDatabaseSchema(databaseSchema),
-    onDeleteSchemas: (ids: string[]) => deleteSchemas(ids)
-  }
-)(Schema);
+export const SchemaConnected = connect(mapStateToProps, {
+  onFetch: (affiliations: string[]) => fetchSchemas(affiliations),
+  onUpdate: (databaseSchema: IUpdateDatabaseSchemaInputWithCreatedBy) =>
+    updateSchema(databaseSchema),
+  onDelete: (databaseSchema: IDatabaseSchema) => deleteSchema(databaseSchema),
+  onTestJdbcConnectionForId: (id: string) => testJdbcConnectionForId(id),
+  onTestJdbcConnectionForUser: (jdbcUser: IJdbcUser) =>
+    testJdbcConnectionForJdbcUser(jdbcUser),
+  onCreate: (databaseSchema: ICreateDatabaseSchemaInput) =>
+    createDatabaseSchema(databaseSchema),
+  onDeleteSchemas: (ids: string[]) => deleteSchemas(ids)
+})(Schema);

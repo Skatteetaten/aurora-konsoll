@@ -14,7 +14,6 @@ const ENTER_KEY = 13;
 interface IServerSideSearchProps {
   selectedVersionType: ImageTagType;
   repository: string;
-  searchText?: string;
   handleSelectVersionType: (type: ImageTagType) => void;
   handleSetSearchText: (text: string) => void;
 }
@@ -41,7 +40,6 @@ const ServerSideSearch = ({
   handleSetSearchText,
   repository,
   fetchVersions,
-  searchText,
   isFetchingVersions,
   clearStateForType
 }: Props) => {
@@ -73,7 +71,6 @@ const ServerSideSearch = ({
     <div style={{ width: 300, marginLeft: 20, marginRight: 6 }}>
       <TextField
         componentRef={ref => (textFieldRef.current = ref)}
-        value={searchText}
         disabled={isFetchingVersions}
         placeholder="Søk etter versjon"
         iconProps={{ iconName: 'Search' }}
