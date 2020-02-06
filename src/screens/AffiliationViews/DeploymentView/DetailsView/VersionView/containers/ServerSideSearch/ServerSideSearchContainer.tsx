@@ -1,5 +1,7 @@
-import React, { useEffect, KeyboardEvent, useRef } from 'react';
+import React, { useEffect, KeyboardEvent, useRef, useState } from 'react';
 import TextField from '@skatteetaten/frontend-components/TextField';
+import LoadingButton from 'components/LoadingButton';
+
 import { ITextField } from 'office-ui-fabric-react/lib-commonjs';
 import { ImageTagType } from 'models/ImageTagType';
 import {
@@ -8,6 +10,10 @@ import {
 } from 'store/state/versions/action.creators';
 import { connect } from 'react-redux';
 import { RootState, ReduxProps } from 'store/types';
+
+import palette from '@skatteetaten/frontend-components/utils/palette';
+
+const { skeColor } = palette;
 
 const ENTER_KEY = 13;
 
@@ -22,7 +28,9 @@ const mapStateToProps = (
   { versions }: RootState,
   { selectedVersionType }: IServerSideSearchProps
 ) => ({
-  isFetchingVersions: versions.isFetching[selectedVersionType]
+  isFetchingVersions:
+    versions.isFetching && selectedVersionType === ImageTagType.SEARCH,
+  isFetching: versions.isFetching
 });
 
 const mapDispatchToProps = {
@@ -44,6 +52,8 @@ const ServerSideSearch = ({
   clearStateForType
 }: Props) => {
   const textFieldRef = useRef<ITextField | null>();
+  const [isSearchButtonDisabled, setSearchButtonDisabled] = useState(true);
+
   useEffect(() => {
     if (textFieldRef.current) {
       textFieldRef.current.focus();
@@ -53,10 +63,16 @@ const ServerSideSearch = ({
   const searchOnEnterPress = (
     e: KeyboardEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
-    if (selectedVersionType !== ImageTagType.SEARCH) {
-      handleSelectVersionType(ImageTagType.SEARCH);
+    if (e.charCode === ENTER_KEY) {
+      searchOnClick();
     }
-    if (e.charCode === ENTER_KEY && !isFetchingVersions) {
+  };
+
+  const searchOnClick = () => {
+    if (!isFetchingVersions) {
+      if (selectedVersionType !== ImageTagType.SEARCH) {
+        handleSelectVersionType(ImageTagType.SEARCH);
+      }
       const text = textFieldRef.current
         ? textFieldRef.current.value
         : undefined;
@@ -67,16 +83,32 @@ const ServerSideSearch = ({
       }
     }
   };
+
   return (
-    <div style={{ width: 300, marginLeft: 20, marginRight: 6 }}>
-      <TextField
-        componentRef={ref => (textFieldRef.current = ref)}
-        disabled={isFetchingVersions}
-        placeholder="Søk etter versjon"
-        iconProps={{ iconName: 'Search' }}
-        onKeyPress={searchOnEnterPress}
-      />
-    </div>
+    <>
+      <div style={{ width: 300, marginLeft: 20, marginRight: 20 }}>
+        <TextField
+          componentRef={ref => (textFieldRef.current = ref)}
+          disabled={isFetchingVersions}
+          placeholder="Søk etter versjon"
+          onKeyUp={() =>
+            !textFieldRef.current?.value
+              ? setSearchButtonDisabled(true)
+              : setSearchButtonDisabled(false)
+          }
+          onKeyPress={searchOnEnterPress}
+          iconProps={{ iconName: 'Search', style: { color: skeColor.blue } }}
+        />
+      </div>
+      <LoadingButton
+        loading={isFetchingVersions}
+        buttonStyle="primaryRounded"
+        onClick={searchOnClick}
+        disabled={isSearchButtonDisabled || isFetchingVersions}
+      >
+        Søk
+      </LoadingButton>
+    </>
   );
 };
 
