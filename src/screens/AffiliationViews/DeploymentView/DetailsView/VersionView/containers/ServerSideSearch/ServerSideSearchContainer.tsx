@@ -28,9 +28,8 @@ const mapStateToProps = (
   { versions }: RootState,
   { selectedVersionType }: IServerSideSearchProps
 ) => ({
-  isFetchingVersions:
-    versions.isFetching && selectedVersionType === ImageTagType.SEARCH,
-  isFetching: versions.isFetching
+  isFetchingSearchVersions:
+    versions.isFetching && selectedVersionType === ImageTagType.SEARCH
 });
 
 const mapDispatchToProps = {
@@ -43,12 +42,11 @@ type StateProps = ReduxProps<typeof mapDispatchToProps, typeof mapStateToProps>;
 type Props = IServerSideSearchProps & StateProps;
 
 const ServerSideSearch = ({
-  selectedVersionType,
   handleSelectVersionType,
   handleSetSearchText,
   repository,
   fetchVersions,
-  isFetchingVersions,
+  isFetchingSearchVersions,
   clearStateForType
 }: Props) => {
   const textFieldRef = useRef<ITextField | null>();
@@ -69,13 +67,9 @@ const ServerSideSearch = ({
   };
 
   const searchOnClick = () => {
-    if (!isFetchingVersions) {
-      if (selectedVersionType !== ImageTagType.SEARCH) {
-        handleSelectVersionType(ImageTagType.SEARCH);
-      }
-      const text = textFieldRef.current
-        ? textFieldRef.current.value
-        : undefined;
+    if (!isFetchingSearchVersions) {
+      handleSelectVersionType(ImageTagType.SEARCH);
+      const text = textFieldRef.current?.value;
       if (text) {
         handleSetSearchText(text);
         clearStateForType(ImageTagType.SEARCH);
@@ -89,7 +83,7 @@ const ServerSideSearch = ({
       <div style={{ width: 300, marginLeft: 20, marginRight: 20 }}>
         <TextField
           componentRef={ref => (textFieldRef.current = ref)}
-          disabled={isFetchingVersions}
+          disabled={isFetchingSearchVersions}
           placeholder="Søk etter versjon"
           onKeyUp={() =>
             !textFieldRef.current?.value
@@ -101,10 +95,10 @@ const ServerSideSearch = ({
         />
       </div>
       <LoadingButton
-        loading={isFetchingVersions}
+        loading={isFetchingSearchVersions}
         buttonStyle="primaryRounded"
         onClick={searchOnClick}
-        disabled={isSearchButtonDisabled || isFetchingVersions}
+        disabled={isSearchButtonDisabled || isFetchingSearchVersions}
       >
         Søk
       </LoadingButton>
