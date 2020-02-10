@@ -68,6 +68,7 @@ const Wrapper = styled.div`
   }
   .ms-ComboBox-Input,
   .ms-ComboBox {
+    height: 32px;
     cursor: pointer;
   }
   .comboBox {
