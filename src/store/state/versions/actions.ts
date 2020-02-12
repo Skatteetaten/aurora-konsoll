@@ -1,29 +1,39 @@
 import { createAction } from 'redux-ts-utils';
 import { ImageTagType } from 'models/ImageTagType';
-import { IImageTagsConnection } from 'services/auroraApiClients/imageRepositoryClient/query';
+import {
+  ITagsQuery,
+  ITagQuery
+} from 'services/auroraApiClients/imageRepositoryClient/query';
 import { ActionType } from 'typesafe-actions';
+import { createAsyncActions } from 'utils/redux/action-utils';
+import { IDataAndErrors } from 'services/GoboClient';
 
 const action = (action: string) => `versions/${action}`;
 
-const isFetching = createAction<{ isFetching: boolean; type: ImageTagType }>(
-  action('IS_FETCHING')
-);
+const fetchInitVersions = createAsyncActions<
+  Record<ImageTagType, IDataAndErrors<ITagsQuery>>
+>(action('FETCH_INIT_VERSIONS'));
 
-const fetchVersionsForType = createAction<{
-  data: IImageTagsConnection;
+const fetchVersionsForType = createAsyncActions<{
+  response: IDataAndErrors<ITagsQuery>;
   type: ImageTagType;
   paged: boolean;
 }>(action('FETCH_VERSIONS_FOR_TYPE'));
 
-const reset = createAction<void>(action('RESET'));
+const fetchVersion = createAsyncActions<IDataAndErrors<ITagQuery>>(
+  action('FETCH_VERSION')
+);
 
-const clearStateForType = createAction<ImageTagType>(action('CLEAR_TYPE'));
+const resetState = createAction<void>(action('RESET'));
+
+const resetStateForType = createAction<ImageTagType>(action('CLEAR_TYPE'));
 
 export const actions = {
-  isFetching,
+  fetchInitVersions,
   fetchVersionsForType,
-  reset,
-  clearStateForType
+  resetState,
+  resetStateForType,
+  fetchVersion
 };
 
 export type VersionsAction = ActionType<typeof actions>;

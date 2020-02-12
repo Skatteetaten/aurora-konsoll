@@ -1,6 +1,6 @@
 import * as React from 'react';
 
-import ActionButton from 'aurora-frontend-react-komponenter/ActionButton';
+import ActionButton from '@skatteetaten/frontend-components/ActionButton';
 
 import { IManagementEndpointResponse } from 'models/Pod';
 import { getTimestamp } from 'utils/date';
@@ -47,6 +47,7 @@ const ManagementResponseDialogSelector = ({
     <ErrorResponseDialog
       icon={icon}
       createdAtTime={createdAtTime}
+      title={title}
       response={response}
       renderRefreshButton={renderRefreshButton}
     />

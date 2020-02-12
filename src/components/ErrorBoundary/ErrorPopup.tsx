@@ -1,9 +1,9 @@
 import * as React from 'react';
 import styled from 'styled-components';
 
-import Button from 'aurora-frontend-react-komponenter/Button';
-import ActionButton from 'aurora-frontend-react-komponenter/ActionButton';
-import MessageBar from 'aurora-frontend-react-komponenter/MessageBar';
+import Button from '@skatteetaten/frontend-components/Button';
+import ActionButton from '@skatteetaten/frontend-components/ActionButton';
+import MessageBar from '@skatteetaten/frontend-components/MessageBar';
 import { IAppError } from 'models/errors';
 
 interface IErrorPopupProps {

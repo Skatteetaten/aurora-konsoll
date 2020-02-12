@@ -1,4 +1,4 @@
-import 'aurora-frontend-react-komponenter/utils/loadTheme';
+import '@skatteetaten/frontend-components/utils/loadTheme';
 
 import * as Enzyme from 'enzyme';
 import Adapter from 'enzyme-adapter-react-16';

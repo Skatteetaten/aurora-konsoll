@@ -7,7 +7,7 @@ import {
   IJdbcUser,
   IUpdateDatabaseSchemaInputWithCreatedBy
 } from 'models/schemas';
-import { IStartupState } from 'state/reducers';
+import { IStartupState } from 'store/state/startup/reducers';
 import { RootState } from 'store/types';
 import {
   createDatabaseSchema,
@@ -40,18 +40,15 @@ const mapStateToProps = (state: RootState) => ({
   deleteResponse: getDeletionInfo(state.database)
 });
 
-export const SchemaConnected = connect(
-  mapStateToProps,
-  {
-    onFetch: (affiliations: string[]) => fetchSchemas(affiliations),
-    onUpdate: (databaseSchema: IUpdateDatabaseSchemaInputWithCreatedBy) =>
-      updateSchema(databaseSchema),
-    onDelete: (databaseSchema: IDatabaseSchema) => deleteSchema(databaseSchema),
-    onTestJdbcConnectionForId: (id: string) => testJdbcConnectionForId(id),
-    onTestJdbcConnectionForUser: (jdbcUser: IJdbcUser) =>
-      testJdbcConnectionForJdbcUser(jdbcUser),
-    onCreate: (databaseSchema: ICreateDatabaseSchemaInput) =>
-      createDatabaseSchema(databaseSchema),
-    onDeleteSchemas: (ids: string[]) => deleteSchemas(ids)
-  }
-)(Schema);
+export const SchemaConnected = connect(mapStateToProps, {
+  onFetch: (affiliations: string[]) => fetchSchemas(affiliations),
+  onUpdate: (databaseSchema: IUpdateDatabaseSchemaInputWithCreatedBy) =>
+    updateSchema(databaseSchema),
+  onDelete: (databaseSchema: IDatabaseSchema) => deleteSchema(databaseSchema),
+  onTestJdbcConnectionForId: (id: string) => testJdbcConnectionForId(id),
+  onTestJdbcConnectionForUser: (jdbcUser: IJdbcUser) =>
+    testJdbcConnectionForJdbcUser(jdbcUser),
+  onCreate: (databaseSchema: ICreateDatabaseSchemaInput) =>
+    createDatabaseSchema(databaseSchema),
+  onDeleteSchemas: (ids: string[]) => deleteSchemas(ids)
+})(Schema);

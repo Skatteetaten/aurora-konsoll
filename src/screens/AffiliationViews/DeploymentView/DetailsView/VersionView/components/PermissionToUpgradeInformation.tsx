@@ -1,5 +1,5 @@
 import React from 'react';
-import MessageBar from 'aurora-frontend-react-komponenter/MessageBar';
+import MessageBar from '@skatteetaten/frontend-components/MessageBar';
 
 export const PermissionToUpgradeInformation = () => (
   <MessageBar>

@@ -1,8 +1,8 @@
 import * as React from 'react';
 import styled from 'styled-components';
 
-import Icon from 'aurora-frontend-react-komponenter/Icon';
-import palette from 'aurora-frontend-react-komponenter/utils/palette';
+import Icon from '@skatteetaten/frontend-components/Icon';
+import palette from '@skatteetaten/frontend-components/utils/palette';
 
 interface IIconWithTooltip {
   content: string;

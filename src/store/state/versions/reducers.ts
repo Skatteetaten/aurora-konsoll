@@ -4,7 +4,20 @@ import { ImageTagType } from 'models/ImageTagType';
 import { ImageTagsConnection } from 'models/immer/ImageTagsConnection';
 
 import { actions } from './actions';
-import { defaultImageTagsConnection } from './action.creators';
+import {
+  IImageTagsConnection,
+  ITagsQuery,
+  IImageTag
+} from 'services/auroraApiClients/imageRepositoryClient/query';
+
+export const defaultImageTagsConnection: IImageTagsConnection = {
+  edges: [],
+  pageInfo: {
+    endCursor: '',
+    hasNextPage: true
+  },
+  totalCount: 0
+};
 
 const {
   AURORA_SNAPSHOT_VERSION,
@@ -19,25 +32,18 @@ const {
 } = ImageTagType;
 
 export interface IVersionsState {
-  readonly types: Record<ImageTagType, ImageTagsConnection>;
-  readonly isFetching: Record<ImageTagType, boolean>;
+  types: Record<ImageTagType, ImageTagsConnection>;
+  isFetching: boolean;
+  isFetchingConfiguredVersionTag: boolean;
+  configuredVersionTag?: IImageTag;
 }
 
 const createImageTagsConnection = (type: ImageTagType): ImageTagsConnection =>
   new ImageTagsConnection(type, defaultImageTagsConnection);
 
 const initialState: IVersionsState = {
-  isFetching: {
-    [AURORA_SNAPSHOT_VERSION]: false,
-    [AURORA_VERSION]: false,
-    [BUGFIX]: false,
-    [COMMIT_HASH]: false,
-    [LATEST]: false,
-    [MAJOR]: false,
-    [MINOR]: false,
-    [SNAPSHOT]: false,
-    [SEARCH]: false
-  },
+  isFetching: false,
+  isFetchingConfiguredVersionTag: false,
   types: {
     [AURORA_SNAPSHOT_VERSION]: createImageTagsConnection(
       AURORA_SNAPSHOT_VERSION
@@ -55,31 +61,84 @@ const initialState: IVersionsState = {
 
 export const versionsReducer = reduceReducers<IVersionsState>(
   [
-    handleAction(actions.fetchVersionsForType, (state, { payload }) => {
-      const { data, paged, type } = payload;
-      const current = state.types[type];
+    handleAction(actions.fetchInitVersions.request, state => {
+      state.isFetching = true;
+    }),
+    handleAction(actions.fetchInitVersions.success, (state, { payload }) => {
+      state.isFetching = false;
+      Object.keys(payload).forEach(key => {
+        const type = key as ImageTagType;
+        const response = payload[type];
+        const current = state.types[type] as ImageTagsConnection;
 
-      current.setTotalCount(data.totalCount);
-      current.addVersions(data.edges);
+        if (response.data) {
+          updateImageTagsConnection(response.data, current, true);
+        }
+      });
+    }),
 
-      if (paged) {
-        current.setPageInfo(data.pageInfo);
+    handleAction(actions.fetchInitVersions.failure, state => {
+      state.isFetching = false;
+    }),
+
+    handleAction(actions.fetchVersionsForType.request, state => {
+      state.isFetching = true;
+    }),
+
+    handleAction(actions.fetchVersionsForType.success, (state, { payload }) => {
+      state.isFetching = false;
+
+      const { response, paged, type } = payload;
+      const current = state.types[type] as ImageTagsConnection;
+
+      if (response.data) {
+        updateImageTagsConnection(response.data, current, paged);
+      }
+    }),
+    handleAction(actions.fetchVersionsForType.failure, state => {
+      state.isFetching = false;
+    }),
+
+    handleAction(actions.resetState, (state, result) => {
+      state.isFetching = initialState.isFetching;
+      state.types = initialState.types;
+      state.configuredVersionTag = undefined;
+    }),
+
+    handleAction(actions.resetStateForType, (state, { payload }) => {
+      state.types[payload] = createImageTagsConnection(payload);
+    }),
+
+    handleAction(actions.fetchVersion.request, state => {
+      state.isFetchingConfiguredVersionTag = true;
+    }),
+
+    handleAction(actions.fetchVersion.success, (state, { payload }) => {
+      state.isFetchingConfiguredVersionTag = false;
+      if ((payload.data?.imageRepositories?.length ?? 0) > 0) {
+        state.configuredVersionTag = payload.data?.imageRepositories[0].tag[0];
       }
     }),
 
-    handleAction(actions.isFetching, (state, { payload }) => {
-      const { isFetching, type } = payload;
-      state.isFetching[type] = isFetching;
-    }),
-
-    handleAction(actions.reset, (state, result) => {
-      state.isFetching = initialState.isFetching;
-      state.types = initialState.types;
-    }),
-
-    handleAction(actions.clearStateForType, (state, { payload }) => {
-      state.types[payload] = createImageTagsConnection(payload);
+    handleAction(actions.fetchVersion.failure, state => {
+      state.isFetchingConfiguredVersionTag = false;
     })
   ],
   initialState
 );
+
+function updateImageTagsConnection(
+  data: ITagsQuery,
+  current: ImageTagsConnection,
+  paged: boolean
+) {
+  const { imageRepositories } = data;
+  if (imageRepositories.length > 0) {
+    const repo = imageRepositories[0].tags;
+    current.setTotalCount(repo.totalCount);
+    current.addVersions(repo.edges);
+    if (paged) {
+      current.setPageInfo(repo.pageInfo);
+    }
+  }
+}

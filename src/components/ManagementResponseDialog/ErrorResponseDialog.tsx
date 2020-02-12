@@ -1,17 +1,19 @@
 import * as React from 'react';
 
-import ActionButton from 'aurora-frontend-react-komponenter/ActionButton';
-import MessageBar from 'aurora-frontend-react-komponenter/MessageBar';
+import MessageBar from '@skatteetaten/frontend-components/MessageBar';
 import InfoDialog from 'components/InfoDialog';
 import { IManagementEndpointResponse } from 'models/Pod';
 import styled from 'styled-components';
 import { prettifyJSON } from 'utils/string';
 import { StyledPre } from 'components/StyledPre';
+import { skeColor } from '@skatteetaten/frontend-components';
+import Icon from '@skatteetaten/frontend-components/Icon';
 
 interface IErrorResponseDialogProps {
   response: IManagementEndpointResponse;
   createdAtTime: string;
   icon: string;
+  title: string;
   renderRefreshButton: () => JSX.Element;
 }
 
@@ -19,19 +21,22 @@ const ErrorResponseDialog = ({
   response,
   createdAtTime,
   renderRefreshButton,
+  title,
   icon
 }: IErrorResponseDialogProps) => {
   const renderOpenErrorButton = (open: () => void) => (
-    <StyledActionButton>
-      <ActionButton
-        onClick={open}
-        iconSize={ActionButton.LARGE}
-        color="red"
-        icon={icon}
-      >
-        Helsestatus
-      </ActionButton>
-    </StyledActionButton>
+    <Icon
+      onClick={open}
+      iconName={icon}
+      title={title}
+      style={{
+        fontSize: '25px',
+        cursor: 'pointer',
+        color: `${skeColor.error}`,
+        float: 'none',
+        marginLeft: '4px'
+      }}
+    />
   );
 
   const { httpCode, textResponse, error } = response;
@@ -52,16 +57,6 @@ const ErrorResponseDialog = ({
     </InfoDialog>
   );
 };
-
-export const StyledActionButton = styled.div`
-  display: flex;
-  flex: 1;
-
-  button {
-    display: flex;
-    justify-content: center;
-  }
-`;
 
 const Content = styled.div`
   margin-bottom: 10px;

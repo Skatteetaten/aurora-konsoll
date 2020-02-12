@@ -1,4 +1,4 @@
-import ActionButton from 'aurora-frontend-react-komponenter/ActionButton';
+import ActionButton from '@skatteetaten/frontend-components/ActionButton';
 import InfoDialog from 'components/InfoDialog';
 import React from 'react';
 import { IDatabaseSchema } from 'models/schemas';

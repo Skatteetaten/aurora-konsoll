@@ -1,43 +1,16 @@
-import { addErrors, closeError } from 'screens/ErrorHandler/state/actions';
-import { IUserSettings } from 'models/UserSettings';
 import { connect } from 'react-redux';
-import { RootState } from 'store/types';
+import { RootState, ReduxProps } from 'store/types';
 import { AffiliationViewValidator } from './AffiliationViewValidator';
-import {
-  findAllApplicationDeployments,
-  findApplicationDeploymentDetails,
-  getUserSettings,
-  refreshAffiliations,
-  updateUserSettings
-} from './state/actions';
 
-const mapStateToProps = ({ affiliationView, ...state }: RootState) => ({
-  isFetchingAffiliations: affiliationView.isRefreshingAffiliations,
-  allApplicationDeployments: affiliationView.allApplicationDeploymentsResult,
-  isFetchingAllApplicationDeployments:
-    affiliationView.isFetchingAllApplicationDeployments,
-  currentUser: state.startup.currentUser,
-  errors: state.errors.errors,
-  userSettings: affiliationView.userSettings,
-  applicationDeploymentDetails: affiliationView.applicationDeploymentDetails,
-  isUpdatingUserSettings: affiliationView.isUpdatingUserSettings,
-  isRefreshingApplicationDeployment:
-    affiliationView.isRefreshingApplicationDeployment
+const mapStateToProps = ({ startup }: RootState) => ({
+  currentUser: startup.currentUser
 });
 
-export const AffiliationViewValidatorConnected = connect(
-  mapStateToProps,
-  {
-    addErrors: (errors: any[]) => addErrors(errors),
-    closeError: (id: number) => closeError(id),
-    refreshAffiliations: (affiliations: string[]) =>
-      refreshAffiliations(affiliations),
-    findAllApplicationDeployments: (affiliations: string[]) =>
-      findAllApplicationDeployments(affiliations),
-    getUserSettings: () => getUserSettings(),
-    updateUserSettings: (userSettings: IUserSettings) =>
-      updateUserSettings(userSettings),
-    findApplicationDeploymentDetails: (id: string) =>
-      findApplicationDeploymentDetails(id)
-  }
-)(AffiliationViewValidator);
+export type AffiliationViewValidatorState = ReduxProps<
+  {},
+  typeof mapStateToProps
+>;
+
+export const AffiliationViewValidatorConnected = connect(mapStateToProps)(
+  AffiliationViewValidator
+);

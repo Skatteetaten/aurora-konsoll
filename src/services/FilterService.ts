@@ -1,6 +1,7 @@
 import { IApplicationDeployment } from 'models/ApplicationDeployment';
 import { IApplicationDeploymentFilters } from 'models/UserSettings';
-import { SelectionType } from 'screens/AffiliationViews/DeploymentView/MatrixView/Filter/Filter';
+import { SelectionType } from 'screens/AffiliationViews/DeploymentView/MatrixView/components/Filter/Filter';
+import { IChoiceGroupOption } from 'office-ui-fabric-react/lib-commonjs';
 
 export interface IUniqueSelectionNames {
   applications: string[];
@@ -29,16 +30,16 @@ export default class FilterService {
   public createFilterOptions = (
     allFilters: IApplicationDeploymentFilters[],
     affiliation: string
-  ) => {
+  ): IChoiceGroupOption[] => {
     const filterNames = allFilters
       .filter(filter => filter.affiliation === affiliation)
       .map(filter => filter.name)
       .sort();
-    return filterNames.map(name => ({
+    return filterNames.map((name, index) => ({
       value: name,
       label: name,
-      key: name,
-      text: name
+      key: name || '',
+      text: name || ''
     }));
   };
 

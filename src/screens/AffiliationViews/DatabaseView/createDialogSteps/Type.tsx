@@ -1,26 +1,12 @@
 import * as React from 'react';
 import styled from 'styled-components';
 
-import palette from 'aurora-frontend-react-komponenter/utils/palette';
+import palette from '@skatteetaten/frontend-components/utils/palette';
 
-import NavigationTile from 'aurora-frontend-react-komponenter/NavigationTile';
+import NavigationTile from '@skatteetaten/frontend-components/NavigationTile';
+import NavigationContent from '@skatteetaten/frontend-components/NavigationTile/NavigationContent';
 import { Step } from 'models/schemas';
 import { ButtonLink } from 'components/ButtonLink';
-
-const contents = [
-  {
-    to: Step.NEW.toString(),
-    title: 'Nytt skjema',
-    description: 'Oppretter et internt databaseskjema',
-    icon: 'add'
-  },
-  {
-    to: Step.EXTERNAL.toString(),
-    title: 'Eksternt skjema',
-    description: 'Oppretter tilkoblingen for et eksternt databaseskjema',
-    icon: 'openInNew'
-  }
-];
 
 interface ITypeProps {
   setStep: (step: Step) => void;
@@ -37,11 +23,22 @@ const Type = ({ setStep, className }: ITypeProps) => {
 
   return (
     <div className={className}>
-      <NavigationTile
-        contents={contents}
-        className="styled-tile"
-        renderContent={renderContent}
-      />
+      <NavigationTile className="styled-tile">
+        <NavigationContent
+          to={Step.NEW.toString()}
+          heading="Nytt skjema"
+          description="Oppretter et internt databaseskjema"
+          icon="add"
+          renderContent={renderContent}
+        />
+        <NavigationContent
+          to={Step.EXTERNAL.toString()}
+          heading="Eksternt skjema"
+          description="Oppretter tilkoblingen for et eksternt databaseskjema"
+          icon="openInNew"
+          renderContent={renderContent}
+        />
+      </NavigationTile>
     </div>
   );
 };

@@ -1,10 +1,10 @@
 import * as React from 'react';
-import Table from 'aurora-frontend-react-komponenter/Table';
+import Table from '@skatteetaten/frontend-components/Table';
 import styled from 'styled-components';
-import { DeployButtonContainer } from '../DeployButton/DeployButtonContainer';
 import { ImageTagType } from 'models/ImageTagType';
 import { IVersionTableProps, VersionTableState } from './VersionTable.state';
-import { useEffect } from 'react';
+import { DeployButton } from '../../components/DeployButton';
+import { VersionInfo } from '../../components/VersionInfo';
 
 const columns = [
   {
@@ -55,50 +55,47 @@ function getOptionName(type: ImageTagType): string {
 type Props = IVersionTableProps & VersionTableState;
 
 export const VersionTable = ({
-  affiliation,
-  applicationId,
   currentVersion,
   imageTagsConnection,
   hasAccessToDeploy,
-  fetchVersions,
-  isFetching,
-  repository,
-  searchText,
-  versionType
+  versionBeingDeployed,
+  onConfirmDeploy,
+  configuredVersionTag,
+  releaseTo
 }: Props) => {
-  const index = imageTagsConnection.findVersionIndex(currentVersion.name);
-
-  useEffect(() => {
-    // If configured version is not in the list, fetch more to find the version.
-    if (index === -1 && !isFetching && versionType === currentVersion.type) {
-      fetchVersions(repository, versionType, 100, true, searchText);
-    }
-  }, [
-    currentVersion.type,
-    fetchVersions,
-    index,
-    isFetching,
-    repository,
-    searchText,
-    versionType
-  ]);
+  const versionToFilter: string =
+    releaseTo && configuredVersionTag
+      ? configuredVersionTag.name
+      : currentVersion.name;
 
   const data = imageTagsConnection
     .getVersions()
-    .filter(it => it.name !== currentVersion.name)
+    .filter(it => it.name !== versionToFilter)
     .map(it => {
       return {
         type: getOptionName(it.type),
         name: it.name,
         lastModified: it.image ? it.image.buildTime : '',
         deploy: (
-          <DeployButtonContainer
+          <DeployButton
+            isLoading={versionBeingDeployed === it.name}
+            disabled={versionBeingDeployed !== undefined}
+            buttonText="Deploy"
+            dialogTitle="Vil du endre versjonen?"
             hasAccessToDeploy={hasAccessToDeploy}
-            affiliation={affiliation}
-            applicationId={applicationId}
+            isOldVersion={!it.image}
+            onConfirmDeploy={() => onConfirmDeploy(it.name)}
+            releaseTo={releaseTo}
             currentVersion={currentVersion}
-            nextVersion={it}
-          />
+          >
+            <VersionInfo>
+              <p>Fra:</p>{' '}
+              {!releaseTo ? currentVersion.name : configuredVersionTag?.name}
+            </VersionInfo>
+            <VersionInfo>
+              <p>Til:</p> {it.name}
+            </VersionInfo>
+          </DeployButton>
         )
       };
     });

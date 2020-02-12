@@ -1,6 +1,6 @@
 import { ICertificateResult, ICertificateView } from 'models/certificates';
-import { IColumn } from 'office-ui-fabric-react/lib/DetailsList';
 import { getLocalDate } from 'utils/date';
+import { IColumn } from 'office-ui-fabric-react/lib-commonjs';
 
 const certificateColumns: IColumn[] = [
   {
@@ -62,7 +62,7 @@ export const filterCertificateView = (filter: string) => {
 };
 
 export default class CertificateService {
-  public static DEFAULT_COLUMNS: IColumn[] = certificateColumns;
+  public static DEFAULT_COLUMNS = certificateColumns;
 
   public updatedItems = (data: ICertificateResult): ICertificateView[] =>
     data.certificates.map(

@@ -1,12 +1,12 @@
 import { IDeploymentSpec } from 'models/DeploymentSpec';
 import { IPodResource } from 'models/Pod';
-import { ITag } from 'models/Tag';
 import {
   IPermission,
   IStatusCheck,
   IImageRepository
 } from 'services/auroraApiClients/applicationDeploymentClient/query';
 import { StatusCode } from './Status';
+import { IImageTag } from 'services/auroraApiClients/imageRepositoryClient/query';
 
 export interface IApplicationDeployment {
   id: string;
@@ -18,7 +18,7 @@ export interface IApplicationDeployment {
   status: IApplicationDeploymentStatus;
   version: {
     auroraVersion?: string;
-    deployTag: ITag;
+    deployTag: IImageTag;
     releaseTo?: string;
   };
   permission: IPermission;

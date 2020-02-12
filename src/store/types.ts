@@ -6,42 +6,42 @@ import { DatabaseSchemasAction } from 'screens/AffiliationViews/DatabaseView/sta
 import { WebsealAction } from 'screens/AffiliationViews/WebsealView/state/reducers';
 import { CertificateAction } from 'screens/CertificateView/state/reducers';
 import { ErrorsAction } from 'screens/ErrorHandler/state/reducer';
-import { AffiliationViewAction } from 'screens/AffiliationViews/state/reducer';
 import { NetdebugViewAction } from 'screens/NetdebugView/state/reducer';
-import { StartupAction } from 'state/reducers';
 
 import { VersionsAction } from './state/versions/actions';
-import { DeployAction } from './state/deploy/actions';
 
 import { rootReducer } from './rootReducer';
 import { ResolveThunks } from 'react-redux';
 import { IApiClients } from 'models/AuroraApi';
+import { UserSettingsAction } from './state/userSettings/actions';
+import { ApplicationsAction } from './state/applicationDeployments/actions';
+import { StartupAction } from './state/startup/actions';
 
 export type RootState = StateType<typeof rootReducer>;
 
 export type RootAction =
+  | ApplicationsAction
   | VersionsAction
-  | DeployAction
   | DatabaseSchemasAction
   | StartupAction
   | CertificateAction
   | WebsealAction
   | ErrorsAction
-  | AffiliationViewAction
+  | UserSettingsAction
   | NetdebugViewAction;
 
-interface IExtraArguments {
+export interface IExtraArguments {
   clients: IApiClients;
 }
 
-export type StateThunk = ThunkAction<
-  void,
+export type AsyncAction<T = void> = ThunkAction<
+  T,
   RootState,
   IExtraArguments,
   RootAction
 >;
 
-export type Thunk = ActionCreator<StateThunk>;
+export type Thunk = ActionCreator<AsyncAction>;
 
 /**
  * Usage ReduxProps<typeof mapDispatchToProps, typeof mapStateToProps>

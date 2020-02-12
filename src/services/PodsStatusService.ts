@@ -1,7 +1,7 @@
 import {
-  IColumn,
-  ColumnActionsMode
-} from 'office-ui-fabric-react/lib/DetailsList';
+  ColumnActionsMode,
+  IColumn
+} from 'office-ui-fabric-react/lib-commonjs';
 import { IPodsStatus, IPodResource } from 'models/Pod';
 import { STATUS_COLORS } from 'models/Status';
 import { IIconLinkData } from 'components/IconLink';
@@ -64,7 +64,7 @@ export const filterPodsStatus = (filter: string) => {
 };
 
 export default class PodsStatusService {
-  public static DEFAULT_COLUMNS: IColumn[] = podsStatusColumns;
+  public static DEFAULT_COLUMNS = podsStatusColumns;
 
   public handleIsActive(data: IIconLinkData): boolean {
     return data.href.startsWith('http');

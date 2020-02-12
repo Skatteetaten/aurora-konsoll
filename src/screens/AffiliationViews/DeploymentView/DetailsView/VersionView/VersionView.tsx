@@ -3,30 +3,43 @@ import styled from 'styled-components';
 
 import { ImageTagType } from 'models/ImageTagType';
 
-import { VersionTableContainer } from './containers/VersionTable/VersionTableContainer';
 import { VersionTypeSelectorContainer } from './containers/VersionTypeSelector/VersionTypeSelectorContainer';
 import { VersionTableInformation } from './components/VersionTableInformation';
 import { ServerSideSearchContainer } from './containers/ServerSideSearch/ServerSideSearchContainer';
 import { PermissionToUpgradeInformation } from './components/PermissionToUpgradeInformation';
 import { FetchMoreVersionsContainer } from './containers/FetchMoreVersions/FetchMoreVersionsContainer';
 import { VersionViewProps } from './VersionView.state';
-import { RedeployRow } from './components/RedeployRow';
+import { RedeployRowAndVersionTableContainer } from './containers/RedeployRowAndVersionTable/RedeployRowAndVersionTableContainer';
 
 export const VersionView = ({
   versionStatus,
-  affiliation,
   deployment,
   imageTagsConnection,
-  tag
+  deploymentSpecVersion,
+  configuredVersionTag,
+  fetchVersion
 }: VersionViewProps) => {
   const { id, version, imageRepository } = deployment;
 
   const [searchText, setSearchText] = useState<string | undefined>();
   const [versionType, setVersionType] = useState(imageTagsConnection.getType());
-    
+
   useEffect(() => {
-    setVersionType(version.deployTag.type);
-  }, [version.deployTag.type]);
+    if (imageRepository) {
+      if (deploymentSpecVersion) {
+        fetchVersion(imageRepository.repository, deploymentSpecVersion);
+      }
+    }
+  }, [deploymentSpecVersion, fetchVersion, imageRepository]);
+
+  const initVersionType =
+    configuredVersionTag && version.releaseTo
+      ? configuredVersionTag.type
+      : version.deployTag.type;
+
+  useEffect(() => {
+    setVersionType(initVersionType);
+  }, [initVersionType]);
 
   if (!imageRepository) {
     // TODO: Bedre feilmelding
@@ -51,7 +64,6 @@ export const VersionView = ({
           onSelect={onSelectType}
         />
         <ServerSideSearchContainer
-          searchText={searchText}
           handleSelectVersionType={setVersionType}
           handleSetSearchText={setSearchText}
           repository={imageRepository.repository}
@@ -59,22 +71,13 @@ export const VersionView = ({
         />
       </ActionBar>
       <VersionTableInformation />
-      <RedeployRow
+      <RedeployRowAndVersionTableContainer
+        applicationId={id}
+        deployedVersion={version.deployTag}
+        hasAccessToDeploy={hasAccessToDeploy}
         versionStatus={versionStatus}
-        affiliation={affiliation}
-        applicationId={id}
-        hasAccessToDeploy={hasAccessToDeploy}
-        activeVersion={version.deployTag}
-        version={tag}
-      />
-      <VersionTableContainer
-        hasAccessToDeploy={hasAccessToDeploy}
-        affiliation={affiliation}
-        searchText={searchText}
-        currentVersion={version.deployTag}
-        applicationId={id}
-        repository={imageRepository.repository}
         versionType={versionType}
+        releaseTo={deployment.version.releaseTo}
       />
       <FetchMoreVersionsContainer
         searchText={searchText}
@@ -84,7 +87,6 @@ export const VersionView = ({
     </Wrapper>
   );
 };
-
 const Wrapper = styled.div`
   display: flex;
   flex-direction: column;

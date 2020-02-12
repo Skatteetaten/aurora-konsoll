@@ -1,6 +1,6 @@
 import React from 'react';
-import Button from 'aurora-frontend-react-komponenter/Button';
-import Spinner from 'aurora-frontend-react-komponenter/Spinner';
+import Button from '@skatteetaten/frontend-components/Button';
+import Spinner from '@skatteetaten/frontend-components/Spinner';
 
 import { FetchVersionsInformation } from '../../components/FetchVersionsInformation';
 import {
@@ -27,7 +27,7 @@ export const FetchMoreVersions = ({
         </p>
         <Button
           icon="History"
-          buttonType="primaryRoundedFilled"
+          buttonStyle="primaryRoundedFilled"
           disabled={isFetching}
           onClick={() => {
             // Check for new tags
@@ -41,7 +41,7 @@ export const FetchMoreVersions = ({
           }}
         >
           {isFetching ? (
-            <Spinner size={Spinner.Size.large} />
+            <Spinner size={Spinner.Size && Spinner.Size['large']} />
           ) : (
             'Hent flere versjoner'
           )}

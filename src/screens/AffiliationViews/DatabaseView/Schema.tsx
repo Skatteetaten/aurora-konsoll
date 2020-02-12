@@ -1,7 +1,7 @@
 import React from 'react';
 
 import styled from 'styled-components';
-import TextField from 'aurora-frontend-react-komponenter/TextField';
+import TextField from '@skatteetaten/frontend-components/TextField';
 
 import Spinner from 'components/Spinner';
 
@@ -20,6 +20,7 @@ import DatabaseSchemaCreateDialog from './DatabaseSchemaCreateDialog';
 import DatabaseSchemaUpdateDialog from './DatabaseSchemaUpdateDialog';
 import { EnterModeThenConfirm } from './EnterModeThenConfirm';
 import { DatabaseSchemaTable } from './DatabaseSchemaTable';
+import { TextFieldEvent } from 'types/react';
 
 export interface ISchemaProps {
   onFetch: (affiliations: string[]) => void;
@@ -113,7 +114,7 @@ export class Schema extends React.Component<ISchemaProps, ISchemaState> {
             <div className="styled-input">
               <TextField
                 placeholder="Søk etter skjema"
-                onChanged={this.onFilterChange}
+                onChange={this.onFilterChange}
                 value={filter}
               />
             </div>
@@ -211,8 +212,8 @@ export class Schema extends React.Component<ISchemaProps, ISchemaState> {
     this.setState({ deleteMode: true });
   };
 
-  private onFilterChange = (text: string) => {
-    this.setState({ filter: text });
+  private onFilterChange = (event: TextFieldEvent, newValue?: string) => {
+    this.setState({ filter: newValue || '' });
   };
 
   private onCreateCopyConfirmed = () => {

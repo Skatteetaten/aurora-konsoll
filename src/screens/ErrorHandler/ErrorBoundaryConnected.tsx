@@ -16,11 +16,8 @@ const mapStateToProps = (state: RootState) => ({
   nextError: getCurrentErrors(state.errors)
 });
 
-export const ErrorBoundaryConnected = connect(
-  mapStateToProps,
-  {
-    getNextError: () => getNextError(),
-    closeError: (id: number) => closeError(id),
-    closeErrors: () => closeErrors()
-  }
-)(ErrorBoundary);
+export const ErrorBoundaryConnected = connect(mapStateToProps, {
+  getNextError: () => getNextError(),
+  closeError: (id: number) => closeError(id),
+  closeErrors: () => closeErrors()
+})(ErrorBoundary);

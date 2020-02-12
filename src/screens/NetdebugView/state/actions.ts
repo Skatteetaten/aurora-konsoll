@@ -34,7 +34,9 @@ export const findNetdebugStatus: Thunk = (host: string, port: string) => async (
   if (!result) {
     dispatch(fetchNetdebugStatusResponse(errorMessage));
   } else {
-    dispatch(fetchNetdebugStatusResponse(showNetdebugStatus(result.data)));
+    if (result.data) {
+      dispatch(fetchNetdebugStatusResponse(showNetdebugStatus(result.data)));
+    }
   }
   dispatch(fetchNetdebugStatusRequest(false));
 };

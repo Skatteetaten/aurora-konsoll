@@ -1,6 +1,5 @@
 import * as Factory from 'factory.ts';
 import {
-  IApplicationDeployment,
   IApplicationDeploymentDetails,
   IUserAndAffiliations
 } from 'models/ApplicationDeployment';
@@ -23,7 +22,6 @@ import {
   IUpdateDatabaseSchemaInputWithCreatedBy
 } from 'models/schemas';
 import { StatusCode } from 'models/Status';
-import { ITag } from 'models/Tag';
 import {
   IApplicationDeploymentFilters,
   IUserSettings
@@ -34,13 +32,14 @@ import { IWebsealReduxState } from 'screens/AffiliationViews/WebsealView/state/r
 import { ICertificateState } from 'screens/CertificateView/state/reducers';
 import { INetdebugResult } from 'services/auroraApiClients';
 import { IFilter } from 'services/DeploymentFilterService';
-import { IStartupState } from 'state/reducers';
 import { INetdebugViewState } from 'screens/NetdebugView/state/reducer';
 import { IErrorsState } from 'screens/ErrorHandler/state/reducer';
-import { IAffiliationViewState } from 'screens/AffiliationViews/state/reducer';
 import { IErrors, IAppError } from 'models/errors';
 import { IIconLinkData } from 'components/IconLink';
 import { IDatabaseSchemaView } from '../screens/AffiliationViews/DatabaseView/DatabaseSchemaTable';
+import { IImageTag } from 'services/auroraApiClients/imageRepositoryClient/query';
+import { ApplicationDeployment } from 'models/immer/ApplicationDeployment';
+import { IApplicationDeploymentData } from 'services/auroraApiClients/applicationDeploymentClient/query';
 
 const mountFactory = Factory.Sync.makeFactory<IMount>({
   exist: true,
@@ -113,38 +112,52 @@ export const podFactory = Factory.Sync.makeFactory<IPodResource>({
 });
 
 export const deploymentFactory = Factory.Sync.makeFactory<
-  IApplicationDeployment
->({
-  id: 'c10010e594f229649437240f24f231343d62f8fa',
-  affiliation: 'paas',
-  environment: 'martin-dev',
-  name: 'martin-test-applikasjon',
-  namespace: 'paas-martin-dev',
-  imageRepository: {
-    repository: 'localhost/"martin-test-applikasjon'
-  },
-  status: {
-    code: StatusCode.OBSERVE,
-    reasons: [],
-    reports: []
-  },
-  time: '2018-12-07T11:48:34.230Z',
-  version: {
-    auroraVersion: '2.0.14-b1.17.0-flange-8.181.1',
-    deployTag: {
-      lastModified: '',
-      name: 'latest',
-      type: ImageTagType.AURORA_VERSION
-    },
-    releaseTo: undefined
-  },
-  permission: {
-    paas: {
-      admin: false,
-      view: true
+  ApplicationDeployment
+>(
+  new ApplicationDeployment({
+    applicationDeployment: {
+      id: 'c10010e594f229649437240f24f231343d62f8fa',
+      affiliation: {
+        name: 'paas'
+      },
+      environment: 'martin-dev',
+      name: 'martin-test-applikasjon',
+      namespace: {
+        name: 'paas-martin-dev',
+        permission: {
+          paas: {
+            admin: false,
+            view: true
+          }
+        }
+      },
+      imageRepository: {
+        repository: 'localhost/"martin-test-applikasjon'
+      },
+      status: {
+        code: StatusCode.OBSERVE,
+        reasons: [],
+        reports: []
+      },
+      time: '2018-12-07T11:48:34.230Z',
+      version: {
+        auroraVersion: '2.0.14-b1.17.0-flange-8.181.1',
+        deployTag: {
+          name: 'latest',
+          type: ImageTagType.AURORA_VERSION
+        },
+        releaseTo: undefined
+      },
+      details: {
+        buildTime: '2019-08-13T14:06:23.825Z',
+        podResources: [podFactory.build()],
+        updatedBy: 'linus',
+        serviceLinks: [],
+        deploymentSpecs: {}
+      }
     }
-  }
-});
+  })
+);
 
 export const deploymentDetailsFactory = Factory.Sync.makeFactory<
   IApplicationDeploymentDetails
@@ -208,8 +221,10 @@ export const databaseSchemaFactory = Factory.Sync.makeFactory<IDatabaseSchema>({
   users: []
 });
 
-export const tagFactory = Factory.Sync.makeFactory<ITag>({
-  lastModified: '2019-08-13T14:06:23.825Z',
+export const tagFactory = Factory.Sync.makeFactory<IImageTag>({
+  image: {
+    buildTime: '2019-08-13T14:06:23.825Z'
+  },
   name: '1.0',
   type: ImageTagType.MINOR
 });
@@ -330,7 +345,7 @@ export const createDatabaseSchemaInputFactory = Factory.Sync.makeFactory<
   environment: 'env',
   jdbcUser: {
     jdbcUrl: 'jdbc:oracle:thin:@test.skead.no:1521/referanse',
-    password: 'password',
+    password: 'passwords',
     username: 'username'
   }
 });
@@ -350,10 +365,6 @@ export const errorsStateFactory = Factory.Sync.makeFactory<IErrorsState>({
   errorCount: 0,
   errors: errorStateFactory.build(),
   nextError: undefined
-});
-
-export const startupFactory = Factory.Sync.makeFactory<IStartupState>({
-  currentUser: userAndAffiliationsFactory.build()
 });
 
 export const aclFactory = Factory.Sync.makeFactory<IAcl>({
@@ -395,22 +406,44 @@ export const userSettingsFactory = Factory.Sync.makeFactory<IUserSettings>({
   applicationDeploymentFilters: [applicationDeploymentFilterFactory.build()]
 });
 
-export const affiliationViewStateFactory = Factory.Sync.makeFactory<
-  IAffiliationViewState
->({
-  allApplicationDeploymentsResult: [deploymentFactory.build()],
-  applicationDeploymentDetails: deploymentDetailsFactory.build(),
-  isFetchingAllApplicationDeployments: false,
-  isRefreshingAffiliations: false,
-  isRefreshingApplicationDeployment: false,
-  isUpdatingUserSettings: false,
-  userSettings: userSettingsFactory.build(),
-  isFetchingDetails: false,
-  isApplicationDeploymentDeleted: false
-});
-
 export const iconLinkDataFactory = Factory.Sync.makeFactory<IIconLinkData>({
   name: 'test',
   title: 'title',
   href: 'http://test.no'
+});
+
+export const applicationDeploymentFactory = Factory.Sync.makeFactory<
+  IApplicationDeploymentData
+>({
+  affiliation: {
+    name: 'aurora'
+  },
+  environment: 'dev',
+  id: Factory.each(i => `${i}`),
+  imageRepository: {
+    guiUrl: 'http://localhost',
+    repository: 'no.skatteetaten.aurora.mokey'
+  },
+  name: 'mokey',
+  namespace: {
+    name: 'aurora-dev',
+    permission: {
+      paas: {
+        admin: true,
+        view: true
+      }
+    }
+  },
+  status: {
+    code: StatusCode.HEALTHY,
+    reasons: [],
+    reports: []
+  },
+  time: '2019-11-06T12:54:00.707621Z',
+  version: {
+    deployTag: {
+      name: 'latest',
+      type: ImageTagType.LATEST
+    }
+  }
 });

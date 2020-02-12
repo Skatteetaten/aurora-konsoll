@@ -1,4 +1,4 @@
-import { IDropdownOption } from 'aurora-frontend-react-komponenter/Dropdown';
+import { IDropdownOption } from 'office-ui-fabric-react/lib-commonjs';
 
 function toDropdownOptions(names: string[]): IDropdownOption[] {
   const dropdownNames = names

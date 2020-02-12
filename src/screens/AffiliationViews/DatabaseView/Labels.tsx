@@ -1,7 +1,8 @@
 import * as React from 'react';
 import styled from 'styled-components';
 
-import TextField from 'aurora-frontend-react-komponenter/TextField';
+import TextField from '@skatteetaten/frontend-components/TextField';
+import { TextFieldEvent } from 'types/react';
 
 interface ILabelsProps {
   className?: string;
@@ -11,7 +12,9 @@ interface ILabelsProps {
   createdBy?: string;
   description?: string;
   displayCreatedByField: boolean;
-  handleLabelChange: (field: string) => (value: string) => void;
+  handleLabelChange: (
+    field: string
+  ) => (event: TextFieldEvent, newValue?: string) => void;
 }
 
 const Labels = ({
@@ -30,27 +33,27 @@ const Labels = ({
       id={'environment'}
       label={'Miljø'}
       value={environment}
-      onChanged={handleLabelChange('environment')}
+      onChange={handleLabelChange('environment')}
     />
     <TextField
       id={'application'}
       label={'Applikasjon'}
       value={application}
-      onChanged={handleLabelChange('application')}
+      onChange={handleLabelChange('application')}
     />
     <TextField
       id={'discriminator'}
       label={'Diskriminator'}
       value={discriminator}
       help="Benyttes av systemet for å finne et databaseskjema"
-      onChanged={handleLabelChange('discriminator')}
+      onChange={handleLabelChange('discriminator')}
     />
     {displayCreatedByField && (
       <TextField
         id={'createdBy'}
         label={'Bruker'}
         value={createdBy}
-        onChanged={handleLabelChange('createdBy')}
+        onChange={handleLabelChange('createdBy')}
         disabled={true}
       />
     )}
@@ -58,7 +61,7 @@ const Labels = ({
       id={'description'}
       label={'Beskrivelse'}
       value={description}
-      onChanged={handleLabelChange('description')}
+      onChange={handleLabelChange('description')}
       multiline={true}
     />
   </div>

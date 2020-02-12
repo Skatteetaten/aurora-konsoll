@@ -1,20 +1,28 @@
 import * as React from 'react';
 
-import ActionButton from 'aurora-frontend-react-komponenter/ActionButton';
-import Button from 'aurora-frontend-react-komponenter/Button';
-import Dialog from 'aurora-frontend-react-komponenter/Dialog';
+import ActionButton from '@skatteetaten/frontend-components/ActionButton';
+import Button, { ButtonProps } from '@skatteetaten/frontend-components/Button';
+import Dialog from '@skatteetaten/frontend-components/Dialog';
+import styled from 'styled-components';
+
+const DialogSubText = styled<React.FC<{ className?: string }>>(
+  ({ children, className }) => <div className={className}>{children}</div>
+)`
+  font-size: 16px;
+  position: relative;
+  margin: 0;
+  display: inline-block;
+  height: 40px;
+  float: left;
+  top: 10px;
+`;
 
 interface InfoDialogProps {
   title: string;
   subText?: string;
   buttonText?: string;
   isBlocking?: boolean;
-  buttonStyle?:
-    | 'primary'
-    | 'primaryRounded'
-    | 'primaryRoundedFilled'
-    | 'warning'
-    | 'secondary';
+  buttonStyle?: ButtonProps['buttonStyle'];
   children?: JSX.Element;
   renderOpenDialogButton?: (openDialog: () => void) => JSX.Element;
   renderFooterButtons?: (closeDialog: () => void) => JSX.Element;
@@ -27,11 +35,11 @@ interface InfoDialogState {
 
 function renderDefaultOpenDialogButton(
   title: string,
-  buttonStyle: string,
+  buttonStyle: ButtonProps['buttonStyle'],
   openDialog: () => void
 ) {
   return (
-    <Button buttonType={buttonStyle} onClick={openDialog}>
+    <Button buttonStyle={buttonStyle} onClick={openDialog}>
       {title}
     </Button>
   );
@@ -78,13 +86,13 @@ class InfoDialog extends React.Component<InfoDialogProps, InfoDialogState> {
             hidden={!isOpen}
             onDismiss={close}
             title={title}
-            helpText={subText}
-            dialogMinWidth="500px"
-            dialogMaxWidth="90%"
+            minWidth="500px"
+            maxWidth="90%"
             isBlocking={!!isBlocking}
           >
             {children}
             <Dialog.Footer>
+              <DialogSubText>{subText}</DialogSubText>
               {renderFooterButtons && renderFooterButtons(close)}
               {!hideCloseButton && (
                 <ActionButton onClick={close}>Lukk</ActionButton>

@@ -2,10 +2,10 @@ import React, { Component } from 'react';
 import SortableDetailsList from '../../../components/SortableDetailsList';
 import {
   CheckboxVisibility,
-  IColumn,
   Selection,
-  SelectionMode
-} from 'office-ui-fabric-react/lib/DetailsList';
+  SelectionMode,
+  IColumn
+} from 'office-ui-fabric-react/lib-commonjs';
 import { IDatabaseSchema } from '../../../models/schemas';
 import { getLocalDate } from '../../../utils/date';
 

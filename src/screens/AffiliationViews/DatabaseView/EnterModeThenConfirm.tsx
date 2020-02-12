@@ -1,5 +1,5 @@
-import React, {useState} from "react";
-import ActionButton from 'aurora-frontend-react-komponenter/ActionButton';
+import React, { useState } from 'react';
+import ActionButton from '@skatteetaten/frontend-components/ActionButton';
 
 export const EnterModeThenConfirm: React.FC<{
   confirmButtonEnabled: boolean;
@@ -10,14 +10,14 @@ export const EnterModeThenConfirm: React.FC<{
   onExitMode: () => void;
   onConfirmClick: () => void;
 }> = ({
-        confirmButtonEnabled,
-        confirmText,
-        inactiveIcon,
-        inactiveText,
-        onEnterMode,
-        onExitMode,
-        onConfirmClick
-      }) => {
+  confirmButtonEnabled,
+  confirmText,
+  inactiveIcon,
+  inactiveText,
+  onEnterMode,
+  onExitMode,
+  onConfirmClick
+}) => {
   const [modeActive, setModeActive] = useState(false);
 
   const onEnterModeClick = () => {
@@ -36,7 +36,7 @@ export const EnterModeThenConfirm: React.FC<{
         iconSize={ActionButton.LARGE}
         color="red"
         icon={inactiveIcon}
-        style={{minWidth: '120px', marginLeft: '15px', float: 'left'}}
+        style={{ minWidth: '120px', marginLeft: '15px', float: 'left' }}
         onClick={onEnterModeClick}
       >
         {inactiveText}
