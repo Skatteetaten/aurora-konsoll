@@ -40,7 +40,7 @@ import { IErrorsState } from 'screens/ErrorHandler/state/reducer';
 import { IAffiliationViewState } from 'screens/AffiliationViews/state/reducer';
 import { IErrors, IAppError } from 'models/errors';
 import { IIconLinkData } from 'components/IconLink';
-import { IDatabaseSchemaView } from "../screens/AffiliationViews/DatabaseView/DatabaseSchemaTable";
+import { IDatabaseSchemaView } from '../screens/AffiliationViews/DatabaseView/DatabaseSchemaTable';
 
 const mountFactory = Factory.Sync.makeFactory<IMount>({
   exist: true,
@@ -185,6 +185,7 @@ export const databaseSchemaViewFactory = Factory.Sync.makeFactory<
   applicationDeploymentsUses: 1,
   sizeInMb: 0.75,
   type: 'MANAGED',
+  databaseEngine: 'ORACLE',
   jdbcUrl: 'jdbc:oracle:thin:@localhost:1521:db'
 });
 
@@ -233,7 +234,8 @@ export const databaseSchemaInputWithCreatedByFactory = Factory.Sync.makeFactory<
   application: 'application',
   environment: 'environment',
   affiliation: 'paas',
-  createdBy: '12345'
+  createdBy: '12345',
+  databaseEngine: 'ORACLE'
 });
 
 export const jdbcUserFactory = Factory.Sync.makeFactory<IJdbcUser>({

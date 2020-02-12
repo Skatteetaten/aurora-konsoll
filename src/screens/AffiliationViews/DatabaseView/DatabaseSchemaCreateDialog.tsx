@@ -159,7 +159,7 @@ class DatabaseSchemaCreateDialog extends React.Component<
       previousStep: step
     });
 
-    await onCreate(
+    onCreate(
       this.databaseSchemaService.trimLabelsAndJdbcUser(databaseSchemaInput)
     );
     this.setState({

@@ -38,7 +38,6 @@ export interface IDatabaseApplicationDeployment {
   };
 }
 
-
 export interface IDatabaseSchemaInput {
   discriminator: string;
   description?: string | null;
@@ -51,6 +50,7 @@ export interface IDatabaseSchemaInput {
 export interface IUpdateDatabaseSchemaInputWithCreatedBy
   extends IDatabaseSchemaInput {
   id: string;
+  databaseEngine: string;
 }
 
 export interface ICreateDatabaseSchemaInput extends IDatabaseSchemaInput {

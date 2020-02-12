@@ -36,6 +36,7 @@ export interface IDatabaseSchemaUpdateDialogState {
   updatedSchemaValues: {
     id: string;
     discriminator: string;
+    databaseEngine: string;
     createdBy: string;
     description?: string | null;
     environment: string;
@@ -55,6 +56,7 @@ class DatabaseSchemaUpdateDialog extends React.Component<
       id: '',
       discriminator: '',
       createdBy: '',
+      databaseEngine: '',
       description: '',
       environment: '',
       application: '',
@@ -72,6 +74,7 @@ class DatabaseSchemaUpdateDialog extends React.Component<
             discriminator: schema.discriminator,
             createdBy: schema.createdBy,
             description: schema.description ? schema.description : '',
+            databaseEngine: schema.databaseEngine,
             environment: schema.environment,
             application: schema.application,
             affiliation: schema.affiliation.name
@@ -111,6 +114,7 @@ class DatabaseSchemaUpdateDialog extends React.Component<
         description: updatedSchemaValues.description,
         environment: updatedSchemaValues.environment,
         discriminator: updatedSchemaValues.discriminator,
+        databaseEngine: updatedSchemaValues.databaseEngine,
         id: schema.id,
         createdBy: updatedSchemaValues.createdBy
       };
@@ -192,6 +196,7 @@ class DatabaseSchemaUpdateDialog extends React.Component<
               <Grid.Col lg={2} className="bold">
                 <p>Id: </p>
                 <p>Type: </p>
+                <p>Engine: </p>
                 <p>Opprettet: </p>
                 <p>Sist brukt: </p>
                 <p>Brukes av: </p>
@@ -199,6 +204,7 @@ class DatabaseSchemaUpdateDialog extends React.Component<
               <Grid.Col lg={10}>
                 <p>{schema.id}</p>
                 <p>{schema.type}</p>
+                <p>{schema.databaseEngine}</p>
                 <p>{dateTimeFormat(schema.createdDate)}</p>
                 <p>{dateTimeFormat(schema.lastUsedDate)}</p>
                 <ApplicationLinks

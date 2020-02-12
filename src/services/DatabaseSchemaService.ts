@@ -7,7 +7,6 @@ import {
 } from 'models/schemas';
 
 export default class DatabaseSchemaService {
-
   public trimJdbcUser = (
     jdbcUser: IJdbcUser | null | undefined
   ): IJdbcUser | null => {
@@ -50,12 +49,10 @@ export default class DatabaseSchemaService {
   }
 
   public getSelectionDetails(deleteSelectionIds: string[]): string {
-    switch (deleteSelectionIds.length) {
-      case 1:
-        return `Vil du slette dette skjemaet?`;
-      default:
-        return `Vil du slette disse ${deleteSelectionIds.length} skjemaene?`;
+    if (deleteSelectionIds.length === 1) {
+      return `Vil du slette dette skjemaet?`;
     }
+    return `Vil du slette disse ${deleteSelectionIds.length} skjemaene?`;
   }
 
   public hasEmptyLabelValues(input: IDatabaseSchemaInput) {

@@ -3,47 +3,12 @@ import {
   databaseSchemaFactory,
   databaseSchemaInputFactory,
   databaseSchemaInputWithCreatedByFactory,
-  databaseSchemaViewFactory,
   jdbcUserFactory
 } from 'testData/testDataBuilders';
-import DatabaseSchemaService, {
-  filterDatabaseSchemaView
-} from './DatabaseSchemaService';
+import DatabaseSchemaService from './DatabaseSchemaService';
 
 describe('DatabaseSchemaService', () => {
   const databaseSchemaService = new DatabaseSchemaService();
-
-  describe('Filter database schema view', () => {
-    it('filter database schema for column values', () => {
-      const viewItem1 = databaseSchemaViewFactory.build({
-        createdBy: 'my-super-duper-user'
-      });
-      const viewItem2 = databaseSchemaViewFactory.build({
-        createdBy: 'user'
-      });
-
-      const createdFilter = filterDatabaseSchemaView('duper');
-      const filteredItems = [viewItem1, viewItem2].filter(createdFilter);
-
-      expect(filteredItems.length).toEqual(1);
-      expect(filteredItems[0].createdBy).toEqual('my-super-duper-user');
-    });
-
-    it('filter database schema for id', () => {
-      const viewItem1 = databaseSchemaViewFactory.build({
-        id: '5678'
-      });
-      const viewItem2 = databaseSchemaViewFactory.build({
-        id: '1234'
-      });
-
-      const createdFilter = filterDatabaseSchemaView('5678');
-      const filteredItems = [viewItem1, viewItem2].filter(createdFilter);
-
-      expect(filteredItems.length).toEqual(1);
-      expect(filteredItems[0].id).toEqual('5678');
-    });
-  });
 
   describe('trimLabelsAndJdbcUser', () => {
     it('should trim labels values', () => {
