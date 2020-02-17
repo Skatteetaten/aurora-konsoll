@@ -177,7 +177,7 @@ export class DatabaseSchemaTable extends Component<
   public render() {
     const { filter, schemas, multiSelect } = this.props;
     let viewItems = toViewSchemas(schemas || []);
-    
+
     return (
       <div className="styledTable">
         <SortableDetailsList
