@@ -7,6 +7,7 @@ import {
   IDatabaseSchemas,
   IDeleteDatabaseSchemasResponse
 } from 'models/schemas';
+import { renderDetailsListWithSchemaInfo } from './Schema';
 
 interface IDeletionSummaryProps {
   deleteResponse: IDeleteDatabaseSchemasResponse;
@@ -20,8 +21,6 @@ const DeletionSummary = ({
   items
 }: IDeletionSummaryProps) => {
   const getDatabaseSchemaInfoById = (ids: string[]): JSX.Element | null => {
-    return null;
-    /*
     if (!items.databaseSchemas) {
       return null;
     }
@@ -29,7 +28,6 @@ const DeletionSummary = ({
       it => -1 !== ids.indexOf(it.id)
     );
     return renderDetailsListWithSchemaInfo(extendedInfoList);
-    */
   };
 
   const createRows = (label: string, ids: string[]) => (

@@ -1,20 +1,38 @@
 import ActionButton from '@skatteetaten/frontend-components/ActionButton';
 import InfoDialog from 'components/InfoDialog';
 import React from 'react';
-import { IDatabaseSchema } from 'models/schemas';
-import { StyledPre } from 'components/StyledPre';
-import { DetailsList } from 'office-ui-fabric-react';
+import {
+  IDatabaseSchema,
+  IDeleteDatabaseSchemasResponse,
+  IDatabaseSchemas
+} from 'models/schemas';
+import DeletionSummary from './DeletionSummary';
+import { renderDetailsListWithSchemaInfo } from './Schema';
 
 interface IConfirmDeletionDialogProps {
   visible: boolean;
   title: string;
   schemasToDelete: IDatabaseSchema[];
+  hasDeletionInformation: boolean;
+  deleteResponse: IDeleteDatabaseSchemasResponse;
+  items: IDatabaseSchemas;
   onOkClick: () => void;
   onCancelClick: () => void;
+  onExitClick: () => void;
 }
 
 const ConfirmDeletionDialog: React.FC<IConfirmDeletionDialogProps> = props => {
-  const { visible, title, schemasToDelete, onOkClick, onCancelClick } = props;
+  const {
+    visible,
+    title,
+    schemasToDelete,
+    onOkClick,
+    onCancelClick,
+    onExitClick,
+    hasDeletionInformation,
+    deleteResponse,
+    items
+  } = props;
   const createConfirmationMessage = (schemaCount: number): string => {
     if (schemaCount === 1) {
       return `Vil du slette dette skjemaet?`;
@@ -27,47 +45,24 @@ const ConfirmDeletionDialog: React.FC<IConfirmDeletionDialogProps> = props => {
     <InfoDialog
       title={title}
       renderOpenDialogButton={dialogVisibilitySetter(visible)}
-      renderFooterButtons={renderFooterButtons(onOkClick, onCancelClick)}
+      renderFooterButtons={renderFooterButtons(
+        onOkClick,
+        onCancelClick,
+        onExitClick,
+        hasDeletionInformation
+      )}
       hideCloseButton={true}
       isBlocking={true}
     >
       <>
-        <StyledPre>
-          <DetailsList
-            columns={[
-              {
-                key: 'column1',
-                name: 'Applikasjon',
-                fieldName: 'application',
-                minWidth: 200,
-                maxWidth: 200,
-                isResizable: true
-              },
-              {
-                key: 'column2',
-                name: 'Miljø',
-                fieldName: 'environment',
-                minWidth: 200,
-                maxWidth: 200,
-                isResizable: true
-              },
-              {
-                key: 'column3',
-                name: 'Diskriminator',
-                fieldName: 'discriminator',
-                minWidth: 200,
-                maxWidth: 200,
-                isResizable: true
-              }
-            ]}
-            items={schemasToDelete.map(it => ({
-              application: it.application,
-              environment: it.environment,
-              discriminator: it.discriminator
-            }))}
-          />
-        </StyledPre>
-        <h4>{createConfirmationMessage(schemasToDelete.length)}</h4>
+        {!hasDeletionInformation ? (
+          <>
+            {renderDetailsListWithSchemaInfo(schemasToDelete)}
+            <h4>{createConfirmationMessage(schemasToDelete.length)}</h4>
+          </>
+        ) : (
+          <DeletionSummary deleteResponse={deleteResponse} items={items} />
+        )}
       </>
     </InfoDialog>
   );
@@ -75,37 +70,57 @@ const ConfirmDeletionDialog: React.FC<IConfirmDeletionDialogProps> = props => {
 
 const renderFooterButtons = (
   onOkClick: () => void,
-  onCancelClick: () => void
+  onCancelClick: () => void,
+  onExitClick: () => void,
+  hasDeletionInformation: boolean
 ) => {
   return (close: () => void) => {
     const onOkClickInternal = () => {
-      close();
       onOkClick();
     };
     const onCancelClickInternal = () => {
       close();
       onCancelClick();
     };
-    return (
-      <>
+
+    const onExitClickInternal = () => {
+      onCancelClickInternal();
+      onExitClick();
+    };
+
+    if (!hasDeletionInformation) {
+      return (
+        <>
+          <ActionButton
+            onClick={onOkClickInternal}
+            iconSize={ActionButton.LARGE}
+            icon="Check"
+            color="black"
+          >
+            Ja
+          </ActionButton>
+          <ActionButton
+            onClick={onCancelClickInternal}
+            iconSize={ActionButton.LARGE}
+            icon="Cancel"
+            color="black"
+          >
+            Nei
+          </ActionButton>
+        </>
+      );
+    } else {
+      return (
         <ActionButton
-          onClick={onOkClickInternal}
+          onClick={onExitClickInternal}
           iconSize={ActionButton.LARGE}
-          icon="Check"
+          icon="Completed"
           color="black"
         >
-          Ja
+          Avslutt
         </ActionButton>
-        <ActionButton
-          onClick={onCancelClickInternal}
-          iconSize={ActionButton.LARGE}
-          icon="Cancel"
-          color="black"
-        >
-          Nei
-        </ActionButton>
-      </>
-    );
+      );
+    }
   };
 };
 

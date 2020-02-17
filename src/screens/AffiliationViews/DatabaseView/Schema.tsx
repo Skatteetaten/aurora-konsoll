@@ -21,6 +21,46 @@ import DatabaseSchemaUpdateDialog from './DatabaseSchemaUpdateDialog';
 import { EnterModeThenConfirm } from './EnterModeThenConfirm';
 import { DatabaseSchemaTable } from './DatabaseSchemaTable';
 import { TextFieldEvent } from 'types/react';
+import { StyledPre } from 'components/StyledPre';
+import { DetailsList } from 'office-ui-fabric-react/lib-commonjs';
+
+export const renderDetailsListWithSchemaInfo = (schemas: IDatabaseSchema[]) => (
+  <StyledPre>
+    <DetailsList
+      columns={[
+        {
+          key: 'column1',
+          name: 'Applikasjon',
+          fieldName: 'application',
+          minWidth: 200,
+          maxWidth: 200,
+          isResizable: true
+        },
+        {
+          key: 'column2',
+          name: 'Miljø',
+          fieldName: 'environment',
+          minWidth: 200,
+          maxWidth: 200,
+          isResizable: true
+        },
+        {
+          key: 'column3',
+          name: 'Diskriminator',
+          fieldName: 'discriminator',
+          minWidth: 200,
+          maxWidth: 200,
+          isResizable: true
+        }
+      ]}
+      items={schemas.map(it => ({
+        application: it.application,
+        environment: it.environment,
+        discriminator: it.discriminator
+      }))}
+    />
+  </StyledPre>
+);
 
 export interface ISchemaProps {
   onFetch: (affiliations: string[]) => void;
@@ -47,6 +87,7 @@ interface ISchemaState {
   selectedSchemas?: IDatabaseSchema[];
   schemaToCopy?: IDatabaseSchema;
   deleteMode: boolean;
+  extendedInfo: IDatabaseSchema[];
   hasDeletionInformation: boolean;
   confirmDeletionDialogVisible: boolean;
 }
@@ -57,6 +98,7 @@ export class Schema extends React.Component<ISchemaProps, ISchemaState> {
     selectedSchema: undefined,
     schemaToCopy: undefined,
     deleteMode: false,
+    extendedInfo: [],
     hasDeletionInformation: false,
     confirmDeletionDialogVisible: false
   };
@@ -96,7 +138,9 @@ export class Schema extends React.Component<ISchemaProps, ISchemaState> {
       affiliation,
       onTestJdbcConnectionForUser,
       onFetch,
-      currentUser
+      currentUser,
+      deleteResponse,
+      items
     } = this.props;
     const {
       filter,
@@ -104,7 +148,8 @@ export class Schema extends React.Component<ISchemaProps, ISchemaState> {
       selectedSchemas,
       schemaToCopy,
       deleteMode,
-      confirmDeletionDialogVisible
+      confirmDeletionDialogVisible,
+      hasDeletionInformation
     } = this.state;
 
     return (
@@ -168,7 +213,11 @@ export class Schema extends React.Component<ISchemaProps, ISchemaState> {
           visible={confirmDeletionDialogVisible}
           onOkClick={this.onConfirmDeletionClick}
           onCancelClick={this.onCancelDeletionClick}
+          onExitClick={this.onExitDeletionClick}
           schemasToDelete={this.state.selectedSchemas || []}
+          hasDeletionInformation={hasDeletionInformation}
+          deleteResponse={deleteResponse}
+          items={items}
         />
       </div>
     );
@@ -189,19 +238,27 @@ export class Schema extends React.Component<ISchemaProps, ISchemaState> {
     });
   };
 
+  private onExitDeletionClick = () => {
+    const { affiliation, onFetch } = this.props;
+    onFetch([affiliation]);
+  };
+
   private onDeleteSelectionConfirmed = () => {
     this.setState({ confirmDeletionDialogVisible: true });
   };
 
   private onConfirmDeletionClick = () => {
-    // deleteResponse,
-    //   onDeleteSchemas
+    const { selectedSchemas } = this.state;
+    const { onDeleteSchemas } = this.props;
+    if (selectedSchemas && selectedSchemas?.map(it => it.id).length > 0) {
+      const dbIds = selectedSchemas?.map(it => it.id);
 
-    //onDeleteSchemas(deleteSelectionIds);
-    this.setState({
-      hasDeletionInformation: true,
-      confirmDeletionDialogVisible: false
-    });
+      onDeleteSchemas(dbIds);
+      this.setState({
+        hasDeletionInformation: true,
+        confirmDeletionDialogVisible: false
+      });
+    }
   };
 
   private onExitDeletionMode = () => {

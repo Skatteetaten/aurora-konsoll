@@ -26,7 +26,6 @@ export class DatabaseSchemaTable extends Component<
   {}
 > {
   public state = {};
-
   private columns: IColumn[] = [
     {
       fieldName: 'type',
@@ -152,6 +151,7 @@ export class DatabaseSchemaTable extends Component<
       if (this.props.multiSelect) {
         this.onSchemaSelectionChange();
       } else {
+        this.selection.setAllSelected(false);
         this.onSingleSchemaSelected();
       }
     }
@@ -167,10 +167,9 @@ export class DatabaseSchemaTable extends Component<
     snapshot?: any
   ): void {
     if (
-      this.props.multiSelect &&
+      !this.props.multiSelect &&
       prevProps.multiSelect !== this.props.multiSelect
     ) {
-      // TODO: This does not seem to work. Must fix.
       this.selection.setAllSelected(false);
     }
   }
@@ -178,7 +177,7 @@ export class DatabaseSchemaTable extends Component<
   public render() {
     const { filter, schemas, multiSelect } = this.props;
     let viewItems = toViewSchemas(schemas || []);
-
+    
     return (
       <div className="styledTable">
         <SortableDetailsList
