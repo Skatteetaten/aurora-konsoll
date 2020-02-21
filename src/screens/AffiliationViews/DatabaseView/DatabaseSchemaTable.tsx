@@ -109,7 +109,7 @@ export class DatabaseSchemaTable extends Component<
       iconName: ''
     },
     {
-      fieldName: 'databaseEngine',
+      fieldName: 'engine',
       isResizable: true,
       key: '9',
       maxWidth: 90,
@@ -149,9 +149,14 @@ export class DatabaseSchemaTable extends Component<
     onSelectionChanged: () => {
       window.debug = { selection: this.selection };
       if (this.props.multiSelect) {
+        console.log('onSchemaSelectionChange');
+        console.log(this.selection.getSelectedIndices());
+
         this.onSchemaSelectionChange();
       } else {
-        this.selection.setAllSelected(false);
+        console.log('onSingleSchemaSelected');
+        console.log(this.selection.getSelectedIndices());
+
         this.onSingleSchemaSelected();
       }
     }
@@ -166,6 +171,9 @@ export class DatabaseSchemaTable extends Component<
     prevState: Readonly<{}>,
     snapshot?: any
   ): void {
+    // if (prevProps.filter !== this.props.filter) {
+    //   this.selection.setAllSelected(false);
+    // }
     if (
       !this.props.multiSelect &&
       prevProps.multiSelect !== this.props.multiSelect
@@ -233,7 +241,7 @@ export interface IDatabaseSchemaView {
   sizeInMb: number;
   applicationDeploymentsUses: number;
   id: string;
-  databaseEngine: string;
+  engine: string;
   jdbcUrl: string;
 }
 
@@ -267,7 +275,7 @@ const toViewSchema = (i: IDatabaseSchema): IDatabaseSchemaView => {
     applicationDeploymentsUses: i.applicationDeployments.length,
     sizeInMb: i.sizeInMb,
     createdBy: i.createdBy,
-    databaseEngine: i.databaseEngine,
+    engine: i.engine,
     jdbcUrl
   };
 };
