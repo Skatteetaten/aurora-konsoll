@@ -2,6 +2,21 @@ export interface IDatabaseSchemas {
   databaseSchemas?: IDatabaseSchema[];
 }
 
+export interface IDatabaseInstances {
+  databaseInstances?: IDatabaseInstance[];
+}
+
+export interface IDatabaseInstance {
+  engine: string;
+  instanceName: string;
+  host: string;
+  port: number;
+  createSchemaAllowed: boolean;
+  affiliation: {
+    name: string;
+  };
+}
+
 export interface IDatabaseSchema {
   id: string;
   type: string;

@@ -12,7 +12,7 @@
     "metadata"
   ],
   "dependencies": {
-    "@skatteetaten/frontend-components": "3.1.0",
+    "@skatteetaten/frontend-components": "3.1.1",
     "aurora-management-interface": "0.6.1",
     "cors": "2.8.5",
     "express": "4.17.1",
