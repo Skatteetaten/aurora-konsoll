@@ -11,7 +11,7 @@ Object {
         "applicationDeployment": null,
         "createdBy": "default",
         "createdDate": "+49635-05-22T19:10:00Z",
-        "databaseEngine": "ORACLE",
+        "engine": "ORACLE",
         "id": "d83cdd47-4bfe-41b5-9271-doijadOIASD",
         "jdbcUrl": "jdbc:oracle:thin:@localhost:1521/db",
         "lastUsedDate": "+49635-05-24T19:13:20Z",
