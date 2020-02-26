@@ -96,6 +96,7 @@ interface ISchemaState {
   deleteMode: boolean;
   hasDeletionInformation: boolean;
   confirmDeletionDialogVisible: boolean;
+  shouldResetSort: boolean;
 }
 
 export class Schema extends React.Component<ISchemaProps, ISchemaState> {
@@ -105,7 +106,8 @@ export class Schema extends React.Component<ISchemaProps, ISchemaState> {
     schemaToCopy: undefined,
     deleteMode: false,
     hasDeletionInformation: false,
-    confirmDeletionDialogVisible: false
+    confirmDeletionDialogVisible: false,
+    shouldResetSort: false
   };
 
   public componentDidMount() {
@@ -126,7 +128,8 @@ export class Schema extends React.Component<ISchemaProps, ISchemaState> {
     ) {
       onFetch([affiliation]);
       this.setState({
-        filter: ''
+        filter: '',
+        shouldResetSort: true
       });
     }
   }
@@ -140,6 +143,12 @@ export class Schema extends React.Component<ISchemaProps, ISchemaState> {
       }
     }
   });
+
+  public onResetSort = () => {
+    this.setState({
+      shouldResetSort: false
+    });
+  };
 
   public render() {
     const {
@@ -166,7 +175,8 @@ export class Schema extends React.Component<ISchemaProps, ISchemaState> {
       schemaToCopy,
       deleteMode,
       confirmDeletionDialogVisible,
-      hasDeletionInformation
+      hasDeletionInformation,
+      shouldResetSort
     } = this.state;
 
     return (
@@ -213,6 +223,8 @@ export class Schema extends React.Component<ISchemaProps, ISchemaState> {
             schemas={this.props.items.databaseSchemas || []}
             multiSelect={deleteMode}
             selection={this.selection}
+            onResetSort={this.onResetSort}
+            shouldResetSort={shouldResetSort}
           />
         )}
         <DatabaseSchemaUpdateDialog
@@ -295,6 +307,7 @@ export class Schema extends React.Component<ISchemaProps, ISchemaState> {
   };
 
   private onUpdateSchemaDialogClosed = () => {
+    this.selection.setAllSelected(false);
     this.setState({ selectedSchema: undefined });
   };
 

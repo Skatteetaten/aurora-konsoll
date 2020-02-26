@@ -20,13 +20,17 @@ interface IDatabaseSchemaTableProps {
   schemas: IDatabaseSchema[];
   multiSelect: boolean;
   selection: Selection;
+  shouldResetSort: boolean;
+  onResetSort: () => void;
 }
 
 export function DatabaseSchemaTable({
   filter,
   schemas,
   multiSelect,
-  selection
+  selection,
+  onResetSort,
+  shouldResetSort
 }: IDatabaseSchemaTableProps) {
   const columns: IColumn[] = [
     {
@@ -157,6 +161,8 @@ export function DatabaseSchemaTable({
         selectionMode={SelectionMode.multiple}
         filter={filter}
         isHeaderVisible={true}
+        onResetSort={onResetSort}
+        shouldResetSort={shouldResetSort}
         items={viewItems}
         selection={selection}
         checkboxVisibility={
