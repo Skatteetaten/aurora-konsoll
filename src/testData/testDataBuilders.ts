@@ -297,6 +297,8 @@ export const schemasFactory = Factory.Sync.makeFactory<ISchemasState>({
   updateSchemaResponse: false,
   deleteSchemasResponse: { failed: [], succeeded: [] },
   testJdbcConnectionResponse: false,
+  databaseInstances: { databaseInstances: [] },
+  isFetchingInstances: false,
   createDatabaseSchemaResponse: {
     id: '',
     jdbcUser: { jdbcUrl: '', username: '', password: '' }
