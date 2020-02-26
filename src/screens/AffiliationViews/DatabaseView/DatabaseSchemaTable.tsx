@@ -1,32 +1,34 @@
-import React, { Component } from 'react';
-import SortableDetailsList from '../../../components/SortableDetailsList';
+import React from 'react';
+import SortableDetailsList from 'components/SortableDetailsList';
 import {
   CheckboxVisibility,
-  Selection,
   SelectionMode,
+  Selection,
   IColumn
 } from 'office-ui-fabric-react/lib-commonjs';
-import { IDatabaseSchema } from '../../../models/schemas';
-import { getLocalDate } from '../../../utils/date';
+
+import { IDatabaseSchema } from 'models/schemas';
+import { getLocalDate } from 'utils/date';
 
 declare global {
   interface Window {
     debug: any;
   }
 }
+interface IDatabaseSchemaTableProps {
+  filter: string;
+  schemas: IDatabaseSchema[];
+  multiSelect: boolean;
+  selection: Selection;
+}
 
-export class DatabaseSchemaTable extends Component<
-  {
-    filter: string;
-    schemas: IDatabaseSchema[];
-    multiSelect: boolean;
-    onSingleSchemaSelected: (schema: IDatabaseSchema) => void;
-    onSchemaSelectionChange: (schemas: IDatabaseSchema[]) => void;
-  },
-  {}
-> {
-  public state = {};
-  private columns: IColumn[] = [
+export function DatabaseSchemaTable({
+  filter,
+  schemas,
+  multiSelect,
+  selection
+}: IDatabaseSchemaTableProps) {
+  const columns: IColumn[] = [
     {
       fieldName: 'type',
       isResizable: true,
@@ -109,7 +111,7 @@ export class DatabaseSchemaTable extends Component<
       iconName: ''
     },
     {
-      fieldName: 'databaseEngine',
+      fieldName: 'engine',
       isResizable: true,
       key: '9',
       maxWidth: 90,
@@ -129,7 +131,7 @@ export class DatabaseSchemaTable extends Component<
     }
   ];
 
-  private filterDatabaseSchemaView = (filter: string) => {
+  const filterDatabaseSchemaView = (filter: string) => {
     return (v: IDatabaseSchemaView) =>
       v.createdBy.includes(filter) ||
       v.application.includes(filter) ||
@@ -145,81 +147,24 @@ export class DatabaseSchemaTable extends Component<
       v.id.includes(filter);
   };
 
-  private selection = new Selection({
-    onSelectionChanged: () => {
-      window.debug = { selection: this.selection };
-      if (this.props.multiSelect) {
-        this.onSchemaSelectionChange();
-      } else {
-        this.selection.setAllSelected(false);
-        this.onSingleSchemaSelected();
-      }
-    }
-  });
+  let viewItems = toViewSchemas(schemas || []);
 
-  public componentDidUpdate(
-    prevProps: Readonly<{
-      filter: string;
-      schemas: IDatabaseSchema[];
-      multiSelect: boolean;
-    }>,
-    prevState: Readonly<{}>,
-    snapshot?: any
-  ): void {
-    if (
-      !this.props.multiSelect &&
-      prevProps.multiSelect !== this.props.multiSelect
-    ) {
-      this.selection.setAllSelected(false);
-    }
-  }
-
-  public render() {
-    const { filter, schemas, multiSelect } = this.props;
-    let viewItems = toViewSchemas(schemas || []);
-
-    return (
-      <div className="styledTable">
-        <SortableDetailsList
-          columns={this.columns}
-          filterView={this.filterDatabaseSchemaView}
-          selectionMode={SelectionMode.multiple}
-          filter={filter}
-          isHeaderVisible={true}
-          items={viewItems}
-          selection={this.selection}
-          checkboxVisibility={
-            multiSelect ? CheckboxVisibility.always : CheckboxVisibility.hidden
-          }
-        />
-      </div>
-    );
-  }
-
-  private onSchemaSelectionChange() {
-    const selected: IDatabaseSchemaView[] = this.selection
-      .getSelection()
-      .map(it => it as IDatabaseSchemaView);
-    const databaseSchemas = this.props.schemas || [];
-    const selectedSchemas = databaseSchemas.filter(
-      schema => selected.find(it => it.id === schema.id) !== undefined
-    );
-
-    this.props.onSchemaSelectionChange(selectedSchemas);
-  }
-
-  private onSingleSchemaSelected() {
-    const selected: IDatabaseSchemaView = this.selection
-      .getSelection()
-      .map(it => it as IDatabaseSchemaView)[0];
-    if (!selected) return;
-    const databaseSchemas = this.props.schemas || [];
-    const selectedSchema = databaseSchemas.find(
-      schema => schema.id === selected.id
-    );
-
-    if (selectedSchema) this.props.onSingleSchemaSelected(selectedSchema);
-  }
+  return (
+    <div className="styledTable">
+      <SortableDetailsList
+        columns={columns}
+        filterView={filterDatabaseSchemaView}
+        selectionMode={SelectionMode.multiple}
+        filter={filter}
+        isHeaderVisible={true}
+        items={viewItems}
+        selection={selection}
+        checkboxVisibility={
+          multiSelect ? CheckboxVisibility.always : CheckboxVisibility.hidden
+        }
+      />
+    </div>
+  );
 }
 
 export interface IDatabaseSchemaView {
@@ -233,7 +178,7 @@ export interface IDatabaseSchemaView {
   sizeInMb: number;
   applicationDeploymentsUses: number;
   id: string;
-  databaseEngine: string;
+  engine: string;
   jdbcUrl: string;
 }
 
@@ -267,7 +212,7 @@ const toViewSchema = (i: IDatabaseSchema): IDatabaseSchemaView => {
     applicationDeploymentsUses: i.applicationDeployments.length,
     sizeInMb: i.sizeInMb,
     createdBy: i.createdBy,
-    databaseEngine: i.databaseEngine,
+    engine: i.engine,
     jdbcUrl
   };
 };

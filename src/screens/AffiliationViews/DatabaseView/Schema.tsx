@@ -5,6 +5,7 @@ import TextField from '@skatteetaten/frontend-components/TextField';
 
 import Spinner from 'components/Spinner';
 
+import { Selection } from 'office-ui-fabric-react/lib-commonjs';
 import { IUserAndAffiliations } from 'models/ApplicationDeployment';
 import {
   ICreateDatabaseSchemaInput,
@@ -19,7 +20,10 @@ import ConfirmDeletionDialog from './ConfirmDeletionDialog';
 import DatabaseSchemaCreateDialog from './DatabaseSchemaCreateDialog';
 import DatabaseSchemaUpdateDialog from './DatabaseSchemaUpdateDialog';
 import { EnterModeThenConfirm } from './EnterModeThenConfirm';
-import { DatabaseSchemaTable } from './DatabaseSchemaTable';
+import {
+  DatabaseSchemaTable,
+  IDatabaseSchemaView
+} from './DatabaseSchemaTable';
 import { TextFieldEvent } from 'types/react';
 import { StyledPre } from 'components/StyledPre';
 import { DetailsList } from 'office-ui-fabric-react/lib-commonjs';
@@ -87,7 +91,6 @@ interface ISchemaState {
   selectedSchemas?: IDatabaseSchema[];
   schemaToCopy?: IDatabaseSchema;
   deleteMode: boolean;
-  extendedInfo: IDatabaseSchema[];
   hasDeletionInformation: boolean;
   confirmDeletionDialogVisible: boolean;
 }
@@ -98,7 +101,6 @@ export class Schema extends React.Component<ISchemaProps, ISchemaState> {
     selectedSchema: undefined,
     schemaToCopy: undefined,
     deleteMode: false,
-    extendedInfo: [],
     hasDeletionInformation: false,
     confirmDeletionDialogVisible: false
   };
@@ -124,6 +126,16 @@ export class Schema extends React.Component<ISchemaProps, ISchemaState> {
       });
     }
   }
+
+  public selection = new Selection({
+    onSelectionChanged: () => {
+      if (this.state.deleteMode) {
+        this.onSchemaSelectionChange();
+      } else {
+        this.onSingleSchemaSelected();
+      }
+    }
+  });
 
   public render() {
     const {
@@ -194,11 +206,9 @@ export class Schema extends React.Component<ISchemaProps, ISchemaState> {
             filter={filter}
             schemas={this.props.items.databaseSchemas || []}
             multiSelect={deleteMode}
-            onSingleSchemaSelected={this.onSingleSchemaSelected.bind(this)}
-            onSchemaSelectionChange={this.onSchemaSelectionChange.bind(this)}
+            selection={this.selection}
           />
         )}
-
         <DatabaseSchemaUpdateDialog
           schema={selectedSchema}
           clearSelectedSchema={this.onUpdateSchemaDialogClosed}
@@ -221,14 +231,6 @@ export class Schema extends React.Component<ISchemaProps, ISchemaState> {
         />
       </div>
     );
-  }
-
-  private onSingleSchemaSelected(selectedSchema: IDatabaseSchema) {
-    this.setState({ selectedSchema });
-  }
-
-  private onSchemaSelectionChange(selectedSchemas: IDatabaseSchema[]) {
-    this.setState({ selectedSchemas });
   }
 
   private onCancelDeletionClick = () => {
@@ -254,6 +256,7 @@ export class Schema extends React.Component<ISchemaProps, ISchemaState> {
       const dbIds = selectedSchemas?.map(it => it.id);
 
       onDeleteSchemas(dbIds);
+      this.selection.setAllSelected(false);
       this.setState({
         hasDeletionInformation: true,
         confirmDeletionDialogVisible: false
@@ -262,7 +265,11 @@ export class Schema extends React.Component<ISchemaProps, ISchemaState> {
   };
 
   private onExitDeletionMode = () => {
-    this.setState({ deleteMode: false });
+    this.setState({
+      deleteMode: false,
+      selectedSchemas: []
+    });
+    this.selection.setAllSelected(false);
   };
 
   private onEnterDeletionMode = () => {
@@ -270,6 +277,9 @@ export class Schema extends React.Component<ISchemaProps, ISchemaState> {
   };
 
   private onFilterChange = (event: TextFieldEvent, newValue?: string) => {
+    if (newValue && newValue !== this.state.filter) {
+      this.selection.setAllSelected(false);
+    }
     this.setState({ filter: newValue || '' });
   };
 
@@ -280,6 +290,31 @@ export class Schema extends React.Component<ISchemaProps, ISchemaState> {
 
   private onUpdateSchemaDialogClosed = () => {
     this.setState({ selectedSchema: undefined });
+  };
+
+  private onSchemaSelectionChange = () => {
+    const selected: IDatabaseSchemaView[] = this.selection
+      .getSelection()
+      .map(it => it as IDatabaseSchemaView);
+    const databaseSchemas = this.props.items.databaseSchemas || [];
+    const selectedSchemas = databaseSchemas.filter(
+      schema => selected.find(it => it.id === schema.id) !== undefined
+    );
+
+    this.setState({ selectedSchemas });
+  };
+
+  private onSingleSchemaSelected = () => {
+    const selected: IDatabaseSchemaView = this.selection
+      .getSelection()
+      .map(it => it as IDatabaseSchemaView)[0];
+    if (!selected) return;
+    const databaseSchemas = this.props.items.databaseSchemas || [];
+    const selectedSchema = databaseSchemas.find(
+      schema => schema.id === selected.id
+    );
+
+    if (selectedSchema) this.setState({ selectedSchema });
   };
 }
 

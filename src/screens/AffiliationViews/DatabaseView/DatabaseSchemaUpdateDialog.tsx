@@ -37,7 +37,7 @@ export interface IDatabaseSchemaUpdateDialogState {
   updatedSchemaValues: {
     id: string;
     discriminator: string;
-    databaseEngine: string;
+    engine: string;
     createdBy: string;
     description?: string | null;
     environment: string;
@@ -57,7 +57,7 @@ class DatabaseSchemaUpdateDialog extends React.Component<
       id: '',
       discriminator: '',
       createdBy: '',
-      databaseEngine: '',
+      engine: '',
       description: '',
       environment: '',
       application: '',
@@ -75,7 +75,7 @@ class DatabaseSchemaUpdateDialog extends React.Component<
             discriminator: schema.discriminator,
             createdBy: schema.createdBy,
             description: schema.description ? schema.description : '',
-            databaseEngine: schema.databaseEngine,
+            engine: schema.engine,
             environment: schema.environment,
             application: schema.application,
             affiliation: schema.affiliation.name
@@ -118,7 +118,7 @@ class DatabaseSchemaUpdateDialog extends React.Component<
         description: updatedSchemaValues.description,
         environment: updatedSchemaValues.environment,
         discriminator: updatedSchemaValues.discriminator,
-        databaseEngine: updatedSchemaValues.databaseEngine,
+        engine: updatedSchemaValues.engine,
         id: schema.id,
         createdBy: updatedSchemaValues.createdBy
       };
@@ -208,7 +208,7 @@ class DatabaseSchemaUpdateDialog extends React.Component<
               <Grid.Col lg={10}>
                 <p>{schema.id}</p>
                 <p>{schema.type}</p>
-                <p>{schema.databaseEngine}</p>
+                <p>{schema.engine}</p>
                 <p>{dateTimeFormat(schema.createdDate)}</p>
                 <p>{dateTimeFormat(schema.lastUsedDate)}</p>
                 <ApplicationLinks

@@ -30,7 +30,7 @@ export interface IDatabaseSchema {
     name: string;
   };
   applicationDeployments: IDatabaseApplicationDeployment[];
-  databaseEngine: string;
+  engine: string;
   createdBy: string;
   createdDate: Date;
   lastUsedDate?: Date | null;
@@ -65,7 +65,7 @@ export interface IDatabaseSchemaInput {
 export interface IUpdateDatabaseSchemaInputWithCreatedBy
   extends IDatabaseSchemaInput {
   id: string;
-  databaseEngine: string;
+  engine: string;
 }
 
 export interface ICreateDatabaseSchemaInput extends IDatabaseSchemaInput {

@@ -198,7 +198,7 @@ export const databaseSchemaViewFactory = Factory.Sync.makeFactory<
   applicationDeploymentsUses: 1,
   sizeInMb: 0.75,
   type: 'MANAGED',
-  databaseEngine: 'ORACLE',
+  engine: 'ORACLE',
   jdbcUrl: 'jdbc:oracle:thin:@localhost:1521:db'
 });
 
@@ -214,7 +214,7 @@ export const databaseSchemaFactory = Factory.Sync.makeFactory<IDatabaseSchema>({
   sizeInMb: 0.75,
   type: 'MANAGED',
   affiliation: { name: 'paas' },
-  databaseEngine: 'oracle',
+  engine: 'oracle',
   id: '1234.1234.1234',
   jdbcUrl: 'jdbcurl-123',
   name: 'l4342',
@@ -250,7 +250,7 @@ export const databaseSchemaInputWithCreatedByFactory = Factory.Sync.makeFactory<
   environment: 'environment',
   affiliation: 'paas',
   createdBy: '12345',
-  databaseEngine: 'ORACLE'
+  engine: 'ORACLE'
 });
 
 export const jdbcUserFactory = Factory.Sync.makeFactory<IJdbcUser>({

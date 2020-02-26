@@ -23,7 +23,7 @@ export const DATABASE_SCHEMAS_QUERY = gql`
       environment
       description
       discriminator
-      databaseEngine
+      engine
       applicationDeployments {
         id
         name

@@ -9,7 +9,7 @@
           "name": "paas"
         },
         "name": "AOIJDOISJDASDAF",
-        "databaseEngine": "ORACLE",
+        "engine": "ORACLE",
         "applicationDeployment": null,
         "createdBy": "default",
         "createdDate": "+49635-05-22T19:10:00Z",
