@@ -15,6 +15,10 @@ export interface IDatabaseInstance {
   affiliation: {
     name: string;
   };
+  labels: Array<{
+    key: string;
+    value: string;
+  }>;
 }
 
 export interface IDatabaseSchema {

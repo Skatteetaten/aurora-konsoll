@@ -57,6 +57,10 @@ export const DATABASE_INSTANCES_QUERY = gql`
       affiliation {
         name
       }
+      labels {
+        key
+        value
+      }
     }
   }
 `;

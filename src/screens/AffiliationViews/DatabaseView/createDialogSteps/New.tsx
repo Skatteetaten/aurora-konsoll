@@ -71,7 +71,11 @@ const New = ({
       it => ({
         key: it.instanceName,
         text: `Postgres (${it.instanceName})`,
-        description: `${it.host}:${it.port}`,
+        description: `${it.host}:${it.port} lables=[${it.labels
+          .map(it => {
+            return `{${it.key}:${it.value}}`;
+          })
+          .join(', ')}]`,
         engine: it.engine,
         instanceName: it.instanceName
       })
