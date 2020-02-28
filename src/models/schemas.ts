@@ -70,6 +70,8 @@ export interface IUpdateDatabaseSchemaInputWithCreatedBy
 
 export interface ICreateDatabaseSchemaInput extends IDatabaseSchemaInput {
   jdbcUser?: IJdbcUser | null;
+  engine: string;
+  instanceName?: string | null;
 }
 
 export interface IJdbcUser {

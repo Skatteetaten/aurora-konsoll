@@ -345,6 +345,7 @@ export const createDatabaseSchemaInputFactory = Factory.Sync.makeFactory<
   description: null,
   discriminator: 'my-db',
   environment: 'env',
+  engine: 'ORACLE',
   jdbcUser: {
     jdbcUrl: 'jdbc:oracle:thin:@test.skead.no:1521/referanse',
     password: 'password',

@@ -33,7 +33,8 @@ export default class DatabaseSchemaService {
       description: null,
       environment: '',
       application: '',
-      affiliation: ''
+      affiliation: '',
+      engine: ''
     };
 
     const trimLabels = (value: string): string => {
