@@ -12,21 +12,24 @@ describe('DatabaseSchemaService', () => {
 
   describe('trimLabelsAndJdbcUser', () => {
     it('should trim labels values', () => {
-      const databseSchema = databaseSchemaInputFactory.build({
+      const databseSchema = createDatabaseSchemaInputFactory.build({
         environment: 'environment ',
         discriminator: ' db ',
-        createdBy: ' 123'
+        createdBy: ' 123',
+        jdbcUser: null
       });
 
       expect(
         databaseSchemaService.trimLabelsAndJdbcUser(databseSchema)
       ).toEqual({
         affiliation: 'paas',
-        application: 'application',
+        application: 'app',
         description: null,
         createdBy: '123',
+        engine: 'ORACLE',
         discriminator: 'db',
-        environment: 'environment'
+        environment: 'environment',
+        jdbcUser: null
       });
     });
 
@@ -35,6 +38,7 @@ describe('DatabaseSchemaService', () => {
         application: ' app ',
         discriminator: ' db ',
         createdBy: ' ',
+        engine: 'ORACLE',
         jdbcUser: {
           jdbcUrl: ' test.no',
           password: '123 '
@@ -48,6 +52,7 @@ describe('DatabaseSchemaService', () => {
         application: 'app',
         createdBy: '',
         description: null,
+        engine: 'ORACLE',
         discriminator: 'db',
         environment: 'env',
         jdbcUser: { jdbcUrl: 'test.no', password: '123', username: 'username' }

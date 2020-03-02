@@ -51,7 +51,8 @@ class DatabaseSchemaCreateDialog extends React.Component<
     environment: '',
     application: '',
     affiliation: this.props.affiliation,
-    jdbcUser: null
+    jdbcUser: null,
+    engine: 'ORACLE'
   };
 
   public state = {
@@ -79,6 +80,7 @@ class DatabaseSchemaCreateDialog extends React.Component<
         environment: initialDatabaseSchemaInput.environment,
         application: initialDatabaseSchemaInput.application,
         affiliation: this.props.affiliation,
+        engine: initialDatabaseSchemaInput.engine,
         jdbcUser: {
           jdbcUrl: initialDatabaseSchemaInput.jdbcUrl,
           username: initialDatabaseSchemaInput.users[0].username,
