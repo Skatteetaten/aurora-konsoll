@@ -53,6 +53,7 @@ describe('DatabaseSchemaService', () => {
         createdBy: '',
         engine: 'ORACLE',
         description: null,
+        engine: 'ORACLE',
         discriminator: 'db',
         environment: 'env',
         jdbcUser: { jdbcUrl: 'test.no', password: '123', username: 'username' }
