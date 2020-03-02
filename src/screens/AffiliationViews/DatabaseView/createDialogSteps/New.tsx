@@ -71,7 +71,7 @@ const New = ({
       it => ({
         key: it.instanceName,
         text: `Postgres (${it.instanceName})`,
-        description: `${it.host}:${it.port} lables=[${it.labels
+        description: `${it.host}:${it.port} labels=[${it.labels
           .map(it => {
             return `{${it.key}:${it.value}}`;
           })
