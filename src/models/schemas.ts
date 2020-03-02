@@ -50,7 +50,6 @@ export interface IDatabaseSchemaInput {
 export interface IUpdateDatabaseSchemaInputWithCreatedBy
   extends IDatabaseSchemaInput {
   id: string;
-  engine: string;
 }
 
 export interface ICreateDatabaseSchemaInput extends IDatabaseSchemaInput {
