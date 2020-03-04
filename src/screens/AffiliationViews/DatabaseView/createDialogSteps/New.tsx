@@ -4,9 +4,7 @@ import styled from 'styled-components';
 import { ICreateDatabaseSchemaInput, IDatabaseInstances } from 'models/schemas';
 import Labels from '../Labels';
 import { TextFieldEvent } from 'types/react';
-import RadioButtonGroup, {
-  IRadioButtonGroupOptions
-} from '@skatteetaten/frontend-components/RadioButtonGroup';
+import RadioButtonGroup from '@skatteetaten/frontend-components/RadioButtonGroup';
 import Grid from '@skatteetaten/frontend-components/Grid';
 
 export interface INewProps {
@@ -63,32 +61,34 @@ const New = ({
     instanceName?: string | null;
   }
 
-  const options = (): IRadioButtonGroupOptions[] => {
-    if (!instances.databaseInstances) {
-      return [];
-    }
-    const databaseInstances: IInstanceRadioButton[] = instances.databaseInstances?.map(
-      it => ({
-        key: it.instanceName,
-        text: `Postgres (${it.instanceName})`,
-        description: `${it.host}:${it.port} labels=[${it.labels
-          .map(it => {
-            return `{${it.key}:${it.value}}`;
-          })
-          .join(', ')}]`,
-        engine: it.engine,
-        instanceName: it.instanceName
-      })
-    );
-
-    databaseInstances.unshift({
+  const options = (): IInstanceRadioButton[] => {
+    const oracleInstance = {
       key: 'oracle',
       text: 'Oracle (drivei1/drivei2)',
       description: 'uil0map-drivein-db01:1521 eller uil0map-drivein-db02:1521',
       engine: 'ORACLE',
       instanceName: null
-    });
-    return databaseInstances;
+    };
+
+    const databaseInstances:
+      | IInstanceRadioButton[]
+      | undefined = instances.databaseInstances?.map(it => ({
+      key: it.instanceName,
+      text: `Postgres (${it.instanceName})`,
+      description: `${it.host}:${it.port} labels=[${it.labels
+        .map(it => {
+          return `{${it.key}:${it.value}}`;
+        })
+        .join(', ')}]`,
+      engine: it.engine,
+      instanceName: it.instanceName
+    }));
+
+    if (databaseInstances) {
+      databaseInstances.unshift(oracleInstance);
+      return databaseInstances;
+    }
+    return [oracleInstance];
   };
 
   return (
