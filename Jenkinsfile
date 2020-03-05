@@ -9,6 +9,7 @@ def overrides = [
     chatRoom: "#aos-notifications",
     npmInstallCommand: 'ci',
     iqOrganizationName: "Team AOS",
+    iqBaseUrl: "https://iqref.aurora.skead.no",
     nodeVersion: "10",
     versionStrategy: [
         [ branch: 'master', versionHint: '0']
