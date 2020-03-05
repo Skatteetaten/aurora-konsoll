@@ -2,7 +2,7 @@
 def jenkinsfile
 
 def overrides = [
-    scriptVersion  : 'test-nexus-iq-url',
+    scriptVersion  : 'feature/iq-base-url-as-param',
     pipelineScript: 'https://git.aurora.skead.no/scm/ao/aurora-pipeline-scripts.git',
     credentialsId: "github",
     jiraFiksetIKomponentversjon: true,
