@@ -249,8 +249,7 @@ export const databaseSchemaInputWithCreatedByFactory = Factory.Sync.makeFactory<
   application: 'application',
   environment: 'environment',
   affiliation: 'paas',
-  createdBy: '12345',
-  engine: 'ORACLE'
+  createdBy: '12345'
 });
 
 export const jdbcUserFactory = Factory.Sync.makeFactory<IJdbcUser>({

@@ -118,7 +118,6 @@ class DatabaseSchemaUpdateDialog extends React.Component<
         description: updatedSchemaValues.description,
         environment: updatedSchemaValues.environment,
         discriminator: updatedSchemaValues.discriminator,
-        engine: updatedSchemaValues.engine,
         id: schema.id,
         createdBy: updatedSchemaValues.createdBy
       };
