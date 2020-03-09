@@ -1,7 +1,7 @@
 import * as React from 'react';
 
 import { SchemaConnected } from './schemaConnected';
-import { Switch, Route, useRouteMatch, Redirect } from 'react-router';
+import { Redirect, Route, Switch, useRouteMatch } from 'react-router';
 
 export interface IDatabaseViewRoutesProps {
   affiliation: string;

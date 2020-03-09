@@ -7,7 +7,7 @@ import {
   IDatabaseSchemas,
   IDeleteDatabaseSchemasResponse
 } from 'models/schemas';
-import { renderDetailsListWithSchemaInfo } from './DatabaseSchemaTable';
+import { renderDetailsListWithSchemaInfo } from './Schema';
 
 interface IDeletionSummaryProps {
   deleteResponse: IDeleteDatabaseSchemasResponse;

@@ -29,7 +29,6 @@ export interface IDatabaseSchemaUpdateDialogProps {
   onUpdate: (databaseSchema: IUpdateDatabaseSchemaInputWithCreatedBy) => void;
   onDelete: (databaseSchema: IDatabaseSchema) => void;
   onTestJdbcConnectionForId: (id: string) => void;
-  databaseSchemaService: DatabaseSchemaService;
   testJdbcConnectionResponse: boolean;
   createNewCopy: () => void;
 }
@@ -38,6 +37,7 @@ export interface IDatabaseSchemaUpdateDialogState {
   updatedSchemaValues: {
     id: string;
     discriminator: string;
+    engine: string;
     createdBy: string;
     description?: string | null;
     environment: string;
@@ -50,11 +50,14 @@ class DatabaseSchemaUpdateDialog extends React.Component<
   IDatabaseSchemaUpdateDialogProps,
   IDatabaseSchemaUpdateDialogState
 > {
+  private databaseSchemaService = new DatabaseSchemaService();
+
   public state = {
     updatedSchemaValues: {
       id: '',
       discriminator: '',
       createdBy: '',
+      engine: '',
       description: '',
       environment: '',
       application: '',
@@ -72,6 +75,7 @@ class DatabaseSchemaUpdateDialog extends React.Component<
             discriminator: schema.discriminator,
             createdBy: schema.createdBy,
             description: schema.description ? schema.description : '',
+            engine: schema.engine,
             environment: schema.environment,
             application: schema.application,
             affiliation: schema.affiliation.name
@@ -170,7 +174,6 @@ class DatabaseSchemaUpdateDialog extends React.Component<
     const {
       schema,
       className,
-      databaseSchemaService,
       testJdbcConnectionResponse,
       onTestJdbcConnectionForId
     } = this.props;
@@ -196,6 +199,7 @@ class DatabaseSchemaUpdateDialog extends React.Component<
               <Grid.Col lg={2} className="bold">
                 <p>Id: </p>
                 <p>Type: </p>
+                <p>Engine: </p>
                 <p>Opprettet: </p>
                 <p>Sist brukt: </p>
                 <p>Brukes av: </p>
@@ -203,6 +207,7 @@ class DatabaseSchemaUpdateDialog extends React.Component<
               <Grid.Col lg={10}>
                 <p>{schema.id}</p>
                 <p>{schema.type}</p>
+                <p>{schema.engine}</p>
                 <p>{dateTimeFormat(schema.createdDate)}</p>
                 <p>{dateTimeFormat(schema.lastUsedDate)}</p>
                 <ApplicationLinks
@@ -268,7 +273,7 @@ class DatabaseSchemaUpdateDialog extends React.Component<
               style={{ width: '120px' }}
               icon="Check"
               onClick={this.updateLabels}
-              disabled={databaseSchemaService.isUpdateButtonDisabled(
+              disabled={this.databaseSchemaService.isUpdateButtonDisabled(
                 updatedSchemaValues,
                 schema
               )}

@@ -1,8 +1,12 @@
 import gql from 'graphql-tag';
-import { IDatabaseSchema } from 'models/schemas';
+import { IDatabaseSchema, IDatabaseInstance } from 'models/schemas';
 
 export interface IDatabaseSchemasQuery {
   databaseSchemas?: IDatabaseSchema[];
+}
+
+export interface IDatabaseInstancesQuery {
+  databaseInstances?: IDatabaseInstance[];
 }
 
 export const DATABASE_SCHEMAS_QUERY = gql`
@@ -19,7 +23,7 @@ export const DATABASE_SCHEMAS_QUERY = gql`
       environment
       description
       discriminator
-      databaseEngine
+      engine
       applicationDeployments {
         id
         name
@@ -37,6 +41,25 @@ export const DATABASE_SCHEMAS_QUERY = gql`
       users {
         username
         type
+      }
+    }
+  }
+`;
+
+export const DATABASE_INSTANCES_QUERY = gql`
+  query getDatabaseInstances($affiliation: String!) {
+    databaseInstances(affiliation: $affiliation) {
+      engine
+      instanceName
+      host
+      port
+      createSchemaAllowed
+      affiliation {
+        name
+      }
+      labels {
+        key
+        value
       }
     }
   }

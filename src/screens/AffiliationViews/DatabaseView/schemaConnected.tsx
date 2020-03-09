@@ -1,5 +1,5 @@
 import { connect } from 'react-redux';
-import Schema from './DatabaseSchemaTable';
+import Schema from './Schema';
 
 import {
   ICreateDatabaseSchemaInput,
@@ -16,7 +16,8 @@ import {
   fetchSchemas,
   testJdbcConnectionForId,
   testJdbcConnectionForJdbcUser,
-  updateSchema
+  updateSchema,
+  fetchInstances
 } from './state/actions';
 import { ISchemasState } from './state/reducers';
 
@@ -29,9 +30,14 @@ const getCreateDatabaseSchemaRespnse = (state: ISchemasState) =>
   state.createDatabaseSchemaResponse;
 const getCurrentUser = (state: IStartupState) => state.currentUser;
 const getDeletionInfo = (state: ISchemasState) => state.deleteSchemasResponse;
+const getInstances = (state: ISchemasState) => state.databaseInstances;
+const getFetchingStatusInstances = (state: ISchemasState) =>
+  state.isFetchingInstances;
 
 const mapStateToProps = (state: RootState) => ({
   items: getItems(state.database),
+  instances: getInstances(state.database),
+  isFetchingInstances: getFetchingStatusInstances(state.database),
   isFetching: getFetchingStatus(state.database),
   updateResponse: getUpdateResponse(state.database),
   testJdbcConnectionResponse: getTestConnectionResponse(state.database),
@@ -42,6 +48,7 @@ const mapStateToProps = (state: RootState) => ({
 
 export const SchemaConnected = connect(mapStateToProps, {
   onFetch: (affiliations: string[]) => fetchSchemas(affiliations),
+  onFetchInstances: (affiliation: string) => fetchInstances(affiliation),
   onUpdate: (databaseSchema: IUpdateDatabaseSchemaInputWithCreatedBy) =>
     updateSchema(databaseSchema),
   onDelete: (databaseSchema: IDatabaseSchema) => deleteSchema(databaseSchema),

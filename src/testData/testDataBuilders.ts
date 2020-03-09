@@ -17,7 +17,6 @@ import {
   IDatabaseSchema,
   IDatabaseSchemaInput,
   IDatabaseSchemas,
-  IDatabaseSchemaView,
   IDeleteDatabaseSchemasResponse,
   IJdbcUser,
   IUpdateDatabaseSchemaInputWithCreatedBy
@@ -37,6 +36,7 @@ import { INetdebugViewState } from 'screens/NetdebugView/state/reducer';
 import { IErrorsState } from 'screens/ErrorHandler/state/reducer';
 import { IErrors, IAppError } from 'models/errors';
 import { IIconLinkData } from 'components/IconLink';
+import { IDatabaseSchemaView } from '../screens/AffiliationViews/DatabaseView/DatabaseSchemaTable';
 import { IImageTag } from 'services/auroraApiClients/imageRepositoryClient/query';
 import { ApplicationDeployment } from 'models/immer/ApplicationDeployment';
 import { IApplicationDeploymentData } from 'services/auroraApiClients/applicationDeploymentClient/query';
@@ -198,6 +198,7 @@ export const databaseSchemaViewFactory = Factory.Sync.makeFactory<
   applicationDeploymentsUses: 1,
   sizeInMb: 0.75,
   type: 'MANAGED',
+  engine: 'ORACLE',
   jdbcUrl: 'jdbc:oracle:thin:@localhost:1521:db'
 });
 
@@ -213,7 +214,7 @@ export const databaseSchemaFactory = Factory.Sync.makeFactory<IDatabaseSchema>({
   sizeInMb: 0.75,
   type: 'MANAGED',
   affiliation: { name: 'paas' },
-  databaseEngine: 'oracle',
+  engine: 'oracle',
   id: '1234.1234.1234',
   jdbcUrl: 'jdbcurl-123',
   name: 'l4342',
@@ -295,6 +296,8 @@ export const schemasFactory = Factory.Sync.makeFactory<ISchemasState>({
   updateSchemaResponse: false,
   deleteSchemasResponse: { failed: [], succeeded: [] },
   testJdbcConnectionResponse: false,
+  databaseInstances: { databaseInstances: [] },
+  isFetchingInstances: false,
   createDatabaseSchemaResponse: {
     id: '',
     jdbcUser: { jdbcUrl: '', username: '', password: '' }
@@ -341,6 +344,7 @@ export const createDatabaseSchemaInputFactory = Factory.Sync.makeFactory<
   description: null,
   discriminator: 'my-db',
   environment: 'env',
+  engine: 'ORACLE',
   jdbcUser: {
     jdbcUrl: 'jdbc:oracle:thin:@test.skead.no:1521/referanse',
     password: 'password',

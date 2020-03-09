@@ -2,6 +2,25 @@ export interface IDatabaseSchemas {
   databaseSchemas?: IDatabaseSchema[];
 }
 
+export interface IDatabaseInstances {
+  databaseInstances?: IDatabaseInstance[];
+}
+
+export interface IDatabaseInstance {
+  engine: string;
+  instanceName: string;
+  host: string;
+  port: number;
+  createSchemaAllowed: boolean;
+  affiliation: {
+    name: string;
+  };
+  labels: Array<{
+    key: string;
+    value: string;
+  }>;
+}
+
 export interface IDatabaseSchema {
   id: string;
   type: string;
@@ -15,7 +34,7 @@ export interface IDatabaseSchema {
     name: string;
   };
   applicationDeployments: IDatabaseApplicationDeployment[];
-  databaseEngine: string;
+  engine: string;
   createdBy: string;
   createdDate: Date;
   lastUsedDate?: Date | null;
@@ -38,20 +57,6 @@ export interface IDatabaseApplicationDeployment {
   };
 }
 
-export interface IDatabaseSchemaView {
-  type: string;
-  application: string;
-  environment: string;
-  discriminator: string;
-  createdBy: string;
-  createdDate: string;
-  lastUsedDate?: string | null;
-  sizeInMb: number;
-  applicationDeploymentsUses: number;
-  id: string;
-  jdbcUrl: string;
-}
-
 export interface IDatabaseSchemaInput {
   discriminator: string;
   description?: string | null;
@@ -68,6 +73,8 @@ export interface IUpdateDatabaseSchemaInputWithCreatedBy
 
 export interface ICreateDatabaseSchemaInput extends IDatabaseSchemaInput {
   jdbcUser?: IJdbcUser | null;
+  engine: string;
+  instanceName?: string | null;
 }
 
 export interface IJdbcUser {

@@ -11,7 +11,8 @@ import {
   ICreateDatabaseSchemaResponse,
   IDatabaseSchema,
   IJdbcUser,
-  Step
+  Step,
+  IDatabaseInstances
 } from 'models/schemas';
 import DatabaseSchemaService from 'services/DatabaseSchemaService';
 import External from './createDialogSteps/External';
@@ -30,6 +31,7 @@ interface IDatabaseSchemaCreateDialogProps {
   currentUser: IUserAndAffiliations;
   isFetching: boolean;
   initialDatabaseSchemaInput?: IDatabaseSchema;
+  instances: IDatabaseInstances;
 }
 
 interface IDatabaseSchemaCreateDialogState {
@@ -51,7 +53,9 @@ class DatabaseSchemaCreateDialog extends React.Component<
     environment: '',
     application: '',
     affiliation: this.props.affiliation,
-    jdbcUser: null
+    jdbcUser: null,
+    engine: 'ORACLE',
+    instanceName: null
   };
 
   public state = {
@@ -79,6 +83,7 @@ class DatabaseSchemaCreateDialog extends React.Component<
         environment: initialDatabaseSchemaInput.environment,
         application: initialDatabaseSchemaInput.application,
         affiliation: this.props.affiliation,
+        engine: initialDatabaseSchemaInput.engine,
         jdbcUser: {
           jdbcUrl: initialDatabaseSchemaInput.jdbcUrl,
           username: initialDatabaseSchemaInput.users[0].username,
@@ -159,7 +164,7 @@ class DatabaseSchemaCreateDialog extends React.Component<
       previousStep: step
     });
 
-    await onCreate(
+    onCreate(
       this.databaseSchemaService.trimLabelsAndJdbcUser(databaseSchemaInput)
     );
     this.setState({
@@ -175,7 +180,8 @@ class DatabaseSchemaCreateDialog extends React.Component<
       onFetch,
       affiliation,
       createResponse,
-      isFetching
+      isFetching,
+      instances
     } = this.props;
     const { isOpen, isLoading, step, databaseSchemaInput } = this.state;
 
@@ -258,6 +264,7 @@ class DatabaseSchemaCreateDialog extends React.Component<
                 <New
                   setDatabaseSchemaInput={this.setDatabaseSchemaInput}
                   databaseSchemaInput={databaseSchemaInput}
+                  instances={instances}
                 />
               )}
               {isExternal && (
@@ -361,5 +368,6 @@ class DatabaseSchemaCreateDialog extends React.Component<
 export default styled(DatabaseSchemaCreateDialog)`
   .styled-dialog {
     height: 380px;
+    width: 1000px;
   }
 `;

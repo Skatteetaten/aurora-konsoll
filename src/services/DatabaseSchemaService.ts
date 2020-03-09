@@ -2,153 +2,11 @@ import {
   ICreateDatabaseSchemaInput,
   IDatabaseSchema,
   IDatabaseSchemaInput,
-  IDatabaseSchemaView,
   IJdbcUser,
   IUpdateDatabaseSchemaInputWithCreatedBy
 } from 'models/schemas';
-import { IColumn } from 'office-ui-fabric-react/lib-commonjs';
-
-const deletionDialogColumns: IColumn[] = [
-  {
-    key: 'column1',
-    name: 'Applikasjon',
-    fieldName: 'application',
-    minWidth: 200,
-    maxWidth: 200,
-    isResizable: true
-  },
-  {
-    key: 'column2',
-    name: 'Miljø',
-    fieldName: 'environment',
-    minWidth: 200,
-    maxWidth: 200,
-    isResizable: true
-  },
-  {
-    key: 'column3',
-    name: 'Diskriminator',
-    fieldName: 'discriminator',
-    minWidth: 200,
-    maxWidth: 200,
-    isResizable: true
-  }
-];
-
-const defaultColumns: IColumn[] = [
-  {
-    fieldName: 'type',
-    isResizable: true,
-    key: '0',
-    maxWidth: 85,
-    minWidth: 85,
-    name: 'Type',
-    iconName: ''
-  },
-  {
-    fieldName: 'environment',
-    isResizable: true,
-    key: '1',
-    maxWidth: 200,
-    minWidth: 200,
-    name: 'Miljø',
-    iconName: ''
-  },
-  {
-    fieldName: 'application',
-    isResizable: true,
-    key: '2',
-    maxWidth: 200,
-    minWidth: 200,
-    name: 'Applikasjon',
-    iconName: ''
-  },
-  {
-    fieldName: 'discriminator',
-    isResizable: true,
-    key: '3',
-    maxWidth: 200,
-    minWidth: 200,
-    name: 'Diskriminator',
-    iconName: ''
-  },
-  {
-    fieldName: 'createdDate',
-    isResizable: true,
-    key: '4',
-    maxWidth: 90,
-    minWidth: 90,
-    name: 'Opprettet',
-    iconName: ''
-  },
-  {
-    fieldName: 'lastUsedDate',
-    isResizable: true,
-    key: '5',
-    maxWidth: 90,
-    minWidth: 90,
-    name: 'Sist brukt',
-    iconName: ''
-  },
-  {
-    fieldName: 'sizeInMb',
-    isResizable: true,
-    key: '6',
-    maxWidth: 110,
-    minWidth: 110,
-    name: 'Størrelse (MB)',
-    iconName: ''
-  },
-  {
-    fieldName: 'createdBy',
-    isResizable: true,
-    key: '7',
-    maxWidth: 80,
-    minWidth: 80,
-    name: 'Bruker',
-    iconName: ''
-  },
-  {
-    fieldName: 'applicationDeploymentsUses',
-    isResizable: true,
-    key: '8',
-    maxWidth: 70,
-    minWidth: 70,
-    name: 'I bruk av',
-    iconName: ''
-  },
-  {
-    fieldName: 'jdbcUrl',
-    isResizable: true,
-    key: '9',
-    maxWidth: 280,
-    minWidth: 280,
-    name: 'JDBC url',
-    iconName: '',
-    className: 'jdbcurl-col'
-  }
-];
-
-export const filterDatabaseSchemaView = (filter: string) => {
-  return (v: IDatabaseSchemaView) =>
-    v.createdBy.includes(filter) ||
-    v.application.includes(filter) ||
-    v.environment.includes(filter) ||
-    v.discriminator.includes(filter) ||
-    v.createdDate.includes(filter) ||
-    (!v.lastUsedDate || v.lastUsedDate === null
-      ? false
-      : v.lastUsedDate.includes(filter)) ||
-    v.sizeInMb.toString().includes(filter) ||
-    v.type.includes(filter) ||
-    v.jdbcUrl.includes(filter) ||
-    v.id.includes(filter);
-};
 
 export default class DatabaseSchemaService {
-  public static DEFAULT_COLUMNS = defaultColumns;
-  public static DELETION_COLUMNS = deletionDialogColumns;
-
   public trimJdbcUser = (
     jdbcUser: IJdbcUser | null | undefined
   ): IJdbcUser | null => {
@@ -175,7 +33,8 @@ export default class DatabaseSchemaService {
       description: null,
       environment: '',
       application: '',
-      affiliation: ''
+      affiliation: '',
+      engine: ''
     };
 
     const trimLabels = (value: string): string => {
@@ -191,12 +50,10 @@ export default class DatabaseSchemaService {
   }
 
   public getSelectionDetails(deleteSelectionIds: string[]): string {
-    switch (deleteSelectionIds.length) {
-      case 1:
-        return `Vil du slette dette skjemaet?`;
-      default:
-        return `Vil du slette disse ${deleteSelectionIds.length} skjemaene?`;
+    if (deleteSelectionIds.length === 1) {
+      return `Vil du slette dette skjemaet?`;
     }
+    return `Vil du slette disse ${deleteSelectionIds.length} skjemaene?`;
   }
 
   public hasEmptyLabelValues(input: IDatabaseSchemaInput) {
