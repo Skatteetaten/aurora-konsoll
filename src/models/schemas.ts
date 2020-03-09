@@ -2,6 +2,25 @@ export interface IDatabaseSchemas {
   databaseSchemas?: IDatabaseSchema[];
 }
 
+export interface IDatabaseInstances {
+  databaseInstances?: IDatabaseInstance[];
+}
+
+export interface IDatabaseInstance {
+  engine: string;
+  instanceName: string;
+  host: string;
+  port: number;
+  createSchemaAllowed: boolean;
+  affiliation: {
+    name: string;
+  };
+  labels: Array<{
+    key: string;
+    value: string;
+  }>;
+}
+
 export interface IDatabaseSchema {
   id: string;
   type: string;
@@ -55,6 +74,7 @@ export interface IUpdateDatabaseSchemaInputWithCreatedBy
 export interface ICreateDatabaseSchemaInput extends IDatabaseSchemaInput {
   jdbcUser?: IJdbcUser | null;
   engine: string;
+  instanceName?: string | null;
 }
 
 export interface IJdbcUser {

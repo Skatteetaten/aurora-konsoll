@@ -14,7 +14,8 @@ import {
   IDatabaseSchemas,
   IDeleteDatabaseSchemasResponse,
   IJdbcUser,
-  IUpdateDatabaseSchemaInputWithCreatedBy
+  IUpdateDatabaseSchemaInputWithCreatedBy,
+  IDatabaseInstances
 } from 'models/schemas';
 import ConfirmDeletionDialog from './ConfirmDeletionDialog';
 import DatabaseSchemaCreateDialog from './DatabaseSchemaCreateDialog';
@@ -68,6 +69,7 @@ export const renderDetailsListWithSchemaInfo = (schemas: IDatabaseSchema[]) => (
 
 export interface ISchemaProps {
   onFetch: (affiliations: string[]) => void;
+  onFetchInstances: (affiliation: string) => void;
   onUpdate: (databaseSchema: IUpdateDatabaseSchemaInputWithCreatedBy) => void;
   onDelete: (databaseSchema: IDatabaseSchema) => void;
   onCreate: (databaseSchema: ICreateDatabaseSchemaInput) => void;
@@ -75,6 +77,7 @@ export interface ISchemaProps {
   onTestJdbcConnectionForId: (id: string) => void;
   onTestJdbcConnectionForUser: (jdbcUser: IJdbcUser) => void;
   items: IDatabaseSchemas;
+  instances: IDatabaseInstances;
   createResponse: ICreateDatabaseSchemaResponse;
   isFetching: boolean;
   updateResponse: boolean;
@@ -108,11 +111,12 @@ export class Schema extends React.Component<ISchemaProps, ISchemaState> {
   };
 
   public componentDidMount() {
-    const { affiliation, onFetch } = this.props;
+    const { affiliation, onFetch, onFetchInstances } = this.props;
     onFetch([affiliation]);
+    onFetchInstances(affiliation);
   }
 
-  public componentDidUpdate(prevProps: ISchemaProps, prevState: ISchemaState) {
+  public componentDidUpdate(prevProps: ISchemaProps) {
     const { affiliation, items, onFetch } = this.props;
 
     if (
@@ -161,7 +165,8 @@ export class Schema extends React.Component<ISchemaProps, ISchemaState> {
       onFetch,
       currentUser,
       deleteResponse,
-      items
+      items,
+      instances
     } = this.props;
     const {
       filter,
@@ -206,6 +211,7 @@ export class Schema extends React.Component<ISchemaProps, ISchemaState> {
               currentUser={currentUser}
               isFetching={isFetching}
               initialDatabaseSchemaInput={schemaToCopy}
+              instances={instances}
             />
           </div>
         </div>

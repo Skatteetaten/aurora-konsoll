@@ -13,7 +13,12 @@ import {
   TEST_JDBC_CONNECTION_FOR_JDBCUSER_MUTATION,
   UPDATE_DATABASESCHEMA_MUTATION
 } from './mutation';
-import { DATABASE_SCHEMAS_QUERY, IDatabaseSchemasQuery } from './query';
+import {
+  DATABASE_SCHEMAS_QUERY,
+  IDatabaseSchemasQuery,
+  DATABASE_INSTANCES_QUERY,
+  IDatabaseInstancesQuery
+} from './query';
 
 export class DatabaseClient {
   private client: GoboClient;
@@ -29,6 +34,17 @@ export class DatabaseClient {
       query: DATABASE_SCHEMAS_QUERY,
       variables: {
         affiliations
+      }
+    });
+  }
+
+  public async getInstances(
+    affiliation: string
+  ): Promise<IDataAndErrors<IDatabaseInstancesQuery> | undefined> {
+    return await this.client.query<IDatabaseInstancesQuery>({
+      query: DATABASE_INSTANCES_QUERY,
+      variables: {
+        affiliation
       }
     });
   }

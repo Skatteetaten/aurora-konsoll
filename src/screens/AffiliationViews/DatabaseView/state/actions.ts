@@ -7,7 +7,8 @@ import {
   IDatabaseSchemas,
   IDeleteDatabaseSchemasResponse,
   IJdbcUser,
-  IUpdateDatabaseSchemaInputWithCreatedBy
+  IUpdateDatabaseSchemaInputWithCreatedBy,
+  IDatabaseInstances
 } from 'models/schemas';
 import { addCurrentErrors } from 'screens/ErrorHandler/state/actions';
 import { createAction } from 'redux-ts-utils';
@@ -17,8 +18,14 @@ const databaseAction = (action: string) => `database/${action}`;
 export const fetchSchemaRequest = createAction<boolean>(
   databaseAction('FETCHED_SCHEMA_REQUEST')
 );
+export const fetchInstanceRequest = createAction<boolean>(
+  databaseAction('FETCHED_INSTANCE_REQUEST')
+);
 export const fetchSchemaResponse = createAction<IDatabaseSchemas>(
   databaseAction('FETCHED_SCHEMA_RESPONSE')
+);
+export const fetchInstanceResponse = createAction<IDatabaseInstances>(
+  databaseAction('FETCHED_INSTANCE_RESPONSE')
 );
 export const updateSchemaResponse = createAction<boolean>(
   databaseAction('UPDATE_SCHEMA_RESPONSE')
@@ -55,6 +62,23 @@ export const fetchSchemas: Thunk = (affiliations: string[]) => async (
     dispatch(fetchSchemaResponse(result.data));
   } else {
     dispatch(fetchSchemaResponse({ databaseSchemas: [] }));
+  }
+};
+
+export const fetchInstances: Thunk = (affiliation: string) => async (
+  dispatch,
+  getState,
+  { clients }
+) => {
+  dispatch(fetchInstanceRequest(true));
+  const result = await clients.databaseClient.getInstances(affiliation);
+  dispatch(fetchInstanceRequest(false));
+  dispatch(addCurrentErrors(result));
+
+  if (result && result.data) {
+    dispatch(fetchInstanceResponse(result.data));
+  } else {
+    dispatch(fetchInstanceResponse({ databaseInstances: [] }));
   }
 };
 
@@ -186,6 +210,8 @@ export const createDatabaseSchema: Thunk = (
 };
 
 export default {
+  fetchInstanceResponse,
+  fetchInstanceRequest,
   fetchSchemaRequest,
   fetchSchemaResponse,
   updateSchemaResponse,

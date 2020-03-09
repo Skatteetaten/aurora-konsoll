@@ -80,11 +80,13 @@ const FilterModeSelect = ({
           {
             key: FilterMode.Create.toString(),
             text: 'Nytt',
+            description: '',
             iconProps: { iconName: 'AddOutline' }
           },
           {
             key: FilterMode.Edit.toString(),
             text: 'Rediger',
+            description: '',
             iconProps: { iconName: 'Edit' }
           }
         ]}

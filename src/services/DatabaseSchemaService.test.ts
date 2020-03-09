@@ -51,8 +51,8 @@ describe('DatabaseSchemaService', () => {
         affiliation: 'paas',
         application: 'app',
         createdBy: '',
-        description: null,
         engine: 'ORACLE',
+        description: null,
         discriminator: 'db',
         environment: 'env',
         jdbcUser: { jdbcUrl: 'test.no', password: '123', username: 'username' }
