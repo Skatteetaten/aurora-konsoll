@@ -43,12 +43,14 @@ function getVersionViewUnavailableMessage(
 
   if (deployment.details.deploymentSpec?.type === 'development') {
     return serviceUnavailableBecause(
-      'Applikasjonen er av type development, og kan kun oppgraderes med binary builds'
+      'Applikasjonen er av type development, og kan kun oppgraderes med binary builds',
+      'info'
     );
   }
   if (!deployment.imageRepository?.isFullyQualified) {
     return serviceUnavailableBecause(
-      'Applikasjonen har en Docker Image referanse som ikke er støttet, og kan dermed ikke hente versjoner'
+      'Applikasjonen har en Docker Image referanse som ikke er støttet, og versjoner kan dermed ikke hentes',
+      'warning'
     );
   }
 
@@ -133,7 +135,10 @@ export const DetailsView: React.FC<IDetailsViewProps> = ({
           </Route>
           <Route path={`${match.path}/version`}>
             {unavailableMessage ? (
-              <UnavailableServiceMessage message={unavailableMessage} />
+              <UnavailableServiceMessage
+                message={unavailableMessage}
+                type={unavailableMessage.type}
+              />
             ) : (
               <VersionViewContainer
                 versionStatus={versionStatus}
