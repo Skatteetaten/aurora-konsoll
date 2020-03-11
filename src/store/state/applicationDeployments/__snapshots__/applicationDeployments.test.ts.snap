@@ -10,6 +10,7 @@ Object {
         "id": "1",
         "imageRepository": Object {
           "guiUrl": "http://localhost",
+          "isFullyQualified": true,
           "repository": "no.skatteetaten.aurora.mokey",
         },
         "message": undefined,
@@ -95,6 +96,7 @@ Object {
         "id": "0",
         "imageRepository": Object {
           "guiUrl": "http://localhost",
+          "isFullyQualified": true,
           "repository": "no.skatteetaten.aurora.mokey",
         },
         "message": undefined,
@@ -146,6 +148,7 @@ Object {
         "id": "0",
         "imageRepository": Object {
           "guiUrl": "http://localhost",
+          "isFullyQualified": true,
           "repository": "no.skatteetaten.aurora.mokey",
         },
         "message": undefined,
@@ -197,6 +200,7 @@ Object {
         "id": "1",
         "imageRepository": Object {
           "guiUrl": "http://localhost",
+          "isFullyQualified": true,
           "repository": "no.skatteetaten.aurora.mokey",
         },
         "message": undefined,

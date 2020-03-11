@@ -22,6 +22,7 @@ export interface IApplication {
 export interface IImageRepository {
   repository: string;
   guiUrl?: string;
+  isFullyQualified?: boolean;
 }
 
 export interface IPermission {
@@ -76,6 +77,7 @@ export const APPLICATIONS_QUERY = gql`
             imageRepository {
               repository
               guiUrl
+              isFullyQualified
             }
             id
             name
@@ -249,6 +251,7 @@ export const APPLICATION_DEPLOYMENT_WITH_DETAILS_QUERY = gql`
       imageRepository {
         repository
         guiUrl
+        isFullyQualified
       }
       id
       name

@@ -10,7 +10,6 @@ import {
   IUnavailableServiceMessage,
   unavailableServiceMessageCreator
 } from 'models/UnavailableServiceMessage';
-import { IApplicationDeploymentDetails } from 'models/ApplicationDeployment';
 
 import DetailsActionBar from './DetailsActionBar';
 import InformationView from './InformationView/InformationView';
@@ -36,17 +35,20 @@ interface IDetailsViewProps {
 }
 
 function getVersionViewUnavailableMessage(
-  deploymentDetails: IApplicationDeploymentDetails
+  deployment: ApplicationDeployment
 ): IUnavailableServiceMessage | undefined {
-  const { deploymentSpec } = deploymentDetails;
-
   const serviceUnavailableBecause = unavailableServiceMessageCreator(
     'Det er ikke mulig å endre versjonen på denne applikasjonen'
   );
 
-  if (deploymentSpec && deploymentSpec.type === 'development') {
+  if (deployment.details.deploymentSpec?.type === 'development') {
     return serviceUnavailableBecause(
       'Applikasjonen er av type development, og kan kun oppgraderes med binary builds'
+    );
+  }
+  if (!deployment.imageRepository?.isFullyQualified) {
+    return serviceUnavailableBecause(
+      'Applikasjonen har en Docker Image referanse som ikke er støttet, og kan dermed ikke hente versjoner'
     );
   }
 
@@ -87,9 +89,7 @@ export const DetailsView: React.FC<IDetailsViewProps> = ({
     return null;
   }
 
-  const unavailableMessage = getVersionViewUnavailableMessage(
-    deployment.details
-  );
+  const unavailableMessage = getVersionViewUnavailableMessage(deployment);
   const versionStatus = versionStatusMessage(deployment);
 
   const goToDeploymentsPage = () => {

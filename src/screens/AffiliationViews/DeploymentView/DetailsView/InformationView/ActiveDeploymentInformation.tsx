@@ -37,14 +37,19 @@ export const ActiveDeploymentInformation = ({
   });
 
   values.addFrom(deployment, add => {
-    const getImageRepository =
-      deployment.details.deploymentSpec &&
-      deployment.details.deploymentSpec.type === 'deploy'
-        ? (repo: IImageRepository) => ({
-            value: removeFirstPath(repo.repository),
-            link: `${repo.guiUrl}${deployment.version.deployTag.name}`
-          })
-        : (repo: IImageRepository) => removeFirstPath(repo.repository);
+    const getImageRepository = (repo: IImageRepository) => {
+      const isTypeDeploy =
+        deployment.details.deploymentSpec &&
+        deployment.details.deploymentSpec.type === 'deploy';
+
+      if (!isTypeDeploy || !repo.isFullyQualified) {
+        return removeFirstPath(repo.repository);
+      }
+      return {
+        value: removeFirstPath(repo.repository),
+        link: `${repo.guiUrl}${deployment.version.deployTag.name}`
+      };
+    };
     add('imageRepository', 'Image repository', getImageRepository);
   });
 
