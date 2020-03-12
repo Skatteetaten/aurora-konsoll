@@ -49,7 +49,7 @@ function getVersionViewUnavailableMessage(
   }
   if (!deployment.imageRepository?.isFullyQualified) {
     return serviceUnavailableBecause(
-      'Applikasjonen har en Docker Image referanse som ikke er støttet, og versjoner kan dermed ikke hentes',
+      'Applikasjonen har en Docker Image referanse som ikke går mot det interne Docker Registry, og versjoner kan dermed ikke hentes',
       'warning'
     );
   }

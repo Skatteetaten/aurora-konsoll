@@ -51,7 +51,7 @@ export const InformationViewNotifications = ({
           <>
             <br />
             <MessageBar type={MessageBar.Type.warning} isMultiline={true}>
-              Referansen til Docker Imaget er ikke støttet.
+              Referansen til Docker Imaget går ikke mot det interne Docker Registry.
               <br />
               Det vil ikke gå an å se versjonslisten.
             </MessageBar>
