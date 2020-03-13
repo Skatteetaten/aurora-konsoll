@@ -132,7 +132,8 @@ export const deploymentFactory = Factory.Sync.makeFactory<
         }
       },
       imageRepository: {
-        repository: 'localhost/"martin-test-applikasjon'
+        repository: 'localhost/"martin-test-applikasjon',
+        isFullyQualified: true
       },
       status: {
         code: StatusCode.OBSERVE,
@@ -424,7 +425,8 @@ export const applicationDeploymentFactory = Factory.Sync.makeFactory<
   id: Factory.each(i => `${i}`),
   imageRepository: {
     guiUrl: 'http://localhost',
-    repository: 'no.skatteetaten.aurora.mokey'
+    repository: 'no.skatteetaten.aurora.mokey',
+    isFullyQualified: true
   },
   name: 'mokey',
   namespace: {

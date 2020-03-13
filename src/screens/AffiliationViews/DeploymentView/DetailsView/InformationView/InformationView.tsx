@@ -6,13 +6,13 @@ import ActionButton from '@skatteetaten/frontend-components/ActionButton';
 import { ActiveDeploymentInformation } from './ActiveDeploymentInformation';
 import { DeploymentSpecInformation } from './DeploymentSpecInformation';
 import { GitAndBuildInformation } from './GitAndBuildInformation';
-import { ManagementInterface } from './ManagementInterface';
 import { ServiceLinks } from './ServiceLinks';
 import StatusCheckReportCard from './StatusCheckReportCard';
 import PodsStatus from './PodsStatus';
 import ConfirmationDialog from 'components/ConfirmationDialog';
 import { VersionStatus } from '../models/VersionStatus';
 import { ApplicationDeployment } from 'models/immer/ApplicationDeployment';
+import { InformationViewNotifications } from './InformationViewNotifications';
 
 interface IInformationViewProps {
   versionStatus: VersionStatus;
@@ -109,9 +109,9 @@ const InformationView = ({
           />
         </div>
         <div>
-          <ManagementInterface
+          <InformationViewNotifications
             hasManagementInterface={hasManagementInterface}
-            details={deployment.details}
+            deployment={deployment}
           />
         </div>
       </div>

@@ -10,7 +10,6 @@ import {
   IUnavailableServiceMessage,
   unavailableServiceMessageCreator
 } from 'models/UnavailableServiceMessage';
-import { IApplicationDeploymentDetails } from 'models/ApplicationDeployment';
 
 import DetailsActionBar from './DetailsActionBar';
 import InformationView from './InformationView/InformationView';
@@ -36,17 +35,22 @@ interface IDetailsViewProps {
 }
 
 function getVersionViewUnavailableMessage(
-  deploymentDetails: IApplicationDeploymentDetails
+  deployment: ApplicationDeployment
 ): IUnavailableServiceMessage | undefined {
-  const { deploymentSpec } = deploymentDetails;
-
   const serviceUnavailableBecause = unavailableServiceMessageCreator(
     'Det er ikke mulig å endre versjonen på denne applikasjonen'
   );
 
-  if (deploymentSpec && deploymentSpec.type === 'development') {
+  if (deployment.details.deploymentSpec?.type === 'development') {
     return serviceUnavailableBecause(
-      'Applikasjonen er av type development, og kan kun oppgraderes med binary builds'
+      'Applikasjonen er av type development, og kan kun oppgraderes med binary builds',
+      'info'
+    );
+  }
+  if (!deployment.imageRepository?.isFullyQualified) {
+    return serviceUnavailableBecause(
+      'Applikasjonen har en Docker Image referanse som ikke går mot det interne Docker Registry, og versjoner kan dermed ikke hentes',
+      'warning'
     );
   }
 
@@ -87,9 +91,7 @@ export const DetailsView: React.FC<IDetailsViewProps> = ({
     return null;
   }
 
-  const unavailableMessage = getVersionViewUnavailableMessage(
-    deployment.details
-  );
+  const unavailableMessage = getVersionViewUnavailableMessage(deployment);
   const versionStatus = versionStatusMessage(deployment);
 
   const goToDeploymentsPage = () => {
@@ -133,7 +135,10 @@ export const DetailsView: React.FC<IDetailsViewProps> = ({
           </Route>
           <Route path={`${match.path}/version`}>
             {unavailableMessage ? (
-              <UnavailableServiceMessage message={unavailableMessage} />
+              <UnavailableServiceMessage
+                message={unavailableMessage}
+                type={unavailableMessage.type}
+              />
             ) : (
               <VersionViewContainer
                 versionStatus={versionStatus}
