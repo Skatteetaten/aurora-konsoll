@@ -218,7 +218,7 @@ const toViewSchema = (i: IDatabaseSchema): IDatabaseSchemaView => {
     applicationDeploymentsUses: i.applicationDeployments.length,
     sizeInMb: i.sizeInMb,
     createdBy: i.createdBy,
-    engine: i.engine,
+    engine: i.type === 'EXTERNAL' ? '' : i.engine,
     jdbcUrl
   };
 };

@@ -207,7 +207,7 @@ class DatabaseSchemaUpdateDialog extends React.Component<
               <Grid.Col lg={10}>
                 <p>{schema.id}</p>
                 <p>{schema.type}</p>
-                <p>{schema.engine}</p>
+                <p>{schema.type === 'EXTERNAL' ? '-' : schema.engine}</p>
                 <p>{dateTimeFormat(schema.createdDate)}</p>
                 <p>{dateTimeFormat(schema.lastUsedDate)}</p>
                 <ApplicationLinks
