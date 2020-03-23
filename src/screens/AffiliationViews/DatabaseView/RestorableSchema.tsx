@@ -1,10 +1,13 @@
 import React from 'react';
 import TextField from '@skatteetaten/frontend-components/TextField';
 import { TextFieldEvent } from '../../../types/react';
+import {IDatabaseSchema, IRestorableDatabaseSchemas} from "../../../models/schemas";
 
 export interface IRestorableSchemaProps {
   className?: string;
   affiliation: string;
+  restorableDatabaseSchemas?: IRestorableDatabaseSchemas;
+  onComponentMounted: (affiliation: string) => void;
 }
 
 export interface IRestorableSchemaState {
@@ -19,9 +22,15 @@ export class RestorableSchema extends React.Component<
     filter: ''
   };
 
+  public componentDidMount(): void {
+
+    this.props.onComponentMounted(this.props.affiliation);
+  }
+
   public render() {
-    const { className, affiliation } = this.props;
+    const { className, affiliation, restorableDatabaseSchemas } = this.props;
     const { filter } = this.state;
+    console.log(restorableDatabaseSchemas);
     return (
       <div className={className}>
         <div className="styled-action-bar">

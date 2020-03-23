@@ -9,14 +9,15 @@ import actions, {
   testJdbcConnectionForJdbcUserResponse,
   updateSchemaResponse,
   fetchInstanceResponse,
-  fetchInstanceRequest
+  fetchInstanceRequest,
+  fetchRestorableSchemaResponse
 } from './actions';
 
 import {
-  ICreateDatabaseSchemaResponse,
-  IDatabaseSchemas,
-  IDeleteDatabaseSchemasResponse,
-  IDatabaseInstances
+    ICreateDatabaseSchemaResponse,
+    IDatabaseSchemas,
+    IDeleteDatabaseSchemasResponse,
+    IDatabaseInstances, IRestorableDatabaseSchemas
 } from 'models/schemas';
 import { handleAction, reduceReducers } from 'redux-ts-utils';
 
@@ -25,6 +26,7 @@ export type DatabaseSchemasAction = ActionType<typeof actions>;
 export interface ISchemasState {
   readonly isFetchingSchemas: boolean;
   readonly databaseSchemas: IDatabaseSchemas;
+  readonly restorableDatabaseSchemas: IRestorableDatabaseSchemas;
   readonly isFetchingInstances: boolean;
   readonly databaseInstances: IDatabaseInstances;
   readonly updateSchemaResponse: boolean;
@@ -37,6 +39,7 @@ const initialState = (): ISchemasState => {
   return {
     isFetchingSchemas: false,
     databaseSchemas: { databaseSchemas: [] },
+    restorableDatabaseSchemas: { restorableDatabaseSchemas: [] },
     isFetchingInstances: false,
     databaseInstances: { databaseInstances: [] },
     updateSchemaResponse: false,
@@ -64,6 +67,10 @@ export const databaseReducer = reduceReducers<ISchemasState>(
     handleAction(
       fetchSchemaResponse,
       updateStateWithPayload('databaseSchemas')
+    ),
+    handleAction(
+      fetchRestorableSchemaResponse,
+      updateStateWithPayload('restorableDatabaseSchemas')
     ),
     handleAction(
       fetchInstanceRequest,

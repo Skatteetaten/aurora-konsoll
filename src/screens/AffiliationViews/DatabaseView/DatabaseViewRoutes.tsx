@@ -3,7 +3,7 @@ import * as React from 'react';
 import { SchemaConnected } from './schemaConnected';
 import { Redirect, Route, Switch, useRouteMatch } from 'react-router';
 import TabLink, { TabLinkWrapper } from '../../../components/TabLink';
-import {RestorableSchema} from "./RestorableSchema";
+import { RestorableSchemaConnected } from './restorableSchemaConnected';
 
 export interface IDatabaseViewRoutesProps {
   affiliation: string;
@@ -31,7 +31,7 @@ export const DatabaseViewRoutes: React.FC<IDatabaseViewRoutesProps> = ({
           <SchemaConnected affiliation={affiliation} />
         </Route>
         <Route path={`${match.url}/restorableSchemas`}>
-          <RestorableSchema affiliation={affiliation}/>
+          <RestorableSchemaConnected affiliation={affiliation} />
         </Route>
       </Switch>
     </>

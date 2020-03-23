@@ -24,6 +24,9 @@ export const fetchInstanceRequest = createAction<boolean>(
 export const fetchSchemaResponse = createAction<IDatabaseSchemas>(
   databaseAction('FETCHED_SCHEMA_RESPONSE')
 );
+export const fetchRestorableSchemaResponse = createAction<IDatabaseSchemas>(
+    databaseAction('FETCHED_RESTORABLE_SCHEMA_RESPONSE')
+);
 export const fetchInstanceResponse = createAction<IDatabaseInstances>(
   databaseAction('FETCHED_INSTANCE_RESPONSE')
 );
@@ -63,6 +66,15 @@ export const fetchSchemas: Thunk = (affiliations: string[]) => async (
   } else {
     dispatch(fetchSchemaResponse({ databaseSchemas: [] }));
   }
+};
+
+export const fetchRestorableSchemas: Thunk = (affiliation: string) => async (
+  dispatch,
+  getState,
+  { clients }
+) => {
+  console.log("LJLKJ");
+  dispatch(fetchRestorableSchemaResponse({ databaseSchemas: [] }));
 };
 
 export const fetchInstances: Thunk = (affiliation: string) => async (

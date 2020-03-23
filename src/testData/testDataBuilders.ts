@@ -294,6 +294,7 @@ export const certificateResultFactory = Factory.Sync.makeFactory<
 export const schemasFactory = Factory.Sync.makeFactory<ISchemasState>({
   isFetchingSchemas: false,
   databaseSchemas: { databaseSchemas: [] },
+  restorableDatabaseSchemas: { restorableDatabaseSchemas: [] },
   updateSchemaResponse: false,
   deleteSchemasResponse: { failed: [], succeeded: [] },
   testJdbcConnectionResponse: false,

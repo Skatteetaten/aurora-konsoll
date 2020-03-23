@@ -2,6 +2,10 @@ export interface IDatabaseSchemas {
   databaseSchemas?: IDatabaseSchema[];
 }
 
+export interface IRestorableDatabaseSchemas {
+  restorableDatabaseSchemas?: IDatabaseSchema[];
+}
+
 export interface IDatabaseInstances {
   databaseInstances?: IDatabaseInstance[];
 }
