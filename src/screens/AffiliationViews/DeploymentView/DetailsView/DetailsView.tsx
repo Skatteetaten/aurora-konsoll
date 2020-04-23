@@ -17,6 +17,7 @@ import { VersionViewContainer } from './VersionView/VersionViewContainer';
 import { getVersionStatus, VersionStatus } from './models/VersionStatus';
 import { ApplicationDeploymentMatchParams } from 'screens/AffiliationViews/DeploymentView/DetailsView/ApplicationDeploymentSelector';
 import { ApplicationDeployment } from 'models/immer/ApplicationDeployment';
+import ProgressionView from './ProgressionView/ProgressionView';
 
 interface IDetailsViewProps {
   deployment: ApplicationDeployment;
@@ -116,6 +117,7 @@ export const DetailsView: React.FC<IDetailsViewProps> = ({
       <TabLinkWrapper>
         <TabLink to={`${match.url}/info`}>Sammendrag</TabLink>
         <TabLink to={`${match.url}/version`}>Oppgradering</TabLink>
+        <TabLink to={`${match.url}/progressions`}>Rute progresjoner</TabLink>
       </TabLinkWrapper>
       <Card>
         <Switch>
@@ -149,6 +151,9 @@ export const DetailsView: React.FC<IDetailsViewProps> = ({
                 deployment={deployment}
               />
             )}
+          </Route>
+          <Route path={`${match.path}/progressions`}>
+            <ProgressionView route={deployment.route} />
           </Route>
         </Switch>
       </Card>

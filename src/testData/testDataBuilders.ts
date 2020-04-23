@@ -155,6 +155,9 @@ export const deploymentFactory = Factory.Sync.makeFactory<
         updatedBy: 'linus',
         serviceLinks: [],
         deploymentSpecs: {}
+      },
+      route: {
+        progressions: []
       }
     }
   })

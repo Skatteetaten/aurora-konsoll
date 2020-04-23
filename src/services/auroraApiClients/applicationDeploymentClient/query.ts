@@ -67,6 +67,22 @@ export interface IApplicationDeploymentData {
   time: string;
 }
 
+export interface IRoute {
+  progressions: IProgression[];
+}
+
+export interface IProgression {
+  id: string;
+  payload: string;
+  objectname: string;
+  namespace: string;
+  type: string;
+  operation: string;
+  status: string;
+  updated: string;
+  errorMessage: string | null;
+}
+
 export const APPLICATIONS_QUERY = gql`
   query getApplicationDeployments($affiliations: [String!]!) {
     applications(affiliations: $affiliations) {
@@ -237,6 +253,7 @@ export const USER_AFFILIATIONS_QUERY = gql`
 export interface IApplicationDeploymentWithDetails
   extends IApplicationDeploymentData {
   details: IApplicationDeploymentDetails;
+  route?: IRoute;
 }
 
 export interface IApplicationDeploymentWithDetailsData {
@@ -328,6 +345,19 @@ export const APPLICATION_DEPLOYMENT_WITH_DETAILS_QUERY = gql`
           current {
             jsonRepresentation
           }
+        }
+      }
+      route {
+        progressions {
+          id
+          payload
+          objectname
+          namespace
+          type
+          operation
+          status
+          updated
+          errorMessage
         }
       }
     }
