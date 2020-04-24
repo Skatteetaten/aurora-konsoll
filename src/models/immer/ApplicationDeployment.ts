@@ -2,7 +2,6 @@ import {
   IApplicationDeploymentWithDetailsData,
   IImageRepository,
   IPermission,
-  IProgression,
   IRoute
 } from 'services/auroraApiClients/applicationDeploymentClient/query';
 import {
