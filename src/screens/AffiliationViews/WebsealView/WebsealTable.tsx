@@ -151,7 +151,7 @@ class Webseal extends React.Component<IWebsealTableProps, IWebsealTableState> {
       <div className={className}>
         <div className="body-wrapper">
           <div className="action-bar">
-            <h2>WealSEAL states for {affiliation}</h2>
+            <h2>WebSEAL states for {affiliation}</h2>
             <LoadingButton
               style={{ minWidth: '141px' }}
               loading={isFetchingWebsealStates}
