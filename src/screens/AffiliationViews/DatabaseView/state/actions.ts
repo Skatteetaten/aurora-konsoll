@@ -39,9 +39,9 @@ export const deleteSchemasResponse = createAction<
   IDeleteDatabaseSchemasResponse
 >(databaseAction('DELETE_SCHEMAS_RESPONSE'));
 
-export const testJdbcConnectionForIdResponse = createAction<
-  ITestJDBCResponse
->(databaseAction('TEST_JDBC_CONNECTION_FOR_ID_RESPONSE'));
+export const testJdbcConnectionForIdResponse = createAction<ITestJDBCResponse>(
+  databaseAction('TEST_JDBC_CONNECTION_FOR_ID_RESPONSE')
+);
 export const testJdbcConnectionForJdbcUserResponse = createAction<
   ITestJDBCResponse
 >(databaseAction('TEST_JDBC_CONNECTION_FOR_JDBCUSER_RESPONSE'));
