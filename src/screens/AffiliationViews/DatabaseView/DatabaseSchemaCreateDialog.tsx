@@ -26,9 +26,9 @@ interface IDatabaseSchemaCreateDialogProps {
   affiliation: string;
   onFetch: (affiliations: string[]) => void;
   onCreate: (databaseSchema: ICreateDatabaseSchemaInput) => void;
-  onTestJdbcConnectionForUserV2: (jdbcUser: IJdbcUser) => void;
+  onTestJdbcConnectionForUser: (jdbcUser: IJdbcUser) => void;
   createResponse: ICreateDatabaseSchemaResponse;
-  testJdbcConnectionResponseV2: ITestJDBCResponse;
+  testJdbcConnectionResponse: ITestJDBCResponse;
   currentUser: IUserAndAffiliations;
   isFetching: boolean;
   initialDatabaseSchemaInput?: IDatabaseSchema;
@@ -176,8 +176,8 @@ class DatabaseSchemaCreateDialog extends React.Component<
   public render() {
     const {
       className,
-      onTestJdbcConnectionForUserV2,
-      testJdbcConnectionResponseV2,
+      onTestJdbcConnectionForUser,
+      testJdbcConnectionResponse,
       onFetch,
       affiliation,
       createResponse,
@@ -273,8 +273,8 @@ class DatabaseSchemaCreateDialog extends React.Component<
                   setDatabaseSchemaInput={this.setDatabaseSchemaInput}
                   setJdbcUserInput={this.setJdbcUserInput}
                   databaseSchemaInput={databaseSchemaInput}
-                  onTestJdbcConnectionForUserV2={onTestJdbcConnectionForUserV2}
-                  testJdbcConnectionResponseV2={testJdbcConnectionResponseV2}
+                  onTestJdbcConnectionForUser={onTestJdbcConnectionForUser}
+                  testJdbcConnectionResponse={testJdbcConnectionResponse}
                   databaseSchemaService={this.databaseSchemaService}
                 />
               )}

@@ -7,7 +7,6 @@ import LoadingButton from 'components/LoadingButton';
 import { IJdbcUser, ITestJDBCResponse } from 'models/schemas';
 import styled from 'styled-components';
 import { TextFieldEvent } from 'types/react';
-import { testJdbcConnectionForIdResponseV2 } from './state/actions';
 
 const { skeColor } = palette;
 
@@ -22,9 +21,9 @@ export interface IJdbcConnectionProps {
   jdbcUrl?: string;
   id?: string;
   password?: string;
-  onTestJdbcConnectionForIdV2?: (id: string) => void;
-  onTestJdbcConnectionForUserV2?: (jdbcUser: IJdbcUser) => void;
-  testJdbcConnectionResponseV2: ITestJDBCResponse;
+  onTestJdbcConnectionForId?: (id: string) => void;
+  onTestJdbcConnectionForUser?: (jdbcUser: IJdbcUser) => void;
+  testJdbcConnectionResponse: ITestJDBCResponse;
   isDisabledFields: boolean;
   className?: string;
   hasPasswordField: boolean;
@@ -48,8 +47,8 @@ class JdbcConnection extends React.Component<
 
   public handleTestJdbcConnection = async () => {
     const {
-      onTestJdbcConnectionForIdV2,
-      onTestJdbcConnectionForUserV2,
+      onTestJdbcConnectionForId,
+      onTestJdbcConnectionForUser,
       id,
       jdbcUrl,
       password,
@@ -63,11 +62,11 @@ class JdbcConnection extends React.Component<
     this.setState({
       jdcbTestState: JdcbTestState.LOADING
     });
-    if (onTestJdbcConnectionForIdV2 && id) {
-      await onTestJdbcConnectionForIdV2(id);
-    } else if (onTestJdbcConnectionForUserV2) {
-      if (onTestJdbcConnectionForUserV2 && password && jdbcUrl && username) {
-        await onTestJdbcConnectionForUserV2({
+    if (onTestJdbcConnectionForId && id) {
+      await onTestJdbcConnectionForId(id);
+    } else if (onTestJdbcConnectionForUser) {
+      if (onTestJdbcConnectionForUser && password && jdbcUrl && username) {
+        await onTestJdbcConnectionForUser({
           password,
           jdbcUrl,
           username
@@ -79,7 +78,7 @@ class JdbcConnection extends React.Component<
 
   public render() {
     const {
-      testJdbcConnectionResponseV2,
+      testJdbcConnectionResponse,
       username,
       jdbcUrl,
       isDisabledFields,
@@ -96,9 +95,9 @@ class JdbcConnection extends React.Component<
       jdcbTestState === JdcbTestState.NOT_STARTED;
 
     const displaySuccess =
-      !displayLoadingOrNotStarted && testJdbcConnectionResponseV2.hasSucceeded;
+      !displayLoadingOrNotStarted && testJdbcConnectionResponse.hasSucceeded;
     const displayFailure =
-      !displayLoadingOrNotStarted && !testJdbcConnectionResponseV2.hasSucceeded;
+      !displayLoadingOrNotStarted && !testJdbcConnectionResponse.hasSucceeded;
 
     return (
       <div className={className}>
@@ -162,7 +161,7 @@ class JdbcConnection extends React.Component<
                 }}
               />
               <p style={{ color: skeColor.error }}>
-                {testJdbcConnectionResponseV2.message}
+                {testJdbcConnectionResponse.message}
               </p>
             </>
           )}

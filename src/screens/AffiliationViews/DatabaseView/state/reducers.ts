@@ -5,13 +5,11 @@ import actions, {
   deleteSchemasResponse,
   fetchSchemaRequest,
   fetchSchemaResponse,
-  testJdbcConnectionForIdResponse,
-  testJdbcConnectionForJdbcUserResponse,
   updateSchemaResponse,
   fetchInstanceResponse,
   fetchInstanceRequest,
-  testJdbcConnectionForIdResponseV2,
-  testJdbcConnectionForJdbcUserResponseV2
+  testJdbcConnectionForIdResponse,
+  testJdbcConnectionForJdbcUserResponse
 } from './actions';
 
 import {
@@ -32,8 +30,7 @@ export interface ISchemasState {
   readonly databaseInstances: IDatabaseInstances;
   readonly updateSchemaResponse: boolean;
   readonly deleteSchemasResponse: IDeleteDatabaseSchemasResponse;
-  readonly testJdbcConnectionResponse: boolean;
-  readonly testJdbcConnectionResponseV2: ITestJDBCResponse;
+  readonly testJdbcConnectionResponse: ITestJDBCResponse;
   readonly createDatabaseSchemaResponse: ICreateDatabaseSchemaResponse;
 }
 
@@ -45,8 +42,7 @@ const initialState = (): ISchemasState => {
     databaseInstances: { databaseInstances: [] },
     updateSchemaResponse: false,
     deleteSchemasResponse: { failed: [], succeeded: [] },
-    testJdbcConnectionResponse: false,
-    testJdbcConnectionResponseV2: { hasSucceeded: false, message: 'failed' },
+    testJdbcConnectionResponse: { hasSucceeded: false, message: 'failed' },
     createDatabaseSchemaResponse: {
       id: '',
       jdbcUser: { jdbcUrl: '', username: '', password: '' }
@@ -95,16 +91,8 @@ export const databaseReducer = reduceReducers<ISchemasState>(
       updateStateWithPayload('testJdbcConnectionResponse')
     ),
     handleAction(
-      testJdbcConnectionForIdResponseV2,
-      updateStateWithPayload('testJdbcConnectionResponseV2')
-    ),
-    handleAction(
       testJdbcConnectionForJdbcUserResponse,
       updateStateWithPayload('testJdbcConnectionResponse')
-    ),
-    handleAction(
-      testJdbcConnectionForJdbcUserResponseV2,
-      updateStateWithPayload('testJdbcConnectionResponseV2')
     ),
     handleAction(
       createDatabaseSchemaResponse,

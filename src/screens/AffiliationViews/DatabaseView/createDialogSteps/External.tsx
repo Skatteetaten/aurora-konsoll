@@ -17,16 +17,16 @@ interface IExternalProps {
   ) => void;
   setJdbcUserInput: (jdbcUser: IJdbcUser) => void;
   databaseSchemaInput: ICreateDatabaseSchemaInput;
-  onTestJdbcConnectionForUserV2: (jdbcUser: IJdbcUser) => void;
-  testJdbcConnectionResponseV2: ITestJDBCResponse;
+  onTestJdbcConnectionForUser: (jdbcUser: IJdbcUser) => void;
+  testJdbcConnectionResponse: ITestJDBCResponse;
   databaseSchemaService: DatabaseSchemaService;
 }
 
 const External = ({
   setDatabaseSchemaInput,
   databaseSchemaInput,
-  onTestJdbcConnectionForUserV2,
-  testJdbcConnectionResponseV2,
+  onTestJdbcConnectionForUser,
+  testJdbcConnectionResponse,
   databaseSchemaService,
   setJdbcUserInput
 }: IExternalProps) => {
@@ -76,8 +76,8 @@ const External = ({
             username={jdbcUser.username}
             password={jdbcUser.password}
             jdbcUrl={jdbcUser.jdbcUrl}
-            onTestJdbcConnectionForUserV2={onTestJdbcConnectionForUserV2}
-            testJdbcConnectionResponseV2={testJdbcConnectionResponseV2}
+            onTestJdbcConnectionForUser={onTestJdbcConnectionForUser}
+            testJdbcConnectionResponse={testJdbcConnectionResponse}
             isDisabledFields={false}
             hasPasswordField={true}
             canNotTest={databaseSchemaService.hasEmptyJdbcValues(

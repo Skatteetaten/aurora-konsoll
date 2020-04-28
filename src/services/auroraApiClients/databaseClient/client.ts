@@ -9,11 +9,9 @@ import {
 import {
   CREATE_DATABASE_SCHEMA_MUTATION,
   DELETE_DATABASESCHEMAS_MUTATION,
-  TEST_JDBC_CONNECTION_FOR_ID_MUTATION,
-  TEST_JDBC_CONNECTION_FOR_JDBCUSER_MUTATION,
   UPDATE_DATABASESCHEMA_MUTATION,
-  TEST_JDBC_CONNECTION_FOR_ID_MUTATION_V2,
-  TEST_JDBC_CONNECTION_FOR_JDBCUSER_MUTATION_V2
+  TEST_JDBC_CONNECTION_FOR_ID_MUTATION,
+  TEST_JDBC_CONNECTION_FOR_JDBCUSER_MUTATION
 } from './mutation';
 import {
   DATABASE_SCHEMAS_QUERY,
@@ -88,23 +86,7 @@ export class DatabaseClient {
     id: string
   ): Promise<
     | IDataAndErrors<{
-        testJdbcConnectionForId: boolean;
-      }>
-    | undefined
-  > {
-    return await this.client.mutate<{ testJdbcConnectionForId: boolean }>({
-      mutation: TEST_JDBC_CONNECTION_FOR_ID_MUTATION,
-      variables: {
-        id
-      }
-    });
-  }
-
-  public async testJdbcConnectionForIdV2(
-    id: string
-  ): Promise<
-    | IDataAndErrors<{
-        testJdbcConnectionForIdV2: {
+        testJdbcConnectionForId: {
           hasSucceeded: boolean;
           message: string;
         };
@@ -112,12 +94,12 @@ export class DatabaseClient {
     | undefined
   > {
     return await this.client.mutate<{
-      testJdbcConnectionForIdV2: {
+      testJdbcConnectionForId: {
         hasSucceeded: boolean;
         message: string;
       };
     }>({
-      mutation: TEST_JDBC_CONNECTION_FOR_ID_MUTATION_V2,
+      mutation: TEST_JDBC_CONNECTION_FOR_ID_MUTATION,
       variables: {
         id
       }
@@ -126,23 +108,12 @@ export class DatabaseClient {
 
   public async testJdbcConnectionForJdbcUser(jdbcUser: IJdbcUser) {
     return await this.client.mutate<{
-      testJdbcConnectionForJdbcUser: boolean;
-    }>({
-      mutation: TEST_JDBC_CONNECTION_FOR_JDBCUSER_MUTATION,
-      variables: {
-        input: jdbcUser
-      }
-    });
-  }
-
-  public async testJdbcConnectionForJdbcUserV2(jdbcUser: IJdbcUser) {
-    return await this.client.mutate<{
-      testJdbcConnectionForJdbcUserV2: {
+      testJdbcConnectionForJdbcUser: {
         hasSucceeded: boolean;
         message: string;
       };
     }>({
-      mutation: TEST_JDBC_CONNECTION_FOR_JDBCUSER_MUTATION_V2,
+      mutation: TEST_JDBC_CONNECTION_FOR_JDBCUSER_MUTATION,
       variables: {
         input: jdbcUser
       }

@@ -76,9 +76,7 @@ export interface ISchemaProps {
   onCreate: (databaseSchema: ICreateDatabaseSchemaInput) => void;
   onDeleteSchemas: (ids: string[]) => void;
   onTestJdbcConnectionForId: (id: string) => void;
-  onTestJdbcConnectionForIdV2: (id: string) => void;
   onTestJdbcConnectionForUser: (jdbcUser: IJdbcUser) => void;
-  onTestJdbcConnectionForUserV2: (jdbcUser: IJdbcUser) => void;
   items: IDatabaseSchemas;
   instances: IDatabaseInstances;
   createResponse: ICreateDatabaseSchemaResponse;
@@ -86,8 +84,7 @@ export interface ISchemaProps {
   updateResponse: boolean;
   affiliation: string;
   className?: string;
-  testJdbcConnectionResponse: boolean;
-  testJdbcConnectionResponseV2: ITestJDBCResponse;
+  testJdbcConnectionResponse: ITestJDBCResponse;
   currentUser: IUserAndAffiliations;
   deleteResponse: IDeleteDatabaseSchemasResponse;
 }
@@ -161,14 +158,11 @@ export class Schema extends React.Component<ISchemaProps, ISchemaState> {
       onUpdate,
       onDelete,
       onTestJdbcConnectionForId,
-      onTestJdbcConnectionForIdV2,
       testJdbcConnectionResponse,
-      testJdbcConnectionResponseV2,
       onCreate,
       createResponse,
       affiliation,
       onTestJdbcConnectionForUser,
-      onTestJdbcConnectionForUserV2,
       onFetch,
       currentUser,
       deleteResponse,
@@ -212,8 +206,8 @@ export class Schema extends React.Component<ISchemaProps, ISchemaState> {
               affiliation={affiliation}
               onCreate={onCreate}
               createResponse={createResponse}
-              onTestJdbcConnectionForUserV2={onTestJdbcConnectionForUserV2}
-              testJdbcConnectionResponseV2={testJdbcConnectionResponseV2}
+              onTestJdbcConnectionForUser={onTestJdbcConnectionForUser}
+              testJdbcConnectionResponse={testJdbcConnectionResponse}
               onFetch={onFetch}
               currentUser={currentUser}
               isFetching={isFetching}
@@ -239,8 +233,8 @@ export class Schema extends React.Component<ISchemaProps, ISchemaState> {
           clearSelectedSchema={this.onUpdateSchemaDialogClosed}
           onUpdate={onUpdate}
           onDelete={onDelete}
-          onTestJdbcConnectionForIdV2={onTestJdbcConnectionForIdV2}
-          testJdbcConnectionResponseV2={testJdbcConnectionResponseV2}
+          onTestJdbcConnectionForId={onTestJdbcConnectionForId}
+          testJdbcConnectionResponse={testJdbcConnectionResponse}
           createNewCopy={this.onCreateCopyConfirmed}
         />
         <ConfirmDeletionDialog

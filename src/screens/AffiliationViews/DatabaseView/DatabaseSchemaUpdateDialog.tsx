@@ -29,8 +29,8 @@ export interface IDatabaseSchemaUpdateDialogProps {
   clearSelectedSchema: () => void;
   onUpdate: (databaseSchema: IUpdateDatabaseSchemaInputWithCreatedBy) => void;
   onDelete: (databaseSchema: IDatabaseSchema) => void;
-  onTestJdbcConnectionForIdV2: (id: string) => void;
-  testJdbcConnectionResponseV2: ITestJDBCResponse;
+  onTestJdbcConnectionForId: (id: string) => void;
+  testJdbcConnectionResponse: ITestJDBCResponse;
   createNewCopy: () => void;
 }
 
@@ -175,8 +175,8 @@ class DatabaseSchemaUpdateDialog extends React.Component<
     const {
       schema,
       className,
-      testJdbcConnectionResponseV2,
-      onTestJdbcConnectionForIdV2
+      testJdbcConnectionResponse,
+      onTestJdbcConnectionForId
     } = this.props;
     const { updatedSchemaValues } = this.state;
     if (!schema) {
@@ -223,8 +223,8 @@ class DatabaseSchemaUpdateDialog extends React.Component<
                   username={user.username}
                   jdbcUrl={schema.jdbcUrl}
                   id={schema.id}
-                  onTestJdbcConnectionForIdV2={onTestJdbcConnectionForIdV2}
-                  testJdbcConnectionResponseV2={testJdbcConnectionResponseV2}
+                  onTestJdbcConnectionForId={onTestJdbcConnectionForId}
+                  testJdbcConnectionResponse={testJdbcConnectionResponse}
                   isDisabledFields={true}
                   hasPasswordField={false}
                   canNotTest={false}
