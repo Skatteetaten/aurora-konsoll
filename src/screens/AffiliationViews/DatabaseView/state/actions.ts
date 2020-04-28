@@ -8,7 +8,8 @@ import {
   IDeleteDatabaseSchemasResponse,
   IJdbcUser,
   IUpdateDatabaseSchemaInputWithCreatedBy,
-  IDatabaseInstances
+  IDatabaseInstances,
+  ITestJDBCResponse
 } from 'models/schemas';
 import { addCurrentErrors } from 'screens/ErrorHandler/state/actions';
 import { createAction } from 'redux-ts-utils';
@@ -41,9 +42,15 @@ export const deleteSchemasResponse = createAction<
 export const testJdbcConnectionForIdResponse = createAction<boolean>(
   databaseAction('TEST_JDBC_CONNECTION_FOR_ID_RESPONSE')
 );
+export const testJdbcConnectionForIdResponseV2 = createAction<
+  ITestJDBCResponse
+>(databaseAction('TEST_JDBC_CONNECTION_FOR_ID_RESPONSE_V2'));
 export const testJdbcConnectionForJdbcUserResponse = createAction<boolean>(
   databaseAction('TEST_JDBC_CONNECTION_FOR_JDBCUSER_RESPONSE')
 );
+export const testJdbcConnectionForJdbcUserResponseV2 = createAction<
+  ITestJDBCResponse
+>(databaseAction('TEST_JDBC_CONNECTION_FOR_JDBCUSER_RESPONSE_V2'));
 export const createDatabaseSchemaResponse = createAction<
   ICreateDatabaseSchemaResponse
 >(databaseAction('CREATE_DATABASE_SCHEMA_RESPONSE'));
@@ -162,6 +169,28 @@ export const testJdbcConnectionForId: Thunk = (id: string) => async (
   }
 };
 
+export const testJdbcConnectionForIdV2: Thunk = (id: string) => async (
+  dispatch,
+  getState,
+  { clients }
+) => {
+  const result = await clients.databaseClient.testJdbcConnectionForIdV2(id);
+  dispatch(addCurrentErrors(result));
+
+  if (result && result.data) {
+    dispatch(
+      testJdbcConnectionForIdResponseV2(result.data.testJdbcConnectionForIdV2)
+    );
+  } else {
+    dispatch(
+      testJdbcConnectionForIdResponseV2({
+        hasSucceeded: false,
+        message: 'failed'
+      })
+    );
+  }
+};
+
 export const testJdbcConnectionForJdbcUser: Thunk = (
   jdbcUser: IJdbcUser
 ) => async (dispatch, getState, { clients }) => {
@@ -178,6 +207,30 @@ export const testJdbcConnectionForJdbcUser: Thunk = (
     );
   } else {
     dispatch(testJdbcConnectionForJdbcUserResponse(false));
+  }
+};
+
+export const testJdbcConnectionForJdbcUserV2: Thunk = (
+  jdbcUser: IJdbcUser
+) => async (dispatch, getState, { clients }) => {
+  const result = await clients.databaseClient.testJdbcConnectionForJdbcUserV2(
+    jdbcUser
+  );
+  dispatch(addCurrentErrors(result));
+
+  if (result && result.data) {
+    dispatch(
+      testJdbcConnectionForJdbcUserResponseV2(
+        result.data.testJdbcConnectionForJdbcUserV2
+      )
+    );
+  } else {
+    dispatch(
+      testJdbcConnectionForIdResponseV2({
+        hasSucceeded: false,
+        message: 'failed'
+      })
+    );
   }
 };
 
@@ -218,5 +271,7 @@ export default {
   deleteSchemasResponse,
   testJdbcConnectionForIdResponse,
   testJdbcConnectionForJdbcUserResponse,
+  testJdbcConnectionForIdResponseV2,
+  testJdbcConnectionForJdbcUserResponseV2,
   createDatabaseSchemaResponse
 };

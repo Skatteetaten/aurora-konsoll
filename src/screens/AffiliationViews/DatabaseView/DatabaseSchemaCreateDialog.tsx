@@ -12,7 +12,8 @@ import {
   IDatabaseSchema,
   IJdbcUser,
   Step,
-  IDatabaseInstances
+  IDatabaseInstances,
+  ITestJDBCResponse
 } from 'models/schemas';
 import DatabaseSchemaService from 'services/DatabaseSchemaService';
 import External from './createDialogSteps/External';
@@ -25,9 +26,9 @@ interface IDatabaseSchemaCreateDialogProps {
   affiliation: string;
   onFetch: (affiliations: string[]) => void;
   onCreate: (databaseSchema: ICreateDatabaseSchemaInput) => void;
-  onTestJdbcConnectionForUser: (jdbcUser: IJdbcUser) => void;
+  onTestJdbcConnectionForUserV2: (jdbcUser: IJdbcUser) => void;
   createResponse: ICreateDatabaseSchemaResponse;
-  testJdbcConnectionResponse: boolean;
+  testJdbcConnectionResponseV2: ITestJDBCResponse;
   currentUser: IUserAndAffiliations;
   isFetching: boolean;
   initialDatabaseSchemaInput?: IDatabaseSchema;
@@ -175,8 +176,8 @@ class DatabaseSchemaCreateDialog extends React.Component<
   public render() {
     const {
       className,
-      onTestJdbcConnectionForUser,
-      testJdbcConnectionResponse,
+      onTestJdbcConnectionForUserV2,
+      testJdbcConnectionResponseV2,
       onFetch,
       affiliation,
       createResponse,
@@ -272,8 +273,8 @@ class DatabaseSchemaCreateDialog extends React.Component<
                   setDatabaseSchemaInput={this.setDatabaseSchemaInput}
                   setJdbcUserInput={this.setJdbcUserInput}
                   databaseSchemaInput={databaseSchemaInput}
-                  onTestJdbcConnectionForUser={onTestJdbcConnectionForUser}
-                  testJdbcConnectionResponse={testJdbcConnectionResponse}
+                  onTestJdbcConnectionForUserV2={onTestJdbcConnectionForUserV2}
+                  testJdbcConnectionResponseV2={testJdbcConnectionResponseV2}
                   databaseSchemaService={this.databaseSchemaService}
                 />
               )}

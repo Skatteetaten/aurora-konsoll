@@ -12,7 +12,8 @@ import SkeLink from 'components/SkeLink';
 import {
   IDatabaseApplicationDeployment,
   IDatabaseSchema,
-  IUpdateDatabaseSchemaInputWithCreatedBy
+  IUpdateDatabaseSchemaInputWithCreatedBy,
+  ITestJDBCResponse
 } from 'models/schemas';
 import DatabaseSchemaService from 'services/DatabaseSchemaService';
 import { getLocalDatetime } from 'utils/date';
@@ -28,8 +29,8 @@ export interface IDatabaseSchemaUpdateDialogProps {
   clearSelectedSchema: () => void;
   onUpdate: (databaseSchema: IUpdateDatabaseSchemaInputWithCreatedBy) => void;
   onDelete: (databaseSchema: IDatabaseSchema) => void;
-  onTestJdbcConnectionForId: (id: string) => void;
-  testJdbcConnectionResponse: boolean;
+  onTestJdbcConnectionForIdV2: (id: string) => void;
+  testJdbcConnectionResponseV2: ITestJDBCResponse;
   createNewCopy: () => void;
 }
 
@@ -174,8 +175,8 @@ class DatabaseSchemaUpdateDialog extends React.Component<
     const {
       schema,
       className,
-      testJdbcConnectionResponse,
-      onTestJdbcConnectionForId
+      testJdbcConnectionResponseV2,
+      onTestJdbcConnectionForIdV2
     } = this.props;
     const { updatedSchemaValues } = this.state;
     if (!schema) {
@@ -222,8 +223,8 @@ class DatabaseSchemaUpdateDialog extends React.Component<
                   username={user.username}
                   jdbcUrl={schema.jdbcUrl}
                   id={schema.id}
-                  onTestJdbcConnectionForId={onTestJdbcConnectionForId}
-                  testJdbcConnectionResponse={testJdbcConnectionResponse}
+                  onTestJdbcConnectionForIdV2={onTestJdbcConnectionForIdV2}
+                  testJdbcConnectionResponseV2={testJdbcConnectionResponseV2}
                   isDisabledFields={true}
                   hasPasswordField={false}
                   canNotTest={false}

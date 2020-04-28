@@ -17,7 +17,9 @@ import {
   testJdbcConnectionForId,
   testJdbcConnectionForJdbcUser,
   updateSchema,
-  fetchInstances
+  fetchInstances,
+  testJdbcConnectionForIdV2,
+  testJdbcConnectionForJdbcUserV2
 } from './state/actions';
 import { ISchemasState } from './state/reducers';
 
@@ -41,6 +43,7 @@ const mapStateToProps = (state: RootState) => ({
   isFetching: getFetchingStatus(state.database),
   updateResponse: getUpdateResponse(state.database),
   testJdbcConnectionResponse: getTestConnectionResponse(state.database),
+  testJdbcConnectionResponseV2: state.database.testJdbcConnectionResponseV2,
   createResponse: getCreateDatabaseSchemaRespnse(state.database),
   currentUser: getCurrentUser(state.startup),
   deleteResponse: getDeletionInfo(state.database)
@@ -53,8 +56,11 @@ export const SchemaConnected = connect(mapStateToProps, {
     updateSchema(databaseSchema),
   onDelete: (databaseSchema: IDatabaseSchema) => deleteSchema(databaseSchema),
   onTestJdbcConnectionForId: (id: string) => testJdbcConnectionForId(id),
+  onTestJdbcConnectionForIdV2: (id: string) => testJdbcConnectionForIdV2(id),
   onTestJdbcConnectionForUser: (jdbcUser: IJdbcUser) =>
     testJdbcConnectionForJdbcUser(jdbcUser),
+  onTestJdbcConnectionForUserV2: (jdbcUser: IJdbcUser) =>
+    testJdbcConnectionForJdbcUserV2(jdbcUser),
   onCreate: (databaseSchema: ICreateDatabaseSchemaInput) =>
     createDatabaseSchema(databaseSchema),
   onDeleteSchemas: (ids: string[]) => deleteSchemas(ids)

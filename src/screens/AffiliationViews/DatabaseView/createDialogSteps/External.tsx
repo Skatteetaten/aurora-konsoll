@@ -1,7 +1,11 @@
 import * as React from 'react';
 
 import Grid from '@skatteetaten/frontend-components/Grid';
-import { ICreateDatabaseSchemaInput, IJdbcUser } from 'models/schemas';
+import {
+  ICreateDatabaseSchemaInput,
+  IJdbcUser,
+  ITestJDBCResponse
+} from 'models/schemas';
 import DatabaseSchemaService from 'services/DatabaseSchemaService';
 import JdbcConnection from '../JdbcConnection';
 import Labels from '../Labels';
@@ -13,16 +17,16 @@ interface IExternalProps {
   ) => void;
   setJdbcUserInput: (jdbcUser: IJdbcUser) => void;
   databaseSchemaInput: ICreateDatabaseSchemaInput;
-  onTestJdbcConnectionForUser: (jdbcUser: IJdbcUser) => void;
-  testJdbcConnectionResponse: boolean;
+  onTestJdbcConnectionForUserV2: (jdbcUser: IJdbcUser) => void;
+  testJdbcConnectionResponseV2: ITestJDBCResponse;
   databaseSchemaService: DatabaseSchemaService;
 }
 
 const External = ({
   setDatabaseSchemaInput,
   databaseSchemaInput,
-  onTestJdbcConnectionForUser,
-  testJdbcConnectionResponse,
+  onTestJdbcConnectionForUserV2,
+  testJdbcConnectionResponseV2,
   databaseSchemaService,
   setJdbcUserInput
 }: IExternalProps) => {
@@ -72,8 +76,8 @@ const External = ({
             username={jdbcUser.username}
             password={jdbcUser.password}
             jdbcUrl={jdbcUser.jdbcUrl}
-            onTestJdbcConnectionForUser={onTestJdbcConnectionForUser}
-            testJdbcConnectionResponse={testJdbcConnectionResponse}
+            onTestJdbcConnectionForUserV2={onTestJdbcConnectionForUserV2}
+            testJdbcConnectionResponseV2={testJdbcConnectionResponseV2}
             isDisabledFields={false}
             hasPasswordField={true}
             canNotTest={databaseSchemaService.hasEmptyJdbcValues(

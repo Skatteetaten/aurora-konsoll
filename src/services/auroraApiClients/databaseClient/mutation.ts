@@ -23,9 +23,27 @@ export const TEST_JDBC_CONNECTION_FOR_ID_MUTATION = gql`
   }
 `;
 
+export const TEST_JDBC_CONNECTION_FOR_ID_MUTATION_V2 = gql`
+  mutation testJdbcConnectionForIdV2($id: String!) {
+    testJdbcConnectionForIdV2(id: $id) {
+      hasSucceeded
+      message
+    }
+  }
+`;
+
 export const TEST_JDBC_CONNECTION_FOR_JDBCUSER_MUTATION = gql`
   mutation testJdbcConnectionForJdbcUser($input: JdbcUserInput!) {
     testJdbcConnectionForJdbcUser(input: $input)
+  }
+`;
+
+export const TEST_JDBC_CONNECTION_FOR_JDBCUSER_MUTATION_V2 = gql`
+  mutation testJdbcConnectionForJdbcUserV2($input: JdbcUserInput!) {
+    testJdbcConnectionForJdbcUserV2(input: $input) {
+      hasSucceeded
+      message
+    }
   }
 `;
 

@@ -9,14 +9,17 @@ import actions, {
   testJdbcConnectionForJdbcUserResponse,
   updateSchemaResponse,
   fetchInstanceResponse,
-  fetchInstanceRequest
+  fetchInstanceRequest,
+  testJdbcConnectionForIdResponseV2,
+  testJdbcConnectionForJdbcUserResponseV2
 } from './actions';
 
 import {
   ICreateDatabaseSchemaResponse,
   IDatabaseSchemas,
   IDeleteDatabaseSchemasResponse,
-  IDatabaseInstances
+  IDatabaseInstances,
+  ITestJDBCResponse
 } from 'models/schemas';
 import { handleAction, reduceReducers } from 'redux-ts-utils';
 
@@ -30,6 +33,7 @@ export interface ISchemasState {
   readonly updateSchemaResponse: boolean;
   readonly deleteSchemasResponse: IDeleteDatabaseSchemasResponse;
   readonly testJdbcConnectionResponse: boolean;
+  readonly testJdbcConnectionResponseV2: ITestJDBCResponse;
   readonly createDatabaseSchemaResponse: ICreateDatabaseSchemaResponse;
 }
 
@@ -42,6 +46,7 @@ const initialState = (): ISchemasState => {
     updateSchemaResponse: false,
     deleteSchemasResponse: { failed: [], succeeded: [] },
     testJdbcConnectionResponse: false,
+    testJdbcConnectionResponseV2: { hasSucceeded: false, message: 'failed' },
     createDatabaseSchemaResponse: {
       id: '',
       jdbcUser: { jdbcUrl: '', username: '', password: '' }
@@ -90,8 +95,16 @@ export const databaseReducer = reduceReducers<ISchemasState>(
       updateStateWithPayload('testJdbcConnectionResponse')
     ),
     handleAction(
+      testJdbcConnectionForIdResponseV2,
+      updateStateWithPayload('testJdbcConnectionResponseV2')
+    ),
+    handleAction(
       testJdbcConnectionForJdbcUserResponse,
       updateStateWithPayload('testJdbcConnectionResponse')
+    ),
+    handleAction(
+      testJdbcConnectionForJdbcUserResponseV2,
+      updateStateWithPayload('testJdbcConnectionResponseV2')
     ),
     handleAction(
       createDatabaseSchemaResponse,
