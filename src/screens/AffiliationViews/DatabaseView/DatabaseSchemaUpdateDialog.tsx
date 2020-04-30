@@ -12,7 +12,8 @@ import SkeLink from 'components/SkeLink';
 import {
   IDatabaseApplicationDeployment,
   IDatabaseSchema,
-  IUpdateDatabaseSchemaInputWithCreatedBy
+  IUpdateDatabaseSchemaInputWithCreatedBy,
+  ITestJDBCResponse
 } from 'models/schemas';
 import DatabaseSchemaService from 'services/DatabaseSchemaService';
 import { getLocalDatetime } from 'utils/date';
@@ -29,7 +30,7 @@ export interface IDatabaseSchemaUpdateDialogProps {
   onUpdate: (databaseSchema: IUpdateDatabaseSchemaInputWithCreatedBy) => void;
   onDelete: (databaseSchema: IDatabaseSchema) => void;
   onTestJdbcConnectionForId: (id: string) => void;
-  testJdbcConnectionResponse: boolean;
+  testJdbcConnectionResponse: ITestJDBCResponse;
   createNewCopy: () => void;
 }
 

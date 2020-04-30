@@ -8,7 +8,8 @@ import {
   IDeleteDatabaseSchemasResponse,
   IJdbcUser,
   IUpdateDatabaseSchemaInputWithCreatedBy,
-  IDatabaseInstances
+  IDatabaseInstances,
+  ITestJDBCResponse
 } from 'models/schemas';
 import { addCurrentErrors } from 'screens/ErrorHandler/state/actions';
 import { createAction } from 'redux-ts-utils';
@@ -38,12 +39,12 @@ export const deleteSchemasResponse = createAction<
   IDeleteDatabaseSchemasResponse
 >(databaseAction('DELETE_SCHEMAS_RESPONSE'));
 
-export const testJdbcConnectionForIdResponse = createAction<boolean>(
+export const testJdbcConnectionForIdResponse = createAction<ITestJDBCResponse>(
   databaseAction('TEST_JDBC_CONNECTION_FOR_ID_RESPONSE')
 );
-export const testJdbcConnectionForJdbcUserResponse = createAction<boolean>(
-  databaseAction('TEST_JDBC_CONNECTION_FOR_JDBCUSER_RESPONSE')
-);
+export const testJdbcConnectionForJdbcUserResponse = createAction<
+  ITestJDBCResponse
+>(databaseAction('TEST_JDBC_CONNECTION_FOR_JDBCUSER_RESPONSE'));
 export const createDatabaseSchemaResponse = createAction<
   ICreateDatabaseSchemaResponse
 >(databaseAction('CREATE_DATABASE_SCHEMA_RESPONSE'));
@@ -158,7 +159,12 @@ export const testJdbcConnectionForId: Thunk = (id: string) => async (
       testJdbcConnectionForIdResponse(result.data.testJdbcConnectionForId)
     );
   } else {
-    dispatch(testJdbcConnectionForIdResponse(false));
+    dispatch(
+      testJdbcConnectionForIdResponse({
+        hasSucceeded: false,
+        message: 'failed'
+      })
+    );
   }
 };
 
@@ -177,7 +183,12 @@ export const testJdbcConnectionForJdbcUser: Thunk = (
       )
     );
   } else {
-    dispatch(testJdbcConnectionForJdbcUserResponse(false));
+    dispatch(
+      testJdbcConnectionForIdResponse({
+        hasSucceeded: false,
+        message: 'failed'
+      })
+    );
   }
 };
 

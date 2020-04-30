@@ -294,11 +294,11 @@ export const certificateResultFactory = Factory.Sync.makeFactory<
 export const schemasFactory = Factory.Sync.makeFactory<ISchemasState>({
   isFetchingSchemas: false,
   databaseSchemas: { databaseSchemas: [] },
+  isFetchingInstances: false,
+  databaseInstances: { databaseInstances: [] },
   updateSchemaResponse: false,
   deleteSchemasResponse: { failed: [], succeeded: [] },
-  testJdbcConnectionResponse: false,
-  databaseInstances: { databaseInstances: [] },
-  isFetchingInstances: false,
+  testJdbcConnectionResponse: { hasSucceeded: false, message: 'failed' },
   createDatabaseSchemaResponse: {
     id: '',
     jdbcUser: { jdbcUrl: '', username: '', password: '' }

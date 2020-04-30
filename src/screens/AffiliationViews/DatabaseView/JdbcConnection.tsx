@@ -4,7 +4,7 @@ import Icon from '@skatteetaten/frontend-components/Icon';
 import TextField from '@skatteetaten/frontend-components/TextField';
 import palette from '@skatteetaten/frontend-components/utils/palette';
 import LoadingButton from 'components/LoadingButton';
-import { IJdbcUser } from 'models/schemas';
+import { IJdbcUser, ITestJDBCResponse } from 'models/schemas';
 import styled from 'styled-components';
 import { TextFieldEvent } from 'types/react';
 
@@ -23,7 +23,7 @@ export interface IJdbcConnectionProps {
   password?: string;
   onTestJdbcConnectionForId?: (id: string) => void;
   onTestJdbcConnectionForUser?: (jdbcUser: IJdbcUser) => void;
-  testJdbcConnectionResponse: boolean;
+  testJdbcConnectionResponse: ITestJDBCResponse;
   isDisabledFields: boolean;
   className?: string;
   hasPasswordField: boolean;
@@ -95,9 +95,9 @@ class JdbcConnection extends React.Component<
       jdcbTestState === JdcbTestState.NOT_STARTED;
 
     const displaySuccess =
-      !displayLoadingOrNotStarted && testJdbcConnectionResponse;
+      !displayLoadingOrNotStarted && testJdbcConnectionResponse.hasSucceeded;
     const displayFailure =
-      !displayLoadingOrNotStarted && !testJdbcConnectionResponse;
+      !displayLoadingOrNotStarted && !testJdbcConnectionResponse.hasSucceeded;
 
     return (
       <div className={className}>
@@ -151,14 +151,19 @@ class JdbcConnection extends React.Component<
             />
           )}
           {displayFailure && (
-            <Icon
-              className="styled-jdbc-status"
-              iconName="Clear"
-              style={{
-                color: skeColor.pink,
-                fontSize: '30px'
-              }}
-            />
+            <>
+              <Icon
+                className="styled-jdbc-status"
+                iconName="Clear"
+                style={{
+                  color: skeColor.pink,
+                  fontSize: '30px'
+                }}
+              />
+              <p style={{ color: skeColor.error }}>
+                {testJdbcConnectionResponse.message}
+              </p>
+            </>
           )}
         </p>
       </div>

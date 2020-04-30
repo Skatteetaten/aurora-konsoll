@@ -9,9 +9,9 @@ import {
 import {
   CREATE_DATABASE_SCHEMA_MUTATION,
   DELETE_DATABASESCHEMAS_MUTATION,
+  UPDATE_DATABASESCHEMA_MUTATION,
   TEST_JDBC_CONNECTION_FOR_ID_MUTATION,
-  TEST_JDBC_CONNECTION_FOR_JDBCUSER_MUTATION,
-  UPDATE_DATABASESCHEMA_MUTATION
+  TEST_JDBC_CONNECTION_FOR_JDBCUSER_MUTATION
 } from './mutation';
 import {
   DATABASE_SCHEMAS_QUERY,
@@ -86,11 +86,19 @@ export class DatabaseClient {
     id: string
   ): Promise<
     | IDataAndErrors<{
-        testJdbcConnectionForId: boolean;
+        testJdbcConnectionForId: {
+          hasSucceeded: boolean;
+          message: string;
+        };
       }>
     | undefined
   > {
-    return await this.client.mutate<{ testJdbcConnectionForId: boolean }>({
+    return await this.client.mutate<{
+      testJdbcConnectionForId: {
+        hasSucceeded: boolean;
+        message: string;
+      };
+    }>({
       mutation: TEST_JDBC_CONNECTION_FOR_ID_MUTATION,
       variables: {
         id
@@ -100,7 +108,10 @@ export class DatabaseClient {
 
   public async testJdbcConnectionForJdbcUser(jdbcUser: IJdbcUser) {
     return await this.client.mutate<{
-      testJdbcConnectionForJdbcUser: boolean;
+      testJdbcConnectionForJdbcUser: {
+        hasSucceeded: boolean;
+        message: string;
+      };
     }>({
       mutation: TEST_JDBC_CONNECTION_FOR_JDBCUSER_MUTATION,
       variables: {
