@@ -19,7 +19,7 @@ const renderTableContent = (type: string): JSX.Element[] => {
   return Object.keys(parsedType).map(it => (
     <tr key={`${it}`}>
       <th>{`${it}:`}</th>
-      <td>{parsedType[it]}</td>
+      <td>{`${parsedType[it]}`}</td>
     </tr>
   ));
 };
