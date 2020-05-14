@@ -68,11 +68,11 @@ export interface IApplicationDeploymentData {
 }
 
 export interface IRoute {
-  websealJobs: IWebsealJobs[];
-  bigipJobs: IBigipJobs[];
+  websealJobs: IWebsealJob[];
+  bigipJobs: IBigipJob[];
 }
 
-export interface IWebsealJobs {
+export interface IWebsealJob {
   id: string;
   payload: string;
   type: string;
@@ -85,7 +85,7 @@ export interface IWebsealJobs {
   routeName: string | null;
 }
 
-export interface IBigipJobs {
+export interface IBigipJob {
   id: string;
   payload: string;
   type: string;

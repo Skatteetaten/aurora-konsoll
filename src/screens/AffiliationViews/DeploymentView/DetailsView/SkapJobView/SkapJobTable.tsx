@@ -2,16 +2,16 @@ import React from 'react';
 import Table from '@skatteetaten/frontend-components/Table';
 import styled from 'styled-components';
 import {
-  IBigipJobs,
-  IWebsealJobs
+  IBigipJob,
+  IWebsealJob
 } from 'services/auroraApiClients/applicationDeploymentClient/query';
 
-interface IWebsealJobTable extends IWebsealJobs {
+interface IWebsealJobTable extends IWebsealJob {
   updatedFormatted: string;
   statusWithIcon: JSX.Element;
 }
 
-interface IBigipJobTable extends IBigipJobs {
+interface IBigipJobTable extends IBigipJob {
   updatedFormatted: string;
   statusWithIcon: JSX.Element;
 }
