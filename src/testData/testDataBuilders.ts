@@ -157,7 +157,8 @@ export const deploymentFactory = Factory.Sync.makeFactory<
         deploymentSpecs: {}
       },
       route: {
-        progressions: []
+        bigipJobs: [],
+        websealJobs: []
       }
     }
   })

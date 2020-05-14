@@ -68,19 +68,37 @@ export interface IApplicationDeploymentData {
 }
 
 export interface IRoute {
-  progressions: IProgression[];
+  websealJobs: IWebsealJobs[];
+  bigipJobs: IBigipJobs[];
 }
 
-export interface IProgression {
+export interface IWebsealJobs {
   id: string;
   payload: string;
-  objectname: string;
-  namespace: string;
   type: string;
   operation: string;
   status: string;
   updated: string;
   errorMessage: string | null;
+  host: string | null;
+  roles: string[] | null;
+  routeName: string | null;
+}
+
+export interface IBigipJobs {
+  id: string;
+  payload: string;
+  type: string;
+  operation: string;
+  status: string;
+  updated: string;
+  errorMessage: string | null;
+  asmPolicy: string | null;
+  externalHost: string | null;
+  apiPaths: string[] | null;
+  oauthScopes: string[] | null;
+  hostname: string | null;
+  serviceName: string | null;
 }
 
 export const APPLICATIONS_QUERY = gql`
@@ -348,16 +366,32 @@ export const APPLICATION_DEPLOYMENT_WITH_DETAILS_QUERY = gql`
         }
       }
       route {
-        progressions {
+        websealJobs {
           id
           payload
-          objectname
-          namespace
           type
           operation
           status
           updated
           errorMessage
+          host
+          roles
+          routeName
+        }
+        bigipJobs {
+          id
+          payload
+          type
+          operation
+          status
+          updated
+          errorMessage
+          asmPolicy
+          externalHost
+          apiPaths
+          oauthScopes
+          hostname
+          serviceName
         }
       }
     }
