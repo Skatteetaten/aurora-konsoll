@@ -118,35 +118,16 @@ const SkapJobTable = ({ websealJobs, bigipJobs }: ISkapJobTableProps) => {
                 sortable: true
               },
               {
+                name: 'Konfigurasjon',
+                fieldName: 'konfigurasjon',
+                sortable: true
+              },
+              {
                 name: 'Sist oppdatert',
                 fieldName: 'updatedFormatted',
                 sortable: true
               },
-              {
-                name: 'ASM policy',
-                fieldName: 'asmPolicy',
-                sortable: true
-              },
-              {
-                name: 'Ekstern host',
-                fieldName: 'externalHost',
-                sortable: true
-              },
-              {
-                name: 'Api paths',
-                fieldName: 'apiPaths',
-                sortable: true
-              },
-              {
-                name: 'Oauth scopes',
-                fieldName: 'oauthScopes',
-                sortable: true
-              },
-              {
-                name: 'Tjenestenavn',
-                fieldName: 'serviceName',
-                sortable: true
-              },
+
               {
                 name: 'Feilmelding',
                 fieldName: 'errorMessage',
