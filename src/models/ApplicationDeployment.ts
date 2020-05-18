@@ -3,7 +3,7 @@ import { IPodResource } from 'models/Pod';
 import {
   IPermission,
   IStatusCheck,
-  IImageRepository
+  IImageRepository,
 } from 'services/auroraApiClients/applicationDeploymentClient/query';
 import { StatusCode } from './Status';
 import { IImageTag } from 'services/auroraApiClients/imageRepositoryClient/query';

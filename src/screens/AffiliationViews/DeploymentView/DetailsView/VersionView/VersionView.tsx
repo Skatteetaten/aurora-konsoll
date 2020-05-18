@@ -17,7 +17,7 @@ export const VersionView = ({
   imageTagsConnection,
   deploymentSpecVersion,
   configuredVersionTag,
-  fetchVersion
+  fetchVersion,
 }: VersionViewProps) => {
   const { id, version, imageRepository } = deployment;
 

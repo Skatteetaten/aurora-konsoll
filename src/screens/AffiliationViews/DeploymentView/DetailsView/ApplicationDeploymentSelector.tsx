@@ -7,7 +7,7 @@ import {
   deleteAndRefreshApplications,
   refreshApplicationDeployment,
   fetchApplicationDeploymentWithDetails,
-  resetApplicationDeploymentState
+  resetApplicationDeploymentState,
 } from 'store/state/applicationDeployments/action.creators';
 import Spinner from 'components/Spinner';
 
@@ -33,7 +33,7 @@ const ApplicationDeploymentSelector = ({
   fetchApplicationDeploymentWithDetails,
   isRefreshing,
   isFetching,
-  resetApplicationDeploymentState
+  resetApplicationDeploymentState,
 }: Props) => {
   const match = useRouteMatch<ApplicationDeploymentMatchParams>();
 
@@ -49,7 +49,7 @@ const ApplicationDeploymentSelector = ({
   }, [
     id,
     resetApplicationDeploymentState,
-    fetchApplicationDeploymentWithDetails
+    fetchApplicationDeploymentWithDetails,
   ]);
 
   if (isFetching) {
@@ -76,7 +76,7 @@ const mapDispatchToProps = {
   refreshApplicationDeployment,
   deleteAndRefreshApplications,
   fetchApplicationDeploymentWithDetails,
-  resetApplicationDeploymentState
+  resetApplicationDeploymentState,
 };
 
 const mapStateToProps = ({ applications }: RootState) => {
@@ -84,7 +84,7 @@ const mapStateToProps = ({ applications }: RootState) => {
   return {
     isRefreshing,
     isFetching,
-    applicationDeployment
+    applicationDeployment,
   };
 };
 

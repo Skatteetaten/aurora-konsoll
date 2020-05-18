@@ -8,7 +8,7 @@ export interface IDatabaseViewRoutesProps {
 }
 
 export const DatabaseViewRoutes: React.FC<IDatabaseViewRoutesProps> = ({
-  affiliation
+  affiliation,
 }) => {
   const match = useRouteMatch();
   if (!match) {

@@ -1,7 +1,7 @@
 import { connect } from 'react-redux';
 import {
   mapDispatchToProps,
-  mapStateToProps
+  mapStateToProps,
 } from './RedeployRowAndVersionTable.state';
 import { RedeployRowAndVersionTable } from './RedeployRowAndVersionTable';
 

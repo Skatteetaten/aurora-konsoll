@@ -1,13 +1,13 @@
 import {
   fetchNetdebugStatusRequest,
-  fetchNetdebugStatusResponse
+  fetchNetdebugStatusResponse,
 } from './actions';
 
 describe('netdebug actions', () => {
   it('should return type of action fetchNetdebugStatusRequest and payload', () => {
     expect(fetchNetdebugStatusRequest(true)).toEqual({
       payload: true,
-      type: 'netdebugView/FETCH_NETDEBUG_REQUEST'
+      type: 'netdebugView/FETCH_NETDEBUG_REQUEST',
     });
   });
 
@@ -16,11 +16,11 @@ describe('netdebug actions', () => {
       fetchNetdebugStatusResponse({
         failed: [],
         open: [],
-        status: 'Noe gikk galt'
+        status: 'Noe gikk galt',
       })
     ).toEqual({
       payload: { failed: [], open: [], status: 'Noe gikk galt' },
-      type: 'netdebugView/FETCH_NETDEBUG_RESPONSE'
+      type: 'netdebugView/FETCH_NETDEBUG_RESPONSE',
     });
   });
 });

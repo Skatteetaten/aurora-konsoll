@@ -7,7 +7,7 @@ const auroraConfigDocumentation =
   'https://skatteetaten.github.io/aurora/documentation/aurora-config/#configuration-for-deployment-types-deploy-and-development';
 
 export const ReleaseToInformation: React.FC<{ currentVersion: IImageTag }> = ({
-  currentVersion
+  currentVersion,
 }) => (
   <MessageBar style={{ maxWidth: '600px' }}>
     <ExternalLink

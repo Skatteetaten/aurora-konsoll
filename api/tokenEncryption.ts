@@ -30,7 +30,7 @@ export function decrypt(text: string): string {
     );
     const decrypted = Buffer.concat([
       decipher.update(encryptedText),
-      decipher.final()
+      decipher.final(),
     ]);
     return decrypted.toString();
   } catch (err) {

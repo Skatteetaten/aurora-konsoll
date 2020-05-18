@@ -17,7 +17,7 @@ class Breadcrumb extends React.PureComponent<IBreadcrumbProps> {
     path: '',
     renderLink: ({ href, name }) => {
       return <a href={href}>{name}</a>;
-    }
+    },
   };
 
   public capitalize = (str: string) => {
@@ -37,13 +37,13 @@ class Breadcrumb extends React.PureComponent<IBreadcrumbProps> {
 
     const paths = path
       .split('/')
-      .filter(p => p && p.length > 0 && p.search('#') === -1)
+      .filter((p) => p && p.length > 0 && p.search('#') === -1)
       .map((p, i) => (
         <li key={i}>
           {i > 0 && <span>/</span>}
           {renderLink({
             href: this.nextPath(path, p),
-            name: this.capitalize(p)
+            name: this.capitalize(p),
           })}
         </li>
       ));

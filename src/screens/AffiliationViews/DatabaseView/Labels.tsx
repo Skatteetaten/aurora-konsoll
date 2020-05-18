@@ -25,7 +25,7 @@ const Labels = ({
   description,
   handleLabelChange,
   className,
-  displayCreatedByField
+  displayCreatedByField,
 }: ILabelsProps) => (
   <div className={className}>
     <h3>Labels</h3>

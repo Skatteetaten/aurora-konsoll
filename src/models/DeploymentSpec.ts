@@ -4,7 +4,7 @@ export const normalizeRawDeploymentSpec = (node: any) => (
 ): IDeploymentSpec => {
   const currentNode = node[key];
   const children = Object.keys(currentNode).filter(
-    cKey => ['sources', 'source', 'value'].indexOf(cKey) === -1
+    (cKey) => ['sources', 'source', 'value'].indexOf(cKey) === -1
   );
 
   const nextValue =
@@ -17,7 +17,7 @@ export const normalizeRawDeploymentSpec = (node: any) => (
 
   return {
     ...acc,
-    [key]: nextValue
+    [key]: nextValue,
   };
 };
 

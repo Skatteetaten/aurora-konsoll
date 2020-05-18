@@ -12,7 +12,7 @@ export class UserSettingsClient {
 
   public async getUserSettings(): Promise<IDataAndErrors<IUserSettingsData>> {
     return await this.client.query<IUserSettingsData>({
-      query: USERSETTINGS_QUERY
+      query: USERSETTINGS_QUERY,
     });
   }
 
@@ -24,8 +24,8 @@ export class UserSettingsClient {
     }>({
       mutation: UPDATE_USERSETTINGS_MUTATION,
       variables: {
-        input: userSettings
-      }
+        input: userSettings,
+      },
     });
 
     if (result.data && result.data.updateUserSettings) {
@@ -33,7 +33,7 @@ export class UserSettingsClient {
     } else {
       return {
         name: result.name,
-        errors: result.errors
+        errors: result.errors,
       };
     }
   }

@@ -20,7 +20,7 @@ class TimeSince extends React.PureComponent<ITimeSinceProps, ITimeSinceState> {
   public state: ITimeSinceState = {
     isSecond: false,
     minutesAgo: 0,
-    secondsAgo: 0
+    secondsAgo: 0,
   };
 
   public calculateTimeSinceDeployment(prevTime: Date) {
@@ -35,7 +35,7 @@ class TimeSince extends React.PureComponent<ITimeSinceProps, ITimeSinceState> {
       isSecond: secondsDifference < 60,
       minutesAgo: minutesDifference,
       secondsAgo: secondsDifference,
-      time: prevTime
+      time: prevTime,
     });
   }
   public componentDidUpdate(prevProps: ITimeSinceProps) {

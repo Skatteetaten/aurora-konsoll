@@ -11,7 +11,7 @@ interface IInformationViewNotificationsProps {
 
 export const InformationViewNotifications = ({
   deployment,
-  hasManagementInterface
+  hasManagementInterface,
 }: IInformationViewNotificationsProps) => {
   function isMissingManagementInterface() {
     if (!hasManagementInterface) {

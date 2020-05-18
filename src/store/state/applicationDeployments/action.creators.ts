@@ -11,9 +11,9 @@ export function deleteAndRefreshApplications(
     {
       request: actions.deleteApplicationDeploymentRequest,
       success: actions.fetchApplicationDeployments.success,
-      failure: actions.fetchApplicationDeployments.failure
+      failure: actions.fetchApplicationDeployments.failure,
     },
-    clients =>
+    (clients) =>
       clients.applicationDeploymentClient.deleteAndRefreshApplications(
         affiliation,
         namespace,
@@ -27,11 +27,11 @@ export function refreshAllDeploymentsForAffiliation(affiliation: string) {
     {
       request: actions.refreshAllDeploymentsForAffiliation,
       success: actions.fetchApplicationDeployments.success,
-      failure: actions.fetchApplicationDeployments.failure
+      failure: actions.fetchApplicationDeployments.failure,
     },
-    clients =>
+    (clients) =>
       clients.applicationDeploymentClient.refreshAndFetchApplications([
-        affiliation
+        affiliation,
       ])
   );
 }
@@ -41,7 +41,7 @@ export function refreshApplicationDeployment(applicationDeploymentId: string) {
     {
       request: actions.refreshApplicationDeployment,
       success: actions.fetchApplicationDeploymentWithDetails.success,
-      failure: actions.fetchApplicationDeploymentWithDetails.failure
+      failure: actions.fetchApplicationDeploymentWithDetails.failure,
     },
     ({ applicationDeploymentClient }) =>
       applicationDeploymentClient.refreshAndFetchApplicationDeployment(
@@ -51,7 +51,7 @@ export function refreshApplicationDeployment(applicationDeploymentId: string) {
 }
 
 export function fetchApplicationDeployments(affiliations: string[]) {
-  return doAsyncActions(actions.fetchApplicationDeployments, clients =>
+  return doAsyncActions(actions.fetchApplicationDeployments, (clients) =>
     clients.applicationDeploymentClient.findAllApplicationDeployments(
       affiliations
     )
@@ -63,7 +63,7 @@ export function deploy(applicationDeploymentId: string, version: string) {
     {
       request: actions.deployRequest,
       success: actions.fetchApplicationDeploymentWithDetails.success,
-      failure: actions.fetchApplicationDeploymentWithDetails.failure
+      failure: actions.fetchApplicationDeploymentWithDetails.failure,
     },
     ({ applicationDeploymentClient }) =>
       applicationDeploymentClient.redeployWithVersionAndRefreshDeployment(
@@ -86,7 +86,7 @@ export function fetchApplicationDeploymentWithDetails(
 }
 
 export function resetApplicationDeploymentState(): AsyncAction {
-  return dispatch => {
+  return (dispatch) => {
     dispatch(actions.resetApplicationDeploymentState());
   };
 }

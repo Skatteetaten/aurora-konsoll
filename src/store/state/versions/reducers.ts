@@ -7,16 +7,16 @@ import { actions } from './actions';
 import {
   IImageTagsConnection,
   ITagsQuery,
-  IImageTag
+  IImageTag,
 } from 'services/auroraApiClients/imageRepositoryClient/query';
 
 export const defaultImageTagsConnection: IImageTagsConnection = {
   edges: [],
   pageInfo: {
     endCursor: '',
-    hasNextPage: true
+    hasNextPage: true,
   },
-  totalCount: 0
+  totalCount: 0,
 };
 
 const {
@@ -28,7 +28,7 @@ const {
   MAJOR,
   MINOR,
   SNAPSHOT,
-  SEARCH
+  SEARCH,
 } = ImageTagType;
 
 export interface IVersionsState {
@@ -55,18 +55,18 @@ const initialState: IVersionsState = {
     [MAJOR]: createImageTagsConnection(MAJOR),
     [MINOR]: createImageTagsConnection(MINOR),
     [SNAPSHOT]: createImageTagsConnection(SNAPSHOT),
-    [SEARCH]: createImageTagsConnection(SEARCH)
-  }
+    [SEARCH]: createImageTagsConnection(SEARCH),
+  },
 };
 
 export const versionsReducer = reduceReducers<IVersionsState>(
   [
-    handleAction(actions.fetchInitVersions.request, state => {
+    handleAction(actions.fetchInitVersions.request, (state) => {
       state.isFetching = true;
     }),
     handleAction(actions.fetchInitVersions.success, (state, { payload }) => {
       state.isFetching = false;
-      Object.keys(payload).forEach(key => {
+      Object.keys(payload).forEach((key) => {
         const type = key as ImageTagType;
         const response = payload[type];
         const current = state.types[type] as ImageTagsConnection;
@@ -77,11 +77,11 @@ export const versionsReducer = reduceReducers<IVersionsState>(
       });
     }),
 
-    handleAction(actions.fetchInitVersions.failure, state => {
+    handleAction(actions.fetchInitVersions.failure, (state) => {
       state.isFetching = false;
     }),
 
-    handleAction(actions.fetchVersionsForType.request, state => {
+    handleAction(actions.fetchVersionsForType.request, (state) => {
       state.isFetching = true;
     }),
 
@@ -95,7 +95,7 @@ export const versionsReducer = reduceReducers<IVersionsState>(
         updateImageTagsConnection(response.data, current, paged);
       }
     }),
-    handleAction(actions.fetchVersionsForType.failure, state => {
+    handleAction(actions.fetchVersionsForType.failure, (state) => {
       state.isFetching = false;
     }),
 
@@ -109,7 +109,7 @@ export const versionsReducer = reduceReducers<IVersionsState>(
       state.types[payload] = createImageTagsConnection(payload);
     }),
 
-    handleAction(actions.fetchVersion.request, state => {
+    handleAction(actions.fetchVersion.request, (state) => {
       state.isFetchingConfiguredVersionTag = true;
     }),
 
@@ -120,9 +120,9 @@ export const versionsReducer = reduceReducers<IVersionsState>(
       }
     }),
 
-    handleAction(actions.fetchVersion.failure, state => {
+    handleAction(actions.fetchVersion.failure, (state) => {
       state.isFetchingConfiguredVersionTag = false;
-    })
+    }),
   ],
   initialState
 );

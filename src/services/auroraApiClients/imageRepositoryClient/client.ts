@@ -18,7 +18,7 @@ const {
   MAJOR,
   MINOR,
   SEARCH,
-  SNAPSHOT
+  SNAPSHOT,
 } = ImageTagType;
 
 export class ImageRepositoryClient {
@@ -36,8 +36,8 @@ export class ImageRepositoryClient {
       query: TAG_QUERY,
       variables: {
         repositories: [repository],
-        names: [tagName]
-      }
+        names: [tagName],
+      },
     });
   }
 
@@ -53,8 +53,8 @@ export class ImageRepositoryClient {
         cursor,
         first,
         filter,
-        repositories: [repository]
-      }
+        repositories: [repository],
+      },
     });
   }
 
@@ -68,7 +68,7 @@ export class ImageRepositoryClient {
     let variables: IImageTagsVariables = {
       cursor,
       first,
-      repositories: [repository]
+      repositories: [repository],
     };
 
     if (!isSearch) {
@@ -77,7 +77,7 @@ export class ImageRepositoryClient {
 
     return await this.client.query<ITagsQuery>({
       query: TAGS_QUERY,
-      variables
+      variables,
     });
   }
 
@@ -92,7 +92,7 @@ export class ImageRepositoryClient {
       snapshot,
       commitHash,
       uniqueSnapshot,
-      auroraVersion
+      auroraVersion,
     ] = await Promise.all([
       this.findTagsPaged(repository, MAJOR, 15),
       this.findTagsPaged(repository, MINOR, 15),
@@ -101,7 +101,7 @@ export class ImageRepositoryClient {
       this.findTagsPaged(repository, SNAPSHOT, 15),
       this.findTagsPaged(repository, COMMIT_HASH, 15),
       this.findTagsPaged(repository, AURORA_SNAPSHOT_VERSION, 15),
-      this.findTagsPaged(repository, AURORA_VERSION, 15)
+      this.findTagsPaged(repository, AURORA_VERSION, 15),
     ]);
 
     return {
@@ -113,7 +113,7 @@ export class ImageRepositoryClient {
       [COMMIT_HASH]: commitHash,
       [AURORA_VERSION]: auroraVersion,
       [AURORA_SNAPSHOT_VERSION]: uniqueSnapshot,
-      [SEARCH]: { name: 'search' }
+      [SEARCH]: { name: 'search' },
     };
   }
 }

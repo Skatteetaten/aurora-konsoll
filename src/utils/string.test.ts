@@ -6,8 +6,8 @@ describe('string utils', () => {
       const test = {
         foo: 'bar',
         fooBar: {
-          baz: 'foo'
-        }
+          baz: 'foo',
+        },
       };
       expect(prettifyJSON(test)).toBe(`{
   "foo": "bar",

@@ -9,7 +9,7 @@ interface IDeploymentSpecInformationProps {
 }
 
 export const DeploymentSpecInformation = ({
-  deploymentSpec
+  deploymentSpec,
 }: IDeploymentSpecInformationProps) => {
   if (!deploymentSpec) {
     return null;
@@ -17,7 +17,7 @@ export const DeploymentSpecInformation = ({
 
   const values = new InfoContentValues();
   const { type } = deploymentSpec;
-  values.addFrom(deploymentSpec, add => {
+  values.addFrom(deploymentSpec, (add) => {
     add('type', 'Type');
     if (['development', 'deploy'].indexOf(type) !== -1) {
       add('groupId', 'GroupId');
@@ -25,9 +25,9 @@ export const DeploymentSpecInformation = ({
     }
     add('version', 'Version');
     add('releaseTo', 'ReleaseTo');
-    add('database', 'Database', db => db && 'Ja');
-    add('certificate', 'Sertifikat', cert => cert && 'Ja');
-    add('management', 'Management', v => `Path: ${v.path} | Port: ${v.port}`);
+    add('database', 'Database', (db) => db && 'Ja');
+    add('certificate', 'Sertifikat', (cert) => cert && 'Ja');
+    add('management', 'Management', (v) => `Path: ${v.path} | Port: ${v.port}`);
   });
 
   return (

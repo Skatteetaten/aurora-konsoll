@@ -8,7 +8,7 @@ import UnavailableServiceMessage from 'components/UnavailableServiceMessage';
 import { InitVersionsContainer } from 'containers/InitVersionsContainer';
 import {
   IUnavailableServiceMessage,
-  unavailableServiceMessageCreator
+  unavailableServiceMessageCreator,
 } from 'models/UnavailableServiceMessage';
 
 import DetailsActionBar from './DetailsActionBar';
@@ -64,7 +64,7 @@ function versionStatusMessage(
   const { deployTag, releaseTo } = deployment.version;
 
   const deploymentInProgress = !!deployment.status.reasons.find(
-    status => status.name === 'DeploymentInProgressCheck'
+    (status) => status.name === 'DeploymentInProgressCheck'
   );
 
   return getVersionStatus(
@@ -82,7 +82,7 @@ export const DetailsView: React.FC<IDetailsViewProps> = ({
   deployment,
   isRefreshing,
   deleteAndRefreshApplications,
-  refreshApplicationDeployment
+  refreshApplicationDeployment,
 }) => {
   const match = useRouteMatch<ApplicationDeploymentMatchParams>();
   const history = useHistory();

@@ -10,23 +10,23 @@ const columns = [
   {
     fieldName: 'type',
     key: 'type',
-    name: 'Versjontype'
+    name: 'Versjontype',
   },
   {
     fieldName: 'name',
     key: 'name',
-    name: 'Navn'
+    name: 'Navn',
   },
   {
     fieldName: 'lastModified',
     key: 'lastModified',
-    name: 'Sist endret'
+    name: 'Sist endret',
   },
   {
     fieldName: 'deploy',
     key: 'deploy',
-    name: ''
-  }
+    name: '',
+  },
 ];
 
 function getOptionName(type: ImageTagType): string {
@@ -61,7 +61,7 @@ export const VersionTable = ({
   versionBeingDeployed,
   onConfirmDeploy,
   configuredVersionTag,
-  releaseTo
+  releaseTo,
 }: Props) => {
   const versionToFilter: string =
     releaseTo && configuredVersionTag
@@ -70,8 +70,8 @@ export const VersionTable = ({
 
   const data = imageTagsConnection
     .getVersions()
-    .filter(it => it.name !== versionToFilter)
-    .map(it => {
+    .filter((it) => it.name !== versionToFilter)
+    .map((it) => {
       return {
         type: getOptionName(it.type),
         name: it.name,
@@ -96,7 +96,7 @@ export const VersionTable = ({
               <p>Til:</p> {it.name}
             </VersionInfo>
           </DeployButton>
-        )
+        ),
       };
     });
 

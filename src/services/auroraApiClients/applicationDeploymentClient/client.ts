@@ -4,7 +4,7 @@ import {
   REDEPLOY_WITH_VERSION_MUTATION,
   REFRESH_APPLICATION_DEPLOYMENT_MUTATION,
   REFRESH_APPLICATION_DEPLOYMENTS_MUTATION,
-  DELETE_APPLICATION_DEPLOYMENT_MUTATION
+  DELETE_APPLICATION_DEPLOYMENT_MUTATION,
 } from './mutation';
 import {
   APPLICATION_DEPLOYMENT_DETAILS_QUERY,
@@ -14,7 +14,7 @@ import {
   IUserAndAffiliationsData,
   USER_AFFILIATIONS_QUERY,
   IApplicationDeploymentWithDetailsData,
-  APPLICATION_DEPLOYMENT_WITH_DETAILS_QUERY
+  APPLICATION_DEPLOYMENT_WITH_DETAILS_QUERY,
 } from './query';
 
 export class ApplicationDeploymentClient {
@@ -40,7 +40,7 @@ export class ApplicationDeploymentClient {
     } else {
       return {
         name: redeployResult.name,
-        errors: redeployResult.errors
+        errors: redeployResult.errors,
       };
     }
   }
@@ -62,7 +62,7 @@ export class ApplicationDeploymentClient {
     } else {
       return {
         name: deleteResponse.name,
-        errors: deleteResponse.errors
+        errors: deleteResponse.errors,
       };
     }
   }
@@ -80,7 +80,7 @@ export class ApplicationDeploymentClient {
     } else {
       return {
         name: refreshResult.name,
-        errors: refreshResult.errors
+        errors: refreshResult.errors,
       };
     }
   }
@@ -91,8 +91,8 @@ export class ApplicationDeploymentClient {
     return await this.client.query<IApplicationDeploymentWithDetailsData>({
       query: APPLICATION_DEPLOYMENT_WITH_DETAILS_QUERY,
       variables: {
-        id: applicationDeploymentId
-      }
+        id: applicationDeploymentId,
+      },
     });
   }
 
@@ -105,9 +105,9 @@ export class ApplicationDeploymentClient {
       variables: {
         input: {
           applicationDeploymentId,
-          version
-        }
-      }
+          version,
+        },
+      },
     });
   }
 
@@ -122,9 +122,9 @@ export class ApplicationDeploymentClient {
       mutation: REDEPLOY_WITH_CURRENT_VERSION_MUTATION,
       variables: {
         input: {
-          applicationDeploymentId
-        }
-      }
+          applicationDeploymentId,
+        },
+      },
     });
   }
 
@@ -137,9 +137,9 @@ export class ApplicationDeploymentClient {
       mutation: REFRESH_APPLICATION_DEPLOYMENT_MUTATION,
       variables: {
         input: {
-          applicationDeploymentId
-        }
-      }
+          applicationDeploymentId,
+        },
+      },
     });
   }
 
@@ -155,7 +155,7 @@ export class ApplicationDeploymentClient {
     } else {
       return {
         name: refreshResponse.name,
-        errors: refreshResponse.errors
+        errors: refreshResponse.errors,
       };
     }
   }
@@ -169,9 +169,9 @@ export class ApplicationDeploymentClient {
       mutation: REFRESH_APPLICATION_DEPLOYMENTS_MUTATION,
       variables: {
         input: {
-          affiliations
-        }
-      }
+          affiliations,
+        },
+      },
     });
   }
 
@@ -181,8 +181,8 @@ export class ApplicationDeploymentClient {
     return await this.client.query<IApplicationDeploymentDetailsQuery>({
       query: APPLICATION_DEPLOYMENT_DETAILS_QUERY,
       variables: {
-        id
-      }
+        id,
+      },
     });
   }
 
@@ -190,7 +190,7 @@ export class ApplicationDeploymentClient {
     IDataAndErrors<IUserAndAffiliationsData>
   > {
     return await this.client.query<IUserAndAffiliationsData>({
-      query: USER_AFFILIATIONS_QUERY
+      query: USER_AFFILIATIONS_QUERY,
     });
   }
 
@@ -200,8 +200,8 @@ export class ApplicationDeploymentClient {
     return await this.client.query<IApplicationsConnectionData>({
       query: APPLICATIONS_QUERY,
       variables: {
-        affiliations
-      }
+        affiliations,
+      },
     });
   }
 
@@ -214,9 +214,9 @@ export class ApplicationDeploymentClient {
       variables: {
         input: {
           namespace,
-          name
-        }
-      }
+          name,
+        },
+      },
     });
   }
 }

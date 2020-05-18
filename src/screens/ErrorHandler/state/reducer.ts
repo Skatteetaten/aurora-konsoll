@@ -3,7 +3,7 @@ import { ActionType } from 'typesafe-actions';
 import actions, {
   errorsResponse,
   incrementErrorId,
-  nextErrorResponse
+  nextErrorResponse,
 } from './actions';
 import { IErrors, IAppError } from 'models/errors';
 
@@ -30,16 +30,16 @@ function incrementState(name: string) {
 const initialState: IErrorsState = {
   errors: {
     allErrors: new Map(),
-    errorQueue: []
+    errorQueue: [],
   },
-  errorCount: 0
+  errorCount: 0,
 };
 
 export const errorsReducer = reduceReducers<IErrorsState>(
   [
     handleAction(errorsResponse, updateStateWithPayload('errors')),
     handleAction(nextErrorResponse, updateStateWithPayload('nextError')),
-    handleAction(incrementErrorId, incrementState('errorCount'))
+    handleAction(incrementErrorId, incrementState('errorCount')),
   ],
   initialState
 );
