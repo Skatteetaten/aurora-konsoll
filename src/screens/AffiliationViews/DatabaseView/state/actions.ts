@@ -15,11 +15,8 @@ import { createAction } from 'redux-ts-utils';
 
 const databaseAction = (action: string) => `database/${action}`;
 
-export const fetchSchemaRequest = createAction<boolean>(
-  databaseAction('FETCHED_SCHEMA_REQUEST')
-);
-export const fetchInstanceRequest = createAction<boolean>(
-  databaseAction('FETCHED_INSTANCE_REQUEST')
+export const fetchRequest = createAction<boolean>(
+  databaseAction('FETCH_REQUEST')
 );
 export const fetchSchemaResponse = createAction<IDatabaseSchemas>(
   databaseAction('FETCHED_SCHEMA_RESPONSE')
@@ -56,9 +53,9 @@ export const fetchSchemas: Thunk = (affiliations: string[]) => async (
   getState,
   { clients }
 ) => {
-  dispatch(fetchSchemaRequest(true));
+  dispatch(fetchRequest(true));
   const result = await clients.databaseClient.getSchemas(affiliations);
-  dispatch(fetchSchemaRequest(false));
+  dispatch(fetchRequest(false));
   dispatch(addCurrentErrors(result));
 
   if (result && result.data) {
@@ -82,9 +79,9 @@ export const fetchInstances: Thunk = (affiliation: string) => async (
   getState,
   { clients }
 ) => {
-  dispatch(fetchInstanceRequest(true));
+  dispatch(fetchRequest(true));
   const result = await clients.databaseClient.getInstances(affiliation);
-  dispatch(fetchInstanceRequest(false));
+  dispatch(fetchRequest(false));
   dispatch(addCurrentErrors(result));
 
   if (result && result.data) {
@@ -223,8 +220,7 @@ export const createDatabaseSchema: Thunk = (
 
 export default {
   fetchInstanceResponse,
-  fetchInstanceRequest,
-  fetchSchemaRequest,
+  fetchRequest,
   fetchSchemaResponse,
   updateSchemaResponse,
   deleteSchemasResponse,
@@ -232,3 +228,19 @@ export default {
   testJdbcConnectionForJdbcUserResponse,
   createDatabaseSchemaResponse
 };
+
+import actions, {
+  createDatabaseSchemaResponse,
+  deleteSchemaResponse,
+  deleteSchemasResponse,
+  fetchRequest,
+  fetchSchemaResponse,
+  testJdbcConnectionForIdResponse,
+  testJdbcConnectionForJdbcUserResponse,
+  updateSchemaResponse,
+  fetchInstanceResponse,
+  fetchRestorableSchemaResponse
+} from './actions';
+import {ActionType} from "typesafe-actions";
+export type DatabaseSchemasAction = ActionType<typeof actions>;
+

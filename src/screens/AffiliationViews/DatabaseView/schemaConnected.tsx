@@ -21,7 +21,7 @@ import {
 } from './state/actions';
 import { ISchemasState } from './state/reducers';
 
-const getFetchingStatus = (state: ISchemasState) => state.isFetchingSchemas;
+const getFetchingStatus = (state: ISchemasState) => state.isFetching;
 const getItems = (state: ISchemasState) => state.databaseSchemas;
 const getUpdateResponse = (state: ISchemasState) => state.updateSchemaResponse;
 const getTestConnectionResponse = (state: ISchemasState) =>
@@ -31,13 +31,10 @@ const getCreateDatabaseSchemaRespnse = (state: ISchemasState) =>
 const getCurrentUser = (state: IStartupState) => state.currentUser;
 const getDeletionInfo = (state: ISchemasState) => state.deleteSchemasResponse;
 const getInstances = (state: ISchemasState) => state.databaseInstances;
-const getFetchingStatusInstances = (state: ISchemasState) =>
-  state.isFetchingInstances;
 
 const mapStateToProps = (state: RootState) => ({
   items: getItems(state.database),
   instances: getInstances(state.database),
-  isFetchingInstances: getFetchingStatusInstances(state.database),
   isFetching: getFetchingStatus(state.database),
   updateResponse: getUpdateResponse(state.database),
   testJdbcConnectionResponse: getTestConnectionResponse(state.database),

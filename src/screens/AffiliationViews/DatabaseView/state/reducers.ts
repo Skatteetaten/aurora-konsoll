@@ -1,17 +1,4 @@
 import { ActionType } from 'typesafe-actions';
-import actions, {
-  createDatabaseSchemaResponse,
-  deleteSchemaResponse,
-  deleteSchemasResponse,
-  fetchSchemaRequest,
-  fetchSchemaResponse,
-  testJdbcConnectionForIdResponse,
-  testJdbcConnectionForJdbcUserResponse,
-  updateSchemaResponse,
-  fetchInstanceResponse,
-  fetchInstanceRequest,
-  fetchRestorableSchemaResponse
-} from './actions';
 
 import {
     ICreateDatabaseSchemaResponse,
@@ -21,13 +8,10 @@ import {
 } from 'models/schemas';
 import { handleAction, reduceReducers } from 'redux-ts-utils';
 
-export type DatabaseSchemasAction = ActionType<typeof actions>;
-
 export interface ISchemasState {
-  readonly isFetchingSchemas: boolean;
+  readonly isFetching: boolean;
   readonly databaseSchemas: IDatabaseSchemas;
   readonly restorableDatabaseSchemas: IRestorableDatabaseSchemas;
-  readonly isFetchingInstances: boolean;
   readonly databaseInstances: IDatabaseInstances;
   readonly updateSchemaResponse: boolean;
   readonly deleteSchemasResponse: IDeleteDatabaseSchemasResponse;
@@ -37,10 +21,9 @@ export interface ISchemasState {
 
 const initialState = (): ISchemasState => {
   return {
-    isFetchingSchemas: false,
+    isFetching: false,
     databaseSchemas: { databaseSchemas: [] },
     restorableDatabaseSchemas: { restorableDatabaseSchemas: [] },
-    isFetchingInstances: false,
     databaseInstances: { databaseInstances: [] },
     updateSchemaResponse: false,
     deleteSchemasResponse: { failed: [], succeeded: [] },
@@ -61,8 +44,8 @@ function updateStateWithPayload(name: string) {
 export const databaseReducer = reduceReducers<ISchemasState>(
   [
     handleAction(
-      fetchSchemaRequest,
-      updateStateWithPayload('isFetchingSchemas')
+      fetchRequest,
+      updateStateWithPayload('isFetching')
     ),
     handleAction(
       fetchSchemaResponse,
@@ -71,10 +54,6 @@ export const databaseReducer = reduceReducers<ISchemasState>(
     handleAction(
       fetchRestorableSchemaResponse,
       updateStateWithPayload('restorableDatabaseSchemas')
-    ),
-    handleAction(
-      fetchInstanceRequest,
-      updateStateWithPayload('isFetchingInstances')
     ),
     handleAction(
       fetchInstanceResponse,
