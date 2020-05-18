@@ -99,6 +99,7 @@ export interface IBigipJob {
   oauthScopes: string[] | null;
   hostname: string | null;
   serviceName: string | null;
+  name: string | null;
 }
 
 export const APPLICATIONS_QUERY = gql`
@@ -392,6 +393,7 @@ export const APPLICATION_DEPLOYMENT_WITH_DETAILS_QUERY = gql`
           oauthScopes
           hostname
           serviceName
+          name
         }
       }
     }
