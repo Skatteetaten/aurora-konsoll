@@ -98,6 +98,11 @@ const SkapJobTable = ({ websealJobs, bigipJobs }: ISkapJobTableProps) => {
                 sortable: true
               },
               {
+                name: 'Hostnavn',
+                fieldName: 'hostname',
+                sortable: true
+              },
+              {
                 name: 'Ekstern host',
                 fieldName: 'externalHost',
                 sortable: true

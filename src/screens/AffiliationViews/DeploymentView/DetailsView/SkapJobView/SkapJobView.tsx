@@ -62,7 +62,6 @@ const SkapJobView = ({ route }: ISkapJobViewProps) => {
     createOption(it.oauthScopes, 'Oauth scopes');
     createOption(it.serviceName, 'Tjenestenavn');
     createOption(it.asmPolicy, 'ASM policy');
-    createOption(it.hostname, 'Hostnavn');
     createOption(it.name, 'Navn');
 
     return {
