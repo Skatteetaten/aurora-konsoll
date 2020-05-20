@@ -37,13 +37,15 @@
     "winston-daily-rotate-file": "4.4.1"
   },
   "scripts": {
-    "start": "node scripts/start.js",
+    "start": "npm-run-all -lp load:env build:api:watch start:api start:web",
+    "load:env": "node ./scripts/load-env.js",
     "start:web": "react-scripts start",
-    "start:api": "npm run build:api -- --watch & nodemon --watch ./build-api --exec \"node ./build-api/server.js\"",
+    "start:api": "nodemon",
     "prebuild": "npm-run-all clean lint",
     "build": "npm-run-all -pl build:web build:api",
     "build:web": "GENERATE_SOURCEMAP=false react-scripts build",
     "build:api": "webpack --config webpack.api.config.js --mode production",
+    "build:api:watch": "npm run build:api -- --watch --preserveWatchOutput",
     "test": "react-scripts test",
     "test:api": "jest api/*.ts",
     "eject": "react-scripts eject",
@@ -55,6 +57,13 @@
     "prettier:fix": "prettier --write '{api,src}/**/*{.ts,.tsx,.css}'",
     "lint": "eslint '{api,src}/**/*{.ts,.tsx}'",
     "lint:fix": "eslint --fix '{api,src}/**/*{.ts,.tsx}'"
+  },
+    "nodemonConfig": {
+    "ext": "*.js",
+    "exec": "node build-api/server.js",
+    "runOnChangeOnly": true,
+    "watch": "build-api/**/*",
+    "delay": "200"
   },
   "prettier": {
     "singleQuote": true

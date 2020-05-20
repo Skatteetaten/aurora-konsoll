@@ -56,7 +56,7 @@ app.post('/api/log', (req, res) => {
 app.get('/api/accept-token', (req, res) => {
   const accessToken = req.query.access_token;
   const expires_in = req.query.expires_in;
-  const encryptedToken = tokenEncryption.encrypt(accessToken);
+  const encryptedToken = tokenEncryption.encrypt(accessToken as string);
   res.send(
     `${req.protocol}://${req.get(
       'x-forwarded-host'
