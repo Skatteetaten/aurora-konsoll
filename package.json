@@ -37,8 +37,7 @@
     "winston-daily-rotate-file": "4.4.1"
   },
   "scripts": {
-    "start": "npm-run-all -lp load:env build:api:watch start:api start:web",
-    "load:env": "node ./scripts/load-env.js",
+    "start": "npm-run-all -lp build:api:watch start:api start:web",
     "start:web": "react-scripts start",
     "start:api": "nodemon",
     "prebuild": "npm-run-all clean lint",
@@ -58,7 +57,7 @@
     "lint": "eslint '{api,src}/**/*{.ts,.tsx}'",
     "lint:fix": "eslint --fix '{api,src}/**/*{.ts,.tsx}'"
   },
-    "nodemonConfig": {
+  "nodemonConfig": {
     "ext": "*.js",
     "exec": "node build-api/server.js",
     "runOnChangeOnly": true,
