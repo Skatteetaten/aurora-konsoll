@@ -103,3 +103,8 @@ export enum Step {
   EXTERNAL,
   SUMMARY
 }
+
+export interface ITestJDBCResponse {
+  hasSucceeded: boolean;
+  message: string;
+}

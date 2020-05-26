@@ -5,19 +5,21 @@ import actions, {
   deleteSchemasResponse,
   fetchSchemaRequest,
   fetchSchemaResponse,
-  testJdbcConnectionForIdResponse,
-  testJdbcConnectionForJdbcUserResponse,
   updateSchemaResponse,
   fetchInstanceResponse,
   fetchInstanceRequest,
-  fetchRestorableSchemaResponse
+  fetchRestorableSchemaResponse,
+  testJdbcConnectionForIdResponse,
+  testJdbcConnectionForJdbcUserResponse
 } from './actions';
 
 import {
     ICreateDatabaseSchemaResponse,
     IDatabaseSchemas,
     IDeleteDatabaseSchemasResponse,
-    IDatabaseInstances, IRestorableDatabaseSchemas
+    IDatabaseInstances,
+    IRestorableDatabaseSchemas,
+    ITestJDBCResponse
 } from 'models/schemas';
 import { handleAction, reduceReducers } from 'redux-ts-utils';
 
@@ -31,7 +33,7 @@ export interface ISchemasState {
   readonly databaseInstances: IDatabaseInstances;
   readonly updateSchemaResponse: boolean;
   readonly deleteSchemasResponse: IDeleteDatabaseSchemasResponse;
-  readonly testJdbcConnectionResponse: boolean;
+  readonly testJdbcConnectionResponse: ITestJDBCResponse;
   readonly createDatabaseSchemaResponse: ICreateDatabaseSchemaResponse;
 }
 
@@ -44,7 +46,7 @@ const initialState = (): ISchemasState => {
     databaseInstances: { databaseInstances: [] },
     updateSchemaResponse: false,
     deleteSchemasResponse: { failed: [], succeeded: [] },
-    testJdbcConnectionResponse: false,
+    testJdbcConnectionResponse: { hasSucceeded: false, message: 'failed' },
     createDatabaseSchemaResponse: {
       id: '',
       jdbcUser: { jdbcUrl: '', username: '', password: '' }

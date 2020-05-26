@@ -155,6 +155,10 @@ export const deploymentFactory = Factory.Sync.makeFactory<
         updatedBy: 'linus',
         serviceLinks: [],
         deploymentSpecs: {}
+      },
+      route: {
+        bigipJobs: [],
+        websealJobs: []
       }
     }
   })
@@ -295,11 +299,11 @@ export const schemasFactory = Factory.Sync.makeFactory<ISchemasState>({
   isFetchingSchemas: false,
   databaseSchemas: { databaseSchemas: [] },
   restorableDatabaseSchemas: { restorableDatabaseSchemas: [] },
+  isFetchingInstances: false,
+  databaseInstances: { databaseInstances: [] },
   updateSchemaResponse: false,
   deleteSchemasResponse: { failed: [], succeeded: [] },
-  testJdbcConnectionResponse: false,
-  databaseInstances: { databaseInstances: [] },
-  isFetchingInstances: false,
+  testJdbcConnectionResponse: { hasSucceeded: false, message: 'failed' },
   createDatabaseSchemaResponse: {
     id: '',
     jdbcUser: { jdbcUrl: '', username: '', password: '' }

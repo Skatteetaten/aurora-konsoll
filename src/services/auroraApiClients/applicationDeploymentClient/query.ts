@@ -67,6 +67,41 @@ export interface IApplicationDeploymentData {
   time: string;
 }
 
+export interface IRoute {
+  websealJobs: IWebsealJob[];
+  bigipJobs: IBigipJob[];
+}
+
+export interface IWebsealJob {
+  id: string;
+  payload: string;
+  type: string;
+  operation: string;
+  status: string;
+  updated: string;
+  errorMessage: string | null;
+  host: string | null;
+  roles: string[] | null;
+  routeName: string | null;
+}
+
+export interface IBigipJob {
+  id: string;
+  payload: string;
+  type: string;
+  operation: string;
+  status: string;
+  updated: string;
+  errorMessage: string | null;
+  asmPolicy: string | null;
+  externalHost: string | null;
+  apiPaths: string[] | null;
+  oauthScopes: string[] | null;
+  hostname: string | null;
+  serviceName: string | null;
+  name: string | null;
+}
+
 export const APPLICATIONS_QUERY = gql`
   query getApplicationDeployments($affiliations: [String!]!) {
     applications(affiliations: $affiliations) {
@@ -237,6 +272,7 @@ export const USER_AFFILIATIONS_QUERY = gql`
 export interface IApplicationDeploymentWithDetails
   extends IApplicationDeploymentData {
   details: IApplicationDeploymentDetails;
+  route?: IRoute;
 }
 
 export interface IApplicationDeploymentWithDetailsData {
@@ -328,6 +364,36 @@ export const APPLICATION_DEPLOYMENT_WITH_DETAILS_QUERY = gql`
           current {
             jsonRepresentation
           }
+        }
+      }
+      route {
+        websealJobs {
+          id
+          payload
+          type
+          operation
+          status
+          updated
+          errorMessage
+          host
+          roles
+          routeName
+        }
+        bigipJobs {
+          id
+          payload
+          type
+          operation
+          status
+          updated
+          errorMessage
+          asmPolicy
+          externalHost
+          apiPaths
+          oauthScopes
+          hostname
+          serviceName
+          name
         }
       }
     }

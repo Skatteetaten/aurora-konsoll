@@ -12,7 +12,8 @@ import {
   IDatabaseSchema,
   IJdbcUser,
   Step,
-  IDatabaseInstances
+  IDatabaseInstances,
+  ITestJDBCResponse
 } from 'models/schemas';
 import DatabaseSchemaService from 'services/DatabaseSchemaService';
 import External from './createDialogSteps/External';
@@ -27,7 +28,7 @@ interface IDatabaseSchemaCreateDialogProps {
   onCreate: (databaseSchema: ICreateDatabaseSchemaInput) => void;
   onTestJdbcConnectionForUser: (jdbcUser: IJdbcUser) => void;
   createResponse: ICreateDatabaseSchemaResponse;
-  testJdbcConnectionResponse: boolean;
+  testJdbcConnectionResponse: ITestJDBCResponse;
   currentUser: IUserAndAffiliations;
   isFetching: boolean;
   initialDatabaseSchemaInput?: IDatabaseSchema;

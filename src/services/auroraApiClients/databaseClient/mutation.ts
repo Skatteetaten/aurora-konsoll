@@ -19,13 +19,19 @@ export const DELETE_DATABASESCHEMAS_MUTATION = gql`
 
 export const TEST_JDBC_CONNECTION_FOR_ID_MUTATION = gql`
   mutation testJdbcConnectionForId($id: String!) {
-    testJdbcConnectionForId(id: $id)
+    testJdbcConnectionForId(id: $id) {
+      hasSucceeded
+      message
+    }
   }
 `;
 
 export const TEST_JDBC_CONNECTION_FOR_JDBCUSER_MUTATION = gql`
   mutation testJdbcConnectionForJdbcUser($input: JdbcUserInput!) {
-    testJdbcConnectionForJdbcUser(input: $input)
+    testJdbcConnectionForJdbcUser(input: $input) {
+      hasSucceeded
+      message
+    }
   }
 `;
 

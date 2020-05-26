@@ -15,7 +15,8 @@ import {
   IDeleteDatabaseSchemasResponse,
   IJdbcUser,
   IUpdateDatabaseSchemaInputWithCreatedBy,
-  IDatabaseInstances
+  IDatabaseInstances,
+  ITestJDBCResponse
 } from 'models/schemas';
 import ConfirmDeletionDialog from './ConfirmDeletionDialog';
 import DatabaseSchemaCreateDialog from './DatabaseSchemaCreateDialog';
@@ -83,7 +84,7 @@ export interface ISchemaProps {
   updateResponse: boolean;
   affiliation: string;
   className?: string;
-  testJdbcConnectionResponse: boolean;
+  testJdbcConnectionResponse: ITestJDBCResponse;
   currentUser: IUserAndAffiliations;
   deleteResponse: IDeleteDatabaseSchemasResponse;
 }

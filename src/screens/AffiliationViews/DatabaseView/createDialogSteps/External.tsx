@@ -1,7 +1,11 @@
 import * as React from 'react';
 
 import Grid from '@skatteetaten/frontend-components/Grid';
-import { ICreateDatabaseSchemaInput, IJdbcUser } from 'models/schemas';
+import {
+  ICreateDatabaseSchemaInput,
+  IJdbcUser,
+  ITestJDBCResponse
+} from 'models/schemas';
 import DatabaseSchemaService from 'services/DatabaseSchemaService';
 import JdbcConnection from '../JdbcConnection';
 import Labels from '../Labels';
@@ -14,7 +18,7 @@ interface IExternalProps {
   setJdbcUserInput: (jdbcUser: IJdbcUser) => void;
   databaseSchemaInput: ICreateDatabaseSchemaInput;
   onTestJdbcConnectionForUser: (jdbcUser: IJdbcUser) => void;
-  testJdbcConnectionResponse: boolean;
+  testJdbcConnectionResponse: ITestJDBCResponse;
   databaseSchemaService: DatabaseSchemaService;
 }
 
