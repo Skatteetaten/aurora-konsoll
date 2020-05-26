@@ -30,19 +30,21 @@ export const addErrors = (errors: any[], name?: string): AsyncAction => (
 ) => {
   const state = Object.assign({}, getState().errors.errors);
   errors.forEach((e) => {
-    Logger.error(e.message, {
-      location: window.location.pathname,
-    });
-    dispatch(incrementErrorId());
-    state.errorQueue.push({
-      error: {
-        stack: JSON.stringify(e.extensions),
-        message: e.message,
-        name: !!name ? `{"document": "${name}"}` : '',
-      },
-      id: getState().errors.errorCount,
-      isActive: true,
-    });
+    if (!isIntegrationDisabledError(e)) {
+      Logger.error(e.message, {
+        location: window.location.pathname,
+      });
+      dispatch(incrementErrorId());
+      state.errorQueue.push({
+        error: {
+          stack: JSON.stringify(e.extensions),
+          message: e.message,
+          name: !!name ? `{"document": "${name}"}` : '',
+        },
+        id: getState().errors.errorCount,
+        isActive: true,
+      });
+    }
   });
   dispatch(errorsResponse(state));
 };
@@ -81,6 +83,21 @@ export const closeErrors: Thunk = () => (dispatch, getState) => {
     setIsActiveFalse(err);
   });
   dispatch(errorsResponse(state));
+};
+
+const isIntegrationDisabledError = (e: any) => {
+  if (
+    e.hasOwnProperty('message') &&
+    (e.message as string).includes(
+      'integration is disabled for this environment'
+    )
+  ) {
+    Logger.debug(e.message, {
+      location: window.location.pathname,
+    });
+    return true;
+  }
+  return false;
 };
 
 export default {

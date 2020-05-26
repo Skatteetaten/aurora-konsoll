@@ -2,6 +2,7 @@ import {
   IApplicationDeploymentWithDetailsData,
   IImageRepository,
   IPermission,
+  IRoute,
 } from 'services/auroraApiClients/applicationDeploymentClient/query';
 import {
   IApplicationDeployment,
@@ -34,6 +35,7 @@ export class ApplicationDeployment implements IApplicationDeployment {
   public time: string;
   public message?: string;
   public details: IApplicationDeploymentDetails;
+  public route?: IRoute;
 
   constructor(data: IApplicationDeploymentWithDetailsData) {
     const app = data.applicationDeployment;
@@ -59,6 +61,7 @@ export class ApplicationDeployment implements IApplicationDeployment {
       serviceLinks: details.serviceLinks,
       updatedBy: details.updatedBy,
     };
+    this.route = app.route;
   }
 
   private toDeploymentSpec(current?: any): IDeploymentSpec | undefined {
