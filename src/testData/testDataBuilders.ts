@@ -292,13 +292,14 @@ export const certificateResultFactory = Factory.Sync.makeFactory<
 });
 
 export const schemasFactory = Factory.Sync.makeFactory<ISchemasState>({
-  isFetching: false,
+  isFetchingSchemas: false,
   databaseSchemas: { databaseSchemas: [] },
   restorableDatabaseSchemas: { restorableDatabaseSchemas: [] },
   updateSchemaResponse: false,
   deleteSchemasResponse: { failed: [], succeeded: [] },
   testJdbcConnectionResponse: false,
   databaseInstances: { databaseInstances: [] },
+  isFetchingInstances: false,
   createDatabaseSchemaResponse: {
     id: '',
     jdbcUser: { jdbcUrl: '', username: '', password: '' }

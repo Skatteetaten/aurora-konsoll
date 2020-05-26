@@ -9,7 +9,7 @@ import {
   createDatabaseSchemaResponse,
   deleteSchemaResponse,
   deleteSchemasResponse,
-  fetchRequest,
+  fetchSchemaRequest,
   fetchSchemaResponse,
   testJdbcConnectionForIdResponse,
   testJdbcConnectionForJdbcUserResponse,
@@ -19,7 +19,7 @@ import { databaseReducer } from './reducers';
 
 describe('database schema actions', () => {
   it('should return type of action fetchSchemaRequest and payload', () => {
-    expect(fetchRequest(true)).toEqual({
+    expect(fetchSchemaRequest(true)).toEqual({
       payload: true,
       type: 'database/FETCHED_SCHEMA_REQUEST'
     });
@@ -99,7 +99,7 @@ describe('database schema reducer', () => {
       { name: 'fetchSchemaRequest', item: schemasFactory.build() },
       {
         name: 'isFetchingSchemas',
-        item: fetchRequest(true)
+        item: fetchSchemaRequest(true)
       },
       schemasFactory.build({
         isFetchingSchemas: true
