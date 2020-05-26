@@ -11,17 +11,17 @@ const StatusIcon = ({ status }: IStatusIconProps) => {
       case 'DONE':
         return {
           icon: 'Completed',
-          color: '#4fbb82'
+          color: '#4fbb82',
         };
       case 'FAILED':
         return {
           icon: 'Error',
-          color: '#bb4f4f'
+          color: '#bb4f4f',
         };
       default:
         return {
           icon: 'Info',
-          color: '#bbad4f'
+          color: '#bbad4f',
         };
     }
   };
