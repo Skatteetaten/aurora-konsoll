@@ -1,5 +1,5 @@
 import express from 'express';
-import proxy from 'http-proxy-middleware';
+import { createProxyMiddleware } from 'http-proxy-middleware';
 import * as tokenEncryption from './tokenEncryption';
 import { logger } from './logger';
 
@@ -18,7 +18,7 @@ const app = express();
 
 app.use(
   '/api/graphql',
-  proxy({
+  createProxyMiddleware({
     changeOrigin: true,
     target: GOBO_URL,
     onProxyReq(proxyReq, req) {
