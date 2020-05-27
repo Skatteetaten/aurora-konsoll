@@ -14,12 +14,12 @@ import actions, {
 } from './actions';
 
 import {
-    ICreateDatabaseSchemaResponse,
-    IDatabaseSchemas,
-    IDeleteDatabaseSchemasResponse,
-    IDatabaseInstances,
-    IRestorableDatabaseSchemas,
-    ITestJDBCResponse
+  ICreateDatabaseSchemaResponse,
+  IDatabaseSchemas,
+  IDeleteDatabaseSchemasResponse,
+  IDatabaseInstances,
+  IRestorableDatabaseSchemas,
+  ITestJDBCResponse
 } from 'models/schemas';
 import { handleAction, reduceReducers } from 'redux-ts-utils';
 

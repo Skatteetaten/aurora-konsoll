@@ -58,14 +58,24 @@ describe('database schema actions', () => {
   });
 
   it('should return type of action testJdbcConnectionForIdResponse and payload', () => {
-    expect(testJdbcConnectionForIdResponse(true)).toEqual({
+    expect(
+      testJdbcConnectionForIdResponse({
+        hasSucceeded: true,
+        message: 'success'
+      })
+    ).toEqual({
       payload: true,
       type: 'database/TEST_JDBC_CONNECTION_FOR_ID_RESPONSE'
     });
   });
 
   it('should return type of action testJdbcConnectionForJdbcUserResponse and payload', () => {
-    expect(testJdbcConnectionForJdbcUserResponse(true)).toEqual({
+    expect(
+      testJdbcConnectionForJdbcUserResponse({
+        hasSucceeded: true,
+        message: 'success'
+      })
+    ).toEqual({
       payload: true,
       type: 'database/TEST_JDBC_CONNECTION_FOR_JDBCUSER_RESPONSE'
     });
@@ -139,9 +149,17 @@ describe('database schema reducer', () => {
       { name: 'testJdbcConnectionForIdResponse', item: schemasFactory.build() },
       {
         name: 'testJdbcConnectionResponse',
-        item: testJdbcConnectionForIdResponse(true)
+        item: testJdbcConnectionForIdResponse({
+          hasSucceeded: true,
+          message: 'success'
+        })
       },
-      schemasFactory.build({ testJdbcConnectionResponse: true })
+      schemasFactory.build({
+        testJdbcConnectionResponse: {
+          hasSucceeded: true,
+          message: 'success'
+        }
+      })
     ],
     [
       {
@@ -150,9 +168,17 @@ describe('database schema reducer', () => {
       },
       {
         name: 'testJdbcConnectionResponse',
-        item: testJdbcConnectionForIdResponse(true)
+        item: testJdbcConnectionForIdResponse({
+          hasSucceeded: true,
+          message: 'success'
+        })
       },
-      schemasFactory.build({ testJdbcConnectionResponse: true })
+      schemasFactory.build({
+        testJdbcConnectionResponse: {
+          hasSucceeded: true,
+          message: 'success'
+        }
+      })
     ]
   ]).describe.only('', (a, b, expected) => {
     test.only(`given defaultState and action ${a.name} with given value should change ${b.name} to given value`, () => {

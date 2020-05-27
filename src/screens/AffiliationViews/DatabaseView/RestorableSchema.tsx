@@ -23,7 +23,6 @@ export class RestorableSchema extends React.Component<
   };
 
   public componentDidMount(): void {
-
     this.props.onComponentMounted(this.props.affiliation);
   }
 
