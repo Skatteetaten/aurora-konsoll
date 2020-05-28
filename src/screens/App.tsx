@@ -109,11 +109,8 @@ export const App: React.FC<IAppProps> = ({
                 path="/certificates"
                 component={CertificateConnected}
               />
-              <Route
-                exact={true}
-                path="/storyteller"
-              >
-                <StorytellerView url={storytellerUrl}/>
+              <Route exact={true} path="/storyteller">
+                <StorytellerView url={storytellerUrl} />
               </Route>
             </Switch>
           )}

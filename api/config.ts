@@ -25,7 +25,8 @@ const SKAP_ENABLED = !!env.INTEGRATIONS_SKAP_URL;
 const TOKEN_ENCRYPTION_FRASE =
   env.TOKEN_ENCRYPTION_FRASE || 'UdONoTMessW1TH0leGunnarS0lSkjaer';
 
-const STORYTELLER_URL = env.STORYTELLER_URL || 'https://frontend-aurora.utv.paas.skead.no';
+const STORYTELLER_URL =
+  env.STORYTELLER_URL || 'https://frontend-aurora.utv.paas.skead.no';
 
 export {
   CLIENT_ID,
