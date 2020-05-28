@@ -22,17 +22,20 @@ import { NetdebugConnected } from './NetdebugView/NetdebugConnected';
 
 import { SecretTokenNavigation } from './SecretToken';
 import AcceptToken from './AcceptToken';
+import { StorytellerView } from './StorytellerView/StorytellerView';
 
 interface IAppProps {
   tokenStore: ITokenStore;
   displayDatabaseView: boolean;
   displaySkapViews: boolean;
+  storytellerUrl: string;
 }
 
 export const App: React.FC<IAppProps> = ({
   displayDatabaseView,
   displaySkapViews,
-  tokenStore
+  tokenStore,
+  storytellerUrl
 }) => {
   const [affiliation, setAffiliation] = useState<string | undefined>(undefined);
   const [isMenuExpanded, setMenuExpanded] = useState(true);
@@ -65,6 +68,7 @@ export const App: React.FC<IAppProps> = ({
   };
 
   const isAuthenticated = tokenStore.isTokenValid();
+  console.log(storytellerUrl);
 
   return (
     <StyledSkeBasis>
@@ -105,6 +109,12 @@ export const App: React.FC<IAppProps> = ({
                 path="/certificates"
                 component={CertificateConnected}
               />
+              <Route
+                exact={true}
+                path="/storyteller"
+              >
+                <StorytellerView url={storytellerUrl}/>
+              </Route>
             </Switch>
           )}
         </LayoutConnected>

@@ -71,6 +71,7 @@ async function init() {
           tokenStore={tokenStore}
           displayDatabaseView={config.DBH_ENABLED}
           displaySkapViews={config.SKAP_ENABLED}
+          storytellerUrl={config.STORYTELLER_URL}
         />
       </BrowserRouter>
     </Provider>,

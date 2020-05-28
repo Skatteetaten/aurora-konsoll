@@ -10,7 +10,8 @@ import {
   DBH_ENABLED,
   GOBO_URL,
   PORT,
-  SKAP_ENABLED
+  SKAP_ENABLED,
+  STORYTELLER_URL
 } from './config';
 import { managementInterfaceServer } from './ManagementInterface';
 
@@ -44,7 +45,8 @@ app.get('/api/config', (req, res) => {
     CLIENT_ID,
     APPLICATION_NAME,
     DBH_ENABLED,
-    SKAP_ENABLED
+    SKAP_ENABLED,
+    STORYTELLER_URL
   });
 });
 

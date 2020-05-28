@@ -85,6 +85,11 @@ const Layout = ({
       iconName: 'Code',
       name: 'Netdebug',
       to: '/netdebug'
+    },
+    {
+      iconName: 'Code',
+      name: 'Storyteller',
+      to: '/storyteller'
     }
   ];
 
