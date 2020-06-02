@@ -17,7 +17,9 @@ import {
   DATABASE_SCHEMAS_QUERY,
   IDatabaseSchemasQuery,
   DATABASE_INSTANCES_QUERY,
-  IDatabaseInstancesQuery
+  IDatabaseInstancesQuery,
+  IRestorableDatabaseSchemasQuery,
+  RESTORABLE_DATABASE_SCHEMAS_QUERY
 } from './query';
 
 export class DatabaseClient {
@@ -32,6 +34,17 @@ export class DatabaseClient {
   ): Promise<IDataAndErrors<IDatabaseSchemasQuery> | undefined> {
     return await this.client.query<IDatabaseSchemasQuery>({
       query: DATABASE_SCHEMAS_QUERY,
+      variables: {
+        affiliations
+      }
+    });
+  }
+
+  public async getRestorableSchemas(
+    affiliations: string[]
+  ): Promise<IDataAndErrors<IRestorableDatabaseSchemasQuery> | undefined> {
+    return await this.client.query<IRestorableDatabaseSchemasQuery>({
+      query: RESTORABLE_DATABASE_SCHEMAS_QUERY,
       variables: {
         affiliations
       }

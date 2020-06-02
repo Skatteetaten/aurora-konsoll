@@ -1,5 +1,9 @@
 import gql from 'graphql-tag';
-import { IDatabaseSchema, IDatabaseInstance } from 'models/schemas';
+import {
+  IDatabaseSchema,
+  IDatabaseInstance,
+  IRestorableDatabaseSchema
+} from 'models/schemas';
 
 export interface IDatabaseSchemasQuery {
   databaseSchemas?: IDatabaseSchema[];
@@ -7,6 +11,10 @@ export interface IDatabaseSchemasQuery {
 
 export interface IDatabaseInstancesQuery {
   databaseInstances?: IDatabaseInstance[];
+}
+
+export interface IRestorableDatabaseSchemasQuery {
+  restorableDatabaseSchemas?: IRestorableDatabaseSchema[];
 }
 
 export const DATABASE_SCHEMAS_QUERY = gql`
@@ -61,6 +69,27 @@ export const DATABASE_INSTANCES_QUERY = gql`
         key
         value
       }
+    }
+  }
+`;
+
+export const RESTORABLE_DATABASE_SCHEMAS_QUERY = gql`
+  query getRestorableDatabaseSchemas($affiliations: [String!]!) {
+    restorableDatabaseSchemas(affiliations: $affiliations) {
+      databaseSchema {
+        application
+        description
+        environment
+        discriminator
+        createdDate
+        lastUsedDate
+        sizeInMb
+        createdBy
+        engine
+        name
+      }
+      deleteAfter
+      setToCooldownAt
     }
   }
 `;

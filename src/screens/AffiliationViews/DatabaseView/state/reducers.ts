@@ -9,6 +9,7 @@ import actions, {
   fetchInstanceResponse,
   fetchInstanceRequest,
   fetchRestorableSchemaResponse,
+  fetchRestorableSchemaRequest,
   testJdbcConnectionForIdResponse,
   testJdbcConnectionForJdbcUserResponse
 } from './actions';
@@ -35,6 +36,7 @@ export interface ISchemasState {
   readonly deleteSchemasResponse: IDeleteDatabaseSchemasResponse;
   readonly testJdbcConnectionResponse: ITestJDBCResponse;
   readonly createDatabaseSchemaResponse: ICreateDatabaseSchemaResponse;
+  readonly isFetchingRestorableSchemas: boolean;
 }
 
 const initialState = (): ISchemasState => {
@@ -50,7 +52,8 @@ const initialState = (): ISchemasState => {
     createDatabaseSchemaResponse: {
       id: '',
       jdbcUser: { jdbcUrl: '', username: '', password: '' }
-    }
+    },
+    isFetchingRestorableSchemas: false
   };
 };
 
@@ -69,6 +72,10 @@ export const databaseReducer = reduceReducers<ISchemasState>(
     handleAction(
       fetchSchemaResponse,
       updateStateWithPayload('databaseSchemas')
+    ),
+    handleAction(
+      fetchRestorableSchemaRequest,
+      updateStateWithPayload('isFetchingRestorableSchemas')
     ),
     handleAction(
       fetchRestorableSchemaResponse,

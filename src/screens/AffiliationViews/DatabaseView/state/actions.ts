@@ -9,7 +9,8 @@ import {
   IJdbcUser,
   IUpdateDatabaseSchemaInputWithCreatedBy,
   IDatabaseInstances,
-  ITestJDBCResponse
+  ITestJDBCResponse,
+  IRestorableDatabaseSchemas
 } from 'models/schemas';
 import { addCurrentErrors } from 'screens/ErrorHandler/state/actions';
 import { createAction } from 'redux-ts-utils';
@@ -25,9 +26,12 @@ export const fetchInstanceRequest = createAction<boolean>(
 export const fetchSchemaResponse = createAction<IDatabaseSchemas>(
   databaseAction('FETCHED_SCHEMA_RESPONSE')
 );
-export const fetchRestorableSchemaResponse = createAction<IDatabaseSchemas>(
-  databaseAction('FETCHED_RESTORABLE_SCHEMA_RESPONSE')
+export const fetchRestorableSchemaRequest = createAction<boolean>(
+  databaseAction('FETCHED_RESTORABLE_SCHEMA_REQUEST')
 );
+export const fetchRestorableSchemaResponse = createAction<
+  IRestorableDatabaseSchemas
+>(databaseAction('FETCHED_RESTORABLE_SCHEMA_RESPONSE'));
 export const fetchInstanceResponse = createAction<IDatabaseInstances>(
   databaseAction('FETCHED_INSTANCE_RESPONSE')
 );
@@ -69,13 +73,23 @@ export const fetchSchemas: Thunk = (affiliations: string[]) => async (
   }
 };
 
-export const fetchRestorableSchemas: Thunk = (affiliation: string) => async (
+export const fetchRestorableSchemas: Thunk = (affiliations: string[]) => async (
   dispatch,
   getState,
   { clients }
 ) => {
+  dispatch(fetchRestorableSchemaRequest(true));
+  const result = await clients.databaseClient.getRestorableSchemas(
+    affiliations
+  );
+  dispatch(fetchRestorableSchemaRequest(false));
+  dispatch(addCurrentErrors(result));
+  if (result && result.data) {
+    dispatch(fetchRestorableSchemaResponse(result.data));
+  } else {
+    dispatch(fetchRestorableSchemaResponse({ restorableDatabaseSchemas: [] }));
+  }
   console.log('LJLKJ');
-  dispatch(fetchRestorableSchemaResponse({ databaseSchemas: [] }));
 };
 
 export const fetchInstances: Thunk = (affiliation: string) => async (
@@ -237,6 +251,7 @@ export default {
   fetchInstanceRequest,
   fetchSchemaRequest,
   fetchSchemaResponse,
+  fetchRestorableSchemaResponse,
   updateSchemaResponse,
   deleteSchemasResponse,
   testJdbcConnectionForIdResponse,
