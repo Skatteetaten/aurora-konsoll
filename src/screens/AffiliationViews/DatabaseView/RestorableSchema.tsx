@@ -7,10 +7,12 @@ import {
   IRestorableDatabaseSchemas
 } from '../../../models/schemas';
 import { EnterModeThenConfirm } from './EnterModeThenConfirm';
+import Spinner from 'components/Spinner';
 
 export interface IRestorableSchemaProps {
   className?: string;
   affiliation: string;
+  isFetching: boolean;
   restorableDatabaseSchemas?: IRestorableDatabaseSchemas;
   onComponentMounted: (affiliation: string) => void;
 }
@@ -32,7 +34,12 @@ export class RestorableSchema extends React.Component<
   }
 
   public render() {
-    const { className, affiliation, restorableDatabaseSchemas } = this.props;
+    const {
+      className,
+      affiliation,
+      restorableDatabaseSchemas,
+      isFetching
+    } = this.props;
     const { filter } = this.state;
     console.log(restorableDatabaseSchemas);
     return (
@@ -58,6 +65,18 @@ export class RestorableSchema extends React.Component<
             />
           </div>
         </div>
+        {isFetching ? (
+          <Spinner />
+        ) : (
+          <DatabaseSchemaTable
+            filter={filter}
+            schemas={this.props.items.databaseSchemas || []}
+            multiSelect={deleteMode}
+            selection={this.selection}
+            onResetSort={this.onResetSort}
+            shouldResetSort={shouldResetSort}
+          />
+        )}
       </div>
     );
   }

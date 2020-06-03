@@ -1,3 +1,10 @@
 {
-  "typescript.tsdk": "node_modules/typescript/lib"
+  "typescript.tsdk": "node_modules/typescript/lib",
+  "workbench.colorCustomizations": {
+    "editor.selectionBackground": "#135564",
+    "editor.selectionHighlightBackground": "#628186",
+    "editor.wordHighlightBackground": "#135564",
+    "editor.findMatchHighlightBackground": "#135564",
+    "editor.wordHighlightStrongBackground": "#135564"
+  }
 }
