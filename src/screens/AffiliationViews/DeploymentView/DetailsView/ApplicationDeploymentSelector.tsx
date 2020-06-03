@@ -41,6 +41,7 @@ const ApplicationDeploymentSelector = ({
 
   useEffect(() => {
     if (id) {
+      resetApplicationDeploymentState();
       fetchApplicationDeploymentWithDetails(id);
     }
     return () => {
