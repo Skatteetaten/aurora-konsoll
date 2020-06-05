@@ -26,18 +26,28 @@ export interface IDatabaseInstance {
 }
 
 export interface IRestorableDatabaseSchema {
-  databaseSchema: {
-    id: string;
-    application: string;
-    environment: string;
-    description?: string | null;
-    discriminator: string;
-    engine: string;
-    createdBy: string;
-    createdDate: Date;
-    lastUsedDate?: Date | null;
-    sizeInMb: number;
+  id: string;
+  type: string;
+  jdbcUrl: string;
+  name: string;
+  application: string;
+  environment: string;
+  description?: string | null;
+  discriminator: string;
+  affiliation: {
+    name: string;
   };
+  applicationDeployments: IDatabaseApplicationDeployment[];
+  engine: string;
+  createdBy: string;
+  createdDate: Date;
+  lastUsedDate?: Date | null;
+  sizeInMb: number;
+  users: Array<{
+    username: string;
+    type: string;
+    password?: string;
+  }>;
   deleteAfter: Date;
   setToCooldownAt: Date;
 }

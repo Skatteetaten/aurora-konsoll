@@ -18,6 +18,7 @@ export interface IRestorableSchemaProps {
   affiliation: string;
   isFetching: boolean;
   restorableDatabaseSchemas?: IRestorableDatabaseSchemas;
+  items: IRestorableDatabaseSchemas;
   onComponentMounted: (affiliation: string) => void;
 }
 
@@ -72,9 +73,9 @@ export class RestorableSchema extends React.Component<
         {isFetching ? (
           <Spinner />
         ) : (
-          <DatabaseSchemaTable
+          <RestorableDatabaseSchemaTable
             filter={filter}
-            schemas={this.props.items.databaseSchemas || []}
+            schemas={this.props.items.restorableDatabaseSchemas || []}
             multiSelect={deleteMode}
             selection={this.selection}
             onResetSort={this.onResetSort}
