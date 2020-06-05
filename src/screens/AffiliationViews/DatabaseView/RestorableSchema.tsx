@@ -8,6 +8,10 @@ import {
 } from '../../../models/schemas';
 import { EnterModeThenConfirm } from './EnterModeThenConfirm';
 import Spinner from 'components/Spinner';
+import {
+  RestorableDatabaseSchemaTable,
+  IRestorableDatabaseSchemaView
+} from './RestorableDatabaseSchemaTable';
 
 export interface IRestorableSchemaProps {
   className?: string;

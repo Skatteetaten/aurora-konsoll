@@ -29,18 +29,27 @@ export function RestorableDatabaseSchemaTable({
 }: IRestorableDatabaseSchemaTableProps) {
   const columns: IColumn[] = [
     {
-      fieldName: 'type',
+      fieldName: 'setToCooldownAt',
       isResizable: true,
       key: '0',
       maxWidth: 85,
       minWidth: 85,
-      name: 'Type',
+      name: 'Satt i cooldown',
+      iconName: ''
+    },
+    {
+      fieldName: 'deleteAfter',
+      isResizable: true,
+      key: '1',
+      maxWidth: 85,
+      minWidth: 85,
+      name: 'Slettes permanent',
       iconName: ''
     },
     {
       fieldName: 'environment',
       isResizable: true,
-      key: '1',
+      key: '2',
       maxWidth: 200,
       minWidth: 200,
       name: 'Miljø',
@@ -49,7 +58,7 @@ export function RestorableDatabaseSchemaTable({
     {
       fieldName: 'application',
       isResizable: true,
-      key: '2',
+      key: '3',
       maxWidth: 200,
       minWidth: 200,
       name: 'Applikasjon',
@@ -58,7 +67,7 @@ export function RestorableDatabaseSchemaTable({
     {
       fieldName: 'discriminator',
       isResizable: true,
-      key: '3',
+      key: '4',
       maxWidth: 200,
       minWidth: 200,
       name: 'Diskriminator',
@@ -67,7 +76,7 @@ export function RestorableDatabaseSchemaTable({
     {
       fieldName: 'createdDate',
       isResizable: true,
-      key: '4',
+      key: '5',
       maxWidth: 90,
       minWidth: 90,
       name: 'Opprettet',
@@ -76,7 +85,7 @@ export function RestorableDatabaseSchemaTable({
     {
       fieldName: 'lastUsedDate',
       isResizable: true,
-      key: '5',
+      key: '6',
       maxWidth: 90,
       minWidth: 90,
       name: 'Sist brukt',
@@ -85,7 +94,7 @@ export function RestorableDatabaseSchemaTable({
     {
       fieldName: 'sizeInMb',
       isResizable: true,
-      key: '6',
+      key: '7',
       maxWidth: 110,
       minWidth: 110,
       name: 'Størrelse (MB)',
@@ -94,19 +103,10 @@ export function RestorableDatabaseSchemaTable({
     {
       fieldName: 'createdBy',
       isResizable: true,
-      key: '7',
+      key: '8',
       maxWidth: 80,
       minWidth: 80,
       name: 'Bruker',
-      iconName: ''
-    },
-    {
-      fieldName: 'applicationDeploymentsUses',
-      isResizable: true,
-      key: '8',
-      maxWidth: 70,
-      minWidth: 70,
-      name: 'I bruk av',
       iconName: ''
     },
     {
@@ -117,21 +117,12 @@ export function RestorableDatabaseSchemaTable({
       minWidth: 90,
       name: 'Engine',
       iconName: ''
-    },
-    {
-      fieldName: 'jdbcUrl',
-      isResizable: true,
-      key: '10',
-      maxWidth: 280,
-      minWidth: 280,
-      name: 'JDBC url',
-      iconName: '',
-      className: 'jdbcurl-col'
     }
   ];
 
   const filterDatabaseSchemaView = (filter: string) => {
     return (v: IRestorableDatabaseSchemaView) =>
+      //TODO filter for setToCooldownAt og deleteAfter
       v.createdBy.includes(filter) ||
       v.application.includes(filter) ||
       v.environment.includes(filter) ||
@@ -141,8 +132,6 @@ export function RestorableDatabaseSchemaTable({
         ? false
         : v.lastUsedDate.includes(filter)) ||
       v.sizeInMb.toString().includes(filter) ||
-      v.type.includes(filter) ||
-      v.jdbcUrl.includes(filter) ||
       v.id.includes(filter);
   };
 
@@ -170,6 +159,8 @@ export function RestorableDatabaseSchemaTable({
 
 export interface IRestorableDatabaseSchemaView {
   type: string;
+  setToCooldownAt: Date;
+  deleteAfter: Date;
   application: string;
   environment: string;
   discriminator: string;
@@ -205,6 +196,8 @@ const toViewSchema = (
     : getJdbcUrlText('://');
 
   return {
+    setToCooldownAt: i.setToCooldownAt,
+    deleteAfter: i.deleteAfter,
     id: i.id,
     environment: i.environment,
     application: i.application,
