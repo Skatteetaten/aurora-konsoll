@@ -9,7 +9,7 @@ import {
   IJdbcUser,
   IUpdateDatabaseSchemaInputWithCreatedBy,
   IDatabaseInstances,
-  ITestJDBCResponse
+  ITestJDBCResponse,
 } from 'models/schemas';
 import { addCurrentErrors } from 'screens/ErrorHandler/state/actions';
 import { createAction } from 'redux-ts-utils';
@@ -108,7 +108,7 @@ export const deleteSchema: Thunk = (databaseSchema: IDatabaseSchema) => async (
   { clients }
 ) => {
   const result = await clients.databaseClient.deleteSchemas([
-    databaseSchema.id
+    databaseSchema.id,
   ]);
   dispatch(addCurrentErrors(result));
 
@@ -119,7 +119,7 @@ export const deleteSchema: Thunk = (databaseSchema: IDatabaseSchema) => async (
     dispatch(
       deleteSchemasResponse({
         failed: [],
-        succeeded: []
+        succeeded: [],
       })
     );
     dispatch(fetchSchemas([databaseSchema.affiliation.name]));
@@ -140,7 +140,7 @@ export const deleteSchemas: Thunk = (ids: string[]) => async (
     dispatch(
       deleteSchemasResponse({
         failed: [],
-        succeeded: []
+        succeeded: [],
       })
     );
   }
@@ -162,7 +162,7 @@ export const testJdbcConnectionForId: Thunk = (id: string) => async (
     dispatch(
       testJdbcConnectionForIdResponse({
         hasSucceeded: false,
-        message: 'failed'
+        message: 'failed',
       })
     );
   }
@@ -186,7 +186,7 @@ export const testJdbcConnectionForJdbcUser: Thunk = (
     dispatch(
       testJdbcConnectionForIdResponse({
         hasSucceeded: false,
-        message: 'failed'
+        message: 'failed',
       })
     );
   }
@@ -207,14 +207,14 @@ export const createDatabaseSchema: Thunk = (
       jdbcUser: {
         jdbcUrl: graphqlResult.jdbcUrl,
         password: graphqlResult.users[0].password,
-        username: graphqlResult.users[0].username
-      }
+        username: graphqlResult.users[0].username,
+      },
     };
     dispatch(createDatabaseSchemaResponse(response));
   } else {
     const response = {
       id: '',
-      jdbcUser: { jdbcUrl: '', username: '', password: '' }
+      jdbcUser: { jdbcUrl: '', username: '', password: '' },
     };
     dispatch(createDatabaseSchemaResponse(response));
   }
@@ -229,5 +229,5 @@ export default {
   deleteSchemasResponse,
   testJdbcConnectionForIdResponse,
   testJdbcConnectionForJdbcUserResponse,
-  createDatabaseSchemaResponse
+  createDatabaseSchemaResponse,
 };

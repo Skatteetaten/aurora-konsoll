@@ -7,5 +7,5 @@ export enum ImageTagType {
   MINOR = 'MINOR',
   SNAPSHOT = 'SNAPSHOT',
   COMMIT_HASH = 'COMMIT_HASH',
-  SEARCH = 'SEARCH'
+  SEARCH = 'SEARCH',
 }

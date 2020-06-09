@@ -3,7 +3,7 @@ import FilterService from './FilterService';
 import { SelectionType } from 'screens/AffiliationViews/DeploymentView/MatrixView/components/Filter/Filter';
 import {
   applicationDeploymentFilterFactory,
-  deploymentFactory
+  deploymentFactory,
 } from 'testData/testDataBuilders';
 
 describe('FilterService', () => {
@@ -12,15 +12,15 @@ describe('FilterService', () => {
   it('Find filter by applications and environments', () => {
     const deployment1 = applicationDeploymentFilterFactory.build({
       applications: ['app1'],
-      environments: ['env1']
+      environments: ['env1'],
     });
     const deployment2 = applicationDeploymentFilterFactory.build({
       applications: ['app2'],
-      environments: ['env1']
+      environments: ['env1'],
     });
     const deployment3 = applicationDeploymentFilterFactory.build({
       applications: ['app1'],
-      environments: ['env2']
+      environments: ['env2'],
     });
 
     const filter = filterService.findFilterByApplicationsAndEnvironments(
@@ -42,7 +42,7 @@ describe('FilterService', () => {
     const deployment1 = applicationDeploymentFilterFactory.build();
     const deployment2 = applicationDeploymentFilterFactory.build({
       affiliation: 'aurora',
-      name: 'aos'
+      name: 'aos',
     });
     const filterOptions = filterService.createFilterOptions(
       [deployment1, deployment2],
@@ -64,7 +64,7 @@ describe('FilterService', () => {
   it('get default filter name', () => {
     const defaultFilter = applicationDeploymentFilterFactory.build();
     const notDefaultFilter = applicationDeploymentFilterFactory.build({
-      default: false
+      default: false,
     });
 
     const filterName = filterService.getDefaultFilterName(
@@ -77,7 +77,7 @@ describe('FilterService', () => {
   it('get default filter', () => {
     const defaultFilter = applicationDeploymentFilterFactory.build();
     const notDefaultFilter = applicationDeploymentFilterFactory.build({
-      default: false
+      default: false,
     });
 
     const filterName = filterService.getDefaultFilter(

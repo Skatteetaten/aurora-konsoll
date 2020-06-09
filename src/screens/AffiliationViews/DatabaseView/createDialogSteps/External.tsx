@@ -4,7 +4,7 @@ import Grid from '@skatteetaten/frontend-components/Grid';
 import {
   ICreateDatabaseSchemaInput,
   IJdbcUser,
-  ITestJDBCResponse
+  ITestJDBCResponse,
 } from 'models/schemas';
 import DatabaseSchemaService from 'services/DatabaseSchemaService';
 import JdbcConnection from '../JdbcConnection';
@@ -28,7 +28,7 @@ const External = ({
   onTestJdbcConnectionForUser,
   testJdbcConnectionResponse,
   databaseSchemaService,
-  setJdbcUserInput
+  setJdbcUserInput,
 }: IExternalProps) => {
   const handleLabelChange = (field: string) => (
     event: TextFieldEvent,
@@ -36,7 +36,7 @@ const External = ({
   ) => {
     setDatabaseSchemaInput({
       ...databaseSchemaInput,
-      [field]: newValue
+      [field]: newValue,
     });
   };
 
@@ -46,7 +46,7 @@ const External = ({
   ) => {
     setJdbcUserInput({
       ...databaseSchemaInput.jdbcUser,
-      [field]: newValue
+      [field]: newValue,
     } as IJdbcUser);
   };
 
@@ -57,7 +57,7 @@ const External = ({
     jdbcUser = {
       username: '',
       password: '',
-      jdbcUrl: ''
+      jdbcUrl: '',
     };
   }
 
@@ -65,7 +65,7 @@ const External = ({
     environment,
     application,
     discriminator,
-    description
+    description,
   } = databaseSchemaInput;
 
   return (

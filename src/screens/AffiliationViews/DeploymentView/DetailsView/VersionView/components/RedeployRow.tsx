@@ -8,7 +8,7 @@ import { WrongVersionCallout } from './WrongVersionCallout';
 import { getLocalDatetime } from 'utils/date';
 import {
   VersionStatus,
-  versionStatusMessage
+  versionStatusMessage,
 } from '../../models/VersionStatus';
 import { DeployButton } from './DeployButton';
 import { VersionInfo } from './VersionInfo';
@@ -33,7 +33,7 @@ export const RedeployRow = ({
   onConfirmDeploy,
   releaseTo,
   currentVersion,
-  isFetchingConfiguredVersionTag
+  isFetchingConfiguredVersionTag,
 }: IRedeployRowProps) => {
   if (isFetchingConfiguredVersionTag) {
     return (

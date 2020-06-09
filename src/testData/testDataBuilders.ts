@@ -1,12 +1,12 @@
 import * as Factory from 'factory.ts';
 import {
   IApplicationDeploymentDetails,
-  IUserAndAffiliations
+  IUserAndAffiliations,
 } from 'models/ApplicationDeployment';
 import {
   ICertificate,
   ICertificateResult,
-  ICertificateView
+  ICertificateView,
 } from 'models/certificates';
 import { IDeploymentSpec, IMount } from 'models/DeploymentSpec';
 import { ImageTagType } from 'models/ImageTagType';
@@ -19,12 +19,12 @@ import {
   IDatabaseSchemas,
   IDeleteDatabaseSchemasResponse,
   IJdbcUser,
-  IUpdateDatabaseSchemaInputWithCreatedBy
+  IUpdateDatabaseSchemaInputWithCreatedBy,
 } from 'models/schemas';
 import { StatusCode } from 'models/Status';
 import {
   IApplicationDeploymentFilters,
-  IUserSettings
+  IUserSettings,
 } from 'models/UserSettings';
 import { IAcl, IWebsealState } from 'models/Webseal';
 import { ISchemasState } from 'screens/AffiliationViews/DatabaseView/state/reducers';
@@ -46,7 +46,7 @@ const mountFactory = Factory.Sync.makeFactory<IMount>({
   mountName: 'name',
   path: '/',
   type: 'mount',
-  volumeName: 'volume'
+  volumeName: 'volume',
 });
 
 export const deploymentSpecFactory = Factory.Sync.makeFactory<IDeploymentSpec>({
@@ -80,12 +80,12 @@ export const deploymentSpecFactory = Factory.Sync.makeFactory<IDeploymentSpec>({
   resources: {
     cpu: {
       max: '2000m',
-      min: '10m'
+      min: '10m',
     },
     memory: {
       max: '512Mi',
-      min: '128Mi'
-    }
+      min: '128Mi',
+    },
   },
   route: { route: 'route' },
   routeDefaults: { host: 'test' },
@@ -93,12 +93,12 @@ export const deploymentSpecFactory = Factory.Sync.makeFactory<IDeploymentSpec>({
   splunkIndex: 'openshift-test',
   toxiproxy: { version: '2.1.3' },
   type: 'deploy',
-  webseal: false
+  webseal: false,
 });
 
 export const podFactory = Factory.Sync.makeFactory<IPodResource>({
   latestDeployTag: false,
-  name: Factory.each(i => 'martin-test-applikasjon-16-rmvrd' + i),
+  name: Factory.each((i) => 'martin-test-applikasjon-16-rmvrd' + i),
   phase: 'Down',
   ready: true,
   restartCount: 1,
@@ -106,9 +106,9 @@ export const podFactory = Factory.Sync.makeFactory<IPodResource>({
   links: [
     {
       name: 'app',
-      url: 'localhost/app'
-    }
-  ]
+      url: 'localhost/app',
+    },
+  ],
 });
 
 export const deploymentFactory = Factory.Sync.makeFactory<
@@ -118,7 +118,7 @@ export const deploymentFactory = Factory.Sync.makeFactory<
     applicationDeployment: {
       id: 'c10010e594f229649437240f24f231343d62f8fa',
       affiliation: {
-        name: 'paas'
+        name: 'paas',
       },
       environment: 'martin-dev',
       name: 'martin-test-applikasjon',
@@ -127,40 +127,40 @@ export const deploymentFactory = Factory.Sync.makeFactory<
         permission: {
           paas: {
             admin: false,
-            view: true
-          }
-        }
+            view: true,
+          },
+        },
       },
       imageRepository: {
         repository: 'localhost/"martin-test-applikasjon',
-        isFullyQualified: true
+        isFullyQualified: true,
       },
       status: {
         code: StatusCode.OBSERVE,
         reasons: [],
-        reports: []
+        reports: [],
       },
       time: '2018-12-07T11:48:34.230Z',
       version: {
         auroraVersion: '2.0.14-b1.17.0-flange-8.181.1',
         deployTag: {
           name: 'latest',
-          type: ImageTagType.AURORA_VERSION
+          type: ImageTagType.AURORA_VERSION,
         },
-        releaseTo: undefined
+        releaseTo: undefined,
       },
       details: {
         buildTime: '2019-08-13T14:06:23.825Z',
         podResources: [podFactory.build()],
         updatedBy: 'linus',
         serviceLinks: [],
-        deploymentSpecs: {}
+        deploymentSpecs: {},
       },
       route: {
         bigipJobs: [],
-        websealJobs: []
-      }
-    }
+        websealJobs: [],
+      },
+    },
   })
 );
 
@@ -170,7 +170,7 @@ export const deploymentDetailsFactory = Factory.Sync.makeFactory<
   updatedBy: 'linus',
   deploymentSpec: deploymentSpecFactory.build(),
   pods: podFactory.buildList(3),
-  serviceLinks: []
+  serviceLinks: [],
 });
 
 export const applicationDeploymentFilterFactory = Factory.Sync.makeFactory<
@@ -180,14 +180,14 @@ export const applicationDeploymentFilterFactory = Factory.Sync.makeFactory<
   affiliation: 'paas',
   default: true,
   applications: ['app1', 'app2'],
-  environments: ['test']
+  environments: ['test'],
 });
 
 export const filterFactory = Factory.Sync.makeFactory<IFilter>({
   applications: [],
   environments: [],
   default: true,
-  name: 'auroraFilter'
+  name: 'auroraFilter',
 });
 
 export const databaseSchemaViewFactory = Factory.Sync.makeFactory<
@@ -204,7 +204,7 @@ export const databaseSchemaViewFactory = Factory.Sync.makeFactory<
   sizeInMb: 0.75,
   type: 'MANAGED',
   engine: 'ORACLE',
-  jdbcUrl: 'jdbc:oracle:thin:@localhost:1521:db'
+  jdbcUrl: 'jdbc:oracle:thin:@localhost:1521:db',
 });
 
 export const databaseSchemaFactory = Factory.Sync.makeFactory<IDatabaseSchema>({
@@ -223,15 +223,15 @@ export const databaseSchemaFactory = Factory.Sync.makeFactory<IDatabaseSchema>({
   id: '1234.1234.1234',
   jdbcUrl: 'jdbcurl-123',
   name: 'l4342',
-  users: []
+  users: [],
 });
 
 export const tagFactory = Factory.Sync.makeFactory<IImageTag>({
   image: {
-    buildTime: '2019-08-13T14:06:23.825Z'
+    buildTime: '2019-08-13T14:06:23.825Z',
   },
   name: '1.0',
-  type: ImageTagType.MINOR
+  type: ImageTagType.MINOR,
 });
 
 export const databaseSchemaInputFactory = Factory.Sync.makeFactory<
@@ -242,7 +242,7 @@ export const databaseSchemaInputFactory = Factory.Sync.makeFactory<
   environment: 'environment',
   discriminator: 'db',
   createdBy: '12345',
-  affiliation: 'paas'
+  affiliation: 'paas',
 });
 
 export const databaseSchemaInputWithCreatedByFactory = Factory.Sync.makeFactory<
@@ -254,20 +254,20 @@ export const databaseSchemaInputWithCreatedByFactory = Factory.Sync.makeFactory<
   application: 'application',
   environment: 'environment',
   affiliation: 'paas',
-  createdBy: '12345'
+  createdBy: '12345',
 });
 
 export const jdbcUserFactory = Factory.Sync.makeFactory<IJdbcUser>({
   jdbcUrl: 'jdbc:oracle:thin:@test.skead.no:1521/referanse',
   password: 'password',
-  username: 'username'
+  username: 'username',
 });
 
 export const createDatabaseSchemaResponseFactory = Factory.Sync.makeFactory<
   ICreateDatabaseSchemaResponse
 >({
   id: '123',
-  jdbcUser: jdbcUserFactory.build()
+  jdbcUser: jdbcUserFactory.build(),
 });
 
 export const certificateViewFactory = Factory.Sync.makeFactory<
@@ -277,7 +277,7 @@ export const certificateViewFactory = Factory.Sync.makeFactory<
   dn: 'test',
   issuedDate: '12.01.2018',
   revokedDate: '22.03.2016',
-  expiresDate: '12.01.2019'
+  expiresDate: '12.01.2019',
 });
 
 export const certificateFactory = Factory.Sync.makeFactory<ICertificate>({
@@ -285,14 +285,14 @@ export const certificateFactory = Factory.Sync.makeFactory<ICertificate>({
   dn: 'test',
   issuedDate: new Date(2018, 0, 12),
   revokedDate: new Date(2016, 2, 22),
-  expiresDate: new Date(2019, 0, 12)
+  expiresDate: new Date(2019, 0, 12),
 });
 
 export const certificateResultFactory = Factory.Sync.makeFactory<
   ICertificateResult
 >({
   certificates: [certificateFactory.build()],
-  totalCount: 1
+  totalCount: 1,
 });
 
 export const schemasFactory = Factory.Sync.makeFactory<ISchemasState>({
@@ -305,8 +305,8 @@ export const schemasFactory = Factory.Sync.makeFactory<ISchemasState>({
   testJdbcConnectionResponse: { hasSucceeded: false, message: 'failed' },
   createDatabaseSchemaResponse: {
     id: '',
-    jdbcUser: { jdbcUrl: '', username: '', password: '' }
-  }
+    jdbcUser: { jdbcUrl: '', username: '', password: '' },
+  },
 });
 
 export const certificateInitialFactory = Factory.Sync.makeFactory<
@@ -314,22 +314,22 @@ export const certificateInitialFactory = Factory.Sync.makeFactory<
 >({
   certificates: {
     certificates: [],
-    totalCount: 0
+    totalCount: 0,
   },
-  isFetchingCertificates: false
+  isFetchingCertificates: false,
 });
 
 export const databaseSchemasFactory = Factory.Sync.makeFactory<
   IDatabaseSchemas
 >({
-  databaseSchemas: [databaseSchemaFactory.build()]
+  databaseSchemas: [databaseSchemaFactory.build()],
 });
 
 export const deleteDatabaseSchemasResponseFactory = Factory.Sync.makeFactory<
   IDeleteDatabaseSchemasResponse
 >({
   failed: [],
-  succeeded: []
+  succeeded: [],
 });
 
 export const userAndAffiliationsFactory = Factory.Sync.makeFactory<
@@ -337,7 +337,7 @@ export const userAndAffiliationsFactory = Factory.Sync.makeFactory<
 >({
   affiliations: ['paas'],
   id: '123',
-  user: 'bob'
+  user: 'bob',
 });
 
 export const createDatabaseSchemaInputFactory = Factory.Sync.makeFactory<
@@ -353,45 +353,45 @@ export const createDatabaseSchemaInputFactory = Factory.Sync.makeFactory<
   jdbcUser: {
     jdbcUrl: 'jdbc:oracle:thin:@test.skead.no:1521/referanse',
     password: 'password',
-    username: 'username'
-  }
+    username: 'username',
+  },
 });
 
 export const appErrorFactory = Factory.Sync.makeFactory<IAppError>({
   error: new Error('error'),
   id: 1,
-  isActive: false
+  isActive: false,
 });
 
 export const errorStateFactory = Factory.Sync.makeFactory<IErrors>({
   errorQueue: [appErrorFactory.build()],
-  allErrors: new Map()
+  allErrors: new Map(),
 });
 
 export const errorsStateFactory = Factory.Sync.makeFactory<IErrorsState>({
   errorCount: 0,
   errors: errorStateFactory.build(),
-  nextError: undefined
+  nextError: undefined,
 });
 
 export const aclFactory = Factory.Sync.makeFactory<IAcl>({
   aclName: 'acl-name',
   anyOther: false,
   open: true,
-  roles: []
+  roles: [],
 });
 
 export const netdebugResultFactory = Factory.Sync.makeFactory<INetdebugResult>({
   failed: [],
   open: [],
-  status: 'CLOSED'
+  status: 'CLOSED',
 });
 
 export const netdebugViewStateInitialState = Factory.Sync.makeFactory<
   INetdebugViewState
 >({
   isFetching: false,
-  netdebugStatus: netdebugResultFactory.build()
+  netdebugStatus: netdebugResultFactory.build(),
 });
 
 export const websealStateFactory = Factory.Sync.makeFactory<IWebsealState>({
@@ -399,38 +399,38 @@ export const websealStateFactory = Factory.Sync.makeFactory<IWebsealState>({
   name: 'state-name',
   namespace: 'namespace',
   routeName: 'route',
-  junctions: ['{"totalRequests":"10"}', '{"totalRequests":"12"}']
+  junctions: ['{"totalRequests":"10"}', '{"totalRequests":"12"}'],
 });
 
 export const websealReduxStateFactory = Factory.Sync.makeFactory<
   IWebsealReduxState
 >({
   isFetchingWebsealStates: false,
-  websealStates: []
+  websealStates: [],
 });
 
 export const userSettingsFactory = Factory.Sync.makeFactory<IUserSettings>({
-  applicationDeploymentFilters: [applicationDeploymentFilterFactory.build()]
+  applicationDeploymentFilters: [applicationDeploymentFilterFactory.build()],
 });
 
 export const iconLinkDataFactory = Factory.Sync.makeFactory<IIconLinkData>({
   name: 'test',
   title: 'title',
-  href: 'http://test.no'
+  href: 'http://test.no',
 });
 
 export const applicationDeploymentFactory = Factory.Sync.makeFactory<
   IApplicationDeploymentData
 >({
   affiliation: {
-    name: 'aurora'
+    name: 'aurora',
   },
   environment: 'dev',
-  id: Factory.each(i => `${i}`),
+  id: Factory.each((i) => `${i}`),
   imageRepository: {
     guiUrl: 'http://localhost',
     repository: 'no.skatteetaten.aurora.mokey',
-    isFullyQualified: true
+    isFullyQualified: true,
   },
   name: 'mokey',
   namespace: {
@@ -438,20 +438,20 @@ export const applicationDeploymentFactory = Factory.Sync.makeFactory<
     permission: {
       paas: {
         admin: true,
-        view: true
-      }
-    }
+        view: true,
+      },
+    },
   },
   status: {
     code: StatusCode.HEALTHY,
     reasons: [],
-    reports: []
+    reports: [],
   },
   time: '2019-11-06T12:54:00.707621Z',
   version: {
     deployTag: {
       name: 'latest',
-      type: ImageTagType.LATEST
-    }
-  }
+      type: ImageTagType.LATEST,
+    },
+  },
 });

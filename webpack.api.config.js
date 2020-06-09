@@ -9,17 +9,17 @@ module.exports = {
         loader: 'ts-loader',
         exclude: /node_modules/,
         options: {
-          configFile: 'tsconfig.api.json'
-        }
-      }
-    ]
+          configFile: 'tsconfig.api.json',
+        },
+      },
+    ],
   },
   resolve: {
-    extensions: ['.ts', '.js', '!.test.ts']
+    extensions: ['.ts', '.js', '!.test.ts'],
   },
   output: {
     filename: 'server.js',
-    path: path.resolve(__dirname, 'build-api')
+    path: path.resolve(__dirname, 'build-api'),
   },
-  target: 'node'
+  target: 'node',
 };

@@ -14,11 +14,11 @@ interface IStatusCheckReportCardProps {
 
 const StatusCheckReportCard = ({
   deployment,
-  className
+  className,
 }: IStatusCheckReportCardProps) => {
   const { reasons, reports } = deployment.status;
   const specialChecks = reasons.filter(
-    c => !reports.find(r => r.name === c.name)
+    (c) => !reports.find((r) => r.name === c.name)
   );
   const reasonsToShow = specialChecks.length > 0 ? specialChecks : reasons;
   return (
@@ -26,7 +26,7 @@ const StatusCheckReportCard = ({
       <div className="status-card">
         <header
           style={{
-            background: toStatusColor(deployment.status.code).base
+            background: toStatusColor(deployment.status.code).base,
           }}
         >
           {deployment.status.code}
@@ -35,7 +35,7 @@ const StatusCheckReportCard = ({
           <>
             <p>Påvirkede sjekker:</p>
             <ul>
-              {reasonsToShow.map(reason => (
+              {reasonsToShow.map((reason) => (
                 <li key={reason.name}>
                   {reason.name} ({reason.failLevel})
                 </li>

@@ -16,7 +16,7 @@ export function createAsyncActions<P, F = Error>(
   return {
     request: createAction<void>(type),
     success: createAction<P>(`${type}_SUCCESS`),
-    failure: createAction<F>(`${type}_FAILURE`)
+    failure: createAction<F>(`${type}_FAILURE`),
   };
 }
 
@@ -33,7 +33,7 @@ export function doAsyncActions<P>(
       if (isDataAndErrors(result)) {
         dispatch(addCurrentErrors(result));
       } else if (isDataAndErrorsMap(result)) {
-        Object.values(result).forEach(val => {
+        Object.values(result).forEach((val) => {
           dispatch(addCurrentErrors(val));
         });
       }

@@ -9,7 +9,7 @@ export interface IFetchMoreVersionsProps {
 }
 
 export const mapDispatchToProps = {
-  fetchVersions
+  fetchVersions,
 };
 
 export const mapStateToProps = (
@@ -17,7 +17,7 @@ export const mapStateToProps = (
   { versionType }: IFetchMoreVersionsProps
 ) => ({
   imageTagsConnection: versions.types[versionType],
-  isFetching: versions.isFetching
+  isFetching: versions.isFetching,
 });
 
 export type FetchMoreVersionsState = ReduxProps<

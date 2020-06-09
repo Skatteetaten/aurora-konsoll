@@ -3,7 +3,7 @@ import {
   IDatabaseSchema,
   IDatabaseSchemaInput,
   IJdbcUser,
-  IUpdateDatabaseSchemaInputWithCreatedBy
+  IUpdateDatabaseSchemaInputWithCreatedBy,
 } from 'models/schemas';
 
 export default class DatabaseSchemaService {
@@ -13,7 +13,7 @@ export default class DatabaseSchemaService {
     const defaultValues: IJdbcUser = {
       username: '',
       password: '',
-      jdbcUrl: ''
+      jdbcUrl: '',
     };
     if (!!jdbcUser) {
       return Object.keys(jdbcUser).reduce((acc, curr) => {
@@ -34,7 +34,7 @@ export default class DatabaseSchemaService {
       environment: '',
       application: '',
       affiliation: '',
-      engine: ''
+      engine: '',
     };
 
     const trimLabels = (value: string): string => {

@@ -11,6 +11,6 @@ export function unavailableServiceMessageCreator(description: string) {
   ): IUnavailableServiceMessage => ({
     description,
     reason,
-    type
+    type,
   });
 }

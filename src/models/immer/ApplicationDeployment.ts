@@ -2,17 +2,17 @@ import {
   IApplicationDeploymentWithDetailsData,
   IImageRepository,
   IPermission,
-  IRoute
+  IRoute,
 } from 'services/auroraApiClients/applicationDeploymentClient/query';
 import {
   IApplicationDeployment,
   IApplicationDeploymentDetails,
-  IApplicationDeploymentStatus
+  IApplicationDeploymentStatus,
 } from 'models/ApplicationDeployment';
 import { immerable } from 'immer';
 import {
   normalizeRawDeploymentSpec,
-  IDeploymentSpec
+  IDeploymentSpec,
 } from 'models/DeploymentSpec';
 import { IImageTag } from 'services/auroraApiClients/imageRepositoryClient/query';
 
@@ -59,7 +59,7 @@ export class ApplicationDeployment implements IApplicationDeployment {
       gitInfo: details.gitInfo,
       pods: details.podResources,
       serviceLinks: details.serviceLinks,
-      updatedBy: details.updatedBy
+      updatedBy: details.updatedBy,
     };
     this.route = app.route;
   }

@@ -18,22 +18,22 @@ const columns = [
     key: 'column0',
     name: '',
     fieldName: 'active',
-    minWidth: 50
+    minWidth: 50,
   },
   {
     key: 'column1',
     name: 'Statussjekk',
     fieldName: 'name',
     minWidth: 250,
-    isResizable: true
+    isResizable: true,
   },
   {
     key: 'column2',
     name: 'Beskrivelse',
     fieldName: 'description',
     minWidth: 750,
-    isResizable: true
-  }
+    isResizable: true,
+  },
 ];
 
 function getIconStatusStyle(
@@ -45,7 +45,7 @@ function getIconStatusStyle(
   const color: string = hasFailed ? toStatusColor(level).base : skeColor.green;
   return {
     color,
-    fontSize
+    fontSize,
   };
 }
 
@@ -73,7 +73,7 @@ const StatusCheckReport = ({ reports, reasons }: IStatusCheckReportProps) => {
       columns={columns}
       items={list
         .sort((a, b) => a.name.localeCompare(b.name))
-        .map(it => ({
+        .map((it) => ({
           ...it,
           active: (
             <Icon
@@ -81,22 +81,22 @@ const StatusCheckReport = ({ reports, reasons }: IStatusCheckReportProps) => {
               style={getIconStatusStyle(it.hasFailed, it.failLevel)}
               title={it.hasFailed ? it.failLevel : StatusCode.HEALTHY}
             />
-          )
+          ),
         }))}
     />
   );
 
   const specialChecks = reasons.filter(
-    c => !reports.find(r => r.name === c.name)
+    (c) => !reports.find((r) => r.name === c.name)
   );
 
   const standardChecks = {
     hiddenBecauseMessage: '',
-    isCollapsed: false
+    isCollapsed: false,
   };
 
   if (specialChecks.length > 0) {
-    const joinedChecks = specialChecks.map(it => it.name).join(',');
+    const joinedChecks = specialChecks.map((it) => it.name).join(',');
     standardChecks.hiddenBecauseMessage = `Utgår pga. spesialsjekk: ${joinedChecks}`;
     standardChecks.isCollapsed = true;
   }
@@ -143,7 +143,7 @@ interface IStatusIconInfoProps {
 const StatusIconInfo = ({
   code,
   title,
-  hasFailed = true
+  hasFailed = true,
 }: IStatusIconInfoProps) => (
   <StatusIconInfoWrapper>
     <Icon

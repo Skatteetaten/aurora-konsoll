@@ -15,7 +15,7 @@ const SelectionButtons = ({
   type,
   onClear,
   onSelect,
-  className
+  className,
 }: ISelectionButtonsProps) => {
   const clear = () => onClear(type);
   const select = () => onSelect(type);

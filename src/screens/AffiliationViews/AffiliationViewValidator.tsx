@@ -17,7 +17,7 @@ type Props = IAffiliationViewValidatorProps & AffiliationViewValidatorState;
 export const AffiliationViewValidator: React.FC<Props> = ({
   affiliation,
   currentUser,
-  onAffiliationValidated
+  onAffiliationValidated,
 }) => {
   const history = useHistory();
   const match = useRouteMatch<{ affiliation: string; screen: string }>();
@@ -28,7 +28,7 @@ export const AffiliationViewValidator: React.FC<Props> = ({
 
   const pathAffiliation = (match && match.params.affiliation) || '';
   const isValidAffiliation = currentUser.affiliations.find(
-    a => a === pathAffiliation
+    (a) => a === pathAffiliation
   );
 
   useEffect(() => {
@@ -39,7 +39,7 @@ export const AffiliationViewValidator: React.FC<Props> = ({
     affiliation,
     isValidAffiliation,
     onAffiliationValidated,
-    pathAffiliation
+    pathAffiliation,
   ]);
 
   if (!match) {

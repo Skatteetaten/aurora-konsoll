@@ -26,12 +26,12 @@ const SkapJobView = ({ route }: ISkapJobViewProps) => {
     return <h2>Ingen WebSEAL/BIG-IP jobber for denne applikasjonen</h2>;
   }
 
-  const websealJobsData = route.websealJobs.map(it => {
+  const websealJobsData = route.websealJobs.map((it) => {
     return {
       roles: JSON.stringify(it.roles),
       updatedFormatted: getLocalDatetime(it.updated),
       statusWithIcon: <StatusIcon status={it.status} />,
-      ...it
+      ...it,
     };
   });
 
@@ -44,7 +44,7 @@ const SkapJobView = ({ route }: ISkapJobViewProps) => {
         options.push({
           key: index,
           text: `${title}: ${value}`,
-          disabled: true
+          disabled: true,
         });
         index++;
       }
@@ -52,7 +52,7 @@ const SkapJobView = ({ route }: ISkapJobViewProps) => {
         options.push({
           key: index,
           text: `${title}: [${value}]`,
-          disabled: true
+          disabled: true,
         });
         index++;
       }
@@ -81,7 +81,7 @@ const SkapJobView = ({ route }: ISkapJobViewProps) => {
           />
         </div>
       ),
-      ...it
+      ...it,
     };
   });
 
