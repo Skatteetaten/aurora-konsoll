@@ -173,7 +173,6 @@ export interface IRestorableDatabaseSchemaView {
   sizeInMb: number;
   applicationDeploymentsUses: number;
   id: string;
-  engine: string;
   jdbcUrl: string;
 }
 
@@ -201,23 +200,31 @@ const toViewSchema = (
   const jdbcUrl = i.databaseSchema.jdbcUrl.includes('@')
     ? getJdbcUrlText('@')
     : getJdbcUrlText('://');
+  const {
+    id,
+    environment,
+    application,
+    discriminator,
+    type,
+    sizeInMb,
+    createdBy
+  } = i.databaseSchema;
 
   return {
     setToCooldownAt: i.setToCooldownAt,
     deleteAfter: i.deleteAfter,
-    id: i.databaseSchema.id,
-    environment: i.databaseSchema.environment,
-    application: i.databaseSchema.application,
+    id,
+    environment,
+    application,
     createdDate: getLocalDate(i.databaseSchema.createdDate),
     lastUsedDate:
       i.databaseSchema.lastUsedDate &&
       getLocalDate(i.databaseSchema.lastUsedDate),
-    discriminator: i.databaseSchema.discriminator,
-    type: i.databaseSchema.type,
+    discriminator,
+    type,
     applicationDeploymentsUses: i.databaseSchema.applicationDeployments.length,
-    sizeInMb: i.databaseSchema.sizeInMb,
-    createdBy: i.databaseSchema.createdBy,
-    engine: i.databaseSchema.type === 'EXTERNAL' ? '' : i.databaseSchema.engine,
+    sizeInMb: sizeInMb,
+    createdBy: createdBy,
     jdbcUrl
   };
 };
