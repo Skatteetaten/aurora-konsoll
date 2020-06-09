@@ -7,12 +7,15 @@ import {
   IColumn
 } from 'office-ui-fabric-react/lib-commonjs';
 
-import { IRestorableDatabaseSchema } from 'models/schemas';
+import {
+  IRestorableDatabaseSchema,
+  IRestorableDatabaseSchemaData
+} from 'models/schemas';
 import { getLocalDate } from 'utils/date';
 
 interface IRestorableDatabaseSchemaTableProps {
   filter: string;
-  schemas: IRestorableDatabaseSchema[];
+  schemas: IRestorableDatabaseSchemaData[];
   multiSelect: boolean;
   selection: Selection;
   shouldResetSort: boolean;
@@ -175,7 +178,7 @@ export interface IRestorableDatabaseSchemaView {
 }
 
 const toViewSchemas = (
-  databaseSchemas: IRestorableDatabaseSchema[]
+  databaseSchemas: IRestorableDatabaseSchemaData[]
 ): IRestorableDatabaseSchemaView[] => {
   let viewItems: IRestorableDatabaseSchemaView[] = [];
 
@@ -186,29 +189,35 @@ const toViewSchemas = (
 };
 
 const toViewSchema = (
-  i: IRestorableDatabaseSchema
+  i: IRestorableDatabaseSchemaData
 ): IRestorableDatabaseSchemaView => {
   const getJdbcUrlText = (prefix: string) =>
-    i.jdbcUrl.substring(i.jdbcUrl.indexOf(prefix) + prefix.length);
+    i.databaseSchema.jdbcUrl.substring(
+      i.databaseSchema.jdbcUrl.indexOf(prefix) + prefix.length
+    );
 
-  const jdbcUrl = i.jdbcUrl.includes('@')
+  console.log(i);
+
+  const jdbcUrl = i.databaseSchema.jdbcUrl.includes('@')
     ? getJdbcUrlText('@')
     : getJdbcUrlText('://');
 
   return {
     setToCooldownAt: i.setToCooldownAt,
     deleteAfter: i.deleteAfter,
-    id: i.id,
-    environment: i.environment,
-    application: i.application,
-    createdDate: getLocalDate(i.createdDate),
-    lastUsedDate: i.lastUsedDate && getLocalDate(i.lastUsedDate),
-    discriminator: i.discriminator,
-    type: i.type,
-    applicationDeploymentsUses: i.applicationDeployments.length,
-    sizeInMb: i.sizeInMb,
-    createdBy: i.createdBy,
-    engine: i.type === 'EXTERNAL' ? '' : i.engine,
+    id: i.databaseSchema.id,
+    environment: i.databaseSchema.environment,
+    application: i.databaseSchema.application,
+    createdDate: getLocalDate(i.databaseSchema.createdDate),
+    lastUsedDate:
+      i.databaseSchema.lastUsedDate &&
+      getLocalDate(i.databaseSchema.lastUsedDate),
+    discriminator: i.databaseSchema.discriminator,
+    type: i.databaseSchema.type,
+    applicationDeploymentsUses: i.databaseSchema.applicationDeployments.length,
+    sizeInMb: i.databaseSchema.sizeInMb,
+    createdBy: i.databaseSchema.createdBy,
+    engine: i.databaseSchema.type === 'EXTERNAL' ? '' : i.databaseSchema.engine,
     jdbcUrl
   };
 };

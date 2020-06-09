@@ -3,7 +3,7 @@ export interface IDatabaseSchemas {
 }
 
 export interface IRestorableDatabaseSchemas {
-  restorableDatabaseSchemas?: IRestorableDatabaseSchema[];
+  restorableDatabaseSchemas?: IRestorableDatabaseSchemaData[];
 }
 
 export interface IDatabaseInstances {
@@ -23,6 +23,12 @@ export interface IDatabaseInstance {
     key: string;
     value: string;
   }>;
+}
+
+export interface IRestorableDatabaseSchemaData {
+  databaseSchema: IRestorableDatabaseSchema;
+  deleteAfter: Date;
+  setToCooldownAt: Date;
 }
 
 export interface IRestorableDatabaseSchema {
@@ -48,8 +54,6 @@ export interface IRestorableDatabaseSchema {
     type: string;
     password?: string;
   }>;
-  deleteAfter: Date;
-  setToCooldownAt: Date;
 }
 
 export interface IDatabaseSchema {

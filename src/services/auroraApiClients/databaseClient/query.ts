@@ -2,7 +2,7 @@ import gql from 'graphql-tag';
 import {
   IDatabaseSchema,
   IDatabaseInstance,
-  IRestorableDatabaseSchema
+  IRestorableDatabaseSchemaData
 } from 'models/schemas';
 
 export interface IDatabaseSchemasQuery {
@@ -14,7 +14,7 @@ export interface IDatabaseInstancesQuery {
 }
 
 export interface IRestorableDatabaseSchemasQuery {
-  restorableDatabaseSchemas?: IRestorableDatabaseSchema[];
+  restorableDatabaseSchemas?: IRestorableDatabaseSchemaData[];
 }
 
 export const DATABASE_SCHEMAS_QUERY = gql`
@@ -77,16 +77,36 @@ export const RESTORABLE_DATABASE_SCHEMAS_QUERY = gql`
   query getRestorableDatabaseSchemas($affiliations: [String!]!) {
     restorableDatabaseSchemas(affiliations: $affiliations) {
       databaseSchema {
+        id
+        type
+        jdbcUrl
+        affiliation {
+          name
+        }
+        name
         application
-        description
         environment
+        description
         discriminator
+        engine
+        applicationDeployments {
+          id
+          name
+          affiliation {
+            name
+          }
+          namespace {
+            name
+          }
+        }
+        createdBy
         createdDate
         lastUsedDate
         sizeInMb
-        createdBy
-        engine
-        name
+        users {
+          username
+          type
+        }
       }
       deleteAfter
       setToCooldownAt

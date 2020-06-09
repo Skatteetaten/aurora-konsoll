@@ -1,17 +1,15 @@
 import { connect } from 'react-redux';
 import { RootState } from '../../../store/types';
 import RestorableSchema from './RestorableSchema';
-import { fetchRestorableSchemas } from './state/actions';
+import { fetchRestorableSchemas, fetchInstances } from './state/actions';
 import { ISchemasState } from './state/reducers';
 
-const getItems = (state: ISchemasState) => state.restorableDatabaseSchemas;
-
 const mapStateToProps = (state: RootState) => ({
-  restorableDatabaseSchemas: getItems(state.database)
+  items: state.database.restorableDatabaseSchemas,
+  isFetching: state.database.isFetchingRestorableSchemas
 });
 const mapDispatchToProps = {
-  onComponentMounted: (affiliation: string) =>
-    fetchRestorableSchemas(affiliation)
+  onFetch: (affiliations: string[]) => fetchRestorableSchemas(affiliations)
 };
 
 export const RestorableSchemaConnected = connect(

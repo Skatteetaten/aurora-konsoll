@@ -1,10 +1,13 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
+import { Selection } from 'office-ui-fabric-react/lib-commonjs';
 import styled from 'styled-components';
 import TextField from '@skatteetaten/frontend-components/TextField';
 import { TextFieldEvent } from '../../../types/react';
 import {
   IDatabaseSchema,
-  IRestorableDatabaseSchemas
+  IRestorableDatabaseSchemas,
+  IRestorableDatabaseSchema,
+  IRestorableDatabaseSchemaData
 } from '../../../models/schemas';
 import { EnterModeThenConfirm } from './EnterModeThenConfirm';
 import Spinner from 'components/Spinner';
@@ -17,84 +20,133 @@ export interface IRestorableSchemaProps {
   className?: string;
   affiliation: string;
   isFetching: boolean;
-  restorableDatabaseSchemas?: IRestorableDatabaseSchemas;
   items: IRestorableDatabaseSchemas;
-  onComponentMounted: (affiliation: string) => void;
+  onFetch: (affiliation: string[]) => void | undefined;
 }
 
-export interface IRestorableSchemaState {
-  filter: string;
-}
+// export interface IRestorableSchemaState {
+//   filter: string;
+// }
 
-export class RestorableSchema extends React.Component<
-  IRestorableSchemaProps,
-  IRestorableSchemaState
-> {
-  public state: IRestorableSchemaState = {
-    filter: ''
+function RestorableSchema({
+  affiliation,
+  onFetch,
+  isFetching,
+  items,
+  className
+}: IRestorableSchemaProps) {
+  // public state: IRestorableSchemaState = {
+  // filter: ''
+  // };
+  const [filter, setFilter] = useState<string>('');
+  const [restoreMode, setRestoreMode] = useState<boolean>(false);
+  const [selectedSchemas, setSelectedSchemas] = useState<
+    IRestorableDatabaseSchemaData[] | undefined
+  >(undefined);
+  const [selectedSchema, setSelectedSchema] = useState<
+    IRestorableDatabaseSchemaData | undefined
+  >(undefined);
+  const [shouldResetSort, setShouldResetSort] = useState<boolean>(false);
+
+  useEffect(() => {
+    onFetch([affiliation]);
+  }, []);
+
+  const onFilterChange = (event: TextFieldEvent, newValue?: string) => {
+    setFilter(newValue || '');
   };
 
-  public componentDidMount(): void {
-    this.props.onComponentMounted(this.props.affiliation);
-  }
+  const onResetSort = () => {
+    setShouldResetSort(false);
+  };
 
-  public render() {
-    const {
-      className,
-      affiliation,
-      restorableDatabaseSchemas,
-      isFetching
-    } = this.props;
-    const { filter } = this.state;
-    console.log(restorableDatabaseSchemas);
-    return (
-      <div className={className}>
-        <div className="styled-action-bar">
-          <div className="styled-input-and-restore">
-            <div className="styled-input">
-              <TextField
-                placeholder="Søk etter skjema"
-                onChange={this.onFilterChange}
-                value={filter}
-              />
-            </div>
-            <EnterModeThenConfirm
-              confirmButtonEnabled={[].length !== 0}
-              confirmText="Gjennopprett valgte"
-              inactiveIcon="History"
-              inactiveText="Velg skjemaer for gjenoppretting"
-              onEnterMode={this.onEnterDeletionMode}
-              onExitMode={this.onExitDeletionMode}
-              onConfirmClick={this.onDeleteSelectionConfirmed}
-              iconColor="green"
+  const onExitRestorationMode = () => {
+    setRestoreMode(false);
+    setSelectedSchemas([]);
+  };
+
+  const onEnterRestorationMode = () => {
+    setRestoreMode(true);
+  };
+
+  const onSchemaSelectionChange = () => {
+    const selected: IRestorableDatabaseSchemaView[] = selection
+      .getSelection()
+      .map(it => it as IRestorableDatabaseSchemaView);
+    const databaseSchemas = items.restorableDatabaseSchemas || [];
+    const selectedSchemas = databaseSchemas.filter(
+      schema =>
+        selected.find(it => it.id === schema.databaseSchema.id) !== undefined
+    );
+
+    setSelectedSchemas(selectedSchemas);
+  };
+
+  const onSingleSchemaSelected = () => {
+    console.log('Tried to select');
+    //TODO her er det noe krøll
+    const selected: IRestorableDatabaseSchemaView = selection
+      .getSelection()
+      .map(it => it as IRestorableDatabaseSchemaView)[0];
+    if (!selected) return;
+    const databaseSchemas = items.restorableDatabaseSchemas || [];
+    const selectedSchema = databaseSchemas.find(
+      schema => schema.databaseSchema.id === selected.id
+    );
+
+    if (selectedSchema) setSelectedSchema(selectedSchema);
+  };
+
+  const selection = new Selection({
+    onSelectionChanged: () => {
+      if (restoreMode) {
+        onSchemaSelectionChange();
+      } else {
+        onSingleSchemaSelected();
+      }
+    }
+  });
+
+  const onDeleteSelectionConfirmed = () => {};
+
+  console.log(items);
+  return (
+    <div className={className}>
+      <div className="styled-action-bar">
+        <div className="styled-input-and-restore">
+          <div className="styled-input">
+            <TextField
+              placeholder="Søk etter skjema"
+              onChange={onFilterChange}
+              value={filter}
             />
           </div>
-        </div>
-        {isFetching ? (
-          <Spinner />
-        ) : (
-          <RestorableDatabaseSchemaTable
-            filter={filter}
-            schemas={this.props.items.restorableDatabaseSchemas || []}
-            multiSelect={deleteMode}
-            selection={this.selection}
-            onResetSort={this.onResetSort}
-            shouldResetSort={shouldResetSort}
+          <EnterModeThenConfirm
+            confirmButtonEnabled={[].length !== 0}
+            confirmText="Gjennopprett valgte"
+            inactiveIcon="History"
+            inactiveText="Velg skjemaer for gjenoppretting"
+            onEnterMode={onEnterRestorationMode}
+            onExitMode={onExitRestorationMode}
+            onConfirmClick={onDeleteSelectionConfirmed}
+            iconColor="green"
           />
-        )}
+        </div>
       </div>
-    );
-  }
-
-  private onFilterChange = (event: TextFieldEvent, newValue?: string) => {
-    this.setState({ filter: newValue || '' });
-  };
-
-  private onExitDeletionMode = () => {};
-
-  private onEnterDeletionMode = () => {};
-
-  private onDeleteSelectionConfirmed = () => {};
+      {isFetching ? (
+        <Spinner />
+      ) : (
+        <RestorableDatabaseSchemaTable
+          filter={filter}
+          schemas={items.restorableDatabaseSchemas || []}
+          multiSelect={restoreMode}
+          selection={selection}
+          onResetSort={onResetSort}
+          shouldResetSort={shouldResetSort}
+        />
+      )}
+    </div>
+  );
 }
 export default styled(RestorableSchema)`
   height: 100%;
