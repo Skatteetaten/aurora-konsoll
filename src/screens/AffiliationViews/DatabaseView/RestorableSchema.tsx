@@ -15,6 +15,7 @@ import {
   RestorableDatabaseSchemaTable,
   IRestorableDatabaseSchemaView
 } from './RestorableDatabaseSchemaTable';
+import DatabaseSchemaUpdateDialog from './DatabaseSchemaUpdateDialog';
 
 export interface IRestorableSchemaProps {
   className?: string;
@@ -83,11 +84,10 @@ function RestorableSchema({
   };
 
   const onSingleSchemaSelected = () => {
-    console.log('Tried to select');
-    //TODO her er det noe krøll
     const selected: IRestorableDatabaseSchemaView = selection
       .getSelection()
       .map(it => it as IRestorableDatabaseSchemaView)[0];
+    console.log(selected);
     if (!selected) return;
     const databaseSchemas = items.restorableDatabaseSchemas || [];
     const selectedSchema = databaseSchemas.find(
@@ -145,6 +145,15 @@ function RestorableSchema({
           shouldResetSort={shouldResetSort}
         />
       )}
+      {/* <DatabaseSchemaUpdateDialog
+        schema={selectedSchema}
+        clearSelectedSchema={onUpdateSchemaDialogClosed}
+        onUpdate={onUpdate}
+        onDelete={onDelete}
+        onTestJdbcConnectionForId={onTestJdbcConnectionForId}
+        testJdbcConnectionResponse={testJdbcConnectionResponse}
+        createNewCopy={onCreateCopyConfirmed}
+      /> */}
     </div>
   );
 }

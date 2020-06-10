@@ -13,7 +13,8 @@ import {
   IDatabaseApplicationDeployment,
   IDatabaseSchema,
   IUpdateDatabaseSchemaInputWithCreatedBy,
-  ITestJDBCResponse
+  ITestJDBCResponse,
+  IRestorableDatabaseSchemaData
 } from 'models/schemas';
 import DatabaseSchemaService from 'services/DatabaseSchemaService';
 import { getLocalDatetime } from 'utils/date';
