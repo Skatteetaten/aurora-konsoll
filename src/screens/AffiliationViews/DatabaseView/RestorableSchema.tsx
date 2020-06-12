@@ -15,7 +15,7 @@ import {
   RestorableDatabaseSchemaTable,
   IRestorableDatabaseSchemaView
 } from './RestorableDatabaseSchemaTable';
-import DatabaseSchemaUpdateDialog from './DatabaseSchemaUpdateDialog';
+import RestorableDatabaseSchemaUpdateDialog from './RestorableDatabaseSchemaUpdateDialog';
 
 export interface IRestorableSchemaProps {
   className?: string;
@@ -145,15 +145,15 @@ function RestorableSchema({
           shouldResetSort={shouldResetSort}
         />
       )}
-      {/* <DatabaseSchemaUpdateDialog
+      <RestorableDatabaseSchemaUpdateDialog
         schema={selectedSchema}
-        clearSelectedSchema={onUpdateSchemaDialogClosed}
-        onUpdate={onUpdate}
-        onDelete={onDelete}
-        onTestJdbcConnectionForId={onTestJdbcConnectionForId}
-        testJdbcConnectionResponse={testJdbcConnectionResponse}
-        createNewCopy={onCreateCopyConfirmed}
-      /> */}
+        // clearSelectedSchema={onUpdateSchemaDialogClosed}
+        // onUpdate={onUpdate}
+        // onDelete={onDelete}
+        // onTestJdbcConnectionForId={onTestJdbcConnectionForId}
+        // testJdbcConnectionResponse={testJdbcConnectionResponse}
+        // createNewCopy={onCreateCopyConfirmed}
+      />
     </div>
   );
 }

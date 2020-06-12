@@ -7,10 +7,7 @@ import {
   IColumn
 } from 'office-ui-fabric-react/lib-commonjs';
 
-import {
-  IRestorableDatabaseSchema,
-  IRestorableDatabaseSchemaData
-} from 'models/schemas';
+import { IRestorableDatabaseSchemaData } from 'models/schemas';
 import { getLocalDate } from 'utils/date';
 
 interface IRestorableDatabaseSchemaTableProps {
