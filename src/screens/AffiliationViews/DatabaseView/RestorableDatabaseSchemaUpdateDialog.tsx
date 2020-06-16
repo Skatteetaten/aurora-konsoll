@@ -1,7 +1,7 @@
 import * as React from 'react';
 import palette from '@skatteetaten/frontend-components/utils/palette';
 import styled from 'styled-components';
-import { IRestorableDatabaseSchemaData } from 'models/schemas';
+import { IRestorableDatabaseSchemaData, IUpdateDatabaseSchemaInputWithCreatedBy } from 'models/schemas';
 import { useState, useEffect, useRef } from 'react';
 
 const { skeColor } = palette;
@@ -10,11 +10,11 @@ interface IRestorableDatabaseSchemaUpdateDialogProps {
   schema?: IRestorableDatabaseSchemaData;
   //   className?: string;
   clearSelectedSchema: () => void;
-  //   onUpdate: (databaseSchema: IUpdateDatabaseSchemaInputWithCreatedBy) => void;
+  onUpdate: (databaseSchema: IUpdateDatabaseSchemaInputWithCreatedBy) => void;
   //   onDelete: (databaseSchema: IDatabaseSchema) => void;
   //   onTestJdbcConnectionForId: (id: string) => void;
   //   testJdbcConnectionResponse: ITestJDBCResponse;
-  createNewCopy: () => void;
+  // createNewCopy: () => void;
 }
 
 interface IUpdatedSchemaValues {

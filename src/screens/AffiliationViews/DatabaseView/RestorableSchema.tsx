@@ -7,7 +7,8 @@ import {
   IDatabaseSchema,
   IRestorableDatabaseSchemas,
   IRestorableDatabaseSchema,
-  IRestorableDatabaseSchemaData
+  IRestorableDatabaseSchemaData,
+  IUpdateDatabaseSchemaInputWithCreatedBy
 } from '../../../models/schemas';
 import { EnterModeThenConfirm } from './EnterModeThenConfirm';
 import Spinner from 'components/Spinner';
@@ -23,6 +24,7 @@ export interface IRestorableSchemaProps {
   isFetching: boolean;
   items: IRestorableDatabaseSchemas;
   onFetch: (affiliation: string[]) => void | undefined;
+  onUpdate: (databaseSchema: IUpdateDatabaseSchemaInputWithCreatedBy) => void;
 }
 
 // export interface IRestorableSchemaState {
@@ -34,7 +36,8 @@ function RestorableSchema({
   onFetch,
   isFetching,
   items,
-  className
+  className,
+  onUpdate
 }: IRestorableSchemaProps) {
   const [filter, setFilter] = useState<string>('');
   const [restoreMode, setRestoreMode] = useState<boolean>(false);
@@ -150,7 +153,7 @@ function RestorableSchema({
       <RestorableDatabaseSchemaUpdateDialog
         schema={selectedSchema}
         clearSelectedSchema={onUpdateSchemaDialogClosed}
-        // onUpdate={onUpdate}
+        onUpdate={onUpdate}
         // onDelete={onDelete}
         // onTestJdbcConnectionForId={onTestJdbcConnectionForId}
         // testJdbcConnectionResponse={testJdbcConnectionResponse}
