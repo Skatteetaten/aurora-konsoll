@@ -21,15 +21,18 @@ export const Matrix: React.FC<IMatrixProps> = ({
     return <Spinner />;
   }
 
-  const environments = deployments.reduce(
-    (acc, app) => {
-      if (acc.indexOf(app.environment) === -1) {
-        return acc.concat(app.environment);
-      }
-      return acc;
-    },
-    [' ']
-  );
+  const appCountForEnv = deployments.reduce((prev, cur) => {
+    prev[cur.environment] = (prev[cur.environment] || 0) + 1;
+    return prev;
+  }, {});
+
+  const environments = Object.keys(appCountForEnv)
+    .sort()
+    .sort((a, b) => {
+      return appCountForEnv[b] - appCountForEnv[a];
+    });
+
+  environments.unshift(' ');
 
   const apps: IApplicationMap = deployments.reduce((acc, app) => {
     if (acc[app.name]) {
@@ -45,7 +48,7 @@ export const Matrix: React.FC<IMatrixProps> = ({
       <table>
         <thead>
           <tr>
-            {environments.sort().map((name) => (
+            {environments.map((name) => (
               <th key={name}>{name}</th>
             ))}
           </tr>
