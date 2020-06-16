@@ -9,12 +9,12 @@ const { skeColor } = palette;
 interface IRestorableDatabaseSchemaUpdateDialogProps {
   schema?: IRestorableDatabaseSchemaData;
   //   className?: string;
-  //   clearSelectedSchema: () => void;
+  clearSelectedSchema: () => void;
   //   onUpdate: (databaseSchema: IUpdateDatabaseSchemaInputWithCreatedBy) => void;
   //   onDelete: (databaseSchema: IDatabaseSchema) => void;
   //   onTestJdbcConnectionForId: (id: string) => void;
   //   testJdbcConnectionResponse: ITestJDBCResponse;
-  //   createNewCopy: () => void;
+  createNewCopy: () => void;
 }
 
 interface IUpdatedSchemaValues {
@@ -29,7 +29,8 @@ interface IUpdatedSchemaValues {
 }
 
 function RestorableDatabaseSchemaUpdateDialog({
-  schema
+  schema,
+  clearSelectedSchema
 }: IRestorableDatabaseSchemaUpdateDialogProps) {
   const initialUpdatedSchemaValues: IUpdatedSchemaValues = {
     id: '',
@@ -45,26 +46,6 @@ function RestorableDatabaseSchemaUpdateDialog({
     IUpdatedSchemaValues
   >(initialUpdatedSchemaValues);
 
-  //   public componentDidUpdate(prevProps: IDatabaseSchemaUpdateDialogProps) {
-  //     const { schema } = this.props;
-  //     if (schema) {
-  //       if (typeof prevProps.schema === 'undefined') {
-  //         this.setState({
-  //           updatedSchemaValues: {
-  //             id: schema.id,
-  //             discriminator: schema.discriminator,
-  //             createdBy: schema.createdBy,
-  //             description: schema.description ? schema.description : '',
-  //             engine: schema.engine,
-  //             environment: schema.environment,
-  //             application: schema.application,
-  //             affiliation: schema.affiliation.name
-  //           }
-  //         });
-  //       }
-  //     }
-  //   }
-
   console.log(updatedSchemaValues);
   function usePrevious(value) {
     const ref = useRef();
@@ -73,6 +54,11 @@ function RestorableDatabaseSchemaUpdateDialog({
     });
     return ref.current;
   }
+
+  const createNewCopy = () => {
+    createNewCopy();
+    clearSelectedSchema();
+  };
 
   const prevSchema = usePrevious({ schema });
 
@@ -104,7 +90,7 @@ function RestorableDatabaseSchemaUpdateDialog({
     }
   }, [schema, prevSchema]);
 
-  return <div> ting </div>;
+  return <div> foobarbaz </div>;
 }
 
 export default styled(RestorableDatabaseSchemaUpdateDialog)`

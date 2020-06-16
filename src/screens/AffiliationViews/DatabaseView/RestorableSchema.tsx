@@ -36,9 +36,6 @@ function RestorableSchema({
   items,
   className
 }: IRestorableSchemaProps) {
-  // public state: IRestorableSchemaState = {
-  // filter: ''
-  // };
   const [filter, setFilter] = useState<string>('');
   const [restoreMode, setRestoreMode] = useState<boolean>(false);
   const [selectedSchemas, setSelectedSchemas] = useState<
@@ -59,6 +56,21 @@ function RestorableSchema({
 
   const onResetSort = () => {
     setShouldResetSort(false);
+  };
+
+  const selection = new Selection({
+    onSelectionChanged: () => {
+      if (restoreMode) {
+        onSchemaSelectionChange();
+      } else {
+        onSingleSchemaSelected();
+      }
+    }
+  });
+
+  const onUpdateSchemaDialogClosed = () => {
+    selection.setAllSelected(false);
+    setSelectedSchema(undefined);
   };
 
   const onExitRestorationMode = () => {
@@ -96,16 +108,6 @@ function RestorableSchema({
 
     if (selectedSchema) setSelectedSchema(selectedSchema);
   };
-
-  const selection = new Selection({
-    onSelectionChanged: () => {
-      if (restoreMode) {
-        onSchemaSelectionChange();
-      } else {
-        onSingleSchemaSelected();
-      }
-    }
-  });
 
   const onDeleteSelectionConfirmed = () => {};
 
@@ -147,7 +149,7 @@ function RestorableSchema({
       )}
       <RestorableDatabaseSchemaUpdateDialog
         schema={selectedSchema}
-        // clearSelectedSchema={onUpdateSchemaDialogClosed}
+        clearSelectedSchema={onUpdateSchemaDialogClosed}
         // onUpdate={onUpdate}
         // onDelete={onDelete}
         // onTestJdbcConnectionForId={onTestJdbcConnectionForId}
