@@ -16,7 +16,7 @@ export const EnterModeThenConfirm: React.FC<{
   inactiveText,
   onEnterMode,
   onExitMode,
-  onConfirmClick
+  onConfirmClick,
 }) => {
   const [modeActive, setModeActive] = useState(false);
 
@@ -52,7 +52,7 @@ export const EnterModeThenConfirm: React.FC<{
           style={{
             minWidth: '120px',
             marginLeft: '15px',
-            float: 'left'
+            float: 'left',
           }}
           onClick={onConfirmClick}
           disabled={!confirmButtonEnabled}
@@ -65,7 +65,7 @@ export const EnterModeThenConfirm: React.FC<{
           icon="Cancel"
           style={{
             minWidth: '120px',
-            float: 'left'
+            float: 'left',
           }}
           onClick={onExitModeClick}
         >

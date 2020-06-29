@@ -29,7 +29,7 @@ export const DeployButton: React.FC<IDeployButtonProps> = ({
   hasAccessToDeploy,
   releaseTo,
   currentVersion,
-  children
+  children,
 }) => {
   const [hidden, setHidden] = useState(true);
   const close = () => setHidden(true);

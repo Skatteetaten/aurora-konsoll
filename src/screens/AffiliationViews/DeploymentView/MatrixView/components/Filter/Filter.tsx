@@ -21,7 +21,7 @@ import { TextFieldEvent } from 'types/react';
 
 export enum SelectionType {
   Applications,
-  Environments
+  Environments,
 }
 
 interface ICheckboxValue {
@@ -60,7 +60,7 @@ export class Filter extends React.Component<IFilterProps, IFilterState> {
     environments: [],
     mode: FilterMode.Create,
     selectedFilterKey: undefined,
-    isDefaultCheckedForCreate: false
+    isDefaultCheckedForCreate: false,
   };
   private filterService = new FilterService();
 
@@ -68,7 +68,7 @@ export class Filter extends React.Component<IFilterProps, IFilterState> {
     const { filters } = this.props;
     this.setState({
       applications: filters.applications,
-      environments: filters.environments
+      environments: filters.environments,
     });
   }
 
@@ -85,7 +85,7 @@ export class Filter extends React.Component<IFilterProps, IFilterState> {
       );
       if (enabledFilter) {
         this.setState({
-          selectedFilterKey: enabledFilter.name
+          selectedFilterKey: enabledFilter.name,
         });
       }
     }
@@ -104,18 +104,18 @@ export class Filter extends React.Component<IFilterProps, IFilterState> {
           environments: defaultFilter.environments,
           selectedFilterKey: defaultFilter.name,
           currentFilterName: defaultFilter.name,
-          mode: FilterMode.Edit
+          mode: FilterMode.Edit,
         });
         updateFilter({
           applications: defaultFilter.applications,
-          environments: defaultFilter.environments
+          environments: defaultFilter.environments,
         });
       } else {
         this.setState({
           applications: [],
           environments: [],
           selectedFilterKey: undefined,
-          mode: FilterMode.Create
+          mode: FilterMode.Create,
         });
       }
     }
@@ -133,7 +133,7 @@ export class Filter extends React.Component<IFilterProps, IFilterState> {
     ) {
       this.setState({
         applications: this.props.filters.applications,
-        environments: this.props.filters.environments
+        environments: this.props.filters.environments,
       });
     }
   }
@@ -145,23 +145,23 @@ export class Filter extends React.Component<IFilterProps, IFilterState> {
     const values = isApplication ? applications : environments;
     if (!values.includes(value.name)) {
       if (isApplication) {
-        this.setState(prevState => ({
-          applications: [...prevState.applications, value.name]
+        this.setState((prevState) => ({
+          applications: [...prevState.applications, value.name],
         }));
       } else {
-        this.setState(prevState => ({
-          environments: [...prevState.environments, value.name]
+        this.setState((prevState) => ({
+          environments: [...prevState.environments, value.name],
         }));
       }
     } else {
       const newArray = this.filterService.removeElement(values, value.name);
       if (isApplication) {
         this.setState({
-          applications: newArray
+          applications: newArray,
         });
       } else {
         this.setState({
-          environments: newArray
+          environments: newArray,
         });
       }
     }
@@ -184,7 +184,7 @@ export class Filter extends React.Component<IFilterProps, IFilterState> {
       environments,
       selectedFilterKey,
       mode,
-      currentFilterName
+      currentFilterName,
     } = this.state;
     if (this.hasCurrentFilterName() && this.noFilterOptionsSelected()) {
       addErrors([new Error('Ingen applikasjoner og miljøer valgt')]);
@@ -198,10 +198,10 @@ export class Filter extends React.Component<IFilterProps, IFilterState> {
           mode === FilterMode.Create ? currentFilterName : selectedFilterKey,
         default: getDefaultFilterName === selectedFilterKey ? true : false,
         applications,
-        environments
+        environments,
       });
       this.setState({
-        selectedFilterKey: currentFilterName
+        selectedFilterKey: currentFilterName,
       });
       close();
     }
@@ -213,13 +213,13 @@ export class Filter extends React.Component<IFilterProps, IFilterState> {
       affiliation,
       className,
       updateFilter,
-      addErrors
+      addErrors,
     } = this.props;
     const {
       selectedFilterKey,
       mode,
       currentFilterName,
-      isDefaultCheckedForCreate
+      isDefaultCheckedForCreate,
     } = this.state;
     const applyNewFilter = () => this.applyFilter(close);
     const defaultFilter = this.filterService.getDefaultFilter(
@@ -227,10 +227,10 @@ export class Filter extends React.Component<IFilterProps, IFilterState> {
       affiliation
     );
     const findDefaultFilter = allFilters.find(
-      f => f.name === selectedFilterKey && f.default
+      (f) => f.name === selectedFilterKey && f.default
     );
     const currentFilter = allFilters.find(
-      filter => filter.name === selectedFilterKey
+      (filter) => filter.name === selectedFilterKey
     );
     const isCurrentFilterDefault =
       defaultFilter &&
@@ -255,14 +255,14 @@ export class Filter extends React.Component<IFilterProps, IFilterState> {
           environments:
             currentFilter && currentFilter.environments.length > 0
               ? currentFilter.environments
-              : []
+              : [],
         });
         this.setState({
-          selectedFilterKey: currentFilterName
+          selectedFilterKey: currentFilterName,
         });
         if (isCreateMode) {
-          this.setState(prevState => ({
-            isDefaultCheckedForCreate: !prevState.isDefaultCheckedForCreate
+          this.setState((prevState) => ({
+            isDefaultCheckedForCreate: !prevState.isDefaultCheckedForCreate,
           }));
         }
       }
@@ -302,11 +302,11 @@ export class Filter extends React.Component<IFilterProps, IFilterState> {
   public setCurrentFilterName = (event: TextFieldEvent, newValue?: string) => {
     if (!newValue) {
       this.setState({
-        isDefaultCheckedForCreate: false
+        isDefaultCheckedForCreate: false,
       });
     }
     this.setState({
-      currentFilterName: newValue
+      currentFilterName: newValue,
     });
   };
 
@@ -318,20 +318,20 @@ export class Filter extends React.Component<IFilterProps, IFilterState> {
     if (option) {
       this.setState({
         selectedFilterKey: option.text,
-        mode: FilterMode.Edit
+        mode: FilterMode.Edit,
       });
       const currentFilter = allFilters.find(
-        filter => filter.name === option.text
+        (filter) => filter.name === option.text
       );
       if (currentFilter) {
         this.setState({
           applications: currentFilter.applications,
           environments: currentFilter.environments,
-          currentFilterName: currentFilter.name
+          currentFilterName: currentFilter.name,
         });
         updateFilter({
           applications: currentFilter.applications,
-          environments: currentFilter.environments
+          environments: currentFilter.environments,
         });
       }
     } else {
@@ -339,7 +339,7 @@ export class Filter extends React.Component<IFilterProps, IFilterState> {
         applications: [],
         environments: [],
         currentFilterName: undefined,
-        selectedFilterKey: undefined
+        selectedFilterKey: undefined,
       });
       updateFilter({ applications: [], environments: [] });
     }
@@ -348,11 +348,11 @@ export class Filter extends React.Component<IFilterProps, IFilterState> {
   public clearAllCheckboxes = (type: SelectionType) => {
     if (type === SelectionType.Applications) {
       this.setState({
-        applications: []
+        applications: [],
       });
     } else {
       this.setState({
-        environments: []
+        environments: [],
       });
     }
   };
@@ -365,11 +365,11 @@ export class Filter extends React.Component<IFilterProps, IFilterState> {
     );
     if (type === SelectionType.Applications) {
       this.setState({
-        applications: values
+        applications: values,
       });
     } else {
       this.setState({
-        environments: values
+        environments: values,
       });
     }
   };
@@ -382,7 +382,7 @@ export class Filter extends React.Component<IFilterProps, IFilterState> {
       this.setState({
         applications: [],
         environments: [],
-        selectedFilterKey: undefined
+        selectedFilterKey: undefined,
       });
     }
   };
@@ -410,11 +410,11 @@ export class Filter extends React.Component<IFilterProps, IFilterState> {
       if (m === FilterMode.Create) {
         this.setState({
           currentFilterName: '',
-          isDefaultCheckedForCreate: false
+          isDefaultCheckedForCreate: false,
         });
       }
       this.setState({
-        mode: m
+        mode: m,
       });
     };
 
@@ -460,7 +460,7 @@ export class Filter extends React.Component<IFilterProps, IFilterState> {
                       checked={applications.includes(application)}
                       onChange={this.updateFilterState({
                         name: application,
-                        type: SelectionType.Applications
+                        type: SelectionType.Applications,
                       })}
                     />
                   ))}
@@ -482,7 +482,7 @@ export class Filter extends React.Component<IFilterProps, IFilterState> {
                       checked={environments.includes(environment)}
                       onChange={this.updateFilterState({
                         name: environment,
-                        type: SelectionType.Environments
+                        type: SelectionType.Environments,
                       })}
                     />
                   ))}
@@ -558,5 +558,5 @@ const styledFilter = styled(Filter)`
 export default styledFilter;
 
 export const styledFilterConnected = connect(null, {
-  addErrors: (errors: any[]) => addErrors(errors)
+  addErrors: (errors: any[]) => addErrors(errors),
 })(styledFilter);

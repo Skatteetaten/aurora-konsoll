@@ -10,9 +10,9 @@ const getItems = (state: IWebsealReduxState) => state.websealStates;
 
 const mapStateToProps = (state: RootState) => ({
   isFetchingWebsealStates: getFetchingStatus(state.webseal),
-  websealStates: getItems(state.webseal)
+  websealStates: getItems(state.webseal),
 });
 
 export const WebsealConnected = connect(mapStateToProps, {
-  onFetch: (affiliation: string) => fetchWebsealStates(affiliation)
+  onFetch: (affiliation: string) => fetchWebsealStates(affiliation),
 })(Webseal);

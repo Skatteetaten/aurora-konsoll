@@ -10,7 +10,7 @@ import { IWebsealState } from 'models/Webseal';
 import { IObjectWithKey, Selection } from 'office-ui-fabric-react/lib-commonjs';
 import WebsealService, {
   filterWebsealView,
-  IWebsealTableColumns
+  IWebsealTableColumns,
 } from 'services/WebsealService';
 import WebsealDialog from './WebstealDialog';
 import { TextFieldEvent } from 'types/react';
@@ -37,19 +37,19 @@ class Webseal extends React.Component<IWebsealTableProps, IWebsealTableState> {
     filter: '',
     viewItems: [],
     filteredColumns: [],
-    shouldResetSort: false
+    shouldResetSort: false,
   };
 
   public selection = new Selection({
     onSelectionChanged: () => {
       this.onRowClicked();
-    }
+    },
   });
 
   public websealStates = (): IWebsealTableColumns[] => {
-    return this.props.websealStates.map(it => ({
+    return this.props.websealStates.map((it) => ({
       host: it.name,
-      roles: it.acl.roles.join(', ')
+      roles: it.acl.roles.join(', '),
     }));
   };
 
@@ -64,7 +64,7 @@ class Webseal extends React.Component<IWebsealTableProps, IWebsealTableState> {
       this.refreshWebsealStates();
       this.setState({
         filter: '',
-        shouldResetSort: true
+        shouldResetSort: true,
       });
     }
   }
@@ -82,7 +82,7 @@ class Webseal extends React.Component<IWebsealTableProps, IWebsealTableState> {
   public deselectWebsealState = () => {
     this.selection.setAllSelected(false);
     this.setState({
-      selectedWebsealState: undefined
+      selectedWebsealState: undefined,
     });
   };
 
@@ -93,18 +93,18 @@ class Webseal extends React.Component<IWebsealTableProps, IWebsealTableState> {
     if (selected.length > 0) {
       const selectedName = (selected[0] as IWebsealTableColumns).host;
       selectedWebsealState = this.state.viewItems.find(
-        i => i.name === selectedName
+        (i) => i.name === selectedName
       );
     }
 
     this.setState({
-      selectedWebsealState
+      selectedWebsealState,
     });
   };
 
   public onResetSort = () => {
     this.setState({
-      shouldResetSort: false
+      shouldResetSort: false,
     });
   };
 
@@ -115,7 +115,7 @@ class Webseal extends React.Component<IWebsealTableProps, IWebsealTableState> {
     if (JSON.stringify(viewItems) !== JSON.stringify(websealStates)) {
       this.setState({
         viewItems: websealStates,
-        filteredColumns: this.websealStates()
+        filteredColumns: this.websealStates(),
       });
     }
   };
@@ -130,6 +130,7 @@ class Webseal extends React.Component<IWebsealTableProps, IWebsealTableState> {
       <div className="webseal-grid">
         <div className="table-wrapper">
           <SortableDetailsList
+            // @ts-ignore
             columns={WebsealService.DEFAULT_COLUMNS}
             items={filteredColumns}
             selection={this.selection}
@@ -181,7 +182,7 @@ class Webseal extends React.Component<IWebsealTableProps, IWebsealTableState> {
   private onFilterChange = (event: TextFieldEvent, newValue?: string) => {
     if (newValue) {
       this.setState({
-        filter: newValue
+        filter: newValue,
       });
     }
   };

@@ -14,16 +14,16 @@ const initialState: IUserSettingsState = {
   isLoading: false,
   applicationDeploymentFilters: [],
   errors: {
-    requestUserSettings: []
-  }
+    requestUserSettings: [],
+  },
 };
 
 export const userSettingsReducer = reduceReducers<IUserSettingsState>(
   [
-    handleAction(actions.updateUserSettingsRequest, state => {
+    handleAction(actions.updateUserSettingsRequest, (state) => {
       state.isLoading = true;
     }),
-    handleAction(actions.fetchUserSettings.request, state => {
+    handleAction(actions.fetchUserSettings.request, (state) => {
       state.isLoading = true;
     }),
 
@@ -40,7 +40,7 @@ export const userSettingsReducer = reduceReducers<IUserSettingsState>(
     handleAction(actions.fetchUserSettings.failure, (state, { payload }) => {
       state.isLoading = false;
       state.errors.requestUserSettings.push(payload);
-    })
+    }),
   ],
   initialState
 );

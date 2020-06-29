@@ -19,7 +19,7 @@ const Row = ({
   name,
   environments,
   apps,
-  showSemanticVersion: showExactVersion
+  showSemanticVersion: showExactVersion,
 }: IRowProps) => {
   const match = useRouteMatch();
   if (!match) {
@@ -37,7 +37,9 @@ const Row = ({
       );
     }
 
-    const deployment = apps[name].find(app => app.environment === environment);
+    const deployment = apps[name].find(
+      (app) => app.environment === environment
+    );
     if (!deployment) {
       return <td key={key}>-</td>;
     }

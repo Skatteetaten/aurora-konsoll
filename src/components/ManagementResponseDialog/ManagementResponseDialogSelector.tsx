@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 
 import ActionButton from '@skatteetaten/frontend-components/ActionButton';
 
@@ -20,7 +20,7 @@ const ManagementResponseDialogSelector = ({
   refreshApplicationDeployment,
   isUpdating,
   title,
-  icon
+  icon,
 }: IManagementResponseDialogSelectorProps) => {
   const renderRefreshButton = () => {
     return (

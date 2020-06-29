@@ -11,9 +11,9 @@ const getCertificates = (state: ICertificateState) => state.certificates;
 
 const mapStateToProps = (state: RootState) => ({
   isFetching: getFetchingStatus(state.certificate),
-  certificates: getCertificates(state.certificate)
+  certificates: getCertificates(state.certificate),
 });
 
 export const CertificateConnected = connect(mapStateToProps, {
-  onFetch: () => fetchCertificates()
+  onFetch: () => fetchCertificates(),
 })(Certificate);

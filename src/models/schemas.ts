@@ -97,7 +97,7 @@ export enum Step {
   TYPE,
   NEW,
   EXTERNAL,
-  SUMMARY
+  SUMMARY,
 }
 
 export interface ITestJDBCResponse {

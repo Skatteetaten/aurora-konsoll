@@ -1,7 +1,7 @@
 import {
   applicationDeploymentFilterFactory,
   deploymentFactory,
-  filterFactory
+  filterFactory,
 } from 'testData/testDataBuilders';
 
 import { IApplicationDeployment } from '../models/ApplicationDeployment';
@@ -12,17 +12,17 @@ describe('DeploymentFilterService', () => {
 
   const deployments: IApplicationDeployment[] = [
     deploymentFactory.build({ environment: 'martin-dev', name: 'whoami-sub' }),
-    deploymentFactory.build({ environment: 'robust-test', name: 'whoami' })
+    deploymentFactory.build({ environment: 'robust-test', name: 'whoami' }),
   ];
 
   const testFilters: IFilter = {
     applications: ['whoami-sub'],
-    environments: ['martin-dev']
+    environments: ['martin-dev'],
   };
 
   const emptyTestFilters: IFilter = {
     applications: [],
-    environments: []
+    environments: [],
   };
 
   describe('filterDeployments', () => {
@@ -47,7 +47,7 @@ describe('DeploymentFilterService', () => {
         deploymentFilterService.toFilter('?apps=whoami-sub&envs=martin-dev')
       ).toEqual({
         applications: ['whoami-sub'],
-        environments: ['martin-dev']
+        environments: ['martin-dev'],
       });
     });
 
@@ -58,7 +58,7 @@ describe('DeploymentFilterService', () => {
         )
       ).toEqual({
         applications: ['whoami-sub', 'whoami', 'skattemelding-core-mock'],
-        environments: ['martin-dev']
+        environments: ['martin-dev'],
       });
     });
   });
@@ -76,8 +76,8 @@ describe('DeploymentFilterService', () => {
       const applicationDeploymentFilters = [
         applicationDeploymentFilterFactory.build(),
         applicationDeploymentFilterFactory.build({
-          name: 'auroraFilter'
-        })
+          name: 'auroraFilter',
+        }),
       ];
 
       const result = deploymentFilterService.getOtherNonDefaultFilters(

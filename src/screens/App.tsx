@@ -5,13 +5,13 @@ import {
   Switch,
   useHistory,
   useLocation,
-  useRouteMatch
+  useRouteMatch,
 } from 'react-router-dom';
 import styled from 'styled-components';
 
 import SkeBasis from '@skatteetaten/frontend-components/SkeBasis';
 
-import { ITokenStore } from 'services/TokenStore';
+import { TokenStore } from 'services/TokenStore';
 
 import LayoutConnected from 'components/Layout/Layout';
 import { CertificateConnected } from './CertificateView/CertificateConnected';
@@ -24,7 +24,7 @@ import { SecretTokenNavigation } from './SecretToken';
 import AcceptToken from './AcceptToken';
 
 interface IAppProps {
-  tokenStore: ITokenStore;
+  tokenStore: TokenStore;
   displayDatabaseView: boolean;
   displaySkapViews: boolean;
 }
@@ -32,7 +32,7 @@ interface IAppProps {
 export const App: React.FC<IAppProps> = ({
   displayDatabaseView,
   displaySkapViews,
-  tokenStore
+  tokenStore,
 }) => {
   const [affiliation, setAffiliation] = useState<string | undefined>(undefined);
   const [isMenuExpanded, setMenuExpanded] = useState(true);
@@ -80,7 +80,10 @@ export const App: React.FC<IAppProps> = ({
         >
           <Route path="/secret" component={SecretTokenNavigation} />
           <Route path="/accept-token">
-            <AcceptToken onTokenUpdated={onTokenUpdated} />
+            <AcceptToken
+              onTokenUpdated={onTokenUpdated}
+              tokenStore={tokenStore}
+            />
           </Route>
           {isAuthenticated && (
             <Switch>

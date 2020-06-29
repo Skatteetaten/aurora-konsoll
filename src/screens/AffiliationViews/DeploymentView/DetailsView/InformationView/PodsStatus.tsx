@@ -1,10 +1,10 @@
-import * as React from 'react';
+import React from 'react';
 import styled from 'styled-components';
 
 import { IPodResource, IPodsStatus } from 'models/Pod';
 import SortableDetailsList from 'components/SortableDetailsList';
 import PodsStatusService, {
-  filterPodsStatus
+  filterPodsStatus,
 } from 'services/PodsStatusService';
 import { IApplicationDeploymentDetails } from 'models/ApplicationDeployment';
 import Icon from '@skatteetaten/frontend-components/Icon';
@@ -43,7 +43,7 @@ class PodsStatus extends React.Component<IPodsStatusProps, IPodsStatusState> {
   public state: IPodsStatusState = {
     isCalloutVisibleList: this.resetInput(),
     podResources: this.props.details.pods,
-    menuButtonElements: this.createMenuButtonElements()
+    menuButtonElements: this.createMenuButtonElements(),
   };
 
   public componentDidUpdate(prevProps: IPodsStatusProps) {
@@ -55,7 +55,7 @@ class PodsStatus extends React.Component<IPodsStatusProps, IPodsStatusState> {
       this.setState({
         podResources: details.pods,
         menuButtonElements: this.createMenuButtonElements(),
-        isCalloutVisibleList: this.resetInput()
+        isCalloutVisibleList: this.resetInput(),
       });
     }
   }
@@ -106,10 +106,11 @@ class PodsStatus extends React.Component<IPodsStatusProps, IPodsStatusState> {
     const { details } = this.props;
     const pods = currentViewItems.map((it: IPodsStatus) => it.name.key);
     if (pods.length > 0) {
-      const getPod = (pod: string) => details.pods.find(it => it.name === pod);
+      const getPod = (pod: string) =>
+        details.pods.find((it) => it.name === pod);
 
       const sortedPods: IPodResource[] = pods
-        .map(it => getPod(it))
+        .map((it) => getPod(it))
         .filter((element: IPodResource) => {
           return element !== undefined;
         });
@@ -117,7 +118,7 @@ class PodsStatus extends React.Component<IPodsStatusProps, IPodsStatusState> {
       if (JSON.stringify(sortedPods) !== JSON.stringify(podResources)) {
         this.setState({
           podResources: sortedPods,
-          isCalloutVisibleList: this.resetInput()
+          isCalloutVisibleList: this.resetInput(),
         });
       }
     }
@@ -127,19 +128,19 @@ class PodsStatus extends React.Component<IPodsStatusProps, IPodsStatusState> {
     const {
       isCalloutVisibleList,
       podResources,
-      menuButtonElements
+      menuButtonElements,
     } = this.state;
 
     const onIndexChange = (index: number) => () => {
       if (isCalloutVisibleList[index]) {
         this.setState({
-          isCalloutVisibleList: this.resetInput()
+          isCalloutVisibleList: this.resetInput(),
         });
       } else {
         const newItems = this.resetInput();
         newItems[index] = true;
         this.setState({
-          isCalloutVisibleList: newItems
+          isCalloutVisibleList: newItems,
         });
       }
     };
@@ -165,7 +166,7 @@ class PodsStatus extends React.Component<IPodsStatusProps, IPodsStatusState> {
                   cursor: 'pointer',
                   float: 'none',
                   color: this.PodsStatusService.getStatusColorAndIconForPod(pod)
-                    .color
+                    .color,
                 }}
               />
             </span>
@@ -218,7 +219,7 @@ class PodsStatus extends React.Component<IPodsStatusProps, IPodsStatusState> {
               title="Splunk"
             />
           </div>
-        )
+        ),
       };
     });
   };
@@ -234,6 +235,7 @@ class PodsStatus extends React.Component<IPodsStatusProps, IPodsStatusState> {
             items={this.applicationDeploymentPods()}
             selection={this.selection}
             filterView={filterPodsStatus}
+            // @ts-ignore
             columns={PodsStatusService.DEFAULT_COLUMNS}
             isHeaderVisible={true}
           />

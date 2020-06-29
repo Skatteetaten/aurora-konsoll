@@ -25,15 +25,15 @@ export const fetchCertificates: Thunk = () => async (
 
   if (result && result.data && result.data.certificates.edges.length > 0) {
     const certificates = {
-      certificates: result.data.certificates.edges.map(edge => edge.node),
-      totalCount: result.data.certificates.totalCount
+      certificates: result.data.certificates.edges.map((edge) => edge.node),
+      totalCount: result.data.certificates.totalCount,
     };
     dispatch(fetchCertificatesResponse(certificates));
   } else {
     dispatch(
       fetchCertificatesResponse({
         certificates: [],
-        totalCount: 0
+        totalCount: 0,
       })
     );
   }
@@ -41,5 +41,5 @@ export const fetchCertificates: Thunk = () => async (
 
 export default {
   fetchCertificatesRequest,
-  fetchCertificatesResponse
+  fetchCertificatesResponse,
 };

@@ -4,33 +4,33 @@ import { RootState, ReduxProps } from 'store/types';
 
 import {
   updateUserSettings,
-  getUserSettings
+  getUserSettings,
 } from 'store/state/userSettings/action.creators';
 import {
   fetchApplicationDeployments,
-  refreshAllDeploymentsForAffiliation
+  refreshAllDeploymentsForAffiliation,
 } from 'store/state/applicationDeployments/action.creators';
 
 const mapDispatchToProps = {
   refreshAllDeploymentsForAffiliation,
   fetchApplicationDeployments,
   updateUserSettings,
-  getUserSettings
+  getUserSettings,
 };
 
 const mapStateToProps = ({ userSettings, applications }: RootState) => {
   const {
     applicationsConnection,
     isRefreshingForAffiliation,
-    isFetching
+    isFetching,
   } = applications;
   return {
     isFetching,
     applicationsConnection,
     isRefreshingForAffiliation,
     userSettings: {
-      applicationDeploymentFilters: userSettings.applicationDeploymentFilters
-    }
+      applicationDeploymentFilters: userSettings.applicationDeploymentFilters,
+    },
   };
 };
 

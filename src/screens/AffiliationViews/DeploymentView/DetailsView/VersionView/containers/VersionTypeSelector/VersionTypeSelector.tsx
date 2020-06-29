@@ -9,7 +9,7 @@ import { onRenderOption } from './components/VersionTypeOption';
 import { VersionTypeSelectorState } from './VersionTypeSelector.state';
 import {
   IComboBox,
-  IComboBoxOption
+  IComboBoxOption,
 } from 'office-ui-fabric-react/lib-commonjs';
 
 interface IVersionTypeSelectorProps {
@@ -25,7 +25,7 @@ export const VersionTypeSelector = ({
   onSelect,
   versionType,
   className,
-  clearStateForType
+  clearStateForType,
 }: Props) => {
   const onTagTypeChanged = (
     event: FormEvent<IComboBox>,
@@ -44,6 +44,7 @@ export const VersionTypeSelector = ({
           <ComboBox
             options={getVersionTypeSelectorOptions(totalCountMap)}
             selectedKey={versionType}
+            // @ts-ignore
             onChange={onTagTypeChanged}
             label="Velg versjontype"
             onRenderOption={onRenderOption}

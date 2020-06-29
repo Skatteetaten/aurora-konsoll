@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 
 import InfoDialog from 'components/InfoDialog';
 import { IManagementEndpointResponse } from 'models/Pod';
@@ -22,7 +22,7 @@ const SuccessResponseDialog = ({
   createdAtTime,
   renderRefreshButton,
   title,
-  icon
+  icon,
 }: ISuccessResponseDialogProps) => {
   const { httpCode, textResponse } = response;
   const text = textResponse ? prettifyJSON(textResponse) : '';
@@ -39,7 +39,7 @@ const SuccessResponseDialog = ({
           cursor: 'pointer',
           color: `${skeColor.blue}`,
           float: 'none',
-          marginLeft: '4px'
+          marginLeft: '4px',
         }}
       />
     );

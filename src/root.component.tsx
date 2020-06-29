@@ -1,12 +1,10 @@
-import * as React from 'react';
-import * as ReactDOM from 'react-dom';
+import React from 'react';
 import { BrowserRouter } from 'react-router-dom';
 
 import { Provider } from 'react-redux';
 
 import { IApiClients } from 'models/AuroraApi';
-import { tokenStore } from 'services/TokenStore';
-import { fetchConfiguration, IConfiguration } from 'utils/config';
+import { IConfiguration } from 'utils/config';
 
 import { App } from 'screens/App';
 import {
@@ -22,27 +20,16 @@ import GoboClient from 'services/GoboClient';
 import createStoreWithApi from 'store';
 import { requestCurrentUser } from 'store/state/startup/action.creators';
 import './index.css';
+import { TokenStore } from 'services/TokenStore';
 
-async function init() {
-  const configOrError = await fetchConfiguration();
+const Root = (props: any) => {
+  const tokenStore: TokenStore = props.tokenStore;
+  const configOrError = props.konsollConfig;
   if ((configOrError as Error).message) {
     throw new Error((configOrError as Error).message);
   }
   const config = configOrError as IConfiguration;
-
-  if (!tokenStore.isTokenValid() && window.location.pathname !== '/secret') {
-    redirectToLoginPage(config.AUTHORIZATION_URI, config.CLIENT_ID);
-  }
-
-  const urlParams = new URLSearchParams(window.location.hash.replace('#', '?'));
-  const token = urlParams.get('access_token')
-    ? urlParams.get('access_token')
-    : tokenStore.getToken();
-  const expiresInSeconds = Number(urlParams.get('expires_in'));
-  if (urlParams.get('access_token')) {
-    tokenStore.updateToken(token as string, expiresInSeconds);
-  }
-
+  const token = tokenStore.getToken();
   const goboClient = new GoboClient({
     url: '/api/graphql',
     headers: {
@@ -64,7 +51,7 @@ async function init() {
   const store = createStoreWithApi(clients);
   store.dispatch(requestCurrentUser());
 
-  ReactDOM.render(
+  return (
     <Provider store={store}>
       <BrowserRouter>
         <App
@@ -73,20 +60,8 @@ async function init() {
           displaySkapViews={config.SKAP_ENABLED}
         />
       </BrowserRouter>
-    </Provider>,
-    document.getElementById('root') as HTMLElement
+    </Provider>
   );
-}
+};
 
-function redirectToLoginPage(authorizationUri: string, clientId: string) {
-  const params = new URLSearchParams();
-  params.append('client_id', clientId);
-  params.append('redirect_uri', window.location.origin + '/secret');
-  params.append('response_type', 'token');
-  params.append('scope', '');
-  params.append('state', '');
-  const authorizationUrl = authorizationUri + '?' + params.toString();
-  window.location.replace(authorizationUrl);
-}
-
-init();
+export default Root;

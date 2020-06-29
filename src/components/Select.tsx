@@ -27,8 +27,8 @@ const theme = (t: Theme) => ({
     ...t.colors,
     primary25: skeColor.whiteGrey,
     primary: skeColor.lightGrey,
-    textLight: skeColor.black
-  }
+    textLight: skeColor.black,
+  },
 });
 
 const Select = ({
@@ -37,7 +37,7 @@ const Select = ({
   selectedKey,
   handleChange,
   isClearable,
-  className
+  className,
 }: ISelectProps) => {
   const getValue = (key?: string) => (key ? { label: key, value: key } : null);
 

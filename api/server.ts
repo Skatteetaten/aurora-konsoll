@@ -1,5 +1,5 @@
 import express from 'express';
-import proxy from 'http-proxy-middleware';
+import { createProxyMiddleware } from 'http-proxy-middleware';
 import * as tokenEncryption from './tokenEncryption';
 import { logger } from './logger';
 
@@ -10,7 +10,7 @@ import {
   DBH_ENABLED,
   GOBO_URL,
   PORT,
-  SKAP_ENABLED
+  SKAP_ENABLED,
 } from './config';
 import { managementInterfaceServer } from './ManagementInterface';
 
@@ -18,7 +18,7 @@ const app = express();
 
 app.use(
   '/api/graphql',
-  proxy({
+  createProxyMiddleware({
     changeOrigin: true,
     target: GOBO_URL,
     onProxyReq(proxyReq, req) {
@@ -31,8 +31,8 @@ app.use(
       }
     },
     pathRewrite: {
-      '/api/graphql': '/graphql'
-    }
+      '/api/graphql': '/graphql',
+    },
   })
 );
 
@@ -44,7 +44,7 @@ app.get('/api/config', (req, res) => {
     CLIENT_ID,
     APPLICATION_NAME,
     DBH_ENABLED,
-    SKAP_ENABLED
+    SKAP_ENABLED,
   });
 });
 
@@ -56,7 +56,7 @@ app.post('/api/log', (req, res) => {
 app.get('/api/accept-token', (req, res) => {
   const accessToken = req.query.access_token;
   const expires_in = req.query.expires_in;
-  const encryptedToken = tokenEncryption.encrypt(accessToken);
+  const encryptedToken = tokenEncryption.encrypt(accessToken as string);
   res.send(
     `${req.protocol}://${req.get(
       'x-forwarded-host'
@@ -68,6 +68,6 @@ app.listen(PORT, () => {
   logger.info(`application server started on port ${PORT}`);
 });
 
-managementInterfaceServer.listen(8081, () => {
-  logger.info(`management interface server started on port ${8081}`);
+managementInterfaceServer.listen(8092, () => {
+  logger.info(`management interface server started on port ${8092}`);
 });

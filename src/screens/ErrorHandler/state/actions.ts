@@ -18,7 +18,7 @@ export const nextErrorResponse = createAction<IAppError | undefined>(
 
 export const addCurrentErrors = (
   result: IDataAndErrors<any> | undefined
-): AsyncAction => dispatch => {
+): AsyncAction => (dispatch) => {
   if (result && result.errors) {
     dispatch(addErrors(result.errors, result.name));
   }
@@ -29,19 +29,19 @@ export const addErrors = (errors: any[], name?: string): AsyncAction => (
   getState
 ) => {
   const state = Object.assign({}, getState().errors.errors);
-  errors.forEach(e => {
+  errors.forEach((e) => {
     Logger.error(e.message, {
-      location: window.location.pathname
+      location: window.location.pathname,
     });
     dispatch(incrementErrorId());
     state.errorQueue.push({
       error: {
         stack: JSON.stringify(e.extensions),
         message: e.message,
-        name: !!name ? `{"document": "${name}"}` : ''
+        name: !!name ? `{"document": "${name}"}` : '',
       },
       id: getState().errors.errorCount,
-      isActive: true
+      isActive: true,
     });
   });
   dispatch(errorsResponse(state));
@@ -74,10 +74,10 @@ export const closeErrors: Thunk = () => (dispatch, getState) => {
   const setIsActiveFalse = (err: IAppError) =>
     err.isActive === true && (err.isActive = false);
 
-  state.allErrors.forEach(err => {
+  state.allErrors.forEach((err) => {
     setIsActiveFalse(err);
   });
-  state.errorQueue.forEach(err => {
+  state.errorQueue.forEach((err) => {
     setIsActiveFalse(err);
   });
   dispatch(errorsResponse(state));
@@ -86,5 +86,5 @@ export const closeErrors: Thunk = () => (dispatch, getState) => {
 export default {
   errorsResponse,
   incrementErrorId,
-  nextErrorResponse
+  nextErrorResponse,
 };

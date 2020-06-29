@@ -1,7 +1,7 @@
 import * as React from 'react';
 
 import DetailsList, {
-  DetailsListProps
+  DetailsListProps,
 } from '@skatteetaten/frontend-components/DetailsList';
 import { SortDirection } from 'models/SortDirection';
 import { createDate, dateValidation } from 'utils/date';
@@ -11,7 +11,7 @@ import {
   CheckboxVisibility,
   ISelection,
   SelectionMode,
-  IColumn
+  IColumn,
 } from 'office-ui-fabric-react/lib-commonjs';
 
 export let selectedIndices: number[] = [];
@@ -39,7 +39,7 @@ class SortableDetailsList extends React.Component<
     selectedColumnIndex: -1,
     currentViewItems: [],
     columnSortDirections: [],
-    prevIndices: []
+    prevIndices: [],
   };
 
   public createDefaultSortDirections: () => SortDirection[] = () =>
@@ -49,7 +49,7 @@ class SortableDetailsList extends React.Component<
 
   public componentDidMount() {
     this.setState({
-      columnSortDirections: this.createDefaultSortDirections()
+      columnSortDirections: this.createDefaultSortDirections(),
     });
   }
 
@@ -60,7 +60,7 @@ class SortableDetailsList extends React.Component<
       items,
       shouldResetSort,
       onResetSort,
-      passItemsToParentComp
+      passItemsToParentComp,
     } = this.props;
     const { currentViewItems, prevIndices } = this.state;
     if (selection) {
@@ -76,7 +76,7 @@ class SortableDetailsList extends React.Component<
       (!(currentViewItems.length > 0) && items.length > 0)
     ) {
       this.setState({
-        currentViewItems: items
+        currentViewItems: items,
       });
     }
 
@@ -87,7 +87,7 @@ class SortableDetailsList extends React.Component<
       this.resetColumns();
       this.setState({
         columnSortDirections: this.createDefaultSortDirections(),
-        selectedColumnIndex: -1
+        selectedColumnIndex: -1,
       });
     }
 
@@ -106,7 +106,7 @@ class SortableDetailsList extends React.Component<
   public resetColumns() {
     const { columns } = this.props;
     if (columns) {
-      columns.forEach(col => (col.isSorted = false));
+      columns.forEach((col) => (col.isSorted = false));
     }
   }
 
@@ -134,6 +134,7 @@ class SortableDetailsList extends React.Component<
         currentCol.isSortedDescending = false;
       }
     }
+    // @ts-ignore
     return columns;
   }
 
@@ -163,12 +164,12 @@ class SortableDetailsList extends React.Component<
       currentViewItems: sortedItems,
       columnSortDirections: newSortDirections,
       selectedColumnIndex: Number(column.key),
-      prevIndices: selectedIndices
+      prevIndices: selectedIndices,
     });
   };
   public toViewIndex<T>(index: number, selection: ISelection, items: T[]) {
     const listItem = items[index];
-    return selection.getItems().findIndex(viewItem => viewItem === listItem);
+    return selection.getItems().findIndex((viewItem) => viewItem === listItem);
   }
 
   public updateCurrentSelection<T>(
@@ -176,7 +177,7 @@ class SortableDetailsList extends React.Component<
     prevIndices: number[],
     items: T[]
   ): void {
-    const intersection = prevIndices.filter(element =>
+    const intersection = prevIndices.filter((element) =>
       selectedIndices.includes(element)
     );
 
@@ -189,8 +190,8 @@ class SortableDetailsList extends React.Component<
     }
 
     const indices = selectedIndices
-      .map(index => this.toViewIndex(index, selection, items))
-      .filter(index => index !== -1);
+      .map((index) => this.toViewIndex(index, selection, items))
+      .filter((index) => index !== -1);
 
     for (const i of indices) {
       if (!intersection.includes(i)) {
@@ -225,9 +226,11 @@ class SortableDetailsList extends React.Component<
           ? dateB - dateA
           : dateA - dateB;
       } else {
-        return (this.sortNextAscending(prevSortDirection)
-        ? valueA < valueB
-        : valueA > valueB)
+        return (
+          this.sortNextAscending(prevSortDirection)
+            ? valueA < valueB
+            : valueA > valueB
+        )
           ? 1
           : -1;
       }
@@ -241,23 +244,23 @@ class SortableDetailsList extends React.Component<
   ): number {
     const viewItems = selection.getItems();
     const viewItem = viewItems[index];
-    return items.findIndex(listItem => listItem === viewItem);
+    return items.findIndex((listItem) => listItem === viewItem);
   }
 
   public currentSelection<T>(selection: ISelection, items: T[]) {
     const newIndices = selection
       .getSelectedIndices()
-      .map(index => this.toListIndex(index, selection, items))
-      .filter(index => selectedIndices.indexOf(index) === -1);
+      .map((index) => this.toListIndex(index, selection, items))
+      .filter((index) => selectedIndices.indexOf(index) === -1);
 
     const unselectedIndices = selection
       .getItems()
       .map((item, index) => index)
-      .filter(index => selection.isIndexSelected(index) === false)
-      .map(index => this.toListIndex(index, selection, items));
+      .filter((index) => selection.isIndexSelected(index) === false)
+      .map((index) => this.toListIndex(index, selection, items));
 
     selectedIndices = selectedIndices.filter(
-      index => unselectedIndices.indexOf(index) === -1
+      (index) => unselectedIndices.indexOf(index) === -1
     );
     selectedIndices = [...selectedIndices, ...newIndices];
   }
@@ -268,12 +271,12 @@ class SortableDetailsList extends React.Component<
       isHeaderVisible = false,
       selection,
       selectionMode = SelectionMode.single,
-      checkboxVisibility = CheckboxVisibility.hidden
+      checkboxVisibility = CheckboxVisibility.hidden,
     } = this.props;
     const {
       columnSortDirections,
       currentViewItems,
-      selectedColumnIndex
+      selectedColumnIndex,
     } = this.state;
 
     if (selection) {
@@ -285,6 +288,7 @@ class SortableDetailsList extends React.Component<
 
     return (
       <DetailsList
+        // @ts-ignore
         columns={this.createColumns(
           selectedColumnIndex,
           columnSortDirections[selectedColumnIndex]
