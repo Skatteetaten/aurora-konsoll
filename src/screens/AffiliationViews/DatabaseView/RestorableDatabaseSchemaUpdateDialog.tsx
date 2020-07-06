@@ -1,8 +1,15 @@
 import * as React from 'react';
 import palette from '@skatteetaten/frontend-components/utils/palette';
 import styled from 'styled-components';
-import { IRestorableDatabaseSchemaData, IUpdateDatabaseSchemaInputWithCreatedBy } from 'models/schemas';
+import {
+  IRestorableDatabaseSchemaData,
+  IUpdateDatabaseSchemaInputWithCreatedBy,
+  IDatabaseSchema
+} from 'models/schemas';
 import { useState, useEffect, useRef } from 'react';
+import Dialog from '@skatteetaten/frontend-components/Dialog';
+import { Grid } from '@skatteetaten/frontend-components/Grid';
+import { getLocalDatetime } from 'utils/date';
 
 const { skeColor } = palette;
 
@@ -11,7 +18,7 @@ interface IRestorableDatabaseSchemaUpdateDialogProps {
   //   className?: string;
   clearSelectedSchema: () => void;
   onUpdate: (databaseSchema: IUpdateDatabaseSchemaInputWithCreatedBy) => void;
-  //   onDelete: (databaseSchema: IDatabaseSchema) => void;
+  onDelete: (databaseSchema: IDatabaseSchema) => void;
   //   onTestJdbcConnectionForId: (id: string) => void;
   //   testJdbcConnectionResponse: ITestJDBCResponse;
   // createNewCopy: () => void;
@@ -90,7 +97,47 @@ function RestorableDatabaseSchemaUpdateDialog({
     }
   }, [schema, prevSchema]);
 
-  return <div> foobarbaz </div>;
+  if (!!!schema) {
+    console.log(schema);
+    return <div></div>;
+  }
+
+  const dateTimeFormat = (date?: Date | null) =>
+    date ? getLocalDatetime(date) : '-';
+  console.log(schema);
+
+  return (
+    <Dialog
+      hidden={!!!schema}
+      onDismiss={clearSelectedSchema}
+      minWidth="1000px"
+      maxWidth="90%"
+    >
+      <Grid>
+        <Grid.Row>
+          <Grid.Col lg={2} className="bold">
+            <p>Id: </p>
+            <p>Type: </p>
+            <p>Engine: </p>
+            <p>Opprettet: </p>
+            <p>Sist brukt: </p>
+            <p>Brukes av: </p>
+          </Grid.Col>
+          <Grid.Col lg={10}>
+            <p>{schema.databaseSchema.id}</p>
+            <p>{schema.databaseSchema.type}</p>
+            <p>
+              {schema.databaseSchema.type === 'EXTERNAL'
+                ? '-'
+                : schema.databaseSchema.engine}
+            </p>
+            <p>{dateTimeFormat(schema.databaseSchema.createdDate)}</p>
+            <p>{dateTimeFormat(schema.databaseSchema.lastUsedDate)}</p>
+          </Grid.Col>
+        </Grid.Row>
+      </Grid>
+    </Dialog>
+  );
 }
 
 export default styled(RestorableDatabaseSchemaUpdateDialog)`

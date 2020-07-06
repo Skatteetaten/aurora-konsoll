@@ -4,10 +4,11 @@ import RestorableSchema from './RestorableSchema';
 import {
   fetchRestorableSchemas,
   fetchInstances,
-  updateSchema
+  updateSchema,
+  deleteSchema
 } from './state/actions';
 import { ISchemasState } from './state/reducers';
-import { IUpdateDatabaseSchemaInputWithCreatedBy } from 'models/schemas';
+import { IUpdateDatabaseSchemaInputWithCreatedBy, IDatabaseSchema } from 'models/schemas';
 
 const mapStateToProps = (state: RootState) => ({
   items: state.database.restorableDatabaseSchemas,
@@ -16,7 +17,8 @@ const mapStateToProps = (state: RootState) => ({
 const mapDispatchToProps = {
   onFetch: (affiliations: string[]) => fetchRestorableSchemas(affiliations),
   onUpdate: (databaseSchema: IUpdateDatabaseSchemaInputWithCreatedBy) =>
-    updateSchema(databaseSchema)
+    updateSchema(databaseSchema),
+  onDelete: (databaseSchema: IDatabaseSchema) => deleteSchema(databaseSchema)
 };
 
 export const RestorableSchemaConnected = connect(

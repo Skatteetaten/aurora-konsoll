@@ -24,12 +24,9 @@ export interface IRestorableSchemaProps {
   isFetching: boolean;
   items: IRestorableDatabaseSchemas;
   onFetch: (affiliation: string[]) => void | undefined;
-  onUpdate: (databaseSchema: IUpdateDatabaseSchemaInputWithCreatedBy) => void;
+  onUpdate: (databaseSchema: IUpdateDatabaseSchemaInputWithCreatedBy) => void; //TODO mulig feil type her
+  onDelete: (databaseSchema: IDatabaseSchema) => void;
 }
-
-// export interface IRestorableSchemaState {
-//   filter: string;
-// }
 
 function RestorableSchema({
   affiliation,
@@ -37,7 +34,8 @@ function RestorableSchema({
   isFetching,
   items,
   className,
-  onUpdate
+  onUpdate,
+  onDelete
 }: IRestorableSchemaProps) {
   const [filter, setFilter] = useState<string>('');
   const [restoreMode, setRestoreMode] = useState<boolean>(false);
@@ -86,6 +84,7 @@ function RestorableSchema({
   };
 
   const onSchemaSelectionChange = () => {
+    console.log(items);
     const selected: IRestorableDatabaseSchemaView[] = selection
       .getSelection()
       .map(it => it as IRestorableDatabaseSchemaView);
@@ -102,19 +101,17 @@ function RestorableSchema({
     const selected: IRestorableDatabaseSchemaView = selection
       .getSelection()
       .map(it => it as IRestorableDatabaseSchemaView)[0];
-    console.log(selected);
     if (!selected) return;
     const databaseSchemas = items.restorableDatabaseSchemas || [];
     const selectedSchema = databaseSchemas.find(
       schema => schema.databaseSchema.id === selected.id
     );
-
+    console.log(databaseSchemas);
     if (selectedSchema) setSelectedSchema(selectedSchema);
   };
 
-  const onDeleteSelectionConfirmed = () => {};
-
-  console.log(items);
+  const onRestoreSelectionConfirmed = () => {};
+  console.log(items.restorableDatabaseSchemas);
   return (
     <div className={className}>
       <div className="styled-action-bar">
@@ -133,7 +130,7 @@ function RestorableSchema({
             inactiveText="Velg skjemaer for gjenoppretting"
             onEnterMode={onEnterRestorationMode}
             onExitMode={onExitRestorationMode}
-            onConfirmClick={onDeleteSelectionConfirmed}
+            onConfirmClick={onRestoreSelectionConfirmed}
             iconColor="green"
           />
         </div>
@@ -154,7 +151,7 @@ function RestorableSchema({
         schema={selectedSchema}
         clearSelectedSchema={onUpdateSchemaDialogClosed}
         onUpdate={onUpdate}
-        // onDelete={onDelete}
+        onDelete={onDelete}
         // onTestJdbcConnectionForId={onTestJdbcConnectionForId}
         // testJdbcConnectionResponse={testJdbcConnectionResponse}
         // createNewCopy={onCreateCopyConfirmed}
