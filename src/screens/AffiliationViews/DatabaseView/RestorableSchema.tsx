@@ -8,7 +8,9 @@ import {
   IRestorableDatabaseSchemas,
   IRestorableDatabaseSchema,
   IRestorableDatabaseSchemaData,
-  IUpdateDatabaseSchemaInputWithCreatedBy
+  IUpdateDatabaseSchemaInputWithCreatedBy,
+  IJdbcUser,
+  ITestJDBCResponse
 } from '../../../models/schemas';
 import { EnterModeThenConfirm } from './EnterModeThenConfirm';
 import Spinner from 'components/Spinner';
@@ -17,147 +19,190 @@ import {
   IRestorableDatabaseSchemaView
 } from './RestorableDatabaseSchemaTable';
 import RestorableDatabaseSchemaUpdateDialog from './RestorableDatabaseSchemaUpdateDialog';
+import LoadingButton from 'components/LoadingButton';
 
 export interface IRestorableSchemaProps {
   className?: string;
   affiliation: string;
   isFetching: boolean;
   items: IRestorableDatabaseSchemas;
+  testJdbcConnectionResponse: ITestJDBCResponse;
   onFetch: (affiliation: string[]) => void | undefined;
   onUpdate: (databaseSchema: IUpdateDatabaseSchemaInputWithCreatedBy) => void; //TODO mulig feil type her
-  onDelete: (databaseSchema: IDatabaseSchema) => void;
+  onRestore: (databaseSchema: IRestorableDatabaseSchema) => void;
+  onTestJdbcConnectionForId: (id: string) => void;
+  onTestJdbcConnectionForUser: (jdbcUser: IJdbcUser) => void;
 }
 
-function RestorableSchema({
-  affiliation,
-  onFetch,
-  isFetching,
-  items,
-  className,
-  onUpdate,
-  onDelete
-}: IRestorableSchemaProps) {
-  const [filter, setFilter] = useState<string>('');
-  const [restoreMode, setRestoreMode] = useState<boolean>(false);
-  const [selectedSchemas, setSelectedSchemas] = useState<
-    IRestorableDatabaseSchemaData[] | undefined
-  >(undefined);
-  const [selectedSchema, setSelectedSchema] = useState<
-    IRestorableDatabaseSchemaData | undefined
-  >(undefined);
-  const [shouldResetSort, setShouldResetSort] = useState<boolean>(false);
+interface IRestorableSchemaState {
+  filter: string;
+  selectedSchema?: IRestorableDatabaseSchemaData;
+  selectedSchemas?: IRestorableDatabaseSchemaData[];
+  restoreMode: boolean;
+  confirmDeletionDialogVisible: boolean;
+  shouldResetSort: boolean;
+}
 
-  useEffect(() => {
+export class RestorableSchema extends React.Component<
+  IRestorableSchemaProps,
+  IRestorableSchemaState
+> {
+  public state: IRestorableSchemaState = {
+    filter: '',
+    selectedSchema: undefined,
+    restoreMode: false,
+    confirmDeletionDialogVisible: false,
+    shouldResetSort: false
+  };
+
+  public componentDidMount() {
+    const { affiliation, onFetch } = this.props;
     onFetch([affiliation]);
-  }, []);
+  }
 
-  const onFilterChange = (event: TextFieldEvent, newValue?: string) => {
-    setFilter(newValue || '');
+  public onFilterChange = (event: TextFieldEvent, newValue?: string) => {
+    this.setState({ filter: newValue || '' });
   };
 
-  const onResetSort = () => {
-    setShouldResetSort(false);
+  public onResetSort = () => {
+    this.setState({
+      shouldResetSort: false
+    });
   };
 
-  const selection = new Selection({
-    onSelectionChanged: () => {
-      if (restoreMode) {
-        onSchemaSelectionChange();
-      } else {
-        onSingleSchemaSelected();
-      }
-    }
-  });
-
-  const onUpdateSchemaDialogClosed = () => {
-    selection.setAllSelected(false);
-    setSelectedSchema(undefined);
+  public closeAndFetch = () => {
+    this.props.onFetch([this.props.affiliation]);
   };
 
-  const onExitRestorationMode = () => {
-    setRestoreMode(false);
-    setSelectedSchemas([]);
+  private onUpdateSchemaDialogClosed = () => {
+    this.selection.setAllSelected(false);
+    this.setState({ selectedSchema: undefined });
   };
 
-  const onEnterRestorationMode = () => {
-    setRestoreMode(true);
+  private onExitRestorationMode = () => {
+    this.setState({
+      restoreMode: false,
+      selectedSchemas: []
+    });
+    this.selection.setAllSelected(false);
   };
 
-  const onSchemaSelectionChange = () => {
-    console.log(items);
-    const selected: IRestorableDatabaseSchemaView[] = selection
+  public onEnterRestorationMode = () => {
+    this.setState({ restoreMode: true });
+  };
+
+  public onSchemaSelectionChange = () => {
+    const selected: IRestorableDatabaseSchemaView[] = this.selection
       .getSelection()
       .map(it => it as IRestorableDatabaseSchemaView);
-    const databaseSchemas = items.restorableDatabaseSchemas || [];
+    const databaseSchemas = this.props.items.restorableDatabaseSchemas || [];
     const selectedSchemas = databaseSchemas.filter(
       schema =>
         selected.find(it => it.id === schema.databaseSchema.id) !== undefined
     );
 
-    setSelectedSchemas(selectedSchemas);
+    this.setState({ selectedSchemas });
   };
 
-  const onSingleSchemaSelected = () => {
-    const selected: IRestorableDatabaseSchemaView = selection
+  public onSingleSchemaSelected = () => {
+    const selected: IRestorableDatabaseSchemaView = this.selection
       .getSelection()
       .map(it => it as IRestorableDatabaseSchemaView)[0];
     if (!selected) return;
-    const databaseSchemas = items.restorableDatabaseSchemas || [];
+    const databaseSchemas = this.props.items.restorableDatabaseSchemas || [];
     const selectedSchema = databaseSchemas.find(
       schema => schema.databaseSchema.id === selected.id
     );
-    console.log(databaseSchemas);
-    if (selectedSchema) setSelectedSchema(selectedSchema);
+    if (selectedSchema) this.setState({ selectedSchema });
   };
 
-  const onRestoreSelectionConfirmed = () => {};
-  console.log(items.restorableDatabaseSchemas);
-  return (
-    <div className={className}>
-      <div className="styled-action-bar">
-        <div className="styled-input-and-restore">
-          <div className="styled-input">
-            <TextField
-              placeholder="Søk etter skjema"
-              onChange={onFilterChange}
-              value={filter}
+  public onRestoreSelectionConfirmed = () => {};
+  public selection = new Selection({
+    onSelectionChanged: () => {
+      if (this.state.restoreMode) {
+        this.onSchemaSelectionChange();
+      } else {
+        this.onSingleSchemaSelected();
+      }
+    }
+  });
+  public render() {
+    const {
+      isFetching,
+      className,
+      onUpdate,
+      onRestore,
+      affiliation,
+      onFetch,
+      items,
+      onTestJdbcConnectionForId,
+      onTestJdbcConnectionForUser,
+      testJdbcConnectionResponse
+    } = this.props;
+    const {
+      filter,
+      selectedSchema,
+      selectedSchemas,
+      restoreMode,
+      confirmDeletionDialogVisible,
+      shouldResetSort
+    } = this.state;
+    return (
+      <div className={className}>
+        <div className="styled-action-bar">
+          <div className="styled-input-and-restore">
+            <div className="styled-input">
+              <TextField
+                placeholder="Søk etter skjema"
+                onChange={this.onFilterChange}
+                value={filter}
+              />
+            </div>
+            <EnterModeThenConfirm
+              confirmButtonEnabled={[].length !== 0}
+              confirmText="Gjennopprett valgte"
+              inactiveIcon="History"
+              inactiveText="Velg skjemaer for gjenoppretting"
+              onEnterMode={this.onEnterRestorationMode}
+              onExitMode={this.onExitRestorationMode}
+              onConfirmClick={this.onRestoreSelectionConfirmed}
+              iconColor="green"
             />
           </div>
-          <EnterModeThenConfirm
-            confirmButtonEnabled={[].length !== 0}
-            confirmText="Gjennopprett valgte"
-            inactiveIcon="History"
-            inactiveText="Velg skjemaer for gjenoppretting"
-            onEnterMode={onEnterRestorationMode}
-            onExitMode={onExitRestorationMode}
-            onConfirmClick={onRestoreSelectionConfirmed}
-            iconColor="green"
-          />
+          <div style={{marginRight: '20px'}}>
+            <LoadingButton
+              icon="Update"
+              style={{ minWidth: '141px', marginLeft: '15px' }}
+              loading={isFetching}
+              onClick={this.closeAndFetch}
+            >
+              Oppdater
+            </LoadingButton>
+          </div>
         </div>
-      </div>
-      {isFetching ? (
-        <Spinner />
-      ) : (
-        <RestorableDatabaseSchemaTable
-          filter={filter}
-          schemas={items.restorableDatabaseSchemas || []}
-          multiSelect={restoreMode}
-          selection={selection}
-          onResetSort={onResetSort}
-          shouldResetSort={shouldResetSort}
+        {isFetching ? (
+          <Spinner />
+        ) : (
+          <RestorableDatabaseSchemaTable
+            filter={filter}
+            schemas={items.restorableDatabaseSchemas || []}
+            multiSelect={restoreMode}
+            selection={this.selection}
+            onResetSort={this.onResetSort}
+            shouldResetSort={shouldResetSort}
+          />
+        )}
+        <RestorableDatabaseSchemaUpdateDialog
+          schema={selectedSchema}
+          clearSelectedSchema={this.onUpdateSchemaDialogClosed}
+          onUpdate={onUpdate}
+          onDelete={onRestore}
+          onTestJdbcConnectionForId={onTestJdbcConnectionForId}
+          testJdbcConnectionResponse={testJdbcConnectionResponse}
         />
-      )}
-      <RestorableDatabaseSchemaUpdateDialog
-        schema={selectedSchema}
-        clearSelectedSchema={onUpdateSchemaDialogClosed}
-        onUpdate={onUpdate}
-        onDelete={onDelete}
-        // onTestJdbcConnectionForId={onTestJdbcConnectionForId}
-        // testJdbcConnectionResponse={testJdbcConnectionResponse}
-        // createNewCopy={onCreateCopyConfirmed}
-      />
-    </div>
-  );
+      </div>
+    );
+  }
 }
 export default styled(RestorableSchema)`
   height: 100%;

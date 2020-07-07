@@ -4,24 +4,30 @@ import styled from 'styled-components';
 import {
   IRestorableDatabaseSchemaData,
   IUpdateDatabaseSchemaInputWithCreatedBy,
-  IDatabaseSchema
+  IDatabaseSchema,
+  ITestJDBCResponse
 } from 'models/schemas';
 import { useState, useEffect, useRef } from 'react';
 import Dialog from '@skatteetaten/frontend-components/Dialog';
 import { Grid } from '@skatteetaten/frontend-components/Grid';
 import { getLocalDatetime } from 'utils/date';
+import JdbcConnection from './JdbcConnection';
+import { TextFieldEvent } from 'types/react';
+import Labels from './Labels';
+import ConfirmationDialog from 'components/ConfirmationDialog';
+import Button from '@skatteetaten/frontend-components/Button';
+import ActionButton from '@skatteetaten/frontend-components/ActionButton';
 
 const { skeColor } = palette;
 
 interface IRestorableDatabaseSchemaUpdateDialogProps {
   schema?: IRestorableDatabaseSchemaData;
-  //   className?: string;
+  className?: string;
   clearSelectedSchema: () => void;
   onUpdate: (databaseSchema: IUpdateDatabaseSchemaInputWithCreatedBy) => void;
   onDelete: (databaseSchema: IDatabaseSchema) => void;
-  //   onTestJdbcConnectionForId: (id: string) => void;
-  //   testJdbcConnectionResponse: ITestJDBCResponse;
-  // createNewCopy: () => void;
+  onTestJdbcConnectionForId: (id: string) => void;
+  testJdbcConnectionResponse: ITestJDBCResponse;
 }
 
 interface IUpdatedSchemaValues {
@@ -37,7 +43,10 @@ interface IUpdatedSchemaValues {
 
 function RestorableDatabaseSchemaUpdateDialog({
   schema,
-  clearSelectedSchema
+  clearSelectedSchema,
+  className,
+  onTestJdbcConnectionForId,
+  testJdbcConnectionResponse
 }: IRestorableDatabaseSchemaUpdateDialogProps) {
   const initialUpdatedSchemaValues: IUpdatedSchemaValues = {
     id: '',
@@ -53,7 +62,6 @@ function RestorableDatabaseSchemaUpdateDialog({
     IUpdatedSchemaValues
   >(initialUpdatedSchemaValues);
 
-  console.log(updatedSchemaValues);
   function usePrevious(value) {
     const ref = useRef();
     useEffect(() => {
@@ -67,11 +75,63 @@ function RestorableDatabaseSchemaUpdateDialog({
     clearSelectedSchema();
   };
 
-  const prevSchema = usePrevious({ schema });
+  const handleLabelChange = (field: string) => (
+    event: TextFieldEvent,
+    newValue?: string
+  ) => {
+    setUpdatedSchemaValues(prevState => ({
+      ...prevState,
+      currentOrNewKey: newValue
+    }));
+  };
+
+  const renderConfirmationOpenButton = (open: () => void) => (
+    <ActionButton
+      onClick={open}
+      iconSize={ActionButton.LARGE}
+      icon="Delete"
+      color="black"
+      style={{ float: 'left' }}
+    >
+      Gjenopprett
+    </ActionButton>
+  );
+
+  const renderConfirmationFooterButtons = (close: () => void) => {
+    const deleteSchema = () => {
+      if (schema) {
+        // onRestore(schema);
+        close();
+        clearSelectedSchema();
+      }
+    };
+
+    return (
+      <>
+        <ActionButton
+          onClick={deleteSchema}
+          iconSize={ActionButton.LARGE}
+          icon="Check"
+          color="black"
+        >
+          Ja
+        </ActionButton>
+        <ActionButton
+          onClick={close}
+          iconSize={ActionButton.LARGE}
+          icon="Cancel"
+          color="black"
+        >
+          Nei
+        </ActionButton>
+      </>
+    );
+  };
+
+  const prevSchema = usePrevious( schema );
 
   useEffect(() => {
     if (schema) {
-      // TODO se om neste ifcheck kan fjernes
       if (typeof prevSchema === 'undefined') {
         const {
           id,
@@ -95,16 +155,15 @@ function RestorableDatabaseSchemaUpdateDialog({
         });
       }
     }
-  }, [schema, prevSchema]);
+  }, [schema]);
 
   if (!!!schema) {
-    console.log(schema);
     return <div></div>;
   }
 
   const dateTimeFormat = (date?: Date | null) =>
     date ? getLocalDatetime(date) : '-';
-  console.log(schema);
+  const user = schema.databaseSchema.users[0];
 
   return (
     <Dialog
@@ -113,29 +172,76 @@ function RestorableDatabaseSchemaUpdateDialog({
       minWidth="1000px"
       maxWidth="90%"
     >
-      <Grid>
-        <Grid.Row>
-          <Grid.Col lg={2} className="bold">
-            <p>Id: </p>
-            <p>Type: </p>
-            <p>Engine: </p>
-            <p>Opprettet: </p>
-            <p>Sist brukt: </p>
-            <p>Brukes av: </p>
-          </Grid.Col>
-          <Grid.Col lg={10}>
-            <p>{schema.databaseSchema.id}</p>
-            <p>{schema.databaseSchema.type}</p>
-            <p>
-              {schema.databaseSchema.type === 'EXTERNAL'
-                ? '-'
-                : schema.databaseSchema.engine}
-            </p>
-            <p>{dateTimeFormat(schema.databaseSchema.createdDate)}</p>
-            <p>{dateTimeFormat(schema.databaseSchema.lastUsedDate)}</p>
-          </Grid.Col>
-        </Grid.Row>
-      </Grid>
+      <div className={className}>
+        <Grid>
+          <Grid.Row>
+            <Grid.Col lg={2} className="bold">
+              <p>Id: </p>
+              <p>Type: </p>
+              <p>Engine: </p>
+              <p>Opprettet: </p>
+              <p>Sist brukt: </p>
+            </Grid.Col>
+            <Grid.Col lg={10}>
+              <p>{schema.databaseSchema.id}</p>
+              <p>{schema.databaseSchema.type}</p>
+              <p>
+                {schema.databaseSchema.type === 'EXTERNAL'
+                  ? '-'
+                  : schema.databaseSchema.engine}
+              </p>
+              <p>{dateTimeFormat(schema.databaseSchema.createdDate)}</p>
+              <p>{dateTimeFormat(schema.databaseSchema.lastUsedDate)}</p>
+            </Grid.Col>
+          </Grid.Row>
+          <hr />
+          <Grid.Row>
+            <Grid.Col lg={6}>
+              <JdbcConnection
+                username={user.username}
+                jdbcUrl={schema.databaseSchema.jdbcUrl}
+                id={schema.databaseSchema.id}
+                onTestJdbcConnectionForId={onTestJdbcConnectionForId}
+                testJdbcConnectionResponse={testJdbcConnectionResponse}
+                isDisabledFields={true}
+                hasPasswordField={false}
+                canNotTest={true}
+              />
+            </Grid.Col>
+            <Grid.Col lg={1} />
+            <Grid.Col lg={5}>
+              <Labels
+                environment={updatedSchemaValues.environment}
+                application={updatedSchemaValues.application}
+                discriminator={updatedSchemaValues.discriminator}
+                createdBy={updatedSchemaValues.createdBy}
+                description={updatedSchemaValues.description}
+                handleLabelChange={handleLabelChange}
+                displayCreatedByField={true}
+                isDisabledFields={true}
+              />
+            </Grid.Col>
+          </Grid.Row>
+        </Grid>
+      </div>
+      <div className={className}>
+          <Dialog.Footer>
+            <ConfirmationDialog
+              title="Gjenopprett databaseskjema"
+              text={`Ønsker du å gjenopprette databaseskjemaet til ${updatedSchemaValues.application}?`}
+              renderOpenDialogButton={renderConfirmationOpenButton}
+              renderFooterButtons={renderConfirmationFooterButtons}
+            />
+            <Button
+              buttonStyle="primaryRoundedFilled"
+              style={{ width: '120px', marginRight: '10px' }}
+              icon="Clear"
+              onClick={clearSelectedSchema}
+            >
+              Avbryt
+            </Button>
+          </Dialog.Footer>
+        </div>
     </Dialog>
   );
 }

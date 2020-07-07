@@ -9,6 +9,7 @@ import {
 
 import { IRestorableDatabaseSchemaData } from 'models/schemas';
 import { getLocalDate } from 'utils/date';
+import { ENGINE_METHOD_ALL } from 'constants';
 
 interface IRestorableDatabaseSchemaTableProps {
   filter: string;
@@ -29,27 +30,9 @@ export function RestorableDatabaseSchemaTable({
 }: IRestorableDatabaseSchemaTableProps) {
   const columns: IColumn[] = [
     {
-      fieldName: 'setToCooldownAt',
-      isResizable: true,
-      key: '0',
-      maxWidth: 85,
-      minWidth: 85,
-      name: 'Satt i cooldown',
-      iconName: ''
-    },
-    {
-      fieldName: 'deleteAfter',
-      isResizable: true,
-      key: '1',
-      maxWidth: 85,
-      minWidth: 85,
-      name: 'Slettes permanent',
-      iconName: ''
-    },
-    {
       fieldName: 'environment',
       isResizable: true,
-      key: '2',
+      key: '0',
       maxWidth: 200,
       minWidth: 200,
       name: 'Miljø',
@@ -58,7 +41,7 @@ export function RestorableDatabaseSchemaTable({
     {
       fieldName: 'application',
       isResizable: true,
-      key: '3',
+      key: '1',
       maxWidth: 200,
       minWidth: 200,
       name: 'Applikasjon',
@@ -67,10 +50,28 @@ export function RestorableDatabaseSchemaTable({
     {
       fieldName: 'discriminator',
       isResizable: true,
-      key: '4',
+      key: '2',
       maxWidth: 200,
       minWidth: 200,
       name: 'Diskriminator',
+      iconName: ''
+    },
+    {
+      fieldName: 'setToCooldownAt',
+      isResizable: true,
+      key: '3',
+      maxWidth: 200,
+      minWidth: 200,
+      name: 'Satt i cooldown',
+      iconName: ''
+    },
+    {
+      fieldName: 'deleteAfter',
+      isResizable: true,
+      key: '4',
+      maxWidth: 200,
+      minWidth: 200,
+      name: 'Slettes permanent',
       iconName: ''
     },
     {
@@ -122,10 +123,11 @@ export function RestorableDatabaseSchemaTable({
 
   const filterDatabaseSchemaView = (filter: string) => {
     return (v: IRestorableDatabaseSchemaView) =>
-      //TODO filter for setToCooldownAt og deleteAfter
       v.createdBy.includes(filter) ||
       v.application.includes(filter) ||
       v.environment.includes(filter) ||
+      v.setToCooldownAt.includes(filter) ||
+      v.deleteAfter.includes(filter) ||
       v.discriminator.includes(filter) ||
       v.createdDate.includes(filter) ||
       (!v.lastUsedDate || v.lastUsedDate === null
@@ -159,8 +161,8 @@ export function RestorableDatabaseSchemaTable({
 
 export interface IRestorableDatabaseSchemaView {
   type: string;
-  setToCooldownAt: Date;
-  deleteAfter: Date;
+  setToCooldownAt: string;
+  deleteAfter: string;
   application: string;
   environment: string;
   discriminator: string;
@@ -171,6 +173,7 @@ export interface IRestorableDatabaseSchemaView {
   applicationDeploymentsUses: number;
   id: string;
   jdbcUrl: string;
+  engine: string;
 }
 
 const toViewSchemas = (
@@ -204,12 +207,13 @@ const toViewSchema = (
     discriminator,
     type,
     sizeInMb,
-    createdBy
+    createdBy,
+    engine
   } = i.databaseSchema;
 
   return {
-    setToCooldownAt: i.setToCooldownAt,
-    deleteAfter: i.deleteAfter,
+    setToCooldownAt: getLocalDate(i.setToCooldownAt),
+    deleteAfter: getLocalDate(i.deleteAfter),
     id,
     environment,
     application,
@@ -222,6 +226,7 @@ const toViewSchema = (
     applicationDeploymentsUses: i.databaseSchema.applicationDeployments.length,
     sizeInMb: sizeInMb,
     createdBy: createdBy,
+    engine: engine,
     jdbcUrl
   };
 };
