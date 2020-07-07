@@ -33,7 +33,8 @@ export const InformationViewNotifications = ({
   }
 
   const isInvalidImageReference =
-    !deployment.imageRepository?.isFullyQualified &&
+    deployment.imageRepository &&
+    !deployment.imageRepository.isFullyQualified &&
     deployment.details.deploymentSpec?.type === 'deploy';
 
   if (isMissingManagementInterface() || isInvalidImageReference) {
