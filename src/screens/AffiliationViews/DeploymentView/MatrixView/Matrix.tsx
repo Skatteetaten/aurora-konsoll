@@ -21,10 +21,10 @@ export const Matrix: React.FC<IMatrixProps> = ({
     return <Spinner />;
   }
 
-  const appCountForEnv = deployments.reduce(
-    (prev, cur) => (prev[cur.environment] = (prev[cur.environment] || 0) + 1),
-    {}
-  );
+  const appCountForEnv = deployments.reduce((prev, cur) => {
+    prev[cur.environment] = (prev[cur.environment] || 0) + 1;
+    return prev;
+  }, {});
 
   const environments = Object.keys(appCountForEnv)
     .sort()
@@ -58,7 +58,7 @@ export const Matrix: React.FC<IMatrixProps> = ({
                 key={name}
                 showSemanticVersion={showExactVersion}
                 name={name}
-                environments={environments}
+                environments={[' ', ...environments]}
                 apps={apps}
               />
             ))}
