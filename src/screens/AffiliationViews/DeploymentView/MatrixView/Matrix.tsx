@@ -15,24 +15,20 @@ export const Matrix: React.FC<IMatrixProps> = ({
   deployments,
   isFetching,
   expandApplicationName,
-  showSemanticVersion: showExactVersion,
+  showSemanticVersion: showExactVersion
 }) => {
   if (isFetching) {
     return <Spinner />;
   }
 
-  const appCountForEnv = deployments.reduce((prev, cur) => {
-    prev[cur.environment] = (prev[cur.environment] || 0) + 1;
-    return prev;
-  }, {});
+  const appCountForEnv = deployments.reduce(
+    (prev, cur) => (prev[cur.environment] = (prev[cur.environment] || 0) + 1),
+    {}
+  );
 
   const environments = Object.keys(appCountForEnv)
     .sort()
-    .sort((a, b) => {
-      return appCountForEnv[b] - appCountForEnv[a];
-    });
-
-  environments.unshift(' ');
+    .sort((a, b) => appCountForEnv[b] - appCountForEnv[a]);
 
   const apps: IApplicationMap = deployments.reduce((acc, app) => {
     if (acc[app.name]) {
@@ -48,7 +44,8 @@ export const Matrix: React.FC<IMatrixProps> = ({
       <table>
         <thead>
           <tr>
-            {environments.map((name) => (
+            <th key={' '}> </th>
+            {environments.map(name => (
               <th key={name}>{name}</th>
             ))}
           </tr>
@@ -56,7 +53,7 @@ export const Matrix: React.FC<IMatrixProps> = ({
         <tbody>
           {Object.keys(apps)
             .sort()
-            .map((name) => (
+            .map(name => (
               <Row
                 key={name}
                 showSemanticVersion={showExactVersion}
@@ -100,7 +97,7 @@ const Wrapper = styled.div<{ expandApplicationName: boolean }>`
         overflow: hidden;
         text-overflow: ellipsis;
         cursor: default;
-        ${(props) =>
+        ${props =>
           props.expandApplicationName &&
           `max-width: 100%; white-space: nowrap;`}
       }
