@@ -47,12 +47,12 @@ function renderDefaultOpenDialogButton(
 
 class InfoDialog extends React.Component<InfoDialogProps, InfoDialogState> {
   public state: InfoDialogState = {
-    isOpen: false
+    isOpen: false,
   };
 
   public toggleDialog = (isOpen: boolean) => () => {
     this.setState({
-      isOpen
+      isOpen,
     });
   };
 
@@ -67,7 +67,7 @@ class InfoDialog extends React.Component<InfoDialogProps, InfoDialogState> {
       title,
       subText,
       buttonText,
-      buttonStyle = 'secondary'
+      buttonStyle = 'secondary',
     } = this.props;
     const close = this.toggleDialog(false);
     const open = this.toggleDialog(true);

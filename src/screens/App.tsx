@@ -5,7 +5,7 @@ import {
   Switch,
   useHistory,
   useLocation,
-  useRouteMatch
+  useRouteMatch,
 } from 'react-router-dom';
 import styled from 'styled-components';
 
@@ -32,7 +32,7 @@ interface IAppProps {
 export const App: React.FC<IAppProps> = ({
   displayDatabaseView,
   displaySkapViews,
-  tokenStore
+  tokenStore,
 }) => {
   const [affiliation, setAffiliation] = useState<string | undefined>(undefined);
   const [isMenuExpanded, setMenuExpanded] = useState(true);

@@ -3,7 +3,7 @@ import { handleAction, reduceReducers } from 'redux-ts-utils';
 import { ActionType } from 'typesafe-actions';
 import actions, {
   fetchCertificatesRequest,
-  fetchCertificatesResponse
+  fetchCertificatesResponse,
 } from './actions';
 
 export type CertificateAction = ActionType<typeof actions>;
@@ -17,9 +17,9 @@ const initialState = (): ICertificateState => {
   return {
     certificates: {
       certificates: [],
-      totalCount: 0
+      totalCount: 0,
     },
-    isFetchingCertificates: false
+    isFetchingCertificates: false,
   };
 };
 
@@ -38,7 +38,7 @@ export const certificateReducer = reduceReducers<ICertificateState>(
     handleAction(
       fetchCertificatesResponse,
       updateStateWithPayload('certificates')
-    )
+    ),
   ],
   initialState()
 );

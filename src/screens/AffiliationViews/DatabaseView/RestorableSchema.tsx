@@ -11,13 +11,13 @@ import {
   IJdbcUser,
   ITestJDBCResponse,
   IChangeCooldownDatabaseSchemasResponse,
-  IDatabaseSchema
+  IDatabaseSchema,
 } from '../../../models/schemas';
 import { EnterModeThenConfirm } from './EnterModeThenConfirm';
 import Spinner from 'components/Spinner';
 import {
   RestorableDatabaseSchemaTable,
-  IRestorableDatabaseSchemaView
+  IRestorableDatabaseSchemaView,
 } from './RestorableDatabaseSchemaTable';
 import RestorableDatabaseSchemaUpdateDialog from './RestorableDatabaseSchemaUpdateDialog';
 import LoadingButton from 'components/LoadingButton';
@@ -37,7 +37,7 @@ export const renderDetailsListWithSchemaInfo = (
           fieldName: 'application',
           minWidth: 200,
           maxWidth: 200,
-          isResizable: true
+          isResizable: true,
         },
         {
           key: 'column2',
@@ -45,7 +45,7 @@ export const renderDetailsListWithSchemaInfo = (
           fieldName: 'environment',
           minWidth: 200,
           maxWidth: 200,
-          isResizable: true
+          isResizable: true,
         },
         {
           key: 'column3',
@@ -53,13 +53,13 @@ export const renderDetailsListWithSchemaInfo = (
           fieldName: 'discriminator',
           minWidth: 200,
           maxWidth: 200,
-          isResizable: true
-        }
+          isResizable: true,
+        },
       ]}
-      items={schemas.map(it => ({
+      items={schemas.map((it) => ({
         application: it.databaseSchema.application,
         environment: it.databaseSchema.environment,
-        discriminator: it.databaseSchema.discriminator
+        discriminator: it.databaseSchema.discriminator,
       }))}
     />
   </StyledPre>
@@ -106,7 +106,7 @@ export class RestorableSchema extends React.Component<
     confirmDeletionDialogVisible: false,
     shouldResetSort: false,
     confirmRestorationDialogVisible: false,
-    hasRestorationInformation: false
+    hasRestorationInformation: false,
   };
 
   public componentDidMount() {
@@ -120,7 +120,7 @@ export class RestorableSchema extends React.Component<
 
   public onResetSort = () => {
     this.setState({
-      shouldResetSort: false
+      shouldResetSort: false,
     });
   };
 
@@ -136,7 +136,7 @@ export class RestorableSchema extends React.Component<
   private onExitRestorationMode = () => {
     this.setState({
       restoreMode: false,
-      selectedSchemas: []
+      selectedSchemas: [],
     });
     this.selection.setAllSelected(false);
   };
@@ -148,7 +148,7 @@ export class RestorableSchema extends React.Component<
   private onCancelRestorationClick = () => {
     this.setState({
       hasRestorationInformation: false,
-      confirmRestorationDialogVisible: false
+      confirmRestorationDialogVisible: false,
     });
   };
 
@@ -162,15 +162,15 @@ export class RestorableSchema extends React.Component<
     const { onRestoreDatabaseSchemas } = this.props;
     if (
       selectedSchemas &&
-      selectedSchemas?.map(it => it.databaseSchema.id).length > 0
+      selectedSchemas?.map((it) => it.databaseSchema.id).length > 0
     ) {
-      const dbIds = selectedSchemas?.map(it => it.databaseSchema.id);
+      const dbIds = selectedSchemas?.map((it) => it.databaseSchema.id);
 
       onRestoreDatabaseSchemas(dbIds, true);
       this.selection.setAllSelected(false);
       this.setState({
         hasRestorationInformation: true,
-        confirmDeletionDialogVisible: false
+        confirmDeletionDialogVisible: false,
       });
     }
   };
@@ -178,11 +178,11 @@ export class RestorableSchema extends React.Component<
   public onSchemaSelectionChange = () => {
     const selected: IRestorableDatabaseSchemaView[] = this.selection
       .getSelection()
-      .map(it => it as IRestorableDatabaseSchemaView);
+      .map((it) => it as IRestorableDatabaseSchemaView);
     const databaseSchemas = this.props.items.restorableDatabaseSchemas || [];
     const selectedSchemas = databaseSchemas.filter(
-      schema =>
-        selected.find(it => it.id === schema.databaseSchema.id) !== undefined
+      (schema) =>
+        selected.find((it) => it.id === schema.databaseSchema.id) !== undefined
     );
 
     this.setState({ selectedSchemas });
@@ -191,11 +191,11 @@ export class RestorableSchema extends React.Component<
   public onSingleSchemaSelected = () => {
     const selected: IRestorableDatabaseSchemaView = this.selection
       .getSelection()
-      .map(it => it as IRestorableDatabaseSchemaView)[0];
+      .map((it) => it as IRestorableDatabaseSchemaView)[0];
     if (!selected) return;
     const databaseSchemas = this.props.items.restorableDatabaseSchemas || [];
     const selectedSchema = databaseSchemas.find(
-      schema => schema.databaseSchema.id === selected.id
+      (schema) => schema.databaseSchema.id === selected.id
     );
     if (selectedSchema) this.setState({ selectedSchema });
   };
@@ -211,7 +211,7 @@ export class RestorableSchema extends React.Component<
       } else {
         this.onSingleSchemaSelected();
       }
-    }
+    },
   });
   public render() {
     const {
@@ -223,7 +223,7 @@ export class RestorableSchema extends React.Component<
       onTestJdbcConnectionForId,
       testJdbcConnectionResponse,
       restoreResponse,
-      onRestoreDatabaseSchema
+      onRestoreDatabaseSchema,
     } = this.props;
     const {
       filter,
@@ -232,7 +232,7 @@ export class RestorableSchema extends React.Component<
       restoreMode,
       confirmRestorationDialogVisible,
       shouldResetSort,
-      hasRestorationInformation
+      hasRestorationInformation,
     } = this.state;
     return (
       <div className={className}>

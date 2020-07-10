@@ -1,7 +1,7 @@
 import each from 'jest-each';
 import {
   certificateInitialFactory,
-  certificateResultFactory
+  certificateResultFactory,
 } from 'testData/testDataBuilders';
 import { fetchCertificatesRequest, fetchCertificatesResponse } from './actions';
 import { certificateReducer } from './reducers';
@@ -11,29 +11,29 @@ describe('certificate reducer', () => {
     [
       {
         name: 'fetchCertificatesRequest',
-        item: certificateInitialFactory.build()
+        item: certificateInitialFactory.build(),
       },
       {
         name: 'isFetchingCertificates',
-        item: fetchCertificatesRequest(true)
+        item: fetchCertificatesRequest(true),
       },
       certificateInitialFactory.build({
-        isFetchingCertificates: true
-      })
+        isFetchingCertificates: true,
+      }),
     ],
     [
       {
         name: 'fetchCertificatesResponse',
-        item: certificateInitialFactory.build()
+        item: certificateInitialFactory.build(),
       },
       {
         name: 'certificates',
-        item: fetchCertificatesResponse(certificateResultFactory.build())
+        item: fetchCertificatesResponse(certificateResultFactory.build()),
       },
       certificateInitialFactory.build({
-        certificates: certificateResultFactory.build()
-      })
-    ]
+        certificates: certificateResultFactory.build(),
+      }),
+    ],
   ]).describe.only('', (a, b, expected) => {
     test.only(`given defaultState and action ${a.name} with given value should change ${b.name} to given value`, () => {
       expect(certificateReducer(a.item, b.item)).toEqual(expected);

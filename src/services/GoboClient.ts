@@ -37,14 +37,14 @@ export default class GoboClient {
 
   public async query<T>({
     query,
-    variables
+    variables,
   }: IGoboQuery): Promise<IDataAndErrors<T>> {
     return await this.doRequest<T>(query, variables);
   }
 
   public async mutate<T>({
     mutation,
-    variables
+    variables,
   }: IGoboMutation): Promise<IDataAndErrors<T>> {
     return await this.doRequest<T>(mutation, variables);
   }
@@ -60,20 +60,20 @@ export default class GoboClient {
           'Content-Type': 'application/json',
           Korrelasjonsid: uuid(),
           Accept: '*/*',
-          ...this.options.headers
+          ...this.options.headers,
         },
         body: JSON.stringify({
           operationName: this.getDocumentName(document.definitions),
           query: print(document),
-          variables
-        })
+          variables,
+        }),
       });
 
       const data = await res.json();
       return {
         data: data.data,
         errors: data.errors,
-        name: this.getDocumentName(document.definitions)
+        name: this.getDocumentName(document.definitions),
       };
     } catch (e) {
       return Promise.reject(e);

@@ -5,7 +5,7 @@ import Card, { CardColor } from '@skatteetaten/frontend-components/Card';
 import Grid from '@skatteetaten/frontend-components/Grid';
 import {
   IChangeCooldownDatabaseSchemasResponse,
-  IRestorableDatabaseSchemas
+  IRestorableDatabaseSchemas,
 } from 'models/schemas';
 import { renderDetailsListWithSchemaInfo } from './RestorableSchema';
 
@@ -18,14 +18,14 @@ interface IRestorationSummaryProps {
 const RestorationSummary = ({
   restoreResponse,
   className,
-  items
+  items,
 }: IRestorationSummaryProps) => {
   const getDatabaseSchemaInfoById = (ids: string[]): JSX.Element | null => {
     if (!items.restorableDatabaseSchemas) {
       return null;
     }
     const extendedInfoList = items.restorableDatabaseSchemas.filter(
-      it => -1 !== ids.indexOf(it.databaseSchema.id)
+      (it) => -1 !== ids.indexOf(it.databaseSchema.id)
     );
     return renderDetailsListWithSchemaInfo(extendedInfoList);
   };

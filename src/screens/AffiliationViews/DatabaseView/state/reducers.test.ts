@@ -3,7 +3,7 @@ import {
   createDatabaseSchemaResponseFactory,
   databaseSchemasFactory,
   deleteDatabaseSchemasResponseFactory,
-  schemasFactory
+  schemasFactory,
 } from 'testData/testDataBuilders';
 import {
   createDatabaseSchemaResponse,
@@ -13,7 +13,7 @@ import {
   fetchSchemaResponse,
   testJdbcConnectionForIdResponse,
   testJdbcConnectionForJdbcUserResponse,
-  updateSchemaResponse
+  updateSchemaResponse,
 } from './actions';
 import { databaseReducer } from './reducers';
 
@@ -21,21 +21,21 @@ describe('database schema actions', () => {
   it('should return type of action fetchSchemaRequest and payload', () => {
     expect(fetchSchemaRequest(true)).toEqual({
       payload: true,
-      type: 'database/FETCHED_SCHEMA_REQUEST'
+      type: 'database/FETCHED_SCHEMA_REQUEST',
     });
   });
 
   it('should return type of action fetchSchemaResponse and payload', () => {
     expect(fetchSchemaResponse(databaseSchemasFactory.build())).toEqual({
       payload: databaseSchemasFactory.build(),
-      type: 'database/FETCHED_SCHEMA_RESPONSE'
+      type: 'database/FETCHED_SCHEMA_RESPONSE',
     });
   });
 
   it('should return type of action updateSchemaResponse and payload', () => {
     expect(updateSchemaResponse(true)).toEqual({
       payload: true,
-      type: 'database/UPDATE_SCHEMA_RESPONSE'
+      type: 'database/UPDATE_SCHEMA_RESPONSE',
     });
   });
 
@@ -44,7 +44,7 @@ describe('database schema actions', () => {
       deleteSchemaResponse(deleteDatabaseSchemasResponseFactory.build())
     ).toEqual({
       payload: deleteDatabaseSchemasResponseFactory.build(),
-      type: 'database/DELETE_SCHEMA_RESPONSE'
+      type: 'database/DELETE_SCHEMA_RESPONSE',
     });
   });
 
@@ -53,7 +53,7 @@ describe('database schema actions', () => {
       deleteSchemasResponse(deleteDatabaseSchemasResponseFactory.build())
     ).toEqual({
       payload: deleteDatabaseSchemasResponseFactory.build(),
-      type: 'database/DELETE_SCHEMAS_RESPONSE'
+      type: 'database/DELETE_SCHEMAS_RESPONSE',
     });
   });
 
@@ -61,11 +61,11 @@ describe('database schema actions', () => {
     expect(
       testJdbcConnectionForIdResponse({
         hasSucceeded: true,
-        message: 'success'
+        message: 'success',
       })
     ).toEqual({
       payload: true,
-      type: 'database/TEST_JDBC_CONNECTION_FOR_ID_RESPONSE'
+      type: 'database/TEST_JDBC_CONNECTION_FOR_ID_RESPONSE',
     });
   });
 
@@ -73,11 +73,11 @@ describe('database schema actions', () => {
     expect(
       testJdbcConnectionForJdbcUserResponse({
         hasSucceeded: true,
-        message: 'success'
+        message: 'success',
       })
     ).toEqual({
       payload: true,
-      type: 'database/TEST_JDBC_CONNECTION_FOR_JDBCUSER_RESPONSE'
+      type: 'database/TEST_JDBC_CONNECTION_FOR_JDBCUSER_RESPONSE',
     });
   });
 
@@ -86,7 +86,7 @@ describe('database schema actions', () => {
       createDatabaseSchemaResponse(createDatabaseSchemaResponseFactory.build())
     ).toEqual({
       payload: createDatabaseSchemaResponseFactory.build(),
-      type: 'database/CREATE_DATABASE_SCHEMA_RESPONSE'
+      type: 'database/CREATE_DATABASE_SCHEMA_RESPONSE',
     });
   });
 });
@@ -99,21 +99,21 @@ describe('database schema reducer', () => {
         name: 'createDatabaseSchemaResponse',
         item: createDatabaseSchemaResponse(
           createDatabaseSchemaResponseFactory.build()
-        )
+        ),
       },
       schemasFactory.build({
-        createDatabaseSchemaResponse: createDatabaseSchemaResponseFactory.build()
-      })
+        createDatabaseSchemaResponse: createDatabaseSchemaResponseFactory.build(),
+      }),
     ],
     [
       { name: 'fetchSchemaRequest', item: schemasFactory.build() },
       {
         name: 'isFetchingSchemas',
-        item: fetchSchemaRequest(true)
+        item: fetchSchemaRequest(true),
       },
       schemasFactory.build({
-        isFetchingSchemas: true
-      })
+        isFetchingSchemas: true,
+      }),
     ],
     [
       { name: 'deleteSchemasResponse', item: schemasFactory.build() },
@@ -121,29 +121,31 @@ describe('database schema reducer', () => {
         name: 'deleteSchemasResponse',
         item: deleteSchemasResponse(
           deleteDatabaseSchemasResponseFactory.build()
-        )
+        ),
       },
       schemasFactory.build({
-        deleteSchemasResponse: deleteDatabaseSchemasResponseFactory.build()
-      })
+        deleteSchemasResponse: deleteDatabaseSchemasResponseFactory.build(),
+      }),
     ],
     [
       { name: 'deleteSchemaResponse', item: schemasFactory.build() },
       {
         name: 'deleteSchemasResponse',
-        item: deleteSchemaResponse(deleteDatabaseSchemasResponseFactory.build())
+        item: deleteSchemaResponse(
+          deleteDatabaseSchemasResponseFactory.build()
+        ),
       },
       schemasFactory.build({
-        deleteSchemasResponse: deleteDatabaseSchemasResponseFactory.build()
-      })
+        deleteSchemasResponse: deleteDatabaseSchemasResponseFactory.build(),
+      }),
     ],
     [
       { name: 'updateSchemaResponse', item: schemasFactory.build() },
       {
         name: 'updateSchemaResponse',
-        item: updateSchemaResponse(true)
+        item: updateSchemaResponse(true),
       },
-      schemasFactory.build({ updateSchemaResponse: true })
+      schemasFactory.build({ updateSchemaResponse: true }),
     ],
     [
       { name: 'testJdbcConnectionForIdResponse', item: schemasFactory.build() },
@@ -151,35 +153,35 @@ describe('database schema reducer', () => {
         name: 'testJdbcConnectionResponse',
         item: testJdbcConnectionForIdResponse({
           hasSucceeded: true,
-          message: 'success'
-        })
+          message: 'success',
+        }),
       },
       schemasFactory.build({
         testJdbcConnectionResponse: {
           hasSucceeded: true,
-          message: 'success'
-        }
-      })
+          message: 'success',
+        },
+      }),
     ],
     [
       {
         name: 'testJdbcConnectionForJdbcUserResponse',
-        item: schemasFactory.build()
+        item: schemasFactory.build(),
       },
       {
         name: 'testJdbcConnectionResponse',
         item: testJdbcConnectionForIdResponse({
           hasSucceeded: true,
-          message: 'success'
-        })
+          message: 'success',
+        }),
       },
       schemasFactory.build({
         testJdbcConnectionResponse: {
           hasSucceeded: true,
-          message: 'success'
-        }
-      })
-    ]
+          message: 'success',
+        },
+      }),
+    ],
   ]).describe.only('', (a, b, expected) => {
     test.only(`given defaultState and action ${a.name} with given value should change ${b.name} to given value`, () => {
       expect(databaseReducer(a.item, b.item)).toEqual(expected);

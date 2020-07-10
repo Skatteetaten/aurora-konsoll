@@ -3,7 +3,7 @@ import {
   databaseSchemaFactory,
   databaseSchemaInputFactory,
   databaseSchemaInputWithCreatedByFactory,
-  jdbcUserFactory
+  jdbcUserFactory,
 } from 'testData/testDataBuilders';
 import DatabaseSchemaService from './DatabaseSchemaService';
 
@@ -16,7 +16,7 @@ describe('DatabaseSchemaService', () => {
         environment: 'environment ',
         discriminator: ' db ',
         createdBy: ' 123',
-        jdbcUser: null
+        jdbcUser: null,
       });
 
       expect(
@@ -29,7 +29,7 @@ describe('DatabaseSchemaService', () => {
         engine: 'ORACLE',
         discriminator: 'db',
         environment: 'environment',
-        jdbcUser: null
+        jdbcUser: null,
       });
     });
 
@@ -41,8 +41,8 @@ describe('DatabaseSchemaService', () => {
         engine: 'ORACLE',
         jdbcUser: {
           jdbcUrl: ' test.no',
-          password: '123 '
-        }
+          password: '123 ',
+        },
       });
 
       expect(
@@ -55,7 +55,7 @@ describe('DatabaseSchemaService', () => {
         description: null,
         discriminator: 'db',
         environment: 'env',
-        jdbcUser: { jdbcUrl: 'test.no', password: '123', username: 'username' }
+        jdbcUser: { jdbcUrl: 'test.no', password: '123', username: 'username' },
       });
     });
 
@@ -106,7 +106,7 @@ describe('DatabaseSchemaService', () => {
 
     it('Button is disabled given null description and empty input', () => {
       const databaseSchemaWithNullDescription = databaseSchemaFactory.build({
-        description: null
+        description: null,
       });
       const updatedDatabaseSchema = databaseSchemaInputWithCreatedByFactory.build(
         { description: '' }
@@ -121,7 +121,7 @@ describe('DatabaseSchemaService', () => {
 
     it('hasEmptyLabelValues given affiliation with only spaces', () => {
       const databaseSchemaInput = databaseSchemaInputFactory.build({
-        environment: '      '
+        environment: '      ',
       });
 
       const hasEmptyValues = databaseSchemaService.hasEmptyLabelValues(
@@ -137,7 +137,7 @@ describe('DatabaseSchemaService', () => {
 
     it('hasEmptyJdbcValues given jdbcUrl with spaces', () => {
       const jdbcUserInput = jdbcUserFactory.build({
-        jdbcUrl: '       '
+        jdbcUrl: '       ',
       });
 
       const isEmpty = databaseSchemaService.hasEmptyJdbcValues(jdbcUserInput);
@@ -155,14 +155,14 @@ describe('DatabaseSchemaService', () => {
       const selectionDetails = databaseSchemaService.getSelectionDetails([
         '123',
         '234',
-        '345'
+        '345',
       ]);
       expect(selectionDetails).toEqual('Vil du slette disse 3 skjemaene?');
     });
 
     it('getSelectionDetails given one schema', () => {
       const selectionDetails = databaseSchemaService.getSelectionDetails([
-        '123'
+        '123',
       ]);
       expect(selectionDetails).toEqual('Vil du slette dette skjemaet?');
     });

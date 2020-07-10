@@ -4,7 +4,7 @@ import React from 'react';
 import {
   IChangeCooldownDatabaseSchemasResponse,
   IRestorableDatabaseSchemas,
-  IRestorableDatabaseSchemaData
+  IRestorableDatabaseSchemaData,
 } from 'models/schemas';
 import { renderDetailsListWithSchemaInfo } from './RestorableSchema';
 import RestorationSummary from './RestorationSummary';
@@ -21,7 +21,9 @@ interface IConfirmRestorationDialogProps {
   onExitClick: () => void;
 }
 
-const ConfirmRestorationDialog: React.FC<IConfirmRestorationDialogProps> = props => {
+const ConfirmRestorationDialog: React.FC<IConfirmRestorationDialogProps> = (
+  props
+) => {
   const {
     visible,
     title,
@@ -31,7 +33,7 @@ const ConfirmRestorationDialog: React.FC<IConfirmRestorationDialogProps> = props
     onExitClick,
     hasRestorationInformation,
     restoreResponse,
-    items
+    items,
   } = props;
   const createConfirmationMessage = (schemaCount: number): string => {
     if (schemaCount === 1) {

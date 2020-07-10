@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import ActionButton, {
-  ActionButtonProps
+  ActionButtonProps,
 } from '@skatteetaten/frontend-components/ActionButton';
 
 export const EnterModeThenConfirm: React.FC<{
@@ -20,7 +20,7 @@ export const EnterModeThenConfirm: React.FC<{
   onEnterMode,
   onExitMode,
   onConfirmClick,
-  iconColor = 'red'
+  iconColor = 'red',
 }) => {
   const [modeActive, setModeActive] = useState(false);
 
@@ -56,7 +56,7 @@ export const EnterModeThenConfirm: React.FC<{
           style={{
             minWidth: '120px',
             marginLeft: '15px',
-            float: 'left'
+            float: 'left',
           }}
           onClick={onConfirmClick}
           disabled={!confirmButtonEnabled}
@@ -69,7 +69,7 @@ export const EnterModeThenConfirm: React.FC<{
           icon="Cancel"
           style={{
             minWidth: '120px',
-            float: 'left'
+            float: 'left',
           }}
           onClick={onExitModeClick}
         >

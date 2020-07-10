@@ -47,8 +47,8 @@ class NetdebugBase extends React.Component<INetdebugProps, INetdebugState> {
     showTable: false,
     validateErrors: {
       hostname: false,
-      port: false
-    }
+      port: false,
+    },
   };
 
   public async scanCall() {
@@ -57,11 +57,11 @@ class NetdebugBase extends React.Component<INetdebugProps, INetdebugState> {
       this.state.portValue
     );
 
-    this.setState(state => ({
+    this.setState((state) => ({
       lastScan: `${state.hostnameValue}:${state.portValue}`,
       netdebugStatus: this.props.netdebugStatus.status,
       parsedData: this.props.netdebugStatus,
-      showCard: true
+      showCard: true,
     }));
   }
 
@@ -70,36 +70,37 @@ class NetdebugBase extends React.Component<INetdebugProps, INetdebugState> {
   };
 
   public displayTableOnClicked = () => {
-    this.setState(prevState => ({ showTable: !prevState.showTable }));
+    this.setState((prevState) => ({ showTable: !prevState.showTable }));
   };
 
   public handleHostnameValue = (event: TextFieldEvent, newValue?: string) => {
     if (newValue) {
       this.setState({
-        hostnameValue: newValue
+        hostnameValue: newValue,
       });
     }
   };
 
   public handlePortValue = (event: TextFieldEvent, newValue?: string) => {
     if (newValue) {
-      this.setState(state => ({
+      this.setState((state) => ({
         portValue: newValue,
         validateErrors: {
           ...state.validateErrors,
-          port: !newValue.match(portValidator)
-        }
+          port: !newValue.match(portValidator),
+        },
       }));
     }
   };
 
   public validateHostname = () => {
-    this.setState(state => ({
+    this.setState((state) => ({
       validateErrors: {
         ...state.validateErrors,
         hostname:
-          !!state.hostnameValue && !state.hostnameValue.match(hostnameValidator)
-      }
+          !!state.hostnameValue &&
+          !state.hostnameValue.match(hostnameValidator),
+      },
     }));
   };
 

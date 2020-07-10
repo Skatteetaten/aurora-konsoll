@@ -4,7 +4,7 @@ import {
   ICreateDatabaseSchemaInput,
   IChangeCooldownDatabaseSchemasResponse,
   IJdbcUser,
-  IUpdateDatabaseSchemaInputWithCreatedBy
+  IUpdateDatabaseSchemaInputWithCreatedBy,
 } from 'models/schemas';
 import {
   CREATE_DATABASE_SCHEMA_MUTATION,
@@ -12,7 +12,7 @@ import {
   UPDATE_DATABASESCHEMA_MUTATION,
   TEST_JDBC_CONNECTION_FOR_ID_MUTATION,
   TEST_JDBC_CONNECTION_FOR_JDBCUSER_MUTATION,
-  RESTORE_DATABASESCHEMAS_MUTATION
+  RESTORE_DATABASESCHEMAS_MUTATION,
 } from './mutation';
 import {
   DATABASE_SCHEMAS_QUERY,
@@ -20,7 +20,7 @@ import {
   DATABASE_INSTANCES_QUERY,
   IDatabaseInstancesQuery,
   IRestorableDatabaseSchemasQuery,
-  RESTORABLE_DATABASE_SCHEMAS_QUERY
+  RESTORABLE_DATABASE_SCHEMAS_QUERY,
 } from './query';
 
 export class DatabaseClient {
@@ -36,8 +36,8 @@ export class DatabaseClient {
     return await this.client.query<IDatabaseSchemasQuery>({
       query: DATABASE_SCHEMAS_QUERY,
       variables: {
-        affiliations
-      }
+        affiliations,
+      },
     });
   }
 
@@ -47,8 +47,8 @@ export class DatabaseClient {
     return await this.client.query<IRestorableDatabaseSchemasQuery>({
       query: RESTORABLE_DATABASE_SCHEMAS_QUERY,
       variables: {
-        affiliations
-      }
+        affiliations,
+      },
     });
   }
 
@@ -58,8 +58,8 @@ export class DatabaseClient {
     return await this.client.query<IDatabaseInstancesQuery>({
       query: DATABASE_INSTANCES_QUERY,
       variables: {
-        affiliation
-      }
+        affiliation,
+      },
     });
   }
 
@@ -71,8 +71,8 @@ export class DatabaseClient {
     return await this.client.mutate<{ updateDatabaseSchema: { id: string } }>({
       mutation: UPDATE_DATABASESCHEMA_MUTATION,
       variables: {
-        input: databaseSchema
-      }
+        input: databaseSchema,
+      },
     });
   }
 
@@ -90,9 +90,9 @@ export class DatabaseClient {
       mutation: DELETE_DATABASESCHEMAS_MUTATION,
       variables: {
         input: {
-          ids
-        }
-      }
+          ids,
+        },
+      },
     });
   }
 
@@ -112,9 +112,9 @@ export class DatabaseClient {
       variables: {
         input: {
           ids,
-          active
-        }
-      }
+          active,
+        },
+      },
     });
   }
 
@@ -137,8 +137,8 @@ export class DatabaseClient {
     }>({
       mutation: TEST_JDBC_CONNECTION_FOR_ID_MUTATION,
       variables: {
-        id
-      }
+        id,
+      },
     });
   }
 
@@ -151,8 +151,8 @@ export class DatabaseClient {
     }>({
       mutation: TEST_JDBC_CONNECTION_FOR_JDBCUSER_MUTATION,
       variables: {
-        input: jdbcUser
-      }
+        input: jdbcUser,
+      },
     });
   }
 
@@ -168,8 +168,8 @@ export class DatabaseClient {
     }>({
       mutation: CREATE_DATABASE_SCHEMA_MUTATION,
       variables: {
-        input: databaseSchema
-      }
+        input: databaseSchema,
+      },
     });
   }
 }

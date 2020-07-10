@@ -6,7 +6,7 @@ import {
   IUpdateDatabaseSchemaInputWithCreatedBy,
   IDatabaseSchema,
   ITestJDBCResponse,
-  IChangeCooldownDatabaseSchemasResponse
+  IChangeCooldownDatabaseSchemasResponse,
 } from 'models/schemas';
 import { useState, useEffect, useRef } from 'react';
 import Dialog from '@skatteetaten/frontend-components/Dialog';
@@ -51,7 +51,7 @@ function RestorableDatabaseSchemaUpdateDialog({
   onTestJdbcConnectionForId,
   testJdbcConnectionResponse,
   onRestoreDatabaseSchema,
-  restoreResponse
+  restoreResponse,
 }: IRestorableDatabaseSchemaUpdateDialogProps) {
   const initialUpdatedSchemaValues: IUpdatedSchemaValues = {
     id: '',
@@ -61,7 +61,7 @@ function RestorableDatabaseSchemaUpdateDialog({
     description: '',
     environment: '',
     application: '',
-    affiliation: ''
+    affiliation: '',
   };
   const [updatedSchemaValues, setUpdatedSchemaValues] = useState<
     IUpdatedSchemaValues
@@ -79,9 +79,9 @@ function RestorableDatabaseSchemaUpdateDialog({
     event: TextFieldEvent,
     newValue?: string
   ) => {
-    setUpdatedSchemaValues(prevState => ({
+    setUpdatedSchemaValues((prevState) => ({
       ...prevState,
-      currentOrNewKey: newValue
+      currentOrNewKey: newValue,
     }));
   };
 
@@ -141,7 +141,7 @@ function RestorableDatabaseSchemaUpdateDialog({
           engine,
           description,
           createdBy,
-          affiliation
+          affiliation,
         } = schema.databaseSchema;
         setUpdatedSchemaValues({
           id: id,
@@ -151,7 +151,7 @@ function RestorableDatabaseSchemaUpdateDialog({
           engine: engine,
           environment: environment,
           application: application,
-          affiliation: affiliation.name
+          affiliation: affiliation.name,
         });
       }
     }

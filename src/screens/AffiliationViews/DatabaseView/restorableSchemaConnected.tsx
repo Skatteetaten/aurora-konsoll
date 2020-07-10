@@ -8,19 +8,19 @@ import {
   testJdbcConnectionForId,
   testJdbcConnectionForJdbcUser,
   restoreSchemas,
-  restoreSchema
+  restoreSchema,
 } from './state/actions';
 import {
   IUpdateDatabaseSchemaInputWithCreatedBy,
   IDatabaseSchema,
-  IJdbcUser
+  IJdbcUser,
 } from 'models/schemas';
 
 const mapStateToProps = (state: RootState) => ({
   items: state.database.restorableDatabaseSchemas,
   isFetching: state.database.isFetchingRestorableSchemas,
   testJdbcConnectionResponse: state.database.testJdbcConnectionResponse,
-  restoreResponse: state.database.restoreSchemasResponse
+  restoreResponse: state.database.restoreSchemasResponse,
 });
 const mapDispatchToProps = {
   onFetch: (affiliations: string[]) => fetchRestorableSchemas(affiliations),
@@ -33,7 +33,7 @@ const mapDispatchToProps = {
   onRestoreDatabaseSchemas: (ids: string[], active: boolean) =>
     restoreSchemas(ids, active),
   onRestoreDatabaseSchema: (databaseSchema: IDatabaseSchema, active: boolean) =>
-    restoreSchema(databaseSchema, active)
+    restoreSchema(databaseSchema, active),
 };
 
 export const RestorableSchemaConnected = connect(

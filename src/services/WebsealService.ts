@@ -7,7 +7,7 @@ const websealTableColumns: IColumn[] = [
     fieldName: 'host',
     minWidth: 500,
     maxWidth: 600,
-    iconName: ''
+    iconName: '',
   },
   {
     key: '1',
@@ -15,8 +15,8 @@ const websealTableColumns: IColumn[] = [
     fieldName: 'roles',
     minWidth: 800,
     maxWidth: 1000,
-    iconName: ''
-  }
+    iconName: '',
+  },
 ];
 
 type ColumnRenderFunc = (item: { key: string }) => JSX.Element;
@@ -28,15 +28,15 @@ const websealDialogColumns = (onRender: ColumnRenderFunc): IColumn[] => [
     fieldName: 'key',
     minWidth: 400,
     maxWidth: 400,
-    onRender
+    onRender,
   },
   {
     key: '1',
     name: 'Value',
     fieldName: 'value',
     minWidth: 200,
-    maxWidth: 200
-  }
+    maxWidth: 200,
+  },
 ];
 
 export interface IWebsealTableColumns {
@@ -61,7 +61,7 @@ class WebsealService {
     while (i--) {
       resArray[i] = {
         key: ownProps[i],
-        value: parsedType[ownProps[i]]
+        value: parsedType[ownProps[i]],
       };
     }
     return resArray;

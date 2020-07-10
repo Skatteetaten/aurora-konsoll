@@ -16,7 +16,7 @@ interface IErrorPopupProps {
 
 const renderTableContent = (type: string): JSX.Element[] => {
   const parsedType = JSON.parse(type);
-  return Object.keys(parsedType).map(it => (
+  return Object.keys(parsedType).map((it) => (
     <tr key={`${it}`}>
       <th>{`${it}:`}</th>
       <td>{`${parsedType[it]}`}</td>
@@ -29,7 +29,7 @@ const ErrorPopup = ({
   closeError,
   closeErrors,
   errorCount,
-  className
+  className,
 }: IErrorPopupProps) => {
   const [expandMessageBar, setExpandMessageBar] = React.useState(false);
   const hasMoreErrors = errorCount > 0;

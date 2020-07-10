@@ -23,23 +23,23 @@ describe('Filter', () => {
       status: {
         code: StatusCode.HEALTHY,
         reasons: [],
-        reports: []
+        reports: [],
       },
       version: {
         auroraVersion: '',
         deployTag: {
           name: 'version',
-          type: ImageTagType.AURORA_SNAPSHOT_VERSION
+          type: ImageTagType.AURORA_SNAPSHOT_VERSION,
         },
-        releaseTo: ''
+        releaseTo: '',
       },
       permission: {
         paas: {
           admin: false,
-          view: true
-        }
+          view: true,
+        },
       },
-      time: ''
+      time: '',
     },
     {
       id: '2',
@@ -50,24 +50,24 @@ describe('Filter', () => {
       status: {
         code: StatusCode.HEALTHY,
         reasons: [],
-        reports: []
+        reports: [],
       },
       version: {
         auroraVersion: '',
         deployTag: {
           name: 'version',
-          type: ImageTagType.AURORA_SNAPSHOT_VERSION
+          type: ImageTagType.AURORA_SNAPSHOT_VERSION,
         },
-        releaseTo: ''
+        releaseTo: '',
       },
       permission: {
         paas: {
           admin: false,
-          view: true
-        }
+          view: true,
+        },
       },
-      time: ''
-    }
+      time: '',
+    },
   ];
   const updateFilter = () => {
     return;
@@ -165,7 +165,7 @@ describe('Filter', () => {
         allDeployments={deployments}
         filters={{
           applications: ['app1', 'app2', 'app3'],
-          environments: ['env1']
+          environments: ['env1'],
         }}
         allFilters={[]}
         deleteFilter={deleteFilter}
@@ -173,10 +173,7 @@ describe('Filter', () => {
       />
     );
 
-    wrapper
-      .find(Checkbox)
-      .at(0)
-      .simulate('change');
+    wrapper.find(Checkbox).at(0).simulate('change');
 
     (wrapper.instance() as Filter).clearAllCheckboxes(
       SelectionType.Applications
@@ -200,7 +197,7 @@ describe('Filter', () => {
         allDeployments={deployments}
         filters={{
           applications: [],
-          environments: []
+          environments: [],
         }}
         allFilters={[]}
         deleteFilter={deleteFilter}

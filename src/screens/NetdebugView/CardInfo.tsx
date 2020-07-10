@@ -35,7 +35,7 @@ const CardInfo = ({
   lastScan,
   className,
   netdebugStatus,
-  parsedData
+  parsedData,
 }: ICardProps) => (
   <div className={className}>
     <Indicator color={getIndicatorColor(netdebugStatus)} />

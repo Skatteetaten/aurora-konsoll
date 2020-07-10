@@ -4,7 +4,7 @@ import {
   CheckboxVisibility,
   SelectionMode,
   Selection,
-  IColumn
+  IColumn,
 } from 'office-ui-fabric-react/lib-commonjs';
 
 import { IRestorableDatabaseSchemaData } from 'models/schemas';
@@ -25,7 +25,7 @@ export function RestorableDatabaseSchemaTable({
   multiSelect,
   selection,
   onResetSort,
-  shouldResetSort
+  shouldResetSort,
 }: IRestorableDatabaseSchemaTableProps) {
   const columns: IColumn[] = [
     {
@@ -35,7 +35,7 @@ export function RestorableDatabaseSchemaTable({
       maxWidth: 200,
       minWidth: 200,
       name: 'Miljø',
-      iconName: ''
+      iconName: '',
     },
     {
       fieldName: 'application',
@@ -44,7 +44,7 @@ export function RestorableDatabaseSchemaTable({
       maxWidth: 200,
       minWidth: 200,
       name: 'Applikasjon',
-      iconName: ''
+      iconName: '',
     },
     {
       fieldName: 'discriminator',
@@ -53,7 +53,7 @@ export function RestorableDatabaseSchemaTable({
       maxWidth: 200,
       minWidth: 200,
       name: 'Diskriminator',
-      iconName: ''
+      iconName: '',
     },
     {
       fieldName: 'setToCooldownAt',
@@ -62,7 +62,7 @@ export function RestorableDatabaseSchemaTable({
       maxWidth: 200,
       minWidth: 200,
       name: 'Satt i cooldown',
-      iconName: ''
+      iconName: '',
     },
     {
       fieldName: 'deleteAfter',
@@ -71,7 +71,7 @@ export function RestorableDatabaseSchemaTable({
       maxWidth: 200,
       minWidth: 200,
       name: 'Slettes permanent',
-      iconName: ''
+      iconName: '',
     },
     {
       fieldName: 'createdDate',
@@ -80,7 +80,7 @@ export function RestorableDatabaseSchemaTable({
       maxWidth: 90,
       minWidth: 90,
       name: 'Opprettet',
-      iconName: ''
+      iconName: '',
     },
     {
       fieldName: 'lastUsedDate',
@@ -89,7 +89,7 @@ export function RestorableDatabaseSchemaTable({
       maxWidth: 90,
       minWidth: 90,
       name: 'Sist brukt',
-      iconName: ''
+      iconName: '',
     },
     {
       fieldName: 'sizeInMb',
@@ -98,7 +98,7 @@ export function RestorableDatabaseSchemaTable({
       maxWidth: 110,
       minWidth: 110,
       name: 'Størrelse (MB)',
-      iconName: ''
+      iconName: '',
     },
     {
       fieldName: 'createdBy',
@@ -107,7 +107,7 @@ export function RestorableDatabaseSchemaTable({
       maxWidth: 80,
       minWidth: 80,
       name: 'Bruker',
-      iconName: ''
+      iconName: '',
     },
     {
       fieldName: 'engine',
@@ -116,8 +116,8 @@ export function RestorableDatabaseSchemaTable({
       maxWidth: 90,
       minWidth: 90,
       name: 'Engine',
-      iconName: ''
-    }
+      iconName: '',
+    },
   ];
 
   const filterDatabaseSchemaView = (filter: string) => {
@@ -181,7 +181,7 @@ const toViewSchemas = (
   let viewItems: IRestorableDatabaseSchemaView[] = [];
 
   if (databaseSchemas && databaseSchemas.length > 0) {
-    viewItems = databaseSchemas.map(i => toViewSchema(i));
+    viewItems = databaseSchemas.map((i) => toViewSchema(i));
   }
   return viewItems;
 };
@@ -205,7 +205,7 @@ const toViewSchema = (
     type,
     sizeInMb,
     createdBy,
-    engine
+    engine,
   } = i.databaseSchema;
 
   return {
@@ -224,6 +224,6 @@ const toViewSchema = (
     sizeInMb: sizeInMb,
     createdBy: createdBy,
     engine: engine,
-    jdbcUrl
+    jdbcUrl,
   };
 };

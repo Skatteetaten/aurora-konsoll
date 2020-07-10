@@ -1,11 +1,11 @@
 import each from 'jest-each';
 import {
   netdebugResultFactory,
-  netdebugViewStateInitialState
+  netdebugViewStateInitialState,
 } from 'testData/testDataBuilders';
 import {
   fetchNetdebugStatusResponse,
-  fetchNetdebugStatusRequest
+  fetchNetdebugStatusRequest,
 } from './actions';
 import { netdebugViewReducer } from './reducer';
 
@@ -14,20 +14,20 @@ describe('netdebug reducer', () => {
     [
       {
         name: 'fetchNetdebugStatusRequest',
-        item: netdebugViewStateInitialState.build()
+        item: netdebugViewStateInitialState.build(),
       },
       {
         name: 'isFetching',
-        item: fetchNetdebugStatusRequest(true)
+        item: fetchNetdebugStatusRequest(true),
       },
       netdebugViewStateInitialState.build({
-        isFetching: true
-      })
+        isFetching: true,
+      }),
     ],
     [
       {
         name: 'fetchNetdebugStatusResponse',
-        item: netdebugViewStateInitialState.build()
+        item: netdebugViewStateInitialState.build(),
       },
       {
         name: 'netdebugStatus',
@@ -35,18 +35,18 @@ describe('netdebug reducer', () => {
           netdebugResultFactory.build({
             failed: [],
             open: [{ message: 'beskjed' }],
-            status: 'OPEN'
+            status: 'OPEN',
           })
-        )
+        ),
       },
       netdebugViewStateInitialState.build({
         netdebugStatus: netdebugResultFactory.build({
           failed: [],
           open: [{ message: 'beskjed' }],
-          status: 'OPEN'
-        })
-      })
-    ]
+          status: 'OPEN',
+        }),
+      }),
+    ],
   ]).describe.only('', (a, b, expected) => {
     test.only(`given defaultState and action ${a.name} with given value should change ${b.name} to given value`, () => {
       expect(netdebugViewReducer(a.item, b.item)).toEqual(expected);

@@ -4,7 +4,7 @@ import {
   createStore,
   Action,
   Reducer,
-  AnyAction
+  AnyAction,
 } from 'redux';
 import thunkMiddleware, { ThunkMiddleware } from 'redux-thunk';
 
@@ -13,20 +13,20 @@ import {
   RootState,
   RootAction,
   IExtraArguments,
-  AsyncAction
+  AsyncAction,
 } from 'store/types';
 import { rootReducer } from 'store/rootReducer';
 import { getApiClientsMock, GraphQLSeverMock } from 'utils/GraphQLMock';
 
 const resetStoreStateAction: Action = {
-  type: 'RESET_STORE_STATE'
+  type: 'RESET_STORE_STATE',
 };
 
 const createStoreWithApi = (clients: IApiClients, initialState: {} = {}) => {
   const enhancer = compose(
     applyMiddleware(
       thunkMiddleware.withExtraArgument({
-        clients
+        clients,
       }) as ThunkMiddleware<RootState, RootAction, IExtraArguments>
     )
   );
@@ -73,7 +73,7 @@ export const createTestStore = (serverMock: GraphQLSeverMock) => {
    */
   function nextAction(
     expectedAction: Action,
-    assertFn: (state: RootState) => void = state => {}
+    assertFn: (state: RootState) => void = (state) => {}
   ) {
     const action = actionQueue.pop();
     if (!action) {
@@ -119,6 +119,6 @@ export const createTestStore = (serverMock: GraphQLSeverMock) => {
     dispatch,
     nextAction,
     skipActions,
-    clearActionsAndResetState
+    clearActionsAndResetState,
   };
 };

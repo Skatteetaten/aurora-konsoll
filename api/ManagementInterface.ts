@@ -6,6 +6,6 @@ const server = express();
 export const managementInterfaceServer = server.use(
   managementInterface({
     endpoint: '/actuator',
-    cacheDuration: 5 * 1000
+    cacheDuration: 5 * 1000,
   })
 );

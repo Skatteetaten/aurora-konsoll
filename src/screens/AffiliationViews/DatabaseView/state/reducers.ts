@@ -12,7 +12,7 @@ import actions, {
   fetchRestorableSchemaRequest,
   testJdbcConnectionForIdResponse,
   testJdbcConnectionForJdbcUserResponse,
-  restoreSchemasResponse
+  restoreSchemasResponse,
 } from './actions';
 
 import {
@@ -21,7 +21,7 @@ import {
   IChangeCooldownDatabaseSchemasResponse,
   IDatabaseInstances,
   IRestorableDatabaseSchemas,
-  ITestJDBCResponse
+  ITestJDBCResponse,
 } from 'models/schemas';
 import { handleAction, reduceReducers } from 'redux-ts-utils';
 
@@ -54,9 +54,9 @@ const initialState = (): ISchemasState => {
     testJdbcConnectionResponse: { hasSucceeded: false, message: 'failed' },
     createDatabaseSchemaResponse: {
       id: '',
-      jdbcUser: { jdbcUrl: '', username: '', password: '' }
+      jdbcUser: { jdbcUrl: '', username: '', password: '' },
     },
-    isFetchingRestorableSchemas: false
+    isFetchingRestorableSchemas: false,
   };
 };
 
@@ -119,7 +119,7 @@ export const databaseReducer = reduceReducers<ISchemasState>(
     handleAction(
       createDatabaseSchemaResponse,
       updateStateWithPayload('createDatabaseSchemaResponse')
-    )
+    ),
   ],
   initialState()
 );

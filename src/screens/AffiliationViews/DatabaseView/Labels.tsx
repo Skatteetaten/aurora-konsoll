@@ -27,7 +27,7 @@ const Labels = ({
   handleLabelChange,
   className,
   displayCreatedByField,
-  isDisabledFields = false
+  isDisabledFields = false,
 }: ILabelsProps) => (
   <div className={className}>
     <h3>Labels</h3>

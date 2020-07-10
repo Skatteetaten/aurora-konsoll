@@ -2,7 +2,7 @@ import gql from 'graphql-tag';
 import {
   IDatabaseSchema,
   IDatabaseInstance,
-  IRestorableDatabaseSchemaData
+  IRestorableDatabaseSchemaData,
 } from 'models/schemas';
 
 export interface IDatabaseSchemasQuery {

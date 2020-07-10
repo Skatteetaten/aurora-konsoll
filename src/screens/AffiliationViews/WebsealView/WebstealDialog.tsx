@@ -27,7 +27,7 @@ class WebsealDialog extends React.Component<
   IWebsealDialogState
 > {
   public state = {
-    junctions: []
+    junctions: [],
   };
 
   private websealService = new WebsealService();
@@ -55,7 +55,7 @@ class WebsealDialog extends React.Component<
     const {
       selectedWebsealState,
       deselectWebsealState,
-      className
+      className,
     } = this.props;
 
     if (!selectedWebsealState) {

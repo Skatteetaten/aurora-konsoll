@@ -3,7 +3,7 @@ import { handleAction, reduceReducers } from 'redux-ts-utils';
 import { ActionType } from 'typesafe-actions';
 import actions, {
   fetchWebsealStatesRequest,
-  fetchWebsealStatesResponse
+  fetchWebsealStatesResponse,
 } from './actions';
 
 export type WebsealAction = ActionType<typeof actions>;
@@ -16,7 +16,7 @@ export interface IWebsealReduxState {
 const InitialState = (): IWebsealReduxState => {
   return {
     isFetchingWebsealStates: false,
-    websealStates: []
+    websealStates: [],
   };
 };
 
@@ -35,7 +35,7 @@ export const websealReducer = reduceReducers<IWebsealReduxState>(
     handleAction(
       fetchWebsealStatesResponse,
       updateStateWithPayload('websealStates')
-    )
+    ),
   ],
   InitialState()
 );

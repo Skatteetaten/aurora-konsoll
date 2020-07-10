@@ -16,7 +16,7 @@ import {
   IJdbcUser,
   IUpdateDatabaseSchemaInputWithCreatedBy,
   IDatabaseInstances,
-  ITestJDBCResponse
+  ITestJDBCResponse,
 } from 'models/schemas';
 import ConfirmDeletionDialog from './ConfirmDeletionDialog';
 import DatabaseSchemaCreateDialog from './DatabaseSchemaCreateDialog';
@@ -24,7 +24,7 @@ import DatabaseSchemaUpdateDialog from './DatabaseSchemaUpdateDialog';
 import { EnterModeThenConfirm } from './EnterModeThenConfirm';
 import {
   DatabaseSchemaTable,
-  IDatabaseSchemaView
+  IDatabaseSchemaView,
 } from './DatabaseSchemaTable';
 import { TextFieldEvent } from 'types/react';
 import { StyledPre } from 'components/StyledPre';
@@ -40,7 +40,7 @@ export const renderDetailsListWithSchemaInfo = (schemas: IDatabaseSchema[]) => (
           fieldName: 'application',
           minWidth: 200,
           maxWidth: 200,
-          isResizable: true
+          isResizable: true,
         },
         {
           key: 'column2',
@@ -48,7 +48,7 @@ export const renderDetailsListWithSchemaInfo = (schemas: IDatabaseSchema[]) => (
           fieldName: 'environment',
           minWidth: 200,
           maxWidth: 200,
-          isResizable: true
+          isResizable: true,
         },
         {
           key: 'column3',
@@ -56,13 +56,13 @@ export const renderDetailsListWithSchemaInfo = (schemas: IDatabaseSchema[]) => (
           fieldName: 'discriminator',
           minWidth: 200,
           maxWidth: 200,
-          isResizable: true
-        }
+          isResizable: true,
+        },
       ]}
-      items={schemas.map(it => ({
+      items={schemas.map((it) => ({
         application: it.application,
         environment: it.environment,
-        discriminator: it.discriminator
+        discriminator: it.discriminator,
       }))}
     />
   </StyledPre>
@@ -108,7 +108,7 @@ export class Schema extends React.Component<ISchemaProps, ISchemaState> {
     deleteMode: false,
     hasDeletionInformation: false,
     confirmDeletionDialogVisible: false,
-    shouldResetSort: false
+    shouldResetSort: false,
   };
 
   public componentDidMount() {
@@ -130,7 +130,7 @@ export class Schema extends React.Component<ISchemaProps, ISchemaState> {
       onFetch([affiliation]);
       this.setState({
         filter: '',
-        shouldResetSort: true
+        shouldResetSort: true,
       });
     }
   }
@@ -142,12 +142,12 @@ export class Schema extends React.Component<ISchemaProps, ISchemaState> {
       } else {
         this.onSingleSchemaSelected();
       }
-    }
+    },
   });
 
   public onResetSort = () => {
     this.setState({
-      shouldResetSort: false
+      shouldResetSort: false,
     });
   };
 
@@ -167,7 +167,7 @@ export class Schema extends React.Component<ISchemaProps, ISchemaState> {
       currentUser,
       deleteResponse,
       items,
-      instances
+      instances,
     } = this.props;
     const {
       filter,
@@ -177,7 +177,7 @@ export class Schema extends React.Component<ISchemaProps, ISchemaState> {
       deleteMode,
       confirmDeletionDialogVisible,
       hasDeletionInformation,
-      shouldResetSort
+      shouldResetSort,
     } = this.state;
     return (
       <div className={className}>
@@ -254,7 +254,7 @@ export class Schema extends React.Component<ISchemaProps, ISchemaState> {
   private onCancelDeletionClick = () => {
     this.setState({
       hasDeletionInformation: false,
-      confirmDeletionDialogVisible: false
+      confirmDeletionDialogVisible: false,
     });
   };
 
@@ -270,14 +270,14 @@ export class Schema extends React.Component<ISchemaProps, ISchemaState> {
   private onConfirmDeletionClick = () => {
     const { selectedSchemas } = this.state;
     const { onDeleteSchemas } = this.props;
-    if (selectedSchemas && selectedSchemas?.map(it => it.id).length > 0) {
-      const dbIds = selectedSchemas?.map(it => it.id);
+    if (selectedSchemas && selectedSchemas?.map((it) => it.id).length > 0) {
+      const dbIds = selectedSchemas?.map((it) => it.id);
 
       onDeleteSchemas(dbIds);
       this.selection.setAllSelected(false);
       this.setState({
         hasDeletionInformation: true,
-        confirmDeletionDialogVisible: false
+        confirmDeletionDialogVisible: false,
       });
     }
   };
@@ -285,7 +285,7 @@ export class Schema extends React.Component<ISchemaProps, ISchemaState> {
   private onExitDeletionMode = () => {
     this.setState({
       deleteMode: false,
-      selectedSchemas: []
+      selectedSchemas: [],
     });
     this.selection.setAllSelected(false);
   };
@@ -314,10 +314,10 @@ export class Schema extends React.Component<ISchemaProps, ISchemaState> {
   private onSchemaSelectionChange = () => {
     const selected: IDatabaseSchemaView[] = this.selection
       .getSelection()
-      .map(it => it as IDatabaseSchemaView);
+      .map((it) => it as IDatabaseSchemaView);
     const databaseSchemas = this.props.items.databaseSchemas || [];
     const selectedSchemas = databaseSchemas.filter(
-      schema => selected.find(it => it.id === schema.id) !== undefined
+      (schema) => selected.find((it) => it.id === schema.id) !== undefined
     );
 
     this.setState({ selectedSchemas });
@@ -326,11 +326,11 @@ export class Schema extends React.Component<ISchemaProps, ISchemaState> {
   private onSingleSchemaSelected = () => {
     const selected: IDatabaseSchemaView = this.selection
       .getSelection()
-      .map(it => it as IDatabaseSchemaView)[0];
+      .map((it) => it as IDatabaseSchemaView)[0];
     if (!selected) return;
     const databaseSchemas = this.props.items.databaseSchemas || [];
     const selectedSchema = databaseSchemas.find(
-      schema => schema.id === selected.id
+      (schema) => schema.id === selected.id
     );
 
     if (selectedSchema) this.setState({ selectedSchema });

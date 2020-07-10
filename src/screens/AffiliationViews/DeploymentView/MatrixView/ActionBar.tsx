@@ -46,7 +46,7 @@ export const ActionBar: React.FC<IActionBarProps> = ({
   time,
   refreshApplicationDeployments,
   expandApplicationName,
-  setExpandApplicationName
+  setExpandApplicationName,
 }) => {
   const filterChange = (ev: TextFieldEvent, filter?: string) => {
     if (filter !== undefined) {

@@ -27,7 +27,7 @@ export class ApplicationsConnection {
   }
 
   public updateApplicationDeployment(deployment: IApplicationDeployment) {
-    this.applicationDeployments = this.applicationDeployments.map(app => {
+    this.applicationDeployments = this.applicationDeployments.map((app) => {
       if (
         app.name === deployment.name &&
         app.namespace === deployment.namespace
@@ -49,7 +49,7 @@ export class ApplicationsConnection {
     return data.applications.edges.reduce(
       (acc: IApplicationDeployment[], { node }) => {
         const { applicationDeployments } = node;
-        const deployments = applicationDeployments.map(app => ({
+        const deployments = applicationDeployments.map((app) => ({
           affiliation: app.affiliation.name,
           environment: app.environment,
           id: app.id,
@@ -60,7 +60,7 @@ export class ApplicationsConnection {
           status: {
             code: app.status.code,
             reasons: app.status.reasons,
-            reports: app.status.reports
+            reports: app.status.reports,
           },
           message: app.message,
           time: app.time,
@@ -70,9 +70,9 @@ export class ApplicationsConnection {
             deployTag: {
               lastModified: '',
               name: app.version.deployTag.name,
-              type: app.version.deployTag.type
-            }
-          }
+              type: app.version.deployTag.type,
+            },
+          },
         }));
         return [...acc, ...deployments];
       },

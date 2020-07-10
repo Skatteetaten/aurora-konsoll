@@ -10,7 +10,7 @@ import {
   ImageRepositoryClient,
   NetdebugClient,
   UserSettingsClient,
-  WebsealClient
+  WebsealClient,
 } from 'services/auroraApiClients';
 
 type ResponseMock = any;
@@ -77,6 +77,6 @@ export function getApiClientsMock(serverMock: GraphQLSeverMock): IApiClients {
     imageRepositoryClient: new ImageRepositoryClient(clientMock),
     netdebugClient: new NetdebugClient(clientMock),
     userSettingsClient: new UserSettingsClient(clientMock),
-    websealClient: new WebsealClient(clientMock)
+    websealClient: new WebsealClient(clientMock),
   };
 }
