@@ -3,7 +3,7 @@ import InfoDialog from 'components/InfoDialog';
 import React from 'react';
 import {
   IDatabaseSchema,
-  IDeleteDatabaseSchemasResponse,
+  IChangeCooldownDatabaseSchemasResponse,
   IDatabaseSchemas
 } from 'models/schemas';
 import DeletionSummary from './DeletionSummary';
@@ -14,7 +14,7 @@ interface IConfirmDeletionDialogProps {
   title: string;
   schemasToDelete: IDatabaseSchema[];
   hasDeletionInformation: boolean;
-  deleteResponse: IDeleteDatabaseSchemasResponse;
+  deleteResponse: IChangeCooldownDatabaseSchemasResponse;
   items: IDatabaseSchemas;
   onOkClick: () => void;
   onCancelClick: () => void;

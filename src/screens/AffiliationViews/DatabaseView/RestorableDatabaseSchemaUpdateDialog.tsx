@@ -5,7 +5,8 @@ import {
   IRestorableDatabaseSchemaData,
   IUpdateDatabaseSchemaInputWithCreatedBy,
   IDatabaseSchema,
-  ITestJDBCResponse
+  ITestJDBCResponse,
+  IChangeCooldownDatabaseSchemasResponse
 } from 'models/schemas';
 import { useState, useEffect, useRef } from 'react';
 import Dialog from '@skatteetaten/frontend-components/Dialog';
@@ -23,11 +24,13 @@ const { skeColor } = palette;
 interface IRestorableDatabaseSchemaUpdateDialogProps {
   schema?: IRestorableDatabaseSchemaData;
   className?: string;
+  testJdbcConnectionResponse: ITestJDBCResponse;
+  restoreResponse: IChangeCooldownDatabaseSchemasResponse;
   clearSelectedSchema: () => void;
   onUpdate: (databaseSchema: IUpdateDatabaseSchemaInputWithCreatedBy) => void;
   onDelete: (databaseSchema: IDatabaseSchema) => void;
   onTestJdbcConnectionForId: (id: string) => void;
-  testJdbcConnectionResponse: ITestJDBCResponse;
+  onRestoreDatabaseSchema: (schema: IDatabaseSchema, active: boolean) => void;
 }
 
 interface IUpdatedSchemaValues {
@@ -46,7 +49,9 @@ function RestorableDatabaseSchemaUpdateDialog({
   clearSelectedSchema,
   className,
   onTestJdbcConnectionForId,
-  testJdbcConnectionResponse
+  testJdbcConnectionResponse,
+  onRestoreDatabaseSchema,
+  restoreResponse
 }: IRestorableDatabaseSchemaUpdateDialogProps) {
   const initialUpdatedSchemaValues: IUpdatedSchemaValues = {
     id: '',
@@ -98,9 +103,9 @@ function RestorableDatabaseSchemaUpdateDialog({
   );
 
   const renderConfirmationFooterButtons = (close: () => void) => {
-    const deleteSchema = () => {
+    const restoreSchema = () => {
       if (schema) {
-        // onRestore(schema);
+        onRestoreDatabaseSchema(schema.databaseSchema, true);
         close();
         clearSelectedSchema();
       }
@@ -109,7 +114,7 @@ function RestorableDatabaseSchemaUpdateDialog({
     return (
       <>
         <ActionButton
-          onClick={deleteSchema}
+          onClick={restoreSchema}
           iconSize={ActionButton.LARGE}
           icon="Check"
           color="black"
@@ -128,7 +133,7 @@ function RestorableDatabaseSchemaUpdateDialog({
     );
   };
 
-  const prevSchema = usePrevious( schema );
+  const prevSchema = usePrevious(schema);
 
   useEffect(() => {
     if (schema) {
@@ -164,6 +169,8 @@ function RestorableDatabaseSchemaUpdateDialog({
   const dateTimeFormat = (date?: Date | null) =>
     date ? getLocalDatetime(date) : '-';
   const user = schema.databaseSchema.users[0];
+
+  console.log(restoreResponse);
 
   return (
     <Dialog
@@ -225,23 +232,23 @@ function RestorableDatabaseSchemaUpdateDialog({
         </Grid>
       </div>
       <div className={className}>
-          <Dialog.Footer>
-            <ConfirmationDialog
-              title="Gjenopprett databaseskjema"
-              text={`Ønsker du å gjenopprette databaseskjemaet til ${updatedSchemaValues.application}?`}
-              renderOpenDialogButton={renderConfirmationOpenButton}
-              renderFooterButtons={renderConfirmationFooterButtons}
-            />
-            <Button
-              buttonStyle="primaryRoundedFilled"
-              style={{ width: '120px', marginRight: '10px' }}
-              icon="Clear"
-              onClick={clearSelectedSchema}
-            >
-              Avbryt
-            </Button>
-          </Dialog.Footer>
-        </div>
+        <Dialog.Footer>
+          <ConfirmationDialog
+            title="Gjenopprett databaseskjema"
+            text={`Ønsker du å gjenopprette databaseskjemaet til ${updatedSchemaValues.application}?`}
+            renderOpenDialogButton={renderConfirmationOpenButton}
+            renderFooterButtons={renderConfirmationFooterButtons}
+          />
+          <Button
+            buttonStyle="primaryRoundedFilled"
+            style={{ width: '120px', marginRight: '10px' }}
+            icon="Clear"
+            onClick={clearSelectedSchema}
+          >
+            Avbryt
+          </Button>
+        </Dialog.Footer>
+      </div>
     </Dialog>
   );
 }

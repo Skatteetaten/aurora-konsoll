@@ -123,7 +123,7 @@ export interface ICreateDatabaseSchemaResponse {
   jdbcUser: IJdbcUser;
 }
 
-export interface IDeleteDatabaseSchemasResponse {
+export interface IChangeCooldownDatabaseSchemasResponse {
   succeeded: string[];
   failed: string[];
 }

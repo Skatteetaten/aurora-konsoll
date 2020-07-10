@@ -4,13 +4,14 @@ import styled from 'styled-components';
 import TextField from '@skatteetaten/frontend-components/TextField';
 import { TextFieldEvent } from '../../../types/react';
 import {
-  IDatabaseSchema,
   IRestorableDatabaseSchemas,
   IRestorableDatabaseSchema,
   IRestorableDatabaseSchemaData,
   IUpdateDatabaseSchemaInputWithCreatedBy,
   IJdbcUser,
-  ITestJDBCResponse
+  ITestJDBCResponse,
+  IChangeCooldownDatabaseSchemasResponse,
+  IDatabaseSchema
 } from '../../../models/schemas';
 import { EnterModeThenConfirm } from './EnterModeThenConfirm';
 import Spinner from 'components/Spinner';
@@ -27,11 +28,14 @@ export interface IRestorableSchemaProps {
   isFetching: boolean;
   items: IRestorableDatabaseSchemas;
   testJdbcConnectionResponse: ITestJDBCResponse;
+  restoreResponse: IChangeCooldownDatabaseSchemasResponse;
   onFetch: (affiliation: string[]) => void | undefined;
   onUpdate: (databaseSchema: IUpdateDatabaseSchemaInputWithCreatedBy) => void; //TODO mulig feil type her
   onRestore: (databaseSchema: IRestorableDatabaseSchema) => void;
   onTestJdbcConnectionForId: (id: string) => void;
   onTestJdbcConnectionForUser: (jdbcUser: IJdbcUser) => void;
+  onRestoreDatabaseSchemas: (ids: string[], active: boolean) => void;
+  onRestoreDatabaseSchema: (databaseSchema: IDatabaseSchema, active: boolean) => void;
 }
 
 interface IRestorableSchemaState {
@@ -137,7 +141,10 @@ export class RestorableSchema extends React.Component<
       items,
       onTestJdbcConnectionForId,
       onTestJdbcConnectionForUser,
-      testJdbcConnectionResponse
+      testJdbcConnectionResponse,
+      restoreResponse,
+      onRestoreDatabaseSchemas,
+      onRestoreDatabaseSchema
     } = this.props;
     const {
       filter,
@@ -169,7 +176,7 @@ export class RestorableSchema extends React.Component<
               iconColor="green"
             />
           </div>
-          <div style={{marginRight: '20px'}}>
+          <div style={{ marginRight: '20px' }}>
             <LoadingButton
               icon="Update"
               style={{ minWidth: '141px', marginLeft: '15px' }}
@@ -199,6 +206,8 @@ export class RestorableSchema extends React.Component<
           onDelete={onRestore}
           onTestJdbcConnectionForId={onTestJdbcConnectionForId}
           testJdbcConnectionResponse={testJdbcConnectionResponse}
+          onRestoreDatabaseSchema={onRestoreDatabaseSchema}
+          restoreResponse={restoreResponse}
         />
       </div>
     );

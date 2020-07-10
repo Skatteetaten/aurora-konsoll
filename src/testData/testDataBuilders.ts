@@ -17,7 +17,7 @@ import {
   IDatabaseSchema,
   IDatabaseSchemaInput,
   IDatabaseSchemas,
-  IDeleteDatabaseSchemasResponse,
+  IChangeCooldownDatabaseSchemasResponse,
   IJdbcUser,
   IUpdateDatabaseSchemaInputWithCreatedBy
 } from 'models/schemas';
@@ -304,6 +304,7 @@ export const schemasFactory = Factory.Sync.makeFactory<ISchemasState>({
   databaseInstances: { databaseInstances: [] },
   updateSchemaResponse: false,
   deleteSchemasResponse: { failed: [], succeeded: [] },
+  restoreSchemasResponse: { failed: [], succeeded: [] },
   testJdbcConnectionResponse: { hasSucceeded: false, message: 'failed' },
   createDatabaseSchemaResponse: {
     id: '',
@@ -328,7 +329,7 @@ export const databaseSchemasFactory = Factory.Sync.makeFactory<
 });
 
 export const deleteDatabaseSchemasResponseFactory = Factory.Sync.makeFactory<
-  IDeleteDatabaseSchemasResponse
+  IChangeCooldownDatabaseSchemasResponse
 >({
   failed: [],
   succeeded: []

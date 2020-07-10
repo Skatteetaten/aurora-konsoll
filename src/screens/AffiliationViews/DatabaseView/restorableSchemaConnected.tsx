@@ -7,15 +7,22 @@ import {
   updateSchema,
   deleteSchema,
   testJdbcConnectionForId,
-  testJdbcConnectionForJdbcUser
+  testJdbcConnectionForJdbcUser,
+  restoreSchemas,
+  restoreSchema
 } from './state/actions';
 import { ISchemasState } from './state/reducers';
-import { IUpdateDatabaseSchemaInputWithCreatedBy, IDatabaseSchema, IJdbcUser } from 'models/schemas';
+import {
+  IUpdateDatabaseSchemaInputWithCreatedBy,
+  IDatabaseSchema,
+  IJdbcUser
+} from 'models/schemas';
 
 const mapStateToProps = (state: RootState) => ({
   items: state.database.restorableDatabaseSchemas,
   isFetching: state.database.isFetchingRestorableSchemas,
-  testJdbcConnectionResponse: state.database.testJdbcConnectionResponse
+  testJdbcConnectionResponse: state.database.testJdbcConnectionResponse,
+  restoreResponse: state.database.restoreSchemasResponse
 });
 const mapDispatchToProps = {
   onFetch: (affiliations: string[]) => fetchRestorableSchemas(affiliations),
@@ -24,7 +31,11 @@ const mapDispatchToProps = {
   onRestore: (databaseSchema: IDatabaseSchema) => deleteSchema(databaseSchema),
   onTestJdbcConnectionForId: (id: string) => testJdbcConnectionForId(id),
   onTestJdbcConnectionForUser: (jdbcUser: IJdbcUser) =>
-    testJdbcConnectionForJdbcUser(jdbcUser)
+    testJdbcConnectionForJdbcUser(jdbcUser),
+  onRestoreDatabaseSchemas: (ids: string[], active: boolean) =>
+    restoreSchemas(ids, active),
+  onRestoreDatabaseSchema: (databaseSchema: IDatabaseSchema, active: boolean) =>
+    restoreSchema(databaseSchema, active)
 };
 
 export const RestorableSchemaConnected = connect(

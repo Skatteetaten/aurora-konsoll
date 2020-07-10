@@ -17,6 +17,15 @@ export const DELETE_DATABASESCHEMAS_MUTATION = gql`
   }
 `;
 
+export const RESTORE_DATABASESCHEMAS_MUTATION = gql`
+  mutation restoreDatabaseSchemas($input: RestoreDatabaseSchemasInput!) {
+    restoreDatabaseSchemas(input: $input) {
+      succeeded
+      failed
+    }
+  }
+`;
+
 export const TEST_JDBC_CONNECTION_FOR_ID_MUTATION = gql`
   mutation testJdbcConnectionForId($id: String!) {
     testJdbcConnectionForId(id: $id) {

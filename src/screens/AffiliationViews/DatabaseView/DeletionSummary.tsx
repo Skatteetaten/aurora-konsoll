@@ -5,12 +5,12 @@ import Card, { CardColor } from '@skatteetaten/frontend-components/Card';
 import Grid from '@skatteetaten/frontend-components/Grid';
 import {
   IDatabaseSchemas,
-  IDeleteDatabaseSchemasResponse
+  IChangeCooldownDatabaseSchemasResponse
 } from 'models/schemas';
 import { renderDetailsListWithSchemaInfo } from './Schema';
 
 interface IDeletionSummaryProps {
-  deleteResponse: IDeleteDatabaseSchemasResponse;
+  deleteResponse: IChangeCooldownDatabaseSchemasResponse;
   className?: string;
   items: IDatabaseSchemas;
 }

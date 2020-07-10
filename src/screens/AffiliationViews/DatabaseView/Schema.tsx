@@ -12,7 +12,7 @@ import {
   ICreateDatabaseSchemaResponse,
   IDatabaseSchema,
   IDatabaseSchemas,
-  IDeleteDatabaseSchemasResponse,
+  IChangeCooldownDatabaseSchemasResponse,
   IJdbcUser,
   IUpdateDatabaseSchemaInputWithCreatedBy,
   IDatabaseInstances,
@@ -86,7 +86,7 @@ export interface ISchemaProps {
   className?: string;
   testJdbcConnectionResponse: ITestJDBCResponse;
   currentUser: IUserAndAffiliations;
-  deleteResponse: IDeleteDatabaseSchemasResponse;
+  deleteResponse: IChangeCooldownDatabaseSchemasResponse;
 }
 
 interface ISchemaState {

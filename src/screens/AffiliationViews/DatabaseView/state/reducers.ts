@@ -11,13 +11,14 @@ import actions, {
   fetchRestorableSchemaResponse,
   fetchRestorableSchemaRequest,
   testJdbcConnectionForIdResponse,
-  testJdbcConnectionForJdbcUserResponse
+  testJdbcConnectionForJdbcUserResponse,
+  restoreSchemasResponse
 } from './actions';
 
 import {
   ICreateDatabaseSchemaResponse,
   IDatabaseSchemas,
-  IDeleteDatabaseSchemasResponse,
+  IChangeCooldownDatabaseSchemasResponse,
   IDatabaseInstances,
   IRestorableDatabaseSchemas,
   ITestJDBCResponse
@@ -33,7 +34,8 @@ export interface ISchemasState {
   readonly isFetchingInstances: boolean;
   readonly databaseInstances: IDatabaseInstances;
   readonly updateSchemaResponse: boolean;
-  readonly deleteSchemasResponse: IDeleteDatabaseSchemasResponse;
+  readonly deleteSchemasResponse: IChangeCooldownDatabaseSchemasResponse;
+  readonly restoreSchemasResponse: IChangeCooldownDatabaseSchemasResponse;
   readonly testJdbcConnectionResponse: ITestJDBCResponse;
   readonly createDatabaseSchemaResponse: ICreateDatabaseSchemaResponse;
   readonly isFetchingRestorableSchemas: boolean;
@@ -48,6 +50,7 @@ const initialState = (): ISchemasState => {
     databaseInstances: { databaseInstances: [] },
     updateSchemaResponse: false,
     deleteSchemasResponse: { failed: [], succeeded: [] },
+    restoreSchemasResponse: { failed: [], succeeded: [] },
     testJdbcConnectionResponse: { hasSucceeded: false, message: 'failed' },
     createDatabaseSchemaResponse: {
       id: '',
@@ -100,6 +103,10 @@ export const databaseReducer = reduceReducers<ISchemasState>(
     handleAction(
       deleteSchemasResponse,
       updateStateWithPayload('deleteSchemasResponse')
+    ),
+    handleAction(
+      restoreSchemasResponse,
+      updateStateWithPayload('restoreSchemasResponse')
     ),
     handleAction(
       testJdbcConnectionForIdResponse,

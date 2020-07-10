@@ -2,7 +2,7 @@ import GoboClient, { IDataAndErrors } from 'services/GoboClient';
 
 import {
   ICreateDatabaseSchemaInput,
-  IDeleteDatabaseSchemasResponse,
+  IChangeCooldownDatabaseSchemasResponse,
   IJdbcUser,
   IUpdateDatabaseSchemaInputWithCreatedBy
 } from 'models/schemas';
@@ -11,7 +11,8 @@ import {
   DELETE_DATABASESCHEMAS_MUTATION,
   UPDATE_DATABASESCHEMA_MUTATION,
   TEST_JDBC_CONNECTION_FOR_ID_MUTATION,
-  TEST_JDBC_CONNECTION_FOR_JDBCUSER_MUTATION
+  TEST_JDBC_CONNECTION_FOR_JDBCUSER_MUTATION,
+  RESTORE_DATABASESCHEMAS_MUTATION
 } from './mutation';
 import {
   DATABASE_SCHEMAS_QUERY,
@@ -79,17 +80,39 @@ export class DatabaseClient {
     ids: string[]
   ): Promise<
     | IDataAndErrors<{
-        deleteDatabaseSchemas: IDeleteDatabaseSchemasResponse;
+        deleteDatabaseSchemas: IChangeCooldownDatabaseSchemasResponse;
       }>
     | undefined
   > {
     return await this.client.mutate<{
-      deleteDatabaseSchemas: IDeleteDatabaseSchemasResponse;
+      deleteDatabaseSchemas: IChangeCooldownDatabaseSchemasResponse;
     }>({
       mutation: DELETE_DATABASESCHEMAS_MUTATION,
       variables: {
         input: {
           ids
+        }
+      }
+    });
+  }
+
+  public async restoreSchemas(
+    ids: string[],
+    active: boolean
+  ): Promise<
+    | IDataAndErrors<{
+        restoreDatabaseSchemas: IChangeCooldownDatabaseSchemasResponse;
+      }>
+    | undefined
+  > {
+    return await this.client.mutate<{
+      restoreDatabaseSchemas: IChangeCooldownDatabaseSchemasResponse;
+    }>({
+      mutation: RESTORE_DATABASESCHEMAS_MUTATION,
+      variables: {
+        input: {
+          ids,
+          active
         }
       }
     });
