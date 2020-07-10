@@ -13,7 +13,7 @@ interface IUnavailableServiceMessageProps {
 const UnavailableServiceMessage = ({
   message,
   className,
-  type = 'info',
+  type = 'info'
 }: IUnavailableServiceMessageProps) => (
   <div
     className={className}

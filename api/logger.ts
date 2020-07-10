@@ -12,7 +12,7 @@ const customLevels = {
   warning: 1,
   info: 2,
   debug: 3,
-  trace: 4,
+  trace: 4
 };
 
 const { combine, timestamp, printf } = winston.format;
@@ -22,7 +22,7 @@ const customFormat = printf(({ timestamp, level, message, ...rest }) => {
     timestamp,
     level: level.toUpperCase(),
     message: !!message ? message : '',
-    ...rest,
+    ...rest
   });
 });
 
@@ -31,9 +31,9 @@ export const logger = winston.createLogger({
   format: combine(timestamp(), customFormat),
   transports: [
     new winston.transports.Console({
-      level: LOG_LEVEL,
-    }),
-  ],
+      level: LOG_LEVEL
+    })
+  ]
 });
 
 if (LOG_INDEX_STRATEGY === 'file' || LOG_INDEX_STRATEGY === 'both') {
@@ -44,7 +44,7 @@ if (LOG_INDEX_STRATEGY === 'file' || LOG_INDEX_STRATEGY === 'both') {
       datePattern: 'YYYY-MM-DD',
       level: LOG_LEVEL,
       maxSize: '50m',
-      maxFiles: 3,
+      maxFiles: 3
     })
   );
 }

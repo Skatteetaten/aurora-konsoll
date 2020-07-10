@@ -3,7 +3,7 @@ import { INetdebugResult } from 'services/auroraApiClients';
 import { ActionType } from 'typesafe-actions';
 import actions, {
   fetchNetdebugStatusRequest,
-  fetchNetdebugStatusResponse,
+  fetchNetdebugStatusResponse
 } from './actions';
 
 export type NetdebugViewAction = ActionType<typeof actions>;
@@ -19,8 +19,8 @@ const initialState = (): INetdebugViewState => {
     netdebugStatus: {
       failed: [],
       open: [],
-      status: '',
-    },
+      status: ''
+    }
   };
 };
 
@@ -39,7 +39,7 @@ export const netdebugViewReducer = reduceReducers<INetdebugViewState>(
     handleAction(
       fetchNetdebugStatusResponse,
       updateStateWithPayload('netdebugStatus')
-    ),
+    )
   ],
   initialState()
 );

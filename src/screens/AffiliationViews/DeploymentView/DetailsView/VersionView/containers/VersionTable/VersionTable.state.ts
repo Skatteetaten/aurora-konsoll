@@ -16,7 +16,7 @@ export const mapStateToProps = (
   { versions }: RootState,
   { versionType }: IVersionTableProps
 ) => ({
-  imageTagsConnection: versions.types[versionType],
+  imageTagsConnection: versions.types[versionType]
 });
 
 export type VersionTableState = ReduxProps<{}, typeof mapStateToProps>;

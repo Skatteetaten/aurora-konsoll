@@ -4,7 +4,7 @@ import React from 'react';
 import {
   IDatabaseSchema,
   IChangeCooldownDatabaseSchemasResponse,
-  IDatabaseSchemas,
+  IDatabaseSchemas
 } from 'models/schemas';
 import DeletionSummary from './DeletionSummary';
 import { renderDetailsListWithSchemaInfo } from './Schema';
@@ -21,9 +21,7 @@ interface IConfirmDeletionDialogProps {
   onExitClick: () => void;
 }
 
-const ConfirmDeletionDialog: React.FC<IConfirmDeletionDialogProps> = (
-  props
-) => {
+const ConfirmDeletionDialog: React.FC<IConfirmDeletionDialogProps> = props => {
   const {
     visible,
     title,
@@ -33,7 +31,7 @@ const ConfirmDeletionDialog: React.FC<IConfirmDeletionDialogProps> = (
     onExitClick,
     hasDeletionInformation,
     deleteResponse,
-    items,
+    items
   } = props;
   const createConfirmationMessage = (schemaCount: number): string => {
     if (schemaCount === 1) {

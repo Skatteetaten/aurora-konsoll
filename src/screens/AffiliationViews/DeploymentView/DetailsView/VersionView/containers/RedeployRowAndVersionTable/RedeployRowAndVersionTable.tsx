@@ -3,7 +3,7 @@ import { RedeployRow } from '../../components/RedeployRow';
 import { VersionTableContainer } from '../VersionTable/VersionTableContainer';
 import {
   IRedeployRowAndVersionTableProps,
-  IRedeployRowAndVersionTableState,
+  IRedeployRowAndVersionTableState
 } from './RedeployRowAndVersionTable.state';
 
 type Props = IRedeployRowAndVersionTableProps &
@@ -19,7 +19,7 @@ export const RedeployRowAndVersionTable: React.FC<Props> = ({
   deploy,
   isDeploying,
   releaseTo,
-  isFetchingConfiguredVersionTag,
+  isFetchingConfiguredVersionTag
 }) => {
   const [versionBeingDeploy, setVersionBeingDeploy] = useState<
     string | undefined

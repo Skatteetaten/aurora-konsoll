@@ -24,32 +24,32 @@ const initialState: IApplicationsState = {
   applicationsConnection: new ApplicationsConnection({}),
   errors: {
     requestApplications: [],
-    requestApplicationDeployment: [],
-  },
+    requestApplicationDeployment: []
+  }
 };
 
 export const applicationsReducer = reduceReducers<IApplicationsState>(
   [
-    handleAction(actions.deleteApplicationDeploymentRequest, (state) => {
+    handleAction(actions.deleteApplicationDeploymentRequest, state => {
       state.isRefreshingForAffiliation = true;
       state.isFetching = true;
     }),
-    handleAction(actions.refreshAllDeploymentsForAffiliation, (state) => {
+    handleAction(actions.refreshAllDeploymentsForAffiliation, state => {
       state.isRefreshingForAffiliation = true;
       state.isFetching = true;
     }),
-    handleAction(actions.refreshApplicationDeployment, (state) => {
+    handleAction(actions.refreshApplicationDeployment, state => {
       state.isRefreshing = true;
     }),
-    handleAction(actions.resetApplicationDeploymentState, (state) => {
+    handleAction(actions.resetApplicationDeploymentState, state => {
       state.applicationDeployment = undefined;
     }),
-    handleAction(actions.deployRequest, (state) => {
+    handleAction(actions.deployRequest, state => {
       state.isDeploying = true;
     }),
     handleAction(
       actions.fetchApplicationDeploymentWithDetails.request,
-      (state) => {
+      state => {
         state.isFetching = true;
       }
     ),
@@ -81,7 +81,7 @@ export const applicationsReducer = reduceReducers<IApplicationsState>(
       }
     ),
 
-    handleAction(actions.fetchApplicationDeployments.request, (state) => {
+    handleAction(actions.fetchApplicationDeployments.request, state => {
       state.isFetching = true;
     }),
     handleAction(
@@ -104,7 +104,7 @@ export const applicationsReducer = reduceReducers<IApplicationsState>(
         state.isRefreshingForAffiliation = false;
         state.errors.requestApplications.push(payload);
       }
-    ),
+    )
   ],
   initialState
 );

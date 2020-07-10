@@ -21,7 +21,7 @@ import {
   IChangeCooldownDatabaseSchemasResponse,
   IDatabaseInstances,
   IRestorableDatabaseSchemas,
-  ITestJDBCResponse,
+  ITestJDBCResponse
 } from 'models/schemas';
 import { handleAction, reduceReducers } from 'redux-ts-utils';
 
@@ -119,7 +119,7 @@ export const databaseReducer = reduceReducers<ISchemasState>(
     handleAction(
       createDatabaseSchemaResponse,
       updateStateWithPayload('createDatabaseSchemaResponse')
-    ),
+    )
   ],
   initialState()
 );

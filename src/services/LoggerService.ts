@@ -19,12 +19,12 @@ export class Logger {
       body: JSON.stringify({
         level,
         message,
-        logData,
+        logData
       }),
       headers: {
-        'Content-Type': 'application/json; charset=utf-8',
+        'Content-Type': 'application/json; charset=utf-8'
       },
-      method: 'POST',
+      method: 'POST'
     });
   }
 }

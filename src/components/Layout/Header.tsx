@@ -48,7 +48,7 @@ const Header = ({ title, currentUser, className, children }: IHeaderProps) => {
             renderContent={[
               <ButtonLink key="logout" onClick={logOut}>
                 Logg ut{' '}
-              </ButtonLink>,
+              </ButtonLink>
             ]}
           />
         </div>

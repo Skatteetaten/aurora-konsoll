@@ -16,7 +16,7 @@ import {
   ImageRepositoryClient,
   NetdebugClient,
   UserSettingsClient,
-  WebsealClient,
+  WebsealClient
 } from 'services/auroraApiClients';
 import GoboClient from 'services/GoboClient';
 import createStoreWithApi from 'store';
@@ -47,8 +47,8 @@ async function init() {
     url: '/api/graphql',
     headers: {
       Authorization: token ? token : '',
-      KlientID: config.APPLICATION_NAME,
-    },
+      KlientID: config.APPLICATION_NAME
+    }
   });
 
   const clients: IApiClients = {
@@ -58,7 +58,7 @@ async function init() {
     userSettingsClient: new UserSettingsClient(goboClient),
     databaseClient: new DatabaseClient(goboClient),
     websealClient: new WebsealClient(goboClient),
-    certificateClient: new CertificateClient(goboClient),
+    certificateClient: new CertificateClient(goboClient)
   };
 
   const store = createStoreWithApi(clients);

@@ -5,7 +5,7 @@ import {
   IImageTagsConnection,
   IImageTagEdge,
   IImageTag,
-  IPageInfo,
+  IPageInfo
 } from 'services/auroraApiClients/imageRepositoryClient/query';
 import { ImageTagType } from 'models/ImageTagType';
 
@@ -29,7 +29,7 @@ export class ImageTagsConnection {
   }
 
   public findVersionIndex(name: string): number {
-    return this.getVersions().findIndex((version) => version.name === name);
+    return this.getVersions().findIndex(version => version.name === name);
   }
 
   public totalVersionsCount(): number {
@@ -42,7 +42,7 @@ export class ImageTagsConnection {
 
   public getVersions(): IImageTag[] {
     return this.edges
-      .map((edge) => edge.node)
+      .map(edge => edge.node)
       .sort((t1, t2) => {
         const t1LastModified = (t1.image && t1.image.buildTime) || 0;
         const t2LastModified = (t2.image && t2.image.buildTime) || 0;
@@ -63,8 +63,8 @@ export class ImageTagsConnection {
 
   public addVersions(next: IImageTagEdge[]): void {
     const edges = [...this.edges, ...next];
-    const nodes = edges.map((edge) => edge.node);
-    this.edges = uniqBy(nodes, 'name').map((node) => ({ node }));
+    const nodes = edges.map(edge => edge.node);
+    this.edges = uniqBy(nodes, 'name').map(node => ({ node }));
   }
 
   public setPageInfo(pageInfo: IPageInfo): void {

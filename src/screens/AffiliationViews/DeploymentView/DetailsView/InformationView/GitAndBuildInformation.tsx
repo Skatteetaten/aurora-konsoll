@@ -10,7 +10,7 @@ interface IGitAndBuildInformationProps {
 }
 
 export const GitAndBuildInformation = ({
-  deploymentDetails,
+  deploymentDetails
 }: IGitAndBuildInformationProps) => {
   if (
     !deploymentDetails ||
@@ -21,9 +21,9 @@ export const GitAndBuildInformation = ({
   }
 
   const values = new InfoContentValues();
-  values.addFrom(deploymentDetails, (add) => {
-    add('buildTime', 'Build Time (CI)', (v) => getLocalDatetime(v));
-    add('gitInfo', 'Commit Id', (git) => git.commitId);
+  values.addFrom(deploymentDetails, add => {
+    add('buildTime', 'Build Time (CI)', v => getLocalDatetime(v));
+    add('gitInfo', 'Commit Id', git => git.commitId);
     add(
       'gitInfo',
       'Commit Time',

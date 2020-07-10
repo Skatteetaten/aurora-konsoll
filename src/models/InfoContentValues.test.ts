@@ -7,9 +7,9 @@ describe('InfoContentValues', () => {
     it('should add Phase, but not Health since its undefined', () => {
       const pod = podFactory.build();
       const infoContent = new InfoContentValues();
-      infoContent.addFrom(pod, (add) => {
+      infoContent.addFrom(pod, add => {
         add('phase', 'Phase');
-        add('managementResponses', 'Health', (m) => m.health);
+        add('managementResponses', 'Health', m => m.health);
       });
       const values = infoContent.get();
       expect(values.Phase).toEqual('Down');

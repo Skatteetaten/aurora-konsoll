@@ -15,11 +15,11 @@ describe('Row', () => {
         version: {
           auroraVersion: '1.2.3',
           deployTag: {
-            name: 'version',
+            name: 'version'
           },
-          releaseTo: releaseToParam,
-        },
-      }),
+          releaseTo: releaseToParam
+        }
+      })
     };
   };
 

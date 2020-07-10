@@ -1,6 +1,6 @@
 import {
   certificateResultFactory,
-  certificateViewFactory,
+  certificateViewFactory
 } from 'testData/testDataBuilders';
 import CertificateService from './CertificateService';
 

@@ -5,7 +5,7 @@ import {
   ImageRepositoryClient,
   NetdebugClient,
   UserSettingsClient,
-  WebsealClient,
+  WebsealClient
 } from 'services/auroraApiClients';
 export interface IApiClients {
   applicationDeploymentClient: ApplicationDeploymentClient;

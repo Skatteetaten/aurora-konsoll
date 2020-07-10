@@ -13,7 +13,7 @@ const { skeColor } = palette;
 enum JdcbTestState {
   NOT_STARTED,
   LOADING,
-  RESPONSE,
+  RESPONSE
 }
 
 export interface IJdbcConnectionProps {
@@ -42,7 +42,7 @@ class JdbcConnection extends React.Component<
   IJdbcConnectionState
 > {
   public state = {
-    jdcbTestState: JdcbTestState.NOT_STARTED,
+    jdcbTestState: JdcbTestState.NOT_STARTED
   };
 
   public handleTestJdbcConnection = async () => {
@@ -52,15 +52,15 @@ class JdbcConnection extends React.Component<
       id,
       jdbcUrl,
       password,
-      username,
+      username
     } = this.props;
     const handleJdbcLoading = () => {
       this.setState({
-        jdcbTestState: JdcbTestState.RESPONSE,
+        jdcbTestState: JdcbTestState.RESPONSE
       });
     };
     this.setState({
-      jdcbTestState: JdcbTestState.LOADING,
+      jdcbTestState: JdcbTestState.LOADING
     });
     if (onTestJdbcConnectionForId && id) {
       await onTestJdbcConnectionForId(id);
@@ -69,7 +69,7 @@ class JdbcConnection extends React.Component<
         await onTestJdbcConnectionForUser({
           password,
           jdbcUrl,
-          username,
+          username
         });
       }
     }
@@ -86,7 +86,7 @@ class JdbcConnection extends React.Component<
       hasPasswordField,
       password,
       canNotTest,
-      handleJdbcChange,
+      handleJdbcChange
     } = this.props;
     const { jdcbTestState } = this.state;
 
@@ -157,7 +157,7 @@ class JdbcConnection extends React.Component<
                 iconName="Clear"
                 style={{
                   color: skeColor.pink,
-                  fontSize: '30px',
+                  fontSize: '30px'
                 }}
               />
               <p style={{ color: skeColor.error }}>

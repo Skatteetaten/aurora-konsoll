@@ -15,7 +15,7 @@ const IconWithTooltip = ({
   className,
   content,
   icon,
-  iconStyle,
+  iconStyle
 }: IIconWithTooltip) => {
   return (
     <div className={className}>

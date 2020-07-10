@@ -25,7 +25,7 @@ export default function Label<T>({
   color,
   subText,
   iconName,
-  children,
+  children
 }: ILabelProps<T>) {
   return (
     <LabelWrapper exists={exists || !!data}>
@@ -85,8 +85,7 @@ const LabelWrapper = styled.div<{ exists: boolean }>`
     i {
       padding: 5px;
       font-size: 18px;
-      color: ${(props) =>
-        props.color || (props.exists ? '#70ffa8' : '#ffffff')};
+      color: ${props => props.color || (props.exists ? '#70ffa8' : '#ffffff')};
     }
   }
 `;

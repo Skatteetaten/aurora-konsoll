@@ -18,7 +18,7 @@ const ErrorBoundary = ({
   closeErrors,
   errors,
   nextError,
-  children,
+  children
 }: IErrorBoundaryProps) => {
   useEffect(() => {
     if (

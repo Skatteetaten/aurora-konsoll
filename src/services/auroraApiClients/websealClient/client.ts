@@ -14,7 +14,7 @@ export class WebsealClient {
   ): Promise<IDataAndErrors<IWebsealAffiliationQuery>> {
     return await this.client.query<IWebsealAffiliationQuery>({
       query: WEBSEAL_STATES_QUERY,
-      variables: { affiliation },
+      variables: { affiliation }
     });
   }
 }

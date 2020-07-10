@@ -3,7 +3,7 @@ import { Route, Switch } from 'react-router-dom';
 
 import { IApplicationDeploymentFilters } from 'models/UserSettings';
 import DeploymentFilterService, {
-  IFilter,
+  IFilter
 } from 'services/DeploymentFilterService';
 import { ApplicationDeploymentSelectorContainer } from './DetailsView/ApplicationDeploymentSelector';
 import { MatrixView } from './MatrixView/MatrixView';
@@ -34,12 +34,12 @@ export class DeploymentView extends React.Component<
   public state: IDeploymentViewState = {
     filter: {
       applications: [],
-      environments: [],
+      environments: []
     },
     allFilters: [],
     filterPathUrl: '',
     showSemanticVersion: false,
-    quickFilter: '',
+    quickFilter: ''
   };
 
   private deploymentFilterService = new DeploymentFilterService();
@@ -53,18 +53,18 @@ export class DeploymentView extends React.Component<
     const { affiliation, userSettings } = this.props;
     if (userSettings) {
       this.setState({
-        allFilters: userSettings.applicationDeploymentFilters,
+        allFilters: userSettings.applicationDeploymentFilters
       });
 
       const filter = userSettings.applicationDeploymentFilters.find(
-        (f) => f.affiliation === affiliation && f.default === true
+        f => f.affiliation === affiliation && f.default === true
       );
       if (filter && !paramsExists) {
         this.setState({
           filter: {
             applications: filter.applications,
-            environments: filter.environments,
-          },
+            environments: filter.environments
+          }
         });
       }
     }
@@ -88,17 +88,17 @@ export class DeploymentView extends React.Component<
           this.setState({
             filter: {
               applications: defaultFilter.applications,
-              environments: defaultFilter.environments,
+              environments: defaultFilter.environments
             },
-            quickFilter: '',
+            quickFilter: ''
           });
         } else {
           this.setState({
             filter: {
               applications: [],
-              environments: [],
+              environments: []
             },
-            quickFilter: '',
+            quickFilter: ''
           });
         }
       });
@@ -113,7 +113,7 @@ export class DeploymentView extends React.Component<
     if (prevQuery !== query && query !== '') {
       updateUrlWithQuery(query);
       this.setState(() => ({
-        filterPathUrl: query,
+        filterPathUrl: query
       }));
     }
   }
@@ -137,8 +137,8 @@ export class DeploymentView extends React.Component<
     this.setState(({ filter }) => ({
       filter: {
         applications: newFilters.applications || filter.applications,
-        environments: newFilters.environments || filter.environments,
-      },
+        environments: newFilters.environments || filter.environments
+      }
     }));
   }
 
@@ -152,7 +152,7 @@ export class DeploymentView extends React.Component<
     );
     if (filterName) {
       await updateUserSettings({
-        applicationDeploymentFilters: updatedFilters,
+        applicationDeploymentFilters: updatedFilters
       });
     }
   };
@@ -167,7 +167,7 @@ export class DeploymentView extends React.Component<
     );
     if (filter.quickFilter) {
       this.setState({
-        filter,
+        filter
       });
     } else {
       if (filter.name) {
@@ -176,19 +176,19 @@ export class DeploymentView extends React.Component<
           name: filter.name,
           default: !!filter.default,
           applications: filter.applications,
-          environments: filter.environments,
+          environments: filter.environments
         });
         await updateUserSettings({
-          applicationDeploymentFilters: updatedFilters,
+          applicationDeploymentFilters: updatedFilters
         });
         this.setState({
           filter,
-          quickFilter: '',
+          quickFilter: ''
         });
       } else {
         this.setState({
           filter,
-          quickFilter: '',
+          quickFilter: ''
         });
       }
     }
@@ -197,7 +197,7 @@ export class DeploymentView extends React.Component<
       const currentQuery = this.deploymentFilterService.toQuery(filter);
       if (currentQuery === '') {
         this.setState({
-          filterPathUrl: '',
+          filterPathUrl: ''
         });
       }
     }
@@ -206,26 +206,26 @@ export class DeploymentView extends React.Component<
   public updateQuickFilter = (filter: string) => {
     const { applicationsConnection } = this.props;
     this.setState({
-      quickFilter: filter,
+      quickFilter: filter
     });
 
     const allApplicationDeploymentsResult = applicationsConnection.getApplicationDeployments();
 
     const filtered = allApplicationDeploymentsResult.filter(
-      (deployment) =>
+      deployment =>
         deployment.name.includes(filter) ||
         deployment.environment.includes(filter)
     );
     this.updateFilter({
       quickFilter: true,
-      applications: filtered.map((f) => f.name),
-      environments: filtered.map((f) => f.environment),
+      applications: filtered.map(f => f.name),
+      environments: filtered.map(f => f.environment)
     });
   };
 
   public toggleShowSemanticVersion = () => {
-    this.setState((state) => ({
-      showSemanticVersion: !state.showSemanticVersion,
+    this.setState(state => ({
+      showSemanticVersion: !state.showSemanticVersion
     }));
   };
 
@@ -235,14 +235,14 @@ export class DeploymentView extends React.Component<
       affiliation,
       isRefreshingForAffiliation,
       applicationsConnection,
-      isFetching,
+      isFetching
     } = this.props;
     const {
       filterPathUrl,
       filter,
       allFilters,
       showSemanticVersion: showExactVersion,
-      quickFilter,
+      quickFilter
     } = this.state;
 
     const allApplicationDeploymentsResult = applicationsConnection.getApplicationDeployments();

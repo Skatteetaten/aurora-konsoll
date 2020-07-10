@@ -21,13 +21,13 @@ const MenuNavLink = ({
   to,
   onClick,
   className,
-  showName = true,
+  showName = true
 }: IMenuNavLinkProps) => (
   <li className={className} onClick={onClick}>
     <NavLink
       to={to}
       activeStyle={{
-        background: '#f9ede2',
+        background: '#f9ede2'
       }}
     >
       {iconName && <Icon iconName={iconName} style={{ fontSize: `24px` }} />}

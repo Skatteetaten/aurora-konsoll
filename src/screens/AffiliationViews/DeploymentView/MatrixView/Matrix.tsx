@@ -15,7 +15,7 @@ export const Matrix: React.FC<IMatrixProps> = ({
   deployments,
   isFetching,
   expandApplicationName,
-  showSemanticVersion: showExactVersion,
+  showSemanticVersion: showExactVersion
 }) => {
   if (isFetching) {
     return <Spinner />;
@@ -45,7 +45,7 @@ export const Matrix: React.FC<IMatrixProps> = ({
       <table>
         <thead>
           <tr>
-            {environments.sort().map((name) => (
+            {environments.sort().map(name => (
               <th key={name}>{name}</th>
             ))}
           </tr>
@@ -53,7 +53,7 @@ export const Matrix: React.FC<IMatrixProps> = ({
         <tbody>
           {Object.keys(apps)
             .sort()
-            .map((name) => (
+            .map(name => (
               <Row
                 key={name}
                 showSemanticVersion={showExactVersion}
@@ -97,7 +97,7 @@ const Wrapper = styled.div<{ expandApplicationName: boolean }>`
         overflow: hidden;
         text-overflow: ellipsis;
         cursor: default;
-        ${(props) =>
+        ${props =>
           props.expandApplicationName &&
           `max-width: 100%; white-space: nowrap;`}
       }

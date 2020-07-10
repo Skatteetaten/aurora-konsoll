@@ -13,7 +13,7 @@ import {
   IJdbcUser,
   Step,
   IDatabaseInstances,
-  ITestJDBCResponse,
+  ITestJDBCResponse
 } from 'models/schemas';
 import DatabaseSchemaService from 'services/DatabaseSchemaService';
 import External from './createDialogSteps/External';
@@ -56,7 +56,7 @@ class DatabaseSchemaCreateDialog extends React.Component<
     affiliation: this.props.affiliation,
     jdbcUser: null,
     engine: 'ORACLE',
-    instanceName: null,
+    instanceName: null
   };
 
   public state = {
@@ -64,7 +64,7 @@ class DatabaseSchemaCreateDialog extends React.Component<
     isLoading: false,
     step: Step.TYPE,
     previousStep: Step.TYPE,
-    databaseSchemaInput: this.resetInput,
+    databaseSchemaInput: this.resetInput
   };
 
   private databaseSchemaService = new DatabaseSchemaService();
@@ -90,8 +90,8 @@ class DatabaseSchemaCreateDialog extends React.Component<
           username: initialDatabaseSchemaInput.users[0].username,
           password: initialDatabaseSchemaInput.users[0].password
             ? initialDatabaseSchemaInput.users[0].password
-            : '',
-        },
+            : ''
+        }
       };
 
       this.setState({
@@ -99,31 +99,31 @@ class DatabaseSchemaCreateDialog extends React.Component<
         isLoading: false,
         step: Step.EXTERNAL,
         previousStep: Step.TYPE,
-        databaseSchemaInput: schema,
+        databaseSchemaInput: schema
       });
     }
 
     if (this.props.affiliation !== prevProps.affiliation) {
-      this.setState((state) => ({
+      this.setState(state => ({
         databaseSchemaInput: {
           ...state.databaseSchemaInput,
-          affiliation: this.props.affiliation,
-        },
+          affiliation: this.props.affiliation
+        }
       }));
     }
   }
 
   public toggleDialog = (isOpen: boolean) => () => {
     this.setState({
-      isOpen,
+      isOpen
     });
     if (isOpen) {
       this.setState({
-        step: Step.TYPE,
+        step: Step.TYPE
       });
     } else {
       this.setState({
-        databaseSchemaInput: this.resetInput,
+        databaseSchemaInput: this.resetInput
       });
     }
   };
@@ -136,7 +136,7 @@ class DatabaseSchemaCreateDialog extends React.Component<
     const { step } = this.state;
     this.setState({
       previousStep: step,
-      step: newStep,
+      step: newStep
     });
   };
 
@@ -144,16 +144,16 @@ class DatabaseSchemaCreateDialog extends React.Component<
     databaseSchemaInput: ICreateDatabaseSchemaInput
   ) => {
     this.setState({
-      databaseSchemaInput,
+      databaseSchemaInput
     });
   };
 
   public setJdbcUserInput = (jdbcUser: IJdbcUser) => {
-    this.setState((state) => ({
+    this.setState(state => ({
       databaseSchemaInput: {
         ...state.databaseSchemaInput,
-        jdbcUser,
-      },
+        jdbcUser
+      }
     }));
   };
 
@@ -162,14 +162,14 @@ class DatabaseSchemaCreateDialog extends React.Component<
     const { databaseSchemaInput, step } = this.state;
     this.setState({
       isLoading: true,
-      previousStep: step,
+      previousStep: step
     });
 
     onCreate(
       this.databaseSchemaService.trimLabelsAndJdbcUser(databaseSchemaInput)
     );
     this.setState({
-      step: Step.SUMMARY,
+      step: Step.SUMMARY
     });
   };
 
@@ -182,7 +182,7 @@ class DatabaseSchemaCreateDialog extends React.Component<
       affiliation,
       createResponse,
       isFetching,
-      instances,
+      instances
     } = this.props;
     const { isOpen, isLoading, step, databaseSchemaInput } = this.state;
 
@@ -191,12 +191,12 @@ class DatabaseSchemaCreateDialog extends React.Component<
       if (isNew || isExternal) {
         this.setState({
           step: Step.TYPE,
-          databaseSchemaInput: this.resetInput,
+          databaseSchemaInput: this.resetInput
         });
       } else {
         this.setState({
           isLoading: false,
-          step: previousStep,
+          step: previousStep
         });
       }
     };
@@ -206,7 +206,7 @@ class DatabaseSchemaCreateDialog extends React.Component<
       this.setState({
         isOpen: false,
         isLoading: false,
-        databaseSchemaInput: this.resetInput,
+        databaseSchemaInput: this.resetInput
       });
     };
 

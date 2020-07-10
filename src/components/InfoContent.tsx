@@ -12,19 +12,19 @@ interface IInfoContentProps {
 }
 
 const defaultStyle: React.CSSProperties = {
-  background: 'white',
+  background: 'white'
 };
 
 const InfoContent = ({
   infoContentValues,
   className,
   id,
-  style = defaultStyle,
+  style = defaultStyle
 }: IInfoContentProps) => {
   const values = infoContentValues.get();
   return (
     <div className={className} style={style} id={id}>
-      {Object.keys(values).map((k) => {
+      {Object.keys(values).map(k => {
         const content = values[k];
 
         return (

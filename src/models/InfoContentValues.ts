@@ -14,7 +14,7 @@ export class InfoContentValues {
 
   public get(): Record<string, any> {
     return {
-      ...this.values,
+      ...this.values
     };
   }
 

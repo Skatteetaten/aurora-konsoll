@@ -9,7 +9,7 @@ const certificateColumns: IColumn[] = [
     key: '0',
     minWidth: 75,
     name: 'ID',
-    iconName: '',
+    iconName: ''
   },
   {
     fieldName: 'dn',
@@ -17,7 +17,7 @@ const certificateColumns: IColumn[] = [
     key: '1',
     minWidth: 650,
     name: 'DN',
-    iconName: '',
+    iconName: ''
   },
   {
     fieldName: 'revokedDate',
@@ -26,7 +26,7 @@ const certificateColumns: IColumn[] = [
     maxWidth: 300,
     minWidth: 150,
     name: 'Revoked',
-    iconName: '',
+    iconName: ''
   },
   {
     fieldName: 'issuedDate',
@@ -35,7 +35,7 @@ const certificateColumns: IColumn[] = [
     maxWidth: 300,
     minWidth: 150,
     name: 'Opprettet',
-    iconName: '',
+    iconName: ''
   },
   {
     fieldName: 'expiresDate',
@@ -44,8 +44,8 @@ const certificateColumns: IColumn[] = [
     maxWidth: 300,
     minWidth: 150,
     name: 'Utløper',
-    iconName: '',
-  },
+    iconName: ''
+  }
 ];
 
 export const filterCertificateView = (filter: string) => {
@@ -72,7 +72,7 @@ export default class CertificateService {
           dn: it.dn,
           issuedDate: getLocalDate(it.issuedDate),
           revokedDate: !!it.revokedDate ? getLocalDate(it.revokedDate) : '-',
-          expiresDate: !!it.expiresDate ? getLocalDate(it.expiresDate) : '-',
+          expiresDate: !!it.expiresDate ? getLocalDate(it.expiresDate) : '-'
         };
       }
     );

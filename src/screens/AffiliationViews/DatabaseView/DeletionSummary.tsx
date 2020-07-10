@@ -18,14 +18,14 @@ interface IDeletionSummaryProps {
 const DeletionSummary = ({
   deleteResponse,
   className,
-  items,
+  items
 }: IDeletionSummaryProps) => {
   const getDatabaseSchemaInfoById = (ids: string[]): JSX.Element | null => {
     if (!items.databaseSchemas) {
       return null;
     }
     const extendedInfoList = items.databaseSchemas.filter(
-      (it) => -1 !== ids.indexOf(it.id)
+      it => -1 !== ids.indexOf(it.id)
     );
     return renderDetailsListWithSchemaInfo(extendedInfoList);
   };

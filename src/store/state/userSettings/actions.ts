@@ -16,7 +16,7 @@ const updateUserSettingsRequest = createAction<void>(
 
 export const actions = {
   updateUserSettingsRequest,
-  fetchUserSettings,
+  fetchUserSettings
 };
 
 export type UserSettingsAction = ActionType<typeof actions>;

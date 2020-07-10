@@ -18,7 +18,7 @@ const New = ({
   databaseSchemaInput,
   setDatabaseSchemaInput,
   instances,
-  className,
+  className
 }: INewProps) => {
   const [selectedInstance, setInstance] = useState<string>('oracle');
 
@@ -28,7 +28,7 @@ const New = ({
   ) => {
     setDatabaseSchemaInput({
       ...databaseSchemaInput,
-      [field]: newValue,
+      [field]: newValue
     });
   };
 
@@ -41,7 +41,7 @@ const New = ({
       setDatabaseSchemaInput({
         ...databaseSchemaInput,
         engine: option.engine,
-        instanceName: option.instanceName,
+        instanceName: option.instanceName
       });
     }
   };
@@ -50,7 +50,7 @@ const New = ({
     environment,
     application,
     discriminator,
-    description,
+    description
   } = databaseSchemaInput;
 
   interface IInstanceRadioButton {
@@ -67,21 +67,21 @@ const New = ({
       text: 'Oracle (drivei1/drivei2)',
       description: 'uil0map-drivein-db01:1521 eller uil0map-drivein-db02:1521',
       engine: 'ORACLE',
-      instanceName: null,
+      instanceName: null
     };
 
     const databaseInstances:
       | IInstanceRadioButton[]
-      | undefined = instances.databaseInstances?.map((it) => ({
+      | undefined = instances.databaseInstances?.map(it => ({
       key: it.instanceName,
       text: `Postgres (${it.instanceName})`,
       description: `${it.host}:${it.port} labels=[${it.labels
-        .map((it) => {
+        .map(it => {
           return `{${it.key}:${it.value}}`;
         })
         .join(', ')}]`,
       engine: it.engine,
-      instanceName: it.instanceName,
+      instanceName: it.instanceName
     }));
 
     if (databaseInstances) {

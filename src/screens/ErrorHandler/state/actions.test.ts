@@ -5,14 +5,14 @@ describe('errors actions', () => {
   it('should return type of action errorsResponse and payload', () => {
     expect(errorsResponse(errorStateFactory.build())).toEqual({
       payload: errorStateFactory.build(),
-      type: 'errors/ERRORS',
+      type: 'errors/ERRORS'
     });
   });
 
   it('should return type of action incrementErrorId and payload', () => {
     expect(incrementErrorId(3)).toEqual({
       payload: 3,
-      type: 'errors/INCREMENT_ERROR_ID_COUNT',
+      type: 'errors/INCREMENT_ERROR_ID_COUNT'
     });
   });
 
@@ -22,16 +22,16 @@ describe('errors actions', () => {
         appErrorFactory.build({
           id: 5,
           error: new Error('test'),
-          isActive: false,
+          isActive: false
         })
       )
     ).toEqual({
       payload: appErrorFactory.build({
         id: 5,
         error: new Error('test'),
-        isActive: false,
+        isActive: false
       }),
-      type: 'errors/NEXT_ERROR',
+      type: 'errors/NEXT_ERROR'
     });
   });
 });

@@ -6,7 +6,7 @@ import { ITextField } from 'office-ui-fabric-react/lib-commonjs';
 import { ImageTagType } from 'models/ImageTagType';
 import {
   fetchVersions,
-  clearStateForType,
+  clearStateForType
 } from 'store/state/versions/action.creators';
 import { connect } from 'react-redux';
 import { RootState, ReduxProps } from 'store/types';
@@ -29,12 +29,12 @@ const mapStateToProps = (
   { selectedVersionType }: IServerSideSearchProps
 ) => ({
   isFetchingSearchVersions:
-    versions.isFetching && selectedVersionType === ImageTagType.SEARCH,
+    versions.isFetching && selectedVersionType === ImageTagType.SEARCH
 });
 
 const mapDispatchToProps = {
   fetchVersions,
-  clearStateForType,
+  clearStateForType
 };
 
 type StateProps = ReduxProps<typeof mapDispatchToProps, typeof mapStateToProps>;
@@ -47,7 +47,7 @@ const ServerSideSearch = ({
   repository,
   fetchVersions,
   isFetchingSearchVersions,
-  clearStateForType,
+  clearStateForType
 }: Props) => {
   const textFieldRef = useRef<ITextField | null>();
   const [isSearchButtonDisabled, setSearchButtonDisabled] = useState(true);
@@ -82,7 +82,7 @@ const ServerSideSearch = ({
     <>
       <div style={{ width: 300, marginLeft: 20, marginRight: 20 }}>
         <TextField
-          componentRef={(ref) => (textFieldRef.current = ref)}
+          componentRef={ref => (textFieldRef.current = ref)}
           disabled={isFetchingSearchVersions}
           placeholder="Søk etter versjon"
           onKeyUp={() =>

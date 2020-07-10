@@ -34,7 +34,7 @@ describe('PodsStatusService', () => {
     );
     expect(getIconAndColor).toEqual({
       icon: 'Info',
-      color: STATUS_COLORS.unknown,
+      color: STATUS_COLORS.unknown
     } as { icon: string; color: string });
   });
   it('given empty health textResponse return Info icon and unkown color', () => {
@@ -43,7 +43,7 @@ describe('PodsStatusService', () => {
     );
     expect(getIconAndColor).toEqual({
       icon: 'Info',
-      color: STATUS_COLORS.unknown,
+      color: STATUS_COLORS.unknown
     } as { icon: string; color: string });
   });
 
@@ -53,15 +53,15 @@ describe('PodsStatusService', () => {
         managementResponses: {
           health: {
             hasResponse: true,
-            textResponse: '{"status":"UP"}',
-          },
-        },
+            textResponse: '{"status":"UP"}'
+          }
+        }
       })
     );
 
     expect(getIconAndColor).toEqual({
       icon: 'Completed',
-      color: STATUS_COLORS.healthy,
+      color: STATUS_COLORS.healthy
     } as { icon: string; color: string });
   });
 });

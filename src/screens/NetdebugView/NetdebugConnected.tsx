@@ -11,10 +11,10 @@ const getItems = (state: INetdebugViewState) => state.netdebugStatus;
 
 const mapStateToProps = (state: RootState) => ({
   isFetching: getFetchingStatus(state.netdebug),
-  netdebugStatus: getItems(state.netdebug),
+  netdebugStatus: getItems(state.netdebug)
 });
 
 export const NetdebugConnected = connect(mapStateToProps, {
   findNetdebugStatus: (host: string, port: string) =>
-    findNetdebugStatus(host, port),
+    findNetdebugStatus(host, port)
 })(Netdebug);

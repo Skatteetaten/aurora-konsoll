@@ -31,7 +31,7 @@ const InformationView = ({
   refreshApplicationDeployment,
   isUpdating,
   deleteApplicationDeployment,
-  goToDeploymentsPage,
+  goToDeploymentsPage
 }: IInformationViewProps) => {
   const { deploymentSpec, pods } = deployment.details;
   const hasManagementInterface =
@@ -39,7 +39,7 @@ const InformationView = ({
 
   const hasManagementLinksErrors =
     pods.map(
-      (pod) =>
+      pod =>
         pod.managementResponses &&
         pod.managementResponses.links &&
         pod.managementResponses.links.error
@@ -118,7 +118,7 @@ const InformationView = ({
       <hr
         style={{
           borderWidth: '2px',
-          margin: '30px 0',
+          margin: '30px 0'
         }}
       />
       <h3>Pods fra OpenShift</h3>

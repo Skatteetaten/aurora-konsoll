@@ -16,7 +16,7 @@ const {
   LATEST,
   MAJOR,
   MINOR,
-  SNAPSHOT,
+  SNAPSHOT
 } = ImageTagType;
 
 function getOptionLabel(imageTagType: ImageTagType): string {
@@ -50,7 +50,7 @@ export function getVersionTypeSelectorOptions(
     return {
       key: type,
       tag: type,
-      text: type === SEARCH ? '' : text,
+      text: type === SEARCH ? '' : text
     };
   };
 
@@ -62,6 +62,6 @@ export function getVersionTypeSelectorOptions(
     createOption(SNAPSHOT),
     createOption(AURORA_SNAPSHOT_VERSION),
     createOption(COMMIT_HASH),
-    createOption(AURORA_VERSION),
+    createOption(AURORA_VERSION)
   ];
 }

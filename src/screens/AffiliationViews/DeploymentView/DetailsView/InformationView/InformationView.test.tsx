@@ -20,9 +20,9 @@ describe('InformationView', () => {
   describe('AreAnyPodsRunningWithLatestDeployTag', () => {
     it('Given startTime is not defined, should display startedDate as a dash', () => {
       const deployment = deploymentFactory.build();
-      deployment.details.pods = deployment.details.pods.map((pod) => ({
+      deployment.details.pods = deployment.details.pods.map(pod => ({
         ...pod,
-        startTime: undefined,
+        startTime: undefined
       }));
       const wrapper = mount(
         <InformationView
@@ -87,9 +87,9 @@ describe('InformationView', () => {
           deployment={deploymentFactory.build({
             version: {
               deployTag: {
-                name: 'BUGFIX',
-              },
-            },
+                name: 'BUGFIX'
+              }
+            }
           })}
           isUpdating={false}
           refreshApplicationDeployment={refreshApplicationDeployment}
@@ -114,7 +114,7 @@ describe('InformationView', () => {
           deleteApplicationDeployment={() => {}}
           versionStatus={VersionStatus.OK}
           deployment={deploymentFactory.build({
-            message,
+            message
           })}
           isUpdating={false}
           refreshApplicationDeployment={refreshApplicationDeployment}

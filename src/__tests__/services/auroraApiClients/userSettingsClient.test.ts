@@ -26,7 +26,7 @@ describe('getUserSettings', () => {
 describe('updateUserSettings', () => {
   it('should update user settings to GraphQL server', async () => {
     serverMock.putResponse('updateUserSettings', {
-      data: { updateUserSettings: true },
+      data: { updateUserSettings: true }
     });
 
     const result = await userSettingsClient.updateUserSettings({
@@ -36,9 +36,9 @@ describe('updateUserSettings', () => {
           affiliation: 'aurora',
           default: true,
           applications: ['app'],
-          environments: ['env'],
-        },
-      ],
+          environments: ['env']
+        }
+      ]
     });
     expect(result).toBeTruthy();
     expect(result).toMatchSnapshot();

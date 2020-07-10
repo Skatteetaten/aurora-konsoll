@@ -3,7 +3,7 @@ import { createAction } from 'redux-ts-utils';
 import { INetdebugResult, IScanStatus } from 'services/auroraApiClients';
 import {
   IScanQuery,
-  IScanStatusQuery,
+  IScanStatusQuery
 } from 'services/auroraApiClients/netdebugClient/query';
 import { Thunk } from 'store/types';
 
@@ -20,7 +20,7 @@ export const fetchNetdebugStatusRequest = createAction<boolean>(
 const errorMessage = {
   failed: [],
   open: [],
-  status: 'Noe gikk galt',
+  status: 'Noe gikk galt'
 };
 
 export const findNetdebugStatus: Thunk = (host: string, port: string) => async (
@@ -46,13 +46,13 @@ const normalizeScanStatus = (scanStatus?: IScanStatusQuery): IScanStatus[] => {
     return [];
   }
 
-  return scanStatus.edges.map((edge) => {
+  return scanStatus.edges.map(edge => {
     const { clusterNode, message, status, resolvedIp } = edge.node;
     return {
       clusterNodeIp: clusterNode && clusterNode.ip,
       message,
       resolvedIp,
-      status,
+      status
     };
   });
 };
@@ -62,7 +62,7 @@ const showNetdebugStatus = (item: IScanQuery): INetdebugResult => {
     return {
       failed: normalizeScanStatus(item.scan.failed),
       open: normalizeScanStatus(item.scan.open),
-      status: item.scan.status,
+      status: item.scan.status
     };
   } else {
     return errorMessage;
@@ -71,5 +71,5 @@ const showNetdebugStatus = (item: IScanQuery): INetdebugResult => {
 
 export default {
   fetchNetdebugStatusRequest,
-  fetchNetdebugStatusResponse,
+  fetchNetdebugStatusResponse
 };

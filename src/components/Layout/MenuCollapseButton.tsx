@@ -12,7 +12,7 @@ interface IMenuCollapseButtonProps {
 const MenuCollapseButton = ({
   isExpanded,
   onClick,
-  className,
+  className
 }: IMenuCollapseButtonProps) => (
   <li className={className} onClick={onClick}>
     <Icon

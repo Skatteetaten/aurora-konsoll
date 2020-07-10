@@ -10,7 +10,7 @@ const fetchCurrentUser = createAsyncActions<
 >(action('REQUEST_CURRENT_USER'));
 
 export const actions = {
-  fetchCurrentUser,
+  fetchCurrentUser
 };
 
 export type StartupAction = ActionType<typeof actions>;

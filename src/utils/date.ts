@@ -8,7 +8,7 @@ export function getTimestamp(time: string | number | Date): string {
     day: undefined,
     month: undefined,
     second: '2-digit',
-    year: undefined,
+    year: undefined
   });
 }
 
@@ -18,7 +18,7 @@ export function getLocalDate(time: string | number | Date): string {
     hour: undefined,
     minute: undefined,
     month: '2-digit',
-    year: 'numeric',
+    year: 'numeric'
   });
 }
 
@@ -33,7 +33,7 @@ export function getLocalDatetime(
       minute: '2-digit',
       month: '2-digit',
       year: 'numeric',
-      ...override,
+      ...override
     });
   } else {
     return '-';

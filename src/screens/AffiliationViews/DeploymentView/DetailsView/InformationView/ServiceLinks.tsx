@@ -16,7 +16,7 @@ export const ServiceLinks = ({ serviceLinks }: IServiceLinksProps) => {
     <>
       <h3>Tjenestelenker</h3>
       <ul>
-        {serviceLinks.map((link) => (
+        {serviceLinks.map(link => (
           <li key={link.name} style={{ marginBottom: '5px' }}>
             <ExternalLink target="_blank" href={link.url}>
               {link.name}

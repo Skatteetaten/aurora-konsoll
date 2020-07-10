@@ -31,7 +31,7 @@ interface ILayoutProps {
 const defaultUser: IUserAndAffiliations = {
   affiliations: [],
   id: '',
-  user: '',
+  user: ''
 };
 
 const Layout = ({
@@ -44,7 +44,7 @@ const Layout = ({
   onAffiliationChange,
   displayDatabaseView,
   displaySkapViews,
-  currentUser = defaultUser,
+  currentUser = defaultUser
 }: ILayoutProps) => {
   const onAffiliationChanged = (
     e: React.FormEvent<HTMLDivElement>,
@@ -59,33 +59,33 @@ const Layout = ({
   const databaseMenuLink: IMenuNavLinkData = {
     iconName: 'Save',
     name: 'Database',
-    to: `/a/${affiliation || '_'}/db`,
+    to: `/a/${affiliation || '_'}/db`
   };
 
   const skapMenuLinks: IMenuNavLinkData[] = [
     {
       iconName: 'LockOutline',
       name: 'Webseal',
-      to: `/a/${affiliation || '_'}/webseal`,
+      to: `/a/${affiliation || '_'}/webseal`
     },
     {
       iconName: 'Lock',
       name: 'Sertifikater',
-      to: '/certificates',
-    },
+      to: '/certificates'
+    }
   ];
 
   const menuLinks: IMenuNavLinkData[] = [
     {
       iconName: 'Menu',
       name: 'Applikasjoner',
-      to: `/a/${affiliation || '_'}/deployments`,
+      to: `/a/${affiliation || '_'}/deployments`
     },
     {
       iconName: 'Code',
       name: 'Netdebug',
-      to: '/netdebug',
-    },
+      to: '/netdebug'
+    }
   ];
 
   if (displayDatabaseView) {
@@ -96,9 +96,9 @@ const Layout = ({
     menuLinks.push(...skapMenuLinks);
   }
 
-  menuLinks.map((item) => ({
+  menuLinks.map(item => ({
     ...item,
-    showName: isMenuExpanded,
+    showName: isMenuExpanded
   }));
 
   const layoutClassNames =
@@ -121,7 +121,7 @@ const Layout = ({
         )}
       </Header>
       <Menu className="g-menu">
-        {menuLinks.map((props) => (
+        {menuLinks.map(props => (
           <MenuNavLink key={props.name} showName={isMenuExpanded} {...props} />
         ))}
         <MenuCollapseButton
@@ -138,7 +138,7 @@ const StyledLayout = styled(Layout)`
   height: 100%;
   display: grid;
   grid-template-rows: auto 1fr;
-  grid-template-columns: ${(props) => (props.isMenuExpanded ? '250px' : '70px')} 1fr;
+  grid-template-columns: ${props => (props.isMenuExpanded ? '250px' : '70px')} 1fr;
   grid-template-areas:
     'header header'
     'menu content';
@@ -160,7 +160,7 @@ const StyledLayout = styled(Layout)`
 `;
 
 const mapStateToProps = (state: RootState) => ({
-  currentUser: state.startup.currentUser,
+  currentUser: state.startup.currentUser
 });
 
 const LayoutConnected = connect(mapStateToProps, null)(StyledLayout);

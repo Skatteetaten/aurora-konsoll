@@ -20,7 +20,7 @@ const DetailsActionBar = ({
   updatedTime,
   className,
   goToDeploymentsPage,
-  refreshApplicationDeployment,
+  refreshApplicationDeployment
 }: IDetailsActionBarProps) => (
   <div className={className}>
     <ActionButton

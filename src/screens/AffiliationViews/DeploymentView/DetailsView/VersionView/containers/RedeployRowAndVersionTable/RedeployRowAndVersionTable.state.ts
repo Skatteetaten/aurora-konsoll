@@ -14,7 +14,7 @@ export interface IRedeployRowAndVersionTableProps {
 }
 
 export const mapDispatchToProps = {
-  deploy,
+  deploy
 };
 
 export const mapStateToProps = ({ applications, versions }: RootState) => {
@@ -23,7 +23,7 @@ export const mapStateToProps = ({ applications, versions }: RootState) => {
   return {
     isDeploying,
     configuredVersionTag,
-    isFetchingConfiguredVersionTag,
+    isFetchingConfiguredVersionTag
   };
 };
 

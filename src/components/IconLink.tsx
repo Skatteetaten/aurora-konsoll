@@ -35,7 +35,7 @@ const IconLink: React.StatelessComponent<IIconLinkProps> = ({
   title,
   isActiveHandler,
   className,
-  iconStyle,
+  iconStyle
 }) => {
   const icon = (
     <span className={className} title={title}>

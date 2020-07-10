@@ -12,7 +12,7 @@ interface IDropdownMenuProps {
 const DropdownMenu = ({
   className,
   renderTitle,
-  renderContent,
+  renderContent
 }: IDropdownMenuProps) => {
   return (
     <div className={className}>

@@ -2,7 +2,7 @@ import { ActionType } from 'typesafe-actions';
 
 import {
   IApplicationsConnectionData,
-  IApplicationDeploymentWithDetailsData,
+  IApplicationDeploymentWithDetailsData
 } from 'services/auroraApiClients/applicationDeploymentClient/query';
 import { IDataAndErrors } from 'services/GoboClient';
 import { createAsyncActions } from 'utils/redux/action-utils';
@@ -43,7 +43,7 @@ export const actions = {
   fetchApplicationDeploymentWithDetails,
   resetApplicationDeploymentState,
   refreshApplicationDeployment,
-  deleteApplicationDeploymentRequest,
+  deleteApplicationDeploymentRequest
 };
 
 export type ApplicationsAction = ActionType<typeof actions>;

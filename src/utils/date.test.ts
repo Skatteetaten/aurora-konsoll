@@ -3,7 +3,7 @@ import {
   dateValidation,
   getLocalDate,
   getLocalDatetime,
-  getTimestamp,
+  getTimestamp
 } from './date';
 
 describe('date utility', () => {

@@ -28,8 +28,8 @@ export class NetdebugClient {
       query: NETDEBUG_QUERY,
       variables: {
         host,
-        port,
-      },
+        port
+      }
     });
   }
 }

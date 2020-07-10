@@ -1,11 +1,11 @@
 import React from 'react';
 import {
   IRenderFunction,
-  ISelectableOption,
+  ISelectableOption
 } from 'office-ui-fabric-react/lib-commonjs';
 import styled from 'styled-components';
 
-export const onRenderOption: IRenderFunction<ISelectableOption> = (item) => {
+export const onRenderOption: IRenderFunction<ISelectableOption> = item => {
   if (!item) {
     return null;
   }

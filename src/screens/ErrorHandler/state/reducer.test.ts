@@ -2,7 +2,7 @@ import each from 'jest-each';
 import {
   errorsStateFactory,
   errorStateFactory,
-  appErrorFactory,
+  appErrorFactory
 } from 'testData/testDataBuilders';
 import { errorsResponse, incrementErrorId, nextErrorResponse } from './actions';
 import { errorsReducer } from './reducer';
@@ -12,38 +12,38 @@ describe('errors reducer', () => {
     [
       {
         name: 'errorsResponse',
-        item: errorsStateFactory.build(),
+        item: errorsStateFactory.build()
       },
 
       {
         name: 'errors',
-        item: errorsResponse(errorStateFactory.build()),
+        item: errorsResponse(errorStateFactory.build())
       },
 
       errorsStateFactory.build({
-        errors: errorStateFactory.build(),
-      }),
+        errors: errorStateFactory.build()
+      })
     ],
 
     [
       {
         name: 'incrementErrorId',
-        item: errorsStateFactory.build(),
+        item: errorsStateFactory.build()
       },
 
       {
         name: 'errorCount',
-        item: incrementErrorId(1),
+        item: incrementErrorId(1)
       },
 
       errorsStateFactory.build({
-        errorCount: 1,
-      }),
+        errorCount: 1
+      })
     ],
     [
       {
         name: 'nextErrorResponse',
-        item: errorsStateFactory.build(),
+        item: errorsStateFactory.build()
       },
       {
         name: 'nextError',
@@ -51,18 +51,18 @@ describe('errors reducer', () => {
           appErrorFactory.build({
             id: 9,
             isActive: true,
-            error: new Error('test'),
+            error: new Error('test')
           })
-        ),
+        )
       },
       errorsStateFactory.build({
         nextError: appErrorFactory.build({
           id: 9,
           isActive: true,
-          error: new Error('test'),
-        }),
-      }),
-    ],
+          error: new Error('test')
+        })
+      })
+    ]
   ]).describe.only('', (a, b, expected) => {
     test.only(`given defaultState and action ${a.name} with given value should change ${b.name} to given value`, () => {
       expect(errorsReducer(a.item, b.item)).toEqual(expected);

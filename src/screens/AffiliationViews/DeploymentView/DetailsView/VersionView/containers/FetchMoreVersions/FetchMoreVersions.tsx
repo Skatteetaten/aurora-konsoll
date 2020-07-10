@@ -5,7 +5,7 @@ import Spinner from '@skatteetaten/frontend-components/Spinner';
 import { FetchVersionsInformation } from '../../components/FetchVersionsInformation';
 import {
   IFetchMoreVersionsProps,
-  FetchMoreVersionsState,
+  FetchMoreVersionsState
 } from './FetchMoreVersions.state';
 
 type Props = IFetchMoreVersionsProps & FetchMoreVersionsState;
@@ -16,7 +16,7 @@ export const FetchMoreVersions = ({
   repository,
   imageTagsConnection,
   fetchVersions,
-  isFetching,
+  isFetching
 }: Props) => {
   return (
     <>
@@ -37,7 +37,7 @@ export const FetchMoreVersions = ({
             }
           }}
           style={{
-            minWidth: '225px',
+            minWidth: '225px'
           }}
         >
           {isFetching ? (

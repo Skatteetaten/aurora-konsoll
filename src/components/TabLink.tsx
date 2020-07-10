@@ -21,8 +21,8 @@ const TabLink = styled(NavLink)`
 
 TabLink.defaultProps = {
   activeStyle: {
-    borderBottom: `3px solid ${skeColor.blue}`,
-  },
+    borderBottom: `3px solid ${skeColor.blue}`
+  }
 };
 
 export const TabLinkWrapper = styled.div`

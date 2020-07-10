@@ -15,7 +15,7 @@ interface IDifferentVersionTooltipProps {
 
 export const DifferentVersionTooltip = ({
   versionStatus,
-  deploymentTag,
+  deploymentTag
 }: IDifferentVersionTooltipProps) => {
   if (versionStatus === VersionStatus.OK) {
     return deploymentTag;
@@ -31,7 +31,7 @@ export const DifferentVersionTooltip = ({
         iconStyle={{
           cursor: 'default',
           color: skeColor.error,
-          fontSize: '18px',
+          fontSize: '18px'
         }}
       />
       <div style={{ paddingLeft: '25px' }} title={deploymentTag}>

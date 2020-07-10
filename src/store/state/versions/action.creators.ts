@@ -5,13 +5,13 @@ import { actions } from './actions';
 import { doAsyncActions } from 'utils/redux/action-utils';
 
 export function fetchInitVersions(repository: string) {
-  return doAsyncActions(actions.fetchInitVersions, (clients) => {
+  return doAsyncActions(actions.fetchInitVersions, clients => {
     return clients.imageRepositoryClient.fetchInitVersions(repository);
   });
 }
 
 export function fetchVersion(repository: string, tagName: string) {
-  return doAsyncActions(actions.fetchVersion, (clients) => {
+  return doAsyncActions(actions.fetchVersion, clients => {
     return clients.imageRepositoryClient.fetchTag(repository, tagName);
   });
 }
@@ -27,8 +27,8 @@ export function fetchVersions(
     paged: page,
     type,
     response: {
-      name: '',
-    },
+      name: ''
+    }
   };
   return doAsyncActions(
     actions.fetchVersionsForType,
@@ -44,16 +44,16 @@ export function fetchVersions(
         : await client.findTagsPaged(repository, type, first, cursor);
       return {
         ...defaultResponse,
-        response,
+        response
       };
     }
   );
 }
 
 export function resetState(): AsyncAction {
-  return (dispatch) => dispatch(actions.resetState());
+  return dispatch => dispatch(actions.resetState());
 }
 
 export function clearStateForType(type: ImageTagType): AsyncAction {
-  return (dispatch) => dispatch(actions.resetStateForType(type));
+  return dispatch => dispatch(actions.resetStateForType(type));
 }

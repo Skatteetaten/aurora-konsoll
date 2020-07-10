@@ -10,7 +10,7 @@ import {
   DBH_ENABLED,
   GOBO_URL,
   PORT,
-  SKAP_ENABLED,
+  SKAP_ENABLED
 } from './config';
 import { managementInterfaceServer } from './ManagementInterface';
 
@@ -31,8 +31,8 @@ app.use(
       }
     },
     pathRewrite: {
-      '/api/graphql': '/graphql',
-    },
+      '/api/graphql': '/graphql'
+    }
   })
 );
 
@@ -44,7 +44,7 @@ app.get('/api/config', (req, res) => {
     CLIENT_ID,
     APPLICATION_NAME,
     DBH_ENABLED,
-    SKAP_ENABLED,
+    SKAP_ENABLED
   });
 });
 

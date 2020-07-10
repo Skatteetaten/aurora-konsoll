@@ -6,11 +6,11 @@ import { actions } from './actions';
 import {
   fetchApplicationDeployments,
   refreshAllDeploymentsForAffiliation,
-  deleteAndRefreshApplications,
+  deleteAndRefreshApplications
 } from './action.creators';
 import {
   IApplicationDeploymentData,
-  IApplicationsConnectionData,
+  IApplicationsConnectionData
 } from 'services/auroraApiClients/applicationDeploymentClient/query';
 
 const server = new GraphQLSeverMock();
@@ -20,7 +20,7 @@ const {
   dispatch,
   clearActionsAndResetState,
   skipActions,
-  getActionQueue,
+  getActionQueue
 } = createTestStore(server);
 
 function createApplicationConnectionData(
@@ -33,12 +33,12 @@ function createApplicationConnectionData(
           {
             node: {
               name: 'mokey',
-              applicationDeployments: deployments,
-            },
-          },
-        ],
-      },
-    },
+              applicationDeployments: deployments
+            }
+          }
+        ]
+      }
+    }
   };
 }
 
@@ -47,21 +47,21 @@ beforeAll(() => {
     'getApplicationDeployments',
     createApplicationConnectionData(
       applicationDeploymentFactory.buildList(1, {
-        time: '2019-11-06T12:54:00.707621Z',
+        time: '2019-11-06T12:54:00.707621Z'
       })
     )
   );
 
   server.putResponse('refreshApplicationDeployments', {
     data: {
-      refreshApplicationDeployments: true,
-    },
+      refreshApplicationDeployments: true
+    }
   });
 
   server.putResponse('deleteApplicationDeployment', {
     data: {
-      deleteApplicationDeployment: true,
-    },
+      deleteApplicationDeployment: true
+    }
   });
 });
 
@@ -104,7 +104,7 @@ describe('applicationDeployments', () => {
       'getApplicationDeployments',
       createApplicationConnectionData(
         applicationDeploymentFactory.buildList(1, {
-          time: '2019-11-06T12:56:00.707621Z',
+          time: '2019-11-06T12:56:00.707621Z'
         })
       )
     );

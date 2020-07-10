@@ -13,7 +13,7 @@ const AffiliationSelector = ({
   title,
   affiliations,
   className,
-  onSelectAffiliation: onAffiliationSelected,
+  onSelectAffiliation: onAffiliationSelected
 }: IAffiliationSelectorProps) => {
   const match = useRouteMatch<{ screen: string }>();
   if (!match) {
@@ -26,7 +26,7 @@ const AffiliationSelector = ({
         <div className="affiliation-list">
           {affiliations
             .sort((a1, a2) => a1.localeCompare(a2))
-            .map((a) => {
+            .map(a => {
               return (
                 <Link
                   to={`/a/${a}/${match.params.screen}`}

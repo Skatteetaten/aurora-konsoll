@@ -1,6 +1,6 @@
 import {
   ColumnActionsMode,
-  IColumn,
+  IColumn
 } from 'office-ui-fabric-react/lib-commonjs';
 import { IPodsStatus, IPodResource } from 'models/Pod';
 import { STATUS_COLORS } from 'models/Status';
@@ -15,7 +15,7 @@ const podsStatusColumns: IColumn[] = [
     maxWidth: 50,
     minWidth: 50,
     name: '',
-    iconName: '',
+    iconName: ''
   },
   {
     fieldName: 'name',
@@ -24,7 +24,7 @@ const podsStatusColumns: IColumn[] = [
     maxWidth: 400,
     minWidth: 300,
     name: 'Navn',
-    iconName: '',
+    iconName: ''
   },
   {
     fieldName: 'startedDate',
@@ -33,7 +33,7 @@ const podsStatusColumns: IColumn[] = [
     maxWidth: 400,
     minWidth: 300,
     name: 'Startet',
-    iconName: '',
+    iconName: ''
   },
   {
     fieldName: 'numberOfRestarts',
@@ -42,7 +42,7 @@ const podsStatusColumns: IColumn[] = [
     maxWidth: 250,
     minWidth: 150,
     name: 'Restartet',
-    iconName: '',
+    iconName: ''
   },
   {
     fieldName: 'externalLinks',
@@ -52,8 +52,8 @@ const podsStatusColumns: IColumn[] = [
     maxWidth: 120,
     minWidth: 120,
     name: '',
-    iconName: '',
-  },
+    iconName: ''
+  }
 ];
 
 export const filterPodsStatus = (filter: string) => {
@@ -71,12 +71,12 @@ export default class PodsStatusService {
   }
 
   public findLink(pod: IPodResource, name: string): string {
-    const podLink = pod.links.find((l) => l.name === name);
+    const podLink = pod.links.find(l => l.name === name);
     return podLink ? podLink.url : '#';
   }
 
   public getStatusColorAndIconForPod({
-    managementResponses,
+    managementResponses
   }: IPodResource): { icon: string; color: string } {
     if (
       managementResponses &&
@@ -89,35 +89,35 @@ export default class PodsStatusService {
         case 'HEALTHY':
           return {
             icon: 'Completed',
-            color: STATUS_COLORS.healthy,
+            color: STATUS_COLORS.healthy
           };
         case 'COMMENT':
         case 'OBSERVE':
           return {
             icon: 'Info',
-            color: STATUS_COLORS.observe,
+            color: STATUS_COLORS.observe
           };
         case 'OUT_OF_SERVICE':
         case 'DOWN':
           return {
             icon: 'Error',
-            color: STATUS_COLORS.down,
+            color: STATUS_COLORS.down
           };
         case 'OFF':
           return {
             icon: 'Blocked',
-            color: STATUS_COLORS.off,
+            color: STATUS_COLORS.off
           };
         default:
           return {
             icon: 'Info',
-            color: STATUS_COLORS.unknown,
+            color: STATUS_COLORS.unknown
           };
       }
     }
     return {
       icon: 'Info',
-      color: STATUS_COLORS.unknown,
+      color: STATUS_COLORS.unknown
     };
   }
 }

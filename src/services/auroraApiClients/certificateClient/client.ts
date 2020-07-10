@@ -12,7 +12,7 @@ export class CertificateClient {
     IDataAndErrors<ICertificatesQuery> | undefined
   > {
     return await this.client.query<ICertificatesQuery>({
-      query: CERTIFICATES_QUERY,
+      query: CERTIFICATES_QUERY
     });
   }
 }

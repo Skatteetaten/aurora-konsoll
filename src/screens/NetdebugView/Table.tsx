@@ -11,7 +11,7 @@ const columns = [
     key: 'column1',
     maxWidth: 115,
     minWidth: 50,
-    name: 'Status',
+    name: 'Status'
   },
   {
     fieldName: 'message',
@@ -19,7 +19,7 @@ const columns = [
     key: 'column5',
     maxWidth: 475,
     minWidth: 100,
-    name: 'Kommentar',
+    name: 'Kommentar'
   },
   {
     fieldName: 'resolvedIp',
@@ -27,7 +27,7 @@ const columns = [
     key: 'column7',
     maxWidth: 250,
     minWidth: 100,
-    name: 'Resolved Ip',
+    name: 'Resolved Ip'
   },
   {
     fieldName: 'clusterNodeIp',
@@ -35,8 +35,8 @@ const columns = [
     key: 'column7',
     maxWidth: 250,
     minWidth: 100,
-    name: 'IP til noden som gjør sjekk',
-  },
+    name: 'IP til noden som gjør sjekk'
+  }
 ];
 
 interface ITableProps {

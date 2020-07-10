@@ -6,7 +6,7 @@ describe('aurora-frontend', () => {
       'name3',
       'NAME1',
       'name1',
-      'name2',
+      'name2'
     ]);
 
     expect(dropdownOptions).toHaveLength(4);

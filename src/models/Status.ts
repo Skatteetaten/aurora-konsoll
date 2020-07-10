@@ -8,7 +8,7 @@ export const STATUS_COLORS: IStatusColors = {
   off: '#91919199',
   offHover: '#b9b5b599',
   unknown: '#4f8ebb',
-  unknownHover: '#4086c6',
+  unknownHover: '#4086c6'
 };
 
 interface IStatusColors {
@@ -19,7 +19,7 @@ export enum StatusCode {
   HEALTHY = 'HEALTHY',
   OBSERVE = 'OBSERVE',
   DOWN = 'DOWN',
-  OFF = 'OFF',
+  OFF = 'OFF'
 }
 
 export interface IStatusColor {
@@ -31,6 +31,6 @@ export function toStatusColor(code: StatusCode): IStatusColor {
   const codeId = code.toLowerCase();
   return {
     base: STATUS_COLORS[codeId],
-    hover: STATUS_COLORS[codeId + 'Hover'],
+    hover: STATUS_COLORS[codeId + 'Hover']
   };
 }

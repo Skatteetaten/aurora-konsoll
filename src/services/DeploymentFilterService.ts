@@ -24,7 +24,7 @@ export default class DeploymentFilterService {
 
     return {
       applications,
-      environments,
+      environments
     };
   }
 
@@ -43,20 +43,20 @@ export default class DeploymentFilterService {
       if (list.length === 0) {
         return true;
       }
-      return list.some((value) => value === toInclude);
+      return list.some(value => value === toInclude);
     };
 
     return deployments
-      .filter((dep) => filterBy(applications, dep.name))
-      .filter((dep) => filterBy(environments, dep.environment));
+      .filter(dep => filterBy(applications, dep.name))
+      .filter(dep => filterBy(environments, dep.environment));
   }
 
   public toQuery(filters: IFilter): string {
     const { applications, environments } = filters;
 
     const params = new URLSearchParams();
-    applications.forEach((app) => params.append('apps', app));
-    environments.forEach((env) => params.append('envs', env));
+    applications.forEach(app => params.append('apps', app));
+    environments.forEach(env => params.append('envs', env));
 
     return `?${params.toString()}`;
   }
@@ -65,7 +65,7 @@ export default class DeploymentFilterService {
     allFilters: IApplicationDeploymentFilters[],
     affiliation: string
   ) {
-    return allFilters.find((f) => f.affiliation === affiliation && f.default);
+    return allFilters.find(f => f.affiliation === affiliation && f.default);
   }
 
   public getOtherNonDefaultFilters = (
@@ -74,11 +74,11 @@ export default class DeploymentFilterService {
     filter: IFilter
   ) => {
     let otherFilters = allFilters.filter(
-      (f) => f.affiliation !== affiliation || f.name !== filter.name
+      f => f.affiliation !== affiliation || f.name !== filter.name
     );
 
     if (filter.default) {
-      otherFilters = otherFilters.map((f) => {
+      otherFilters = otherFilters.map(f => {
         if (f.affiliation === affiliation) {
           f.default = false;
         }

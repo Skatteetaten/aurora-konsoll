@@ -5,7 +5,7 @@ import {
   ICreateDatabaseSchemaInput,
   IDatabaseSchema,
   IJdbcUser,
-  IUpdateDatabaseSchemaInputWithCreatedBy,
+  IUpdateDatabaseSchemaInputWithCreatedBy
 } from 'models/schemas';
 import { IStartupState } from 'store/state/startup/reducers';
 import { RootState } from 'store/types';
@@ -17,7 +17,7 @@ import {
   updateSchema,
   fetchInstances,
   testJdbcConnectionForId,
-  testJdbcConnectionForJdbcUser,
+  testJdbcConnectionForJdbcUser
 } from './state/actions';
 import { ISchemasState } from './state/reducers';
 
@@ -41,7 +41,7 @@ const mapStateToProps = (state: RootState) => ({
   testJdbcConnectionResponse: state.database.testJdbcConnectionResponse,
   createResponse: getCreateDatabaseSchemaRespnse(state.database),
   currentUser: getCurrentUser(state.startup),
-  deleteResponse: getDeletionInfo(state.database),
+  deleteResponse: getDeletionInfo(state.database)
 });
 
 export const SchemaConnected = connect(mapStateToProps, {
@@ -55,5 +55,5 @@ export const SchemaConnected = connect(mapStateToProps, {
     testJdbcConnectionForJdbcUser(jdbcUser),
   onCreate: (databaseSchema: ICreateDatabaseSchemaInput) =>
     createDatabaseSchema(databaseSchema),
-  onDeleteSchemas: (ids: string[]) => deleteSchemas(ids),
+  onDeleteSchemas: (ids: string[]) => deleteSchemas(ids)
 })(Schema);
