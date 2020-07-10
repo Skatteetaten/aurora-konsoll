@@ -179,7 +179,6 @@ export class Schema extends React.Component<ISchemaProps, ISchemaState> {
       hasDeletionInformation,
       shouldResetSort
     } = this.state;
-    console.log(selectedSchema);
     return (
       <div className={className}>
         <div className="styled-action-bar">

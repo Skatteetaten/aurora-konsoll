@@ -75,11 +75,6 @@ function RestorableDatabaseSchemaUpdateDialog({
     return ref.current;
   }
 
-  const createNewCopy = () => {
-    createNewCopy();
-    clearSelectedSchema();
-  };
-
   const handleLabelChange = (field: string) => (
     event: TextFieldEvent,
     newValue?: string
@@ -94,7 +89,7 @@ function RestorableDatabaseSchemaUpdateDialog({
     <ActionButton
       onClick={open}
       iconSize={ActionButton.LARGE}
-      icon="Delete"
+      icon="LockOutlineOpen"
       color="black"
       style={{ float: 'left' }}
     >
@@ -160,7 +155,7 @@ function RestorableDatabaseSchemaUpdateDialog({
         });
       }
     }
-  }, [schema]);
+  }, [prevSchema, schema]);
 
   if (!!!schema) {
     return <div></div>;
@@ -169,8 +164,6 @@ function RestorableDatabaseSchemaUpdateDialog({
   const dateTimeFormat = (date?: Date | null) =>
     date ? getLocalDatetime(date) : '-';
   const user = schema.databaseSchema.users[0];
-
-  console.log(restoreResponse);
 
   return (
     <Dialog

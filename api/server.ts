@@ -68,6 +68,6 @@ app.listen(PORT, () => {
   logger.info(`application server started on port ${PORT}`);
 });
 
-managementInterfaceServer.listen(58081, () => {
-  logger.info(`management interface server started on port ${58081}`);
+managementInterfaceServer.listen(8081, () => {
+  logger.info(`management interface server started on port ${8081}`);
 });

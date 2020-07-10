@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { Selection } from 'office-ui-fabric-react/lib-commonjs';
 import styled from 'styled-components';
 import TextField from '@skatteetaten/frontend-components/TextField';
@@ -21,6 +21,49 @@ import {
 } from './RestorableDatabaseSchemaTable';
 import RestorableDatabaseSchemaUpdateDialog from './RestorableDatabaseSchemaUpdateDialog';
 import LoadingButton from 'components/LoadingButton';
+import ConfirmRestorationDialog from './ConfirmRestorationDialog';
+import { StyledPre } from 'components/StyledPre';
+import { DetailsList } from '@skatteetaten/frontend-components/DetailsList';
+
+export const renderDetailsListWithSchemaInfo = (
+  schemas: IRestorableDatabaseSchemaData[]
+) => (
+  <StyledPre>
+    <DetailsList
+      columns={[
+        {
+          key: 'column1',
+          name: 'Applikasjon',
+          fieldName: 'application',
+          minWidth: 200,
+          maxWidth: 200,
+          isResizable: true
+        },
+        {
+          key: 'column2',
+          name: 'Miljø',
+          fieldName: 'environment',
+          minWidth: 200,
+          maxWidth: 200,
+          isResizable: true
+        },
+        {
+          key: 'column3',
+          name: 'Diskriminator',
+          fieldName: 'discriminator',
+          minWidth: 200,
+          maxWidth: 200,
+          isResizable: true
+        }
+      ]}
+      items={schemas.map(it => ({
+        application: it.databaseSchema.application,
+        environment: it.databaseSchema.environment,
+        discriminator: it.databaseSchema.discriminator
+      }))}
+    />
+  </StyledPre>
+);
 
 export interface IRestorableSchemaProps {
   className?: string;
@@ -35,7 +78,10 @@ export interface IRestorableSchemaProps {
   onTestJdbcConnectionForId: (id: string) => void;
   onTestJdbcConnectionForUser: (jdbcUser: IJdbcUser) => void;
   onRestoreDatabaseSchemas: (ids: string[], active: boolean) => void;
-  onRestoreDatabaseSchema: (databaseSchema: IDatabaseSchema, active: boolean) => void;
+  onRestoreDatabaseSchema: (
+    databaseSchema: IDatabaseSchema,
+    active: boolean
+  ) => void;
 }
 
 interface IRestorableSchemaState {
@@ -45,6 +91,8 @@ interface IRestorableSchemaState {
   restoreMode: boolean;
   confirmDeletionDialogVisible: boolean;
   shouldResetSort: boolean;
+  confirmRestorationDialogVisible: boolean;
+  hasRestorationInformation: boolean;
 }
 
 export class RestorableSchema extends React.Component<
@@ -56,7 +104,9 @@ export class RestorableSchema extends React.Component<
     selectedSchema: undefined,
     restoreMode: false,
     confirmDeletionDialogVisible: false,
-    shouldResetSort: false
+    shouldResetSort: false,
+    confirmRestorationDialogVisible: false,
+    hasRestorationInformation: false
   };
 
   public componentDidMount() {
@@ -95,6 +145,36 @@ export class RestorableSchema extends React.Component<
     this.setState({ restoreMode: true });
   };
 
+  private onCancelRestorationClick = () => {
+    this.setState({
+      hasRestorationInformation: false,
+      confirmRestorationDialogVisible: false
+    });
+  };
+
+  private onExitRestorationClick = () => {
+    const { affiliation, onFetch } = this.props;
+    onFetch([affiliation]);
+  };
+
+  private onConfirmRestorationClick = () => {
+    const { selectedSchemas } = this.state;
+    const { onRestoreDatabaseSchemas } = this.props;
+    if (
+      selectedSchemas &&
+      selectedSchemas?.map(it => it.databaseSchema.id).length > 0
+    ) {
+      const dbIds = selectedSchemas?.map(it => it.databaseSchema.id);
+
+      onRestoreDatabaseSchemas(dbIds, true);
+      this.selection.setAllSelected(false);
+      this.setState({
+        hasRestorationInformation: true,
+        confirmDeletionDialogVisible: false
+      });
+    }
+  };
+
   public onSchemaSelectionChange = () => {
     const selected: IRestorableDatabaseSchemaView[] = this.selection
       .getSelection()
@@ -120,7 +200,10 @@ export class RestorableSchema extends React.Component<
     if (selectedSchema) this.setState({ selectedSchema });
   };
 
-  public onRestoreSelectionConfirmed = () => {};
+  public onRestoreSelectionConfirmed = () => {
+    this.setState({ confirmRestorationDialogVisible: true });
+  };
+
   public selection = new Selection({
     onSelectionChanged: () => {
       if (this.state.restoreMode) {
@@ -136,14 +219,10 @@ export class RestorableSchema extends React.Component<
       className,
       onUpdate,
       onRestore,
-      affiliation,
-      onFetch,
       items,
       onTestJdbcConnectionForId,
-      onTestJdbcConnectionForUser,
       testJdbcConnectionResponse,
       restoreResponse,
-      onRestoreDatabaseSchemas,
       onRestoreDatabaseSchema
     } = this.props;
     const {
@@ -151,8 +230,9 @@ export class RestorableSchema extends React.Component<
       selectedSchema,
       selectedSchemas,
       restoreMode,
-      confirmDeletionDialogVisible,
-      shouldResetSort
+      confirmRestorationDialogVisible,
+      shouldResetSort,
+      hasRestorationInformation
     } = this.state;
     return (
       <div className={className}>
@@ -166,9 +246,9 @@ export class RestorableSchema extends React.Component<
               />
             </div>
             <EnterModeThenConfirm
-              confirmButtonEnabled={[].length !== 0}
+              confirmButtonEnabled={(selectedSchemas || []).length !== 0}
               confirmText="Gjennopprett valgte"
-              inactiveIcon="History"
+              inactiveIcon="LockOutlineOpen"
               inactiveText="Velg skjemaer for gjenoppretting"
               onEnterMode={this.onEnterRestorationMode}
               onExitMode={this.onExitRestorationMode}
@@ -208,6 +288,17 @@ export class RestorableSchema extends React.Component<
           testJdbcConnectionResponse={testJdbcConnectionResponse}
           onRestoreDatabaseSchema={onRestoreDatabaseSchema}
           restoreResponse={restoreResponse}
+        />
+        <ConfirmRestorationDialog
+          title="Gjenopprett databaseskjemaer"
+          visible={confirmRestorationDialogVisible}
+          onOkClick={this.onConfirmRestorationClick}
+          onCancelClick={this.onCancelRestorationClick}
+          onExitClick={this.onExitRestorationClick}
+          schemasToRestore={this.state.selectedSchemas || []}
+          hasRestorationInformation={hasRestorationInformation}
+          restoreResponse={restoreResponse}
+          items={items}
         />
       </div>
     );

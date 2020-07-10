@@ -3,7 +3,6 @@ import { RootState } from '../../../store/types';
 import RestorableSchema from './RestorableSchema';
 import {
   fetchRestorableSchemas,
-  fetchInstances,
   updateSchema,
   deleteSchema,
   testJdbcConnectionForId,
@@ -11,7 +10,6 @@ import {
   restoreSchemas,
   restoreSchema
 } from './state/actions';
-import { ISchemasState } from './state/reducers';
 import {
   IUpdateDatabaseSchemaInputWithCreatedBy,
   IDatabaseSchema,

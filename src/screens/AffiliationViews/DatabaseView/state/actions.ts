@@ -93,7 +93,6 @@ export const fetchRestorableSchemas: Thunk = (affiliations: string[]) => async (
   } else {
     dispatch(fetchRestorableSchemaResponse({ restorableDatabaseSchemas: [] }));
   }
-  console.log('LJLKJ');
 };
 
 export const fetchInstances: Thunk = (affiliation: string) => async (
@@ -176,14 +175,14 @@ export const deleteSchemas: Thunk = (ids: string[]) => async (
   }
 };
 
-export const restoreSchema: Thunk = (databaseSchema: IDatabaseSchema, active: boolean) => async (
-  dispatch,
-  getState,
-  { clients }
-) => {
-  const result = await clients.databaseClient.restoreSchemas([
-    databaseSchema.id
-  ], active);
+export const restoreSchema: Thunk = (
+  databaseSchema: IDatabaseSchema,
+  active: boolean
+) => async (dispatch, getState, { clients }) => {
+  const result = await clients.databaseClient.restoreSchemas(
+    [databaseSchema.id],
+    active
+  );
   dispatch(addCurrentErrors(result));
 
   if (result && result.data) {

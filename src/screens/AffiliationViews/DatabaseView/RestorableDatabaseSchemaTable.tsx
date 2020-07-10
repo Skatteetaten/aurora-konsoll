@@ -9,7 +9,6 @@ import {
 
 import { IRestorableDatabaseSchemaData } from 'models/schemas';
 import { getLocalDate } from 'utils/date';
-import { ENGINE_METHOD_ALL } from 'constants';
 
 interface IRestorableDatabaseSchemaTableProps {
   filter: string;
@@ -194,8 +193,6 @@ const toViewSchema = (
     i.databaseSchema.jdbcUrl.substring(
       i.databaseSchema.jdbcUrl.indexOf(prefix) + prefix.length
     );
-
-  console.log(i);
 
   const jdbcUrl = i.databaseSchema.jdbcUrl.includes('@')
     ? getJdbcUrlText('@')
