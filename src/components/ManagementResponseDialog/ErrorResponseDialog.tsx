@@ -22,7 +22,7 @@ const ErrorResponseDialog = ({
   createdAtTime,
   renderRefreshButton,
   title,
-  icon
+  icon,
 }: IErrorResponseDialogProps) => {
   const renderOpenErrorButton = (open: () => void) => (
     <Icon
@@ -34,7 +34,7 @@ const ErrorResponseDialog = ({
         cursor: 'pointer',
         color: `${skeColor.error}`,
         float: 'none',
-        marginLeft: '4px'
+        marginLeft: '4px',
       }}
     />
   );

@@ -4,7 +4,7 @@ export enum VersionStatus {
   OK,
   IS_NOT_LATEST,
   DIFFER_FROM_AURORA_CONFIG,
-  IS_NOT_LATEST_AND_DIFFER_FROM_AURORA_CONFIG
+  IS_NOT_LATEST_AND_DIFFER_FROM_AURORA_CONFIG,
 }
 
 export function getVersionStatus(

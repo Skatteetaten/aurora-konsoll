@@ -19,5 +19,5 @@ export const rootReducer = combineReducers({
   netdebug: netdebugViewReducer,
   versions: versionsReducer,
   userSettings: userSettingsReducer,
-  applications: applicationsReducer
+  applications: applicationsReducer,
 });

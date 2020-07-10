@@ -6,16 +6,16 @@ import CalloutButton from 'components/CalloutButton';
 export const VersionTableInformation = () => (
   <CalloutButton
     style={{
-      marginBottom: '6px'
+      marginBottom: '6px',
     }}
     calloutProps={{
       color: Callout.INFO,
       gapSpace: 8,
-      directionalHint: Callout.POS_BOTTOM_LEFT
+      directionalHint: Callout.POS_BOTTOM_LEFT,
     }}
     buttonProps={{
       icon: 'info',
-      buttonStyle: 'secondary'
+      buttonStyle: 'secondary',
     }}
     title="Finner du ikke versjoner du leter etter?"
     content={

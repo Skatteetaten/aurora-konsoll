@@ -2,7 +2,7 @@ import { IDropdownOption } from 'office-ui-fabric-react/lib-commonjs';
 
 function toDropdownOptions(names: string[]): IDropdownOption[] {
   const dropdownNames = names
-    .map(name => name.toLowerCase())
+    .map((name) => name.toLowerCase())
     .filter((name, index, self) => self.indexOf(name) === index)
     .sort()
     .reduce(
@@ -10,8 +10,8 @@ function toDropdownOptions(names: string[]): IDropdownOption[] {
         ...acc,
         {
           key: name,
-          text: name
-        }
+          text: name,
+        },
       ],
       []
     );

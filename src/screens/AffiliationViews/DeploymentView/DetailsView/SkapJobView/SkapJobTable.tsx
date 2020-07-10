@@ -3,7 +3,7 @@ import Table from '@skatteetaten/frontend-components/Table';
 import styled from 'styled-components';
 import {
   IBigipJob,
-  IWebsealJob
+  IWebsealJob,
 } from 'services/auroraApiClients/applicationDeploymentClient/query';
 
 interface IWebsealJobTable extends IWebsealJob {
@@ -34,48 +34,48 @@ const SkapJobTable = ({ websealJobs, bigipJobs }: ISkapJobTableProps) => {
               {
                 name: 'Status',
                 fieldName: 'statusWithIcon',
-                sortable: true
+                sortable: true,
               },
               {
                 name: 'Id',
                 fieldName: 'id',
-                sortable: true
+                sortable: true,
               },
               {
                 name: 'Host',
                 fieldName: 'host',
-                sortable: true
+                sortable: true,
               },
               {
                 name: 'Roller',
                 fieldName: 'roles',
-                sortable: true
+                sortable: true,
               },
               {
                 name: 'Type',
                 fieldName: 'type',
-                sortable: true
+                sortable: true,
               },
               {
                 name: 'Operasjon',
                 fieldName: 'operation',
-                sortable: true
+                sortable: true,
               },
               {
                 name: 'Rutenavn',
                 fieldName: 'routeName',
-                sortable: true
+                sortable: true,
               },
               {
                 name: 'Sist oppdatert',
                 fieldName: 'updatedFormatted',
-                sortable: true
+                sortable: true,
               },
               {
                 name: 'Feilmelding',
                 fieldName: 'errorMessage',
-                sortable: true
-              }
+                sortable: true,
+              },
             ]}
           />
         </>
@@ -90,49 +90,49 @@ const SkapJobTable = ({ websealJobs, bigipJobs }: ISkapJobTableProps) => {
               {
                 name: 'Status',
                 fieldName: 'statusWithIcon',
-                sortable: true
+                sortable: true,
               },
               {
                 name: 'Id',
                 fieldName: 'id',
-                sortable: true
+                sortable: true,
               },
               {
                 name: 'Hostnavn',
                 fieldName: 'hostname',
-                sortable: true
+                sortable: true,
               },
               {
                 name: 'Ekstern host',
                 fieldName: 'externalHost',
-                sortable: true
+                sortable: true,
               },
               {
                 name: 'Type',
                 fieldName: 'type',
-                sortable: true
+                sortable: true,
               },
               {
                 name: 'Operasjon',
                 fieldName: 'operation',
-                sortable: true
+                sortable: true,
               },
               {
                 name: 'Konfigurasjon',
                 fieldName: 'konfigurasjon',
-                sortable: true
+                sortable: true,
               },
               {
                 name: 'Sist oppdatert',
                 fieldName: 'updatedFormatted',
-                sortable: true
+                sortable: true,
               },
 
               {
                 name: 'Feilmelding',
                 fieldName: 'errorMessage',
-                sortable: true
-              }
+                sortable: true,
+              },
             ]}
           />
         </>

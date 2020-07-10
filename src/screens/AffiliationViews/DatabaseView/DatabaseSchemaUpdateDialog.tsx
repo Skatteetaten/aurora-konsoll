@@ -13,7 +13,7 @@ import {
   IDatabaseApplicationDeployment,
   IDatabaseSchema,
   IUpdateDatabaseSchemaInputWithCreatedBy,
-  ITestJDBCResponse
+  ITestJDBCResponse,
 } from 'models/schemas';
 import DatabaseSchemaService from 'services/DatabaseSchemaService';
 import { getLocalDatetime } from 'utils/date';
@@ -62,8 +62,8 @@ class DatabaseSchemaUpdateDialog extends React.Component<
       description: '',
       environment: '',
       application: '',
-      affiliation: ''
-    }
+      affiliation: '',
+    },
   };
 
   public componentDidUpdate(prevProps: IDatabaseSchemaUpdateDialogProps) {
@@ -79,8 +79,8 @@ class DatabaseSchemaUpdateDialog extends React.Component<
             engine: schema.engine,
             environment: schema.environment,
             application: schema.application,
-            affiliation: schema.affiliation.name
-          }
+            affiliation: schema.affiliation.name,
+          },
         });
       }
     }
@@ -101,11 +101,11 @@ class DatabaseSchemaUpdateDialog extends React.Component<
     event: TextFieldEvent,
     newValue?: string
   ) => {
-    this.setState(state => ({
+    this.setState((state) => ({
       updatedSchemaValues: {
         ...state.updatedSchemaValues,
-        [field]: newValue
-      }
+        [field]: newValue,
+      },
     }));
   };
 
@@ -120,7 +120,7 @@ class DatabaseSchemaUpdateDialog extends React.Component<
         environment: updatedSchemaValues.environment,
         discriminator: updatedSchemaValues.discriminator,
         id: schema.id,
-        createdBy: updatedSchemaValues.createdBy
+        createdBy: updatedSchemaValues.createdBy,
       };
       onUpdate(newValues);
       this.hideDialog();
@@ -176,7 +176,7 @@ class DatabaseSchemaUpdateDialog extends React.Component<
       schema,
       className,
       testJdbcConnectionResponse,
-      onTestJdbcConnectionForId
+      onTestJdbcConnectionForId,
     } = this.props;
     const { updatedSchemaValues } = this.state;
     if (!schema) {
@@ -300,14 +300,14 @@ Miljø: ${app.namespace.name}
 Affiliation: ${app.affiliation.name}
 `;
 
-    const links = applicationDeployments.map(it => [
+    const links = applicationDeployments.map((it) => [
       <SkeLink
         key={it.id}
         title={title(it)}
         to={`/a/${it.affiliation.name}/deployments/${it.id}/info`}
       >
         {it.name}
-      </SkeLink>
+      </SkeLink>,
     ]);
 
     if (links.length === 0) {

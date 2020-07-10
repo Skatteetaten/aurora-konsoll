@@ -2,14 +2,14 @@ import * as React from 'react';
 
 import ActionButton from '@skatteetaten/frontend-components/ActionButton';
 import RadioButtonGroup, {
-  RadioButtonGroupProps
+  RadioButtonGroupProps,
 } from '@skatteetaten/frontend-components/RadioButtonGroup';
 import TextField from '@skatteetaten/frontend-components/TextField';
 import { TextFieldEvent } from 'types/react';
 
 export enum FilterMode {
   Create,
-  Edit
+  Edit,
 }
 
 export interface IFilterOption {
@@ -36,7 +36,7 @@ const FilterModeSelect = ({
   selectedFilterKey,
   deleteFilter,
   mode,
-  handleFilterChange
+  handleFilterChange,
 }: IFilterModeSelectProps) => {
   const changeMode: RadioButtonGroupProps['onChange'] = (ev, option) => {
     if (option) {
@@ -81,14 +81,14 @@ const FilterModeSelect = ({
             key: FilterMode.Create.toString(),
             text: 'Nytt',
             description: '',
-            iconProps: { iconName: 'AddOutline' }
+            iconProps: { iconName: 'AddOutline' },
           },
           {
             key: FilterMode.Edit.toString(),
             text: 'Rediger',
             description: '',
-            iconProps: { iconName: 'Edit' }
-          }
+            iconProps: { iconName: 'Edit' },
+          },
         ]}
         warning=""
         errorMessage=""

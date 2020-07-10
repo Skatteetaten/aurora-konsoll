@@ -39,8 +39,8 @@ describe('redeployWithCurrentVersion', () => {
   it('should redeploy with current version to GraphQL server', async () => {
     serverMock.putResponse('redeployWithCurrentVersion', {
       data: {
-        redeployWithCurrentVersion: true
-      }
+        redeployWithCurrentVersion: true,
+      },
     });
 
     const result = await applicationDeploymentClient.redeployWithCurrentVersion(

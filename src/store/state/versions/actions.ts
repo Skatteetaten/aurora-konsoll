@@ -2,7 +2,7 @@ import { createAction } from 'redux-ts-utils';
 import { ImageTagType } from 'models/ImageTagType';
 import {
   ITagsQuery,
-  ITagQuery
+  ITagQuery,
 } from 'services/auroraApiClients/imageRepositoryClient/query';
 import { ActionType } from 'typesafe-actions';
 import { createAsyncActions } from 'utils/redux/action-utils';
@@ -33,7 +33,7 @@ export const actions = {
   fetchVersionsForType,
   resetState,
   resetStateForType,
-  fetchVersion
+  fetchVersion,
 };
 
 export type VersionsAction = ActionType<typeof actions>;

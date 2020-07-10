@@ -8,11 +8,11 @@ export const FetchVersionsInformation = () => (
     calloutProps={{
       color: Callout.INFO,
       gapSpace: 8,
-      directionalHint: Callout.POS_BOTTOM_CENTER
+      directionalHint: Callout.POS_BOTTOM_CENTER,
     }}
     buttonProps={{
       icon: 'info',
-      buttonStyle: 'secondary'
+      buttonStyle: 'secondary',
     }}
     title="Vis info"
     content={

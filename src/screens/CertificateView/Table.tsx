@@ -3,7 +3,7 @@ import * as React from 'react';
 import SortableDetailsList from 'components/SortableDetailsList';
 import { ICertificateView } from 'models/certificates';
 import CertificateService, {
-  filterCertificateView
+  filterCertificateView,
 } from 'services/CertificateService';
 
 interface ITableProps {

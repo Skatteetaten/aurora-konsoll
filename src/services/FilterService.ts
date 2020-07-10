@@ -16,30 +16,30 @@ export default class FilterService {
     environments: string[]
   ) {
     return allFilters
-      .filter(f => f.affiliation === affiliation)
+      .filter((f) => f.affiliation === affiliation)
       .find(
-        f =>
+        (f) =>
           JSON.stringify(f.environments) === JSON.stringify(environments) &&
           JSON.stringify(f.applications) === JSON.stringify(applications)
       );
   }
 
   public removeElement = (list: string[], element: string) =>
-    list.filter(item => item !== element);
+    list.filter((item) => item !== element);
 
   public createFilterOptions = (
     allFilters: IApplicationDeploymentFilters[],
     affiliation: string
   ): IChoiceGroupOption[] => {
     const filterNames = allFilters
-      .filter(filter => filter.affiliation === affiliation)
-      .map(filter => filter.name)
+      .filter((filter) => filter.affiliation === affiliation)
+      .map((filter) => filter.name)
       .sort();
     return filterNames.map((name, index) => ({
       value: name,
       label: name,
       key: name || '',
-      text: name || ''
+      text: name || '',
     }));
   };
 
@@ -48,7 +48,7 @@ export default class FilterService {
     type: SelectionType
   ) => {
     return allDeployments
-      .map(deployment =>
+      .map((deployment) =>
         type === SelectionType.Applications
           ? deployment.name
           : deployment.environment
@@ -68,7 +68,7 @@ export default class FilterService {
       environments: this.removeSelectionTypeDuplicateValues(
         allDeployments,
         SelectionType.Environments
-      )
+      ),
     };
   };
 
@@ -83,5 +83,5 @@ export default class FilterService {
   public getDefaultFilter = (
     allFilters: IApplicationDeploymentFilters[],
     affiliation: string
-  ) => allFilters.find(f => f.affiliation === affiliation && f.default);
+  ) => allFilters.find((f) => f.affiliation === affiliation && f.default);
 }

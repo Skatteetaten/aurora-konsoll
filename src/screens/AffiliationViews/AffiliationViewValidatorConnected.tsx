@@ -3,7 +3,7 @@ import { RootState, ReduxProps } from 'store/types';
 import { AffiliationViewValidator } from './AffiliationViewValidator';
 
 const mapStateToProps = ({ startup }: RootState) => ({
-  currentUser: startup.currentUser
+  currentUser: startup.currentUser,
 });
 
 export type AffiliationViewValidatorState = ReduxProps<

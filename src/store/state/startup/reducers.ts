@@ -12,12 +12,12 @@ export interface IStartupState {
 const initialState: IStartupState = {
   isLoading: false,
   errors: [],
-  currentUser: { id: '', user: '', affiliations: [] }
+  currentUser: { id: '', user: '', affiliations: [] },
 };
 
 export const startupReducer = reduceReducers<IStartupState>(
   [
-    handleAction(actions.fetchCurrentUser.request, state => {
+    handleAction(actions.fetchCurrentUser.request, (state) => {
       state.isLoading = true;
     }),
     handleAction(actions.fetchCurrentUser.success, (state, { payload }) => {
@@ -27,7 +27,7 @@ export const startupReducer = reduceReducers<IStartupState>(
         state.currentUser = {
           id: currentUser.id,
           user: formatName(currentUser.name),
-          affiliations: affiliations.edges.map(edge => edge.node.name)
+          affiliations: affiliations.edges.map((edge) => edge.node.name),
         };
       }
       if (payload.errors) {
@@ -37,7 +37,7 @@ export const startupReducer = reduceReducers<IStartupState>(
     handleAction(actions.fetchCurrentUser.failure, (state, { payload }) => {
       state.isLoading = false;
       state.errors.push(payload);
-    })
+    }),
   ],
   initialState
 );

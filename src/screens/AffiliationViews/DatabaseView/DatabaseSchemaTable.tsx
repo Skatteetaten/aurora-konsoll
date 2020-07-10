@@ -4,7 +4,7 @@ import {
   CheckboxVisibility,
   SelectionMode,
   Selection,
-  IColumn
+  IColumn,
 } from 'office-ui-fabric-react/lib-commonjs';
 
 import { IDatabaseSchema } from 'models/schemas';
@@ -30,7 +30,7 @@ export function DatabaseSchemaTable({
   multiSelect,
   selection,
   onResetSort,
-  shouldResetSort
+  shouldResetSort,
 }: IDatabaseSchemaTableProps) {
   const columns: IColumn[] = [
     {
@@ -40,7 +40,7 @@ export function DatabaseSchemaTable({
       maxWidth: 85,
       minWidth: 85,
       name: 'Type',
-      iconName: ''
+      iconName: '',
     },
     {
       fieldName: 'environment',
@@ -49,7 +49,7 @@ export function DatabaseSchemaTable({
       maxWidth: 200,
       minWidth: 200,
       name: 'Miljø',
-      iconName: ''
+      iconName: '',
     },
     {
       fieldName: 'application',
@@ -58,7 +58,7 @@ export function DatabaseSchemaTable({
       maxWidth: 200,
       minWidth: 200,
       name: 'Applikasjon',
-      iconName: ''
+      iconName: '',
     },
     {
       fieldName: 'discriminator',
@@ -67,7 +67,7 @@ export function DatabaseSchemaTable({
       maxWidth: 200,
       minWidth: 200,
       name: 'Diskriminator',
-      iconName: ''
+      iconName: '',
     },
     {
       fieldName: 'createdDate',
@@ -76,7 +76,7 @@ export function DatabaseSchemaTable({
       maxWidth: 90,
       minWidth: 90,
       name: 'Opprettet',
-      iconName: ''
+      iconName: '',
     },
     {
       fieldName: 'lastUsedDate',
@@ -85,7 +85,7 @@ export function DatabaseSchemaTable({
       maxWidth: 90,
       minWidth: 90,
       name: 'Sist brukt',
-      iconName: ''
+      iconName: '',
     },
     {
       fieldName: 'sizeInMb',
@@ -94,7 +94,7 @@ export function DatabaseSchemaTable({
       maxWidth: 110,
       minWidth: 110,
       name: 'Størrelse (MB)',
-      iconName: ''
+      iconName: '',
     },
     {
       fieldName: 'createdBy',
@@ -103,7 +103,7 @@ export function DatabaseSchemaTable({
       maxWidth: 80,
       minWidth: 80,
       name: 'Bruker',
-      iconName: ''
+      iconName: '',
     },
     {
       fieldName: 'applicationDeploymentsUses',
@@ -112,7 +112,7 @@ export function DatabaseSchemaTable({
       maxWidth: 70,
       minWidth: 70,
       name: 'I bruk av',
-      iconName: ''
+      iconName: '',
     },
     {
       fieldName: 'engine',
@@ -121,7 +121,7 @@ export function DatabaseSchemaTable({
       maxWidth: 90,
       minWidth: 90,
       name: 'Engine',
-      iconName: ''
+      iconName: '',
     },
     {
       fieldName: 'jdbcUrl',
@@ -131,8 +131,8 @@ export function DatabaseSchemaTable({
       minWidth: 280,
       name: 'JDBC url',
       iconName: '',
-      className: 'jdbcurl-col'
-    }
+      className: 'jdbcurl-col',
+    },
   ];
 
   const filterDatabaseSchemaView = (filter: string) => {
@@ -194,7 +194,7 @@ const toViewSchemas = (
   let viewItems: IDatabaseSchemaView[] = [];
 
   if (databaseSchemas && databaseSchemas.length > 0) {
-    viewItems = databaseSchemas.map(i => toViewSchema(i));
+    viewItems = databaseSchemas.map((i) => toViewSchema(i));
   }
   return viewItems;
 };
@@ -219,6 +219,6 @@ const toViewSchema = (i: IDatabaseSchema): IDatabaseSchemaView => {
     sizeInMb: i.sizeInMb,
     createdBy: i.createdBy,
     engine: i.type === 'EXTERNAL' ? '' : i.engine,
-    jdbcUrl
+    jdbcUrl,
   };
 };

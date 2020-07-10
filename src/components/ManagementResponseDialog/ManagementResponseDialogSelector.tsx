@@ -20,7 +20,7 @@ const ManagementResponseDialogSelector = ({
   refreshApplicationDeployment,
   isUpdating,
   title,
-  icon
+  icon,
 }: IManagementResponseDialogSelectorProps) => {
   const renderRefreshButton = () => {
     return (

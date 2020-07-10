@@ -11,7 +11,7 @@ const composeEnhancers =
     ? ((window as any).__REDUX_DEVTOOLS_EXTENSION_COMPOSE__({
         serialize: true,
         latency: 0,
-        features: { persist: false }
+        features: { persist: false },
       }) as typeof compose)
     : compose;
 
@@ -19,7 +19,7 @@ const createStoreWithApi = (clients: IApiClients, initialState: {} = {}) => {
   const enhancer = composeEnhancers(
     applyMiddleware(
       thunkMiddleware.withExtraArgument({
-        clients
+        clients,
       }) as ThunkMiddleware<RootState, RootAction, IExtraArguments>
     )
   );

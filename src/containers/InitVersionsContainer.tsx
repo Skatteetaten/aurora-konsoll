@@ -1,14 +1,14 @@
 import React, { useEffect } from 'react';
 import {
   resetState,
-  fetchInitVersions
+  fetchInitVersions,
 } from 'store/state/versions/action.creators';
 import { connect, ResolveThunks } from 'react-redux';
 import { IImageRepository } from 'services/auroraApiClients/applicationDeploymentClient/query';
 
 const mapDispatchToProps = {
   resetState,
-  fetchInitVersions
+  fetchInitVersions,
 };
 
 interface InitVersionsProps {
@@ -22,13 +22,14 @@ const InitVersions = ({
   imageRepository,
   fetchInitVersions,
   resetState,
-  hasPermission
+  hasPermission,
 }: Props) => {
   const repository = imageRepository && imageRepository.repository;
   useEffect(() => {
     if (!repository || !hasPermission) {
       return;
     }
+    resetState();
     fetchInitVersions(repository);
     return () => {
       resetState();

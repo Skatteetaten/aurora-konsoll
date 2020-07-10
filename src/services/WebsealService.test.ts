@@ -7,13 +7,13 @@ describe('WebsealService', () => {
     it('should convert object to have two properties', () => {
       const object = [
         { key: 'activeWorkerThreads', value: '1' },
-        { key: 'hostname', value: 'test.com' }
+        { key: 'hostname', value: 'test.com' },
       ];
 
       const newObject = websealService.addProperties(
         JSON.stringify({
           activeWorkerThreads: '1',
-          hostname: 'test.com'
+          hostname: 'test.com',
         })
       );
       expect(newObject).toEqual(object);

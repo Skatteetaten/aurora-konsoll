@@ -1,3 +1,7 @@
+import dotenv from 'dotenv';
+
+dotenv.config({ path: '.env.local' });
+
 const { env } = process;
 
 const OPENSHIFT_CLUSTER = env.OPENSHIFT_CLUSTER || 'utv';
@@ -33,5 +37,5 @@ export {
   GOBO_URL,
   DBH_ENABLED,
   SKAP_ENABLED,
-  TOKEN_ENCRYPTION_FRASE
+  TOKEN_ENCRYPTION_FRASE,
 };

@@ -16,12 +16,12 @@ export default class Collapse extends React.Component<
   ICollapseState
 > {
   public state: ICollapseState = {
-    isCollapsed: false
+    isCollapsed: false,
   };
 
   public componentDidMount() {
-    this.setState(state => ({
-      isCollapsed: this.props.isCollapsed || state.isCollapsed
+    this.setState((state) => ({
+      isCollapsed: this.props.isCollapsed || state.isCollapsed,
     }));
   }
 
@@ -47,8 +47,8 @@ export default class Collapse extends React.Component<
   };
 
   private toggleCollapse = () => {
-    this.setState(state => ({
-      isCollapsed: !state.isCollapsed
+    this.setState((state) => ({
+      isCollapsed: !state.isCollapsed,
     }));
   };
 }

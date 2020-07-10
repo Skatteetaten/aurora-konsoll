@@ -44,5 +44,5 @@ export const fetchWebsealStates: Thunk = (affiliation: string) => async (
 
 export default {
   fetchWebsealStatesRequest,
-  fetchWebsealStatesResponse
+  fetchWebsealStatesResponse,
 };

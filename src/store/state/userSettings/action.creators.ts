@@ -3,7 +3,7 @@ import { IUserSettings } from 'models/UserSettings';
 import { doAsyncActions } from 'utils/redux/action-utils';
 
 export function getUserSettings() {
-  return doAsyncActions(actions.fetchUserSettings, clients =>
+  return doAsyncActions(actions.fetchUserSettings, (clients) =>
     clients.userSettingsClient.getUserSettings()
   );
 }
@@ -13,8 +13,8 @@ export function updateUserSettings(userSettings: IUserSettings) {
     {
       request: actions.updateUserSettingsRequest,
       success: actions.fetchUserSettings.success,
-      failure: actions.fetchUserSettings.failure
+      failure: actions.fetchUserSettings.failure,
     },
-    clients => clients.userSettingsClient.updateUserSettings(userSettings)
+    (clients) => clients.userSettingsClient.updateUserSettings(userSettings)
   );
 }

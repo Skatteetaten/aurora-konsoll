@@ -30,7 +30,7 @@ class CertificateBase extends React.Component<
 > {
   public state = {
     filter: '',
-    viewItems: []
+    viewItems: [],
   };
 
   public componentDidMount() {
@@ -55,7 +55,7 @@ class CertificateBase extends React.Component<
       viewItems = [];
     }
     this.setState({
-      viewItems
+      viewItems,
     });
   };
 
@@ -109,7 +109,7 @@ class CertificateBase extends React.Component<
   private onFilterChange = (event: TextFieldEvent, newValue?: string) => {
     if (newValue) {
       this.setState({
-        filter: newValue
+        filter: newValue,
       });
     }
   };

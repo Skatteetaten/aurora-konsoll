@@ -14,29 +14,26 @@ interface IActiveDeploymentInformationProps {
 
 export const ActiveDeploymentInformation = ({
   versionStatus,
-  deployment
+  deployment,
 }: IActiveDeploymentInformationProps) => {
   const values = new InfoContentValues();
 
   const tooltip = (tag: string) =>
     DifferentVersionTooltip({
       versionStatus,
-      deploymentTag: tag
+      deploymentTag: tag,
     });
 
   const removeFirstPath = (path: string): string =>
-    path
-      .split('/')
-      .slice(1)
-      .join('/');
+    path.split('/').slice(1).join('/');
 
-  values.addFrom(deployment, add => {
-    add('version', 'Tag', v => tooltip(v.deployTag.name));
-    add('version', 'Aurora version', version => version.auroraVersion);
+  values.addFrom(deployment, (add) => {
+    add('version', 'Tag', (v) => tooltip(v.deployTag.name));
+    add('version', 'Aurora version', (version) => version.auroraVersion);
     add('message', 'Message');
   });
 
-  values.addFrom(deployment, add => {
+  values.addFrom(deployment, (add) => {
     const getImageRepository = (repo: IImageRepository) => {
       const isTypeDeploy =
         deployment.details.deploymentSpec &&
@@ -47,13 +44,13 @@ export const ActiveDeploymentInformation = ({
       }
       return {
         value: removeFirstPath(repo.repository),
-        link: `${repo.guiUrl}${deployment.version.deployTag.name}`
+        link: `${repo.guiUrl}${deployment.version.deployTag.name}`,
       };
     };
     add('imageRepository', 'Image repository', getImageRepository);
   });
 
-  values.addFrom(deployment.details, add => {
+  values.addFrom(deployment.details, (add) => {
     add('updatedBy', 'Oppdatert av');
   });
 
