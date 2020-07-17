@@ -18,7 +18,6 @@ import {
   IDatabaseInstances,
   ITestJDBCResponse,
 } from 'models/schemas';
-import ConfirmDeletionDialog from './ConfirmDeletionDialog';
 import DatabaseSchemaCreateDialog from './DatabaseSchemaCreateDialog';
 import DatabaseSchemaUpdateDialog from './DatabaseSchemaUpdateDialog';
 import { EnterModeThenConfirm } from './EnterModeThenConfirm';
@@ -28,7 +27,8 @@ import {
 } from './DatabaseSchemaTable';
 import { TextFieldEvent } from 'types/react';
 import { StyledPre } from 'components/StyledPre';
-import { DetailsList } from 'office-ui-fabric-react/lib-commonjs';
+import ConfirmChangeCooldownDialog from "./ConfirmChangeCooldownDialog";
+import DetailsList from "@skatteetaten/frontend-components/DetailsList";
 
 export const renderDetailsListWithSchemaInfo = (schemas: IDatabaseSchema[]) => (
   <StyledPre>
@@ -236,15 +236,16 @@ export class Schema extends React.Component<ISchemaProps, ISchemaState> {
           testJdbcConnectionResponse={testJdbcConnectionResponse}
           createNewCopy={this.onCreateCopyConfirmed}
         />
-        <ConfirmDeletionDialog
+        <ConfirmChangeCooldownDialog
           title="Slett databaseskjemaer"
           visible={confirmDeletionDialogVisible}
           onOkClick={this.onConfirmDeletionClick}
           onCancelClick={this.onCancelDeletionClick}
           onExitClick={this.onExitDeletionClick}
-          schemasToDelete={this.state.selectedSchemas || []}
-          hasDeletionInformation={hasDeletionInformation}
-          deleteResponse={deleteResponse}
+          schemasToChange={this.state.selectedSchemas || []}
+          hasChangeInformation={hasDeletionInformation}
+          changeCooldownResponse={deleteResponse}
+          changeCooldownType={"slettet"}
           items={items}
         />
       </div>

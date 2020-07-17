@@ -20,49 +20,7 @@ import {
 } from './RestorableDatabaseSchemaTable';
 import RestorableDatabaseSchemaUpdateDialog from './RestorableDatabaseSchemaUpdateDialog';
 import LoadingButton from 'components/LoadingButton';
-import ConfirmRestorationDialog from './ConfirmRestorationDialog';
-import { StyledPre } from 'components/StyledPre';
-import { DetailsList } from '@skatteetaten/frontend-components/DetailsList';
-
-export const renderDetailsListWithSchemaInfo = (
-  schemas: IRestorableDatabaseSchemaData[]
-) => (
-  <StyledPre>
-    <DetailsList
-      columns={[
-        {
-          key: 'column1',
-          name: 'Applikasjon',
-          fieldName: 'application',
-          minWidth: 200,
-          maxWidth: 200,
-          isResizable: true,
-        },
-        {
-          key: 'column2',
-          name: 'Miljø',
-          fieldName: 'environment',
-          minWidth: 200,
-          maxWidth: 200,
-          isResizable: true,
-        },
-        {
-          key: 'column3',
-          name: 'Diskriminator',
-          fieldName: 'discriminator',
-          minWidth: 200,
-          maxWidth: 200,
-          isResizable: true,
-        },
-      ]}
-      items={schemas.map((it) => ({
-        application: it.databaseSchema.application,
-        environment: it.databaseSchema.environment,
-        discriminator: it.databaseSchema.discriminator,
-      }))}
-    />
-  </StyledPre>
-);
+import ConfirmChangeCooldownDialog from './ConfirmChangeCooldownDialog';
 
 export interface IRestorableSchemaProps {
   className?: string;
@@ -288,16 +246,24 @@ export class RestorableSchema extends React.Component<
           onRestoreDatabaseSchema={onRestoreDatabaseSchema}
           restoreResponse={restoreResponse}
         />
-        <ConfirmRestorationDialog
+        <ConfirmChangeCooldownDialog
           title="Gjenopprett databaseskjemaer"
           visible={confirmRestorationDialogVisible}
+          changeCooldownType="gjenopprette"
           onOkClick={this.onConfirmRestorationClick}
           onCancelClick={this.onCancelRestorationClick}
           onExitClick={this.onExitRestorationClick}
-          schemasToRestore={this.state.selectedSchemas || []}
-          hasRestorationInformation={hasRestorationInformation}
-          restoreResponse={restoreResponse}
-          items={items}
+          schemasToChange={this.state.selectedSchemas?.map(
+            (it) => it.databaseSchema
+          ) || []}
+          hasChangeInformation={hasRestorationInformation}
+          changeCooldownResponse={restoreResponse}
+          items={
+            {
+              databaseSchemas:items.restorableDatabaseSchemas?.map(
+                (it) => it.databaseSchema
+              )
+            }}
         />
       </div>
     );

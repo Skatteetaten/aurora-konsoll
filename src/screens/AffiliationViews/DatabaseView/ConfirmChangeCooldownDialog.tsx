@@ -4,32 +4,34 @@ import React from 'react';
 import {
   IChangeCooldownDatabaseSchemasResponse,
   IRestorableDatabaseSchemas,
-  IRestorableDatabaseSchemaData,
+  IRestorableDatabaseSchemaData, IDatabaseSchema, IDatabaseSchemas,
 } from 'models/schemas';
-import { renderDetailsListWithSchemaInfo } from './RestorableSchema';
-import RestorationSummary from './RestorationSummary';
+import {renderDetailsListWithSchemaInfo} from "./Schema";
+import DeletionSummary from "./DeletionSummary";
 
 interface IConfirmRestorationDialogProps {
   visible: boolean;
   title: string;
-  schemasToRestore: IRestorableDatabaseSchemaData[];
-  hasRestorationInformation: boolean;
-  restoreResponse: IChangeCooldownDatabaseSchemasResponse;
-  items: IRestorableDatabaseSchemas;
+  changeCooldownType: string;
+  schemasToChange: IDatabaseSchema[];
+  hasChangeInformation: boolean;
+  changeCooldownResponse: IChangeCooldownDatabaseSchemasResponse;
+  items: IDatabaseSchemas;
   onOkClick: () => void;
   onCancelClick: () => void;
   onExitClick: () => void;
 }
 
-const ConfirmRestorationDialog: React.FC<IConfirmRestorationDialogProps> = ({
+const ConfirmChangeCooldownDialog: React.FC<IConfirmRestorationDialogProps> = ({
   visible,
   title,
-  schemasToRestore,
+  changeCooldownType,
+  schemasToChange,
   onOkClick,
   onCancelClick,
   onExitClick,
-  hasRestorationInformation,
-  restoreResponse,
+  hasChangeInformation,
+  changeCooldownResponse,
   items,
 }) => (
   <InfoDialog
@@ -39,22 +41,22 @@ const ConfirmRestorationDialog: React.FC<IConfirmRestorationDialogProps> = ({
       onOkClick,
       onCancelClick,
       onExitClick,
-      hasRestorationInformation
+      hasChangeInformation
     )}
     hideCloseButton={true}
     isBlocking={true}
   >
-    {!hasRestorationInformation ? (
+    {!hasChangeInformation ? (
       <>
-        {renderDetailsListWithSchemaInfo(schemasToRestore)}
+        {renderDetailsListWithSchemaInfo(schemasToChange)}
         <h4>
-          {schemasToRestore.length === 1
-            ? 'Vil du gjenopprette dette skjemaet?'
-            : `Vil du gjenopprette disse ${schemasToRestore.length} skjemaene?`}
+          {schemasToChange.length === 1
+            ? `Vil du ${changeCooldownType} dette skjemaet?`
+            : `Vil du ${changeCooldownType} disse ${schemasToChange.length} skjemaene?`}
         </h4>
       </>
     ) : (
-      <RestorationSummary restoreResponse={restoreResponse} items={items} />
+      <DeletionSummary changeCooldownType={changeCooldownType} deleteResponse={changeCooldownResponse} items={items} />
     )}
   </InfoDialog>
 );
@@ -63,7 +65,7 @@ const renderFooterButtons = (
   onOkClick: () => void,
   onCancelClick: () => void,
   onExitClick: () => void,
-  hasRestorationInformation: boolean
+  hasChangeCooldownInformation: boolean
 ) => {
   return (close: () => void) => {
     const onOkClickInternal = () => {
@@ -79,38 +81,38 @@ const renderFooterButtons = (
       onExitClick();
     };
 
-    if (!hasRestorationInformation) {
+    if (!hasChangeCooldownInformation) {
       return (
         <>
           <ActionButton
             onClick={onOkClickInternal}
-            iconSize={ActionButton.LARGE}
-            icon="Check"
-            color="black"
-          >
-            Ja
-          </ActionButton>
-          <ActionButton
-            onClick={onCancelClickInternal}
-            iconSize={ActionButton.LARGE}
-            icon="Cancel"
-            color="black"
-          >
-            Nei
-          </ActionButton>
+      iconSize={ActionButton.LARGE}
+      icon="Check"
+      color="black"
+        >
+        Ja
+        </ActionButton>
+        <ActionButton
+      onClick={onCancelClickInternal}
+      iconSize={ActionButton.LARGE}
+      icon="Cancel"
+      color="black"
+        >
+        Nei
+        </ActionButton>
         </>
-      );
+    );
     } else {
       return (
         <ActionButton
           onClick={onExitClickInternal}
-          iconSize={ActionButton.LARGE}
-          icon="Completed"
-          color="black"
+      iconSize={ActionButton.LARGE}
+      icon="Completed"
+      color="black"
         >
-          Avslutt
+        Avslutt
         </ActionButton>
-      );
+    );
     }
   };
 };
@@ -128,4 +130,4 @@ const dialogVisibilitySetter = (shouldBeVisible: boolean) => {
   };
 };
 
-export default ConfirmRestorationDialog;
+export default ConfirmChangeCooldownDialog;

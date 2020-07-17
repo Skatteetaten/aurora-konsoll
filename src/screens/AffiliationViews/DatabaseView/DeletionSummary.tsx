@@ -13,12 +13,14 @@ interface IDeletionSummaryProps {
   deleteResponse: IChangeCooldownDatabaseSchemasResponse;
   className?: string;
   items: IDatabaseSchemas;
+  changeCooldownType: string;
 }
 
 const DeletionSummary = ({
   deleteResponse,
   className,
   items,
+  changeCooldownType,
 }: IDeletionSummaryProps) => {
   const getDatabaseSchemaInfoById = (ids: string[]): JSX.Element | null => {
     if (!items.databaseSchemas) {
@@ -46,11 +48,11 @@ const DeletionSummary = ({
       <Card color={CardColor.GREEN}>
         <Grid>
           {createRows(
-            'Følgende databaseskjemaer ble slettet:',
+            `Følgende databaseskjemaer ble ${changeCooldownType}t:`,
             deleteResponse.succeeded
           )}
           {createRows(
-            'Klarte ikke å slette databaseskjemaene:',
+            `Klarte ikke å ${changeCooldownType} databaseskjemaene:`,
             deleteResponse.failed
           )}
         </Grid>
