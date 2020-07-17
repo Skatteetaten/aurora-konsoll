@@ -21,54 +21,43 @@ interface IConfirmRestorationDialogProps {
   onExitClick: () => void;
 }
 
-const ConfirmRestorationDialog: React.FC<IConfirmRestorationDialogProps> = (
-  props
-) => {
-  const {
-    visible,
-    title,
-    schemasToRestore,
-    onOkClick,
-    onCancelClick,
-    onExitClick,
-    hasRestorationInformation,
-    restoreResponse,
-    items,
-  } = props;
-  const createConfirmationMessage = (schemaCount: number): string => {
-    if (schemaCount === 1) {
-      return `Vil du gjenopprette dette skjemaet?`;
-    } else {
-      return `Vil du gjenopprette disse ${schemaCount} skjemaene?`;
-    }
-  };
-
-  return (
-    <InfoDialog
-      title={title}
-      renderOpenDialogButton={dialogVisibilitySetter(visible)}
-      renderFooterButtons={renderFooterButtons(
-        onOkClick,
-        onCancelClick,
-        onExitClick,
-        hasRestorationInformation
-      )}
-      hideCloseButton={true}
-      isBlocking={true}
-    >
+const ConfirmRestorationDialog: React.FC<IConfirmRestorationDialogProps> = ({
+  visible,
+  title,
+  schemasToRestore,
+  onOkClick,
+  onCancelClick,
+  onExitClick,
+  hasRestorationInformation,
+  restoreResponse,
+  items,
+}) => (
+  <InfoDialog
+    title={title}
+    renderOpenDialogButton={dialogVisibilitySetter(visible)}
+    renderFooterButtons={renderFooterButtons(
+      onOkClick,
+      onCancelClick,
+      onExitClick,
+      hasRestorationInformation
+    )}
+    hideCloseButton={true}
+    isBlocking={true}
+  >
+    {!hasRestorationInformation ? (
       <>
-        {!hasRestorationInformation ? (
-          <>
-            {renderDetailsListWithSchemaInfo(schemasToRestore)}
-            <h4>{createConfirmationMessage(schemasToRestore.length)}</h4>
-          </>
-        ) : (
-          <RestorationSummary restoreResponse={restoreResponse} items={items} />
-        )}
+        {renderDetailsListWithSchemaInfo(schemasToRestore)}
+        <h4>
+          {schemasToRestore.length === 1
+            ? 'Vil du gjenopprette dette skjemaet?'
+            : `Vil du gjenopprette disse ${schemasToRestore.length} skjemaene?`}
+        </h4>
       </>
-    </InfoDialog>
-  );
-};
+    ) : (
+      <RestorationSummary restoreResponse={restoreResponse} items={items} />
+    )}
+  </InfoDialog>
+);
 
 const renderFooterButtons = (
   onOkClick: () => void,

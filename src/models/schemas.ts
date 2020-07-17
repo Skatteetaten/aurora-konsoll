@@ -26,34 +26,9 @@ export interface IDatabaseInstance {
 }
 
 export interface IRestorableDatabaseSchemaData {
-  databaseSchema: IRestorableDatabaseSchema;
+  databaseSchema: IDatabaseSchema;
   deleteAfter: Date;
   setToCooldownAt: Date;
-}
-
-export interface IRestorableDatabaseSchema {
-  id: string;
-  type: string;
-  jdbcUrl: string;
-  name: string;
-  application: string;
-  environment: string;
-  description?: string | null;
-  discriminator: string;
-  affiliation: {
-    name: string;
-  };
-  applicationDeployments: IDatabaseApplicationDeployment[];
-  engine: string;
-  createdBy: string;
-  createdDate: Date;
-  lastUsedDate?: Date | null;
-  sizeInMb: number;
-  users: Array<{
-    username: string;
-    type: string;
-    password?: string;
-  }>;
 }
 
 export interface IDatabaseSchema {

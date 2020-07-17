@@ -5,7 +5,6 @@ import TextField from '@skatteetaten/frontend-components/TextField';
 import { TextFieldEvent } from '../../../types/react';
 import {
   IRestorableDatabaseSchemas,
-  IRestorableDatabaseSchema,
   IRestorableDatabaseSchemaData,
   IUpdateDatabaseSchemaInputWithCreatedBy,
   IJdbcUser,
@@ -74,7 +73,7 @@ export interface IRestorableSchemaProps {
   restoreResponse: IChangeCooldownDatabaseSchemasResponse;
   onFetch: (affiliation: string[]) => void | undefined;
   onUpdate: (databaseSchema: IUpdateDatabaseSchemaInputWithCreatedBy) => void; //TODO mulig feil type her
-  onRestore: (databaseSchema: IRestorableDatabaseSchema) => void;
+  onRestore: (databaseSchema: IDatabaseSchema) => void;
   onTestJdbcConnectionForId: (id: string) => void;
   onTestJdbcConnectionForUser: (jdbcUser: IJdbcUser) => void;
   onRestoreDatabaseSchemas: (ids: string[], active: boolean) => void;
