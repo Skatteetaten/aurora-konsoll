@@ -22,7 +22,7 @@ import DatabaseSchemaService from '../../../services/DatabaseSchemaService';
 
 const { skeColor } = palette;
 
-interface IRestorableDatabaseSchemaUpdateDialogProps {
+interface IDatabaseSchemaUpdateDialogProps {
   schema?: IDatabaseSchema;
   className?: string;
   testJdbcConnectionResponse: ITestJDBCResponse;
@@ -55,7 +55,7 @@ const DatabaseSchemaUpdateDialog = ({
   onChangeCooldownSchema,
   isRestoreDialog,
   createNewCopy,
-}: IRestorableDatabaseSchemaUpdateDialogProps) => {
+}: IDatabaseSchemaUpdateDialogProps) => {
   const initialUpdatedSchemaValues: IUpdatedSchemaValues = {
     id: '',
     discriminator: '',

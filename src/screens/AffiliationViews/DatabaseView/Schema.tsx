@@ -25,8 +25,8 @@ import { TextFieldEvent } from 'types/react';
 import { StyledPre } from 'components/StyledPre';
 import ConfirmChangeCooldownDialog from './ConfirmChangeCooldownDialog';
 import DetailsList from '@skatteetaten/frontend-components/DetailsList';
-import RestorableDatabaseSchemaUpdateDialog from './DatabaseSchemaUpdateDialog';
 import { IDatabaseSchemaView, DatabaseSchemaTable } from './DatabaseSchemaTable';
+import DatabaseSchemaUpdateDialog from './DatabaseSchemaUpdateDialog';
 
 export const renderDetailsListWithSchemaInfo = (schemas: IDatabaseSchema[]) => (
   <StyledPre>
@@ -226,7 +226,7 @@ export class Schema extends React.Component<ISchemaProps, ISchemaState> {
             isRestoreTable={false}
           />
         )}
-        <RestorableDatabaseSchemaUpdateDialog
+        <DatabaseSchemaUpdateDialog
           schema={selectedSchema}
           clearSelectedSchema={this.onUpdateSchemaDialogClosed}
           onUpdate={onUpdate}

@@ -18,7 +18,7 @@ import {
   DatabaseSchemaTable,
   IDatabaseSchemaView,
 } from './DatabaseSchemaTable';
-import RestorableDatabaseSchemaUpdateDialog from './DatabaseSchemaUpdateDialog';
+import DatabaseSchemaUpdateDialog from './DatabaseSchemaUpdateDialog';
 import LoadingButton from 'components/LoadingButton';
 import ConfirmChangeCooldownDialog from './ConfirmChangeCooldownDialog';
 
@@ -236,7 +236,7 @@ export class RestorableSchema extends React.Component<
             isRestoreTable={true}
           />
         )}
-        <RestorableDatabaseSchemaUpdateDialog
+        <DatabaseSchemaUpdateDialog
           schema={selectedSchema?.databaseSchema}
           clearSelectedSchema={this.onUpdateSchemaDialogClosed}
           onUpdate={onUpdate}
