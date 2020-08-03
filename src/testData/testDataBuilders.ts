@@ -36,10 +36,10 @@ import { INetdebugViewState } from 'screens/NetdebugView/state/reducer';
 import { IErrorsState } from 'screens/ErrorHandler/state/reducer';
 import { IErrors, IAppError } from 'models/errors';
 import { IIconLinkData } from 'components/IconLink';
-import { IDatabaseSchemaView } from '../screens/AffiliationViews/DatabaseView/DatabaseSchemaTable';
 import { IImageTag } from 'services/auroraApiClients/imageRepositoryClient/query';
 import { ApplicationDeployment } from 'models/immer/ApplicationDeployment';
 import { IApplicationDeploymentData } from 'services/auroraApiClients/applicationDeploymentClient/query';
+import { IDatabaseSchemaView } from '../screens/AffiliationViews/DatabaseView/DatabaseSchemaTable';
 
 const mountFactory = Factory.Sync.makeFactory<IMount>({
   exist: true,

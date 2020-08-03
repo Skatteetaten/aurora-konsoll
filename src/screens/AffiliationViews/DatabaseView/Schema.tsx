@@ -17,20 +17,16 @@ import {
   IUpdateDatabaseSchemaInputWithCreatedBy,
   IDatabaseInstances,
   ITestJDBCResponse,
-  IRestorableDatabaseSchemaData,
+  IDatabaseSchemaData,
 } from 'models/schemas';
 import DatabaseSchemaCreateDialog from './DatabaseSchemaCreateDialog';
 import { EnterModeThenConfirm } from './EnterModeThenConfirm';
-import {
-  DatabaseSchemaTable,
-  IDatabaseSchemaView,
-} from './DatabaseSchemaTable';
 import { TextFieldEvent } from 'types/react';
 import { StyledPre } from 'components/StyledPre';
 import ConfirmChangeCooldownDialog from './ConfirmChangeCooldownDialog';
 import DetailsList from '@skatteetaten/frontend-components/DetailsList';
 import RestorableDatabaseSchemaUpdateDialog from './DatabaseSchemaUpdateDialog';
-import { RestorableDatabaseSchemaTable } from './RestorableDatabaseSchemaTable';
+import { IDatabaseSchemaView, DatabaseSchemaTable } from './DatabaseSchemaTable';
 
 export const renderDetailsListWithSchemaInfo = (schemas: IDatabaseSchema[]) => (
   <StyledPre>
@@ -220,7 +216,7 @@ export class Schema extends React.Component<ISchemaProps, ISchemaState> {
         {isFetching ? (
           <Spinner />
         ) : (
-          <RestorableDatabaseSchemaTable
+          <DatabaseSchemaTable
             filter={filter}
             schemas={schemasToSchemaDatas(this.props.items.databaseSchemas)}
             multiSelect={deleteMode}
@@ -344,7 +340,7 @@ export class Schema extends React.Component<ISchemaProps, ISchemaState> {
 
 const schemasToSchemaDatas = (
   schemas?: IDatabaseSchema[]
-): IRestorableDatabaseSchemaData[] =>
+): IDatabaseSchemaData[] =>
   schemas?.map((schema) => ({
     databaseSchema: schema,
     deleteAfter: undefined,

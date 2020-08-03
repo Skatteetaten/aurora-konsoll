@@ -2,36 +2,33 @@ import React from 'react';
 import SortableDetailsList from 'components/SortableDetailsList';
 import {
   CheckboxVisibility,
-  SelectionMode,
-  Selection,
   IColumn,
+  Selection,
+  SelectionMode,
 } from 'office-ui-fabric-react/lib-commonjs';
 
-import { IDatabaseSchema } from 'models/schemas';
+import { IDatabaseSchemaData } from 'models/schemas';
 import { getLocalDate } from 'utils/date';
 
-declare global {
-  interface Window {
-    debug: any;
-  }
-}
 interface IDatabaseSchemaTableProps {
   filter: string;
-  schemas: IDatabaseSchema[];
+  schemas: IDatabaseSchemaData[];
   multiSelect: boolean;
   selection: Selection;
   shouldResetSort: boolean;
   onResetSort: () => void;
+  isRestoreTable: boolean;
 }
 
-export function DatabaseSchemaTable({
+export const DatabaseSchemaTable = ({
   filter,
   schemas,
   multiSelect,
   selection,
   onResetSort,
   shouldResetSort,
-}: IDatabaseSchemaTableProps) {
+  isRestoreTable,
+}: IDatabaseSchemaTableProps) => {
   const filterDatabaseSchemaView = (filter: string) => (
     view: IDatabaseSchemaView
   ) =>
@@ -46,14 +43,16 @@ export function DatabaseSchemaTable({
     view.sizeInMb.toString().includes(filter) ||
     view.type.includes(filter) ||
     view.jdbcUrl.includes(filter) ||
-    view.id.includes(filter);
+    view.id.includes(filter) ||
+    (view.setToCooldownAt?.includes(filter) ?? false) ||
+    (view.deleteAfter?.includes(filter) ?? false);
 
-  let viewItems = toViewSchemas(schemas || []);
+  let viewItems = schemas.map((i) => toViewSchema(i));
 
   return (
     <div className="styledTable">
       <SortableDetailsList
-        columns={columns}
+        columns={isRestoreTable ? restoreColumns : columns}
         filterView={filterDatabaseSchemaView}
         selectionMode={SelectionMode.multiple}
         filter={filter}
@@ -68,7 +67,7 @@ export function DatabaseSchemaTable({
       />
     </div>
   );
-}
+};
 
 export interface IDatabaseSchemaView {
   type: string;
@@ -81,44 +80,137 @@ export interface IDatabaseSchemaView {
   sizeInMb: number;
   applicationDeploymentsUses: number;
   id: string;
-  engine: string;
   jdbcUrl: string;
+  engine: string;
+  setToCooldownAt?: string;
+  deleteAfter?: string;
 }
 
-const toViewSchemas = (
-  databaseSchemas: IDatabaseSchema[]
-): IDatabaseSchemaView[] => {
-  let viewItems: IDatabaseSchemaView[] = [];
-
-  if (databaseSchemas && databaseSchemas.length > 0) {
-    viewItems = databaseSchemas.map((i) => toViewSchema(i));
-  }
-  return viewItems;
-};
-
-const toViewSchema = (i: IDatabaseSchema): IDatabaseSchemaView => {
+const toViewSchema = (schemaData: IDatabaseSchemaData): IDatabaseSchemaView => {
+  const schema = schemaData.databaseSchema;
   const getJdbcUrlText = (prefix: string) =>
-    i.jdbcUrl.substring(i.jdbcUrl.indexOf(prefix) + prefix.length);
+    schema.jdbcUrl.substring(schema.jdbcUrl.indexOf(prefix) + prefix.length);
 
-  const jdbcUrl = i.jdbcUrl.includes('@')
+  const jdbcUrl = schema.jdbcUrl.includes('@')
     ? getJdbcUrlText('@')
     : getJdbcUrlText('://');
 
   return {
-    id: i.id,
-    environment: i.environment,
-    application: i.application,
-    createdDate: getLocalDate(i.createdDate),
-    lastUsedDate: i.lastUsedDate && getLocalDate(i.lastUsedDate),
-    discriminator: i.discriminator,
-    type: i.type,
-    applicationDeploymentsUses: i.applicationDeployments.length,
-    sizeInMb: i.sizeInMb,
-    createdBy: i.createdBy,
-    engine: i.type === 'EXTERNAL' ? '' : i.engine,
-    jdbcUrl,
+    type: schema.type,
+    application: schema.application,
+    environment: schema.environment,
+    discriminator: schema.discriminator,
+    createdBy: schema.createdBy,
+    createdDate: getLocalDate(schema.createdDate),
+    lastUsedDate: schema.lastUsedDate && getLocalDate(schema.lastUsedDate),
+    sizeInMb: schema.sizeInMb,
+    applicationDeploymentsUses: schema.applicationDeployments.length,
+    id: schema.id,
+    jdbcUrl: jdbcUrl,
+    engine: schema.engine,
+    setToCooldownAt:
+      schemaData.setToCooldownAt === undefined
+        ? undefined
+        : getLocalDate(schemaData.setToCooldownAt),
+    deleteAfter:
+      schemaData.deleteAfter === undefined
+        ? undefined
+        : getLocalDate(schemaData.deleteAfter),
   };
 };
+
+const restoreColumns: IColumn[] = [
+  {
+    fieldName: 'environment',
+    isResizable: true,
+    key: '0',
+    maxWidth: 200,
+    minWidth: 200,
+    name: 'Miljø',
+    iconName: '',
+  },
+  {
+    fieldName: 'application',
+    isResizable: true,
+    key: '1',
+    maxWidth: 200,
+    minWidth: 200,
+    name: 'Applikasjon',
+    iconName: '',
+  },
+  {
+    fieldName: 'discriminator',
+    isResizable: true,
+    key: '2',
+    maxWidth: 200,
+    minWidth: 200,
+    name: 'Diskriminator',
+    iconName: '',
+  },
+  {
+    fieldName: 'setToCooldownAt',
+    isResizable: true,
+    key: '3',
+    maxWidth: 200,
+    minWidth: 200,
+    name: 'Satt i cooldown',
+    iconName: '',
+  },
+  {
+    fieldName: 'deleteAfter',
+    isResizable: true,
+    key: '4',
+    maxWidth: 200,
+    minWidth: 200,
+    name: 'Slettes permanent',
+    iconName: '',
+  },
+  {
+    fieldName: 'createdDate',
+    isResizable: true,
+    key: '5',
+    maxWidth: 90,
+    minWidth: 90,
+    name: 'Opprettet',
+    iconName: '',
+  },
+  {
+    fieldName: 'lastUsedDate',
+    isResizable: true,
+    key: '6',
+    maxWidth: 90,
+    minWidth: 90,
+    name: 'Sist brukt',
+    iconName: '',
+  },
+  {
+    fieldName: 'sizeInMb',
+    isResizable: true,
+    key: '7',
+    maxWidth: 110,
+    minWidth: 110,
+    name: 'Størrelse (MB)',
+    iconName: '',
+  },
+  {
+    fieldName: 'createdBy',
+    isResizable: true,
+    key: '8',
+    maxWidth: 80,
+    minWidth: 80,
+    name: 'Bruker',
+    iconName: '',
+  },
+  {
+    fieldName: 'engine',
+    isResizable: true,
+    key: '9',
+    maxWidth: 90,
+    minWidth: 90,
+    name: 'Engine',
+    iconName: '',
+  },
+];
 const columns: IColumn[] = [
   {
     fieldName: 'type',

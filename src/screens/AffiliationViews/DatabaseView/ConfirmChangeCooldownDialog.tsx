@@ -4,7 +4,7 @@ import React from 'react';
 import {
   IChangeCooldownDatabaseSchemasResponse,
   IRestorableDatabaseSchemas,
-  IRestorableDatabaseSchemaData, IDatabaseSchema, IDatabaseSchemas,
+  IDatabaseSchemaData, IDatabaseSchema, IDatabaseSchemas,
 } from 'models/schemas';
 import {renderDetailsListWithSchemaInfo} from "./Schema";
 import DeletionSummary from "./DeletionSummary";

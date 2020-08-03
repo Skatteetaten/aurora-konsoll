@@ -5,7 +5,7 @@ import TextField from '@skatteetaten/frontend-components/TextField';
 import { TextFieldEvent } from '../../../types/react';
 import {
   IRestorableDatabaseSchemas,
-  IRestorableDatabaseSchemaData,
+  IDatabaseSchemaData,
   IUpdateDatabaseSchemaInputWithCreatedBy,
   IJdbcUser,
   ITestJDBCResponse,
@@ -15,9 +15,9 @@ import {
 import { EnterModeThenConfirm } from './EnterModeThenConfirm';
 import Spinner from 'components/Spinner';
 import {
-  RestorableDatabaseSchemaTable,
+  DatabaseSchemaTable,
   IDatabaseSchemaView,
-} from './RestorableDatabaseSchemaTable';
+} from './DatabaseSchemaTable';
 import RestorableDatabaseSchemaUpdateDialog from './DatabaseSchemaUpdateDialog';
 import LoadingButton from 'components/LoadingButton';
 import ConfirmChangeCooldownDialog from './ConfirmChangeCooldownDialog';
@@ -43,8 +43,8 @@ export interface IRestorableSchemaProps {
 
 interface IRestorableSchemaState {
   filter: string;
-  selectedSchema?: IRestorableDatabaseSchemaData;
-  selectedSchemas?: IRestorableDatabaseSchemaData[];
+  selectedSchema?: IDatabaseSchemaData;
+  selectedSchemas?: IDatabaseSchemaData[];
   restoreMode: boolean;
   confirmDeletionDialogVisible: boolean;
   shouldResetSort: boolean;
@@ -226,7 +226,7 @@ export class RestorableSchema extends React.Component<
         {isFetching ? (
           <Spinner />
         ) : (
-          <RestorableDatabaseSchemaTable
+          <DatabaseSchemaTable
             filter={filter}
             schemas={items.restorableDatabaseSchemas || []}
             multiSelect={restoreMode}
