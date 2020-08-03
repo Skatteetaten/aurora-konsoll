@@ -16,9 +16,9 @@ import { EnterModeThenConfirm } from './EnterModeThenConfirm';
 import Spinner from 'components/Spinner';
 import {
   RestorableDatabaseSchemaTable,
-  IRestorableDatabaseSchemaView,
+  IDatabaseSchemaView,
 } from './RestorableDatabaseSchemaTable';
-import RestorableDatabaseSchemaUpdateDialog from './RestorableDatabaseSchemaUpdateDialog';
+import RestorableDatabaseSchemaUpdateDialog from './DatabaseSchemaUpdateDialog';
 import LoadingButton from 'components/LoadingButton';
 import ConfirmChangeCooldownDialog from './ConfirmChangeCooldownDialog';
 
@@ -133,9 +133,9 @@ export class RestorableSchema extends React.Component<
   };
 
   public onSchemaSelectionChange = () => {
-    const selected: IRestorableDatabaseSchemaView[] = this.selection
+    const selected: IDatabaseSchemaView[] = this.selection
       .getSelection()
-      .map((it) => it as IRestorableDatabaseSchemaView);
+      .map((it) => it as IDatabaseSchemaView);
     const databaseSchemas = this.props.items.restorableDatabaseSchemas || [];
     const selectedSchemas = databaseSchemas.filter(
       (schema) =>
@@ -146,9 +146,9 @@ export class RestorableSchema extends React.Component<
   };
 
   public onSingleSchemaSelected = () => {
-    const selected: IRestorableDatabaseSchemaView = this.selection
+    const selected: IDatabaseSchemaView = this.selection
       .getSelection()
-      .map((it) => it as IRestorableDatabaseSchemaView)[0];
+      .map((it) => it as IDatabaseSchemaView)[0];
     if (!selected) return;
     const databaseSchemas = this.props.items.restorableDatabaseSchemas || [];
     const selectedSchema = databaseSchemas.find(
@@ -175,7 +175,6 @@ export class RestorableSchema extends React.Component<
       isFetching,
       className,
       onUpdate,
-      onRestore,
       items,
       onTestJdbcConnectionForId,
       testJdbcConnectionResponse,
@@ -234,17 +233,19 @@ export class RestorableSchema extends React.Component<
             selection={this.selection}
             onResetSort={this.onResetSort}
             shouldResetSort={shouldResetSort}
+            isRestoreTable={true}
           />
         )}
         <RestorableDatabaseSchemaUpdateDialog
-          schema={selectedSchema}
+          schema={selectedSchema?.databaseSchema}
           clearSelectedSchema={this.onUpdateSchemaDialogClosed}
           onUpdate={onUpdate}
-          onDelete={onRestore}
           onTestJdbcConnectionForId={onTestJdbcConnectionForId}
           testJdbcConnectionResponse={testJdbcConnectionResponse}
-          onRestoreDatabaseSchema={onRestoreDatabaseSchema}
-          restoreResponse={restoreResponse}
+          onChangeCooldownSchema={(schema) =>
+            onRestoreDatabaseSchema(schema, true)
+          }
+          isRestoreDialog={true}
         />
         <ConfirmChangeCooldownDialog
           title="Gjenopprett databaseskjemaer"
@@ -253,17 +254,16 @@ export class RestorableSchema extends React.Component<
           onOkClick={this.onConfirmRestorationClick}
           onCancelClick={this.onCancelRestorationClick}
           onExitClick={this.onExitRestorationClick}
-          schemasToChange={this.state.selectedSchemas?.map(
-            (it) => it.databaseSchema
-          ) || []}
+          schemasToChange={
+            this.state.selectedSchemas?.map((it) => it.databaseSchema) || []
+          }
           hasChangeInformation={hasRestorationInformation}
           changeCooldownResponse={restoreResponse}
-          items={
-            {
-              databaseSchemas:items.restorableDatabaseSchemas?.map(
-                (it) => it.databaseSchema
-              )
-            }}
+          items={{
+            databaseSchemas: items.restorableDatabaseSchemas?.map(
+              (it) => it.databaseSchema
+            ),
+          }}
         />
       </div>
     );

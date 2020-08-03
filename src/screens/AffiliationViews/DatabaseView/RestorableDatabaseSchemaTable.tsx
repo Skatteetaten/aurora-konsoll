@@ -2,9 +2,9 @@ import React from 'react';
 import SortableDetailsList from 'components/SortableDetailsList';
 import {
   CheckboxVisibility,
-  SelectionMode,
-  Selection,
   IColumn,
+  Selection,
+  SelectionMode,
 } from 'office-ui-fabric-react/lib-commonjs';
 
 import { IRestorableDatabaseSchemaData } from 'models/schemas';
@@ -17,21 +17,52 @@ interface IRestorableDatabaseSchemaTableProps {
   selection: Selection;
   shouldResetSort: boolean;
   onResetSort: () => void;
+  isRestoreTable: boolean;
 }
 
-export function RestorableDatabaseSchemaTable({
+export const RestorableDatabaseSchemaTable = ({
   filter,
   schemas,
   multiSelect,
   selection,
   onResetSort,
   shouldResetSort,
-}: IRestorableDatabaseSchemaTableProps) {
-  const columns: IColumn[] = [
+  isRestoreTable,
+}: IRestorableDatabaseSchemaTableProps) => {
+  const filterDatabaseSchemaView = (filter: string) => (
+    view: IDatabaseSchemaView
+  ) =>
+    view.createdBy.includes(filter) ||
+    view.application.includes(filter) ||
+    view.environment.includes(filter) ||
+    view.discriminator.includes(filter) ||
+    view.createdDate.includes(filter) ||
+    (!view.lastUsedDate || view.lastUsedDate === null
+      ? false
+      : view.lastUsedDate.includes(filter)) ||
+    view.sizeInMb.toString().includes(filter) ||
+    view.type.includes(filter) ||
+    view.jdbcUrl.includes(filter) ||
+    view.id.includes(filter) ||
+    (view.setToCooldownAt?.includes(filter) ?? false) ||
+    (view.deleteAfter?.includes(filter) ?? false);
+
+  let viewItems = schemas.map((i) => toViewSchema(i));
+
+  const getNullableColumns = (): (IColumn | undefined)[] => [
+    {
+      fieldName: 'type',
+      isResizable: true,
+      key: '0',
+      maxWidth: 85,
+      minWidth: 85,
+      name: 'Type',
+      iconName: '',
+    },
     {
       fieldName: 'environment',
       isResizable: true,
-      key: '0',
+      key: '1',
       maxWidth: 200,
       minWidth: 200,
       name: 'Miljø',
@@ -40,7 +71,7 @@ export function RestorableDatabaseSchemaTable({
     {
       fieldName: 'application',
       isResizable: true,
-      key: '1',
+      key: '2',
       maxWidth: 200,
       minWidth: 200,
       name: 'Applikasjon',
@@ -49,34 +80,39 @@ export function RestorableDatabaseSchemaTable({
     {
       fieldName: 'discriminator',
       isResizable: true,
-      key: '2',
+      key: '3',
       maxWidth: 200,
       minWidth: 200,
       name: 'Diskriminator',
       iconName: '',
     },
-    {
-      fieldName: 'setToCooldownAt',
-      isResizable: true,
-      key: '3',
-      maxWidth: 200,
-      minWidth: 200,
-      name: 'Satt i cooldown',
-      iconName: '',
-    },
-    {
-      fieldName: 'deleteAfter',
-      isResizable: true,
-      key: '4',
-      maxWidth: 200,
-      minWidth: 200,
-      name: 'Slettes permanent',
-      iconName: '',
-    },
+    // TODO: if not isRestoreTable then columns has missing keys 4 and 5
+    isRestoreTable
+      ? {
+          fieldName: 'setToCooldownAt',
+          isResizable: true,
+          key: '4',
+          maxWidth: 200,
+          minWidth: 200,
+          name: 'Satt i cooldown',
+          iconName: '',
+        }
+      : undefined,
+    isRestoreTable
+      ? {
+          fieldName: 'deleteAfter',
+          isResizable: true,
+          key: '5',
+          maxWidth: 200,
+          minWidth: 200,
+          name: 'Slettes permanent',
+          iconName: '',
+        }
+      : undefined,
     {
       fieldName: 'createdDate',
       isResizable: true,
-      key: '5',
+      key: '6',
       maxWidth: 90,
       minWidth: 90,
       name: 'Opprettet',
@@ -85,7 +121,7 @@ export function RestorableDatabaseSchemaTable({
     {
       fieldName: 'lastUsedDate',
       isResizable: true,
-      key: '6',
+      key: '7',
       maxWidth: 90,
       minWidth: 90,
       name: 'Sist brukt',
@@ -94,7 +130,7 @@ export function RestorableDatabaseSchemaTable({
     {
       fieldName: 'sizeInMb',
       isResizable: true,
-      key: '7',
+      key: '8',
       maxWidth: 110,
       minWidth: 110,
       name: 'Størrelse (MB)',
@@ -103,40 +139,45 @@ export function RestorableDatabaseSchemaTable({
     {
       fieldName: 'createdBy',
       isResizable: true,
-      key: '8',
+      key: '9',
       maxWidth: 80,
       minWidth: 80,
       name: 'Bruker',
       iconName: '',
     },
     {
+      fieldName: 'applicationDeploymentsUses',
+      isResizable: true,
+      key: '10',
+      maxWidth: 70,
+      minWidth: 70,
+      name: 'I bruk av',
+      iconName: '',
+    },
+    {
       fieldName: 'engine',
       isResizable: true,
-      key: '9',
+      key: '11',
       maxWidth: 90,
       minWidth: 90,
       name: 'Engine',
       iconName: '',
     },
+    {
+      fieldName: 'jdbcUrl',
+      isResizable: true,
+      key: '12',
+      maxWidth: 280,
+      minWidth: 280,
+      name: 'JDBC url',
+      iconName: '',
+      className: 'jdbcurl-col',
+    },
   ];
 
-  const filterDatabaseSchemaView = (filter: string) => {
-    return (v: IRestorableDatabaseSchemaView) =>
-      v.createdBy.includes(filter) ||
-      v.application.includes(filter) ||
-      v.environment.includes(filter) ||
-      v.setToCooldownAt.includes(filter) ||
-      v.deleteAfter.includes(filter) ||
-      v.discriminator.includes(filter) ||
-      v.createdDate.includes(filter) ||
-      (!v.lastUsedDate || v.lastUsedDate === null
-        ? false
-        : v.lastUsedDate.includes(filter)) ||
-      v.sizeInMb.toString().includes(filter) ||
-      v.id.includes(filter);
-  };
-
-  let viewItems = toViewSchemas(schemas || []);
+  const columns: IColumn[] = getNullableColumns().filter(
+    (column) => column !== undefined
+  ) as IColumn[];
 
   return (
     <div className="styledTable">
@@ -156,12 +197,10 @@ export function RestorableDatabaseSchemaTable({
       />
     </div>
   );
-}
+};
 
-export interface IRestorableDatabaseSchemaView {
+export interface IDatabaseSchemaView {
   type: string;
-  setToCooldownAt: string;
-  deleteAfter: string;
   application: string;
   environment: string;
   discriminator: string;
@@ -173,57 +212,41 @@ export interface IRestorableDatabaseSchemaView {
   id: string;
   jdbcUrl: string;
   engine: string;
+  setToCooldownAt?: string;
+  deleteAfter?: string;
 }
 
-const toViewSchemas = (
-  databaseSchemas: IRestorableDatabaseSchemaData[]
-): IRestorableDatabaseSchemaView[] => {
-  let viewItems: IRestorableDatabaseSchemaView[] = [];
-
-  if (databaseSchemas && databaseSchemas.length > 0) {
-    viewItems = databaseSchemas.map((i) => toViewSchema(i));
-  }
-  return viewItems;
-};
-
 const toViewSchema = (
-  i: IRestorableDatabaseSchemaData
-): IRestorableDatabaseSchemaView => {
+  schemaData: IRestorableDatabaseSchemaData
+): IDatabaseSchemaView => {
+  const schema = schemaData.databaseSchema;
   const getJdbcUrlText = (prefix: string) =>
-    i.databaseSchema.jdbcUrl.substring(
-      i.databaseSchema.jdbcUrl.indexOf(prefix) + prefix.length
-    );
+    schema.jdbcUrl.substring(schema.jdbcUrl.indexOf(prefix) + prefix.length);
 
-  const jdbcUrl = i.databaseSchema.jdbcUrl.includes('@')
+  const jdbcUrl = schema.jdbcUrl.includes('@')
     ? getJdbcUrlText('@')
     : getJdbcUrlText('://');
-  const {
-    id,
-    environment,
-    application,
-    discriminator,
-    type,
-    sizeInMb,
-    createdBy,
-    engine,
-  } = i.databaseSchema;
 
   return {
-    setToCooldownAt: getLocalDate(i.setToCooldownAt),
-    deleteAfter: getLocalDate(i.deleteAfter),
-    id,
-    environment,
-    application,
-    createdDate: getLocalDate(i.databaseSchema.createdDate),
-    lastUsedDate:
-      i.databaseSchema.lastUsedDate &&
-      getLocalDate(i.databaseSchema.lastUsedDate),
-    discriminator,
-    type,
-    applicationDeploymentsUses: i.databaseSchema.applicationDeployments.length,
-    sizeInMb: sizeInMb,
-    createdBy: createdBy,
-    engine: engine,
-    jdbcUrl,
+    type: schema.type,
+    application: schema.application,
+    environment: schema.environment,
+    discriminator: schema.discriminator,
+    createdBy: schema.createdBy,
+    createdDate: getLocalDate(schema.createdDate),
+    lastUsedDate: schema.lastUsedDate && getLocalDate(schema.lastUsedDate),
+    sizeInMb: schema.sizeInMb,
+    applicationDeploymentsUses: schema.applicationDeployments.length,
+    id: schema.id,
+    jdbcUrl: jdbcUrl,
+    engine: schema.engine,
+    setToCooldownAt:
+      schemaData.setToCooldownAt === undefined
+        ? undefined
+        : getLocalDate(schemaData.setToCooldownAt),
+    deleteAfter:
+      schemaData.deleteAfter === undefined
+        ? undefined
+        : getLocalDate(schemaData.deleteAfter),
   };
 };

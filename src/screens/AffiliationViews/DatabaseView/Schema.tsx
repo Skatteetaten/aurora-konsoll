@@ -17,9 +17,9 @@ import {
   IUpdateDatabaseSchemaInputWithCreatedBy,
   IDatabaseInstances,
   ITestJDBCResponse,
+  IRestorableDatabaseSchemaData,
 } from 'models/schemas';
 import DatabaseSchemaCreateDialog from './DatabaseSchemaCreateDialog';
-import DatabaseSchemaUpdateDialog from './DatabaseSchemaUpdateDialog';
 import { EnterModeThenConfirm } from './EnterModeThenConfirm';
 import {
   DatabaseSchemaTable,
@@ -27,8 +27,10 @@ import {
 } from './DatabaseSchemaTable';
 import { TextFieldEvent } from 'types/react';
 import { StyledPre } from 'components/StyledPre';
-import ConfirmChangeCooldownDialog from "./ConfirmChangeCooldownDialog";
-import DetailsList from "@skatteetaten/frontend-components/DetailsList";
+import ConfirmChangeCooldownDialog from './ConfirmChangeCooldownDialog';
+import DetailsList from '@skatteetaten/frontend-components/DetailsList';
+import RestorableDatabaseSchemaUpdateDialog from './DatabaseSchemaUpdateDialog';
+import { RestorableDatabaseSchemaTable } from './RestorableDatabaseSchemaTable';
 
 export const renderDetailsListWithSchemaInfo = (schemas: IDatabaseSchema[]) => (
   <StyledPre>
@@ -218,23 +220,25 @@ export class Schema extends React.Component<ISchemaProps, ISchemaState> {
         {isFetching ? (
           <Spinner />
         ) : (
-          <DatabaseSchemaTable
+          <RestorableDatabaseSchemaTable
             filter={filter}
-            schemas={this.props.items.databaseSchemas || []}
+            schemas={schemasToSchemaDatas(this.props.items.databaseSchemas)}
             multiSelect={deleteMode}
             selection={this.selection}
             onResetSort={this.onResetSort}
             shouldResetSort={shouldResetSort}
+            isRestoreTable={false}
           />
         )}
-        <DatabaseSchemaUpdateDialog
+        <RestorableDatabaseSchemaUpdateDialog
           schema={selectedSchema}
           clearSelectedSchema={this.onUpdateSchemaDialogClosed}
           onUpdate={onUpdate}
-          onDelete={onDelete}
+          onChangeCooldownSchema={onDelete}
           onTestJdbcConnectionForId={onTestJdbcConnectionForId}
           testJdbcConnectionResponse={testJdbcConnectionResponse}
           createNewCopy={this.onCreateCopyConfirmed}
+          isRestoreDialog={false}
         />
         <ConfirmChangeCooldownDialog
           title="Slett databaseskjemaer"
@@ -245,7 +249,7 @@ export class Schema extends React.Component<ISchemaProps, ISchemaState> {
           schemasToChange={this.state.selectedSchemas || []}
           hasChangeInformation={hasDeletionInformation}
           changeCooldownResponse={deleteResponse}
-          changeCooldownType={"slettet"}
+          changeCooldownType={'slettet'}
           items={items}
         />
       </div>
@@ -337,6 +341,15 @@ export class Schema extends React.Component<ISchemaProps, ISchemaState> {
     if (selectedSchema) this.setState({ selectedSchema });
   };
 }
+
+const schemasToSchemaDatas = (
+  schemas?: IDatabaseSchema[]
+): IRestorableDatabaseSchemaData[] =>
+  schemas?.map((schema) => ({
+    databaseSchema: schema,
+    deleteAfter: undefined,
+    setToCooldownAt: undefined,
+  })) ?? [];
 
 export default styled(Schema)`
   height: 100%;

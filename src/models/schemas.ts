@@ -27,8 +27,8 @@ export interface IDatabaseInstance {
 
 export interface IRestorableDatabaseSchemaData {
   databaseSchema: IDatabaseSchema;
-  deleteAfter: Date;
-  setToCooldownAt: Date;
+  deleteAfter?: Date;
+  setToCooldownAt?: Date;
 }
 
 export interface IDatabaseSchema {
