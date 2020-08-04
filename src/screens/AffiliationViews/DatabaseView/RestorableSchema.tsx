@@ -1,5 +1,4 @@
-import React from 'react';
-import { Selection } from 'office-ui-fabric-react/lib-commonjs';
+import React, { useCallback, useEffect, useState } from 'react';
 import styled from 'styled-components';
 import TextField from '@skatteetaten/frontend-components/TextField';
 import { TextFieldEvent } from '../../../types/react';
@@ -7,7 +6,6 @@ import {
   IRestorableDatabaseSchemas,
   IDatabaseSchemaData,
   IUpdateDatabaseSchemaInputWithCreatedBy,
-  IJdbcUser,
   ITestJDBCResponse,
   IChangeCooldownDatabaseSchemasResponse,
   IDatabaseSchema,
@@ -21,6 +19,7 @@ import {
 import DatabaseSchemaUpdateDialog from './DatabaseSchemaUpdateDialog';
 import LoadingButton from 'components/LoadingButton';
 import ConfirmChangeCooldownDialog from './ConfirmChangeCooldownDialog';
+import DetailsList from '@skatteetaten/frontend-components/DetailsList';
 
 export interface IRestorableSchemaProps {
   className?: string;
@@ -31,9 +30,7 @@ export interface IRestorableSchemaProps {
   restoreResponse: IChangeCooldownDatabaseSchemasResponse;
   onFetch: (affiliation: string[]) => void | undefined;
   onUpdate: (databaseSchema: IUpdateDatabaseSchemaInputWithCreatedBy) => void; //TODO mulig feil type her
-  onRestore: (databaseSchema: IDatabaseSchema) => void;
   onTestJdbcConnectionForId: (id: string) => void;
-  onTestJdbcConnectionForUser: (jdbcUser: IJdbcUser) => void;
   onRestoreDatabaseSchemas: (ids: string[], active: boolean) => void;
   onRestoreDatabaseSchema: (
     databaseSchema: IDatabaseSchema,
@@ -41,82 +38,122 @@ export interface IRestorableSchemaProps {
   ) => void;
 }
 
-interface IRestorableSchemaState {
-  filter: string;
-  selectedSchema?: IDatabaseSchemaData;
-  selectedSchemas?: IDatabaseSchemaData[];
-  restoreMode: boolean;
-  confirmDeletionDialogVisible: boolean;
-  shouldResetSort: boolean;
-  confirmRestorationDialogVisible: boolean;
-  hasRestorationInformation: boolean;
-}
+export const RestorableSchema: React.FC<IRestorableSchemaProps> = ({
+  className,
+  affiliation,
+  isFetching,
+  items,
+  testJdbcConnectionResponse,
+  restoreResponse,
+  onFetch,
+  onUpdate,
+  onRestoreDatabaseSchemas,
+  onRestoreDatabaseSchema,
+  onTestJdbcConnectionForId,
+}) => {
+  const [filter, setFilter] = useState('');
+  const [selectedSchema, setSelectedSchema] = useState<
+    IDatabaseSchemaData | undefined
+  >(undefined);
+  const [selectedSchemas, setSelectedSchemas] = useState<IDatabaseSchemaData[]>(
+    []
+  );
 
-export class RestorableSchema extends React.Component<
-  IRestorableSchemaProps,
-  IRestorableSchemaState
-> {
-  public state: IRestorableSchemaState = {
-    filter: '',
-    selectedSchema: undefined,
-    restoreMode: false,
-    confirmDeletionDialogVisible: false,
-    shouldResetSort: false,
-    confirmRestorationDialogVisible: false,
-    hasRestorationInformation: false,
-  };
+  const [selectedDetailsListItems, setSelectedDetailsListItems] = useState<
+    IDatabaseSchemaView[] | undefined
+  >(undefined);
+  const [restoreMode, setRestoreMode] = useState(false);
 
-  public componentDidMount() {
-    const { affiliation, onFetch } = this.props;
+  const [shouldResetSort, setShouldResetSort] = useState(false);
+  const [
+    confirmRestorationDialogVisible,
+    setConfirmRestorationDialogVisible,
+  ] = useState(false);
+  const [hasRestorationInformation, setHasRestorationInformation] = useState(
+    false
+  );
+
+  useEffect(() => {
     onFetch([affiliation]);
-  }
+  }, []);
 
-  public onFilterChange = (event: TextFieldEvent, newValue?: string) => {
-    this.setState({ filter: newValue || '' });
+  const onFilterChange = (event: TextFieldEvent, newValue?: string) => {
+    setFilter(newValue || '');
   };
 
-  public onResetSort = () => {
-    this.setState({
-      shouldResetSort: false,
-    });
+  const onResetSort = () => {
+    setShouldResetSort(false);
   };
 
-  public closeAndFetch = () => {
-    this.props.onFetch([this.props.affiliation]);
-  };
-
-  private onUpdateSchemaDialogClosed = () => {
-    this.selection.setAllSelected(false);
-    this.setState({ selectedSchema: undefined });
-  };
-
-  private onExitRestorationMode = () => {
-    this.setState({
-      restoreMode: false,
-      selectedSchemas: [],
-    });
-    this.selection.setAllSelected(false);
-  };
-
-  public onEnterRestorationMode = () => {
-    this.setState({ restoreMode: true });
-  };
-
-  private onCancelRestorationClick = () => {
-    this.setState({
-      hasRestorationInformation: false,
-      confirmRestorationDialogVisible: false,
-    });
-  };
-
-  private onExitRestorationClick = () => {
-    const { affiliation, onFetch } = this.props;
+  const closeAndFetch = () => {
     onFetch([affiliation]);
   };
 
-  private onConfirmRestorationClick = () => {
-    const { selectedSchemas } = this.state;
-    const { onRestoreDatabaseSchemas } = this.props;
+  const onUpdateSchemaDialogClosed = () => {
+    //selection.setAllSelected(false);
+    setSelectedSchema(undefined);
+  };
+
+  const onSchemaSelectionChange = () => {
+    if (selectedDetailsListItems) {
+      const databaseSchemas = items.restorableDatabaseSchemas || [];
+      const selectedSchemas = databaseSchemas.filter(
+        (schema) =>
+          selectedDetailsListItems.find(
+            (it) => it.id === schema.databaseSchema.id
+          ) !== undefined
+      );
+
+      setSelectedSchemas(selectedSchemas);
+    }
+  };
+  const onSingleSchemaSelected = () => {
+    if (selectedDetailsListItems && selectedDetailsListItems[0]) {
+      const databaseSchemas = items.restorableDatabaseSchemas || [];
+      const selectedSchema = databaseSchemas.find(
+        (schema) => schema.databaseSchema.id === selectedDetailsListItems[0].id
+      );
+      if (selectedSchema) setSelectedSchema(selectedSchema);
+    }
+  };
+
+  useEffect(() => {
+    if (selectedDetailsListItems) {
+      restoreMode ? onSchemaSelectionChange() : onSingleSchemaSelected();
+    }
+  }, [items, selectedDetailsListItems, restoreMode]);
+
+  const selection = new DetailsList.Selection({
+    onSelectionChanged: () => {
+      setSelectedDetailsListItems(
+        selection.getSelection().map((it) => it as IDatabaseSchemaView)
+      );
+    },
+  });
+
+  useEffect(() => {
+    selection.setAllSelected(false);
+    setSelectedDetailsListItems(undefined);
+    setSelectedSchemas([]);
+    setSelectedSchema(undefined);
+  }, [restoreMode]);
+
+  const onExitRestorationMode = () => {
+    setRestoreMode(false);
+  };
+
+  const onEnterRestorationMode = () => {
+    setRestoreMode(true);
+  };
+
+  const onCancelRestorationClick = () => {
+    setHasRestorationInformation(false);
+    setConfirmRestorationDialogVisible(false);
+  };
+
+  const onExitRestorationClick = () => onFetch([affiliation]);
+
+  const onConfirmRestorationClick = () => {
     if (
       selectedSchemas &&
       selectedSchemas?.map((it) => it.databaseSchema.id).length > 0
@@ -124,151 +161,92 @@ export class RestorableSchema extends React.Component<
       const dbIds = selectedSchemas?.map((it) => it.databaseSchema.id);
 
       onRestoreDatabaseSchemas(dbIds, true);
-      this.selection.setAllSelected(false);
-      this.setState({
-        hasRestorationInformation: true,
-        confirmDeletionDialogVisible: false,
-      });
+      //selection.setAllSelected(false);
+      setHasRestorationInformation(true);
+      setConfirmRestorationDialogVisible(false);
     }
   };
 
-  public onSchemaSelectionChange = () => {
-    const selected: IDatabaseSchemaView[] = this.selection
-      .getSelection()
-      .map((it) => it as IDatabaseSchemaView);
-    const databaseSchemas = this.props.items.restorableDatabaseSchemas || [];
-    const selectedSchemas = databaseSchemas.filter(
-      (schema) =>
-        selected.find((it) => it.id === schema.databaseSchema.id) !== undefined
-    );
+  const onRestoreSelectionConfirmed = () =>
+    setConfirmRestorationDialogVisible(true);
 
-    this.setState({ selectedSchemas });
-  };
-
-  public onSingleSchemaSelected = () => {
-    const selected: IDatabaseSchemaView = this.selection
-      .getSelection()
-      .map((it) => it as IDatabaseSchemaView)[0];
-    if (!selected) return;
-    const databaseSchemas = this.props.items.restorableDatabaseSchemas || [];
-    const selectedSchema = databaseSchemas.find(
-      (schema) => schema.databaseSchema.id === selected.id
-    );
-    if (selectedSchema) this.setState({ selectedSchema });
-  };
-
-  public onRestoreSelectionConfirmed = () => {
-    this.setState({ confirmRestorationDialogVisible: true });
-  };
-
-  public selection = new Selection({
-    onSelectionChanged: () => {
-      if (this.state.restoreMode) {
-        this.onSchemaSelectionChange();
-      } else {
-        this.onSingleSchemaSelected();
-      }
-    },
-  });
-  public render() {
-    const {
-      isFetching,
-      className,
-      onUpdate,
-      items,
-      onTestJdbcConnectionForId,
-      testJdbcConnectionResponse,
-      restoreResponse,
-      onRestoreDatabaseSchema,
-    } = this.props;
-    const {
-      filter,
-      selectedSchema,
-      selectedSchemas,
-      restoreMode,
-      confirmRestorationDialogVisible,
-      shouldResetSort,
-      hasRestorationInformation,
-    } = this.state;
-    return (
-      <div className={className}>
-        <div className="styled-action-bar">
-          <div className="styled-input-and-restore">
-            <div className="styled-input">
-              <TextField
-                placeholder="Søk etter skjema"
-                onChange={this.onFilterChange}
-                value={filter}
-              />
-            </div>
-            <EnterModeThenConfirm
-              confirmButtonEnabled={(selectedSchemas || []).length !== 0}
-              confirmText="Gjennopprett valgte"
-              inactiveIcon="LockOutlineOpen"
-              inactiveText="Velg skjemaer for gjenoppretting"
-              onEnterMode={this.onEnterRestorationMode}
-              onExitMode={this.onExitRestorationMode}
-              onConfirmClick={this.onRestoreSelectionConfirmed}
-              iconColor="green"
+  return (
+    <div className={className}>
+      <div className="styled-action-bar">
+        <div className="styled-input-and-restore">
+          <div className="styled-input">
+            <TextField
+              placeholder="Søk etter skjema"
+              onChange={onFilterChange}
+              value={filter}
             />
           </div>
-          <div style={{ marginRight: '20px' }}>
-            <LoadingButton
-              icon="Update"
-              style={{ minWidth: '141px', marginLeft: '15px' }}
-              loading={isFetching}
-              onClick={this.closeAndFetch}
-            >
-              Oppdater
-            </LoadingButton>
-          </div>
-        </div>
-        {isFetching ? (
-          <Spinner />
-        ) : (
-          <DatabaseSchemaTable
-            filter={filter}
-            schemas={items.restorableDatabaseSchemas || []}
-            multiSelect={restoreMode}
-            selection={this.selection}
-            onResetSort={this.onResetSort}
-            shouldResetSort={shouldResetSort}
-            isRestoreTable={true}
+          <EnterModeThenConfirm
+            confirmButtonEnabled={selectedSchemas.length !== 0}
+            confirmText="Gjennopprett valgte"
+            inactiveIcon="LockOutlineOpen"
+            inactiveText="Velg skjemaer for gjenoppretting"
+            onEnterMode={onEnterRestorationMode}
+            onExitMode={onExitRestorationMode}
+            onConfirmClick={onRestoreSelectionConfirmed}
+            iconColor="green"
           />
-        )}
-        <DatabaseSchemaUpdateDialog
-          schema={selectedSchema?.databaseSchema}
-          clearSelectedSchema={this.onUpdateSchemaDialogClosed}
-          onUpdate={onUpdate}
-          onTestJdbcConnectionForId={onTestJdbcConnectionForId}
-          testJdbcConnectionResponse={testJdbcConnectionResponse}
-          onChangeCooldownSchema={(schema) =>
-            onRestoreDatabaseSchema(schema, true)
-          }
-          isRestoreDialog={true}
-        />
-        <ConfirmChangeCooldownDialog
-          title="Gjenopprett databaseskjemaer"
-          visible={confirmRestorationDialogVisible}
-          changeCooldownType="gjenopprette"
-          onOkClick={this.onConfirmRestorationClick}
-          onCancelClick={this.onCancelRestorationClick}
-          onExitClick={this.onExitRestorationClick}
-          schemasToChange={
-            this.state.selectedSchemas?.map((it) => it.databaseSchema) || []
-          }
-          hasChangeInformation={hasRestorationInformation}
-          changeCooldownResponse={restoreResponse}
-          items={{
-            databaseSchemas: items.restorableDatabaseSchemas?.map(
-              (it) => it.databaseSchema
-            ),
-          }}
-        />
+        </div>
+        <div style={{ marginRight: '20px' }}>
+          <LoadingButton
+            icon="Update"
+            style={{ minWidth: '141px', marginLeft: '15px' }}
+            loading={isFetching}
+            onClick={closeAndFetch}
+          >
+            Oppdater
+          </LoadingButton>
+        </div>
       </div>
-    );
-  }
-}
+      {isFetching ? (
+        <Spinner />
+      ) : (
+        <DatabaseSchemaTable
+          filter={filter}
+          schemas={items.restorableDatabaseSchemas || []}
+          selection={selection}
+          multiSelect={restoreMode}
+          onResetSort={onResetSort}
+          shouldResetSort={shouldResetSort}
+          isRestoreTable={true}
+        />
+      )}
+      <DatabaseSchemaUpdateDialog
+        schema={selectedSchema?.databaseSchema}
+        clearSelectedSchema={onUpdateSchemaDialogClosed}
+        onUpdate={onUpdate}
+        onTestJdbcConnectionForId={onTestJdbcConnectionForId}
+        testJdbcConnectionResponse={testJdbcConnectionResponse}
+        onChangeCooldownSchema={(schema) =>
+          onRestoreDatabaseSchema(schema, true)
+        }
+        isRestoreDialog={true}
+      />
+      <ConfirmChangeCooldownDialog
+        title="Gjenopprett databaseskjemaer"
+        visible={confirmRestorationDialogVisible}
+        changeCooldownType="gjenopprette"
+        onOkClick={onConfirmRestorationClick}
+        onCancelClick={onCancelRestorationClick}
+        onExitClick={onExitRestorationClick}
+        schemasToChange={selectedSchemas?.map((it) => it.databaseSchema) || []}
+        hasChangeInformation={hasRestorationInformation}
+        changeCooldownResponse={restoreResponse}
+        items={{
+          databaseSchemas: items.restorableDatabaseSchemas?.map(
+            (it) => it.databaseSchema
+          ),
+        }}
+      />
+    </div>
+  );
+};
+
 export default styled(RestorableSchema)`
   height: 100%;
   overflow-x: auto;

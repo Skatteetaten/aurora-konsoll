@@ -3,11 +3,11 @@ import InfoDialog from 'components/InfoDialog';
 import React from 'react';
 import {
   IChangeCooldownDatabaseSchemasResponse,
-  IRestorableDatabaseSchemas,
-  IDatabaseSchemaData, IDatabaseSchema, IDatabaseSchemas,
+  IDatabaseSchema,
+  IDatabaseSchemas,
 } from 'models/schemas';
-import {renderDetailsListWithSchemaInfo} from "./Schema";
-import DeletionSummary from "./DeletionSummary";
+import { renderDetailsListWithSchemaInfo } from './Schema';
+import DeletionSummary from './DeletionSummary';
 
 interface IConfirmRestorationDialogProps {
   visible: boolean;
@@ -56,7 +56,11 @@ const ConfirmChangeCooldownDialog: React.FC<IConfirmRestorationDialogProps> = ({
         </h4>
       </>
     ) : (
-      <DeletionSummary changeCooldownType={changeCooldownType} deleteResponse={changeCooldownResponse} items={items} />
+      <DeletionSummary
+        changeCooldownType={changeCooldownType}
+        deleteResponse={changeCooldownResponse}
+        items={items}
+      />
     )}
   </InfoDialog>
 );
@@ -86,33 +90,33 @@ const renderFooterButtons = (
         <>
           <ActionButton
             onClick={onOkClickInternal}
-      iconSize={ActionButton.LARGE}
-      icon="Check"
-      color="black"
-        >
-        Ja
-        </ActionButton>
-        <ActionButton
-      onClick={onCancelClickInternal}
-      iconSize={ActionButton.LARGE}
-      icon="Cancel"
-      color="black"
-        >
-        Nei
-        </ActionButton>
+            iconSize={ActionButton.LARGE}
+            icon="Check"
+            color="black"
+          >
+            Ja
+          </ActionButton>
+          <ActionButton
+            onClick={onCancelClickInternal}
+            iconSize={ActionButton.LARGE}
+            icon="Cancel"
+            color="black"
+          >
+            Nei
+          </ActionButton>
         </>
-    );
+      );
     } else {
       return (
         <ActionButton
           onClick={onExitClickInternal}
-      iconSize={ActionButton.LARGE}
-      icon="Completed"
-      color="black"
+          iconSize={ActionButton.LARGE}
+          icon="Completed"
+          color="black"
         >
-        Avslutt
+          Avslutt
         </ActionButton>
-    );
+      );
     }
   };
 };
