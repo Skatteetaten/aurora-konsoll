@@ -83,36 +83,43 @@ export default class PodsStatusService {
       managementResponses.health &&
       managementResponses.health.textResponse
     ) {
-      const status = JSON.parse(managementResponses.health.textResponse).status;
-      switch (status) {
-        case 'UP':
-        case 'HEALTHY':
-          return {
-            icon: 'Completed',
-            color: STATUS_COLORS.healthy,
-          };
-        case 'COMMENT':
-        case 'OBSERVE':
-          return {
-            icon: 'Info',
-            color: STATUS_COLORS.observe,
-          };
-        case 'OUT_OF_SERVICE':
-        case 'DOWN':
-          return {
-            icon: 'Error',
-            color: STATUS_COLORS.down,
-          };
-        case 'OFF':
-          return {
-            icon: 'Blocked',
-            color: STATUS_COLORS.off,
-          };
-        default:
-          return {
-            icon: 'Info',
-            color: STATUS_COLORS.unknown,
-          };
+      if (
+        JSON.parse(managementResponses.health.textResponse).hasOwnProperty(
+          'status'
+        )
+      ) {
+        const status = JSON.parse(managementResponses.health.textResponse)
+          .status;
+        switch (status) {
+          case 'UP':
+          case 'HEALTHY':
+            return {
+              icon: 'Completed',
+              color: STATUS_COLORS.healthy,
+            };
+          case 'COMMENT':
+          case 'OBSERVE':
+            return {
+              icon: 'Info',
+              color: STATUS_COLORS.observe,
+            };
+          case 'OUT_OF_SERVICE':
+          case 'DOWN':
+            return {
+              icon: 'Error',
+              color: STATUS_COLORS.down,
+            };
+          case 'OFF':
+            return {
+              icon: 'Blocked',
+              color: STATUS_COLORS.off,
+            };
+          default:
+            return {
+              icon: 'Info',
+              color: STATUS_COLORS.unknown,
+            };
+        }
       }
     }
     return {
