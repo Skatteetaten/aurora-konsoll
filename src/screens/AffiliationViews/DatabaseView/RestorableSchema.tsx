@@ -73,9 +73,19 @@ export const RestorableSchema: React.FC<IRestorableSchemaProps> = ({
     false
   );
 
+  const [selection] = useState(
+    new DetailsList.Selection({
+      onSelectionChanged: () => {
+        setSelectedDetailsListItems(
+          selection.getSelection().map((it) => it as IDatabaseSchemaView)
+        );
+      },
+    })
+  );
+
   useEffect(() => {
     onFetch([affiliation]);
-  }, []);
+  }, [affiliation, onFetch]);
 
   const onFilterChange = (event: TextFieldEvent, newValue?: string) => {
     setFilter(newValue || '');
@@ -94,55 +104,47 @@ export const RestorableSchema: React.FC<IRestorableSchemaProps> = ({
     setSelectedSchema(undefined);
   };
 
-  const onSchemaSelectionChange = () => {
-    if (selectedDetailsListItems) {
-      const databaseSchemas = items.restorableDatabaseSchemas || [];
-      const selectedSchemas = databaseSchemas.filter(
-        (schema) =>
-          selectedDetailsListItems.find(
-            (it) => it.id === schema.databaseSchema.id
-          ) !== undefined
-      );
-
-      setSelectedSchemas(selectedSchemas);
-    }
-  };
-  const onSingleSchemaSelected = () => {
-    if (selectedDetailsListItems && selectedDetailsListItems[0]) {
-      const databaseSchemas = items.restorableDatabaseSchemas || [];
-      const selectedSchema = databaseSchemas.find(
-        (schema) => schema.databaseSchema.id === selectedDetailsListItems[0].id
-      );
-      if (selectedSchema) setSelectedSchema(selectedSchema);
-    }
-  };
-
   useEffect(() => {
+    const onSchemaSelectionChange = () => {
+      if (selectedDetailsListItems) {
+        const databaseSchemas = items.restorableDatabaseSchemas || [];
+        const selectedSchemas = databaseSchemas.filter(
+          (schema) =>
+            selectedDetailsListItems.find(
+              (it) => it.id === schema.databaseSchema.id
+            ) !== undefined
+        );
+
+        setSelectedSchemas(selectedSchemas);
+      }
+    };
+    const onSingleSchemaSelected = () => {
+      if (selectedDetailsListItems && selectedDetailsListItems[0]) {
+        const databaseSchemas = items.restorableDatabaseSchemas || [];
+        const selectedSchema = databaseSchemas.find(
+          (schema) =>
+            schema.databaseSchema.id === selectedDetailsListItems[0].id
+        );
+        if (selectedSchema) setSelectedSchema(selectedSchema);
+      }
+    };
+
     if (selectedDetailsListItems) {
       restoreMode ? onSchemaSelectionChange() : onSingleSchemaSelected();
     }
   }, [items, selectedDetailsListItems, restoreMode]);
 
-  const selection = new DetailsList.Selection({
-    onSelectionChanged: () => {
-      setSelectedDetailsListItems(
-        selection.getSelection().map((it) => it as IDatabaseSchemaView)
-      );
-    },
-  });
-
-  useEffect(() => {
+  const onExitRestorationMode = () => {
     selection.setAllSelected(false);
     setSelectedDetailsListItems(undefined);
     setSelectedSchemas([]);
-    setSelectedSchema(undefined);
-  }, [restoreMode]);
-
-  const onExitRestorationMode = () => {
     setRestoreMode(false);
   };
 
   const onEnterRestorationMode = () => {
+    selection.setAllSelected(false);
+    setSelectedDetailsListItems(undefined);
+    setSelectedSchema(undefined);
     setRestoreMode(true);
   };
 
