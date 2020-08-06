@@ -31,7 +31,7 @@ async function init() {
   const config = configOrError as IConfiguration;
 
   if (!tokenStore.isTokenValid() && window.location.pathname !== '/secret') {
-    redirectToLoginPage(
+    redirectToAuthorizationPage(
       config.AUTHORIZATION_URI,
       config.CLIENT_ID,
       config.SCOPE
@@ -72,6 +72,14 @@ async function init() {
     <Provider store={store}>
       <BrowserRouter>
         <App
+          onLogout={() => {
+            tokenStore.clearToken();
+            redirectToAuthorizationPage(
+              config.AUTHORIZATION_LOGOUT_URI,
+              config.CLIENT_ID,
+              config.SCOPE
+            );
+          }}
           tokenStore={tokenStore}
           displayDatabaseView={config.DBH_ENABLED}
           displaySkapViews={config.SKAP_ENABLED}
@@ -82,7 +90,7 @@ async function init() {
   );
 }
 
-function redirectToLoginPage(
+function redirectToAuthorizationPage(
   authorizationUri: string,
   clientId: string,
   scope: string
@@ -90,6 +98,7 @@ function redirectToLoginPage(
   const params = new URLSearchParams();
   params.append('client_id', clientId);
   params.append('redirect_uri', window.location.origin + '/secret');
+  params.append('post_logout_redirect_uri', window.location.origin);
   params.append('response_type', 'token');
   params.append('scope', scope);
   params.append('state', '');

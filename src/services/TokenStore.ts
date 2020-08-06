@@ -36,6 +36,10 @@ class TokenStore implements ITokenStore {
     window.localStorage.setItem(this.TOKEN_KEY, token);
     window.localStorage.setItem(this.EXPIRES_AT_KEY, expiresAt.toString());
   }
+
+  public clearToken(): void {
+    window.localStorage.clear();
+  }
 }
 
 const tokenStore = new TokenStore();

@@ -16,6 +16,7 @@ import MenuNavLink, { IMenuNavLinkData } from './MenuNavLink';
 import { IDropdownOption } from 'office-ui-fabric-react/lib-commonjs';
 
 interface ILayoutProps {
+  onLogout: () => void;
   affiliation?: string;
   className?: string;
   handleMenuExpand: () => void;
@@ -35,6 +36,7 @@ const defaultUser: IUserAndAffiliations = {
 };
 
 const Layout = ({
+  onLogout,
   affiliation,
   className,
   isMenuExpanded,
@@ -107,6 +109,7 @@ const Layout = ({
   return (
     <div className={layoutClassNames}>
       <Header
+        onLogout={onLogout}
         title="Aurora Konsoll"
         className="g-header"
         currentUser={currentUser}

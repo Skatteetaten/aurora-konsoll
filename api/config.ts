@@ -27,6 +27,9 @@ const TOKEN_ENCRYPTION_FRASE =
 const AUTHORIZATION_URI =
   env.AUTHORIZATION_URI || `${CLUSTER_URL}/oauth/authorize`;
 
+const AUTHORIZATION_LOGOUT_URI =
+  env.AUTHORIZATION_LOGOUT_URI || `${CLUSTER_URL}/oauth/logout`;
+
 const CLIENT_ID = env.CLIENT_ID || 'aurora-openshift-console-dev';
 
 const SCOPE = env.SCOPE || '';
@@ -36,6 +39,7 @@ export {
   CLIENT_ID,
   APPLICATION_NAME,
   AUTHORIZATION_URI,
+  AUTHORIZATION_LOGOUT_URI,
   PORT,
   GOBO_URL,
   DBH_ENABLED,

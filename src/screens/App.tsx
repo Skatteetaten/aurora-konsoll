@@ -24,6 +24,7 @@ import { SecretTokenNavigation } from './SecretToken';
 import AcceptToken from './AcceptToken';
 
 interface IAppProps {
+  onLogout: () => void;
   tokenStore: ITokenStore;
   displayDatabaseView: boolean;
   displaySkapViews: boolean;
@@ -33,6 +34,7 @@ export const App: React.FC<IAppProps> = ({
   displayDatabaseView,
   displaySkapViews,
   tokenStore,
+  onLogout,
 }) => {
   const [affiliation, setAffiliation] = useState<string | undefined>(undefined);
   const [isMenuExpanded, setMenuExpanded] = useState(true);
@@ -70,6 +72,7 @@ export const App: React.FC<IAppProps> = ({
     <StyledSkeBasis>
       <ErrorBoundaryConnected>
         <LayoutConnected
+          onLogout={onLogout}
           isMenuExpanded={isMenuExpanded}
           handleMenuExpand={() => setMenuExpanded(!isMenuExpanded)}
           affiliation={affiliation}

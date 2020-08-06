@@ -13,18 +13,20 @@ import { IUserAndAffiliations } from 'models/ApplicationDeployment';
 import { ButtonLink } from 'components/ButtonLink';
 
 interface IHeaderProps {
+  onLogout: () => void;
   title: string;
   currentUser: IUserAndAffiliations;
   className?: string;
   children?: React.ReactNode;
 }
 
-const logOut = () => {
-  window.localStorage.clear();
-  window.location.reload();
-};
-
-const Header = ({ title, currentUser, className, children }: IHeaderProps) => {
+const Header = ({
+  onLogout,
+  title,
+  currentUser,
+  className,
+  children,
+}: IHeaderProps) => {
   return (
     <div className={className}>
       <div className="g-header-layout">
@@ -46,7 +48,7 @@ const Header = ({ title, currentUser, className, children }: IHeaderProps) => {
               </>
             }
             renderContent={[
-              <ButtonLink key="logout" onClick={logOut}>
+              <ButtonLink key="logout" onClick={onLogout}>
                 Logg ut{' '}
               </ButtonLink>,
             ]}

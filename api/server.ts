@@ -7,6 +7,7 @@ import {
   SCOPE,
   APPLICATION_NAME,
   AUTHORIZATION_URI,
+  AUTHORIZATION_LOGOUT_URI,
   CLIENT_ID,
   DBH_ENABLED,
   GOBO_URL,
@@ -43,6 +44,7 @@ app.get('/api/config', (req, res) => {
   return res.send({
     SCOPE,
     AUTHORIZATION_URI,
+    AUTHORIZATION_LOGOUT_URI,
     CLIENT_ID,
     APPLICATION_NAME,
     DBH_ENABLED,

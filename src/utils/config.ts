@@ -1,6 +1,7 @@
 export interface IConfiguration {
   SCOPE: string;
   AUTHORIZATION_URI: string;
+  AUTHORIZATION_LOGOUT_URI: string;
   CLIENT_ID: string;
   DBH_ENABLED: boolean;
   SKAP_ENABLED: boolean;
