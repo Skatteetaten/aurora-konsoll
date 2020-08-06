@@ -9,12 +9,7 @@ const OPENSHIFT_CLUSTER = env.OPENSHIFT_CLUSTER || 'utv';
 const CLUSTER_URL =
   env.CLUSTER_URL || `https://${OPENSHIFT_CLUSTER}-master.paas.skead.no:8443`;
 
-const AUTHORIZATION_URI =
-  env.AUTHORIZATION_URI || `${CLUSTER_URL}/oauth/authorize`;
-
 const PORT = Number(env.HTTP_PORT || 9090);
-
-const CLIENT_ID = env.CLIENT_ID || 'aurora-openshift-console-dev';
 
 const GOBO_URL =
   env.INTEGRATIONS_GOBO_URL || 'http://gobo.aurora.utv.paas.skead.no';
@@ -29,7 +24,15 @@ const SKAP_ENABLED = !!env.INTEGRATIONS_SKAP_URL;
 const TOKEN_ENCRYPTION_FRASE =
   env.TOKEN_ENCRYPTION_FRASE || 'UdONoTMessW1TH0leGunnarS0lSkjaer';
 
+const AUTHORIZATION_URI =
+  env.AUTHORIZATION_URI || `${CLUSTER_URL}/oauth/authorize`;
+
+const CLIENT_ID = env.CLIENT_ID || 'aurora-openshift-console-dev';
+
+const SCOPE = env.SCOPE || '';
+
 export {
+  SCOPE,
   CLIENT_ID,
   APPLICATION_NAME,
   AUTHORIZATION_URI,

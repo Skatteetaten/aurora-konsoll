@@ -4,6 +4,7 @@ import * as tokenEncryption from './tokenEncryption';
 import { logger } from './logger';
 
 import {
+  SCOPE,
   APPLICATION_NAME,
   AUTHORIZATION_URI,
   CLIENT_ID,
@@ -40,6 +41,7 @@ app.use(express.json());
 
 app.get('/api/config', (req, res) => {
   return res.send({
+    SCOPE,
     AUTHORIZATION_URI,
     CLIENT_ID,
     APPLICATION_NAME,
@@ -57,6 +59,8 @@ app.get('/api/accept-token', (req, res) => {
   const accessToken = req.query.access_token;
   const expires_in = req.query.expires_in;
   const encryptedToken = tokenEncryption.encrypt(accessToken as string);
+  // TODO: Remove
+  logger.info(accessToken as string);
   res.send(
     `${req.protocol}://${req.get(
       'x-forwarded-host'

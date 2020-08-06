@@ -31,7 +31,11 @@ async function init() {
   const config = configOrError as IConfiguration;
 
   if (!tokenStore.isTokenValid() && window.location.pathname !== '/secret') {
-    redirectToLoginPage(config.AUTHORIZATION_URI, config.CLIENT_ID);
+    redirectToLoginPage(
+      config.AUTHORIZATION_URI,
+      config.CLIENT_ID,
+      config.SCOPE
+    );
   }
 
   const urlParams = new URLSearchParams(window.location.hash.replace('#', '?'));
@@ -78,12 +82,16 @@ async function init() {
   );
 }
 
-function redirectToLoginPage(authorizationUri: string, clientId: string) {
+function redirectToLoginPage(
+  authorizationUri: string,
+  clientId: string,
+  scope: string
+) {
   const params = new URLSearchParams();
   params.append('client_id', clientId);
   params.append('redirect_uri', window.location.origin + '/secret');
   params.append('response_type', 'token');
-  params.append('scope', '');
+  params.append('scope', scope);
   params.append('state', '');
   const authorizationUrl = authorizationUri + '?' + params.toString();
   window.location.replace(authorizationUrl);

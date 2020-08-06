@@ -1,4 +1,5 @@
 export interface IConfiguration {
+  SCOPE: string;
   AUTHORIZATION_URI: string;
   CLIENT_ID: string;
   DBH_ENABLED: boolean;
