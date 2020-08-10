@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import SortableDetailsList from 'components/SortableDetailsList';
 import {
   CheckboxVisibility,
@@ -18,6 +18,7 @@ interface IDatabaseSchemaTableProps {
   shouldResetSort: boolean;
   onResetSort: () => void;
   isRestoreTable: boolean;
+  selectedSchemas: IDatabaseSchemaData[];
 }
 
 export const DatabaseSchemaTable = ({
@@ -28,6 +29,7 @@ export const DatabaseSchemaTable = ({
   onResetSort,
   shouldResetSort,
   isRestoreTable,
+  selectedSchemas,
 }: IDatabaseSchemaTableProps) => {
   const filterDatabaseSchemaView = (filter: string) => (
     view: IDatabaseSchemaView
@@ -46,8 +48,11 @@ export const DatabaseSchemaTable = ({
     view.id.includes(filter) ||
     (view.setToCooldownAt?.includes(filter) ?? false) ||
     (view.deleteAfter?.includes(filter) ?? false);
+  const [viewItems, setViewItems] = useState<IDatabaseSchemaView[]>([]);
 
-  let viewItems = schemas.map((i) => toViewSchema(i));
+  useEffect(() => {
+    setViewItems(schemas.map((schema) => toViewSchema(schema)));
+  }, [schemas]);
 
   return (
     <div className="styledTable">
@@ -64,6 +69,7 @@ export const DatabaseSchemaTable = ({
         checkboxVisibility={
           multiSelect ? CheckboxVisibility.always : CheckboxVisibility.hidden
         }
+        selectedItems={selectedSchemas.map((schema) => toViewSchema(schema))}
       />
     </div>
   );

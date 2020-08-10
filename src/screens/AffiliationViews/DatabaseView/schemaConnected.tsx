@@ -7,44 +7,30 @@ import {
   IJdbcUser,
   IUpdateDatabaseSchemaInputWithCreatedBy,
 } from 'models/schemas';
-import { IStartupState } from 'store/state/startup/reducers';
 import { RootState } from 'store/types';
 import {
   createDatabaseSchema,
   deleteSchema,
   deleteSchemas,
-  fetchSchemas,
-  updateSchema,
   fetchInstances,
+  fetchSchemas,
   testJdbcConnectionForId,
   testJdbcConnectionForJdbcUser,
+  updateSchema,
 } from './state/actions';
-import { ISchemasState } from './state/reducers';
-
-const getFetchingStatus = (state: ISchemasState) => state.isFetchingSchemas;
-const getItems = (state: ISchemasState) => state.databaseSchemas;
-const getUpdateResponse = (state: ISchemasState) => state.updateSchemaResponse;
-const getCreateDatabaseSchemaRespnse = (state: ISchemasState) =>
-  state.createDatabaseSchemaResponse;
-const getCurrentUser = (state: IStartupState) => state.currentUser;
-const getDeletionInfo = (state: ISchemasState) => state.deleteSchemasResponse;
-const getInstances = (state: ISchemasState) => state.databaseInstances;
-const getFetchingStatusInstances = (state: ISchemasState) =>
-  state.isFetchingInstances;
 
 const mapStateToProps = (state: RootState) => ({
-  items: getItems(state.database),
-  instances: getInstances(state.database),
-  isFetchingInstances: getFetchingStatusInstances(state.database),
-  isFetching: getFetchingStatus(state.database),
-  updateResponse: getUpdateResponse(state.database),
+  items: state.database.databaseSchemas,
+  instances: state.database.databaseInstances,
+  isFetchingInstances: state.database.isFetchingInstances,
+  isFetching: state.database.isFetchingSchemas,
   testJdbcConnectionResponse: state.database.testJdbcConnectionResponse,
-  createResponse: getCreateDatabaseSchemaRespnse(state.database),
-  currentUser: getCurrentUser(state.startup),
-  deleteResponse: getDeletionInfo(state.database),
+  createResponse: state.database.createDatabaseSchemaResponse,
+  currentUser: state.startup.currentUser,
+  deleteResponse: state.database.deleteSchemasResponse,
 });
 
-export const SchemaConnected = connect(mapStateToProps, {
+const mapDispatchToProps = {
   onFetch: (affiliations: string[]) => fetchSchemas(affiliations),
   onFetchInstances: (affiliation: string) => fetchInstances(affiliation),
   onUpdate: (databaseSchema: IUpdateDatabaseSchemaInputWithCreatedBy) =>
@@ -56,4 +42,8 @@ export const SchemaConnected = connect(mapStateToProps, {
   onCreate: (databaseSchema: ICreateDatabaseSchemaInput) =>
     createDatabaseSchema(databaseSchema),
   onDeleteSchemas: (ids: string[]) => deleteSchemas(ids),
-})(Schema);
+};
+export const SchemaConnected = connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(Schema);

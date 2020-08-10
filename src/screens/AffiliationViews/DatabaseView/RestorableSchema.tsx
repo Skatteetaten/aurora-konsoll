@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import styled from 'styled-components';
 import TextField from '@skatteetaten/frontend-components/TextField';
 import { TextFieldEvent } from '../../../types/react';
@@ -29,7 +29,7 @@ export interface IRestorableSchemaProps {
   testJdbcConnectionResponse: ITestJDBCResponse;
   restoreResponse: IChangeCooldownDatabaseSchemasResponse;
   onFetch: (affiliation: string[]) => void | undefined;
-  onUpdate: (databaseSchema: IUpdateDatabaseSchemaInputWithCreatedBy) => void; //TODO mulig feil type her
+  onUpdate: (databaseSchema: IUpdateDatabaseSchemaInputWithCreatedBy) => void;
   onTestJdbcConnectionForId: (id: string) => void;
   onRestoreDatabaseSchemas: (ids: string[], active: boolean) => void;
   onRestoreDatabaseSchema: (
@@ -38,6 +38,7 @@ export interface IRestorableSchemaProps {
   ) => void;
 }
 
+// TODO: AOS-4750 Combine or refactor with Schema.tsx
 export const RestorableSchema: React.FC<IRestorableSchemaProps> = ({
   className,
   affiliation,
@@ -73,18 +74,22 @@ export const RestorableSchema: React.FC<IRestorableSchemaProps> = ({
     false
   );
 
-  const [selection] = useState(
-    new DetailsList.Selection({
-      onSelectionChanged: () => {
-        setSelectedDetailsListItems(
-          selection.getSelection().map((it) => it as IDatabaseSchemaView)
-        );
-      },
-    })
+  const selection = useMemo(
+    () =>
+      new DetailsList.Selection({
+        onSelectionChanged: () => {
+          setSelectedDetailsListItems(
+            selection.getSelection().map((it) => it as IDatabaseSchemaView)
+          );
+        },
+      }),
+    []
   );
 
   useEffect(() => {
     onFetch([affiliation]);
+    setFilter('');
+    setShouldResetSort(true);
   }, [affiliation, onFetch]);
 
   const onFilterChange = (event: TextFieldEvent, newValue?: string) => {
@@ -100,7 +105,7 @@ export const RestorableSchema: React.FC<IRestorableSchemaProps> = ({
   };
 
   const onUpdateSchemaDialogClosed = () => {
-    //selection.setAllSelected(false);
+    selection.setAllSelected(false);
     setSelectedSchema(undefined);
   };
 
@@ -163,7 +168,7 @@ export const RestorableSchema: React.FC<IRestorableSchemaProps> = ({
       const dbIds = selectedSchemas?.map((it) => it.databaseSchema.id);
 
       onRestoreDatabaseSchemas(dbIds, true);
-      //selection.setAllSelected(false);
+      selection.setAllSelected(false);
       setHasRestorationInformation(true);
       setConfirmRestorationDialogVisible(false);
     }
@@ -216,6 +221,7 @@ export const RestorableSchema: React.FC<IRestorableSchemaProps> = ({
           onResetSort={onResetSort}
           shouldResetSort={shouldResetSort}
           isRestoreTable={true}
+          selectedSchemas={selectedSchemas}
         />
       )}
       <DatabaseSchemaUpdateDialog
