@@ -4,6 +4,7 @@ export interface IConfiguration {
   DBH_ENABLED: boolean;
   SKAP_ENABLED: boolean;
   APPLICATION_NAME: string;
+  STORYTELLER_URL: string;
 }
 
 async function fetchConfiguration(): Promise<IConfiguration | Error> {

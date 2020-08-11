@@ -22,6 +22,7 @@ import { NetdebugConnected } from './NetdebugView/NetdebugConnected';
 
 import { SecretTokenNavigation } from './SecretToken';
 import AcceptToken from './AcceptToken';
+import { StorytellerView } from './StorytellerView/StorytellerView';
 
 interface IAppProps {
   tokenStore: TokenStore;
@@ -107,6 +108,11 @@ export const App: React.FC<IAppProps> = ({
                 exact={true}
                 path="/certificates"
                 component={CertificateConnected}
+              />
+              <Route
+                exact={true}
+                path="/storyteller"
+                component={StorytellerView}
               />
             </Switch>
           )}

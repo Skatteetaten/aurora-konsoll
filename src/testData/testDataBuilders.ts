@@ -156,6 +156,10 @@ export const deploymentFactory = Factory.Sync.makeFactory<
         serviceLinks: [],
         deploymentSpecs: {},
       },
+      route: {
+        bigipJobs: [],
+        websealJobs: [],
+      },
     },
   })
 );
