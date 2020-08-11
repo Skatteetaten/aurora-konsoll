@@ -8,20 +8,22 @@ import {
   IChangeCooldownDatabaseSchemasResponse,
 } from 'models/schemas';
 import { renderDetailsListWithSchemaInfo } from './Schema';
+import ErrorMessage from '@skatteetaten/frontend-components/ErrorMessage';
+import Spinner from '../../../components/Spinner';
 
-interface IDeletionSummaryProps {
-  deleteResponse: IChangeCooldownDatabaseSchemasResponse;
+interface IChangeCooldownSummaryProps {
+  changeCooldownResponse: IChangeCooldownDatabaseSchemasResponse;
   className?: string;
   items: IDatabaseSchemas;
   changeCooldownType: string;
 }
 
-const DeletionSummary = ({
-  deleteResponse,
+const ChangeCooldownSummary = ({
+  changeCooldownResponse,
   className,
   items,
   changeCooldownType,
-}: IDeletionSummaryProps) => {
+}: IChangeCooldownSummaryProps) => {
   const getDatabaseSchemaInfoById = (ids: string[]): JSX.Element | null => {
     if (!items.databaseSchemas) {
       return null;
@@ -47,21 +49,25 @@ const DeletionSummary = ({
     <div className={className}>
       <Card color={CardColor.GREEN}>
         <Grid>
-          {createRows(
-            `Følgende databaseskjemaer ble ${changeCooldownType}t:`,
-            deleteResponse.succeeded
-          )}
-          {createRows(
-            `Klarte ikke å ${changeCooldownType} databaseskjemaene:`,
-            deleteResponse.failed
-          )}
+          {changeCooldownResponse.succeeded.length > 0 &&
+            createRows(
+              `Følgende databaseskjemaer ble ${changeCooldownType}t:`,
+              changeCooldownResponse.succeeded
+            )}
+          {changeCooldownResponse.failed.length > 0 &&
+            createRows(
+              `Klarte ikke å ${changeCooldownType} databaseskjemaene:`,
+              changeCooldownResponse.failed
+            )}
+          {changeCooldownResponse.succeeded.length === 0 &&
+            changeCooldownResponse.failed.length === 0 && <Spinner />}
         </Grid>
       </Card>
     </div>
   );
 };
 
-export default styled(DeletionSummary)`
+export default styled(ChangeCooldownSummary)`
   .styled-label {
     font-weight: bold;
     font-size: 20px;

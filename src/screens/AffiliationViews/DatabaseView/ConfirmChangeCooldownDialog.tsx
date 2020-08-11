@@ -7,7 +7,7 @@ import {
   IDatabaseSchemas,
 } from 'models/schemas';
 import { renderDetailsListWithSchemaInfo } from './Schema';
-import DeletionSummary from './DeletionSummary';
+import ChangeCooldownSummary from './ChangeCooldownSummary';
 
 interface IConfirmRestorationDialogProps {
   visible: boolean;
@@ -45,6 +45,7 @@ const ConfirmChangeCooldownDialog: React.FC<IConfirmRestorationDialogProps> = ({
     )}
     hideCloseButton={true}
     isBlocking={true}
+    onDismiss={onExitClick}
   >
     {!hasChangeInformation ? (
       <>
@@ -56,9 +57,9 @@ const ConfirmChangeCooldownDialog: React.FC<IConfirmRestorationDialogProps> = ({
         </h4>
       </>
     ) : (
-      <DeletionSummary
+      <ChangeCooldownSummary
         changeCooldownType={changeCooldownType}
-        deleteResponse={changeCooldownResponse}
+        changeCooldownResponse={changeCooldownResponse}
         items={items}
       />
     )}
