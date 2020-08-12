@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React, { useEffect } from 'react';
 import styled from 'styled-components';
 import Row, { IApplicationMap } from './components/Row';
 import { IApplicationDeployment } from 'models/ApplicationDeployment';
@@ -7,6 +7,7 @@ import Spinner from 'components/Spinner';
 interface IMatrixProps {
   showSemanticVersion: boolean;
   expandApplicationName: boolean;
+  sortBySizeAndAlphabetical: boolean;
   isFetching: boolean;
   deployments: IApplicationDeployment[];
 }
@@ -16,19 +17,41 @@ export const Matrix: React.FC<IMatrixProps> = ({
   isFetching,
   expandApplicationName,
   showSemanticVersion: showExactVersion,
+  sortBySizeAndAlphabetical,
 }) => {
-  if (isFetching) {
-    return <Spinner />;
-  }
+  const [environments, setEnvironments] = React.useState<string[]>([]);
 
   const appCountForEnv = deployments.reduce((prev, cur) => {
     prev[cur.environment] = (prev[cur.environment] || 0) + 1;
     return prev;
   }, {});
 
-  const environments = Object.keys(appCountForEnv)
-    .sort()
-    .sort((a, b) => appCountForEnv[b] - appCountForEnv[a]);
+  useEffect(() => {
+    if (deployments.length > 0) {
+      if (sortBySizeAndAlphabetical) {
+        const envsSortedByAppCount = Object.keys(appCountForEnv).sort(
+          (a, b) => appCountForEnv[b] - appCountForEnv[a] || a.localeCompare(b)
+        );
+        setEnvironments([' ', ...envsSortedByAppCount]);
+      } else {
+        setEnvironments(
+          deployments.reduce(
+            (acc, app) => {
+              if (acc.indexOf(app.environment) === -1) {
+                return acc.concat(app.environment);
+              }
+              return acc;
+            },
+            [' ']
+          )
+        );
+      }
+    }
+  }, [sortBySizeAndAlphabetical, deployments]);
+
+  if (isFetching) {
+    return <Spinner />;
+  }
 
   const apps: IApplicationMap = deployments.reduce((acc, app) => {
     if (acc[app.name]) {
@@ -39,26 +62,42 @@ export const Matrix: React.FC<IMatrixProps> = ({
     return acc;
   }, {});
 
-  return (
-    <Wrapper expandApplicationName={expandApplicationName}>
-      <table>
+  const renderRows = () => {
+    if (sortBySizeAndAlphabetical) {
+      return (
         <thead>
           <tr>
-            <th key={' '}> </th>
             {environments.map((name) => (
               <th key={name}>{name}</th>
             ))}
           </tr>
         </thead>
+      );
+    }
+    return (
+      <thead>
+        <tr>
+          {environments.sort().map((name) => (
+            <th key={name}>{name}</th>
+          ))}
+        </tr>
+      </thead>
+    );
+  };
+
+  return (
+    <Wrapper expandApplicationName={expandApplicationName}>
+      <table>
+        {renderRows()}
         <tbody>
           {Object.keys(apps)
             .sort()
-            .map((name) => (
+            .map((name, index) => (
               <Row
-                key={name}
+                key={index}
                 showSemanticVersion={showExactVersion}
                 name={name}
-                environments={[' ', ...environments]}
+                environments={environments}
                 apps={apps}
               />
             ))}

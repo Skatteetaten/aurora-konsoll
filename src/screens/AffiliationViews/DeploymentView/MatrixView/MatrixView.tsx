@@ -35,6 +35,11 @@ export const MatrixView = ({
     true
   );
 
+  const [
+    sortBySizeAndAlphabetical,
+    setSortBySizeAndAlphabetical,
+  ] = React.useState(true);
+
   return (
     <Wrapper>
       <ActionBar
@@ -42,12 +47,15 @@ export const MatrixView = ({
         showSemanticVersion={showSemanticVersion}
         expandApplicationName={expandApplicationName}
         setExpandApplicationName={setExpandApplicationName}
+        sortBySizeAndAlphabetical={sortBySizeAndAlphabetical}
+        setSortBySizeAndAlphabetical={setSortBySizeAndAlphabetical}
       />
       <Matrix
         isFetching={isFetching}
         deployments={deployments}
         showSemanticVersion={showSemanticVersion}
         expandApplicationName={expandApplicationName}
+        sortBySizeAndAlphabetical={sortBySizeAndAlphabetical}
       />
     </Wrapper>
   );
