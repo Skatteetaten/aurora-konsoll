@@ -8,15 +8,19 @@ import actions, {
   updateSchemaResponse,
   fetchInstanceResponse,
   fetchInstanceRequest,
+  fetchRestorableSchemaResponse,
+  fetchRestorableSchemaRequest,
   testJdbcConnectionForIdResponse,
   testJdbcConnectionForJdbcUserResponse,
+  restoreSchemasResponse,
 } from './actions';
 
 import {
   ICreateDatabaseSchemaResponse,
   IDatabaseSchemas,
-  IDeleteDatabaseSchemasResponse,
+  IChangeCooldownDatabaseSchemasResponse,
   IDatabaseInstances,
+  IRestorableDatabaseSchemas,
   ITestJDBCResponse,
 } from 'models/schemas';
 import { handleAction, reduceReducers } from 'redux-ts-utils';
@@ -26,27 +30,33 @@ export type DatabaseSchemasAction = ActionType<typeof actions>;
 export interface ISchemasState {
   readonly isFetchingSchemas: boolean;
   readonly databaseSchemas: IDatabaseSchemas;
+  readonly restorableDatabaseSchemas: IRestorableDatabaseSchemas;
   readonly isFetchingInstances: boolean;
   readonly databaseInstances: IDatabaseInstances;
   readonly updateSchemaResponse: boolean;
-  readonly deleteSchemasResponse: IDeleteDatabaseSchemasResponse;
+  readonly deleteSchemasResponse: IChangeCooldownDatabaseSchemasResponse;
+  readonly restoreSchemasResponse: IChangeCooldownDatabaseSchemasResponse;
   readonly testJdbcConnectionResponse: ITestJDBCResponse;
   readonly createDatabaseSchemaResponse: ICreateDatabaseSchemaResponse;
+  readonly isFetchingRestorableSchemas: boolean;
 }
 
 const initialState = (): ISchemasState => {
   return {
     isFetchingSchemas: false,
     databaseSchemas: { databaseSchemas: [] },
+    restorableDatabaseSchemas: { restorableDatabaseSchemas: [] },
     isFetchingInstances: false,
     databaseInstances: { databaseInstances: [] },
     updateSchemaResponse: false,
     deleteSchemasResponse: { failed: [], succeeded: [] },
+    restoreSchemasResponse: { failed: [], succeeded: [] },
     testJdbcConnectionResponse: { hasSucceeded: false, message: 'failed' },
     createDatabaseSchemaResponse: {
       id: '',
       jdbcUser: { jdbcUrl: '', username: '', password: '' },
     },
+    isFetchingRestorableSchemas: false,
   };
 };
 
@@ -67,6 +77,14 @@ export const databaseReducer = reduceReducers<ISchemasState>(
       updateStateWithPayload('databaseSchemas')
     ),
     handleAction(
+      fetchRestorableSchemaRequest,
+      updateStateWithPayload('isFetchingRestorableSchemas')
+    ),
+    handleAction(
+      fetchRestorableSchemaResponse,
+      updateStateWithPayload('restorableDatabaseSchemas')
+    ),
+    handleAction(
       fetchInstanceRequest,
       updateStateWithPayload('isFetchingInstances')
     ),
@@ -85,6 +103,10 @@ export const databaseReducer = reduceReducers<ISchemasState>(
     handleAction(
       deleteSchemasResponse,
       updateStateWithPayload('deleteSchemasResponse')
+    ),
+    handleAction(
+      restoreSchemasResponse,
+      updateStateWithPayload('restoreSchemasResponse')
     ),
     handleAction(
       testJdbcConnectionForIdResponse,

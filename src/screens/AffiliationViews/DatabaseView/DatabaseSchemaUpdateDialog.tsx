@@ -1,117 +1,107 @@
 import * as React from 'react';
-import styled from 'styled-components';
-
-import ActionButton from '@skatteetaten/frontend-components/ActionButton';
-import Button from '@skatteetaten/frontend-components/Button';
-import Dialog from '@skatteetaten/frontend-components/Dialog';
-import Grid from '@skatteetaten/frontend-components/Grid';
+import { useEffect, useRef, useState } from 'react';
 import palette from '@skatteetaten/frontend-components/utils/palette';
-
-import ConfirmationDialog from 'components/ConfirmationDialog';
-import SkeLink from 'components/SkeLink';
+import styled from 'styled-components';
 import {
   IDatabaseApplicationDeployment,
   IDatabaseSchema,
-  IUpdateDatabaseSchemaInputWithCreatedBy,
   ITestJDBCResponse,
+  IUpdateDatabaseSchemaInputWithCreatedBy,
 } from 'models/schemas';
-import DatabaseSchemaService from 'services/DatabaseSchemaService';
+import Dialog from '@skatteetaten/frontend-components/Dialog';
+import { Grid } from '@skatteetaten/frontend-components/Grid';
 import { getLocalDatetime } from 'utils/date';
 import JdbcConnection from './JdbcConnection';
-import Labels from './Labels';
 import { TextFieldEvent } from 'types/react';
+import Labels from './Labels';
+import ConfirmationDialog from 'components/ConfirmationDialog';
+import Button from '@skatteetaten/frontend-components/Button';
+import ActionButton from '@skatteetaten/frontend-components/ActionButton';
+import SkeLink from '../../../components/SkeLink';
+import DatabaseSchemaService from '../../../services/DatabaseSchemaService';
 
 const { skeColor } = palette;
 
-export interface IDatabaseSchemaUpdateDialogProps {
+interface IDatabaseSchemaUpdateDialogProps {
   schema?: IDatabaseSchema;
   className?: string;
+  testJdbcConnectionResponse: ITestJDBCResponse;
   clearSelectedSchema: () => void;
   onUpdate: (databaseSchema: IUpdateDatabaseSchemaInputWithCreatedBy) => void;
-  onDelete: (databaseSchema: IDatabaseSchema) => void;
   onTestJdbcConnectionForId: (id: string) => void;
-  testJdbcConnectionResponse: ITestJDBCResponse;
-  createNewCopy: () => void;
+  onChangeCooldownSchema: (schema: IDatabaseSchema) => void;
+  isRestoreDialog: boolean;
+  createNewCopy?: () => void;
 }
 
-export interface IDatabaseSchemaUpdateDialogState {
-  updatedSchemaValues: {
-    id: string;
-    discriminator: string;
-    engine: string;
-    createdBy: string;
-    description?: string | null;
-    environment: string;
-    application: string;
-    affiliation: string;
-  };
+interface IUpdatedSchemaValues {
+  id: string;
+  discriminator: string;
+  createdBy: string;
+  engine: string;
+  description: string;
+  environment: string;
+  application: string;
+  affiliation: string;
 }
 
-class DatabaseSchemaUpdateDialog extends React.Component<
-  IDatabaseSchemaUpdateDialogProps,
-  IDatabaseSchemaUpdateDialogState
-> {
-  private databaseSchemaService = new DatabaseSchemaService();
-
-  public state = {
-    updatedSchemaValues: {
-      id: '',
-      discriminator: '',
-      createdBy: '',
-      engine: '',
-      description: '',
-      environment: '',
-      application: '',
-      affiliation: '',
-    },
+const DatabaseSchemaUpdateDialog = ({
+  schema,
+  clearSelectedSchema,
+  className,
+  onUpdate,
+  onTestJdbcConnectionForId,
+  testJdbcConnectionResponse,
+  onChangeCooldownSchema,
+  isRestoreDialog,
+  createNewCopy,
+}: IDatabaseSchemaUpdateDialogProps) => {
+  const initialUpdatedSchemaValues: IUpdatedSchemaValues = {
+    id: '',
+    discriminator: '',
+    createdBy: '',
+    engine: '',
+    description: '',
+    environment: '',
+    application: '',
+    affiliation: '',
   };
+  const [updatedSchemaValues, setUpdatedSchemaValues] = useState<
+    IUpdatedSchemaValues
+  >(initialUpdatedSchemaValues);
+  const databaseService = new DatabaseSchemaService();
 
-  public componentDidUpdate(prevProps: IDatabaseSchemaUpdateDialogProps) {
-    const { schema } = this.props;
-    if (schema) {
-      if (typeof prevProps.schema === 'undefined') {
-        this.setState({
-          updatedSchemaValues: {
-            id: schema.id,
-            discriminator: schema.discriminator,
-            createdBy: schema.createdBy,
-            description: schema.description ? schema.description : '',
-            engine: schema.engine,
-            environment: schema.environment,
-            application: schema.application,
-            affiliation: schema.affiliation.name,
-          },
-        });
-      }
-    }
+  function usePrevious(value) {
+    const ref = useRef();
+    useEffect(() => {
+      ref.current = value;
+    });
+    return ref.current;
   }
 
-  public hideDialog = () => {
-    const { clearSelectedSchema } = this.props;
-    clearSelectedSchema();
-  };
-
-  public createNewCopy = () => {
-    const { createNewCopy } = this.props;
-    createNewCopy();
-    this.hideDialog();
-  };
-
-  public handleLabelChange = (field: string) => (
+  const handleLabelChange = () => (
     event: TextFieldEvent,
     newValue?: string
   ) => {
-    this.setState((state) => ({
-      updatedSchemaValues: {
-        ...state.updatedSchemaValues,
-        [field]: newValue,
-      },
+    setUpdatedSchemaValues((prevState) => ({
+      ...prevState,
+      currentOrNewKey: newValue,
     }));
   };
 
-  public updateLabels = () => {
-    const { schema, onUpdate } = this.props;
-    const { updatedSchemaValues } = this.state;
+  const renderConfirmationOpenButton = (open: () => void) => (
+    <ActionButton
+      onClick={open}
+      iconSize={ActionButton.LARGE}
+      icon="LockOutlineOpen"
+      color="black"
+      style={{ float: 'left' }}
+    >
+      {isRestoreDialog ? 'Gjenopprett' : 'Slett'}
+    </ActionButton>
+  );
+
+  const updateLabels = () => {
     if (schema) {
       const newValues: IUpdateDatabaseSchemaInputWithCreatedBy = {
         affiliation: schema.affiliation.name,
@@ -123,36 +113,22 @@ class DatabaseSchemaUpdateDialog extends React.Component<
         createdBy: updatedSchemaValues.createdBy,
       };
       onUpdate(newValues);
-      this.hideDialog();
+      clearSelectedSchema();
     }
   };
-
-  public renderConfirmationOpenButton = (open: () => void) => (
-    <ActionButton
-      onClick={open}
-      iconSize={ActionButton.LARGE}
-      icon="Delete"
-      color="black"
-      style={{ float: 'left' }}
-    >
-      Slett
-    </ActionButton>
-  );
-
-  public renderConfirmationFooterButtons = (close: () => void) => {
-    const { schema, onDelete } = this.props;
-    const deleteSchema = () => {
+  const renderConfirmationFooterButtons = (close: () => void) => {
+    const changeCooldown = () => {
       if (schema) {
-        onDelete(schema);
+        onChangeCooldownSchema(schema);
         close();
-        this.hideDialog();
+        clearSelectedSchema();
       }
     };
 
     return (
       <>
         <ActionButton
-          onClick={deleteSchema}
+          onClick={changeCooldown}
           iconSize={ActionButton.LARGE}
           icon="Check"
           color="black"
@@ -171,122 +147,153 @@ class DatabaseSchemaUpdateDialog extends React.Component<
     );
   };
 
-  public render() {
-    const {
-      schema,
-      className,
-      testJdbcConnectionResponse,
-      onTestJdbcConnectionForId,
-    } = this.props;
-    const { updatedSchemaValues } = this.state;
-    if (!schema) {
-      return <div />;
+  const prevSchema = usePrevious(schema);
+
+  useEffect(() => {
+    if (schema) {
+      if (prevSchema === undefined) {
+        setUpdatedSchemaValues({
+          id: schema.id,
+          discriminator: schema.discriminator,
+          createdBy: schema.createdBy,
+          description: schema.description ? schema.description : '',
+          engine: schema.engine,
+          environment: schema.environment,
+          application: schema.application,
+          affiliation: schema.affiliation.name,
+        });
+      }
     }
+  }, [prevSchema, schema]);
 
-    const dateTimeFormat = (date?: Date | null) =>
-      date ? getLocalDatetime(date) : '-';
+  const dateTimeFormat = (date?: Date | null) =>
+    date ? getLocalDatetime(date) : '-';
+  return (
+    <>
+      {!schema ? (
+        <></>
+      ) : (
+        <Dialog
+          hidden={!schema}
+          onDismiss={clearSelectedSchema}
+          minWidth="1000px"
+          maxWidth="90%"
+        >
+          <div className={className}>
+            <Grid>
+              <Grid.Row>
+                <Grid.Col lg={2} className="bold">
+                  <p>Id: </p>
+                  <p>Type: </p>
+                  <p>Engine: </p>
+                  <p>Opprettet: </p>
+                  <p>Sist brukt: </p>
+                  {!isRestoreDialog && <p>Brukes av: </p>}
+                </Grid.Col>
+                <Grid.Col lg={10}>
+                  <p>{schema.id}</p>
+                  <p>{schema.type}</p>
+                  <p>{schema.type === 'EXTERNAL' ? '-' : schema.engine}</p>
+                  <p>{dateTimeFormat(schema.createdDate)}</p>
+                  <p>{dateTimeFormat(schema.lastUsedDate)}</p>
 
-    const user = schema.users[0];
-    return (
-      <Dialog
-        hidden={!!!schema}
-        onDismiss={this.hideDialog}
-        minWidth="1000px"
-        maxWidth="90%"
-      >
-        <div className={className}>
-          <Grid>
-            <Grid.Row>
-              <Grid.Col lg={2} className="bold">
-                <p>Id: </p>
-                <p>Type: </p>
-                <p>Engine: </p>
-                <p>Opprettet: </p>
-                <p>Sist brukt: </p>
-                <p>Brukes av: </p>
-              </Grid.Col>
-              <Grid.Col lg={10}>
-                <p>{schema.id}</p>
-                <p>{schema.type}</p>
-                <p>{schema.type === 'EXTERNAL' ? '-' : schema.engine}</p>
-                <p>{dateTimeFormat(schema.createdDate)}</p>
-                <p>{dateTimeFormat(schema.lastUsedDate)}</p>
-                <ApplicationLinks
-                  applicationDeployments={schema.applicationDeployments}
-                />
-              </Grid.Col>
-            </Grid.Row>
-            <hr />
-            <Grid.Row>
-              <Grid.Col lg={6}>
-                <JdbcConnection
-                  username={user.username}
-                  jdbcUrl={schema.jdbcUrl}
-                  id={schema.id}
-                  onTestJdbcConnectionForId={onTestJdbcConnectionForId}
-                  testJdbcConnectionResponse={testJdbcConnectionResponse}
-                  isDisabledFields={true}
-                  hasPasswordField={false}
-                  canNotTest={false}
-                />
-              </Grid.Col>
-              <Grid.Col lg={1} />
-              <Grid.Col lg={5}>
-                <Labels
-                  environment={updatedSchemaValues.environment}
-                  application={updatedSchemaValues.application}
-                  discriminator={updatedSchemaValues.discriminator}
-                  createdBy={updatedSchemaValues.createdBy}
-                  description={updatedSchemaValues.description}
-                  handleLabelChange={this.handleLabelChange}
-                  displayCreatedByField={true}
-                />
-              </Grid.Col>
-            </Grid.Row>
-          </Grid>
-        </div>
-        <div className={className}>
-          <Dialog.Footer>
-            <ConfirmationDialog
-              title="Slett databaseskjema"
-              text={`Ønsker du å slette databaseskjemaet til ${updatedSchemaValues.application}?`}
-              renderOpenDialogButton={this.renderConfirmationOpenButton}
-              renderFooterButtons={this.renderConfirmationFooterButtons}
-            />
-            <Button
-              buttonStyle="primaryRoundedFilled"
-              style={{ width: '162px', marginRight: '10px' }}
-              icon="Copy"
-              onClick={this.createNewCopy}
-            >
-              Lag ny kopi
-            </Button>
-            <Button
-              buttonStyle="primaryRoundedFilled"
-              style={{ width: '120px', marginRight: '10px' }}
-              icon="Clear"
-              onClick={this.hideDialog}
-            >
-              Avbryt
-            </Button>
-            <Button
-              buttonStyle="primaryRoundedFilled"
-              style={{ width: '120px' }}
-              icon="Check"
-              onClick={this.updateLabels}
-              disabled={this.databaseSchemaService.isUpdateButtonDisabled(
-                updatedSchemaValues,
-                schema
+                  {!isRestoreDialog && (
+                    <ApplicationLinks
+                      applicationDeployments={schema.applicationDeployments}
+                    />
+                  )}
+                </Grid.Col>
+              </Grid.Row>
+              <hr />
+              <Grid.Row>
+                <Grid.Col lg={6}>
+                  <JdbcConnection
+                    username={schema.users[0].username}
+                    jdbcUrl={schema.jdbcUrl}
+                    id={schema.id}
+                    onTestJdbcConnectionForId={onTestJdbcConnectionForId}
+                    testJdbcConnectionResponse={testJdbcConnectionResponse}
+                    isDisabledFields={true}
+                    hasPasswordField={false}
+                    canNotTest={isRestoreDialog}
+                  />
+                </Grid.Col>
+                <Grid.Col lg={1} />
+                <Grid.Col lg={5}>
+                  <Labels
+                    environment={updatedSchemaValues.environment}
+                    application={updatedSchemaValues.application}
+                    discriminator={updatedSchemaValues.discriminator}
+                    createdBy={updatedSchemaValues.createdBy}
+                    description={updatedSchemaValues.description}
+                    handleLabelChange={handleLabelChange}
+                    displayCreatedByField={true}
+                    isDisabledFields={isRestoreDialog}
+                  />
+                </Grid.Col>
+              </Grid.Row>
+            </Grid>
+          </div>
+          <div className={className}>
+            <Dialog.Footer>
+              <ConfirmationDialog
+                title={
+                  isRestoreDialog
+                    ? 'Gjenopprett databaseskjema'
+                    : 'Slett databaseskjema'
+                }
+                text={`Ønsker du å ${
+                  isRestoreDialog
+                    ? 'gjenopprette databaseskjemaet'
+                    : 'slette databaseskjemaet'
+                } til ${updatedSchemaValues.application}?`}
+                renderOpenDialogButton={renderConfirmationOpenButton}
+                renderFooterButtons={renderConfirmationFooterButtons}
+              />
+
+              {!isRestoreDialog && createNewCopy && (
+                <Button
+                  buttonStyle="primaryRoundedFilled"
+                  style={{ width: '162px', marginRight: '10px' }}
+                  icon="Copy"
+                  onClick={() => {
+                    createNewCopy();
+                    clearSelectedSchema();
+                  }}
+                >
+                  Lag ny kopi
+                </Button>
               )}
-            >
-              Oppdater
-            </Button>
-          </Dialog.Footer>
-        </div>
-      </Dialog>
-    );
-  }
-}
+              <Button
+                buttonStyle="primaryRoundedFilled"
+                style={{ width: '120px', marginRight: '10px' }}
+                icon="Clear"
+                onClick={clearSelectedSchema}
+              >
+                Avbryt
+              </Button>
+
+              {!isRestoreDialog && (
+                <Button
+                  buttonStyle="primaryRoundedFilled"
+                  style={{ width: '120px' }}
+                  icon="Check"
+                  onClick={updateLabels}
+                  disabled={databaseService.isUpdateButtonDisabled(
+                    updatedSchemaValues,
+                    schema
+                  )}
+                >
+                  Oppdater
+                </Button>
+              )}
+            </Dialog.Footer>
+          </div>
+        </Dialog>
+      )}
+    </>
+  );
+};
 
 interface IApplicationLinksProps {
   applicationDeployments: IDatabaseApplicationDeployment[];
