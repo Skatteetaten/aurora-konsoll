@@ -79,13 +79,13 @@ const DatabaseSchemaUpdateDialog = ({
     return ref.current;
   }
 
-  const handleLabelChange = () => (
+  const handleLabelChange = (field: string) => (
     event: TextFieldEvent,
     newValue?: string
   ) => {
     setUpdatedSchemaValues((prevState) => ({
       ...prevState,
-      currentOrNewKey: newValue,
+      [field]: newValue,
     }));
   };
 
