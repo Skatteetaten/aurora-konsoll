@@ -110,7 +110,7 @@ export const App: React.FC<IAppProps> = ({
                 component={CertificateConnected}
               />
               <Route
-                exact={true}
+                exact={false}
                 path="/storyteller"
                 component={StorytellerView}
               />

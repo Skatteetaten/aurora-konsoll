@@ -1,3 +1,7 @@
+import dotenv from 'dotenv';
+
+dotenv.config({ path: '.env.local' });
+
 const { env } = process;
 
 const OPENSHIFT_CLUSTER = env.OPENSHIFT_CLUSTER || 'utv';
