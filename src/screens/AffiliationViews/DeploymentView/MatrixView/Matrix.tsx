@@ -21,12 +21,12 @@ export const Matrix: React.FC<IMatrixProps> = ({
 }) => {
   const [environments, setEnvironments] = React.useState<string[]>([]);
 
-  const appCountForEnv = deployments.reduce((prev, cur) => {
-    prev[cur.environment] = (prev[cur.environment] || 0) + 1;
-    return prev;
-  }, {});
-
   useEffect(() => {
+    const appCountForEnv = deployments.reduce((prev, cur) => {
+      prev[cur.environment] = (prev[cur.environment] || 0) + 1;
+      return prev;
+    }, {});
+
     if (deployments.length > 0) {
       if (sortBySizeAndAlphabetical) {
         const envsSortedByAppCount = Object.keys(appCountForEnv).sort(
