@@ -2,6 +2,10 @@ export interface IDatabaseSchemas {
   databaseSchemas?: IDatabaseSchema[];
 }
 
+export interface IRestorableDatabaseSchemas {
+  restorableDatabaseSchemas?: IDatabaseSchemaData[];
+}
+
 export interface IDatabaseInstances {
   databaseInstances?: IDatabaseInstance[];
 }
@@ -19,6 +23,12 @@ export interface IDatabaseInstance {
     key: string;
     value: string;
   }>;
+}
+
+export interface IDatabaseSchemaData {
+  databaseSchema: IDatabaseSchema;
+  deleteAfter?: Date;
+  setToCooldownAt?: Date;
 }
 
 export interface IDatabaseSchema {
@@ -88,7 +98,7 @@ export interface ICreateDatabaseSchemaResponse {
   jdbcUser: IJdbcUser;
 }
 
-export interface IDeleteDatabaseSchemasResponse {
+export interface IChangeCooldownDatabaseSchemasResponse {
   succeeded: string[];
   failed: string[];
 }

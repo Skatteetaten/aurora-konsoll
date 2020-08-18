@@ -2,79 +2,75 @@ import ActionButton from '@skatteetaten/frontend-components/ActionButton';
 import InfoDialog from 'components/InfoDialog';
 import React from 'react';
 import {
+  IChangeCooldownDatabaseSchemasResponse,
   IDatabaseSchema,
-  IDeleteDatabaseSchemasResponse,
   IDatabaseSchemas,
 } from 'models/schemas';
-import DeletionSummary from './DeletionSummary';
 import { renderDetailsListWithSchemaInfo } from './Schema';
+import ChangeCooldownSummary from './ChangeCooldownSummary';
 
-interface IConfirmDeletionDialogProps {
+interface IConfirmRestorationDialogProps {
   visible: boolean;
   title: string;
-  schemasToDelete: IDatabaseSchema[];
-  hasDeletionInformation: boolean;
-  deleteResponse: IDeleteDatabaseSchemasResponse;
+  changeCooldownType: string;
+  schemasToChange: IDatabaseSchema[];
+  hasChangeInformation: boolean;
+  changeCooldownResponse: IChangeCooldownDatabaseSchemasResponse;
   items: IDatabaseSchemas;
   onOkClick: () => void;
   onCancelClick: () => void;
   onExitClick: () => void;
 }
 
-const ConfirmDeletionDialog: React.FC<IConfirmDeletionDialogProps> = (
-  props
-) => {
-  const {
-    visible,
-    title,
-    schemasToDelete,
-    onOkClick,
-    onCancelClick,
-    onExitClick,
-    hasDeletionInformation,
-    deleteResponse,
-    items,
-  } = props;
-  const createConfirmationMessage = (schemaCount: number): string => {
-    if (schemaCount === 1) {
-      return `Vil du slette dette skjemaet?`;
-    } else {
-      return `Vil du slette disse ${schemaCount} skjemaene?`;
-    }
-  };
-
-  return (
-    <InfoDialog
-      title={title}
-      renderOpenDialogButton={dialogVisibilitySetter(visible)}
-      renderFooterButtons={renderFooterButtons(
-        onOkClick,
-        onCancelClick,
-        onExitClick,
-        hasDeletionInformation
-      )}
-      hideCloseButton={true}
-      isBlocking={true}
-    >
+const ConfirmChangeCooldownDialog: React.FC<IConfirmRestorationDialogProps> = ({
+  visible,
+  title,
+  changeCooldownType,
+  schemasToChange,
+  onOkClick,
+  onCancelClick,
+  onExitClick,
+  hasChangeInformation,
+  changeCooldownResponse,
+  items,
+}) => (
+  <InfoDialog
+    title={title}
+    renderOpenDialogButton={dialogVisibilitySetter(visible)}
+    renderFooterButtons={renderFooterButtons(
+      onOkClick,
+      onCancelClick,
+      onExitClick,
+      hasChangeInformation
+    )}
+    hideCloseButton={true}
+    isBlocking={true}
+    onDismiss={onExitClick}
+  >
+    {!hasChangeInformation ? (
       <>
-        {!hasDeletionInformation ? (
-          <>
-            {renderDetailsListWithSchemaInfo(schemasToDelete)}
-            <h4>{createConfirmationMessage(schemasToDelete.length)}</h4>
-          </>
-        ) : (
-          <DeletionSummary deleteResponse={deleteResponse} items={items} />
-        )}
+        {renderDetailsListWithSchemaInfo(schemasToChange)}
+        <h4>
+          {schemasToChange.length === 1
+            ? `Vil du ${changeCooldownType} dette skjemaet?`
+            : `Vil du ${changeCooldownType} disse ${schemasToChange.length} skjemaene?`}
+        </h4>
       </>
-    </InfoDialog>
-  );
-};
+    ) : (
+      <ChangeCooldownSummary
+        changeCooldownType={changeCooldownType}
+        changeCooldownResponse={changeCooldownResponse}
+        items={items}
+      />
+    )}
+  </InfoDialog>
+);
 
 const renderFooterButtons = (
   onOkClick: () => void,
   onCancelClick: () => void,
   onExitClick: () => void,
-  hasDeletionInformation: boolean
+  hasChangeCooldownInformation: boolean
 ) => {
   return (close: () => void) => {
     const onOkClickInternal = () => {
@@ -90,7 +86,7 @@ const renderFooterButtons = (
       onExitClick();
     };
 
-    if (!hasDeletionInformation) {
+    if (!hasChangeCooldownInformation) {
       return (
         <>
           <ActionButton
@@ -139,4 +135,4 @@ const dialogVisibilitySetter = (shouldBeVisible: boolean) => {
   };
 };
 
-export default ConfirmDeletionDialog;
+export default ConfirmChangeCooldownDialog;

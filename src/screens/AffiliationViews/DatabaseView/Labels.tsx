@@ -12,6 +12,7 @@ interface ILabelsProps {
   createdBy?: string;
   description?: string;
   displayCreatedByField: boolean;
+  isDisabledFields?: boolean;
   handleLabelChange: (
     field: string
   ) => (event: TextFieldEvent, newValue?: string) => void;
@@ -26,6 +27,7 @@ const Labels = ({
   handleLabelChange,
   className,
   displayCreatedByField,
+  isDisabledFields = false,
 }: ILabelsProps) => (
   <div className={className}>
     <h3>Labels</h3>
@@ -34,12 +36,14 @@ const Labels = ({
       label={'Miljø'}
       value={environment}
       onChange={handleLabelChange('environment')}
+      disabled={isDisabledFields}
     />
     <TextField
       id={'application'}
       label={'Applikasjon'}
       value={application}
       onChange={handleLabelChange('application')}
+      disabled={isDisabledFields}
     />
     <TextField
       id={'discriminator'}
@@ -47,6 +51,7 @@ const Labels = ({
       value={discriminator}
       help="Benyttes av systemet for å finne et databaseskjema"
       onChange={handleLabelChange('discriminator')}
+      disabled={isDisabledFields}
     />
     {displayCreatedByField && (
       <TextField
@@ -63,6 +68,7 @@ const Labels = ({
       value={description}
       onChange={handleLabelChange('description')}
       multiline={true}
+      disabled={isDisabledFields}
     />
   </div>
 );

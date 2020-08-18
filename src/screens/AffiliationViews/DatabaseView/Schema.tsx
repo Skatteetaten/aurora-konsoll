@@ -1,34 +1,34 @@
-import React from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 
 import styled from 'styled-components';
 import TextField from '@skatteetaten/frontend-components/TextField';
 
 import Spinner from 'components/Spinner';
 
-import { Selection } from 'office-ui-fabric-react/lib-commonjs';
 import { IUserAndAffiliations } from 'models/ApplicationDeployment';
 import {
+  IChangeCooldownDatabaseSchemasResponse,
   ICreateDatabaseSchemaInput,
   ICreateDatabaseSchemaResponse,
-  IDatabaseSchema,
-  IDatabaseSchemas,
-  IDeleteDatabaseSchemasResponse,
-  IJdbcUser,
-  IUpdateDatabaseSchemaInputWithCreatedBy,
   IDatabaseInstances,
+  IDatabaseSchema,
+  IDatabaseSchemaData,
+  IDatabaseSchemas,
+  IJdbcUser,
   ITestJDBCResponse,
+  IUpdateDatabaseSchemaInputWithCreatedBy,
 } from 'models/schemas';
-import ConfirmDeletionDialog from './ConfirmDeletionDialog';
 import DatabaseSchemaCreateDialog from './DatabaseSchemaCreateDialog';
-import DatabaseSchemaUpdateDialog from './DatabaseSchemaUpdateDialog';
 import { EnterModeThenConfirm } from './EnterModeThenConfirm';
+import { TextFieldEvent } from 'types/react';
+import { StyledPre } from 'components/StyledPre';
+import ConfirmChangeCooldownDialog from './ConfirmChangeCooldownDialog';
+import DetailsList from '@skatteetaten/frontend-components/DetailsList';
 import {
   DatabaseSchemaTable,
   IDatabaseSchemaView,
 } from './DatabaseSchemaTable';
-import { TextFieldEvent } from 'types/react';
-import { StyledPre } from 'components/StyledPre';
-import { DetailsList } from 'office-ui-fabric-react/lib-commonjs';
+import DatabaseSchemaUpdateDialog from './DatabaseSchemaUpdateDialog';
 
 export const renderDetailsListWithSchemaInfo = (schemas: IDatabaseSchema[]) => (
   <StyledPre>
@@ -81,262 +81,238 @@ export interface ISchemaProps {
   instances: IDatabaseInstances;
   createResponse: ICreateDatabaseSchemaResponse;
   isFetching: boolean;
-  updateResponse: boolean;
   affiliation: string;
   className?: string;
   testJdbcConnectionResponse: ITestJDBCResponse;
   currentUser: IUserAndAffiliations;
-  deleteResponse: IDeleteDatabaseSchemasResponse;
+  deleteResponse: IChangeCooldownDatabaseSchemasResponse;
 }
 
-interface ISchemaState {
-  filter: string;
-  selectedSchema?: IDatabaseSchema;
-  selectedSchemas?: IDatabaseSchema[];
-  schemaToCopy?: IDatabaseSchema;
-  deleteMode: boolean;
-  hasDeletionInformation: boolean;
-  confirmDeletionDialogVisible: boolean;
-  shouldResetSort: boolean;
-}
+const Schema: React.FC<ISchemaProps> = ({
+  className,
+  deleteResponse,
+  onTestJdbcConnectionForId,
+  onTestJdbcConnectionForUser,
+  onUpdate,
+  onFetch,
+  testJdbcConnectionResponse,
+  items,
+  isFetching,
+  affiliation,
+  currentUser,
+  createResponse,
+  instances,
+  onCreate,
+  onDelete,
+  onDeleteSchemas,
+  onFetchInstances,
+}) => {
+  const [filter, setFilter] = useState('');
+  const [selectedSchema, setSelectedSchema] = useState<
+    IDatabaseSchema | undefined
+  >(undefined);
+  const [databaseSchemasData, setDatabaseSchemasData] = useState<
+    IDatabaseSchemaData[]
+  >([]);
+  const [selectedSchemas, setSelectedSchemas] = useState<IDatabaseSchema[]>([]);
+  const [selectedDetailsListItems, setSelectedDetailsListItems] = useState<
+    IDatabaseSchemaView[] | undefined
+  >(undefined);
+  const [schemaToCopy, setSchemaToCopy] = useState<IDatabaseSchema | undefined>(
+    undefined
+  );
+  const [deleteMode, setDeleteMode] = useState(false);
+  const [hasDeletionInformation, setHasDeletionInformation] = useState(false);
+  const [
+    confirmDeletionDialogVisible,
+    setConfirmDeletionDialogVisible,
+  ] = useState(false);
+  const [shouldResetSort, setShouldResetSort] = useState(false);
 
-export class Schema extends React.Component<ISchemaProps, ISchemaState> {
-  public state: ISchemaState = {
-    filter: '',
-    selectedSchema: undefined,
-    schemaToCopy: undefined,
-    deleteMode: false,
-    hasDeletionInformation: false,
-    confirmDeletionDialogVisible: false,
-    shouldResetSort: false,
-  };
-
-  public componentDidMount() {
-    const { affiliation, onFetch, onFetchInstances } = this.props;
+  useEffect(() => {
     onFetch([affiliation]);
     onFetchInstances(affiliation);
-  }
+  }, [onFetch, onFetchInstances, affiliation]);
 
-  public componentDidUpdate(prevProps: ISchemaProps) {
-    const { affiliation, items, onFetch } = this.props;
+  const selection = useMemo(
+    () =>
+      new DetailsList.Selection({
+        onSelectionChanged: () => {
+          setSelectedDetailsListItems(
+            selection.getSelection().map((it) => it as IDatabaseSchemaView)
+          );
+        },
+      }),
+    []
+  );
 
-    if (
-      prevProps.affiliation !== affiliation ||
-      (prevProps.items.databaseSchemas &&
-        prevProps.items.databaseSchemas.length === 0 &&
-        items.databaseSchemas &&
-        items.databaseSchemas.length > 0)
-    ) {
-      onFetch([affiliation]);
-      this.setState({
-        filter: '',
-        shouldResetSort: true,
-      });
-    }
-  }
+  useEffect(() => {
+    const onSchemaSelectionChange = () => {
+      if (selectedDetailsListItems) {
+        const databaseSchemas = items.databaseSchemas || [];
+        const selectedSchemas = databaseSchemas.filter(
+          (schema) =>
+            selectedDetailsListItems.find((it) => it.id === schema.id) !==
+            undefined
+        );
 
-  public selection = new Selection({
-    onSelectionChanged: () => {
-      if (this.state.deleteMode) {
-        this.onSchemaSelectionChange();
-      } else {
-        this.onSingleSchemaSelected();
+        setSelectedSchemas(selectedSchemas);
       }
-    },
-  });
+    };
+    const onSingleSchemaSelected = () => {
+      if (selectedDetailsListItems && selectedDetailsListItems[0]) {
+        const databaseSchemas = items.databaseSchemas || [];
+        const selectedSchema = databaseSchemas.find(
+          (schema) => schema.id === selectedDetailsListItems[0].id
+        );
+        if (selectedSchema) setSelectedSchema(selectedSchema);
+      }
+    };
 
-  public onResetSort = () => {
-    this.setState({
-      shouldResetSort: false,
-    });
-  };
+    if (selectedDetailsListItems) {
+      deleteMode ? onSchemaSelectionChange() : onSingleSchemaSelected();
+    }
+  }, [items, selectedDetailsListItems, deleteMode]);
 
-  public render() {
-    const {
-      isFetching,
-      className,
-      onUpdate,
-      onDelete,
-      onTestJdbcConnectionForId,
-      testJdbcConnectionResponse,
-      onCreate,
-      createResponse,
-      affiliation,
-      onTestJdbcConnectionForUser,
-      onFetch,
-      currentUser,
-      deleteResponse,
-      items,
-      instances,
-    } = this.props;
-    const {
-      filter,
-      selectedSchema,
-      selectedSchemas,
-      schemaToCopy,
-      deleteMode,
-      confirmDeletionDialogVisible,
-      hasDeletionInformation,
-      shouldResetSort,
-    } = this.state;
-
-    return (
-      <div className={className}>
-        <div className="styled-action-bar">
-          <div className="styled-input-and-delete">
-            <div className="styled-input">
-              <TextField
-                placeholder="Søk etter skjema"
-                onChange={this.onFilterChange}
-                value={filter}
-              />
-            </div>
-            <EnterModeThenConfirm
-              confirmButtonEnabled={(selectedSchemas || []).length !== 0}
-              confirmText="Slett valgte"
-              inactiveIcon="Delete"
-              inactiveText="Velg skjemaer for sletting"
-              onEnterMode={this.onEnterDeletionMode}
-              onExitMode={this.onExitDeletionMode}
-              onConfirmClick={this.onDeleteSelectionConfirmed}
-            />
-          </div>
-          <div className="styled-create">
-            <DatabaseSchemaCreateDialog
-              affiliation={affiliation}
-              onCreate={onCreate}
-              createResponse={createResponse}
-              onTestJdbcConnectionForUser={onTestJdbcConnectionForUser}
-              testJdbcConnectionResponse={testJdbcConnectionResponse}
-              onFetch={onFetch}
-              currentUser={currentUser}
-              isFetching={isFetching}
-              initialDatabaseSchemaInput={schemaToCopy}
-              instances={instances}
-            />
-          </div>
-        </div>
-        {isFetching ? (
-          <Spinner />
-        ) : (
-          <DatabaseSchemaTable
-            filter={filter}
-            schemas={this.props.items.databaseSchemas || []}
-            multiSelect={deleteMode}
-            selection={this.selection}
-            onResetSort={this.onResetSort}
-            shouldResetSort={shouldResetSort}
-          />
-        )}
-        <DatabaseSchemaUpdateDialog
-          schema={selectedSchema}
-          clearSelectedSchema={this.onUpdateSchemaDialogClosed}
-          onUpdate={onUpdate}
-          onDelete={onDelete}
-          onTestJdbcConnectionForId={onTestJdbcConnectionForId}
-          testJdbcConnectionResponse={testJdbcConnectionResponse}
-          createNewCopy={this.onCreateCopyConfirmed}
-        />
-        <ConfirmDeletionDialog
-          title="Slett databaseskjemaer"
-          visible={confirmDeletionDialogVisible}
-          onOkClick={this.onConfirmDeletionClick}
-          onCancelClick={this.onCancelDeletionClick}
-          onExitClick={this.onExitDeletionClick}
-          schemasToDelete={this.state.selectedSchemas || []}
-          hasDeletionInformation={hasDeletionInformation}
-          deleteResponse={deleteResponse}
-          items={items}
-        />
-      </div>
+  useEffect(() => {
+    setDatabaseSchemasData(
+      items.databaseSchemas?.map((schema) => ({
+        databaseSchema: schema,
+        deleteAfter: undefined,
+        setToCooldownAt: undefined,
+      })) || []
     );
-  }
+  }, [items]);
 
-  private onCancelDeletionClick = () => {
-    this.setState({
-      hasDeletionInformation: false,
-      confirmDeletionDialogVisible: false,
-    });
+  const onResetSort = () => {
+    setShouldResetSort(false);
+  };
+  const onExitDeletionMode = () => {
+    selection.setAllSelected(false);
+    setSelectedDetailsListItems(undefined);
+    setSelectedSchemas([]);
+    setDeleteMode(false);
   };
 
-  private onExitDeletionClick = () => {
-    const { affiliation, onFetch } = this.props;
-    onFetch([affiliation]);
+  const onEnterDeletionMode = () => {
+    selection.setAllSelected(false);
+    setSelectedDetailsListItems(undefined);
+    setSelectedSchema(undefined);
+    setDeleteMode(true);
   };
 
-  private onDeleteSelectionConfirmed = () => {
-    this.setState({ confirmDeletionDialogVisible: true });
+  const onCancelDeletionClick = () => {
+    setHasDeletionInformation(false);
+    setConfirmDeletionDialogVisible(false);
   };
 
-  private onConfirmDeletionClick = () => {
-    const { selectedSchemas } = this.state;
-    const { onDeleteSchemas } = this.props;
-    if (selectedSchemas && selectedSchemas?.map((it) => it.id).length > 0) {
+  const onExitDeletionClick = () => onFetch([affiliation]);
+
+  const onDeleteSelectionConfirmed = () => {
+    setConfirmDeletionDialogVisible(true);
+  };
+
+  const onFilterChange = (event: TextFieldEvent, newValue?: string) =>
+    setFilter(newValue || '');
+
+  const onCreateCopyConfirmed = () => setSchemaToCopy(selectedSchema);
+
+  const onUpdateSchemaDialogClosed = () => {
+    selection.setAllSelected(false);
+    setSelectedSchema(undefined);
+    setSelectedDetailsListItems(undefined);
+  };
+
+  const onConfirmDeletionClick = () => {
+    if (selectedSchemas && selectedSchemas.length > 0) {
       const dbIds = selectedSchemas?.map((it) => it.id);
 
       onDeleteSchemas(dbIds);
-      this.selection.setAllSelected(false);
-      this.setState({
-        hasDeletionInformation: true,
-        confirmDeletionDialogVisible: false,
-      });
+      selection.setAllSelected(false);
+      setHasDeletionInformation(true);
+      setConfirmDeletionDialogVisible(false);
     }
   };
 
-  private onExitDeletionMode = () => {
-    this.setState({
-      deleteMode: false,
-      selectedSchemas: [],
-    });
-    this.selection.setAllSelected(false);
-  };
-
-  private onEnterDeletionMode = () => {
-    this.setState({ deleteMode: true });
-  };
-
-  private onFilterChange = (event: TextFieldEvent, newValue?: string) => {
-    if (newValue && newValue !== this.state.filter) {
-      this.selection.setAllSelected(false);
-    }
-    this.setState({ filter: newValue || '' });
-  };
-
-  private onCreateCopyConfirmed = () => {
-    const { selectedSchema } = this.state;
-    this.setState({ schemaToCopy: selectedSchema });
-  };
-
-  private onUpdateSchemaDialogClosed = () => {
-    this.selection.setAllSelected(false);
-    this.setState({ selectedSchema: undefined });
-  };
-
-  private onSchemaSelectionChange = () => {
-    const selected: IDatabaseSchemaView[] = this.selection
-      .getSelection()
-      .map((it) => it as IDatabaseSchemaView);
-    const databaseSchemas = this.props.items.databaseSchemas || [];
-    const selectedSchemas = databaseSchemas.filter(
-      (schema) => selected.find((it) => it.id === schema.id) !== undefined
-    );
-
-    this.setState({ selectedSchemas });
-  };
-
-  private onSingleSchemaSelected = () => {
-    const selected: IDatabaseSchemaView = this.selection
-      .getSelection()
-      .map((it) => it as IDatabaseSchemaView)[0];
-    if (!selected) return;
-    const databaseSchemas = this.props.items.databaseSchemas || [];
-    const selectedSchema = databaseSchemas.find(
-      (schema) => schema.id === selected.id
-    );
-
-    if (selectedSchema) this.setState({ selectedSchema });
-  };
-}
+  return (
+    <div className={className}>
+      <div className="styled-action-bar">
+        <div className="styled-input-and-delete">
+          <div className="styled-input">
+            <TextField
+              placeholder="Søk etter skjema"
+              onChange={onFilterChange}
+              value={filter}
+            />
+          </div>
+          <EnterModeThenConfirm
+            confirmButtonEnabled={(selectedSchemas || []).length !== 0}
+            confirmText="Slett valgte"
+            inactiveIcon="Delete"
+            inactiveText="Velg skjemaer for sletting"
+            onEnterMode={onEnterDeletionMode}
+            onExitMode={onExitDeletionMode}
+            onConfirmClick={onDeleteSelectionConfirmed}
+          />
+        </div>
+        <div className="styled-create">
+          <DatabaseSchemaCreateDialog
+            affiliation={affiliation}
+            onCreate={onCreate}
+            createResponse={createResponse}
+            onTestJdbcConnectionForUser={onTestJdbcConnectionForUser}
+            testJdbcConnectionResponse={testJdbcConnectionResponse}
+            onFetch={onFetch}
+            currentUser={currentUser}
+            isFetching={isFetching}
+            initialDatabaseSchemaInput={schemaToCopy}
+            instances={instances}
+          />
+        </div>
+      </div>
+      {isFetching ? (
+        <Spinner />
+      ) : (
+        <DatabaseSchemaTable
+          filter={filter}
+          schemas={databaseSchemasData}
+          multiSelect={deleteMode}
+          selection={selection}
+          onResetSort={onResetSort}
+          shouldResetSort={shouldResetSort}
+          isRestoreTable={false}
+          selectedSchemas={selectedSchemas.map((selectedItem) => ({
+            databaseSchema: selectedItem,
+            deleteAfter: undefined,
+            setToCooldownAt: undefined,
+          }))}
+        />
+      )}
+      <DatabaseSchemaUpdateDialog
+        schema={selectedSchema}
+        clearSelectedSchema={onUpdateSchemaDialogClosed}
+        onUpdate={onUpdate}
+        onChangeCooldownSchema={onDelete}
+        onTestJdbcConnectionForId={onTestJdbcConnectionForId}
+        testJdbcConnectionResponse={testJdbcConnectionResponse}
+        createNewCopy={onCreateCopyConfirmed}
+        isRestoreDialog={false}
+      />
+      <ConfirmChangeCooldownDialog
+        title="Slett databaseskjemaer"
+        visible={confirmDeletionDialogVisible}
+        onOkClick={onConfirmDeletionClick}
+        onCancelClick={onCancelDeletionClick}
+        onExitClick={onExitDeletionClick}
+        schemasToChange={selectedSchemas || []}
+        hasChangeInformation={hasDeletionInformation}
+        changeCooldownResponse={deleteResponse}
+        changeCooldownType={'slettet'}
+        items={items}
+      />
+    </div>
+  );
+};
 
 export default styled(Schema)`
   height: 100%;

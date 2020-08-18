@@ -2,7 +2,7 @@ import GoboClient, { IDataAndErrors } from 'services/GoboClient';
 
 import {
   ICreateDatabaseSchemaInput,
-  IDeleteDatabaseSchemasResponse,
+  IChangeCooldownDatabaseSchemasResponse,
   IJdbcUser,
   IUpdateDatabaseSchemaInputWithCreatedBy,
 } from 'models/schemas';
@@ -12,12 +12,15 @@ import {
   UPDATE_DATABASESCHEMA_MUTATION,
   TEST_JDBC_CONNECTION_FOR_ID_MUTATION,
   TEST_JDBC_CONNECTION_FOR_JDBCUSER_MUTATION,
+  RESTORE_DATABASESCHEMAS_MUTATION,
 } from './mutation';
 import {
   DATABASE_SCHEMAS_QUERY,
   IDatabaseSchemasQuery,
   DATABASE_INSTANCES_QUERY,
   IDatabaseInstancesQuery,
+  IRestorableDatabaseSchemasQuery,
+  RESTORABLE_DATABASE_SCHEMAS_QUERY,
 } from './query';
 
 export class DatabaseClient {
@@ -32,6 +35,17 @@ export class DatabaseClient {
   ): Promise<IDataAndErrors<IDatabaseSchemasQuery> | undefined> {
     return await this.client.query<IDatabaseSchemasQuery>({
       query: DATABASE_SCHEMAS_QUERY,
+      variables: {
+        affiliations,
+      },
+    });
+  }
+
+  public async getRestorableSchemas(
+    affiliations: string[]
+  ): Promise<IDataAndErrors<IRestorableDatabaseSchemasQuery> | undefined> {
+    return await this.client.query<IRestorableDatabaseSchemasQuery>({
+      query: RESTORABLE_DATABASE_SCHEMAS_QUERY,
       variables: {
         affiliations,
       },
@@ -66,17 +80,39 @@ export class DatabaseClient {
     ids: string[]
   ): Promise<
     | IDataAndErrors<{
-        deleteDatabaseSchemas: IDeleteDatabaseSchemasResponse;
+        deleteDatabaseSchemas: IChangeCooldownDatabaseSchemasResponse;
       }>
     | undefined
   > {
     return await this.client.mutate<{
-      deleteDatabaseSchemas: IDeleteDatabaseSchemasResponse;
+      deleteDatabaseSchemas: IChangeCooldownDatabaseSchemasResponse;
     }>({
       mutation: DELETE_DATABASESCHEMAS_MUTATION,
       variables: {
         input: {
           ids,
+        },
+      },
+    });
+  }
+
+  public async restoreSchemas(
+    ids: string[],
+    active: boolean
+  ): Promise<
+    | IDataAndErrors<{
+        restoreDatabaseSchemas: IChangeCooldownDatabaseSchemasResponse;
+      }>
+    | undefined
+  > {
+    return await this.client.mutate<{
+      restoreDatabaseSchemas: IChangeCooldownDatabaseSchemasResponse;
+    }>({
+      mutation: RESTORE_DATABASESCHEMAS_MUTATION,
+      variables: {
+        input: {
+          ids,
+          active,
         },
       },
     });

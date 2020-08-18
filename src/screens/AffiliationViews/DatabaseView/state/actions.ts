@@ -5,11 +5,12 @@ import {
   ICreateDatabaseSchemaResponse,
   IDatabaseSchema,
   IDatabaseSchemas,
-  IDeleteDatabaseSchemasResponse,
+  IChangeCooldownDatabaseSchemasResponse,
   IJdbcUser,
   IUpdateDatabaseSchemaInputWithCreatedBy,
   IDatabaseInstances,
   ITestJDBCResponse,
+  IRestorableDatabaseSchemas,
 } from 'models/schemas';
 import { addCurrentErrors } from 'screens/ErrorHandler/state/actions';
 import { createAction } from 'redux-ts-utils';
@@ -25,6 +26,12 @@ export const fetchInstanceRequest = createAction<boolean>(
 export const fetchSchemaResponse = createAction<IDatabaseSchemas>(
   databaseAction('FETCHED_SCHEMA_RESPONSE')
 );
+export const fetchRestorableSchemaRequest = createAction<boolean>(
+  databaseAction('FETCHED_RESTORABLE_SCHEMA_REQUEST')
+);
+export const fetchRestorableSchemaResponse = createAction<
+  IRestorableDatabaseSchemas
+>(databaseAction('FETCHED_RESTORABLE_SCHEMA_RESPONSE'));
 export const fetchInstanceResponse = createAction<IDatabaseInstances>(
   databaseAction('FETCHED_INSTANCE_RESPONSE')
 );
@@ -32,12 +39,16 @@ export const updateSchemaResponse = createAction<boolean>(
   databaseAction('UPDATE_SCHEMA_RESPONSE')
 );
 export const deleteSchemaResponse = createAction<
-  IDeleteDatabaseSchemasResponse
+  IChangeCooldownDatabaseSchemasResponse
 >(databaseAction('DELETE_SCHEMA_RESPONSE'));
 
 export const deleteSchemasResponse = createAction<
-  IDeleteDatabaseSchemasResponse
+  IChangeCooldownDatabaseSchemasResponse
 >(databaseAction('DELETE_SCHEMAS_RESPONSE'));
+
+export const restoreSchemasResponse = createAction<
+  IChangeCooldownDatabaseSchemasResponse
+>(databaseAction('RESTORE_SCHEMAS_RESPONSE'));
 
 export const testJdbcConnectionForIdResponse = createAction<ITestJDBCResponse>(
   databaseAction('TEST_JDBC_CONNECTION_FOR_ID_RESPONSE')
@@ -63,6 +74,24 @@ export const fetchSchemas: Thunk = (affiliations: string[]) => async (
     dispatch(fetchSchemaResponse(result.data));
   } else {
     dispatch(fetchSchemaResponse({ databaseSchemas: [] }));
+  }
+};
+
+export const fetchRestorableSchemas: Thunk = (affiliations: string[]) => async (
+  dispatch,
+  getState,
+  { clients }
+) => {
+  dispatch(fetchRestorableSchemaRequest(true));
+  const result = await clients.databaseClient.getRestorableSchemas(
+    affiliations
+  );
+  dispatch(fetchRestorableSchemaRequest(false));
+  dispatch(addCurrentErrors(result));
+  if (result && result.data) {
+    dispatch(fetchRestorableSchemaResponse(result.data));
+  } else {
+    dispatch(fetchRestorableSchemaResponse({ restorableDatabaseSchemas: [] }));
   }
 };
 
@@ -139,6 +168,50 @@ export const deleteSchemas: Thunk = (ids: string[]) => async (
   } else {
     dispatch(
       deleteSchemasResponse({
+        failed: [],
+        succeeded: [],
+      })
+    );
+  }
+};
+
+export const restoreSchema: Thunk = (
+  databaseSchema: IDatabaseSchema,
+  active: boolean
+) => async (dispatch, getState, { clients }) => {
+  const result = await clients.databaseClient.restoreSchemas(
+    [databaseSchema.id],
+    active
+  );
+  dispatch(addCurrentErrors(result));
+
+  if (result && result.data) {
+    dispatch(restoreSchemasResponse(result.data.restoreDatabaseSchemas));
+    dispatch(fetchRestorableSchemas([databaseSchema.affiliation.name]));
+  } else {
+    dispatch(
+      restoreSchemasResponse({
+        failed: [],
+        succeeded: [],
+      })
+    );
+    dispatch(fetchSchemas([databaseSchema.affiliation.name]));
+  }
+};
+
+export const restoreSchemas: Thunk = (ids: string[], active: boolean) => async (
+  dispatch,
+  getState,
+  { clients }
+) => {
+  const result = await clients.databaseClient.restoreSchemas(ids, active);
+  dispatch(addCurrentErrors(result));
+
+  if (result && result.data) {
+    dispatch(restoreSchemasResponse(result.data.restoreDatabaseSchemas));
+  } else {
+    dispatch(
+      restoreSchemasResponse({
         failed: [],
         succeeded: [],
       })
@@ -225,8 +298,10 @@ export default {
   fetchInstanceRequest,
   fetchSchemaRequest,
   fetchSchemaResponse,
+  fetchRestorableSchemaResponse,
   updateSchemaResponse,
   deleteSchemasResponse,
+  restoreSchemasResponse,
   testJdbcConnectionForIdResponse,
   testJdbcConnectionForJdbcUserResponse,
   createDatabaseSchemaResponse,

@@ -17,7 +17,7 @@ import {
   IDatabaseSchema,
   IDatabaseSchemaInput,
   IDatabaseSchemas,
-  IDeleteDatabaseSchemasResponse,
+  IChangeCooldownDatabaseSchemasResponse,
   IJdbcUser,
   IUpdateDatabaseSchemaInputWithCreatedBy,
 } from 'models/schemas';
@@ -36,10 +36,10 @@ import { INetdebugViewState } from 'screens/NetdebugView/state/reducer';
 import { IErrorsState } from 'screens/ErrorHandler/state/reducer';
 import { IErrors, IAppError } from 'models/errors';
 import { IIconLinkData } from 'components/IconLink';
-import { IDatabaseSchemaView } from '../screens/AffiliationViews/DatabaseView/DatabaseSchemaTable';
 import { IImageTag } from 'services/auroraApiClients/imageRepositoryClient/query';
 import { ApplicationDeployment } from 'models/immer/ApplicationDeployment';
 import { IApplicationDeploymentData } from 'services/auroraApiClients/applicationDeploymentClient/query';
+import { IDatabaseSchemaView } from '../screens/AffiliationViews/DatabaseView/DatabaseSchemaTable';
 
 const mountFactory = Factory.Sync.makeFactory<IMount>({
   exist: true,
@@ -297,11 +297,14 @@ export const certificateResultFactory = Factory.Sync.makeFactory<
 
 export const schemasFactory = Factory.Sync.makeFactory<ISchemasState>({
   isFetchingSchemas: false,
+  isFetchingRestorableSchemas: false,
   databaseSchemas: { databaseSchemas: [] },
+  restorableDatabaseSchemas: { restorableDatabaseSchemas: [] },
   isFetchingInstances: false,
   databaseInstances: { databaseInstances: [] },
   updateSchemaResponse: false,
   deleteSchemasResponse: { failed: [], succeeded: [] },
+  restoreSchemasResponse: { failed: [], succeeded: [] },
   testJdbcConnectionResponse: { hasSucceeded: false, message: 'failed' },
   createDatabaseSchemaResponse: {
     id: '',
@@ -326,7 +329,7 @@ export const databaseSchemasFactory = Factory.Sync.makeFactory<
 });
 
 export const deleteDatabaseSchemasResponseFactory = Factory.Sync.makeFactory<
-  IDeleteDatabaseSchemasResponse
+  IChangeCooldownDatabaseSchemasResponse
 >({
   failed: [],
   succeeded: [],
