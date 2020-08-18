@@ -5,7 +5,7 @@ import {
 import { IPodsStatus, IPodResource } from 'models/Pod';
 import { STATUS_COLORS } from 'models/Status';
 import { IIconLinkData } from 'components/IconLink';
-import { isJsonString } from 'utils/string';
+import { tryParseJSON } from 'utils/string';
 
 const podsStatusColumns: IColumn[] = [
   {
@@ -79,54 +79,37 @@ export default class PodsStatusService {
   public getStatusColorAndIconForPod({
     managementResponses,
   }: IPodResource): { icon: string; color: string } {
-    if (
-      managementResponses &&
-      managementResponses.health &&
-      managementResponses.health.textResponse
-    ) {
-      if (
-        isJsonString(managementResponses.health.textResponse) &&
-        JSON.parse(managementResponses.health.textResponse).hasOwnProperty(
-          'status'
-        )
-      ) {
-        const status = JSON.parse(managementResponses.health.textResponse)
-          .status;
-        switch (status) {
-          case 'UP':
-          case 'HEALTHY':
-            return {
-              icon: 'Completed',
-              color: STATUS_COLORS.healthy,
-            };
-          case 'COMMENT':
-          case 'OBSERVE':
-            return {
-              icon: 'Info',
-              color: STATUS_COLORS.observe,
-            };
-          case 'OUT_OF_SERVICE':
-          case 'DOWN':
-            return {
-              icon: 'Error',
-              color: STATUS_COLORS.down,
-            };
-          case 'OFF':
-            return {
-              icon: 'Blocked',
-              color: STATUS_COLORS.off,
-            };
-          default:
-            return {
-              icon: 'Info',
-              color: STATUS_COLORS.unknown,
-            };
-        }
-      }
+    const textResponse = managementResponses?.health?.textResponse;
+    const [, response] = tryParseJSON<{ status?: string }>(textResponse);
+    switch (response?.status) {
+      case 'UP':
+      case 'HEALTHY':
+        return {
+          icon: 'Completed',
+          color: STATUS_COLORS.healthy,
+        };
+      case 'COMMENT':
+      case 'OBSERVE':
+        return {
+          icon: 'Info',
+          color: STATUS_COLORS.observe,
+        };
+      case 'OUT_OF_SERVICE':
+      case 'DOWN':
+        return {
+          icon: 'Error',
+          color: STATUS_COLORS.down,
+        };
+      case 'OFF':
+        return {
+          icon: 'Blocked',
+          color: STATUS_COLORS.off,
+        };
+      default:
+        return {
+          icon: 'Info',
+          color: STATUS_COLORS.unknown,
+        };
     }
-    return {
-      icon: 'Info',
-      color: STATUS_COLORS.unknown,
-    };
   }
 }

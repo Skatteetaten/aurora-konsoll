@@ -28,13 +28,13 @@ export function stringify(value: any): string {
   return JSON.stringify(value, undefined, '  ');
 }
 
-export function isJsonString(str: any) {
+export function tryParseJSON<T>(str?: any): [boolean, T?] {
   try {
-    JSON.parse(str);
+    const obj = JSON.parse(str);
+    return [true, obj];
   } catch (e) {
-    return false;
+    return [false, undefined];
   }
-  return true;
 }
 
 export function stringContainsHtml(str?: string): boolean {
