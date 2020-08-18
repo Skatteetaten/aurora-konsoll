@@ -28,6 +28,15 @@ export function stringify(value: any): string {
   return JSON.stringify(value, undefined, '  ');
 }
 
+export function isJsonString(str: any) {
+  try {
+    JSON.parse(str);
+  } catch (e) {
+    return false;
+  }
+  return true;
+}
+
 export function stringContainsHtml(str?: string): boolean {
   if (!str) {
     return false;

@@ -5,6 +5,7 @@ import {
 import { IPodsStatus, IPodResource } from 'models/Pod';
 import { STATUS_COLORS } from 'models/Status';
 import { IIconLinkData } from 'components/IconLink';
+import { isJsonString } from 'utils/string';
 
 const podsStatusColumns: IColumn[] = [
   {
@@ -84,6 +85,7 @@ export default class PodsStatusService {
       managementResponses.health.textResponse
     ) {
       if (
+        isJsonString(managementResponses.health.textResponse) &&
         JSON.parse(managementResponses.health.textResponse).hasOwnProperty(
           'status'
         )
