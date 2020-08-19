@@ -1,4 +1,4 @@
-import { prettifyJSON, stringContainsHtml } from './string';
+import { prettifyJSON, stringContainsHtml, tryParseJSON } from './string';
 
 describe('string utils', () => {
   describe('prettifyJSON', () => {
@@ -43,6 +43,22 @@ describe('string utils', () => {
     it('should return false when string does not contain HTML', () => {
       const stringWithoutHtml = 'text without html';
       expect(stringContainsHtml(stringWithoutHtml)).toBeFalsy();
+    });
+  });
+
+  describe('tryParseJSON', () => {
+    it('given undefined it should return [false, undefined]', () => {
+      const [isJSON, obj] = tryParseJSON(undefined);
+      expect(isJSON).toBeFalsy();
+      expect(obj).toBeUndefined();
+    });
+
+    it('given a valid json it should return [true, obj]', () => {
+      const [isJSON, obj] = tryParseJSON<{ status?: string }>(
+        `{"status": "HEALTHY"}`
+      );
+      expect(isJSON).toBeTruthy();
+      expect(obj?.status).toEqual('HEALTHY');
     });
   });
 });
