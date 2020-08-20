@@ -38,8 +38,6 @@ class PodsStatus extends React.Component<IPodsStatusProps, IPodsStatusState> {
       .fill(0)
       .map(() => React.createRef<HTMLDivElement>());
 
-  private selection = new DetailsList.Selection();
-
   public state: IPodsStatusState = {
     isCalloutVisibleList: this.resetInput(),
     podResources: this.props.details.pods,
@@ -231,7 +229,6 @@ class PodsStatus extends React.Component<IPodsStatusProps, IPodsStatusState> {
             passItemsToParentComp={this.getItemsFromChildComp}
             filter=""
             items={this.applicationDeploymentPods()}
-            selection={this.selection}
             filterView={filterPodsStatus}
             columns={PodsStatusService.DEFAULT_COLUMNS}
             isHeaderVisible={true}

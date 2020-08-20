@@ -1,20 +1,16 @@
 import { default as AuroraSpinner } from '@skatteetaten/frontend-components/Spinner';
 import * as React from 'react';
-import styled from 'styled-components';
+import { SpinnerSize } from 'office-ui-fabric-react/lib-commonjs';
 
 interface ISpinnerProps {
   className?: string;
 }
 
+// TODO: denne kan vel fjernes. Virker som om den er gammel. Vi kan bruke direkte fra frontend components
 const Spinner = ({ className }: ISpinnerProps) => (
   <div className={className}>
-    <AuroraSpinner size={AuroraSpinner.Size && AuroraSpinner.Size['large']} />
+    <AuroraSpinner size={SpinnerSize.large} />
   </div>
 );
 
-export default styled(Spinner)`
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-`;
+export default Spinner;

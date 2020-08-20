@@ -281,6 +281,8 @@ export default styled(RestorableSchema)`
 
   .styled-create {
     margin-right: 20px;
+    display: flex;
+    align-items: center;
   }
 
   .styledTable {

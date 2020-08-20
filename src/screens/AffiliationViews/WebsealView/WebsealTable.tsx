@@ -7,13 +7,14 @@ import LoadingButton from 'components/LoadingButton';
 import SortableDetailsList from 'components/SortableDetailsList';
 import Spinner from 'components/Spinner';
 import { IWebsealState } from 'models/Webseal';
-import { IObjectWithKey, Selection } from 'office-ui-fabric-react/lib-commonjs';
+import { IObjectWithKey } from 'office-ui-fabric-react/lib-commonjs';
 import WebsealService, {
   filterWebsealView,
   IWebsealTableColumns,
 } from 'services/WebsealService';
 import WebsealDialog from './WebstealDialog';
 import { TextFieldEvent } from 'types/react';
+import DetailsList from '@skatteetaten/frontend-components/DetailsList';
 
 interface IWebsealTableProps {
   className?: string;
@@ -40,7 +41,7 @@ class Webseal extends React.Component<IWebsealTableProps, IWebsealTableState> {
     shouldResetSort: false,
   };
 
-  public selection = new Selection({
+  public selection = new DetailsList.Selection({
     onSelectionChanged: () => {
       this.onRowClicked();
     },

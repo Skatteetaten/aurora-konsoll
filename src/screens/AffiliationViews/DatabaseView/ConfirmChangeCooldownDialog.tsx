@@ -45,7 +45,7 @@ const ConfirmChangeCooldownDialog: React.FC<IConfirmRestorationDialogProps> = ({
     )}
     hideCloseButton={true}
     isBlocking={true}
-    onDismiss={onExitClick}
+    onDismiss={onCancelClick}
   >
     {!hasChangeInformation ? (
       <>
