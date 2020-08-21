@@ -316,7 +316,7 @@ const Schema: React.FC<ISchemaProps> = ({
 
 export default styled(Schema)`
   height: 97%;
-  overflow-x: scroll;
+  overflow-x: auto;
 
   .ms-DetailsRow {
     cursor: pointer;

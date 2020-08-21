@@ -20,9 +20,6 @@ interface IDatabaseSchemaTableProps {
   selectedSchemas: IDatabaseSchemaData[];
 }
 
-const includesLowerCase = (value: string, searchString: string): boolean =>
-  value.toLowerCase().includes(searchString);
-
 export const DatabaseSchemaTable = ({
   filter,
   schemas,
