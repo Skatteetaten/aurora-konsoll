@@ -3,8 +3,6 @@ import React, { useEffect, useMemo, useState } from 'react';
 import styled from 'styled-components';
 import TextField from '@skatteetaten/frontend-components/TextField';
 
-import Spinner from 'components/Spinner';
-
 import { IUserAndAffiliations } from 'models/ApplicationDeployment';
 import {
   IChangeCooldownDatabaseSchemasResponse,
@@ -29,6 +27,8 @@ import {
   IDatabaseSchemaView,
 } from './DatabaseSchemaTable';
 import DatabaseSchemaUpdateDialog from './DatabaseSchemaUpdateDialog';
+import Spinner from '@skatteetaten/frontend-components/Spinner';
+import { SpinnerSize } from 'office-ui-fabric-react/lib-commonjs';
 
 export const renderDetailsListWithSchemaInfo = (schemas: IDatabaseSchema[]) => (
   <StyledPre>
@@ -271,7 +271,7 @@ const Schema: React.FC<ISchemaProps> = ({
         </div>
       </div>
       {isFetching ? (
-        <Spinner />
+        <Spinner size={SpinnerSize.large} />
       ) : (
         <DatabaseSchemaTable
           filter={filter}
@@ -315,7 +315,7 @@ const Schema: React.FC<ISchemaProps> = ({
 };
 
 export default styled(Schema)`
-  height: 100%;
+  height: 97%;
   overflow-x: auto;
 
   .ms-DetailsRow {
@@ -339,6 +339,8 @@ export default styled(Schema)`
   }
 
   .styled-create {
+    display: flex;
+    align-items: center;
     margin-right: 20px;
   }
 

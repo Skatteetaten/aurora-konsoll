@@ -8,8 +8,8 @@ import {
   IChangeCooldownDatabaseSchemasResponse,
 } from 'models/schemas';
 import { renderDetailsListWithSchemaInfo } from './Schema';
-import ErrorMessage from '@skatteetaten/frontend-components/ErrorMessage';
-import Spinner from '../../../components/Spinner';
+import Spinner from '@skatteetaten/frontend-components/Spinner';
+import { SpinnerSize } from 'office-ui-fabric-react';
 
 interface IChangeCooldownSummaryProps {
   changeCooldownResponse: IChangeCooldownDatabaseSchemasResponse;
@@ -60,7 +60,9 @@ const ChangeCooldownSummary = ({
               changeCooldownResponse.failed
             )}
           {changeCooldownResponse.succeeded.length === 0 &&
-            changeCooldownResponse.failed.length === 0 && <Spinner />}
+            changeCooldownResponse.failed.length === 0 && (
+              <Spinner size={SpinnerSize.large} />
+            )}
         </Grid>
       </Card>
     </div>

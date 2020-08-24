@@ -2,7 +2,8 @@ import * as React from 'react';
 import styled from 'styled-components';
 import Row, { IApplicationMap } from './components/Row';
 import { IApplicationDeployment } from 'models/ApplicationDeployment';
-import Spinner from 'components/Spinner';
+import Spinner from '@skatteetaten/frontend-components/Spinner';
+import { SpinnerSize } from 'office-ui-fabric-react/lib-commonjs';
 
 interface IMatrixProps {
   showSemanticVersion: boolean;
@@ -18,7 +19,7 @@ export const Matrix: React.FC<IMatrixProps> = ({
   showSemanticVersion: showExactVersion,
 }) => {
   if (isFetching) {
-    return <Spinner />;
+    return <Spinner size={SpinnerSize.large} />;
   }
 
   const environments = deployments.reduce(

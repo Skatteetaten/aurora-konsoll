@@ -4,11 +4,12 @@ import styled from 'styled-components';
 import TextField from '@skatteetaten/frontend-components/TextField';
 
 import LoadingButton from 'components/LoadingButton';
-import Spinner from 'components/Spinner';
 import { ICertificateResult, ICertificateView } from 'models/certificates';
 import CertificateService from 'services/CertificateService';
 import Table from './Table';
 import { TextFieldEvent } from 'types/react';
+import Spinner from '@skatteetaten/frontend-components/Spinner';
+import { SpinnerSize } from 'office-ui-fabric-react/lib-commonjs';
 
 interface ICertificateProps {
   className?: string;
@@ -91,7 +92,7 @@ class CertificateBase extends React.Component<
           <div className="certificate-grid">
             <div className="table-wrapper">
               {isFetching ? (
-                <Spinner />
+                <Spinner size={SpinnerSize.large} />
               ) : (
                 <Table
                   certificateService={certificateService}

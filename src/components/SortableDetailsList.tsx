@@ -8,7 +8,11 @@ import { SortDirection } from 'models/SortDirection';
 import { createDate, dateValidation } from 'utils/date';
 
 import { inspect } from 'util';
-import { IColumn } from 'office-ui-fabric-react/lib-commonjs';
+import {
+  CheckboxVisibility,
+  IColumn,
+  SelectionMode,
+} from 'office-ui-fabric-react/lib-commonjs';
 
 export let selectedIndices: number[] = [];
 
@@ -40,8 +44,7 @@ const SortableDetailsList: React.FC<ISortableDetailsListProps> = ({
   passItemsToParentComp,
   isHeaderVisible,
   selection,
-  selectionMode,
-  checkboxVisibility,
+  checkboxVisibility = CheckboxVisibility.hidden,
   columns,
   items,
   isRefreshing,
@@ -148,7 +151,7 @@ const SortableDetailsList: React.FC<ISortableDetailsListProps> = ({
   };
 
   const filteredItems = (filter: string, viewItems: any[]): any[] =>
-    filterView ? viewItems.filter(filterView(filter)) : viewItems;
+    filterView ? viewItems.filter(filterView(filter.toLowerCase())) : viewItems;
 
   const sortByColumn: DetailsListProps['onColumnHeaderClick'] = (
     ev,
@@ -210,7 +213,11 @@ const SortableDetailsList: React.FC<ISortableDetailsListProps> = ({
       isHeaderVisible={isHeaderVisible}
       onColumnHeaderClick={sortByColumn}
       selection={selection}
-      selectionMode={selectionMode}
+      selectionMode={
+        checkboxVisibility === CheckboxVisibility.hidden
+          ? SelectionMode.single
+          : SelectionMode.multiple
+      }
       checkboxVisibility={checkboxVisibility}
     />
   );

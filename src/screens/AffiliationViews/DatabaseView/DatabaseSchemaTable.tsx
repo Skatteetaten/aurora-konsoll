@@ -4,7 +4,6 @@ import {
   CheckboxVisibility,
   IColumn,
   Selection,
-  SelectionMode,
 } from 'office-ui-fabric-react/lib-commonjs';
 
 import { IDatabaseSchemaData } from 'models/schemas';
@@ -35,17 +34,18 @@ export const DatabaseSchemaTable = ({
     view: IDatabaseSchemaView
   ) =>
     view.createdBy.includes(filter) ||
-    view.application.includes(filter) ||
-    view.environment.includes(filter) ||
-    view.discriminator.includes(filter) ||
+    view.application.toLowerCase().includes(filter) ||
+    view.environment.toLowerCase().includes(filter) ||
+    view.discriminator.toLowerCase().includes(filter) ||
     view.createdDate.includes(filter) ||
     (!view.lastUsedDate || view.lastUsedDate === null
       ? false
       : view.lastUsedDate.includes(filter)) ||
     view.sizeInMb.toString().includes(filter) ||
-    view.type.includes(filter) ||
+    view.type.toLowerCase().includes(filter) ||
     view.jdbcUrl.includes(filter) ||
     view.id.includes(filter) ||
+    view.engine.toLowerCase().includes(filter) ||
     (view.setToCooldownAt?.includes(filter) ?? false) ||
     (view.deleteAfter?.includes(filter) ?? false);
   const [viewItems, setViewItems] = useState<IDatabaseSchemaView[]>([]);
@@ -59,7 +59,6 @@ export const DatabaseSchemaTable = ({
       <SortableDetailsList
         columns={isRestoreTable ? restoreColumns : columns}
         filterView={filterDatabaseSchemaView}
-        selectionMode={SelectionMode.multiple}
         filter={filter}
         isHeaderVisible={true}
         onResetSort={onResetSort}
@@ -113,7 +112,7 @@ const toViewSchema = (schemaData: IDatabaseSchemaData): IDatabaseSchemaView => {
     applicationDeploymentsUses: schema.applicationDeployments.length,
     id: schema.id,
     jdbcUrl: jdbcUrl,
-    engine: schema.engine,
+    engine: schema.type === 'EXTERNAL' ? '' : schema.engine,
     setToCooldownAt:
       schemaData.setToCooldownAt === undefined
         ? undefined

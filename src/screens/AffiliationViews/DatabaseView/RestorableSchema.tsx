@@ -11,7 +11,6 @@ import {
   IDatabaseSchema,
 } from '../../../models/schemas';
 import { EnterModeThenConfirm } from './EnterModeThenConfirm';
-import Spinner from 'components/Spinner';
 import {
   DatabaseSchemaTable,
   IDatabaseSchemaView,
@@ -20,6 +19,8 @@ import DatabaseSchemaUpdateDialog from './DatabaseSchemaUpdateDialog';
 import LoadingButton from 'components/LoadingButton';
 import ConfirmChangeCooldownDialog from './ConfirmChangeCooldownDialog';
 import DetailsList from '@skatteetaten/frontend-components/DetailsList';
+import { SpinnerSize } from 'office-ui-fabric-react';
+import Spinner from '@skatteetaten/frontend-components/Spinner';
 
 export interface IRestorableSchemaProps {
   className?: string;
@@ -211,7 +212,7 @@ export const RestorableSchema: React.FC<IRestorableSchemaProps> = ({
         </div>
       </div>
       {isFetching ? (
-        <Spinner />
+        <Spinner size={SpinnerSize.large} />
       ) : (
         <DatabaseSchemaTable
           filter={filter}
@@ -281,6 +282,8 @@ export default styled(RestorableSchema)`
 
   .styled-create {
     margin-right: 20px;
+    display: flex;
+    align-items: center;
   }
 
   .styledTable {
