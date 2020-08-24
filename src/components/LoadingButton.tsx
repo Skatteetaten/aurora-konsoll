@@ -1,8 +1,8 @@
 import * as React from 'react';
 
 import Button from '@skatteetaten/frontend-components/Button';
-import { SpinnerSize } from 'office-ui-fabric-react';
-import Spinner from './Spinner';
+import Spinner from '@skatteetaten/frontend-components/Spinner';
+import { SpinnerSize } from 'office-ui-fabric-react/lib-commonjs';
 
 interface ILoadingButtonProps {
   loading: boolean;
@@ -22,7 +22,7 @@ const LoadingButton = ({
     disabled={loading}
     {...props}
   >
-    {loading ? <Spinner /> : children}
+    {loading ? <Spinner size={SpinnerSize.large} /> : children}
   </Button>
 );
 

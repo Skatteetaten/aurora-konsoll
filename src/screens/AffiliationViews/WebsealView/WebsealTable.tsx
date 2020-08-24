@@ -5,9 +5,11 @@ import TextField from '@skatteetaten/frontend-components/TextField';
 
 import LoadingButton from 'components/LoadingButton';
 import SortableDetailsList from 'components/SortableDetailsList';
-import Spinner from 'components/Spinner';
 import { IWebsealState } from 'models/Webseal';
-import { IObjectWithKey } from 'office-ui-fabric-react/lib-commonjs';
+import {
+  IObjectWithKey,
+  SpinnerSize,
+} from 'office-ui-fabric-react/lib-commonjs';
 import WebsealService, {
   filterWebsealView,
   IWebsealTableColumns,
@@ -15,6 +17,7 @@ import WebsealService, {
 import WebsealDialog from './WebstealDialog';
 import { TextFieldEvent } from 'types/react';
 import DetailsList from '@skatteetaten/frontend-components/DetailsList';
+import Spinner from '@skatteetaten/frontend-components/Spinner';
 
 interface IWebsealTableProps {
   className?: string;
@@ -169,7 +172,11 @@ class Webseal extends React.Component<IWebsealTableProps, IWebsealTableState> {
               value={filter}
             />
           </div>
-          {isFetchingWebsealStates ? <Spinner /> : this.renderDetailsList()}
+          {isFetchingWebsealStates ? (
+            <Spinner size={SpinnerSize.large} />
+          ) : (
+            this.renderDetailsList()
+          )}
         </div>
         <WebsealDialog
           deselectWebsealState={this.deselectWebsealState}

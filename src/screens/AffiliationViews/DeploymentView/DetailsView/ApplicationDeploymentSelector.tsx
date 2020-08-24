@@ -9,7 +9,8 @@ import {
   fetchApplicationDeploymentWithDetails,
   resetApplicationDeploymentState,
 } from 'store/state/applicationDeployments/action.creators';
-import Spinner from 'components/Spinner';
+import Spinner from '@skatteetaten/frontend-components/Spinner';
+import { SpinnerSize } from 'office-ui-fabric-react';
 
 export type ApplicationDeploymentMatchParams = {
   affiliation: string;
@@ -54,7 +55,7 @@ const ApplicationDeploymentSelector = ({
   ]);
 
   if (isFetching) {
-    return <Spinner />;
+    return <Spinner size={SpinnerSize.large} />;
   }
 
   if (!applicationDeployment) {
