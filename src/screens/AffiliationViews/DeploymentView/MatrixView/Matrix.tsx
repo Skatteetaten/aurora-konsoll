@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, FC, useState } from 'react';
 import styled from 'styled-components';
 import Row, { IApplicationMap } from './components/Row';
 import { IApplicationDeployment } from 'models/ApplicationDeployment';
@@ -12,14 +12,14 @@ interface IMatrixProps {
   deployments: IApplicationDeployment[];
 }
 
-export const Matrix: React.FC<IMatrixProps> = ({
+export const Matrix: FC<IMatrixProps> = ({
   deployments,
   isFetching,
   expandApplicationName,
   showSemanticVersion: showExactVersion,
   sortBySizeAndAlphabetical,
 }) => {
-  const [environments, setEnvironments] = React.useState<string[]>([]);
+  const [environments, setEnvironments] = useState<string[]>([]);
 
   useEffect(() => {
     const appCountForEnv = deployments.reduce((prev, cur) => {
@@ -28,24 +28,15 @@ export const Matrix: React.FC<IMatrixProps> = ({
     }, {});
 
     if (deployments.length > 0) {
-      if (sortBySizeAndAlphabetical) {
-        const envsSortedByAppCount = Object.keys(appCountForEnv).sort(
-          (a, b) => appCountForEnv[b] - appCountForEnv[a] || a.localeCompare(b)
-        );
-        setEnvironments([' ', ...envsSortedByAppCount]);
-      } else {
-        setEnvironments(
-          deployments.reduce(
-            (acc, app) => {
-              if (acc.indexOf(app.environment) === -1) {
-                return acc.concat(app.environment);
-              }
-              return acc;
-            },
-            [' ']
+      const listOfEnvs = Object.keys(appCountForEnv);
+      const formattedEnvs = sortBySizeAndAlphabetical
+        ? [...listOfEnvs].sort(
+            (a, b) =>
+              appCountForEnv[b] - appCountForEnv[a] || a.localeCompare(b)
           )
-        );
-      }
+        : [...listOfEnvs].sort();
+
+      setEnvironments([' ', ...formattedEnvs]);
     }
   }, [sortBySizeAndAlphabetical, deployments]);
 
@@ -62,9 +53,9 @@ export const Matrix: React.FC<IMatrixProps> = ({
     return acc;
   }, {});
 
-  const renderRows = () => {
-    if (sortBySizeAndAlphabetical) {
-      return (
+  return (
+    <Wrapper expandApplicationName={expandApplicationName}>
+      <table>
         <thead>
           <tr>
             {environments.map((name) => (
@@ -72,23 +63,6 @@ export const Matrix: React.FC<IMatrixProps> = ({
             ))}
           </tr>
         </thead>
-      );
-    }
-    return (
-      <thead>
-        <tr>
-          {environments.sort().map((name) => (
-            <th key={name}>{name}</th>
-          ))}
-        </tr>
-      </thead>
-    );
-  };
-
-  return (
-    <Wrapper expandApplicationName={expandApplicationName}>
-      <table>
-        {renderRows()}
         <tbody>
           {Object.keys(apps)
             .sort()

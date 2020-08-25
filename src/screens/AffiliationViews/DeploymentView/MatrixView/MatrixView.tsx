@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import styled from 'styled-components';
 
 import { IApplicationDeployment } from 'models/ApplicationDeployment';
@@ -31,14 +31,10 @@ export const MatrixView = ({
   isFetching,
   ...actionBarProps
 }: IMatrixViewProps) => {
-  const [expandApplicationName, setExpandApplicationName] = React.useState(
+  const [expandApplicationName, setExpandApplicationName] = useState(true);
+  const [sortBySizeAndAlphabetical, setSortBySizeAndAlphabetical] = useState(
     true
   );
-
-  const [
-    sortBySizeAndAlphabetical,
-    setSortBySizeAndAlphabetical,
-  ] = React.useState(true);
 
   return (
     <Wrapper>
