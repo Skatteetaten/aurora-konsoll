@@ -66,9 +66,9 @@ export const Matrix: FC<IMatrixProps> = ({
         <tbody>
           {Object.keys(apps)
             .sort()
-            .map((name, index) => (
+            .map((name) => (
               <Row
-                key={index}
+                key={name}
                 showSemanticVersion={showExactVersion}
                 name={name}
                 environments={environments}
