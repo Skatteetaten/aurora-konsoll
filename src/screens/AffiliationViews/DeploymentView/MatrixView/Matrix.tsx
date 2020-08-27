@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React, { useEffect, FC, useState } from 'react';
 import styled from 'styled-components';
 import Row, { IApplicationMap } from './components/Row';
 import { IApplicationDeployment } from 'models/ApplicationDeployment';
@@ -8,29 +8,42 @@ import { SpinnerSize } from 'office-ui-fabric-react/lib-commonjs';
 interface IMatrixProps {
   showSemanticVersion: boolean;
   expandApplicationName: boolean;
+  sortBySizeAndAlphabetical: boolean;
   isFetching: boolean;
   deployments: IApplicationDeployment[];
 }
 
-export const Matrix: React.FC<IMatrixProps> = ({
+export const Matrix: FC<IMatrixProps> = ({
   deployments,
   isFetching,
   expandApplicationName,
   showSemanticVersion: showExactVersion,
+  sortBySizeAndAlphabetical,
 }) => {
+  const [environments, setEnvironments] = useState<string[]>([]);
+
+  useEffect(() => {
+    const appCountForEnv = deployments.reduce((prev, cur) => {
+      prev[cur.environment] = (prev[cur.environment] || 0) + 1;
+      return prev;
+    }, {});
+
+    if (deployments.length > 0) {
+      const listOfEnvs = Object.keys(appCountForEnv);
+      const formattedEnvs = sortBySizeAndAlphabetical
+        ? [...listOfEnvs].sort(
+            (a, b) =>
+              appCountForEnv[b] - appCountForEnv[a] || a.localeCompare(b)
+          )
+        : [...listOfEnvs].sort();
+
+      setEnvironments([' ', ...formattedEnvs]);
+    }
+  }, [sortBySizeAndAlphabetical, deployments]);
+
   if (isFetching) {
     return <Spinner size={SpinnerSize.large} />;
   }
-
-  const environments = deployments.reduce(
-    (acc, app) => {
-      if (acc.indexOf(app.environment) === -1) {
-        return acc.concat(app.environment);
-      }
-      return acc;
-    },
-    [' ']
-  );
 
   const apps: IApplicationMap = deployments.reduce((acc, app) => {
     if (acc[app.name]) {
@@ -46,7 +59,7 @@ export const Matrix: React.FC<IMatrixProps> = ({
       <table>
         <thead>
           <tr>
-            {environments.sort().map((name) => (
+            {environments.map((name) => (
               <th key={name}>{name}</th>
             ))}
           </tr>
