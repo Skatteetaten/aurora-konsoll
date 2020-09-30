@@ -2,11 +2,12 @@
 def jenkinsfile
 
 def overrides = [
-    scriptVersion  : 'v7',
-    pipelineScript: 'https://git.aurora.skead.no/scm/ao/aurora-pipeline-scripts.git',
+    scriptVersion  : 'feature/SITJ-951-pushe-data-til-sporingslogger',
+    pipelineScript: 'https://git.aurora.skead.no/scm/~k94501/aurora-pipeline-scripts.git',
+    sporingstjeneste: 'https://sporingslogger-utv.sits.no',
+    sporing: true,
     credentialsId: "github",
     jiraFiksetIKomponentversjon: true,
-    chatRoom: "#aos-notifications",
     npmInstallCommand: 'ci',
     iqOrganizationName: "Team AOS",
     nodeVersion: "10",
