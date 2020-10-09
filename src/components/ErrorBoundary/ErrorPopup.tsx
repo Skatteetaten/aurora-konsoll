@@ -5,6 +5,7 @@ import Button from '@skatteetaten/frontend-components/Button';
 import ActionButton from '@skatteetaten/frontend-components/ActionButton';
 import MessageBar from '@skatteetaten/frontend-components/MessageBar';
 import { IAppError } from 'models/errors';
+import { Link } from 'react-router-dom';
 
 interface IErrorPopupProps {
   currentError: IAppError;
@@ -33,11 +34,43 @@ const ErrorPopup = ({
 }: IErrorPopupProps) => {
   const [expandMessageBar, setExpandMessageBar] = React.useState(false);
   const hasMoreErrors = errorCount > 0;
+
+  const isAppRereshFailedCode =
+    currentError.error.stack &&
+    JSON.parse(currentError.error.stack)?.code === 'APP_REFRESH_FAILED';
+
+  const messageBarType = isAppRereshFailedCode
+    ? MessageBar.Type.info
+    : MessageBar.Type.error;
+
+  const displayAppRefreshFailedError = () => {
+    if (isAppRereshFailedCode && currentError.error.stack) {
+      const path = window.location.pathname;
+      const oldApplicationDeploymentId = path.split('/')[4];
+      const newApplicationDeploymentId = JSON.parse(currentError.error.stack)
+        .applicationDeploymentId;
+      const newPath = path.replace(
+        oldApplicationDeploymentId,
+        newApplicationDeploymentId
+      );
+      return (
+        <>
+          <br />
+          Trykk <Link to={newPath}>her</Link> for å gå inn på den nye urlen til
+          applikasjonen
+          <br />
+          Du kan også gå tilbake til matrise visningen og trykke på oppdater, så
+          vil applikasjonen dukke opp
+        </>
+      );
+    }
+  };
+
   return (
     <div className={className}>
       <div className="errorModal">
         <MessageBar
-          type={MessageBar.Type.error}
+          type={messageBarType}
           isMultiline={true}
           actions={
             <div className="action-bar">
@@ -63,6 +96,7 @@ const ErrorPopup = ({
           }
         >
           {currentError.error.message}
+          {displayAppRefreshFailedError()}
           {expandMessageBar && (
             <table>
               <tbody>
