@@ -130,10 +130,10 @@ const DisplayAppRefreshFailedError = ({
     applikasjonoversikten.
     <br />
     Trykk <Link to={`/a/${affiliation}/deployments/${id}/info`}>her</Link> for å
-    gå inn på den nye urlen til applikasjonen. Det kan ta opp mot 2 minutter før
+    gå inn på den nye urlen til applikasjonen. Det kan ta opp til 2 minutter før
     applikasjonen vises pga. caching av data.
     <br />
-    Du kan også gå tilbake til matrise visningen og trykke på oppdater-knappen
+    Du kan også gå tilbake til matrisevisningen og trykke på oppdater-knappen
     for å oppdatere cachen manuelt, så vil applikasjonen dukke opp.
   </>
 );
