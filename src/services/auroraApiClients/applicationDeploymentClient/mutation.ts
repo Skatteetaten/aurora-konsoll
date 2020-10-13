@@ -8,7 +8,7 @@ export interface DeployResponse {
 
 export const REDEPLOY_WITH_VERSION_MUTATION = gql`
   mutation redeployWithVersion($input: ApplicationDeploymentVersionInput!) {
-    redeployWithVersion(input: $input){
+    redeployWithVersion(input: $input) {
       applicationDeploymentId
     }
   }
@@ -16,7 +16,7 @@ export const REDEPLOY_WITH_VERSION_MUTATION = gql`
 
 export const REDEPLOY_WITH_CURRENT_VERSION_MUTATION = gql`
   mutation redeployWithCurrentVersion($input: ApplicationDeploymentIdInput!) {
-    redeployWithCurrentVersion(input: $input){
+    redeployWithCurrentVersion(input: $input) {
       applicationDeploymentId
     }
   }
