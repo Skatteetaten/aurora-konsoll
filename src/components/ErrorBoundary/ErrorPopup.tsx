@@ -7,6 +7,14 @@ import MessageBar from '@skatteetaten/frontend-components/MessageBar';
 import { IAppError } from 'models/errors';
 import { Link } from 'react-router-dom';
 
+interface stackProperties {
+  applicationDeployment?: {
+    affiliation: string;
+    id: string;
+  };
+  [key: string]: any;
+}
+
 interface IErrorPopupProps {
   currentError: IAppError;
   errorCount: number;
@@ -35,36 +43,26 @@ const ErrorPopup = ({
   const [expandMessageBar, setExpandMessageBar] = React.useState(false);
   const hasMoreErrors = errorCount > 0;
 
+  function getPropertyValueFromErrorStack<T extends keyof stackProperties>(
+    property: T
+  ): stackProperties[T] | undefined {
+    if (!currentError.error.stack) {
+      return undefined;
+    }
+    const parsedErrorStack: stackProperties = JSON.parse(
+      currentError.error.stack
+    );
+    return parsedErrorStack[property];
+  }
+
   const isAppRereshFailedCode =
-    currentError.error.stack &&
-    JSON.parse(currentError.error.stack)?.code === 'APP_REFRESH_FAILED';
+    getPropertyValueFromErrorStack('code') === 'APP_REFRESH_FAILED';
+
+  const ad = getPropertyValueFromErrorStack('applicationDeployment');
 
   const messageBarType = isAppRereshFailedCode
     ? MessageBar.Type.info
     : MessageBar.Type.error;
-
-  const displayAppRefreshFailedError = () => {
-    if (isAppRereshFailedCode && currentError.error.stack) {
-      const path = window.location.pathname;
-      const oldApplicationDeploymentId = path.split('/')[4];
-      const newApplicationDeploymentId = JSON.parse(currentError.error.stack)
-        .applicationDeploymentId;
-      const newPath = path.replace(
-        oldApplicationDeploymentId,
-        newApplicationDeploymentId
-      );
-      return (
-        <>
-          <br />
-          Trykk <Link to={newPath}>her</Link> for å gå inn på den nye urlen til
-          applikasjonen
-          <br />
-          Du kan også gå tilbake til matrise visningen og trykke på oppdater, så
-          vil applikasjonen dukke opp
-        </>
-      );
-    }
-  };
 
   return (
     <div className={className}>
@@ -95,8 +93,13 @@ const ErrorPopup = ({
             </div>
           }
         >
+          {isAppRereshFailedCode && ad && (
+            <DisplayAppRefreshFailedError
+              id={ad.id}
+              affiliation={ad.affiliation}
+            />
+          )}
           {currentError.error.message}
-          {displayAppRefreshFailedError()}
           {expandMessageBar && (
             <table>
               <tbody>
@@ -113,6 +116,27 @@ const ErrorPopup = ({
     </div>
   );
 };
+
+const DisplayAppRefreshFailedError = ({
+  affiliation,
+  id,
+}: {
+  affiliation: string;
+  id: string;
+}) => (
+  <>
+    Denne applikasjone har fått ny identifikator pga. endringer i plattform.
+    Dette resulterer i at applikasjonen får en ny lenke til
+    applikasjonoversikten.
+    <br />
+    Trykk <Link to={`/a/${affiliation}/deployments/${id}/info`}>her</Link> for å
+    gå inn på den nye urlen til applikasjonen. Det kan ta opp mot 2 minutter før
+    applikasjonen vises pga. caching av data.
+    <br />
+    Du kan også gå tilbake til matrise visningen og trykke på oppdater-knappen
+    for å oppdatere cachen manuelt, så vil applikasjonen dukke opp.
+  </>
+);
 
 export default styled(ErrorPopup)`
   z-index: 200;
