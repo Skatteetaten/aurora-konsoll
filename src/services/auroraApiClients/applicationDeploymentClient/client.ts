@@ -5,6 +5,7 @@ import {
   REFRESH_APPLICATION_DEPLOYMENT_MUTATION,
   REFRESH_APPLICATION_DEPLOYMENTS_MUTATION,
   DELETE_APPLICATION_DEPLOYMENT_MUTATION,
+  DeployResponse,
 } from './mutation';
 import {
   APPLICATION_DEPLOYMENT_DETAILS_QUERY,
@@ -32,7 +33,7 @@ export class ApplicationDeploymentClient {
       applicationDeploymentId,
       version
     );
-    if (redeployResult.data && redeployResult.data.redeployWithVersion) {
+    if (redeployResult.data?.redeployWithVersion?.applicationDeploymentId) {
       await this.refreshApplicationDeployment(applicationDeploymentId);
       return await this.fetchApplicationDeploymentWithDetails(
         applicationDeploymentId
@@ -99,8 +100,8 @@ export class ApplicationDeploymentClient {
   public async redeployWithVersion(
     applicationDeploymentId: string,
     version: string
-  ): Promise<IDataAndErrors<{ redeployWithVersion: boolean }>> {
-    return await this.client.mutate<{ redeployWithVersion: boolean }>({
+  ): Promise<IDataAndErrors<DeployResponse>> {
+    return await this.client.mutate<DeployResponse>({
       mutation: REDEPLOY_WITH_VERSION_MUTATION,
       variables: {
         input: {
@@ -113,12 +114,8 @@ export class ApplicationDeploymentClient {
 
   public async redeployWithCurrentVersion(
     applicationDeploymentId: string
-  ): Promise<
-    IDataAndErrors<{ redeployWithCurrentVersion: boolean }> | undefined
-  > {
-    return await this.client.mutate<{
-      redeployWithCurrentVersion: boolean;
-    }>({
+  ): Promise<IDataAndErrors<DeployResponse>> {
+    return await this.client.mutate<DeployResponse>({
       mutation: REDEPLOY_WITH_CURRENT_VERSION_MUTATION,
       variables: {
         input: {
