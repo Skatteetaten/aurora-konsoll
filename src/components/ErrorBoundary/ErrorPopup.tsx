@@ -12,6 +12,7 @@ interface StackProperties {
     affiliation: string;
     id: string;
   };
+  code?: string;
   [key: string]: any;
 }
 
@@ -55,9 +56,9 @@ const ErrorPopup = ({
 
   const errorStack = getErrorStack();
 
-  const isAppRereshFailedCode = errorStack?.['code'] === 'APP_REFRESH_FAILED';
+  const isAppRereshFailedCode = errorStack?.code === 'APP_REFRESH_FAILED';
 
-  const ad = errorStack?.['applicationDeployment'];
+  const ad = errorStack?.applicationDeployment;
 
   const messageBarType = isAppRereshFailedCode
     ? MessageBar.Type.info
