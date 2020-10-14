@@ -7,7 +7,7 @@ import MessageBar from '@skatteetaten/frontend-components/MessageBar';
 import { IAppError } from 'models/errors';
 import { Link } from 'react-router-dom';
 
-interface stackProperties {
+interface StackProperties {
   applicationDeployment?: {
     affiliation: string;
     id: string;
@@ -43,22 +43,21 @@ const ErrorPopup = ({
   const [expandMessageBar, setExpandMessageBar] = React.useState(false);
   const hasMoreErrors = errorCount > 0;
 
-  function getPropertyValueFromErrorStack<T extends keyof stackProperties>(
-    property: T
-  ): stackProperties[T] | undefined {
+  function getErrorStack(): StackProperties | undefined {
     if (!currentError.error.stack) {
       return undefined;
     }
-    const parsedErrorStack: stackProperties = JSON.parse(
+    const parsedErrorStack: StackProperties = JSON.parse(
       currentError.error.stack
     );
-    return parsedErrorStack[property];
+    return parsedErrorStack;
   }
 
-  const isAppRereshFailedCode =
-    getPropertyValueFromErrorStack('code') === 'APP_REFRESH_FAILED';
+  const errorStack = getErrorStack();
 
-  const ad = getPropertyValueFromErrorStack('applicationDeployment');
+  const isAppRereshFailedCode = errorStack?.['code'] === 'APP_REFRESH_FAILED';
+
+  const ad = errorStack?.['applicationDeployment'];
 
   const messageBarType = isAppRereshFailedCode
     ? MessageBar.Type.info
@@ -125,16 +124,23 @@ const DisplayAppRefreshFailedError = ({
   id: string;
 }) => (
   <>
-    Denne applikasjone har fått ny identifikator pga. endringer i plattform.
+    Denne applikasjonen har fått ny identifikator pga. endringer i plattform.
     Dette resulterer i at applikasjonen får en ny lenke til
     applikasjonoversikten.
     <br />
-    Trykk <Link to={`/a/${affiliation}/deployments/${id}/info`}>her</Link> for å
-    gå inn på den nye urlen til applikasjonen. Det kan ta opp til 2 minutter før
-    applikasjonen vises pga. caching av data.
+    <br />
+    Trykk på den nye stien:{' '}
+    <Link
+      to={`/a/${affiliation}/deployments/${id}/info`}
+    >{`/a/${affiliation}/deployments/${id}/info`}</Link>{' '}
+    for å gå inn på den nye urlen til applikasjonen. Det kan ta opp til 2
+    minutter før applikasjonen vises pga. caching av data.
+    <br />
     <br />
     Du kan også gå tilbake til matrisevisningen og trykke på oppdater-knappen
     for å oppdatere cachen manuelt, så vil applikasjonen dukke opp.
+    <br />
+    <br />
   </>
 );
 
@@ -147,6 +153,10 @@ export default styled(ErrorPopup)`
   max-height: 600px;
   right: 20px;
   bottom: 20px;
+
+  .ms-MessageBar-content {
+    padding-top: 10px;
+  }
 
   .action-bar {
     align-items: inherit;
