@@ -4,8 +4,6 @@ def jenkinsfile
 def overrides = [
     scriptVersion  : 'feature/SITJ-951-pushe-data-til-sporingslogger',
     pipelineScript: 'https://git.aurora.skead.no/scm/~k94501/aurora-pipeline-scripts.git',
-    sporingstjeneste: 'https://sporingslogger-utv.sits.no',
-    sporing: true,
     credentialsId: "github",
     jiraFiksetIKomponentversjon: true,
     npmInstallCommand: 'ci',
