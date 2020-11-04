@@ -5,7 +5,7 @@ import { ImageTagType } from 'models/ImageTagType';
 import { IVersionTableProps, VersionTableState } from './VersionTable.state';
 import { DeployButton } from '../../components/DeployButton';
 import { VersionInfo } from '../../components/VersionInfo';
-import DateDisplay from 'components/DateDisplay';
+import DateWithTooltip from 'components/DateWithTooltip';
 
 const columns = [
   {
@@ -77,7 +77,7 @@ export const VersionTable = ({
         type: getOptionName(it.type),
         name: it.name,
         lastModified: it.image ? (
-          <DateDisplay date={it.image.buildTime} position="left" />
+          <DateWithTooltip date={it.image.buildTime} position="left" />
         ) : (
           ''
         ),

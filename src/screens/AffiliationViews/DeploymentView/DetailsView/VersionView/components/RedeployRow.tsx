@@ -12,7 +12,7 @@ import {
 import { DeployButton } from './DeployButton';
 import { VersionInfo } from './VersionInfo';
 import { SpinnerSize } from 'office-ui-fabric-react/lib-commonjs';
-import DateDisplay from 'components/DateDisplay';
+import DateWithTooltip from 'components/DateWithTooltip';
 
 interface IRedeployRowProps {
   isFetchingConfiguredVersionTag: boolean;
@@ -66,17 +66,17 @@ export const RedeployRow = ({
           <span>{versionStatusMessage(versionStatus)}</span>
         </WrongVersionCallout>
       )}
-      <div>
+      <span>
         Konfigurert versjon: <strong>{configuredVersionTag.name}</strong>{' '}
         (bygget{' '}
         {configuredVersionTag.image && (
-          <DateDisplay
+          <DateWithTooltip
             date={configuredVersionTag.image.buildTime}
             position="bottom"
           />
         )}
         )
-      </div>
+      </span>
       <DeployButton
         isLoading={isLoading}
         disabled={versionBeingDeployed !== undefined}
