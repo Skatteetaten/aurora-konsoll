@@ -5,13 +5,17 @@ import palette from '@skatteetaten/frontend-components/utils/palette';
 import { getLocalDatetime } from 'utils/date';
 import { DateTime } from 'luxon';
 
-interface DateDisplayProps {
+interface DateWithTooltipProps {
   date: string;
   className?: string;
   position: 'bottom' | 'left';
 }
 
-const DateWithTooltip = ({ date, className, position }: DateDisplayProps) => {
+const DateWithTooltip = ({
+  date,
+  className,
+  position,
+}: DateWithTooltipProps) => {
   return (
     <div className={className}>
       <div className="tooltip position" title="">
