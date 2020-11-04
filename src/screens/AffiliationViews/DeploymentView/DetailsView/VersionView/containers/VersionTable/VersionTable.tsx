@@ -5,6 +5,7 @@ import { ImageTagType } from 'models/ImageTagType';
 import { IVersionTableProps, VersionTableState } from './VersionTable.state';
 import { DeployButton } from '../../components/DeployButton';
 import { VersionInfo } from '../../components/VersionInfo';
+import DateDisplay from 'components/DateDisplay';
 
 const columns = [
   {
@@ -75,7 +76,11 @@ export const VersionTable = ({
       return {
         type: getOptionName(it.type),
         name: it.name,
-        lastModified: it.image ? it.image.buildTime : '',
+        lastModified: it.image ? (
+          <DateDisplay date={it.image.buildTime} position="left" />
+        ) : (
+          ''
+        ),
         deploy: (
           <DeployButton
             isLoading={versionBeingDeployed === it.name}
