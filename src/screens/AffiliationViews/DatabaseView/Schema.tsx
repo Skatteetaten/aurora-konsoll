@@ -286,7 +286,7 @@ const Schema: React.FC<ISchemaProps> = ({
         <Spinner size={SpinnerSize.large} />
       ) : (
         <>
-          <div style={{ position: 'relative', height: '82%' }}>
+          <div style={{ position: 'relative', flex: 1 }}>
             <ScrollablePane>
               <DatabaseSchemaTable
                 filter={filter}
@@ -356,7 +356,9 @@ const Schema: React.FC<ISchemaProps> = ({
 };
 
 export default styled(Schema)`
-  height: 97%;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
   overflow-x: auto;
 
   .ms-DetailsRow {
@@ -389,6 +391,7 @@ export default styled(Schema)`
     display: flex;
     align-items: center;
     flex-direction: column;
+    margin-bottom: 10px;
   }
 
   .styledTable {
