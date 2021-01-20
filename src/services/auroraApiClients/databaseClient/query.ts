@@ -72,7 +72,6 @@ export const DATABASE_SCHEMAS_QUERY = gql`
           sizeInMb
           users {
             username
-            password
             type
           }
         }
