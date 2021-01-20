@@ -5,8 +5,20 @@ import {
   IDatabaseSchemaData,
 } from 'models/schemas';
 
+export interface IPageInfo {
+  endCursor: string;
+  hasNextPage: boolean;
+}
+
 export interface IDatabaseSchemasQuery {
-  databaseSchemas?: IDatabaseSchema[];
+  databaseSchemas: {
+    totalCount: number;
+    edges: Array<{
+      cursor: string;
+      node: IDatabaseSchema;
+    }>;
+    pageInfo: IPageInfo;
+  };
 }
 
 export interface IDatabaseInstancesQuery {
@@ -18,37 +30,56 @@ export interface IRestorableDatabaseSchemasQuery {
 }
 
 export const DATABASE_SCHEMAS_QUERY = gql`
-  query getDatabaseSchemas($affiliations: [String!]!) {
-    databaseSchemas(affiliations: $affiliations) {
-      id
-      type
-      jdbcUrl
-      affiliation {
-        name
-      }
-      name
-      application
-      environment
-      description
-      discriminator
-      engine
-      applicationDeployments {
-        id
-        name
-        affiliation {
+  query getDatabaseSchemas(
+    $affiliations: [String!]!
+    $pageSize: Int!
+    $after: String
+  ) {
+    databaseSchemas(
+      affiliations: $affiliations
+      first: $pageSize
+      after: $after
+    ) {
+      totalCount
+      edges {
+        cursor
+        node {
+          jdbcUrl
+          id
+          type
+          affiliation {
+            name
+          }
           name
-        }
-        namespace {
-          name
+          application
+          environment
+          discriminator
+          description
+          engine
+          applicationDeployments {
+            id
+            name
+            affiliation {
+              name
+            }
+            namespace {
+              name
+            }
+          }
+          createdBy
+          createdDate
+          lastUsedDate
+          sizeInMb
+          users {
+            username
+            password
+            type
+          }
         }
       }
-      createdBy
-      createdDate
-      lastUsedDate
-      sizeInMb
-      users {
-        username
-        type
+      pageInfo {
+        endCursor
+        hasNextPage
       }
     }
   }

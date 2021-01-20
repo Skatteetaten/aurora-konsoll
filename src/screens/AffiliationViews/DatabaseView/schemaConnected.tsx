@@ -5,6 +5,7 @@ import {
   ICreateDatabaseSchemaInput,
   IDatabaseSchema,
   IJdbcUser,
+  IPageInfo,
   IUpdateDatabaseSchemaInputWithCreatedBy,
 } from 'models/schemas';
 import { RootState } from 'store/types';
@@ -13,6 +14,7 @@ import {
   deleteSchema,
   deleteSchemas,
   fetchInstances,
+  fetchNextSchemas,
   fetchSchemas,
   testJdbcConnectionForId,
   testJdbcConnectionForJdbcUser,
@@ -24,6 +26,7 @@ const mapStateToProps = (state: RootState) => ({
   instances: state.database.databaseInstances,
   isFetchingInstances: state.database.isFetchingInstances,
   isFetching: state.database.isFetchingSchemas,
+  isFetchingNext: state.database.isFetchingNextSchemas,
   testJdbcConnectionResponse: state.database.testJdbcConnectionResponse,
   createResponse: state.database.createDatabaseSchemaResponse,
   currentUser: state.startup.currentUser,
@@ -32,6 +35,11 @@ const mapStateToProps = (state: RootState) => ({
 
 const mapDispatchToProps = {
   onFetch: (affiliations: string[]) => fetchSchemas(affiliations),
+  onFetchNext: (
+    affiliations: string[],
+    databaseSchemas: IDatabaseSchema[],
+    endCursor: string
+  ) => fetchNextSchemas(affiliations, databaseSchemas, endCursor),
   onFetchInstances: (affiliation: string) => fetchInstances(affiliation),
   onUpdate: (databaseSchema: IUpdateDatabaseSchemaInputWithCreatedBy) =>
     updateSchema(databaseSchema),

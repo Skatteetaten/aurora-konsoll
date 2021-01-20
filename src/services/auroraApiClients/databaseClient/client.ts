@@ -31,12 +31,16 @@ export class DatabaseClient {
   }
 
   public async getSchemas(
-    affiliations: string[]
+    affiliations: string[],
+    pageSize: number,
+    after?: string
   ): Promise<IDataAndErrors<IDatabaseSchemasQuery> | undefined> {
     return await this.client.query<IDatabaseSchemasQuery>({
       query: DATABASE_SCHEMAS_QUERY,
       variables: {
         affiliations,
+        pageSize,
+        after,
       },
     });
   }

@@ -11,7 +11,7 @@ import {
   IDatabaseInstances,
   IDatabaseSchema,
   IDatabaseSchemaData,
-  IDatabaseSchemas,
+  IDatabaseSchemasWithPageInfo,
   IJdbcUser,
   ITestJDBCResponse,
   IUpdateDatabaseSchemaInputWithCreatedBy,
@@ -28,7 +28,13 @@ import {
 } from './DatabaseSchemaTable';
 import DatabaseSchemaUpdateDialog from './DatabaseSchemaUpdateDialog';
 import Spinner from '@skatteetaten/frontend-components/Spinner';
-import { SpinnerSize } from 'office-ui-fabric-react/lib-commonjs';
+import {
+  ScrollablePane,
+  SpinnerSize,
+} from 'office-ui-fabric-react/lib-commonjs';
+import Button from '@skatteetaten/frontend-components/Button';
+import ActionButton from '@skatteetaten/frontend-components/ActionButton';
+import LoadingButton from 'components/LoadingButton';
 
 export const renderDetailsListWithSchemaInfo = (schemas: IDatabaseSchema[]) => (
   <StyledPre>
@@ -70,6 +76,11 @@ export const renderDetailsListWithSchemaInfo = (schemas: IDatabaseSchema[]) => (
 
 export interface ISchemaProps {
   onFetch: (affiliations: string[]) => void;
+  onFetchNext: (
+    affiliations: string[],
+    databaseSchemas: IDatabaseSchema[],
+    endCursor: string
+  ) => void;
   onFetchInstances: (affiliation: string) => void;
   onUpdate: (databaseSchema: IUpdateDatabaseSchemaInputWithCreatedBy) => void;
   onDelete: (databaseSchema: IDatabaseSchema) => void;
@@ -77,10 +88,11 @@ export interface ISchemaProps {
   onDeleteSchemas: (ids: string[]) => void;
   onTestJdbcConnectionForId: (id: string) => void;
   onTestJdbcConnectionForUser: (jdbcUser: IJdbcUser) => void;
-  items: IDatabaseSchemas;
+  items: IDatabaseSchemasWithPageInfo;
   instances: IDatabaseInstances;
   createResponse: ICreateDatabaseSchemaResponse;
   isFetching: boolean;
+  isFetchingNext: boolean;
   affiliation: string;
   className?: string;
   testJdbcConnectionResponse: ITestJDBCResponse;
@@ -106,6 +118,8 @@ const Schema: React.FC<ISchemaProps> = ({
   onDelete,
   onDeleteSchemas,
   onFetchInstances,
+  onFetchNext,
+  isFetchingNext,
 }) => {
   const [filter, setFilter] = useState('');
   const [selectedSchema, setSelectedSchema] = useState<
@@ -234,6 +248,8 @@ const Schema: React.FC<ISchemaProps> = ({
     }
   };
 
+  console.log(items);
+
   return (
     <div className={className}>
       <div className="styled-action-bar">
@@ -273,20 +289,49 @@ const Schema: React.FC<ISchemaProps> = ({
       {isFetching ? (
         <Spinner size={SpinnerSize.large} />
       ) : (
-        <DatabaseSchemaTable
-          filter={filter}
-          schemas={databaseSchemasData}
-          multiSelect={deleteMode}
-          selection={selection}
-          onResetSort={onResetSort}
-          shouldResetSort={shouldResetSort}
-          isRestoreTable={false}
-          selectedSchemas={selectedSchemas.map((selectedItem) => ({
-            databaseSchema: selectedItem,
-            deleteAfter: undefined,
-            setToCooldownAt: undefined,
-          }))}
-        />
+        <>
+          <div style={{ position: 'relative', height: '85%' }}>
+            <ScrollablePane>
+              <DatabaseSchemaTable
+                filter={filter}
+                schemas={databaseSchemasData}
+                multiSelect={deleteMode}
+                selection={selection}
+                onResetSort={onResetSort}
+                shouldResetSort={shouldResetSort}
+                isRestoreTable={false}
+                selectedSchemas={selectedSchemas.map((selectedItem) => ({
+                  databaseSchema: selectedItem,
+                  deleteAfter: undefined,
+                  setToCooldownAt: undefined,
+                }))}
+              />
+            </ScrollablePane>
+          </div>
+          <div className="styled-load-more">
+            <p>
+              Viser {items.databaseSchemas?.length} av {items.totalCount}{' '}
+              databaseskjemaer
+            </p>
+            <LoadingButton
+              onClick={() =>
+                items.databaseSchemas &&
+                onFetchNext(
+                  [affiliation],
+                  items.databaseSchemas,
+                  items.pageInfo.endCursor
+                )
+              }
+              style={{
+                minWidth: '225px',
+              }}
+              disabled={!items.pageInfo.hasNextPage || isFetchingNext}
+              loading={isFetchingNext}
+            >
+              Hent flere databaseskjemaer
+            </LoadingButton>
+          </div>
+        </>
       )}
       <DatabaseSchemaUpdateDialog
         schema={selectedSchema}
@@ -342,6 +387,12 @@ export default styled(Schema)`
     display: flex;
     align-items: center;
     margin-right: 20px;
+  }
+
+  .styled-load-more {
+    display: flex;
+    align-items: center;
+    flex-direction: column;
   }
 
   .styledTable {
