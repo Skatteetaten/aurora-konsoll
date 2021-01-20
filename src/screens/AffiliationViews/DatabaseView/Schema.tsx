@@ -290,7 +290,7 @@ const Schema: React.FC<ISchemaProps> = ({
         <Spinner size={SpinnerSize.large} />
       ) : (
         <>
-          <div style={{ position: 'relative', height: '85%' }}>
+          <div style={{ position: 'relative', height: '82%' }}>
             <ScrollablePane>
               <DatabaseSchemaTable
                 filter={filter}
