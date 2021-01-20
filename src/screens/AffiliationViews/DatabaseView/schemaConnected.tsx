@@ -5,7 +5,6 @@ import {
   ICreateDatabaseSchemaInput,
   IDatabaseSchema,
   IJdbcUser,
-  IPageInfo,
   IUpdateDatabaseSchemaInputWithCreatedBy,
 } from 'models/schemas';
 import { RootState } from 'store/types';

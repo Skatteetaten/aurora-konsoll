@@ -71,7 +71,6 @@ export const fetchSchemas: Thunk = (affiliations: string[]) => async (
   dispatch(fetchSchemaRequest(true));
 
   const result = await clients.databaseClient.getSchemas(affiliations, 500);
-  console.log(result);
   dispatch(fetchSchemaRequest(false));
   dispatch(addCurrentErrors(result));
 

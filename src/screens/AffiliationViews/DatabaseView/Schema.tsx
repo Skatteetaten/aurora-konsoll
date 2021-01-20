@@ -32,8 +32,6 @@ import {
   ScrollablePane,
   SpinnerSize,
 } from 'office-ui-fabric-react/lib-commonjs';
-import Button from '@skatteetaten/frontend-components/Button';
-import ActionButton from '@skatteetaten/frontend-components/ActionButton';
 import LoadingButton from 'components/LoadingButton';
 
 export const renderDetailsListWithSchemaInfo = (schemas: IDatabaseSchema[]) => (
@@ -247,8 +245,6 @@ const Schema: React.FC<ISchemaProps> = ({
       setConfirmDeletionDialogVisible(false);
     }
   };
-
-  console.log(items);
 
   return (
     <div className={className}>
