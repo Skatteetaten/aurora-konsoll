@@ -18,7 +18,7 @@ export const DatabaseViewRoutes: React.FC<IDatabaseViewRoutesProps> = ({
   }
 
   return (
-    <>
+    <div style={{ display: 'flex', flexDirection: 'column', height: '100%' }}>
       <TabLinkWrapper>
         <TabLink to={`${match.url}/schemas`}>Aktive Skjema</TabLink>
         <TabLink to={`${match.url}/restorableSchemas`}>
@@ -34,6 +34,6 @@ export const DatabaseViewRoutes: React.FC<IDatabaseViewRoutesProps> = ({
           <RestorableSchemaConnected affiliation={affiliation} />
         </Route>
       </Switch>
-    </>
+    </div>
   );
 };

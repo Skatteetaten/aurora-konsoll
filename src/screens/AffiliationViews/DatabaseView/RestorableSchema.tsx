@@ -257,7 +257,9 @@ export const RestorableSchema: React.FC<IRestorableSchemaProps> = ({
 };
 
 export default styled(RestorableSchema)`
-  height: 100%;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
   overflow-x: auto;
 
   .ms-DetailsRow {
