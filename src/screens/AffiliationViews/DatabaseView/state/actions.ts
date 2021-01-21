@@ -4,7 +4,7 @@ import {
   ICreateDatabaseSchemaInput,
   ICreateDatabaseSchemaResponse,
   IDatabaseSchema,
-  IDatabaseSchemas,
+  IDatabaseSchemasWithPageInfo,
   IChangeCooldownDatabaseSchemasResponse,
   IJdbcUser,
   IUpdateDatabaseSchemaInputWithCreatedBy,
@@ -20,10 +20,13 @@ const databaseAction = (action: string) => `database/${action}`;
 export const fetchSchemaRequest = createAction<boolean>(
   databaseAction('FETCHED_SCHEMA_REQUEST')
 );
+export const fetchNextSchemaRequest = createAction<boolean>(
+  databaseAction('FETCHED_NEXT_SCHEMA_REQUEST')
+);
 export const fetchInstanceRequest = createAction<boolean>(
   databaseAction('FETCHED_INSTANCE_REQUEST')
 );
-export const fetchSchemaResponse = createAction<IDatabaseSchemas>(
+export const fetchSchemaResponse = createAction<IDatabaseSchemasWithPageInfo>(
   databaseAction('FETCHED_SCHEMA_RESPONSE')
 );
 export const fetchRestorableSchemaRequest = createAction<boolean>(
@@ -66,14 +69,68 @@ export const fetchSchemas: Thunk = (affiliations: string[]) => async (
   { clients }
 ) => {
   dispatch(fetchSchemaRequest(true));
-  const result = await clients.databaseClient.getSchemas(affiliations);
+
+  const result = await clients.databaseClient.getSchemas(affiliations, 500);
   dispatch(fetchSchemaRequest(false));
   dispatch(addCurrentErrors(result));
 
   if (result && result.data) {
-    dispatch(fetchSchemaResponse(result.data));
+    dispatch(
+      fetchSchemaResponse({
+        databaseSchemas: result.data.databaseSchemas.edges.map(
+          (edge) => edge.node
+        ),
+        pageInfo: result.data.databaseSchemas.pageInfo,
+        totalCount: result.data.databaseSchemas.totalCount,
+      })
+    );
   } else {
-    dispatch(fetchSchemaResponse({ databaseSchemas: [] }));
+    dispatch(
+      fetchSchemaResponse({
+        databaseSchemas: [],
+        pageInfo: { endCursor: '', hasNextPage: false },
+        totalCount: 0,
+      })
+    );
+  }
+};
+
+export const fetchNextSchemas: Thunk = (
+  affiliations: string[],
+  databaseSchemas: IDatabaseSchema[],
+  endCursor: string
+) => async (dispatch, getState, { clients }) => {
+  dispatch(fetchNextSchemaRequest(true));
+
+  const result = await clients.databaseClient.getSchemas(
+    affiliations,
+    500,
+    endCursor
+  );
+
+  dispatch(fetchNextSchemaRequest(false));
+  dispatch(addCurrentErrors(result));
+
+  if (result && result.data) {
+    dispatch(
+      fetchSchemaResponse({
+        databaseSchemas: [
+          ...databaseSchemas,
+          ...(result?.data?.databaseSchemas.edges.map((edge) => edge.node) ||
+            []),
+        ],
+        pageInfo: result.data.databaseSchemas.pageInfo,
+        totalCount: result.data.databaseSchemas.totalCount,
+      })
+    );
+  } else {
+    dispatch(
+      fetchSchemaResponse({
+        databaseSchemas: [],
+        pageInfo: { endCursor: '', hasNextPage: false },
+        totalCount: 0,
+      })
+    );
   }
 };
 

@@ -2,6 +2,17 @@ export interface IDatabaseSchemas {
   databaseSchemas?: IDatabaseSchema[];
 }
 
+export interface IDatabaseSchemasWithPageInfo {
+  databaseSchemas?: IDatabaseSchema[];
+  pageInfo: IPageInfo;
+  totalCount: number;
+}
+
+export interface IPageInfo {
+  endCursor: string;
+  hasNextPage: boolean;
+}
+
 export interface IRestorableDatabaseSchemas {
   restorableDatabaseSchemas?: IDatabaseSchemaData[];
 }
