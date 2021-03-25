@@ -20,7 +20,9 @@ const New = ({
   instances,
   className,
 }: INewProps) => {
-  const [selectedInstance, setInstance] = useState<string>('oracle');
+  const [selectedInstance, setInstance] = useState<string>(
+    databaseSchemaInput.instanceName ?? 'oracle'
+  );
 
   const handleLabelChange = (field: string) => (
     event: TextFieldEvent,
