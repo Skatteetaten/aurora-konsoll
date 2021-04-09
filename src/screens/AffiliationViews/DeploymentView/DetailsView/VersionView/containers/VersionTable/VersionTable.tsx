@@ -102,7 +102,7 @@ export const VersionTable = ({
 
   return (
     <TableWrapper>
-      <Table data={data} columns={columns} />
+      <Table caption={''} data={data} columns={columns} />
     </TableWrapper>
   );
 };
