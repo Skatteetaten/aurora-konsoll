@@ -13,7 +13,7 @@
   ],
   "dependencies": {
     "@skatteetaten/aurora-management-interface": "1.0.2",
-    "@skatteetaten/frontend-components": "4.0.0-c-2683fef.release-v4-SNAPSHOT",
+    "@skatteetaten/frontend-components": "4.0.0-c-c40f10b.release-v4-SNAPSHOT",
     "cors": "2.8.5",
     "express": "4.17.1",
     "graphql": "15.3.0",
