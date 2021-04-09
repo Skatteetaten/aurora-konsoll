@@ -38,8 +38,6 @@ class PodsStatus extends React.Component<IPodsStatusProps, IPodsStatusState> {
       .fill(0)
       .map(() => React.createRef<HTMLDivElement>());
 
-  private selection = new DetailsList.Selection();
-
   public state: IPodsStatusState = {
     isCalloutVisibleList: this.resetInput(),
     podResources: this.props.details.pods,
@@ -111,9 +109,7 @@ class PodsStatus extends React.Component<IPodsStatusProps, IPodsStatusState> {
 
       const sortedPods: IPodResource[] = pods
         .map((it) => getPod(it))
-        .filter((element: IPodResource) => {
-          return element !== undefined;
-        });
+        .filter((element?: IPodResource) => element !== undefined);
 
       if (JSON.stringify(sortedPods) !== JSON.stringify(podResources)) {
         this.setState({
@@ -225,7 +221,7 @@ class PodsStatus extends React.Component<IPodsStatusProps, IPodsStatusState> {
   };
 
   public render() {
-    const { className } = this.props;
+    const { className, isUpdating } = this.props;
     return (
       <div className={className}>
         <div className="styledTable">
@@ -233,11 +229,11 @@ class PodsStatus extends React.Component<IPodsStatusProps, IPodsStatusState> {
             passItemsToParentComp={this.getItemsFromChildComp}
             filter=""
             items={this.applicationDeploymentPods()}
-            selection={this.selection}
             filterView={filterPodsStatus}
             // @ts-ignore
             columns={PodsStatusService.DEFAULT_COLUMNS}
             isHeaderVisible={true}
+            isRefreshing={isUpdating}
           />
         </div>
       </div>

@@ -86,11 +86,6 @@ const Layout = ({
       name: 'Netdebug',
       to: '/netdebug',
     },
-    {
-      iconName: 'Code',
-      name: 'Storyteller',
-      to: '/storyteller',
-    },
   ];
 
   if (displayDatabaseView) {

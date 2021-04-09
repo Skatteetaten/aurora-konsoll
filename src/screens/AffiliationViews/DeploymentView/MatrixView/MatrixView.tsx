@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import styled from 'styled-components';
 
 import { IApplicationDeployment } from 'models/ApplicationDeployment';
@@ -31,7 +31,8 @@ export const MatrixView = ({
   isFetching,
   ...actionBarProps
 }: IMatrixViewProps) => {
-  const [expandApplicationName, setExpandApplicationName] = React.useState(
+  const [expandApplicationName, setExpandApplicationName] = useState(true);
+  const [sortBySizeAndAlphabetical, setSortBySizeAndAlphabetical] = useState(
     true
   );
 
@@ -42,12 +43,15 @@ export const MatrixView = ({
         showSemanticVersion={showSemanticVersion}
         expandApplicationName={expandApplicationName}
         setExpandApplicationName={setExpandApplicationName}
+        sortBySizeAndAlphabetical={sortBySizeAndAlphabetical}
+        setSortBySizeAndAlphabetical={setSortBySizeAndAlphabetical}
       />
       <Matrix
         isFetching={isFetching}
         deployments={deployments}
         showSemanticVersion={showSemanticVersion}
         expandApplicationName={expandApplicationName}
+        sortBySizeAndAlphabetical={sortBySizeAndAlphabetical}
       />
     </Wrapper>
   );

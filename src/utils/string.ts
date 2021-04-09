@@ -28,6 +28,15 @@ export function stringify(value: any): string {
   return JSON.stringify(value, undefined, '  ');
 }
 
+export function tryParseJSON<T>(str?: any): [boolean, T?] {
+  try {
+    const obj = JSON.parse(str);
+    return [true, obj];
+  } catch (e) {
+    return [false, undefined];
+  }
+}
+
 export function stringContainsHtml(str?: string): boolean {
   if (!str) {
     return false;

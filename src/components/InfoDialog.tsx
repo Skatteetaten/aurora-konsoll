@@ -27,6 +27,7 @@ interface InfoDialogProps {
   renderOpenDialogButton?: (openDialog: () => void) => JSX.Element;
   renderFooterButtons?: (closeDialog: () => void) => JSX.Element;
   hideCloseButton?: boolean;
+  onDismiss?: () => void;
 }
 
 interface InfoDialogState {
@@ -56,6 +57,15 @@ class InfoDialog extends React.Component<InfoDialogProps, InfoDialogState> {
     });
   };
 
+  private close = this.toggleDialog(false);
+  private dismissDialog = () => {
+    const { onDismiss } = this.props;
+    this.close();
+    if (onDismiss) {
+      onDismiss();
+    }
+  };
+
   public render() {
     const { isOpen } = this.state;
     const {
@@ -69,7 +79,6 @@ class InfoDialog extends React.Component<InfoDialogProps, InfoDialogState> {
       buttonText,
       buttonStyle = 'secondary',
     } = this.props;
-    const close = this.toggleDialog(false);
     const open = this.toggleDialog(true);
     return (
       <>
@@ -84,7 +93,7 @@ class InfoDialog extends React.Component<InfoDialogProps, InfoDialogState> {
         {isOpen && (
           <Dialog
             hidden={!isOpen}
-            onDismiss={close}
+            onDismiss={this.dismissDialog}
             title={title}
             minWidth="500px"
             maxWidth="90%"
@@ -93,9 +102,9 @@ class InfoDialog extends React.Component<InfoDialogProps, InfoDialogState> {
             {children}
             <Dialog.Footer>
               <DialogSubText>{subText}</DialogSubText>
-              {renderFooterButtons && renderFooterButtons(close)}
+              {renderFooterButtons && renderFooterButtons(this.close)}
               {!hideCloseButton && (
-                <ActionButton onClick={close}>Lukk</ActionButton>
+                <ActionButton onClick={this.close}>Lukk</ActionButton>
               )}
             </Dialog.Footer>
           </Dialog>

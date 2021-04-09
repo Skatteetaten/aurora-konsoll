@@ -29,6 +29,7 @@ const InitVersions = ({
     if (!repository || !hasPermission) {
       return;
     }
+    resetState();
     fetchInitVersions(repository);
     return () => {
       resetState();

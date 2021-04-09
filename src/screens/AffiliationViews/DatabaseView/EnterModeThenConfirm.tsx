@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
-import ActionButton from '@skatteetaten/frontend-components/ActionButton';
+import ActionButton, {
+  ActionButtonProps,
+} from '@skatteetaten/frontend-components/ActionButton';
 
 export const EnterModeThenConfirm: React.FC<{
   confirmButtonEnabled: boolean;
@@ -9,6 +11,7 @@ export const EnterModeThenConfirm: React.FC<{
   onEnterMode: () => void;
   onExitMode: () => void;
   onConfirmClick: () => void;
+  iconColor?: ActionButtonProps['color'];
 }> = ({
   confirmButtonEnabled,
   confirmText,
@@ -17,6 +20,7 @@ export const EnterModeThenConfirm: React.FC<{
   onEnterMode,
   onExitMode,
   onConfirmClick,
+  iconColor = 'red',
 }) => {
   const [modeActive, setModeActive] = useState(false);
 
@@ -34,7 +38,7 @@ export const EnterModeThenConfirm: React.FC<{
     return (
       <ActionButton
         iconSize={ActionButton.LARGE}
-        color="red"
+        color={iconColor}
         icon={inactiveIcon}
         style={{ minWidth: '120px', marginLeft: '15px', float: 'left' }}
         onClick={onEnterModeClick}

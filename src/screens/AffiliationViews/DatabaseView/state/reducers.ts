@@ -4,20 +4,25 @@ import actions, {
   deleteSchemaResponse,
   deleteSchemasResponse,
   fetchSchemaRequest,
+  fetchNextSchemaRequest,
   fetchSchemaResponse,
   updateSchemaResponse,
   fetchInstanceResponse,
   fetchInstanceRequest,
+  fetchRestorableSchemaResponse,
+  fetchRestorableSchemaRequest,
   testJdbcConnectionForIdResponse,
   testJdbcConnectionForJdbcUserResponse,
+  restoreSchemasResponse,
 } from './actions';
 
 import {
   ICreateDatabaseSchemaResponse,
-  IDatabaseSchemas,
-  IDeleteDatabaseSchemasResponse,
+  IChangeCooldownDatabaseSchemasResponse,
   IDatabaseInstances,
+  IRestorableDatabaseSchemas,
   ITestJDBCResponse,
+  IDatabaseSchemasWithPageInfo,
 } from 'models/schemas';
 import { handleAction, reduceReducers } from 'redux-ts-utils';
 
@@ -25,28 +30,40 @@ export type DatabaseSchemasAction = ActionType<typeof actions>;
 
 export interface ISchemasState {
   readonly isFetchingSchemas: boolean;
-  readonly databaseSchemas: IDatabaseSchemas;
+  readonly isFetchingNextSchemas: boolean;
+  readonly databaseSchemas: IDatabaseSchemasWithPageInfo;
+  readonly restorableDatabaseSchemas: IRestorableDatabaseSchemas;
   readonly isFetchingInstances: boolean;
   readonly databaseInstances: IDatabaseInstances;
   readonly updateSchemaResponse: boolean;
-  readonly deleteSchemasResponse: IDeleteDatabaseSchemasResponse;
+  readonly deleteSchemasResponse: IChangeCooldownDatabaseSchemasResponse;
+  readonly restoreSchemasResponse: IChangeCooldownDatabaseSchemasResponse;
   readonly testJdbcConnectionResponse: ITestJDBCResponse;
   readonly createDatabaseSchemaResponse: ICreateDatabaseSchemaResponse;
+  readonly isFetchingRestorableSchemas: boolean;
 }
 
 const initialState = (): ISchemasState => {
   return {
     isFetchingSchemas: false,
-    databaseSchemas: { databaseSchemas: [] },
+    isFetchingNextSchemas: false,
+    databaseSchemas: {
+      databaseSchemas: [],
+      pageInfo: { endCursor: '', hasNextPage: false },
+      totalCount: 0,
+    },
+    restorableDatabaseSchemas: { restorableDatabaseSchemas: [] },
     isFetchingInstances: false,
     databaseInstances: { databaseInstances: [] },
     updateSchemaResponse: false,
     deleteSchemasResponse: { failed: [], succeeded: [] },
+    restoreSchemasResponse: { failed: [], succeeded: [] },
     testJdbcConnectionResponse: { hasSucceeded: false, message: 'failed' },
     createDatabaseSchemaResponse: {
       id: '',
       jdbcUser: { jdbcUrl: '', username: '', password: '' },
     },
+    isFetchingRestorableSchemas: false,
   };
 };
 
@@ -63,8 +80,20 @@ export const databaseReducer = reduceReducers<ISchemasState>(
       updateStateWithPayload('isFetchingSchemas')
     ),
     handleAction(
+      fetchNextSchemaRequest,
+      updateStateWithPayload('isFetchingNextSchemas')
+    ),
+    handleAction(
       fetchSchemaResponse,
       updateStateWithPayload('databaseSchemas')
+    ),
+    handleAction(
+      fetchRestorableSchemaRequest,
+      updateStateWithPayload('isFetchingRestorableSchemas')
+    ),
+    handleAction(
+      fetchRestorableSchemaResponse,
+      updateStateWithPayload('restorableDatabaseSchemas')
     ),
     handleAction(
       fetchInstanceRequest,
@@ -85,6 +114,10 @@ export const databaseReducer = reduceReducers<ISchemasState>(
     handleAction(
       deleteSchemasResponse,
       updateStateWithPayload('deleteSchemasResponse')
+    ),
+    handleAction(
+      restoreSchemasResponse,
+      updateStateWithPayload('restoreSchemasResponse')
     ),
     handleAction(
       testJdbcConnectionForIdResponse,

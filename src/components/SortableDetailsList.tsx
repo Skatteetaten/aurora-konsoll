@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 import DetailsList, {
   DetailsListProps,
@@ -6,12 +7,11 @@ import DetailsList, {
 import { SortDirection } from 'models/SortDirection';
 import { createDate, dateValidation } from 'utils/date';
 
-import * as util from 'util';
+import { inspect } from 'util';
 import {
   CheckboxVisibility,
-  ISelection,
-  SelectionMode,
   IColumn,
+  SelectionMode,
 } from 'office-ui-fabric-react/lib-commonjs';
 
 export let selectedIndices: number[] = [];
@@ -22,107 +22,124 @@ export interface ISortableDetailsListProps extends DetailsListProps {
   shouldResetSort?: boolean;
   onResetSort?: () => void;
   passItemsToParentComp?: (items: any[]) => void;
+  isRefreshing?: boolean;
+  selectedItems?: any[];
 }
 
-export interface ISortableDetailsListState {
-  columnSortDirections: SortDirection[];
-  currentViewItems: any[];
-  selectedColumnIndex: number;
-  prevIndices: number[];
-}
+const createDefaultSortDirections = (columns?: IColumn[]) =>
+  new Array<SortDirection>(columns ? columns.length : 0).fill(
+    SortDirection.NONE
+  );
 
-class SortableDetailsList extends React.Component<
-  ISortableDetailsListProps,
-  ISortableDetailsListState
-> {
-  public state = {
-    selectedColumnIndex: -1,
-    currentViewItems: [],
-    columnSortDirections: [],
-    prevIndices: [],
+const sortNextAscending = (sortDirection: SortDirection): boolean =>
+  sortDirection === SortDirection.NONE || sortDirection === SortDirection.DESC;
+const lowerCaseIfString = (value: any): any =>
+  typeof value === 'string' ? (value as string).toLowerCase() : value;
+
+const SortableDetailsList: React.FC<ISortableDetailsListProps> = ({
+  filterView,
+  filter,
+  shouldResetSort,
+  onResetSort,
+  passItemsToParentComp,
+  isHeaderVisible,
+  selection,
+  checkboxVisibility = CheckboxVisibility.hidden,
+  columns,
+  items,
+  isRefreshing,
+  selectedItems,
+}) => {
+  const [selectedColumnIndex, setSelectedColumnIndex] = useState(-1);
+  const [currentViewItems, setCurrentViewItems] = useState<any[]>([]);
+  //@ts-ignore
+  const sortDirections = createDefaultSortDirections(columns);
+
+  const [columnSortDirections, setColumnSortDirections] = useState<
+    SortDirection[]
+  >(sortDirections);
+  const previousColumnSortDirectionsRef = useRef<SortDirection[]>();
+  useEffect(() => {
+    previousColumnSortDirectionsRef.current = columnSortDirections;
+  });
+
+  const previousColumnSortDirections = previousColumnSortDirectionsRef.current;
+
+  useEffect(() => {
+    if (
+      selection &&
+      selectedItems &&
+      inspect(previousColumnSortDirections) !== inspect(columnSortDirections)
+    ) {
+      selection?.setAllSelected(false);
+      const selectionItems = selection.getItems();
+
+      selectionItems
+        .filter((item) =>
+          selectedItems?.some(
+            (selectedItem) =>
+              inspect(selectedItem as any) === inspect(item as any)
+          )
+        )
+        .map((selectedItem) => selectionItems.indexOf(selectedItem))
+        .forEach((previousSelectedItemIndex) => {
+          selection.setIndexSelected(previousSelectedItemIndex, true, false);
+        });
+    }
+  }, [
+    columnSortDirections,
+    selectedItems,
+    selection,
+    previousColumnSortDirections,
+  ]);
+
+  const resetColumns = () => {
+    if (columns) {
+      columns.forEach((col) => (col.isSorted = false));
+    }
   };
 
-  public createDefaultSortDirections: () => SortDirection[] = () =>
-    new Array<SortDirection>(
-      this.props.columns ? this.props.columns.length : 0
-    ).fill(SortDirection.NONE);
-
-  public componentDidMount() {
-    this.setState({
-      columnSortDirections: this.createDefaultSortDirections(),
-    });
-  }
-
-  public componentDidUpdate(prevProps: ISortableDetailsListProps) {
-    const {
-      selection,
-      filter,
-      items,
-      shouldResetSort,
-      onResetSort,
-      passItemsToParentComp,
-    } = this.props;
-    const { currentViewItems, prevIndices } = this.state;
-    if (selection) {
-      this.updateCurrentSelection(
-        selection,
-        prevIndices,
-        this.filteredItems(filter, currentViewItems)
-      );
-    }
-
-    if (
-      items !== prevProps.items ||
-      (!(currentViewItems.length > 0) && items.length > 0)
-    ) {
-      this.setState({
-        currentViewItems: items,
-      });
-    }
-
+  useEffect(() => {
     if (shouldResetSort) {
       if (onResetSort) {
         onResetSort();
       }
-      this.resetColumns();
-      this.setState({
-        columnSortDirections: this.createDefaultSortDirections(),
-        selectedColumnIndex: -1,
-      });
-    }
+      if (columns) {
+        columns.forEach((col) => (col.isSorted = false));
+      }
+      //@ts-ignore
+      const directions = createDefaultSortDirections(columns);
 
-    if (
-      passItemsToParentComp &&
-      util.inspect(items) === util.inspect(prevProps.items)
-    ) {
+      setColumnSortDirections(directions);
+      setSelectedColumnIndex(-1);
+    }
+  }, [shouldResetSort, onResetSort, columns]);
+
+  useEffect(() => {
+    if (passItemsToParentComp) {
       if (items.length !== currentViewItems.length) {
         passItemsToParentComp(items);
       } else {
         passItemsToParentComp(currentViewItems);
       }
     }
-  }
+  }, [isRefreshing, passItemsToParentComp, items, currentViewItems]);
 
-  public resetColumns() {
-    const { columns } = this.props;
-    if (columns) {
-      columns.forEach((col) => (col.isSorted = false));
-    }
-  }
+  useEffect(() => {
+    setCurrentViewItems(items);
+  }, [items]);
 
-  public componentWillUnmount() {
-    this.resetColumns();
-  }
-
-  public createColumns(index: number, sortDirection: SortDirection): IColumn[] {
-    const { columns } = this.props;
+  const createColumns = (
+    index: number,
+    sortDirection: SortDirection
+  ): IColumn[] => {
     if (!columns) {
       return [];
     }
 
     if (index > -1) {
       // Reset icons, only one column should be sortet at the time.
-      this.resetColumns();
+      resetColumns();
       const currentCol = columns[index];
       currentCol.isSorted = true;
       if (
@@ -136,98 +153,55 @@ class SortableDetailsList extends React.Component<
     }
     // @ts-ignore
     return columns;
-  }
+  };
 
-  public sortByColumn: DetailsListProps['onColumnHeaderClick'] = (
+  const filteredItems = (filter: string, viewItems: any[]): any[] =>
+    filterView ? viewItems.filter(filterView(filter.toLowerCase())) : viewItems;
+
+  const sortByColumn: DetailsListProps['onColumnHeaderClick'] = (
     ev,
     column
   ): void => {
-    const { columnSortDirections } = this.state;
-    const { items } = this.props;
-
     if (!column) {
       return;
     }
 
     const name = column.fieldName! as keyof any;
-    const newSortDirections = this.createDefaultSortDirections();
+    //@ts-ignore
+    const newSortDirections = createDefaultSortDirections(columns);
     const prevSortDirection = columnSortDirections[column.key];
 
-    if (this.sortNextAscending(prevSortDirection)) {
+    if (sortNextAscending(prevSortDirection)) {
       newSortDirections[column.key] = SortDirection.ASC;
     } else if (prevSortDirection === SortDirection.ASC) {
       newSortDirections[column.key] = SortDirection.DESC;
     }
 
-    const sortedItems = this.sortItems(items, prevSortDirection, name);
-    this.setState({
-      currentViewItems: sortedItems,
-      columnSortDirections: newSortDirections,
-      selectedColumnIndex: Number(column.key),
-      prevIndices: selectedIndices,
-    });
+    const sortedItems = sortItems(items, prevSortDirection, name);
+    setCurrentViewItems(sortedItems);
+    setColumnSortDirections(newSortDirections);
+    setSelectedColumnIndex(Number(column.key));
   };
-  public toViewIndex<T>(index: number, selection: ISelection, items: T[]) {
-    const listItem = items[index];
-    return selection.getItems().findIndex((viewItem) => viewItem === listItem);
-  }
 
-  public updateCurrentSelection<T>(
-    selection: ISelection,
-    prevIndices: number[],
-    items: T[]
-  ): void {
-    const intersection = prevIndices.filter((element) =>
-      selectedIndices.includes(element)
-    );
-
-    if (prevIndices.length > 0) {
-      for (const i of prevIndices) {
-        if (!intersection.includes(i) && selection.isIndexSelected(i)) {
-          selection.setIndexSelected(i, false, false);
-        }
-      }
-    }
-
-    const indices = selectedIndices
-      .map((index) => this.toViewIndex(index, selection, items))
-      .filter((index) => index !== -1);
-
-    for (const i of indices) {
-      if (!intersection.includes(i)) {
-        selection.setIndexSelected(i, true, false);
-      }
-    }
-  }
-
-  public filteredItems<T>(filter: string, viewItems: T[]): T[] {
-    const { filterView } = this.props;
-    if (filterView) {
-      return viewItems.filter(filterView(filter));
-    } else {
-      return viewItems;
-    }
-  }
-
-  public sortItems<T>(
-    viewItems: T[],
+  const sortItems = (
+    viewItems: any[],
     prevSortDirection: SortDirection,
     name: string | number | symbol
-  ): T[] {
-    return viewItems.slice(0).sort((a: any, b: any) => {
-      const valueA = this.lowerCaseIfString(a[name]);
-      const valueB = this.lowerCaseIfString(b[name]);
+  ): any[] =>
+    viewItems.slice(0).sort((a: any, b: any) => {
+      const valueA = lowerCaseIfString(a[name]);
+      const valueB = lowerCaseIfString(b[name]);
       if (valueA === valueB) {
         return 0;
       } else if (dateValidation(valueA) || dateValidation(valueB)) {
         const dateA = createDate(valueA).getTime();
         const dateB = createDate(valueB).getTime();
-        return this.sortNextAscending(prevSortDirection)
+        return sortNextAscending(prevSortDirection)
           ? dateB - dateA
           : dateA - dateB;
       } else {
         return (
-          this.sortNextAscending(prevSortDirection)
+          sortNextAscending(prevSortDirection)
             ? valueA < valueB
             : valueA > valueB
         )
@@ -235,83 +209,25 @@ class SortableDetailsList extends React.Component<
           : -1;
       }
     });
-  }
-
-  public toListIndex<T>(
-    index: number,
-    selection: ISelection,
-    items: T[]
-  ): number {
-    const viewItems = selection.getItems();
-    const viewItem = viewItems[index];
-    return items.findIndex((listItem) => listItem === viewItem);
-  }
-
-  public currentSelection<T>(selection: ISelection, items: T[]) {
-    const newIndices = selection
-      .getSelectedIndices()
-      .map((index) => this.toListIndex(index, selection, items))
-      .filter((index) => selectedIndices.indexOf(index) === -1);
-
-    const unselectedIndices = selection
-      .getItems()
-      .map((item, index) => index)
-      .filter((index) => selection.isIndexSelected(index) === false)
-      .map((index) => this.toListIndex(index, selection, items));
-
-    selectedIndices = selectedIndices.filter(
-      (index) => unselectedIndices.indexOf(index) === -1
-    );
-    selectedIndices = [...selectedIndices, ...newIndices];
-  }
-
-  public render() {
-    const {
-      filter,
-      isHeaderVisible = false,
-      selection,
-      selectionMode = SelectionMode.single,
-      checkboxVisibility = CheckboxVisibility.hidden,
-    } = this.props;
-    const {
-      columnSortDirections,
-      currentViewItems,
-      selectedColumnIndex,
-    } = this.state;
-
-    if (selection) {
-      this.currentSelection(
-        selection,
-        this.filteredItems(filter, currentViewItems)
-      );
-    }
-
-    return (
-      <DetailsList
-        // @ts-ignore
-        columns={this.createColumns(
-          selectedColumnIndex,
-          columnSortDirections[selectedColumnIndex]
-        )}
-        items={this.filteredItems(filter, currentViewItems)}
-        isHeaderVisible={isHeaderVisible}
-        onColumnHeaderClick={this.sortByColumn}
-        selection={selection}
-        selectionMode={selectionMode}
-        checkboxVisibility={checkboxVisibility}
-      />
-    );
-  }
-  private sortNextAscending(sortDirection: SortDirection): boolean {
-    return (
-      sortDirection === SortDirection.NONE ||
-      sortDirection === SortDirection.DESC
-    );
-  }
-
-  private lowerCaseIfString(value: any): any {
-    return typeof value === 'string' ? (value as string).toLowerCase() : value;
-  }
-}
+  return (
+    <DetailsList
+      //@ts-ignore
+      columns={createColumns(
+        selectedColumnIndex,
+        columnSortDirections[selectedColumnIndex]
+      )}
+      items={filteredItems(filter, currentViewItems)}
+      isHeaderVisible={isHeaderVisible}
+      onColumnHeaderClick={sortByColumn}
+      selection={selection}
+      selectionMode={
+        checkboxVisibility === CheckboxVisibility.hidden
+          ? SelectionMode.single
+          : SelectionMode.multiple
+      }
+      checkboxVisibility={checkboxVisibility}
+    />
+  );
+};
 
 export default SortableDetailsList;

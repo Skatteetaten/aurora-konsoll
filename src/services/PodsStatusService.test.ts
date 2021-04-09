@@ -64,4 +64,22 @@ describe('PodsStatusService', () => {
       color: STATUS_COLORS.healthy,
     } as { icon: string; color: string });
   });
+
+  it('given invalid JSON health textResponse return Info icon and unknown color', () => {
+    const getIconAndColor = podsStatusService.getStatusColorAndIconForPod(
+      podFactory.build({
+        managementResponses: {
+          health: {
+            hasResponse: true,
+            textResponse: 'Invalid JSON',
+          },
+        },
+      })
+    );
+
+    expect(getIconAndColor).toEqual({
+      icon: 'Info',
+      color: STATUS_COLORS.unknown,
+    } as { icon: string; color: string });
+  });
 });

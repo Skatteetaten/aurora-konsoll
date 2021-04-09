@@ -5,6 +5,16 @@ import Button from '@skatteetaten/frontend-components/Button';
 import ActionButton from '@skatteetaten/frontend-components/ActionButton';
 import MessageBar from '@skatteetaten/frontend-components/MessageBar';
 import { IAppError } from 'models/errors';
+import { Link } from 'react-router-dom';
+
+interface StackProperties {
+  applicationDeployment?: {
+    affiliation: string;
+    id: string;
+  };
+  code?: string;
+  [key: string]: any;
+}
 
 interface IErrorPopupProps {
   currentError: IAppError;
@@ -33,11 +43,32 @@ const ErrorPopup = ({
 }: IErrorPopupProps) => {
   const [expandMessageBar, setExpandMessageBar] = React.useState(false);
   const hasMoreErrors = errorCount > 0;
+
+  function getErrorStack(): StackProperties | undefined {
+    if (!currentError.error.stack) {
+      return undefined;
+    }
+    const parsedErrorStack: StackProperties = JSON.parse(
+      currentError.error.stack
+    );
+    return parsedErrorStack;
+  }
+
+  const errorStack = getErrorStack();
+
+  const isAppRereshFailedCode = errorStack?.code === 'APP_REFRESH_FAILED';
+
+  const ad = errorStack?.applicationDeployment;
+
+  const messageBarType = isAppRereshFailedCode
+    ? MessageBar.Type.info
+    : MessageBar.Type.error;
+
   return (
     <div className={className}>
       <div className="errorModal">
         <MessageBar
-          type={MessageBar.Type.error}
+          type={messageBarType}
           isMultiline={true}
           actions={
             <div className="action-bar">
@@ -62,6 +93,12 @@ const ErrorPopup = ({
             </div>
           }
         >
+          {isAppRereshFailedCode && ad && (
+            <DisplayAppRefreshFailedError
+              id={ad.id}
+              affiliation={ad.affiliation}
+            />
+          )}
           {currentError.error.message}
           {expandMessageBar && (
             <table>
@@ -80,6 +117,34 @@ const ErrorPopup = ({
   );
 };
 
+const DisplayAppRefreshFailedError = ({
+  affiliation,
+  id,
+}: {
+  affiliation: string;
+  id: string;
+}) => (
+  <>
+    Denne applikasjonen har fått ny identifikator pga. endringer i plattform.
+    Dette resulterer i at applikasjonen får en ny lenke til
+    applikasjonoversikten.
+    <br />
+    <br />
+    Trykk på den nye stien:{' '}
+    <Link
+      to={`/a/${affiliation}/deployments/${id}/info`}
+    >{`/a/${affiliation}/deployments/${id}/info`}</Link>{' '}
+    for å gå inn på den nye urlen til applikasjonen. Det kan ta opp til 2
+    minutter før applikasjonen vises pga. caching av data.
+    <br />
+    <br />
+    Du kan også gå tilbake til matrisevisningen og trykke på oppdater-knappen
+    for å oppdatere cachen manuelt, så vil applikasjonen dukke opp.
+    <br />
+    <br />
+  </>
+);
+
 export default styled(ErrorPopup)`
   z-index: 200;
   background: white;
@@ -89,6 +154,10 @@ export default styled(ErrorPopup)`
   max-height: 600px;
   right: 20px;
   bottom: 20px;
+
+  .ms-MessageBar-content {
+    padding-top: 10px;
+  }
 
   .action-bar {
     align-items: inherit;

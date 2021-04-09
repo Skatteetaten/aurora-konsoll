@@ -29,6 +29,8 @@ interface IActionBarProps {
   updateQuickFilter: (filter: string) => void;
   expandApplicationName: boolean;
   setExpandApplicationName: (expand: boolean) => void;
+  sortBySizeAndAlphabetical: boolean;
+  setSortBySizeAndAlphabetical: (expand: boolean) => void;
 }
 
 export const ActionBar: React.FC<IActionBarProps> = ({
@@ -47,6 +49,8 @@ export const ActionBar: React.FC<IActionBarProps> = ({
   refreshApplicationDeployments,
   expandApplicationName,
   setExpandApplicationName,
+  setSortBySizeAndAlphabetical,
+  sortBySizeAndAlphabetical,
 }) => {
   const filterChange = (ev: TextFieldEvent, filter?: string) => {
     if (filter !== undefined) {
@@ -85,6 +89,15 @@ export const ActionBar: React.FC<IActionBarProps> = ({
           label="Vis hele applikasjonsnavnet"
           checked={expandApplicationName}
           onChange={() => setExpandApplicationName(!expandApplicationName)}
+          className="versionCheckbox"
+        />
+        <Checkbox
+          boxSide={'start'}
+          label="Sorter etter antall applikasjoner"
+          checked={sortBySizeAndAlphabetical}
+          onChange={() =>
+            setSortBySizeAndAlphabetical(!sortBySizeAndAlphabetical)
+          }
           className="versionCheckbox"
         />
       </StyledFilter>

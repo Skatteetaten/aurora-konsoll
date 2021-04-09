@@ -1,12 +1,11 @@
 import React from 'react';
-import Button from '@skatteetaten/frontend-components/Button';
-import Spinner from '@skatteetaten/frontend-components/Spinner';
 
 import { FetchVersionsInformation } from '../../components/FetchVersionsInformation';
 import {
   IFetchMoreVersionsProps,
   FetchMoreVersionsState,
 } from './FetchMoreVersions.state';
+import LoadingButton from '../../../../../../../components/LoadingButton';
 
 type Props = IFetchMoreVersionsProps & FetchMoreVersionsState;
 
@@ -25,10 +24,9 @@ export const FetchMoreVersions = ({
           Viser {imageTagsConnection.currentVersionsSize()} av{' '}
           {imageTagsConnection.totalVersionsCount()} versjoner
         </p>
-        <Button
+        <LoadingButton
+          loading={isFetching}
           icon="History"
-          buttonStyle="primaryRoundedFilled"
-          disabled={isFetching}
           onClick={() => {
             // Check for new tags
             fetchVersions(repository, versionType, 5, false, searchText);
@@ -40,12 +38,8 @@ export const FetchMoreVersions = ({
             minWidth: '225px',
           }}
         >
-          {isFetching ? (
-            <Spinner size={Spinner.Size && Spinner.Size['large']} />
-          ) : (
-            'Hent flere versjoner'
-          )}
-        </Button>
+          Hent flere versjoner
+        </LoadingButton>
         <div style={{ marginTop: '8px' }}>
           <FetchVersionsInformation />
         </div>

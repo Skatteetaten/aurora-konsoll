@@ -1,5 +1,5 @@
 import express from 'express';
-import { managementInterface } from 'aurora-management-interface';
+import { managementInterface } from '@skatteetaten/aurora-management-interface';
 
 const server = express();
 

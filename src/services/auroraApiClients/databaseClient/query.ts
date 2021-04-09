@@ -1,46 +1,84 @@
 import gql from 'graphql-tag';
-import { IDatabaseSchema, IDatabaseInstance } from 'models/schemas';
+import {
+  IDatabaseSchema,
+  IDatabaseInstance,
+  IDatabaseSchemaData,
+} from 'models/schemas';
+
+export interface IPageInfo {
+  endCursor: string;
+  hasNextPage: boolean;
+}
 
 export interface IDatabaseSchemasQuery {
-  databaseSchemas?: IDatabaseSchema[];
+  databaseSchemas: {
+    totalCount: number;
+    edges: Array<{
+      cursor: string;
+      node: IDatabaseSchema;
+    }>;
+    pageInfo: IPageInfo;
+  };
 }
 
 export interface IDatabaseInstancesQuery {
   databaseInstances?: IDatabaseInstance[];
 }
 
+export interface IRestorableDatabaseSchemasQuery {
+  restorableDatabaseSchemas?: IDatabaseSchemaData[];
+}
+
 export const DATABASE_SCHEMAS_QUERY = gql`
-  query getDatabaseSchemas($affiliations: [String!]!) {
-    databaseSchemas(affiliations: $affiliations) {
-      id
-      type
-      jdbcUrl
-      affiliation {
-        name
-      }
-      name
-      application
-      environment
-      description
-      discriminator
-      engine
-      applicationDeployments {
-        id
-        name
-        affiliation {
+  query getDatabaseSchemas(
+    $affiliations: [String!]!
+    $pageSize: Int!
+    $after: String
+  ) {
+    databaseSchemas(
+      affiliations: $affiliations
+      first: $pageSize
+      after: $after
+    ) {
+      totalCount
+      edges {
+        cursor
+        node {
+          jdbcUrl
+          id
+          type
+          affiliation {
+            name
+          }
           name
-        }
-        namespace {
-          name
+          application
+          environment
+          discriminator
+          description
+          engine
+          applicationDeployments {
+            id
+            name
+            affiliation {
+              name
+            }
+            namespace {
+              name
+            }
+          }
+          createdBy
+          createdDate
+          lastUsedDate
+          sizeInMb
+          users {
+            username
+            type
+          }
         }
       }
-      createdBy
-      createdDate
-      lastUsedDate
-      sizeInMb
-      users {
-        username
-        type
+      pageInfo {
+        endCursor
+        hasNextPage
       }
     }
   }
@@ -61,6 +99,47 @@ export const DATABASE_INSTANCES_QUERY = gql`
         key
         value
       }
+    }
+  }
+`;
+
+export const RESTORABLE_DATABASE_SCHEMAS_QUERY = gql`
+  query getRestorableDatabaseSchemas($affiliations: [String!]!) {
+    restorableDatabaseSchemas(affiliations: $affiliations) {
+      databaseSchema {
+        id
+        type
+        jdbcUrl
+        affiliation {
+          name
+        }
+        name
+        application
+        environment
+        description
+        discriminator
+        engine
+        applicationDeployments {
+          id
+          name
+          affiliation {
+            name
+          }
+          namespace {
+            name
+          }
+        }
+        createdBy
+        createdDate
+        lastUsedDate
+        sizeInMb
+        users {
+          username
+          type
+        }
+      }
+      deleteAfter
+      setToCooldownAt
     }
   }
 `;

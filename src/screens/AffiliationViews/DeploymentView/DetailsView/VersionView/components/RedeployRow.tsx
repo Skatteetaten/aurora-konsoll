@@ -5,7 +5,6 @@ import Spinner from '@skatteetaten/frontend-components/Spinner';
 
 import { IImageTag } from 'services/auroraApiClients/imageRepositoryClient/query';
 import { WrongVersionCallout } from './WrongVersionCallout';
-import { getLocalDatetime } from 'utils/date';
 import {
   VersionStatus,
   versionStatusMessage,
@@ -13,6 +12,7 @@ import {
 import { DeployButton } from './DeployButton';
 import { VersionInfo } from './VersionInfo';
 import { SpinnerSize } from 'office-ui-fabric-react/lib-commonjs';
+import DateWithTooltip from 'components/DateWithTooltip';
 
 interface IRedeployRowProps {
   isFetchingConfiguredVersionTag: boolean;
@@ -69,8 +69,12 @@ export const RedeployRow = ({
       <span>
         Konfigurert versjon: <strong>{configuredVersionTag.name}</strong>{' '}
         (bygget{' '}
-        {configuredVersionTag.image &&
-          getLocalDatetime(configuredVersionTag.image.buildTime)}
+        {configuredVersionTag.image && (
+          <DateWithTooltip
+            date={configuredVersionTag.image.buildTime}
+            position="bottom"
+          />
+        )}
         )
       </span>
       <DeployButton
