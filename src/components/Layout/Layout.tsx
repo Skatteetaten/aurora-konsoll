@@ -88,6 +88,12 @@ const Layout = ({
     },
   ];
 
+  const storytellerLink: IMenuNavLinkData = {
+    iconName: 'Code',
+    name: 'Storyteller',
+    to: `/storyteller`,
+  };
+
   if (displayDatabaseView) {
     menuLinks.push(databaseMenuLink);
   }
@@ -96,6 +102,7 @@ const Layout = ({
     menuLinks.push(...skapMenuLinks);
   }
 
+  menuLinks.push(storytellerLink);
   menuLinks.map((item) => ({
     ...item,
     showName: isMenuExpanded,
