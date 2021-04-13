@@ -2,10 +2,7 @@ import express from 'express';
 import { createProxyMiddleware } from 'http-proxy-middleware';
 import { logger } from './logger';
 
-import {
-  GOBO_URL,
-  PORT,
-} from './config';
+import { GOBO_URL, PORT } from './config';
 import { managementInterfaceServer } from './ManagementInterface';
 
 const app = express();
