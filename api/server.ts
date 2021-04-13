@@ -3,13 +3,8 @@ import { createProxyMiddleware } from 'http-proxy-middleware';
 import { logger } from './logger';
 
 import {
-  APPLICATION_NAME,
-  AUTHORIZATION_URI,
-  CLIENT_ID,
-  DBH_ENABLED,
   GOBO_URL,
   PORT,
-  SKAP_ENABLED,
 } from './config';
 import { managementInterfaceServer } from './ManagementInterface';
 
@@ -27,16 +22,6 @@ app.use(
 );
 
 app.use(express.json());
-
-app.get('/api/config', (req, res) => {
-  return res.send({
-    AUTHORIZATION_URI,
-    CLIENT_ID,
-    APPLICATION_NAME,
-    DBH_ENABLED,
-    SKAP_ENABLED,
-  });
-});
 
 app.post('/api/log', (req, res) => {
   logger.log(req.body);
