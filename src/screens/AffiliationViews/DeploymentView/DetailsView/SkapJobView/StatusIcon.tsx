@@ -1,5 +1,5 @@
 import React from 'react';
-import Icon from '@skatteetaten/frontend-components/Icon';
+import { Icon } from '@skatteetaten/frontend-components';
 
 interface IStatusIconProps {
   status: string;

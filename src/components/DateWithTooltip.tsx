@@ -1,7 +1,7 @@
 import * as React from 'react';
 import styled from 'styled-components';
 
-import palette from '@skatteetaten/frontend-components/utils/palette';
+import { Palette } from '@skatteetaten/frontend-components';
 import { getLocalDatetime } from 'utils/date';
 import { DateTime } from 'luxon';
 
@@ -43,8 +43,8 @@ display: inline-block;
   visibility: hidden;
   width: max-content;
   opacity: 0;
-  background-color: ${palette.skeColor.blackAlt};
-  color: ${palette.skeColor.white};
+  background-color: ${Palette.skeColor.blackAlt};
+  color: ${Palette.skeColor.white};
   padding: 8px;
   z-index: 1
   display: none;

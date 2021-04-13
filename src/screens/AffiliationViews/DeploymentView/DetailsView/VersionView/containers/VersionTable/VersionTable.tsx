@@ -1,5 +1,5 @@
 import * as React from 'react';
-import Table from '@skatteetaten/frontend-components/Table';
+import { Table } from '@skatteetaten/frontend-components';
 import styled from 'styled-components';
 import { ImageTagType } from 'models/ImageTagType';
 import { IVersionTableProps, VersionTableState } from './VersionTable.state';

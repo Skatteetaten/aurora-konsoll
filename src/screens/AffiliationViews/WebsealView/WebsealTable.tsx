@@ -1,7 +1,11 @@
 import * as React from 'react';
 import styled from 'styled-components';
 
-import TextField from '@skatteetaten/frontend-components/TextField';
+import {
+  TextField,
+  DetailsList,
+  Spinner,
+} from '@skatteetaten/frontend-components';
 
 import LoadingButton from 'components/LoadingButton';
 import SortableDetailsList from 'components/SortableDetailsList';
@@ -16,8 +20,6 @@ import WebsealService, {
 } from 'services/WebsealService';
 import WebsealDialog from './WebstealDialog';
 import { TextFieldEvent } from 'types/react';
-import DetailsList from '@skatteetaten/frontend-components/DetailsList';
-import Spinner from '@skatteetaten/frontend-components/Spinner';
 
 interface IWebsealTableProps {
   className?: string;

@@ -1,6 +1,6 @@
 import * as React from 'react';
 
-import Grid from '@skatteetaten/frontend-components/Grid';
+import { Grid } from '@skatteetaten/frontend-components';
 import {
   ICreateDatabaseSchemaInput,
   IJdbcUser,

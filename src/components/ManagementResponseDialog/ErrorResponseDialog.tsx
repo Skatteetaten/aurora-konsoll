@@ -1,14 +1,16 @@
 import React from 'react';
 
-import MessageBar from '@skatteetaten/frontend-components/MessageBar';
 import InfoDialog from 'components/InfoDialog';
 import { IManagementEndpointResponse } from 'models/Pod';
 import styled from 'styled-components';
 import { prettifyJSON } from 'utils/string';
 import { StyledPre } from 'components/StyledPre';
 import { getTheme } from '@uifabric/styling';
-import Icon from '@skatteetaten/frontend-components/Icon';
-import { PaletteProps } from '@skatteetaten/frontend-components';
+import {
+  PaletteProps,
+  MessageBar,
+  Icon,
+} from '@skatteetaten/frontend-components';
 
 interface IErrorResponseDialogProps {
   response: IManagementEndpointResponse;

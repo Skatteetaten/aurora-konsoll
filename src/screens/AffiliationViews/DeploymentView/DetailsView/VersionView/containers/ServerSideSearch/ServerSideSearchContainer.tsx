@@ -1,5 +1,5 @@
 import React, { useEffect, KeyboardEvent, useRef, useState } from 'react';
-import TextField from '@skatteetaten/frontend-components/TextField';
+import { TextField, Palette } from '@skatteetaten/frontend-components';
 import LoadingButton from 'components/LoadingButton';
 
 import { ITextField } from 'office-ui-fabric-react/lib-commonjs';
@@ -11,9 +11,7 @@ import {
 import { connect } from 'react-redux';
 import { RootState, ReduxProps } from 'store/types';
 
-import palette from '@skatteetaten/frontend-components/utils/palette';
-
-const { skeColor } = palette;
+const { skeColor } = Palette;
 
 const ENTER_KEY = 13;
 

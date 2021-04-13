@@ -1,6 +1,6 @@
 import * as React from 'react';
 
-import DetailsList from '@skatteetaten/frontend-components/DetailsList';
+import { DetailsList } from '@skatteetaten/frontend-components';
 
 import { INetdebugResult } from 'services/auroraApiClients';
 

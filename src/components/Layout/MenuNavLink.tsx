@@ -1,5 +1,5 @@
-import Icon from '@skatteetaten/frontend-components/Icon';
 import * as React from 'react';
+import { Icon } from '@skatteetaten/frontend-components';
 import { NavLink } from 'react-router-dom';
 import styled from 'styled-components';
 

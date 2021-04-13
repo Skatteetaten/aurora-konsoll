@@ -1,8 +1,7 @@
 import * as React from 'react';
 import styled from 'styled-components';
 
-import Icon from '@skatteetaten/frontend-components/Icon';
-import palette from '@skatteetaten/frontend-components/utils/palette';
+import { Icon, Palette } from '@skatteetaten/frontend-components';
 
 interface IIconWithTooltip {
   content: string;
@@ -46,8 +45,8 @@ export default styled(IconWithTooltip)`
     visibility: hidden;
     width: max-content;
     opacity: 0;
-    background-color: ${palette.skeColor.blackAlt};
-    color: ${palette.skeColor.white};
+    background-color: ${Palette.skeColor.blackAlt};
+    color: ${Palette.skeColor.white};
     padding: 8px;
     z-index: 1;
     top: 110%;

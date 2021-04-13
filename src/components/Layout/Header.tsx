@@ -4,11 +4,9 @@ import styled from 'styled-components';
 
 import Dropdown from 'components/DropdownMenu';
 
-import Icon from '@skatteetaten/frontend-components/Icon';
-import Image from '@skatteetaten/frontend-components/Image';
+import { Icon, Image, Palette } from '@skatteetaten/frontend-components';
 import separatorImg from '@skatteetaten/frontend-components/TopBanner/assets/separator.png';
 import Logo from '@skatteetaten/frontend-components/TopBanner/assets/ske-logo.svg';
-import palette from '@skatteetaten/frontend-components/utils/palette';
 import { IUserAndAffiliations } from 'models/ApplicationDeployment';
 import { ButtonLink } from 'components/ButtonLink';
 
@@ -59,7 +57,7 @@ const Header = ({ title, currentUser, className, children }: IHeaderProps) => {
 };
 
 const HomeLink = styled(Link)`
-  color: ${palette.skeColor.black};
+  color: ${Palette.skeColor.black};
   text-decoration: none;
 `;
 
@@ -138,7 +136,7 @@ export default styled(Header)`
     }
 
     button:hover {
-      background-color: ${palette.skeColor.whiteGrey};
+      background-color: ${Palette.skeColor.whiteGrey};
     }
   }
 `;

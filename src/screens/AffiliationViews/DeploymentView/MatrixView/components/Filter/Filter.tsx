@@ -6,8 +6,11 @@ import ReactSelect from 'components/Select';
 
 import { IApplicationDeployment } from 'models/ApplicationDeployment';
 
-import ActionButton from '@skatteetaten/frontend-components/ActionButton';
-import Checkbox from '@skatteetaten/frontend-components/CheckBox';
+import {
+  ActionButton,
+  CheckBox,
+  RadioButtonGroupProps,
+} from '@skatteetaten/frontend-components';
 import { IApplicationDeploymentFilters } from 'models/UserSettings';
 import { IFilter } from 'services/DeploymentFilterService';
 import FilterService from 'services/FilterService';
@@ -16,7 +19,6 @@ import FooterText from './FooterText';
 import SelectionButtons from './SelectionButtons';
 import { connect } from 'react-redux';
 import { addErrors } from 'screens/ErrorHandler/state/actions';
-import { RadioButtonGroupProps } from '@skatteetaten/frontend-components/RadioButtonGroup';
 import { TextFieldEvent } from 'types/react';
 
 export enum SelectionType {
@@ -272,7 +274,7 @@ export class Filter extends React.Component<IFilterProps, IFilterState> {
       disabled: boolean,
       checked: boolean
     ): JSX.Element => (
-      <Checkbox
+      <CheckBox
         disabled={disabled}
         checked={checked}
         boxSide="start"
@@ -453,7 +455,7 @@ export class Filter extends React.Component<IFilterProps, IFilterState> {
                 />
                 <div className="apps-and-envs">
                   {selectionNames.applications.map((application, index) => (
-                    <Checkbox
+                    <CheckBox
                       key={index}
                       boxSide={'start'}
                       label={application}
@@ -475,7 +477,7 @@ export class Filter extends React.Component<IFilterProps, IFilterState> {
                 />
                 <div className="apps-and-envs">
                   {selectionNames.environments.map((environment, index) => (
-                    <Checkbox
+                    <CheckBox
                       key={index}
                       boxSide={'start'}
                       label={environment}

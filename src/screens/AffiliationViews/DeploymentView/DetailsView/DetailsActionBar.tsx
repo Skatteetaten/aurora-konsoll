@@ -1,6 +1,6 @@
 import * as React from 'react';
 
-import ActionButton from '@skatteetaten/frontend-components/ActionButton';
+import { ActionButton } from '@skatteetaten/frontend-components';
 import LoadingButton from 'components/LoadingButton';
 import TimeSince from 'components/TimeSince';
 import styled from 'styled-components';

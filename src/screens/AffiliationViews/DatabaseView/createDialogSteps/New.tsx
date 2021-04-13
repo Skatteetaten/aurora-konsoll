@@ -4,8 +4,7 @@ import styled from 'styled-components';
 import { ICreateDatabaseSchemaInput, IDatabaseInstances } from 'models/schemas';
 import Labels from '../Labels';
 import { TextFieldEvent } from 'types/react';
-import RadioButtonGroup from '@skatteetaten/frontend-components/RadioButtonGroup';
-import Grid from '@skatteetaten/frontend-components/Grid';
+import { Grid, RadioButtonGroup } from '@skatteetaten/frontend-components';
 
 export interface INewProps {
   databaseSchemaInput: ICreateDatabaseSchemaInput;

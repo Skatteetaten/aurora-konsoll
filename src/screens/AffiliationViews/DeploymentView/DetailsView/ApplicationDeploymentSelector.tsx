@@ -9,7 +9,7 @@ import {
   fetchApplicationDeploymentWithDetails,
   resetApplicationDeploymentState,
 } from 'store/state/applicationDeployments/action.creators';
-import Spinner from '@skatteetaten/frontend-components/Spinner';
+import { Spinner } from '@skatteetaten/frontend-components';
 import { SpinnerSize } from 'office-ui-fabric-react';
 
 export type ApplicationDeploymentMatchParams = {

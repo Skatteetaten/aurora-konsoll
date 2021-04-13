@@ -1,12 +1,14 @@
 import * as React from 'react';
 
-import ActionButton from '@skatteetaten/frontend-components/ActionButton';
-import Dialog from '@skatteetaten/frontend-components/Dialog';
-import Grid from '@skatteetaten/frontend-components/Grid';
-import Tabs from '@skatteetaten/frontend-components/Tabs';
-import TabItem from '@skatteetaten/frontend-components/Tabs/TabItem';
+import {
+  ActionButton,
+  Dialog,
+  Grid,
+  Tabs,
+  TabItem,
+  DetailsList,
+} from '@skatteetaten/frontend-components';
 
-import DetailsList from '@skatteetaten/frontend-components/DetailsList';
 import { IWebsealState } from 'models/Webseal';
 import WebsealService from 'services/WebsealService';
 import styled from 'styled-components';

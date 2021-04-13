@@ -1,9 +1,11 @@
 import React, { useState } from 'react';
 
-import Dialog from '@skatteetaten/frontend-components/Dialog';
-import MessageBar from '@skatteetaten/frontend-components/MessageBar';
-import ActionButton from '@skatteetaten/frontend-components/ActionButton';
-import Spinner from '@skatteetaten/frontend-components/Spinner';
+import {
+  Dialog,
+  MessageBar,
+  ActionButton,
+  Spinner,
+} from '@skatteetaten/frontend-components';
 import { IImageTag } from 'services/auroraApiClients/imageRepositoryClient/query';
 import { ReleaseToInformation } from './ReleaseToInformation';
 

@@ -1,7 +1,6 @@
 import * as React from 'react';
 
-import Button from '@skatteetaten/frontend-components/Button';
-import Spinner from '@skatteetaten/frontend-components/Spinner';
+import { Button, Spinner } from '@skatteetaten/frontend-components';
 import { SpinnerSize } from 'office-ui-fabric-react/lib-commonjs';
 
 interface ILoadingButtonProps {

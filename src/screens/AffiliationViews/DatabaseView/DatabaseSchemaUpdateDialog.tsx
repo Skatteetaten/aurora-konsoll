@@ -1,6 +1,5 @@
 import * as React from 'react';
 import { useEffect, useRef, useState } from 'react';
-import palette from '@skatteetaten/frontend-components/utils/palette';
 import styled from 'styled-components';
 import {
   IDatabaseApplicationDeployment,
@@ -8,19 +7,22 @@ import {
   ITestJDBCResponse,
   IUpdateDatabaseSchemaInputWithCreatedBy,
 } from 'models/schemas';
-import Dialog from '@skatteetaten/frontend-components/Dialog';
-import { Grid } from '@skatteetaten/frontend-components/Grid';
+import {
+  Dialog,
+  Grid,
+  Palette,
+  Button,
+  ActionButton,
+} from '@skatteetaten/frontend-components';
 import { getLocalDatetime } from 'utils/date';
 import JdbcConnection from './JdbcConnection';
 import { TextFieldEvent } from 'types/react';
 import Labels from './Labels';
 import ConfirmationDialog from 'components/ConfirmationDialog';
-import Button from '@skatteetaten/frontend-components/Button';
-import ActionButton from '@skatteetaten/frontend-components/ActionButton';
 import SkeLink from '../../../components/SkeLink';
 import DatabaseSchemaService from '../../../services/DatabaseSchemaService';
 
-const { skeColor } = palette;
+const { skeColor } = Palette;
 
 interface IDatabaseSchemaUpdateDialogProps {
   schema?: IDatabaseSchema;

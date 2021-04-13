@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
-import ActionButton, {
+import {
+  ActionButton,
   ActionButtonProps,
-} from '@skatteetaten/frontend-components/ActionButton';
+} from '@skatteetaten/frontend-components';
 
 export const EnterModeThenConfirm: React.FC<{
   confirmButtonEnabled: boolean;

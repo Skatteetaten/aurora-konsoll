@@ -1,7 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
-import Checkbox from '@skatteetaten/frontend-components/CheckBox';
-import TextField from '@skatteetaten/frontend-components/TextField';
+import { CheckBox, TextField } from '@skatteetaten/frontend-components';
 
 import LoadingButton from 'components/LoadingButton';
 import TimeSince from 'components/TimeSince';
@@ -77,21 +76,21 @@ export const ActionBar: React.FC<IActionBarProps> = ({
             value={quickFilter}
           />
         </div>
-        <Checkbox
+        <CheckBox
           boxSide={'start'}
           label="Vis semantisk versjon"
           checked={showSemanticVersion}
           onChange={toggleShowSemanticVersion}
           className="versionCheckbox"
         />
-        <Checkbox
+        <CheckBox
           boxSide={'start'}
           label="Vis hele applikasjonsnavnet"
           checked={expandApplicationName}
           onChange={() => setExpandApplicationName(!expandApplicationName)}
           className="versionCheckbox"
         />
-        <Checkbox
+        <CheckBox
           boxSide={'start'}
           label="Sorter etter antall applikasjoner"
           checked={sortBySizeAndAlphabetical}

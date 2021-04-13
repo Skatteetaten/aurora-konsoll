@@ -1,5 +1,5 @@
 import React from 'react';
-import MessageBar from '@skatteetaten/frontend-components/MessageBar';
+import { MessageBar } from '@skatteetaten/frontend-components';
 
 export const PermissionToUpgradeInformation = () => (
   <MessageBar>

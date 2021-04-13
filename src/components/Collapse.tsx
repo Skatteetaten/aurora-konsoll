@@ -1,6 +1,6 @@
 import * as React from 'react';
 
-import ActionButton from '@skatteetaten/frontend-components/ActionButton';
+import { ActionButton } from '@skatteetaten/frontend-components';
 
 interface ICollapseProps {
   children: JSX.Element;

@@ -1,9 +1,9 @@
 import * as React from 'react';
 import styled from 'styled-components';
 
-import palette from '@skatteetaten/frontend-components/utils/palette';
+import { Palette } from '@skatteetaten/frontend-components';
 
-const { skeColor } = palette;
+const { skeColor } = Palette;
 
 interface IFooterTextProps {
   filter?: string;

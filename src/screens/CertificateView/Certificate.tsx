@@ -1,14 +1,13 @@
 import * as React from 'react';
 import styled from 'styled-components';
 
-import TextField from '@skatteetaten/frontend-components/TextField';
+import { TextField, Spinner } from '@skatteetaten/frontend-components';
 
 import LoadingButton from 'components/LoadingButton';
 import { ICertificateResult, ICertificateView } from 'models/certificates';
 import CertificateService from 'services/CertificateService';
 import Table from './Table';
 import { TextFieldEvent } from 'types/react';
-import Spinner from '@skatteetaten/frontend-components/Spinner';
 import { SpinnerSize } from 'office-ui-fabric-react/lib-commonjs';
 
 interface ICertificateProps {

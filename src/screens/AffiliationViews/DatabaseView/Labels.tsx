@@ -1,7 +1,7 @@
 import * as React from 'react';
 import styled from 'styled-components';
 
-import TextField from '@skatteetaten/frontend-components/TextField';
+import { TextField } from '@skatteetaten/frontend-components';
 import { TextFieldEvent } from 'types/react';
 
 interface ILabelsProps {

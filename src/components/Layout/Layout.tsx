@@ -2,7 +2,7 @@ import * as React from 'react';
 
 import { connect } from 'react-redux';
 
-import Dropdown from '@skatteetaten/frontend-components/Dropdown';
+import { Dropdown } from '@skatteetaten/frontend-components';
 
 import { toDropdownOptions } from 'utils/aurora-frontend';
 

@@ -1,11 +1,11 @@
 import * as React from 'react';
 
-import palette from '@skatteetaten/frontend-components/utils/palette';
+import { Palette } from '@skatteetaten/frontend-components';
 
 import Tooltip from 'components/IconWithTooltip';
 import { VersionStatus, versionStatusMessage } from '../models/VersionStatus';
 
-const { skeColor } = palette;
+const { skeColor } = Palette;
 const bulletPoint = '\u2022';
 
 interface IDifferentVersionTooltipProps {

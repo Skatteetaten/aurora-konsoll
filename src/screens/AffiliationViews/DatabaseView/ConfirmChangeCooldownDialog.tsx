@@ -1,4 +1,4 @@
-import ActionButton from '@skatteetaten/frontend-components/ActionButton';
+import { ActionButton } from '@skatteetaten/frontend-components';
 import InfoDialog from 'components/InfoDialog';
 import React from 'react';
 import {

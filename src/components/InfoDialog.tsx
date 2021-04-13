@@ -1,8 +1,11 @@
 import React from 'react';
 
-import ActionButton from '@skatteetaten/frontend-components/ActionButton';
-import Button, { ButtonProps } from '@skatteetaten/frontend-components/Button';
-import Dialog from '@skatteetaten/frontend-components/Dialog';
+import {
+  Button,
+  ActionButton,
+  ButtonProps,
+  Dialog,
+} from '@skatteetaten/frontend-components';
 import styled from 'styled-components';
 
 const DialogSubText = styled<React.FC<{ className?: string }>>(

@@ -1,10 +1,11 @@
 import * as React from 'react';
 
-import ActionButton from '@skatteetaten/frontend-components/ActionButton';
-import RadioButtonGroup, {
+import {
+  ActionButton,
+  TextField,
+  RadioButtonGroup,
   RadioButtonGroupProps,
-} from '@skatteetaten/frontend-components/RadioButtonGroup';
-import TextField from '@skatteetaten/frontend-components/TextField';
+} from '@skatteetaten/frontend-components';
 import { TextFieldEvent } from 'types/react';
 
 export enum FilterMode {

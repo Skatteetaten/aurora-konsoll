@@ -1,8 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 
-import Button from '@skatteetaten/frontend-components/Button';
-import ActionButton from '@skatteetaten/frontend-components/ActionButton';
+import { Button, ActionButton } from '@skatteetaten/frontend-components';
 import { ActiveDeploymentInformation } from './ActiveDeploymentInformation';
 import { DeploymentSpecInformation } from './DeploymentSpecInformation';
 import { GitAndBuildInformation } from './GitAndBuildInformation';

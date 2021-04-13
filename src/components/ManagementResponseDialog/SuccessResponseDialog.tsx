@@ -4,10 +4,9 @@ import InfoDialog from 'components/InfoDialog';
 import { IManagementEndpointResponse } from 'models/Pod';
 import { prettifyJSON } from 'utils/string';
 import { StyledPre } from '../StyledPre';
-import Icon from '@skatteetaten/frontend-components/Icon';
-import palette from '@skatteetaten/frontend-components/utils/palette';
+import { Icon, Palette } from '@skatteetaten/frontend-components';
 
-const { skeColor } = palette;
+const { skeColor } = Palette;
 
 interface ISuccessResponseDialogProps {
   response: IManagementEndpointResponse;

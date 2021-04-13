@@ -1,6 +1,10 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import styled from 'styled-components';
-import TextField from '@skatteetaten/frontend-components/TextField';
+import {
+  TextField,
+  DetailsList,
+  Spinner,
+} from '@skatteetaten/frontend-components';
 import { TextFieldEvent } from '../../../types/react';
 import {
   IRestorableDatabaseSchemas,
@@ -18,9 +22,7 @@ import {
 import DatabaseSchemaUpdateDialog from './DatabaseSchemaUpdateDialog';
 import LoadingButton from 'components/LoadingButton';
 import ConfirmChangeCooldownDialog from './ConfirmChangeCooldownDialog';
-import DetailsList from '@skatteetaten/frontend-components/DetailsList';
 import { SpinnerSize } from 'office-ui-fabric-react';
-import Spinner from '@skatteetaten/frontend-components/Spinner';
 
 export interface IRestorableSchemaProps {
   className?: string;

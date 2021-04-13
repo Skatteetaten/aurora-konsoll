@@ -1,14 +1,17 @@
 import * as React from 'react';
 import styled from 'styled-components';
 
-import Card, { CardColor } from '@skatteetaten/frontend-components/Card';
-import Grid from '@skatteetaten/frontend-components/Grid';
+import {
+  Card,
+  CardColor,
+  Grid,
+  Spinner,
+} from '@skatteetaten/frontend-components';
 import {
   IDatabaseSchemas,
   IChangeCooldownDatabaseSchemasResponse,
 } from 'models/schemas';
 import { renderDetailsListWithSchemaInfo } from './Schema';
-import Spinner from '@skatteetaten/frontend-components/Spinner';
 import { SpinnerSize } from 'office-ui-fabric-react';
 
 interface IChangeCooldownSummaryProps {

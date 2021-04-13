@@ -1,6 +1,6 @@
 import React from 'react';
-import Callout from '@skatteetaten/frontend-components/Callout';
 
+import { Callout } from '@skatteetaten/frontend-components';
 import CalloutButton from 'components/CalloutButton';
 
 export const FetchVersionsInformation = () => (

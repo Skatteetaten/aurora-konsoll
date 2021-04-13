@@ -1,7 +1,7 @@
 import * as React from 'react';
 import styled from 'styled-components';
 
-import Icon from '@skatteetaten/frontend-components/Icon';
+import { Icon } from '@skatteetaten/frontend-components';
 
 interface IMenuCollapseButtonProps {
   className?: string;

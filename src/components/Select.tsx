@@ -3,10 +3,12 @@ import * as React from 'react';
 import ReactSelect from 'react-select';
 import { Theme } from 'react-select/src/types';
 
-import palette from '@skatteetaten/frontend-components/utils/palette';
-import { RadioButtonGroupProps } from '@skatteetaten/frontend-components/RadioButtonGroup';
+import {
+  Palette,
+  RadioButtonGroupProps,
+} from '@skatteetaten/frontend-components';
 
-const { skeColor } = palette;
+const { skeColor } = Palette;
 
 interface ISelectProps {
   options: Array<{

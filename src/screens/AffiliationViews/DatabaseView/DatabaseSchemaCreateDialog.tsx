@@ -1,9 +1,11 @@
 import * as React from 'react';
 import styled from 'styled-components';
 
-import ActionButton from '@skatteetaten/frontend-components/ActionButton';
-import Button from '@skatteetaten/frontend-components/Button';
-import Dialog from '@skatteetaten/frontend-components/Dialog';
+import {
+  Button,
+  ActionButton,
+  Dialog,
+} from '@skatteetaten/frontend-components';
 import LoadingButton from 'components/LoadingButton';
 import { IUserAndAffiliations } from 'models/ApplicationDeployment';
 import {

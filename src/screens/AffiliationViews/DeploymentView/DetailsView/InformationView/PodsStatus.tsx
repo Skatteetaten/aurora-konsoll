@@ -1,18 +1,20 @@
 import React from 'react';
 import styled from 'styled-components';
 
+import {
+  Icon,
+  Callout,
+  DetailsList,
+  ActionButton,
+} from '@skatteetaten/frontend-components';
 import { IPodResource, IPodsStatus } from 'models/Pod';
 import SortableDetailsList from 'components/SortableDetailsList';
 import PodsStatusService, {
   filterPodsStatus,
 } from 'services/PodsStatusService';
 import { IApplicationDeploymentDetails } from 'models/ApplicationDeployment';
-import Icon from '@skatteetaten/frontend-components/Icon';
 import { getLocalDatetime } from 'utils/date';
 import IconLink from 'components/IconLink';
-import Callout from '@skatteetaten/frontend-components/Callout';
-import DetailsList from '@skatteetaten/frontend-components/DetailsList';
-import ActionButton from '@skatteetaten/frontend-components/ActionButton';
 import ManagementResponseDialogSelector from 'components/ManagementResponseDialog';
 
 interface IPodsStatusProps {

@@ -1,7 +1,7 @@
 import { shallow } from 'enzyme';
 import * as React from 'react';
 
-import Checkbox from '@skatteetaten/frontend-components/CheckBox';
+import { CheckBox } from '@skatteetaten/frontend-components';
 import { IApplicationDeployment } from 'models/ApplicationDeployment';
 import { ImageTagType } from 'models/ImageTagType';
 
@@ -87,7 +87,7 @@ describe('Filter', () => {
         addErrors={() => {}}
       />
     );
-    const checkbox = wrapper.find(Checkbox);
+    const checkbox = wrapper.find(CheckBox);
     checkbox.at(applicationCheckboxIndex).simulate('change');
     const applications = wrapper.state('applications');
     expect(applications).toHaveLength(1);
@@ -108,7 +108,7 @@ describe('Filter', () => {
         addErrors={() => {}}
       />
     );
-    const checkbox = wrapper.find(Checkbox);
+    const checkbox = wrapper.find(CheckBox);
     checkbox.at(environmentCheckboxIndex).simulate('change');
     const applications = wrapper.state('applications');
     expect(applications).toHaveLength(0);
@@ -173,7 +173,7 @@ describe('Filter', () => {
       />
     );
 
-    wrapper.find(Checkbox).at(0).simulate('change');
+    wrapper.find(CheckBox).at(0).simulate('change');
 
     (wrapper.instance() as Filter).clearAllCheckboxes(
       SelectionType.Applications
@@ -182,7 +182,7 @@ describe('Filter', () => {
       SelectionType.Environments
     );
 
-    const checkboxes = wrapper.find(Checkbox);
+    const checkboxes = wrapper.find(CheckBox);
     expect(checkboxes.at(0).prop('checked')).toBeFalsy();
     expect(checkboxes.at(1).prop('checked')).toBeFalsy();
     expect(checkboxes.at(2).prop('checked')).toBeFalsy();
@@ -212,7 +212,7 @@ describe('Filter', () => {
       SelectionType.Environments
     );
 
-    const checkboxes = wrapper.find(Checkbox);
+    const checkboxes = wrapper.find(CheckBox);
     expect(checkboxes.at(0).prop('checked')).toBeTruthy();
     expect(checkboxes.at(1).prop('checked')).toBeTruthy();
     expect(checkboxes.at(2).prop('checked')).toBeTruthy();

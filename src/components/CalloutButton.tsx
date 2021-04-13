@@ -1,7 +1,6 @@
 import React, { useState, useRef } from 'react';
 
-import Callout from '@skatteetaten/frontend-components/Callout';
-import Button from '@skatteetaten/frontend-components/Button';
+import { Callout, Button } from '@skatteetaten/frontend-components';
 
 interface ICalloutProps extends React.ComponentProps<'div'> {
   title: string;

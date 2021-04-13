@@ -1,9 +1,10 @@
 import * as React from 'react';
 import { useEffect, useRef, useState } from 'react';
 
-import DetailsList, {
+import {
+  DetailsList,
   DetailsListProps,
-} from '@skatteetaten/frontend-components/DetailsList';
+} from '@skatteetaten/frontend-components';
 import { SortDirection } from 'models/SortDirection';
 import { createDate, dateValidation } from 'utils/date';
 

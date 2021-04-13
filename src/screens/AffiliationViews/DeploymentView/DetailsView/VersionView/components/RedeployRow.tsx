@@ -1,7 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 
-import Spinner from '@skatteetaten/frontend-components/Spinner';
+import { Spinner } from '@skatteetaten/frontend-components';
 
 import { IImageTag } from 'services/auroraApiClients/imageRepositoryClient/query';
 import { WrongVersionCallout } from './WrongVersionCallout';
