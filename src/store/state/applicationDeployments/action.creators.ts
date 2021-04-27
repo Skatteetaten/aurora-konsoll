@@ -85,6 +85,12 @@ export function fetchApplicationDeploymentWithDetails(
   );
 }
 
+export function setCurrentId(id: string | undefined): AsyncAction {
+  return (dispatch) => {
+    dispatch(actions.setCurrentId(id));
+  };
+}
+
 export function resetApplicationDeploymentState(): AsyncAction {
   return (dispatch) => {
     dispatch(actions.resetApplicationDeploymentState());

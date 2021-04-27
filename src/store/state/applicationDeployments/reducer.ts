@@ -14,6 +14,7 @@ interface IApplicationsState {
     requestApplications: Error[];
     requestApplicationDeployment: Error[];
   };
+  currentId?: string;
 }
 
 const initialState: IApplicationsState = {
@@ -38,6 +39,9 @@ export const applicationsReducer = reduceReducers<IApplicationsState>(
       state.isRefreshingForAffiliation = true;
       state.isFetching = true;
     }),
+    handleAction(actions.setCurrentId, (state, { payload }) => {
+      state.currentId = payload;
+    }),
     handleAction(actions.refreshApplicationDeployment, (state) => {
       state.isRefreshing = true;
     }),
@@ -59,7 +63,13 @@ export const applicationsReducer = reduceReducers<IApplicationsState>(
         state.isDeploying = false;
         state.isFetching = false;
         state.isRefreshing = false;
-        if (payload.data) {
+
+        const ApplicationDeploymentIdIsNotCurrentId =
+          payload.data &&
+          state.currentId &&
+          state.currentId !== payload.data.applicationDeployment.id;
+
+        if (payload.data && !ApplicationDeploymentIdIsNotCurrentId) {
           const newDeployment = new ApplicationDeployment(payload.data);
           state.applicationDeployment = newDeployment;
           state.applicationsConnection.updateApplicationDeployment(
