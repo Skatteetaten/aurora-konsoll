@@ -8,7 +8,7 @@ import {
   refreshApplicationDeployment,
   fetchApplicationDeploymentWithDetails,
   resetApplicationDeploymentState,
-  setCurrentId,
+  setApplicationDeploymentId,
 } from 'store/state/applicationDeployments/action.creators';
 import Spinner from '@skatteetaten/frontend-components/Spinner';
 import { SpinnerSize } from 'office-ui-fabric-react';
@@ -36,15 +36,15 @@ const ApplicationDeploymentSelector = ({
   isRefreshing,
   isFetching,
   resetApplicationDeploymentState,
-  setCurrentId,
+  setApplicationDeploymentId,
 }: Props) => {
   const match = useRouteMatch<ApplicationDeploymentMatchParams>();
 
   const id = (match && match.params.applicationDeploymentId) || undefined;
 
   useEffect(() => {
-    setCurrentId(id);
-  }, [id, setCurrentId]);
+    setApplicationDeploymentId(id);
+  }, [id, setApplicationDeploymentId]);
 
   useEffect(() => {
     if (id) {
@@ -85,7 +85,7 @@ const mapDispatchToProps = {
   deleteAndRefreshApplications,
   fetchApplicationDeploymentWithDetails,
   resetApplicationDeploymentState,
-  setCurrentId,
+  setApplicationDeploymentId,
 };
 
 const mapStateToProps = ({ applications }: RootState) => {
