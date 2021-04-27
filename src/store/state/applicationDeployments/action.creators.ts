@@ -1,6 +1,7 @@
 import { actions } from './actions';
 import { doAsyncActions } from 'utils/redux/action-utils';
 import { AsyncAction } from 'store/types';
+import { ApplicationDeployment } from 'models/immer/ApplicationDeployment';
 
 export function deleteAndRefreshApplications(
   affiliation: string,
@@ -83,6 +84,14 @@ export function fetchApplicationDeploymentWithDetails(
         applicationDeploymentId
       )
   );
+}
+
+export function setApplicationDeployment(
+  applicationDeployment: ApplicationDeployment
+): AsyncAction {
+  return (dispatch) => {
+    dispatch(actions.setApplicationDeployment(applicationDeployment));
+  };
 }
 
 export function resetApplicationDeploymentState(): AsyncAction {

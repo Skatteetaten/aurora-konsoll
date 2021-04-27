@@ -8,9 +8,11 @@ import {
   refreshApplicationDeployment,
   fetchApplicationDeploymentWithDetails,
   resetApplicationDeploymentState,
+  setApplicationDeployment,
 } from 'store/state/applicationDeployments/action.creators';
 import Spinner from '@skatteetaten/frontend-components/Spinner';
 import { SpinnerSize } from 'office-ui-fabric-react';
+import { usePrevious } from 'utils/hooks/usePrevious';
 
 export type ApplicationDeploymentMatchParams = {
   affiliation: string;
@@ -35,10 +37,13 @@ const ApplicationDeploymentSelector = ({
   isRefreshing,
   isFetching,
   resetApplicationDeploymentState,
+  setApplicationDeployment,
 }: Props) => {
   const match = useRouteMatch<ApplicationDeploymentMatchParams>();
 
   const id = (match && match.params.applicationDeploymentId) || undefined;
+
+  const prevApplicationDeployment = usePrevious(applicationDeployment);
 
   useEffect(() => {
     if (id) {
@@ -52,6 +57,25 @@ const ApplicationDeploymentSelector = ({
     id,
     resetApplicationDeploymentState,
     fetchApplicationDeploymentWithDetails,
+  ]);
+
+  useEffect(() => {
+    if (
+      id !== undefined &&
+      applicationDeployment !== undefined &&
+      id !== applicationDeployment.id &&
+      prevApplicationDeployment &&
+      prevApplicationDeployment.id === id
+    ) {
+      setApplicationDeployment(prevApplicationDeployment);
+    }
+  }, [
+    applicationDeployment,
+    fetchApplicationDeploymentWithDetails,
+    id,
+    prevApplicationDeployment,
+    resetApplicationDeploymentState,
+    setApplicationDeployment,
   ]);
 
   if (isFetching) {
@@ -79,6 +103,7 @@ const mapDispatchToProps = {
   deleteAndRefreshApplications,
   fetchApplicationDeploymentWithDetails,
   resetApplicationDeploymentState,
+  setApplicationDeployment,
 };
 
 const mapStateToProps = ({ applications }: RootState) => {

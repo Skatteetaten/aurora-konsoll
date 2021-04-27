@@ -7,6 +7,7 @@ import {
 import { IDataAndErrors } from 'services/GoboClient';
 import { createAsyncActions } from 'utils/redux/action-utils';
 import { createAction } from 'redux-ts-utils';
+import { ApplicationDeployment } from 'models/immer/ApplicationDeployment';
 
 const action = (action: string) => `applicationDeployments/${action}`;
 
@@ -36,6 +37,10 @@ const deleteApplicationDeploymentRequest = createAction<void>(
   action('DELETE_APPLICATION_DEPLOYMENT_REQUEST')
 );
 
+const setApplicationDeployment = createAction<ApplicationDeployment>(
+  action('SET_APPLICATION_DEPLOYMENT')
+);
+
 export const actions = {
   deployRequest,
   fetchApplicationDeployments,
@@ -44,6 +49,7 @@ export const actions = {
   resetApplicationDeploymentState,
   refreshApplicationDeployment,
   deleteApplicationDeploymentRequest,
+  setApplicationDeployment,
 };
 
 export type ApplicationsAction = ActionType<typeof actions>;

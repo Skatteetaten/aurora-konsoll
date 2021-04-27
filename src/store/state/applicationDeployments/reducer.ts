@@ -44,6 +44,9 @@ export const applicationsReducer = reduceReducers<IApplicationsState>(
     handleAction(actions.resetApplicationDeploymentState, (state) => {
       state.applicationDeployment = undefined;
     }),
+    handleAction(actions.setApplicationDeployment, (state, { payload }) => {
+      state.applicationDeployment = payload;
+    }),
     handleAction(actions.deployRequest, (state) => {
       state.isDeploying = true;
     }),
