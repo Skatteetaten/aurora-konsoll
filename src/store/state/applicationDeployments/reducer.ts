@@ -64,13 +64,13 @@ export const applicationsReducer = reduceReducers<IApplicationsState>(
         state.isFetching = false;
         state.isRefreshing = false;
 
-        const ApplicationDeploymentIdFromPayloadIsNotCurrent =
+        const isApplicationDeploymentIdFromPayloadSameAsCurrent =
           payload.data &&
           state.applicationDeploymentId &&
-          state.applicationDeploymentId !==
+          state.applicationDeploymentId ===
             payload.data.applicationDeployment.id;
 
-        if (payload.data && !ApplicationDeploymentIdFromPayloadIsNotCurrent) {
+        if (payload.data && isApplicationDeploymentIdFromPayloadSameAsCurrent) {
           const newDeployment = new ApplicationDeployment(payload.data);
           state.applicationDeployment = newDeployment;
           state.applicationsConnection.updateApplicationDeployment(
