@@ -36,6 +36,10 @@ const deleteApplicationDeploymentRequest = createAction<void>(
   action('DELETE_APPLICATION_DEPLOYMENT_REQUEST')
 );
 
+const setApplicationDeploymentId = createAction<string | undefined>(
+  action('SET_APPLICATION_DEPLOYMENT_ID')
+);
+
 export const actions = {
   deployRequest,
   fetchApplicationDeployments,
@@ -44,6 +48,7 @@ export const actions = {
   resetApplicationDeploymentState,
   refreshApplicationDeployment,
   deleteApplicationDeploymentRequest,
+  setApplicationDeploymentId,
 };
 
 export type ApplicationsAction = ActionType<typeof actions>;
