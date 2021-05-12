@@ -1,13 +1,13 @@
-import { createAction, TsActionCreator } from 'redux-ts-utils';
+import { createAction, PayloadActionCreator } from '@reduxjs/toolkit';
 import { IApiClients } from 'models/AuroraApi';
 import { RootState, AsyncAction } from 'store/types';
 import { addCurrentErrors } from 'screens/ErrorHandler/state/actions';
 import { IDataAndErrors } from 'services/GoboClient';
 
 export type RequestActions<P, F = Error> = {
-  request: TsActionCreator<void>;
-  success: TsActionCreator<P>;
-  failure: TsActionCreator<F>;
+  request: PayloadActionCreator<void>;
+  success: PayloadActionCreator<P>;
+  failure: PayloadActionCreator<F>;
 };
 
 export function createAsyncActions<P, F = Error>(

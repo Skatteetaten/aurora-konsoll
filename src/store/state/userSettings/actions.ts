@@ -2,7 +2,7 @@ import { ActionType } from 'typesafe-actions';
 import { createAsyncActions } from 'utils/redux/action-utils';
 import { IDataAndErrors } from 'services/GoboClient';
 import { IUserSettingsData } from 'services/auroraApiClients/userSettingsClient/query';
-import { createAction } from 'redux-ts-utils';
+import { createAction } from '@reduxjs/toolkit';
 
 const action = (action: string) => `userSettings/${action}`;
 
