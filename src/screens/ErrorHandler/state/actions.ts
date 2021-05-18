@@ -1,4 +1,4 @@
-import { createAction } from 'redux-ts-utils';
+import { createAction } from '@reduxjs/toolkit';
 import { Thunk, AsyncAction } from 'store/types';
 import { IAppError, IErrors } from 'models/errors';
 import { IDataAndErrors } from 'services/GoboClient';
@@ -8,7 +8,7 @@ const errors = (action: string) => `errors/${action}`;
 
 export const errorsResponse = createAction<IErrors>(errors('ERRORS'));
 
-export const incrementErrorId = createAction<number>(
+export const incrementErrorId = createAction<void>(
   errors('INCREMENT_ERROR_ID_COUNT')
 );
 

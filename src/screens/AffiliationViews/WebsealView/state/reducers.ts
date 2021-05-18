@@ -1,5 +1,5 @@
 import { IWebsealState } from 'models/Webseal';
-import { handleAction, reduceReducers } from 'redux-ts-utils';
+import { createReducer } from '@reduxjs/toolkit';
 import { ActionType } from 'typesafe-actions';
 import actions, {
   fetchWebsealStatesRequest,
@@ -13,11 +13,9 @@ export interface IWebsealReduxState {
   readonly websealStates: IWebsealState[];
 }
 
-const InitialState = (): IWebsealReduxState => {
-  return {
-    isFetchingWebsealStates: false,
-    websealStates: [],
-  };
+const initialState: IWebsealReduxState = {
+  isFetchingWebsealStates: false,
+  websealStates: [],
 };
 
 function updateStateWithPayload(name: string) {
@@ -26,16 +24,13 @@ function updateStateWithPayload(name: string) {
   };
 }
 
-export const websealReducer = reduceReducers<IWebsealReduxState>(
-  [
-    handleAction(
-      fetchWebsealStatesRequest,
-      updateStateWithPayload('isFetchingWebsealStates')
-    ),
-    handleAction(
-      fetchWebsealStatesResponse,
-      updateStateWithPayload('websealStates')
-    ),
-  ],
-  InitialState()
-);
+export const websealReducer = createReducer(initialState, (builder) => {
+  builder.addCase(
+    fetchWebsealStatesRequest,
+    updateStateWithPayload('isFetchingWebsealStates')
+  );
+  builder.addCase(
+    fetchWebsealStatesResponse,
+    updateStateWithPayload('websealStates')
+  );
+});

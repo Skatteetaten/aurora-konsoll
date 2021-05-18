@@ -1,4 +1,4 @@
-import { handleAction, reduceReducers } from 'redux-ts-utils';
+import { createReducer } from '@reduxjs/toolkit';
 import { ActionType } from 'typesafe-actions';
 import actions, {
   errorsResponse,
@@ -10,9 +10,9 @@ import { IErrors, IAppError } from 'models/errors';
 export type ErrorsAction = ActionType<typeof actions>;
 
 export interface IErrorsState {
-  readonly errors: IErrors;
-  readonly errorCount: number;
-  readonly nextError?: IAppError;
+  errors: IErrors;
+  errorCount: number;
+  nextError?: IAppError;
 }
 
 function updateStateWithPayload(name: string) {
@@ -35,11 +35,8 @@ const initialState: IErrorsState = {
   errorCount: 0,
 };
 
-export const errorsReducer = reduceReducers<IErrorsState>(
-  [
-    handleAction(errorsResponse, updateStateWithPayload('errors')),
-    handleAction(nextErrorResponse, updateStateWithPayload('nextError')),
-    handleAction(incrementErrorId, incrementState('errorCount')),
-  ],
-  initialState
-);
+export const errorsReducer = createReducer(initialState, (builder) => {
+  builder.addCase(errorsResponse, updateStateWithPayload('errors'));
+  builder.addCase(nextErrorResponse, updateStateWithPayload('nextError'));
+  builder.addCase(incrementErrorId, incrementState('errorCount'));
+});

@@ -24,7 +24,7 @@ import {
   ITestJDBCResponse,
   IDatabaseSchemasWithPageInfo,
 } from 'models/schemas';
-import { handleAction, reduceReducers } from 'redux-ts-utils';
+import { createReducer } from '@reduxjs/toolkit';
 
 export type DatabaseSchemasAction = ActionType<typeof actions>;
 
@@ -43,28 +43,26 @@ export interface ISchemasState {
   readonly isFetchingRestorableSchemas: boolean;
 }
 
-const initialState = (): ISchemasState => {
-  return {
-    isFetchingSchemas: false,
-    isFetchingNextSchemas: false,
-    databaseSchemas: {
-      databaseSchemas: [],
-      pageInfo: { endCursor: '', hasNextPage: false },
-      totalCount: 0,
-    },
-    restorableDatabaseSchemas: { restorableDatabaseSchemas: [] },
-    isFetchingInstances: false,
-    databaseInstances: { databaseInstances: [] },
-    updateSchemaResponse: false,
-    deleteSchemasResponse: { failed: [], succeeded: [] },
-    restoreSchemasResponse: { failed: [], succeeded: [] },
-    testJdbcConnectionResponse: { hasSucceeded: false, message: 'failed' },
-    createDatabaseSchemaResponse: {
-      id: '',
-      jdbcUser: { jdbcUrl: '', username: '', password: '' },
-    },
-    isFetchingRestorableSchemas: false,
-  };
+const initialState: ISchemasState = {
+  isFetchingSchemas: false,
+  isFetchingNextSchemas: false,
+  databaseSchemas: {
+    databaseSchemas: [],
+    pageInfo: { endCursor: '', hasNextPage: false },
+    totalCount: 0,
+  },
+  restorableDatabaseSchemas: { restorableDatabaseSchemas: [] },
+  isFetchingInstances: false,
+  databaseInstances: { databaseInstances: [] },
+  updateSchemaResponse: false,
+  deleteSchemasResponse: { failed: [], succeeded: [] },
+  restoreSchemasResponse: { failed: [], succeeded: [] },
+  testJdbcConnectionResponse: { hasSucceeded: false, message: 'failed' },
+  createDatabaseSchemaResponse: {
+    id: '',
+    jdbcUser: { jdbcUrl: '', username: '', password: '' },
+  },
+  isFetchingRestorableSchemas: false,
 };
 
 function updateStateWithPayload(name: string) {
@@ -73,64 +71,61 @@ function updateStateWithPayload(name: string) {
   };
 }
 
-export const databaseReducer = reduceReducers<ISchemasState>(
-  [
-    handleAction(
-      fetchSchemaRequest,
-      updateStateWithPayload('isFetchingSchemas')
-    ),
-    handleAction(
-      fetchNextSchemaRequest,
-      updateStateWithPayload('isFetchingNextSchemas')
-    ),
-    handleAction(
-      fetchSchemaResponse,
-      updateStateWithPayload('databaseSchemas')
-    ),
-    handleAction(
-      fetchRestorableSchemaRequest,
-      updateStateWithPayload('isFetchingRestorableSchemas')
-    ),
-    handleAction(
-      fetchRestorableSchemaResponse,
-      updateStateWithPayload('restorableDatabaseSchemas')
-    ),
-    handleAction(
-      fetchInstanceRequest,
-      updateStateWithPayload('isFetchingInstances')
-    ),
-    handleAction(
-      fetchInstanceResponse,
-      updateStateWithPayload('databaseInstances')
-    ),
-    handleAction(
-      updateSchemaResponse,
-      updateStateWithPayload('updateSchemaResponse')
-    ),
-    handleAction(
-      deleteSchemaResponse,
-      updateStateWithPayload('deleteSchemasResponse')
-    ),
-    handleAction(
-      deleteSchemasResponse,
-      updateStateWithPayload('deleteSchemasResponse')
-    ),
-    handleAction(
-      restoreSchemasResponse,
-      updateStateWithPayload('restoreSchemasResponse')
-    ),
-    handleAction(
-      testJdbcConnectionForIdResponse,
-      updateStateWithPayload('testJdbcConnectionResponse')
-    ),
-    handleAction(
-      testJdbcConnectionForJdbcUserResponse,
-      updateStateWithPayload('testJdbcConnectionResponse')
-    ),
-    handleAction(
-      createDatabaseSchemaResponse,
-      updateStateWithPayload('createDatabaseSchemaResponse')
-    ),
-  ],
-  initialState()
-);
+export const databaseReducer = createReducer(initialState, (builder) => {
+  builder.addCase(
+    fetchSchemaRequest,
+    updateStateWithPayload('isFetchingSchemas')
+  );
+  builder.addCase(
+    fetchNextSchemaRequest,
+    updateStateWithPayload('isFetchingNextSchemas')
+  );
+  builder.addCase(
+    fetchSchemaResponse,
+    updateStateWithPayload('databaseSchemas')
+  );
+  builder.addCase(
+    fetchRestorableSchemaRequest,
+    updateStateWithPayload('isFetchingRestorableSchemas')
+  );
+  builder.addCase(
+    fetchRestorableSchemaResponse,
+    updateStateWithPayload('restorableDatabaseSchemas')
+  );
+  builder.addCase(
+    fetchInstanceRequest,
+    updateStateWithPayload('isFetchingInstances')
+  );
+  builder.addCase(
+    fetchInstanceResponse,
+    updateStateWithPayload('databaseInstances')
+  );
+  builder.addCase(
+    updateSchemaResponse,
+    updateStateWithPayload('updateSchemaResponse')
+  );
+  builder.addCase(
+    deleteSchemaResponse,
+    updateStateWithPayload('deleteSchemasResponse')
+  );
+  builder.addCase(
+    deleteSchemasResponse,
+    updateStateWithPayload('deleteSchemasResponse')
+  );
+  builder.addCase(
+    restoreSchemasResponse,
+    updateStateWithPayload('restoreSchemasResponse')
+  );
+  builder.addCase(
+    testJdbcConnectionForIdResponse,
+    updateStateWithPayload('testJdbcConnectionResponse')
+  );
+  builder.addCase(
+    testJdbcConnectionForJdbcUserResponse,
+    updateStateWithPayload('testJdbcConnectionResponse')
+  );
+  builder.addCase(
+    createDatabaseSchemaResponse,
+    updateStateWithPayload('createDatabaseSchemaResponse')
+  );
+});
