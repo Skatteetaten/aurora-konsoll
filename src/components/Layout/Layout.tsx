@@ -73,6 +73,11 @@ const Layout = ({
       name: 'Sertifikater',
       to: '/certificates',
     },
+    {
+      iconName: 'Earth',
+      name: 'DNS',
+      to: `/a/${affiliation || '_'}/dns`,
+    },
   ];
 
   const menuLinks: IMenuNavLinkData[] = [

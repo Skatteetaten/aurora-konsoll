@@ -22,6 +22,7 @@ import GoboClient from 'services/GoboClient';
 import createStoreWithApi from 'store';
 import { requestCurrentUser } from 'store/state/startup/action.creators';
 import './index.css';
+import { DnsClient } from 'services/auroraApiClients/dnsClient/client';
 
 async function init() {
   const configOrError = await fetchConfiguration();
@@ -59,6 +60,7 @@ async function init() {
     databaseClient: new DatabaseClient(goboClient),
     websealClient: new WebsealClient(goboClient),
     certificateClient: new CertificateClient(goboClient),
+    dnsClient: new DnsClient(goboClient),
   };
 
   const store = createStoreWithApi(clients);
