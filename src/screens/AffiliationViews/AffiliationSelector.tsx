@@ -24,7 +24,7 @@ const AffiliationSelector = ({
       <div>
         <h1>{title}</h1>
         <div className="affiliation-list">
-          {affiliations
+          {[...affiliations]
             .sort((a1, a2) => a1.localeCompare(a2))
             .map((a) => {
               return (

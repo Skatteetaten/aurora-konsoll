@@ -23,7 +23,6 @@ export const startupReducer = createReducer(initialState, (builder) => {
     state.isLoading = false;
     if (payload.data) {
       const { affiliations, currentUser } = payload.data;
-      console.log(affiliations.edges.map((edge) => edge.node.name));
       state.currentUser = {
         id: currentUser.id,
         user: formatName(currentUser.name),
@@ -31,7 +30,6 @@ export const startupReducer = createReducer(initialState, (builder) => {
       };
     }
     if (payload.errors) {
-      console.log(payload.errors);
       state.errors.push(...payload.errors);
     }
   });
