@@ -380,7 +380,6 @@ export const errorsStateFactory = Factory.Sync.makeFactory<IErrorsState>({
   errorCount: 0,
   errors: errorStateFactory.build(),
   nextError: undefined,
-  errorId: 0,
 });
 
 export const aclFactory = Factory.Sync.makeFactory<IAcl>({

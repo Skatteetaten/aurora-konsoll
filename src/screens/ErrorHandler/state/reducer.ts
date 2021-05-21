@@ -1,12 +1,10 @@
 import { createReducer } from '@reduxjs/toolkit';
 import { ActionType } from 'typesafe-actions';
 import actions, {
-  errorsResponse,
-  nextErrorResponse,
-  errorId,
-  nextErr,
-  closeAllErrors,
-  addAllErrors,
+  closeError,
+  getNextError,
+  closeErrors,
+  addErrors,
 } from './actions';
 import { IErrors, IAppError } from 'models/errors';
 import { Logger } from 'services/LoggerService';
@@ -17,13 +15,6 @@ export interface IErrorsState {
   errors: IErrors;
   errorCount: number;
   nextError?: IAppError;
-  errorId: number;
-}
-
-function updateStateWithPayload(name: string) {
-  return (state: IErrorsState, { payload }: ErrorsAction) => {
-    state[name] = payload;
-  };
 }
 
 const initialState: IErrorsState = {
@@ -32,7 +23,6 @@ const initialState: IErrorsState = {
     errorQueue: [],
   },
   errorCount: 0,
-  errorId: 0,
 };
 
 const isIntegrationDisabledError = (e: any) => {
@@ -51,52 +41,41 @@ const isIntegrationDisabledError = (e: any) => {
 };
 
 export const errorsReducer = createReducer(initialState, (builder) => {
-  builder.addCase(errorsResponse, updateStateWithPayload('errors'));
-  builder.addCase(nextErrorResponse, updateStateWithPayload('nextError'));
-  builder.addCase(errorId, (state, { payload }) => {
-    const copiedState = Object.assign({}, state.errors);
-    const err = copiedState.allErrors[payload];
+  builder.addCase(closeError, (state, { payload }) => {
+    const err = state.errors.allErrors[payload];
     if (!err) {
       throw new Error(`No such error ${payload}`);
     }
     err.isActive = false;
-    state.errors = copiedState;
     state.nextError = undefined;
   });
-  builder.addCase(nextErr, (state) => {
-    const copiedState = Object.assign({}, state.errors);
-
-    const next = copiedState.errorQueue.pop();
+  builder.addCase(getNextError, (state) => {
+    const next = state.errors.errorQueue.pop();
     if (!next) {
       state.nextError = undefined;
     } else {
-      copiedState.allErrors[next.id] = next;
-      state.errors = copiedState;
+      state.errors.allErrors[next.id] = next;
       state.nextError = next;
     }
   });
-  builder.addCase(closeAllErrors, (state) => {
-    const copiedState = Object.assign({}, state.errors);
+  builder.addCase(closeErrors, (state) => {
     const setIsActiveFalse = (err: IAppError) =>
       err.isActive === true && (err.isActive = false);
 
-    for (const key in copiedState.allErrors) {
-      setIsActiveFalse(copiedState.allErrors[key]);
+    for (const key in state.errors.allErrors) {
+      setIsActiveFalse(state.errors.allErrors[key]);
     }
 
-    copiedState.errorQueue.forEach((err) => {
+    state.errors.errorQueue.forEach((err) => {
       setIsActiveFalse(err);
     });
 
     if (state.nextError) {
       state.nextError.isActive = false;
     }
-
-    state.errors = copiedState;
   });
 
-  builder.addCase(addAllErrors, (state, { payload }) => {
-    const copiedState = Object.assign({}, state.errors);
+  builder.addCase(addErrors, (state, { payload }) => {
     payload.errors.forEach((e) => {
       if (!isIntegrationDisabledError(e)) {
         Logger.error(e.message, {
@@ -104,7 +83,7 @@ export const errorsReducer = createReducer(initialState, (builder) => {
         });
         state.errorCount += 1;
 
-        copiedState.errorQueue.push({
+        state.errors.errorQueue.push({
           error: {
             stack: JSON.stringify(e.extensions),
             message: e.message,
@@ -115,7 +94,5 @@ export const errorsReducer = createReducer(initialState, (builder) => {
         });
       }
     });
-
-    state.errors = copiedState;
   });
 });
