@@ -3,6 +3,7 @@ import * as React from 'react';
 import DnsTable from './DnsTable';
 import styled from 'styled-components';
 import { DnsRawEntry } from 'services/auroraApiClients/dnsClient/query';
+import Spinner from '@skatteetaten/frontend-components/Spinner';
 
 interface props {
   affiliation: string;
@@ -19,6 +20,10 @@ const DnsView = ({
   dnsEntries,
   loading,
 }: props) => {
+  React.useEffect(() => {
+    onFetch('');
+  }, [affiliation, onFetch]);
+
   return (
     <div className={className}>
       <div className="body-wrapper">
@@ -33,7 +38,11 @@ const DnsView = ({
             Oppdater
           </LoadingButton>
         </div>
-        <DnsTable dnsEntries={dnsEntries} />
+        {loading ? (
+          <Spinner size={Spinner.Size.large} />
+        ) : (
+          <DnsTable dnsEntries={dnsEntries} />
+        )}
       </div>
     </div>
   );
@@ -41,7 +50,6 @@ const DnsView = ({
 
 export default styled(DnsView)`
   max-height: 100%;
-  overflow-x: auto;
 
   .ms-List-cell {
     cursor: pointer;

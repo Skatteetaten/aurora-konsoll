@@ -16,12 +16,16 @@ export const dnsReducer = reduceReducers<IDnsState>(
   [
     handleAction(actions.fetchDnsEntries.request, (state) => {
       state.isFetching = true;
+      state.dnsEntires = [];
     }),
     handleAction(actions.fetchDnsEntries.success, (state, { payload }) => {
       state.isFetching = false;
       if (payload.data) {
         state.dnsEntires = payload.data.dnsEntires;
       }
+    }),
+    handleAction(actions.fetchDnsEntries.failure, (state) => {
+      state.isFetching = false;
     }),
   ],
   initialState
