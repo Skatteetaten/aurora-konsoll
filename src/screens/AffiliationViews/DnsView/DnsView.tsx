@@ -33,7 +33,7 @@ const DnsView = ({
             style={{ minWidth: '141px' }}
             icon="Update"
             loading={loading}
-            onClick={() => onFetch('aurora')}
+            onClick={() => onFetch(affiliation)}
           >
             Oppdater
           </LoadingButton>
