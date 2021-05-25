@@ -1,4 +1,10 @@
-export interface DnsRawEntry {
+import gql from 'graphql-tag';
+
+export interface CnameInfosQuery {
+  cnameInfo?: CnameInfo[];
+}
+
+export interface CnameInfo {
   status: string;
   clusterId: string;
   appName: string;
@@ -12,4 +18,20 @@ export interface DnsRawEntry {
   };
 }
 
-export const dnsEntiress: DnsRawEntry[] = [];
+export const CNAME_INFO_QUERY = gql`
+  query getCnameInfo($affiliation: String!) {
+    cnameInfo(affiliations: [$affiliation]) {
+      appName
+      clusterId
+      message
+      namespace
+      routeName
+      status
+      entry {
+        cname
+        host
+        ttl
+      }
+    }
+  }
+`;

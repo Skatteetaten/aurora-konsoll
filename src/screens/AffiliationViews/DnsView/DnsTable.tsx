@@ -1,11 +1,11 @@
 import Table from '@skatteetaten/frontend-components/Table';
 import * as React from 'react';
-import { DnsRawEntry } from 'services/auroraApiClients/dnsClient/query';
+import { CnameInfo } from 'services/auroraApiClients/dnsClient/query';
 import styled from 'styled-components';
 import { DnsEntry } from './models/dns';
 
 interface props {
-  dnsEntries: DnsRawEntry[];
+  dnsEntries: CnameInfo[];
 }
 
 const DnsTable = ({ dnsEntries }: props) => {

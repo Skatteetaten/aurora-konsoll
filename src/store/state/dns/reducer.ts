@@ -1,15 +1,17 @@
 import { handleAction, reduceReducers } from 'redux-ts-utils';
-import { DnsRawEntry } from 'services/auroraApiClients/dnsClient/query';
+import { CnameInfo } from 'services/auroraApiClients/dnsClient/query';
 import { actions } from './actions';
 
 interface IDnsState {
   isFetching: boolean;
-  dnsEntires: DnsRawEntry[];
+  dnsEntires?: CnameInfo[];
+  errors: Error[];
 }
 
 const initialState: IDnsState = {
   isFetching: false,
   dnsEntires: [],
+  errors: [],
 };
 
 export const dnsReducer = reduceReducers<IDnsState>(
@@ -21,11 +23,15 @@ export const dnsReducer = reduceReducers<IDnsState>(
     handleAction(actions.fetchDnsEntries.success, (state, { payload }) => {
       state.isFetching = false;
       if (payload.data) {
-        state.dnsEntires = payload.data.dnsEntires;
+        state.dnsEntires = payload.data.cnameInfo;
+      }
+      if (payload.errors) {
+        state.errors.push(...payload.errors);
       }
     }),
-    handleAction(actions.fetchDnsEntries.failure, (state) => {
+    handleAction(actions.fetchDnsEntries.failure, (state, { payload }) => {
       state.isFetching = false;
+      state.errors.push(payload);
     }),
   ],
   initialState

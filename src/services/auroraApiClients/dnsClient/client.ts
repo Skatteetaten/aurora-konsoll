@@ -1,9 +1,5 @@
 import GoboClient, { IDataAndErrors } from 'services/GoboClient';
-import { dnsEntiress, DnsRawEntry } from './query';
-
-export interface IDnsQuery {
-  dnsEntires: DnsRawEntry[];
-}
+import { CnameInfosQuery, CNAME_INFO_QUERY } from './query';
 
 export class DnsClient {
   private client: GoboClient;
@@ -14,8 +10,12 @@ export class DnsClient {
 
   public async fetchDnsEntries(
     affiliation: string
-  ): Promise<IDataAndErrors<IDnsQuery>> {
-    await new Promise((r) => setTimeout(r, 1000));
-    return { data: { dnsEntires: dnsEntiress }, name: 'test' };
+  ): Promise<IDataAndErrors<CnameInfosQuery>> {
+    return await this.client.query<CnameInfosQuery>({
+      query: CNAME_INFO_QUERY,
+      variables: {
+        affiliation,
+      },
+    });
   }
 }

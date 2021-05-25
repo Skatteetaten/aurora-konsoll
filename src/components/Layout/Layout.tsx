@@ -25,6 +25,7 @@ interface ILayoutProps {
   onAffiliationChange: (affiliation: string) => void;
   displayDatabaseView: boolean;
   displaySkapViews: boolean;
+  displayDnsView: boolean;
   currentUser?: IUserAndAffiliations;
 }
 
@@ -44,6 +45,7 @@ const Layout = ({
   onAffiliationChange,
   displayDatabaseView,
   displaySkapViews,
+  displayDnsView,
   currentUser = defaultUser,
 }: ILayoutProps) => {
   const onAffiliationChanged = (
@@ -73,12 +75,12 @@ const Layout = ({
       name: 'Sertifikater',
       to: '/certificates',
     },
-    {
-      iconName: 'Earth',
-      name: 'DNS',
-      to: `/a/${affiliation || '_'}/dns`,
-    },
   ];
+  const dnsMenuLink: IMenuNavLinkData = {
+    iconName: 'Earth',
+    name: 'DNS',
+    to: `/a/${affiliation || '_'}/dns`,
+  };
 
   const menuLinks: IMenuNavLinkData[] = [
     {
@@ -99,6 +101,10 @@ const Layout = ({
 
   if (displaySkapViews) {
     menuLinks.push(...skapMenuLinks);
+  }
+
+  if (displayDnsView) {
+    menuLinks.push(dnsMenuLink);
   }
 
   menuLinks.map((item) => ({

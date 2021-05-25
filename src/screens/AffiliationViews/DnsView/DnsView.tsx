@@ -2,14 +2,14 @@ import LoadingButton from 'components/LoadingButton';
 import * as React from 'react';
 import DnsTable from './DnsTable';
 import styled from 'styled-components';
-import { DnsRawEntry } from 'services/auroraApiClients/dnsClient/query';
 import Spinner from '@skatteetaten/frontend-components/Spinner';
+import { CnameInfo } from 'services/auroraApiClients/dnsClient/query';
 
 interface props {
   affiliation: string;
   className?: string;
   loading: boolean;
-  dnsEntries: DnsRawEntry[];
+  dnsEntries: CnameInfo[];
   onFetch: (affiliation: string) => void;
 }
 

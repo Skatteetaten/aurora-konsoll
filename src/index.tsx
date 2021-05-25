@@ -72,6 +72,7 @@ async function init() {
         <App
           tokenStore={tokenStore}
           displayDatabaseView={config.DBH_ENABLED}
+          displayDnsView={config.GAVEL_ENABLED}
           displaySkapViews={config.SKAP_ENABLED}
         />
       </BrowserRouter>
