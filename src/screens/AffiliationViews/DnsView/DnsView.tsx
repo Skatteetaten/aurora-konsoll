@@ -21,7 +21,7 @@ const DnsView = ({
   loading,
 }: props) => {
   React.useEffect(() => {
-    onFetch('');
+    onFetch(affiliation);
   }, [affiliation, onFetch]);
 
   return (

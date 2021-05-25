@@ -11,6 +11,7 @@ import {
   GOBO_URL,
   PORT,
   SKAP_ENABLED,
+  GAVEL_ENABLED,
 } from './config';
 import { managementInterfaceServer } from './ManagementInterface';
 
@@ -45,6 +46,7 @@ app.get('/api/config', (req, res) => {
     APPLICATION_NAME,
     DBH_ENABLED,
     SKAP_ENABLED,
+    GAVEL_ENABLED,
   });
 });
 
