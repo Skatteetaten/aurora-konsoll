@@ -6,7 +6,7 @@ import { DatabaseViewRoutes } from './DatabaseView/DatabaseViewRoutes';
 import WebsealViewController from './WebsealView/WebsealViewController';
 import { AffiliationViewValidatorState } from './AffiliationViewValidatorConnected';
 import { DeploymentViewContainer } from './DeploymentView/DeploymentViewContainer';
-import DnsViewController from './DnsView/DnsViewController';
+import { DnsViewContainer } from './DnsView/DnsViewContainer';
 
 interface IAffiliationViewValidatorProps {
   affiliation?: string;
@@ -76,7 +76,7 @@ export const AffiliationViewValidator: React.FC<Props> = ({
         <WebsealViewController affiliation={affiliation} />
       </Route>
       <Route path="/a/:affiliation/dns">
-        <DnsViewController affiliation={affiliation} />
+        <DnsViewContainer affiliation={affiliation} />
       </Route>
     </Switch>
   );

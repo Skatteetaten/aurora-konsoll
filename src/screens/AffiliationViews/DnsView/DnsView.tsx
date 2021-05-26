@@ -8,8 +8,8 @@ import { CnameInfo } from 'services/auroraApiClients/dnsClient/query';
 interface props {
   affiliation: string;
   className?: string;
-  loading: boolean;
-  dnsEntries: CnameInfo[];
+  isFetching: boolean;
+  cnameInfos: CnameInfo[];
   onFetch: (affiliation: string) => void;
 }
 
@@ -17,8 +17,8 @@ const DnsView = ({
   affiliation,
   className,
   onFetch,
-  dnsEntries,
-  loading,
+  cnameInfos,
+  isFetching,
 }: props) => {
   React.useEffect(() => {
     onFetch(affiliation);
@@ -32,16 +32,16 @@ const DnsView = ({
           <LoadingButton
             style={{ minWidth: '141px' }}
             icon="Update"
-            loading={loading}
+            loading={isFetching}
             onClick={() => onFetch(affiliation)}
           >
             Oppdater
           </LoadingButton>
         </div>
-        {loading ? (
+        {isFetching ? (
           <Spinner size={Spinner.Size.large} />
         ) : (
-          <DnsTable dnsEntries={dnsEntries} />
+          <DnsTable dnsEntries={cnameInfos} />
         )}
       </div>
     </div>
