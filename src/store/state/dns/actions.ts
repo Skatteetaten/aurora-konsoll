@@ -6,12 +6,12 @@ import { CnameInfosQuery } from 'services/auroraApiClients/dnsClient/query';
 
 const action = (action: string) => `dns/${action}`;
 
-const fetchDnsEntries = createAsyncActions<IDataAndErrors<CnameInfosQuery>>(
-  action('FETCH_DNS_ENTRIES')
-);
+const fetchCnameInfosRequest = createAsyncActions<
+  IDataAndErrors<CnameInfosQuery>
+>(action('FETCH_CNAME_INFOS'));
 
 export const actions = {
-  fetchDnsEntries,
+  fetchCnameInfosRequest,
 };
 
 export type DnsAction = ActionType<typeof actions>;

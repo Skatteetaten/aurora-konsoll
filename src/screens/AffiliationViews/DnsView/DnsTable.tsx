@@ -1,25 +1,24 @@
 import Table from '@skatteetaten/frontend-components/Table';
-import * as React from 'react';
+import React from 'react';
 import { CnameInfo } from 'services/auroraApiClients/dnsClient/query';
 import styled from 'styled-components';
 import { DnsEntry } from 'models/Dns';
 
 interface props {
-  dnsEntries: CnameInfo[];
+  cnameInfos: CnameInfo[];
 }
 
-const DnsTable = ({ dnsEntries }: props) => {
-  const dnsEntires: DnsEntry[] = dnsEntries.map((it) => {
+const DnsTable = ({ cnameInfos }: props) => {
+  const cnameInfosData: DnsEntry[] = cnameInfos.map((it) => {
     return { ...it, cname: it.entry.cname, ttl: it.entry.ttl };
   });
 
   return (
     <TableWrapper>
-      {dnsEntires.length === 0 && <p>Finner ingen DNS entries</p>}
-      {dnsEntires.length > 0 && (
+      {cnameInfosData.length > 0 ? (
         <Table
           style={{ background: 'white' }}
-          data={dnsEntires}
+          data={cnameInfosData}
           columns={[
             {
               name: 'Status',
@@ -58,6 +57,8 @@ const DnsTable = ({ dnsEntries }: props) => {
             },
           ]}
         />
+      ) : (
+        <p>Finner ingen DNS entries</p>
       )}
     </TableWrapper>
   );

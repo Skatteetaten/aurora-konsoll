@@ -1,5 +1,5 @@
 import LoadingButton from 'components/LoadingButton';
-import * as React from 'react';
+import React, { useEffect } from 'react';
 import DnsTable from './DnsTable';
 import styled from 'styled-components';
 import Spinner from '@skatteetaten/frontend-components/Spinner';
@@ -20,7 +20,7 @@ const DnsView = ({
   cnameInfos,
   isFetching,
 }: props) => {
-  React.useEffect(() => {
+  useEffect(() => {
     onFetch(affiliation);
   }, [affiliation, onFetch]);
 
@@ -41,7 +41,7 @@ const DnsView = ({
         {isFetching ? (
           <Spinner size={Spinner.Size.large} />
         ) : (
-          <DnsTable dnsEntries={cnameInfos} />
+          <DnsTable cnameInfos={cnameInfos} />
         )}
       </div>
     </div>
