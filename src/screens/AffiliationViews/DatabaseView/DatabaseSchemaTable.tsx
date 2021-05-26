@@ -1,14 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import SortableDetailsList from 'components/SortableDetailsList';
-import {
-  CheckboxVisibility,
-  IColumn,
-  Selection,
-} from 'office-ui-fabric-react/lib-commonjs';
+import { Selection, CheckboxVisibility, IColumn } from '@fluentui/react';
 
 import { IDatabaseSchemaData } from 'models/schemas';
 import { getLocalDate } from 'utils/date';
-
 interface IDatabaseSchemaTableProps {
   filter: string;
   schemas: IDatabaseSchemaData[];

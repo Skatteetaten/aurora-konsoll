@@ -13,7 +13,7 @@ import Header from './Header';
 import Menu from './Menu';
 import MenuCollapseButton from './MenuCollapseButton';
 import MenuNavLink, { IMenuNavLinkData } from './MenuNavLink';
-import { IDropdownOption } from 'office-ui-fabric-react/lib-commonjs';
+import { IDropdownOption } from '@fluentui/react';
 
 interface ILayoutProps {
   affiliation?: string;

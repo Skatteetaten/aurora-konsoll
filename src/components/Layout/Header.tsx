@@ -8,9 +8,9 @@ import Icon from '@skatteetaten/frontend-components/Icon';
 import Image from '@skatteetaten/frontend-components/Image';
 import separatorImg from '@skatteetaten/frontend-components/TopBanner/assets/separator.png';
 import Logo from '@skatteetaten/frontend-components/TopBanner/assets/ske-logo.svg';
-import palette from '@skatteetaten/frontend-components/utils/palette';
 import { IUserAndAffiliations } from 'models/ApplicationDeployment';
 import { ButtonLink } from 'components/ButtonLink';
+import { skeColor } from '@skatteetaten/frontend-components';
 
 interface IHeaderProps {
   title: string;
@@ -59,7 +59,7 @@ const Header = ({ title, currentUser, className, children }: IHeaderProps) => {
 };
 
 const HomeLink = styled(Link)`
-  color: ${palette.skeColor.black};
+  color: ${skeColor.black};
   text-decoration: none;
 `;
 
@@ -138,7 +138,7 @@ export default styled(Header)`
     }
 
     button:hover {
-      background-color: ${palette.skeColor.whiteGrey};
+      background-color: ${skeColor.whiteGrey};
     }
   }
 `;

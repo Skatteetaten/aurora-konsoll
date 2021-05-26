@@ -1,7 +1,7 @@
 import { IApplicationDeployment } from 'models/ApplicationDeployment';
 import { IApplicationDeploymentFilters } from 'models/UserSettings';
 import { SelectionType } from 'screens/AffiliationViews/DeploymentView/MatrixView/components/Filter/Filter';
-import { IChoiceGroupOption } from 'office-ui-fabric-react/lib-commonjs';
+import { IChoiceGroupOption } from '@fluentui/react';
 
 export interface IUniqueSelectionNames {
   applications: string[];

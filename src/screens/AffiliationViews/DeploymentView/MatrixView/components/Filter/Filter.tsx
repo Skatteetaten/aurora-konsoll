@@ -16,8 +16,8 @@ import FooterText from './FooterText';
 import SelectionButtons from './SelectionButtons';
 import { connect } from 'react-redux';
 import { addErrors } from 'screens/ErrorHandler/state/actions';
-import { RadioButtonGroupProps } from '@skatteetaten/frontend-components/RadioButtonGroup';
 import { TextFieldEvent } from 'types/react';
+import { RadioButtonGroupProps } from '@skatteetaten/frontend-components';
 
 export enum SelectionType {
   Applications,

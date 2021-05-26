@@ -1,8 +1,5 @@
 import React from 'react';
-import {
-  IRenderFunction,
-  ISelectableOption,
-} from 'office-ui-fabric-react/lib-commonjs';
+import { IRenderFunction, ISelectableOption } from '@fluentui/react';
 import styled from 'styled-components';
 
 export const onRenderOption: IRenderFunction<ISelectableOption> = (item) => {

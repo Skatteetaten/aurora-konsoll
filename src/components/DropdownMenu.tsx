@@ -1,7 +1,6 @@
+import { skeColor } from '@skatteetaten/frontend-components';
 import * as React from 'react';
 import styled from 'styled-components';
-
-import palette from '@skatteetaten/frontend-components/utils/palette';
 
 interface IDropdownMenuProps {
   className?: string;
@@ -42,8 +41,8 @@ export default styled(DropdownMenu)`
     display: none;
     position: absolute;
     width: 100%;
-    background-color: ${palette.skeColor.neutralGrey};
-    box-shadow: 0px 3px 3px 0px ${palette.skeColor.lightGrey};
+    background-color: ${skeColor.neutralGrey};
+    box-shadow: 0px 3px 3px 0px ${skeColor.lightGrey};
     z-index: 15;
   }
 
@@ -55,7 +54,7 @@ export default styled(DropdownMenu)`
   }
 
   .dropdown-menu-content a:hover {
-    background-color: ${palette.skeColor.whiteGrey};
+    background-color: ${skeColor.whiteGrey};
   }
 
   .dropdown-menu:hover .dropdown-menu-content {
@@ -63,7 +62,7 @@ export default styled(DropdownMenu)`
   }
 
   .dropdown-menu:hover .dropdown-title {
-    background-color: ${palette.skeColor.whiteGrey};
-    box-shadow: 0px 0px 3px 0px ${palette.skeColor.lightGrey};
+    background-color: ${skeColor.whiteGrey};
+    box-shadow: 0px 0px 3px 0px ${skeColor.lightGrey};
   }
 `;

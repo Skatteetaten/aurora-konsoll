@@ -9,7 +9,7 @@ import CertificateService from 'services/CertificateService';
 import Table from './Table';
 import { TextFieldEvent } from 'types/react';
 import Spinner from '@skatteetaten/frontend-components/Spinner';
-import { SpinnerSize } from 'office-ui-fabric-react/lib-commonjs';
+import { SpinnerSize } from '@fluentui/react';
 
 interface ICertificateProps {
   className?: string;

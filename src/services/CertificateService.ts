@@ -1,6 +1,6 @@
 import { ICertificateResult, ICertificateView } from 'models/certificates';
 import { getLocalDate } from 'utils/date';
-import { IColumn } from 'office-ui-fabric-react/lib-commonjs';
+import { IColumn } from '@fluentui/react';
 
 const certificateColumns: IColumn[] = [
   {

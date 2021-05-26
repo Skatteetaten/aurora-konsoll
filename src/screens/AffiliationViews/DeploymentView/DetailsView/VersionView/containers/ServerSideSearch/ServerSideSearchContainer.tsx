@@ -2,7 +2,7 @@ import React, { useEffect, KeyboardEvent, useRef, useState } from 'react';
 import TextField from '@skatteetaten/frontend-components/TextField';
 import LoadingButton from 'components/LoadingButton';
 
-import { ITextField } from 'office-ui-fabric-react/lib-commonjs';
+import { ITextField } from '@fluentui/react';
 import { ImageTagType } from 'models/ImageTagType';
 import {
   fetchVersions,
@@ -10,10 +10,7 @@ import {
 } from 'store/state/versions/action.creators';
 import { connect } from 'react-redux';
 import { RootState, ReduxProps } from 'store/types';
-
-import palette from '@skatteetaten/frontend-components/utils/palette';
-
-const { skeColor } = palette;
+import { skeColor } from '@skatteetaten/frontend-components';
 
 const ENTER_KEY = 13;
 

@@ -11,7 +11,6 @@ import Icon from '@skatteetaten/frontend-components/Icon';
 import { getLocalDatetime } from 'utils/date';
 import IconLink from 'components/IconLink';
 import Callout from '@skatteetaten/frontend-components/Callout';
-import DetailsList from '@skatteetaten/frontend-components/DetailsList';
 import ActionButton from '@skatteetaten/frontend-components/ActionButton';
 import ManagementResponseDialogSelector from 'components/ManagementResponseDialog';
 

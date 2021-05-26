@@ -1,4 +1,4 @@
-import { IDropdownOption } from 'office-ui-fabric-react/lib-commonjs';
+import { IDropdownOption } from '@fluentui/react';
 
 function toDropdownOptions(names: string[]): IDropdownOption[] {
   const dropdownNames = names
