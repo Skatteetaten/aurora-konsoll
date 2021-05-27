@@ -1,4 +1,4 @@
-import { reduceReducers, handleAction } from 'redux-ts-utils';
+import { createReducer } from '@reduxjs/toolkit';
 
 import { ImageTagType } from 'models/ImageTagType';
 import { ImageTagsConnection } from 'models/immer/ImageTagsConnection';
@@ -59,33 +59,33 @@ const initialState: IVersionsState = {
   },
 };
 
-export const versionsReducer = reduceReducers<IVersionsState>(
-  [
-    handleAction(actions.fetchInitVersions.request, (state) => {
-      state.isFetching = true;
-    }),
-    handleAction(actions.fetchInitVersions.success, (state, { payload }) => {
-      state.isFetching = false;
-      Object.keys(payload).forEach((key) => {
-        const type = key as ImageTagType;
-        const response = payload[type];
-        const current = state.types[type] as ImageTagsConnection;
+export const versionsReducer = createReducer(initialState, (builder) => {
+  builder.addCase(actions.fetchInitVersions.request, (state) => {
+    state.isFetching = true;
+  });
+  builder.addCase(actions.fetchInitVersions.success, (state, { payload }) => {
+    state.isFetching = false;
+    Object.keys(payload).forEach((key) => {
+      const type = key as ImageTagType;
+      const response = payload[type];
+      const current = state.types[type] as ImageTagsConnection;
 
-        if (response.data) {
-          updateImageTagsConnection(response.data, current, true);
-        }
-      });
-    }),
+      if (response.data) {
+        updateImageTagsConnection(response.data, current, true);
+      }
+    });
+  });
+  builder.addCase(actions.fetchInitVersions.failure, (state) => {
+    state.isFetching = false;
+  });
 
-    handleAction(actions.fetchInitVersions.failure, (state) => {
-      state.isFetching = false;
-    }),
+  builder.addCase(actions.fetchVersionsForType.request, (state) => {
+    state.isFetching = true;
+  });
 
-    handleAction(actions.fetchVersionsForType.request, (state) => {
-      state.isFetching = true;
-    }),
-
-    handleAction(actions.fetchVersionsForType.success, (state, { payload }) => {
+  builder.addCase(
+    actions.fetchVersionsForType.success,
+    (state, { payload }) => {
       state.isFetching = false;
 
       const { response, paged, type } = payload;
@@ -94,38 +94,37 @@ export const versionsReducer = reduceReducers<IVersionsState>(
       if (response.data) {
         updateImageTagsConnection(response.data, current, paged);
       }
-    }),
-    handleAction(actions.fetchVersionsForType.failure, (state) => {
-      state.isFetching = false;
-    }),
+    }
+  );
+  builder.addCase(actions.fetchVersionsForType.failure, (state) => {
+    state.isFetching = false;
+  });
 
-    handleAction(actions.resetState, (state, result) => {
-      state.isFetching = initialState.isFetching;
-      state.types = initialState.types;
-      state.configuredVersionTag = undefined;
-    }),
+  builder.addCase(actions.resetState, (state, result) => {
+    state.isFetching = initialState.isFetching;
+    state.types = initialState.types;
+    state.configuredVersionTag = undefined;
+  });
 
-    handleAction(actions.resetStateForType, (state, { payload }) => {
-      state.types[payload] = createImageTagsConnection(payload);
-    }),
+  builder.addCase(actions.resetStateForType, (state, { payload }) => {
+    state.types[payload] = createImageTagsConnection(payload);
+  });
 
-    handleAction(actions.fetchVersion.request, (state) => {
-      state.isFetchingConfiguredVersionTag = true;
-    }),
+  builder.addCase(actions.fetchVersion.request, (state) => {
+    state.isFetchingConfiguredVersionTag = true;
+  });
 
-    handleAction(actions.fetchVersion.success, (state, { payload }) => {
-      state.isFetchingConfiguredVersionTag = false;
-      if ((payload.data?.imageRepositories?.length ?? 0) > 0) {
-        state.configuredVersionTag = payload.data?.imageRepositories[0].tag[0];
-      }
-    }),
+  builder.addCase(actions.fetchVersion.success, (state, { payload }) => {
+    state.isFetchingConfiguredVersionTag = false;
+    if ((payload.data?.imageRepositories?.length ?? 0) > 0) {
+      state.configuredVersionTag = payload.data?.imageRepositories[0].tag[0];
+    }
+  });
 
-    handleAction(actions.fetchVersion.failure, (state) => {
-      state.isFetchingConfiguredVersionTag = false;
-    }),
-  ],
-  initialState
-);
+  builder.addCase(actions.fetchVersion.failure, (state) => {
+    state.isFetchingConfiguredVersionTag = false;
+  });
+});
 
 function updateImageTagsConnection(
   data: ITagsQuery,

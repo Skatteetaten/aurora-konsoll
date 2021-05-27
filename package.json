@@ -12,8 +12,9 @@
     "metadata"
   ],
   "dependencies": {
-    "@skatteetaten/frontend-components": "3.4.2",
+    "@reduxjs/toolkit": "1.5.1",
     "@skatteetaten/aurora-management-interface": "1.0.2",
+    "@skatteetaten/frontend-components": "3.4.2",
     "cors": "2.8.5",
     "express": "4.17.1",
     "graphql": "15.0.0",
@@ -30,7 +31,6 @@
     "react-router-dom": "5.2.0",
     "react-select": "3.1.0",
     "redux-thunk": "2.3.0",
-    "redux-ts-utils": "4.0.0",
     "styled-components": "5.1.1",
     "typesafe-actions": "5.1.0",
     "uuid": "8.1.0",

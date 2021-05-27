@@ -1,5 +1,5 @@
 import { addCurrentErrors } from 'screens/ErrorHandler/state/actions';
-import { createAction } from 'redux-ts-utils';
+import { createAction } from '@reduxjs/toolkit';
 import { INetdebugResult, IScanStatus } from 'services/auroraApiClients';
 import {
   IScanQuery,

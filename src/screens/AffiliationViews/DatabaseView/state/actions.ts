@@ -13,7 +13,7 @@ import {
   IRestorableDatabaseSchemas,
 } from 'models/schemas';
 import { addCurrentErrors } from 'screens/ErrorHandler/state/actions';
-import { createAction } from 'redux-ts-utils';
+import { createAction } from '@reduxjs/toolkit';
 
 const databaseAction = (action: string) => `database/${action}`;
 

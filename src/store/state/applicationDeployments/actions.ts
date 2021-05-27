@@ -6,7 +6,7 @@ import {
 } from 'services/auroraApiClients/applicationDeploymentClient/query';
 import { IDataAndErrors } from 'services/GoboClient';
 import { createAsyncActions } from 'utils/redux/action-utils';
-import { createAction } from 'redux-ts-utils';
+import { createAction } from '@reduxjs/toolkit';
 
 const action = (action: string) => `applicationDeployments/${action}`;
 

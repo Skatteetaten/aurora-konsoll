@@ -1,6 +1,6 @@
 import {
-  closeError,
   closeErrors,
+  closeError,
   getNextError,
 } from 'screens/ErrorHandler/state/actions';
 import { IErrorsState } from 'screens/ErrorHandler/state/reducer';

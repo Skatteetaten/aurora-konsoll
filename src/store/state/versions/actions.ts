@@ -1,4 +1,4 @@
-import { createAction } from 'redux-ts-utils';
+import { createAction } from '@reduxjs/toolkit';
 import { ImageTagType } from 'models/ImageTagType';
 import {
   ITagsQuery,
