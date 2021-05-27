@@ -17,7 +17,6 @@ const initialState: IDnsState = {
 export const dnsReducer = createReducer(initialState, (builder) => {
   builder.addCase(actions.fetchCnameInfosRequest.request, (state) => {
     state.isFetching = true;
-    state.cnameInfos = [];
   });
   builder.addCase(
     actions.fetchCnameInfosRequest.success,
