@@ -24,7 +24,7 @@ export const dnsReducer = createReducer(initialState, (builder) => {
     (state, { payload }) => {
       state.isFetching = false;
       if (payload.data) {
-        state.cnameInfos = payload.data.cnameInfo;
+        state.cnameInfos = payload.data.cnameInfos;
       }
       if (payload.errors) {
         state.errors.push(...payload.errors);

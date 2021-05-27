@@ -1,7 +1,7 @@
 import gql from 'graphql-tag';
 
 export interface CnameInfosQuery {
-  cnameInfo?: CnameInfo[];
+  cnameInfos?: CnameInfo[];
 }
 
 export interface CnameInfo {
