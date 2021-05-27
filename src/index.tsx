@@ -17,12 +17,12 @@ import {
   NetdebugClient,
   UserSettingsClient,
   WebsealClient,
+  DnsClient,
 } from 'services/auroraApiClients';
 import GoboClient from 'services/GoboClient';
 import createStoreWithApi from 'store';
 import { requestCurrentUser } from 'store/state/startup/action.creators';
 import './index.css';
-import { DnsClient } from 'services/auroraApiClients/dnsClient/client';
 
 async function init() {
   const configOrError = await fetchConfiguration();
