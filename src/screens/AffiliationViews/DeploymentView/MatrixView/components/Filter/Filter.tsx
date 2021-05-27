@@ -558,5 +558,5 @@ const styledFilter = styled(Filter)`
 export default styledFilter;
 
 export const styledFilterConnected = connect(null, {
-  addErrors: (errors: any[]) => addErrors(errors),
+  addErrors: (errors: any[]) => addErrors({ errors }),
 })(styledFilter);

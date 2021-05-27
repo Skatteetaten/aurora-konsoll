@@ -1,7 +1,7 @@
 import { IWebsealState } from 'models/Webseal';
 
 import { addCurrentErrors } from 'screens/ErrorHandler/state/actions';
-import { createAction } from 'redux-ts-utils';
+import { createAction } from '@reduxjs/toolkit';
 import { IWebsealStateEdge } from 'services/auroraApiClients/websealClient/query';
 import { Thunk } from 'store/types';
 

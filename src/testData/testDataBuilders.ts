@@ -373,7 +373,7 @@ export const appErrorFactory = Factory.Sync.makeFactory<IAppError>({
 
 export const errorStateFactory = Factory.Sync.makeFactory<IErrors>({
   errorQueue: [appErrorFactory.build()],
-  allErrors: new Map(),
+  allErrors: {},
 });
 
 export const errorsStateFactory = Factory.Sync.makeFactory<IErrorsState>({

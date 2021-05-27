@@ -6,5 +6,5 @@ export interface IAppError {
 
 export interface IErrors {
   errorQueue: IAppError[];
-  allErrors: Map<number, IAppError>;
+  allErrors: Record<number, IAppError>;
 }

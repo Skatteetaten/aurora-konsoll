@@ -1,6 +1,6 @@
 import { ICertificateResult } from 'models/certificates';
 import { addCurrentErrors } from 'screens/ErrorHandler/state/actions';
-import { createAction } from 'redux-ts-utils';
+import { createAction } from '@reduxjs/toolkit';
 import { Thunk } from 'store/types';
 
 const certificateAction = (action: string) => `certificate/${action}`;

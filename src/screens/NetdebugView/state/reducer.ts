@@ -1,4 +1,5 @@
-import { handleAction, reduceReducers } from 'redux-ts-utils';
+import { createReducer } from '@reduxjs/toolkit';
+
 import { INetdebugResult } from 'services/auroraApiClients';
 import { ActionType } from 'typesafe-actions';
 import actions, {
@@ -13,15 +14,13 @@ export interface INetdebugViewState {
   readonly netdebugStatus: INetdebugResult;
 }
 
-const initialState = (): INetdebugViewState => {
-  return {
-    isFetching: false,
-    netdebugStatus: {
-      failed: [],
-      open: [],
-      status: '',
-    },
-  };
+const initialState: INetdebugViewState = {
+  isFetching: false,
+  netdebugStatus: {
+    failed: [],
+    open: [],
+    status: '',
+  },
 };
 
 function updateStateWithPayload(name: string) {
@@ -30,16 +29,13 @@ function updateStateWithPayload(name: string) {
   };
 }
 
-export const netdebugViewReducer = reduceReducers<INetdebugViewState>(
-  [
-    handleAction(
-      fetchNetdebugStatusRequest,
-      updateStateWithPayload('isFetching')
-    ),
-    handleAction(
-      fetchNetdebugStatusResponse,
-      updateStateWithPayload('netdebugStatus')
-    ),
-  ],
-  initialState()
-);
+export const netdebugViewReducer = createReducer(initialState, (builder) => {
+  builder.addCase(
+    fetchNetdebugStatusRequest,
+    updateStateWithPayload('isFetching')
+  );
+  builder.addCase(
+    fetchNetdebugStatusResponse,
+    updateStateWithPayload('netdebugStatus')
+  );
+});
