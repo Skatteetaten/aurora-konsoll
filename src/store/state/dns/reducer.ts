@@ -1,6 +1,6 @@
-import { handleAction, reduceReducers } from 'redux-ts-utils';
 import { CnameInfo } from 'services/auroraApiClients/dnsClient/query';
 import { actions } from './actions';
+import { createReducer } from '@reduxjs/toolkit';
 
 interface IDnsState {
   isFetching: boolean;
@@ -14,31 +14,28 @@ const initialState: IDnsState = {
   errors: [],
 };
 
-export const dnsReducer = reduceReducers<IDnsState>(
-  [
-    handleAction(actions.fetchCnameInfosRequest.request, (state) => {
-      state.isFetching = true;
-      state.cnameInfos = [];
-    }),
-    handleAction(
-      actions.fetchCnameInfosRequest.success,
-      (state, { payload }) => {
-        state.isFetching = false;
-        if (payload.data) {
-          state.cnameInfos = payload.data.cnameInfo;
-        }
-        if (payload.errors) {
-          state.errors.push(...payload.errors);
-        }
+export const dnsReducer = createReducer(initialState, (builder) => {
+  builder.addCase(actions.fetchCnameInfosRequest.request, (state) => {
+    state.isFetching = true;
+    state.cnameInfos = [];
+  });
+  builder.addCase(
+    actions.fetchCnameInfosRequest.success,
+    (state, { payload }) => {
+      state.isFetching = false;
+      if (payload.data) {
+        state.cnameInfos = payload.data.cnameInfo;
       }
-    ),
-    handleAction(
-      actions.fetchCnameInfosRequest.failure,
-      (state, { payload }) => {
-        state.isFetching = false;
-        state.errors.push(payload);
+      if (payload.errors) {
+        state.errors.push(...payload.errors);
       }
-    ),
-  ],
-  initialState
-);
+    }
+  );
+  builder.addCase(
+    actions.fetchCnameInfosRequest.failure,
+    (state, { payload }) => {
+      state.isFetching = false;
+      state.errors.push(payload);
+    }
+  );
+});
