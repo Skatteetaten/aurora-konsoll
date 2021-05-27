@@ -6,8 +6,8 @@ import {
   NetdebugClient,
   UserSettingsClient,
   WebsealClient,
+  DnsClient,
 } from 'services/auroraApiClients';
-import { DnsClient } from 'services/auroraApiClients/dnsClient/client';
 export interface IApiClients {
   applicationDeploymentClient: ApplicationDeploymentClient;
   imageRepositoryClient: ImageRepositoryClient;

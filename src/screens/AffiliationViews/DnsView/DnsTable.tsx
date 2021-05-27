@@ -2,14 +2,14 @@ import Table from '@skatteetaten/frontend-components/Table';
 import React from 'react';
 import { CnameInfo } from 'services/auroraApiClients/dnsClient/query';
 import styled from 'styled-components';
-import { DnsEntry } from 'models/Dns';
+import { CnameInfoData } from 'models/Dns';
 
 interface props {
   cnameInfos: CnameInfo[];
 }
 
 const DnsTable = ({ cnameInfos }: props) => {
-  const cnameInfosData: DnsEntry[] = cnameInfos.map((it) => {
+  const cnameInfosData: CnameInfoData[] = cnameInfos.map((it) => {
     return { ...it, cname: it.entry.cname, ttl: it.entry.ttl };
   });
 

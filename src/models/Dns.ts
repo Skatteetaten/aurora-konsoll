@@ -1,4 +1,4 @@
-export interface DnsEntry {
+export interface CnameInfoData {
   appName: string;
   namespace: string;
   cname: string;
