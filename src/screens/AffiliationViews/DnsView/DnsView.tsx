@@ -9,7 +9,7 @@ interface props {
   affiliation: string;
   className?: string;
   isFetching: boolean;
-  cnameInfos: CnameInfo[];
+  cnameInfos?: CnameInfo[];
   onFetch: (affiliation: string) => void;
 }
 

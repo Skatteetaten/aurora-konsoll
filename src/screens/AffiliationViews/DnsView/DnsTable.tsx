@@ -5,7 +5,7 @@ import styled from 'styled-components';
 import { CnameInfoData } from 'models/Dns';
 
 interface props {
-  cnameInfos: CnameInfo[];
+  cnameInfos?: CnameInfo[];
 }
 
 const DnsTable = ({ cnameInfos = [] }: props) => {
