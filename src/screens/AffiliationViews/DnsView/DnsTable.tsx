@@ -14,53 +14,53 @@ const DnsTable = ({ cnameInfos }: props) => {
       return { ...it, cname: it.entry.cname, ttl: it.entry.ttl };
     }) ?? [];
 
+  if (cnameInfosData.length < 1) {
+    return <p>Finner ingen DNS entries</p>;
+  }
+
   return (
     <TableWrapper>
-      {cnameInfosData.length > 0 ? (
-        <Table
-          style={{ background: 'white' }}
-          data={cnameInfosData}
-          columns={[
-            {
-              name: 'Status',
-              fieldName: 'status',
-              sortable: true,
-            },
-            {
-              name: 'CName',
-              fieldName: 'cname',
-              sortable: true,
-            },
-            {
-              name: 'TTL',
-              fieldName: 'ttl',
-              sortable: true,
-            },
-            {
-              name: 'Namespace',
-              fieldName: 'namespace',
-              sortable: true,
-            },
-            {
-              name: 'Applikasjon',
-              fieldName: 'appName',
-              sortable: true,
-            },
-            {
-              name: 'Rute',
-              fieldName: 'routeName',
-              sortable: true,
-            },
-            {
-              name: 'Meldinger',
-              fieldName: 'message',
-              sortable: true,
-            },
-          ]}
-        />
-      ) : (
-        <p>Finner ingen DNS entries</p>
-      )}
+      <Table
+        style={{ background: 'white' }}
+        data={cnameInfosData}
+        columns={[
+          {
+            name: 'Status',
+            fieldName: 'status',
+            sortable: true,
+          },
+          {
+            name: 'CName',
+            fieldName: 'cname',
+            sortable: true,
+          },
+          {
+            name: 'TTL',
+            fieldName: 'ttl',
+            sortable: true,
+          },
+          {
+            name: 'Namespace',
+            fieldName: 'namespace',
+            sortable: true,
+          },
+          {
+            name: 'Applikasjon',
+            fieldName: 'appName',
+            sortable: true,
+          },
+          {
+            name: 'Rute',
+            fieldName: 'routeName',
+            sortable: true,
+          },
+          {
+            name: 'Meldinger',
+            fieldName: 'message',
+            sortable: true,
+          },
+        ]}
+      />
     </TableWrapper>
   );
 };
