@@ -141,6 +141,9 @@
       "!src/**/*.d.ts",
       "!src/setupTests.ts",
       "!src/services/registerServiceWorker.ts"
+    ],
+    "transformIgnorePatterns": [
+      "node_modules/?!(@skatteetaten/frontend-components)"
     ]
   },
   "eslintConfig": {
