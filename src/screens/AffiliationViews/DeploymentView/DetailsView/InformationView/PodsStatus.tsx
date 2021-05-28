@@ -257,6 +257,12 @@ export default styled(PodsStatus)`
     }
   }
 
+  .ms-Button.ms-Button--action {
+    padding: 0px;
+    min-height: 0px;
+    margin-top: -3px;
+  }
+
   .ms-DetailsRow-cell:nth-child(2),
   .ms-DetailsRow-cell:nth-child(3),
   .ms-DetailsRow-cell:nth-child(4) {

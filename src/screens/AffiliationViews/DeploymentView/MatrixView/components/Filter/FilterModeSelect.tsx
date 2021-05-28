@@ -72,26 +72,28 @@ const FilterModeSelect = ({
   );
   return (
     <>
-      <RadioButtonGroup
-        defaultSelectedKey={mode.toString()}
-        onChange={changeMode}
-        options={[
-          {
-            key: FilterMode.Create.toString(),
-            text: 'Nytt',
-            description: '',
-            iconProps: { iconName: 'AddOutline' },
-          },
-          {
-            key: FilterMode.Edit.toString(),
-            text: 'Rediger',
-            description: '',
-            iconProps: { iconName: 'Edit' },
-          },
-        ]}
-        warning=""
-        errorMessage=""
-      />
+      <div className="styled-radio-buttons">
+        <RadioButtonGroup
+          defaultSelectedKey={mode.toString()}
+          onChange={changeMode}
+          options={[
+            {
+              key: FilterMode.Create.toString(),
+              text: 'Nytt',
+              description: '',
+              iconProps: { iconName: 'AddOutline' },
+            },
+            {
+              key: FilterMode.Edit.toString(),
+              text: 'Rediger',
+              description: '',
+              iconProps: { iconName: 'Edit' },
+            },
+          ]}
+          warning=""
+          errorMessage=""
+        />
+      </div>
       {mode === FilterMode.Create ? newFilter : editFilter}
     </>
   );

@@ -523,6 +523,9 @@ const styledFilter = styled(Filter)`
   .styled-edit {
     margin-right: 40px;
   }
+  .styled-radio-buttons {
+    white-space: nowrap;
+  }
   .apps-and-envs {
     max-height: 500px;
     min-width: 250px;

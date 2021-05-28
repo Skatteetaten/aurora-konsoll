@@ -190,7 +190,7 @@ export default styled(JdbcConnection)`
     align-items: center;
     height: 30px;
   }
-  .ms-Callout-main {
-    width: 380px;
+  .ms-Callout-container {
+    width: fit-content;
   }
 `;

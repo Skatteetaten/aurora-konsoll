@@ -22,7 +22,7 @@ const LoadingButton = ({
     disabled={loading}
     {...props}
   >
-    {loading ? <Spinner size={SpinnerSize.large} /> : children}
+    {loading ? <Spinner size={SpinnerSize.small} /> : children}
   </Button>
 );
 

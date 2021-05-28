@@ -27,12 +27,14 @@ const StatusIcon = ({ status }: IStatusIconProps) => {
   };
 
   return (
-    <div style={{ display: 'inline-flex', height: 0 }}>
+    <div style={{ display: 'inline-flex' }}>
       <div>{status}</div>
-      <Icon
-        iconName={getIconAndColorForIcon().icon}
-        style={{ fontSize: '16px', color: getIconAndColorForIcon().color }}
-      />
+      <div>
+        <Icon
+          iconName={getIconAndColorForIcon().icon}
+          style={{ fontSize: '16px', color: getIconAndColorForIcon().color }}
+        />
+      </div>
     </div>
   );
 };
