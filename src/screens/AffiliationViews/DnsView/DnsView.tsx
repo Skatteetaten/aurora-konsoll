@@ -28,7 +28,7 @@ const DnsView = ({
     <div className={className}>
       <div className="body-wrapper">
         <div className="action-bar">
-          <h2>DNS entires for {affiliation}</h2>
+          <h2>DNS entries for {affiliation}</h2>
           <LoadingButton
             style={{ minWidth: '141px' }}
             icon="Update"
