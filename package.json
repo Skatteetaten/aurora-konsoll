@@ -52,7 +52,7 @@
     "clean": "rimraf build build-api coverage pom *.tgz",
     "test:once": "CI=true npm test",
     "test:web:coverage": "CI=true npm run test -- --coverage --testResultsProcessor jest-junit",
-    "test:coverage": "CI=true npm-run-all test:web:coverage test:api",
+    "test:coverage": "NODE_OPTIONS=--max-old-space-size=1024 CI=true npm-run-all test:web:coverage test:api",
     "prettier": "prettier -l '{api,src}/**/*{.ts,.tsx,.css}'",
     "prettier:fix": "prettier --write '{api,src}/**/*{.ts,.tsx,.css}'",
     "lint": "eslint '{api,src}/**/*{.ts,.tsx}'",
