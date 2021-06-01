@@ -19,7 +19,7 @@ import DatabaseSchemaUpdateDialog from './DatabaseSchemaUpdateDialog';
 import LoadingButton from 'components/LoadingButton';
 import ConfirmChangeCooldownDialog from './ConfirmChangeCooldownDialog';
 import DetailsList from '@skatteetaten/frontend-components/DetailsList';
-import { SpinnerSize } from 'office-ui-fabric-react';
+import { SpinnerSize } from '@fluentui/react';
 import Spinner from '@skatteetaten/frontend-components/Spinner';
 
 export interface IRestorableSchemaProps {

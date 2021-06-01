@@ -11,7 +11,7 @@ import {
   setApplicationDeploymentId,
 } from 'store/state/applicationDeployments/action.creators';
 import Spinner from '@skatteetaten/frontend-components/Spinner';
-import { SpinnerSize } from 'office-ui-fabric-react';
+import { SpinnerSize } from '@fluentui/react';
 
 export type ApplicationDeploymentMatchParams = {
   affiliation: string;
