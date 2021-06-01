@@ -54,26 +54,21 @@ export const RestorableSchema: React.FC<IRestorableSchemaProps> = ({
   onTestJdbcConnectionForId,
 }) => {
   const [filter, setFilter] = useState('');
-  const [selectedSchema, setSelectedSchema] = useState<
-    IDatabaseSchemaData | undefined
-  >(undefined);
+  const [selectedSchema, setSelectedSchema] =
+    useState<IDatabaseSchemaData | undefined>(undefined);
   const [selectedSchemas, setSelectedSchemas] = useState<IDatabaseSchemaData[]>(
     []
   );
 
-  const [selectedDetailsListItems, setSelectedDetailsListItems] = useState<
-    IDatabaseSchemaView[] | undefined
-  >(undefined);
+  const [selectedDetailsListItems, setSelectedDetailsListItems] =
+    useState<IDatabaseSchemaView[] | undefined>(undefined);
   const [restoreMode, setRestoreMode] = useState(false);
 
   const [shouldResetSort, setShouldResetSort] = useState(false);
-  const [
-    confirmRestorationDialogVisible,
-    setConfirmRestorationDialogVisible,
-  ] = useState(false);
-  const [hasRestorationInformation, setHasRestorationInformation] = useState(
-    false
-  );
+  const [confirmRestorationDialogVisible, setConfirmRestorationDialogVisible] =
+    useState(false);
+  const [hasRestorationInformation, setHasRestorationInformation] =
+    useState(false);
 
   const selection = useMemo(
     () =>

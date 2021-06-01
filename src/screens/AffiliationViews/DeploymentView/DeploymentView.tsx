@@ -145,11 +145,12 @@ export class DeploymentView extends React.Component<
   public deleteFilter = async (filterName: string) => {
     const { affiliation, updateUserSettings } = this.props;
     const { allFilters } = this.state;
-    const updatedFilters = this.deploymentFilterService.getOtherNonDefaultFilters(
-      allFilters,
-      affiliation,
-      { name: filterName, applications: [], environments: [], default: false }
-    );
+    const updatedFilters =
+      this.deploymentFilterService.getOtherNonDefaultFilters(
+        allFilters,
+        affiliation,
+        { name: filterName, applications: [], environments: [], default: false }
+      );
     if (filterName) {
       await updateUserSettings({
         applicationDeploymentFilters: updatedFilters,
@@ -160,11 +161,12 @@ export class DeploymentView extends React.Component<
   public updateFilter = async (filter: IFilter) => {
     const { affiliation, updateUserSettings, updateUrlWithQuery } = this.props;
     const { allFilters } = this.state;
-    const updatedFilters = this.deploymentFilterService.getOtherNonDefaultFilters(
-      allFilters,
-      affiliation,
-      filter
-    );
+    const updatedFilters =
+      this.deploymentFilterService.getOtherNonDefaultFilters(
+        allFilters,
+        affiliation,
+        filter
+      );
     if (filter.quickFilter) {
       this.setState({
         filter,
@@ -209,7 +211,8 @@ export class DeploymentView extends React.Component<
       quickFilter: filter,
     });
 
-    const allApplicationDeploymentsResult = applicationsConnection.getApplicationDeployments();
+    const allApplicationDeploymentsResult =
+      applicationsConnection.getApplicationDeployments();
 
     const filtered = allApplicationDeploymentsResult.filter(
       (deployment) =>
@@ -245,7 +248,8 @@ export class DeploymentView extends React.Component<
       quickFilter,
     } = this.state;
 
-    const allApplicationDeploymentsResult = applicationsConnection.getApplicationDeployments();
+    const allApplicationDeploymentsResult =
+      applicationsConnection.getApplicationDeployments();
 
     const filteredDeployments = this.deploymentFilterService.filterDeployments(
       filter,

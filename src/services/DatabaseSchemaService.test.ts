@@ -71,7 +71,8 @@ describe('DatabaseSchemaService', () => {
     const databaseSchema = databaseSchemaFactory.build();
 
     it('Button is disabled given unchanged and non-empty values', () => {
-      const updatedDatabaseSchema = databaseSchemaInputWithCreatedByFactory.build();
+      const updatedDatabaseSchema =
+        databaseSchemaInputWithCreatedByFactory.build();
 
       const isDisabled = databaseSchemaService.isUpdateButtonDisabled(
         updatedDatabaseSchema,
@@ -81,9 +82,10 @@ describe('DatabaseSchemaService', () => {
     });
 
     it('Button is enabled given changed value', () => {
-      const updatedDatabaseSchema = databaseSchemaInputWithCreatedByFactory.build(
-        { application: 'referanse' }
-      );
+      const updatedDatabaseSchema =
+        databaseSchemaInputWithCreatedByFactory.build({
+          application: 'referanse',
+        });
 
       const isDisabled = databaseSchemaService.isUpdateButtonDisabled(
         updatedDatabaseSchema,
@@ -93,9 +95,8 @@ describe('DatabaseSchemaService', () => {
     });
 
     it('Button is disabled given empty value', () => {
-      const updatedDatabaseSchema = databaseSchemaInputWithCreatedByFactory.build(
-        { environment: '' }
-      );
+      const updatedDatabaseSchema =
+        databaseSchemaInputWithCreatedByFactory.build({ environment: '' });
 
       const isDisabled = databaseSchemaService.isUpdateButtonDisabled(
         updatedDatabaseSchema,
@@ -108,9 +109,8 @@ describe('DatabaseSchemaService', () => {
       const databaseSchemaWithNullDescription = databaseSchemaFactory.build({
         description: null,
       });
-      const updatedDatabaseSchema = databaseSchemaInputWithCreatedByFactory.build(
-        { description: '' }
-      );
+      const updatedDatabaseSchema =
+        databaseSchemaInputWithCreatedByFactory.build({ description: '' });
 
       const isDisabled = databaseSchemaService.isUpdateButtonDisabled(
         updatedDatabaseSchema,
@@ -124,9 +124,8 @@ describe('DatabaseSchemaService', () => {
         environment: '      ',
       });
 
-      const hasEmptyValues = databaseSchemaService.hasEmptyLabelValues(
-        databaseSchemaInput
-      );
+      const hasEmptyValues =
+        databaseSchemaService.hasEmptyLabelValues(databaseSchemaInput);
       expect(hasEmptyValues).toBeTruthy();
     });
 

@@ -21,9 +21,8 @@ export const RedeployRowAndVersionTable: React.FC<Props> = ({
   releaseTo,
   isFetchingConfiguredVersionTag,
 }) => {
-  const [versionBeingDeploy, setVersionBeingDeploy] = useState<
-    string | undefined
-  >();
+  const [versionBeingDeploy, setVersionBeingDeploy] =
+    useState<string | undefined>();
 
   const onConfirmDeploy = (version: string) => {
     if (hasAccessToDeploy) {

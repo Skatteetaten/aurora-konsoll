@@ -102,7 +102,8 @@ describe('database schema reducer', () => {
         ),
       },
       schemasFactory.build({
-        createDatabaseSchemaResponse: createDatabaseSchemaResponseFactory.build(),
+        createDatabaseSchemaResponse:
+          createDatabaseSchemaResponseFactory.build(),
       }),
     ],
     [

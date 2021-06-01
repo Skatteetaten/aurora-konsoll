@@ -14,17 +14,19 @@ export const addErrors = createAction<{ errors: any[]; name?: string }>(
   errors('ADD_ERRORS')
 );
 
-export const addCurrentErrors = (
-  result: IDataAndErrors<any> | undefined
-): AsyncAction => (dispatch) => {
-  if (result && result.errors) {
-    dispatch(addErrors({ errors: result.errors, name: result.name }));
-  }
-};
+export const addCurrentErrors =
+  (result: IDataAndErrors<any> | undefined): AsyncAction =>
+  (dispatch) => {
+    if (result && result.errors) {
+      dispatch(addErrors({ errors: result.errors, name: result.name }));
+    }
+  };
 
-export default {
+const actions = {
   closeError,
   getNextError,
   closeErrors,
   addErrors,
 };
+
+export default actions;

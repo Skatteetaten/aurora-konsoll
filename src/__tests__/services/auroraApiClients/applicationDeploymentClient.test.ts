@@ -28,9 +28,10 @@ describe('findAllApplicationDeployments', () => {
       getApplicationDeployments
     );
 
-    const result = await applicationDeploymentClient.findAllApplicationDeployments(
-      ['aurora']
-    );
+    const result =
+      await applicationDeploymentClient.findAllApplicationDeployments([
+        'aurora',
+      ]);
     expect(result).toMatchSnapshot();
   });
 });
