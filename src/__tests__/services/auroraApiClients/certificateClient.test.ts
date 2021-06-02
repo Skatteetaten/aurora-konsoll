@@ -7,8 +7,12 @@ const serverMock = new GraphQLSeverMock();
 const clientMock = goboClientMock(serverMock.graphQLUrl);
 const certificateClient = new CertificateClient(clientMock);
 
-afterAll(() => {
-  serverMock.close();
+afterAll((done) => {
+  console.time('ferdig');
+  serverMock.close(() => {
+    done();
+    console.timeEnd('ferdig');
+  });
 });
 
 describe('getCertificates', () => {

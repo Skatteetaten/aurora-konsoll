@@ -1,5 +1,5 @@
 import cors from 'cors';
-import express from 'express';
+import express, { Application } from 'express';
 import { Server } from 'http';
 import GoboClient from 'services/GoboClient';
 import { IApiClients } from 'models/AuroraApi';
@@ -25,6 +25,8 @@ export class GraphQLSeverMock {
   private server: Server;
   private responses: IGraphQLResponseMock[];
 
+  private serverSockets = new Set<any>();
+
   constructor(port?: number) {
     const PORT = port || randomPort(40000, 50000);
     const ENDPOINT = '/graphql';
@@ -36,12 +38,20 @@ export class GraphQLSeverMock {
     server.post(ENDPOINT, (req, res) => {
       const { operationName } = req.body;
       const responseMock = this.responses[operationName];
-
+      console.log(req.rawHeaders);
+      res.setHeader('Connection', 'close');
       if (!responseMock) {
         res.sendStatus(404);
       } else {
         res.send(responseMock);
       }
+    });
+
+    server.on('connection', (socket) => {
+      this.serverSockets.add(socket);
+      socket.on('close', () => {
+        this.serverSockets.delete(socket);
+      });
     });
 
     this.responses = [];
@@ -50,8 +60,11 @@ export class GraphQLSeverMock {
     this.graphQLUrl = `http://localhost:${PORT}${ENDPOINT}`;
   }
 
-  public close() {
-    this.server.close();
+  public close(fn?: () => void) {
+    for (const socket of this.serverSockets.values()) {
+      socket.destroy();
+    }
+    this.server.close(fn);
   }
 
   public putResponse(queryName: string, response: any) {
