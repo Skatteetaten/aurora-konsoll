@@ -12,6 +12,7 @@ import {
   UserSettingsClient,
   WebsealClient,
 } from 'services/auroraApiClients';
+import { DnsClient } from 'services/auroraApiClients/dnsClient/client';
 
 type ResponseMock = any;
 
@@ -78,5 +79,6 @@ export function getApiClientsMock(serverMock: GraphQLSeverMock): IApiClients {
     netdebugClient: new NetdebugClient(clientMock),
     userSettingsClient: new UserSettingsClient(clientMock),
     websealClient: new WebsealClient(clientMock),
+    dnsClient: new DnsClient(clientMock),
   };
 }

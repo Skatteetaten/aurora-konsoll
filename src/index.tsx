@@ -17,6 +17,7 @@ import {
   NetdebugClient,
   UserSettingsClient,
   WebsealClient,
+  DnsClient,
 } from 'services/auroraApiClients';
 import GoboClient from 'services/GoboClient';
 import createStoreWithApi from 'store';
@@ -59,6 +60,7 @@ async function init() {
     databaseClient: new DatabaseClient(goboClient),
     websealClient: new WebsealClient(goboClient),
     certificateClient: new CertificateClient(goboClient),
+    dnsClient: new DnsClient(goboClient),
   };
 
   const store = createStoreWithApi(clients);
@@ -70,6 +72,7 @@ async function init() {
         <App
           tokenStore={tokenStore}
           displayDatabaseView={config.DBH_ENABLED}
+          displayDnsView={config.GAVEL_ENABLED}
           displaySkapViews={config.SKAP_ENABLED}
         />
       </BrowserRouter>
