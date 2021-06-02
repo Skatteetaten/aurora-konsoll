@@ -8,8 +8,8 @@ const serverMock = new GraphQLSeverMock();
 const clientMock = goboClientMock(serverMock.graphQLUrl);
 const applicationDeploymentClient = new ApplicationDeploymentClient(clientMock);
 
-afterAll(() => {
-  serverMock.close();
+afterAll((done) => {
+  serverMock.close(done);
 });
 
 describe('findUserAndAffiliations', () => {

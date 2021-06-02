@@ -7,8 +7,8 @@ const serverMock = new GraphQLSeverMock();
 const clientMock = goboClientMock(serverMock.graphQLUrl);
 const imageRepositoryClient = new ImageRepositoryClient(clientMock);
 
-afterAll(() => {
-  serverMock.close();
+afterAll((done) => {
+  serverMock.close(done);
 });
 
 describe('findTagsPaged', () => {

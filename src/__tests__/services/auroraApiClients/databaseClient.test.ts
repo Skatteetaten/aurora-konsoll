@@ -7,8 +7,8 @@ const serverMock = new GraphQLSeverMock();
 const clientMock = goboClientMock(serverMock.graphQLUrl);
 const databaseClient = new DatabaseClient(clientMock);
 
-afterAll(() => {
-  serverMock.close();
+afterAll((done) => {
+  serverMock.close(done);
 });
 
 describe('getDatabaseSchemas', () => {

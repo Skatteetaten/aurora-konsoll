@@ -8,11 +8,7 @@ const clientMock = goboClientMock(serverMock.graphQLUrl);
 const certificateClient = new CertificateClient(clientMock);
 
 afterAll((done) => {
-  console.time('ferdig');
-  serverMock.close(() => {
-    done();
-    console.timeEnd('ferdig');
-  });
+  serverMock.close(done);
 });
 
 describe('getCertificates', () => {
