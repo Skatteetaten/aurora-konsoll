@@ -19,7 +19,7 @@
     "express": "4.17.1",
     "graphql": "15.5.0",
     "graphql-tag": "2.12.4",
-    "http-proxy-middleware": "1.0.4",
+    "http-proxy-middleware": "2.0.0",
     "immer": "9.0.2",
     "isomorphic-fetch": "3.0.0",
     "lodash": "4.17.21",
