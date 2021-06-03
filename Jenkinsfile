@@ -9,7 +9,7 @@ def overrides = [
     chatRoom: "#aos-notifications",
     npmInstallCommand: 'ci',
     iqOrganizationName: "Team AOS",
-    nodeVersion: "10",
+    nodeVersion: "12",
     versionStrategy: [
         [ branch: 'master', versionHint: '0']
     ]
