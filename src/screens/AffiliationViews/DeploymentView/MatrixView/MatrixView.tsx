@@ -32,9 +32,8 @@ export const MatrixView = ({
   ...actionBarProps
 }: IMatrixViewProps) => {
   const [expandApplicationName, setExpandApplicationName] = useState(true);
-  const [sortBySizeAndAlphabetical, setSortBySizeAndAlphabetical] = useState(
-    true
-  );
+  const [sortBySizeAndAlphabetical, setSortBySizeAndAlphabetical] =
+    useState(true);
 
   return (
     <Wrapper>

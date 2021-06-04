@@ -63,7 +63,7 @@ class JdbcConnection extends React.Component<
     if (onTestJdbcConnectionForId && id) {
       await onTestJdbcConnectionForId(id);
     } else if (onTestJdbcConnectionForUser) {
-      if (onTestJdbcConnectionForUser && password && jdbcUrl && username) {
+      if (password && jdbcUrl && username) {
         await onTestJdbcConnectionForUser({
           password,
           jdbcUrl,

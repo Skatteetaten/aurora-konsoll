@@ -65,15 +65,13 @@ export default class CertificateService {
   public static DEFAULT_COLUMNS = certificateColumns;
 
   public updatedItems = (data: ICertificateResult): ICertificateView[] =>
-    data.certificates.map(
-      (it): ICertificateView => {
-        return {
-          id: Number(it.id),
-          dn: it.dn,
-          issuedDate: getLocalDate(it.issuedDate),
-          revokedDate: !!it.revokedDate ? getLocalDate(it.revokedDate) : '-',
-          expiresDate: !!it.expiresDate ? getLocalDate(it.expiresDate) : '-',
-        };
-      }
-    );
+    data.certificates.map((it): ICertificateView => {
+      return {
+        id: Number(it.id),
+        dn: it.dn,
+        issuedDate: getLocalDate(it.issuedDate),
+        revokedDate: !!it.revokedDate ? getLocalDate(it.revokedDate) : '-',
+        expiresDate: !!it.expiresDate ? getLocalDate(it.expiresDate) : '-',
+      };
+    });
 }

@@ -19,11 +19,8 @@ const mapDispatchToProps = {
 };
 
 const mapStateToProps = ({ userSettings, applications }: RootState) => {
-  const {
-    applicationsConnection,
-    isRefreshingForAffiliation,
-    isFetching,
-  } = applications;
+  const { applicationsConnection, isRefreshingForAffiliation, isFetching } =
+    applications;
   return {
     isFetching,
     applicationsConnection,

@@ -1,7 +1,7 @@
 import * as React from 'react';
 
 import ReactSelect from 'react-select';
-import { Theme } from 'react-select/src/types';
+import { GroupTypeBase, Theme } from 'react-select/src/types';
 
 import {
   RadioButtonGroupProps,
@@ -9,10 +9,10 @@ import {
 } from '@skatteetaten/frontend-components';
 
 interface ISelectProps {
-  options: Array<{
-    value: string | undefined;
-    label: string | undefined;
-  }>;
+  options?: readonly (
+    | { label: string; value: string }
+    | GroupTypeBase<{ label: string; value: string }>
+  )[];
   placeholder: string;
   selectedKey?: string;
   handleChange: RadioButtonGroupProps['onChange'];

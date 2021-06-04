@@ -120,11 +120,8 @@ class PodsStatus extends React.Component<IPodsStatusProps, IPodsStatusState> {
   };
 
   public applicationDeploymentPods = (): IPodsStatus[] => {
-    const {
-      isCalloutVisibleList,
-      podResources,
-      menuButtonElements,
-    } = this.state;
+    const { isCalloutVisibleList, podResources, menuButtonElements } =
+      this.state;
 
     const onIndexChange = (index: number) => () => {
       if (isCalloutVisibleList[index]) {
@@ -160,8 +157,9 @@ class PodsStatus extends React.Component<IPodsStatusProps, IPodsStatusState> {
                   fontSize: '25px',
                   cursor: 'pointer',
                   float: 'none',
-                  color: this.PodsStatusService.getStatusColorAndIconForPod(pod)
-                    .color,
+                  color:
+                    this.PodsStatusService.getStatusColorAndIconForPod(pod)
+                      .color,
                 }}
               />
             </span>

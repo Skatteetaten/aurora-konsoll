@@ -73,9 +73,10 @@ export default class PodsStatusService {
     return podLink ? podLink.url : '#';
   }
 
-  public getStatusColorAndIconForPod({
-    managementResponses,
-  }: IPodResource): { icon: string; color: string } {
+  public getStatusColorAndIconForPod({ managementResponses }: IPodResource): {
+    icon: string;
+    color: string;
+  } {
     const textResponse = managementResponses?.health?.textResponse;
     const [, response] = tryParseJSON<{ status?: string }>(textResponse);
     switch (response?.status) {

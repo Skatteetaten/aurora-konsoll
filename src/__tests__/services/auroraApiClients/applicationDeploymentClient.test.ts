@@ -8,8 +8,8 @@ const serverMock = new GraphQLSeverMock();
 const clientMock = goboClientMock(serverMock.graphQLUrl);
 const applicationDeploymentClient = new ApplicationDeploymentClient(clientMock);
 
-afterAll(() => {
-  serverMock.close();
+afterAll((done) => {
+  serverMock.close(done);
 });
 
 describe('findUserAndAffiliations', () => {
@@ -28,9 +28,10 @@ describe('findAllApplicationDeployments', () => {
       getApplicationDeployments
     );
 
-    const result = await applicationDeploymentClient.findAllApplicationDeployments(
-      ['aurora']
-    );
+    const result =
+      await applicationDeploymentClient.findAllApplicationDeployments([
+        'aurora',
+      ]);
     expect(result).toMatchSnapshot();
   });
 });

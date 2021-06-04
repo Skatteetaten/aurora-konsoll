@@ -23,6 +23,8 @@ const DnsTable = ({ cnameInfos }: props) => {
       <Table
         style={{ background: 'white' }}
         data={cnameInfosData}
+        caption={''}
+        hideCaption={true}
         columns={[
           {
             name: 'Status',

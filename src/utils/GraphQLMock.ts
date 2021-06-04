@@ -12,6 +12,7 @@ import {
   UserSettingsClient,
   WebsealClient,
 } from 'services/auroraApiClients';
+import { Socket } from 'net';
 import { DnsClient } from 'services/auroraApiClients/dnsClient/client';
 
 type ResponseMock = any;
@@ -25,6 +26,7 @@ export class GraphQLSeverMock {
   public graphQLUrl: string;
   private server: Server;
   private responses: IGraphQLResponseMock[];
+  private serverSockets = new Set<Socket>();
 
   constructor(port?: number) {
     const PORT = port || randomPort(40000, 50000);
@@ -37,7 +39,6 @@ export class GraphQLSeverMock {
     server.post(ENDPOINT, (req, res) => {
       const { operationName } = req.body;
       const responseMock = this.responses[operationName];
-
       if (!responseMock) {
         res.sendStatus(404);
       } else {
@@ -49,10 +50,26 @@ export class GraphQLSeverMock {
     this.server = server.listen(PORT);
     this.port = PORT;
     this.graphQLUrl = `http://localhost:${PORT}${ENDPOINT}`;
+
+    // Keeps track of open connections that must be closed after test is done.
+    this.server.on('connection', (socket) => {
+      this.serverSockets.add(socket);
+      socket.on('close', () => {
+        this.serverSockets.delete(socket);
+      });
+    });
   }
 
-  public close() {
-    this.server.close();
+  /**
+   * Closes all connections and the server.
+   */
+  public close(done: jest.DoneCallback) {
+    this.server.close(() => {
+      done();
+    });
+    for (const socket of this.serverSockets.values()) {
+      socket.destroy();
+    }
   }
 
   public putResponse(queryName: string, response: any) {

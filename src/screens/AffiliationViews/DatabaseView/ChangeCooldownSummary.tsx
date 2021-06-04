@@ -9,7 +9,7 @@ import {
 } from 'models/schemas';
 import { renderDetailsListWithSchemaInfo } from './Schema';
 import Spinner from '@skatteetaten/frontend-components/Spinner';
-import { SpinnerSize } from 'office-ui-fabric-react';
+import { SpinnerSize } from '@fluentui/react';
 
 interface IChangeCooldownSummaryProps {
   changeCooldownResponse: IChangeCooldownDatabaseSchemasResponse;

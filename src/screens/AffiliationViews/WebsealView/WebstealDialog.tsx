@@ -52,11 +52,8 @@ class WebsealDialog extends React.Component<
   };
 
   public render() {
-    const {
-      selectedWebsealState,
-      deselectWebsealState,
-      className,
-    } = this.props;
+    const { selectedWebsealState, deselectWebsealState, className } =
+      this.props;
 
     if (!selectedWebsealState) {
       return <div />;

@@ -111,77 +111,74 @@ export const podFactory = Factory.Sync.makeFactory<IPodResource>({
   ],
 });
 
-export const deploymentFactory = Factory.Sync.makeFactory<
-  ApplicationDeployment
->(
-  new ApplicationDeployment({
-    applicationDeployment: {
-      id: 'c10010e594f229649437240f24f231343d62f8fa',
-      affiliation: {
-        name: 'paas',
-      },
-      environment: 'martin-dev',
-      name: 'martin-test-applikasjon',
-      namespace: {
-        name: 'paas-martin-dev',
-        permission: {
-          paas: {
-            admin: false,
-            view: true,
+export const deploymentFactory =
+  Factory.Sync.makeFactory<ApplicationDeployment>(
+    new ApplicationDeployment({
+      applicationDeployment: {
+        id: 'c10010e594f229649437240f24f231343d62f8fa',
+        affiliation: {
+          name: 'paas',
+        },
+        environment: 'martin-dev',
+        name: 'martin-test-applikasjon',
+        namespace: {
+          name: 'paas-martin-dev',
+          permission: {
+            paas: {
+              admin: false,
+              view: true,
+            },
           },
         },
-      },
-      imageRepository: {
-        repository: 'localhost/"martin-test-applikasjon',
-        isFullyQualified: true,
-      },
-      status: {
-        code: StatusCode.OBSERVE,
-        reasons: [],
-        reports: [],
-      },
-      time: '2018-12-07T11:48:34.230Z',
-      version: {
-        auroraVersion: '2.0.14-b1.17.0-flange-8.181.1',
-        deployTag: {
-          name: 'latest',
-          type: ImageTagType.AURORA_VERSION,
+        imageRepository: {
+          repository: 'localhost/"martin-test-applikasjon',
+          isFullyQualified: true,
         },
-        releaseTo: undefined,
+        status: {
+          code: StatusCode.OBSERVE,
+          reasons: [],
+          reports: [],
+        },
+        time: '2018-12-07T11:48:34.230Z',
+        version: {
+          auroraVersion: '2.0.14-b1.17.0-flange-8.181.1',
+          deployTag: {
+            name: 'latest',
+            type: ImageTagType.AURORA_VERSION,
+          },
+          releaseTo: undefined,
+        },
+        details: {
+          buildTime: '2019-08-13T14:06:23.825Z',
+          podResources: [podFactory.build()],
+          updatedBy: 'linus',
+          serviceLinks: [],
+          deploymentSpecs: {},
+        },
+        route: {
+          bigipJobs: [],
+          websealJobs: [],
+        },
       },
-      details: {
-        buildTime: '2019-08-13T14:06:23.825Z',
-        podResources: [podFactory.build()],
-        updatedBy: 'linus',
-        serviceLinks: [],
-        deploymentSpecs: {},
-      },
-      route: {
-        bigipJobs: [],
-        websealJobs: [],
-      },
-    },
-  })
-);
+    })
+  );
 
-export const deploymentDetailsFactory = Factory.Sync.makeFactory<
-  IApplicationDeploymentDetails
->({
-  updatedBy: 'linus',
-  deploymentSpec: deploymentSpecFactory.build(),
-  pods: podFactory.buildList(3),
-  serviceLinks: [],
-});
+export const deploymentDetailsFactory =
+  Factory.Sync.makeFactory<IApplicationDeploymentDetails>({
+    updatedBy: 'linus',
+    deploymentSpec: deploymentSpecFactory.build(),
+    pods: podFactory.buildList(3),
+    serviceLinks: [],
+  });
 
-export const applicationDeploymentFilterFactory = Factory.Sync.makeFactory<
-  IApplicationDeploymentFilters
->({
-  name: 'my-filter',
-  affiliation: 'paas',
-  default: true,
-  applications: ['app1', 'app2'],
-  environments: ['test'],
-});
+export const applicationDeploymentFilterFactory =
+  Factory.Sync.makeFactory<IApplicationDeploymentFilters>({
+    name: 'my-filter',
+    affiliation: 'paas',
+    default: true,
+    applications: ['app1', 'app2'],
+    environments: ['test'],
+  });
 
 export const filterFactory = Factory.Sync.makeFactory<IFilter>({
   applications: [],
@@ -190,22 +187,21 @@ export const filterFactory = Factory.Sync.makeFactory<IFilter>({
   name: 'auroraFilter',
 });
 
-export const databaseSchemaViewFactory = Factory.Sync.makeFactory<
-  IDatabaseSchemaView
->({
-  id: '123',
-  application: 'application',
-  environment: 'environment',
-  discriminator: 'db',
-  createdBy: '12345',
-  createdDate: '01.12.2015',
-  lastUsedDate: '23.01.2019',
-  applicationDeploymentsUses: 1,
-  sizeInMb: 0.75,
-  type: 'MANAGED',
-  engine: 'ORACLE',
-  jdbcUrl: 'jdbc:oracle:thin:@localhost:1521:db',
-});
+export const databaseSchemaViewFactory =
+  Factory.Sync.makeFactory<IDatabaseSchemaView>({
+    id: '123',
+    application: 'application',
+    environment: 'environment',
+    discriminator: 'db',
+    createdBy: '12345',
+    createdDate: '01.12.2015',
+    lastUsedDate: '23.01.2019',
+    applicationDeploymentsUses: 1,
+    sizeInMb: 0.75,
+    type: 'MANAGED',
+    engine: 'ORACLE',
+    jdbcUrl: 'jdbc:oracle:thin:@localhost:1521:db',
+  });
 
 export const databaseSchemaFactory = Factory.Sync.makeFactory<IDatabaseSchema>({
   discriminator: 'db',
@@ -234,28 +230,26 @@ export const tagFactory = Factory.Sync.makeFactory<IImageTag>({
   type: ImageTagType.MINOR,
 });
 
-export const databaseSchemaInputFactory = Factory.Sync.makeFactory<
-  IDatabaseSchemaInput
->({
-  application: 'application',
-  description: null,
-  environment: 'environment',
-  discriminator: 'db',
-  createdBy: '12345',
-  affiliation: 'paas',
-});
+export const databaseSchemaInputFactory =
+  Factory.Sync.makeFactory<IDatabaseSchemaInput>({
+    application: 'application',
+    description: null,
+    environment: 'environment',
+    discriminator: 'db',
+    createdBy: '12345',
+    affiliation: 'paas',
+  });
 
-export const databaseSchemaInputWithCreatedByFactory = Factory.Sync.makeFactory<
-  IUpdateDatabaseSchemaInputWithCreatedBy
->({
-  id: '1234.1234.1234',
-  discriminator: 'db',
-  description: 'description',
-  application: 'application',
-  environment: 'environment',
-  affiliation: 'paas',
-  createdBy: '12345',
-});
+export const databaseSchemaInputWithCreatedByFactory =
+  Factory.Sync.makeFactory<IUpdateDatabaseSchemaInputWithCreatedBy>({
+    id: '1234.1234.1234',
+    discriminator: 'db',
+    description: 'description',
+    application: 'application',
+    environment: 'environment',
+    affiliation: 'paas',
+    createdBy: '12345',
+  });
 
 export const jdbcUserFactory = Factory.Sync.makeFactory<IJdbcUser>({
   jdbcUrl: 'jdbc:oracle:thin:@test.skead.no:1521/referanse',
@@ -263,22 +257,20 @@ export const jdbcUserFactory = Factory.Sync.makeFactory<IJdbcUser>({
   username: 'username',
 });
 
-export const createDatabaseSchemaResponseFactory = Factory.Sync.makeFactory<
-  ICreateDatabaseSchemaResponse
->({
-  id: '123',
-  jdbcUser: jdbcUserFactory.build(),
-});
+export const createDatabaseSchemaResponseFactory =
+  Factory.Sync.makeFactory<ICreateDatabaseSchemaResponse>({
+    id: '123',
+    jdbcUser: jdbcUserFactory.build(),
+  });
 
-export const certificateViewFactory = Factory.Sync.makeFactory<
-  ICertificateView
->({
-  id: 123,
-  dn: 'test',
-  issuedDate: '12.01.2018',
-  revokedDate: '22.03.2016',
-  expiresDate: '12.01.2019',
-});
+export const certificateViewFactory =
+  Factory.Sync.makeFactory<ICertificateView>({
+    id: 123,
+    dn: 'test',
+    issuedDate: '12.01.2018',
+    revokedDate: '22.03.2016',
+    expiresDate: '12.01.2019',
+  });
 
 export const certificateFactory = Factory.Sync.makeFactory<ICertificate>({
   id: '123',
@@ -288,12 +280,11 @@ export const certificateFactory = Factory.Sync.makeFactory<ICertificate>({
   expiresDate: new Date(2019, 0, 12),
 });
 
-export const certificateResultFactory = Factory.Sync.makeFactory<
-  ICertificateResult
->({
-  certificates: [certificateFactory.build()],
-  totalCount: 1,
-});
+export const certificateResultFactory =
+  Factory.Sync.makeFactory<ICertificateResult>({
+    certificates: [certificateFactory.build()],
+    totalCount: 1,
+  });
 
 export const schemasFactory = Factory.Sync.makeFactory<ISchemasState>({
   isFetchingSchemas: false,
@@ -317,53 +308,48 @@ export const schemasFactory = Factory.Sync.makeFactory<ISchemasState>({
   },
 });
 
-export const certificateInitialFactory = Factory.Sync.makeFactory<
-  ICertificateState
->({
-  certificates: {
-    certificates: [],
-    totalCount: 0,
-  },
-  isFetchingCertificates: false,
-});
+export const certificateInitialFactory =
+  Factory.Sync.makeFactory<ICertificateState>({
+    certificates: {
+      certificates: [],
+      totalCount: 0,
+    },
+    isFetchingCertificates: false,
+  });
 
-export const databaseSchemasFactory = Factory.Sync.makeFactory<
-  IDatabaseSchemas
->({
-  databaseSchemas: [databaseSchemaFactory.build()],
-});
+export const databaseSchemasFactory =
+  Factory.Sync.makeFactory<IDatabaseSchemas>({
+    databaseSchemas: [databaseSchemaFactory.build()],
+  });
 
-export const deleteDatabaseSchemasResponseFactory = Factory.Sync.makeFactory<
-  IChangeCooldownDatabaseSchemasResponse
->({
-  failed: [],
-  succeeded: [],
-});
+export const deleteDatabaseSchemasResponseFactory =
+  Factory.Sync.makeFactory<IChangeCooldownDatabaseSchemasResponse>({
+    failed: [],
+    succeeded: [],
+  });
 
-export const userAndAffiliationsFactory = Factory.Sync.makeFactory<
-  IUserAndAffiliations
->({
-  affiliations: ['paas'],
-  id: '123',
-  user: 'bob',
-});
+export const userAndAffiliationsFactory =
+  Factory.Sync.makeFactory<IUserAndAffiliations>({
+    affiliations: ['paas'],
+    id: '123',
+    user: 'bob',
+  });
 
-export const createDatabaseSchemaInputFactory = Factory.Sync.makeFactory<
-  ICreateDatabaseSchemaInput
->({
-  affiliation: 'paas',
-  application: 'app',
-  createdBy: 'd36754',
-  description: null,
-  discriminator: 'my-db',
-  environment: 'env',
-  engine: 'ORACLE',
-  jdbcUser: {
-    jdbcUrl: 'jdbc:oracle:thin:@test.skead.no:1521/referanse',
-    password: 'password',
-    username: 'username',
-  },
-});
+export const createDatabaseSchemaInputFactory =
+  Factory.Sync.makeFactory<ICreateDatabaseSchemaInput>({
+    affiliation: 'paas',
+    application: 'app',
+    createdBy: 'd36754',
+    description: null,
+    discriminator: 'my-db',
+    environment: 'env',
+    engine: 'ORACLE',
+    jdbcUser: {
+      jdbcUrl: 'jdbc:oracle:thin:@test.skead.no:1521/referanse',
+      password: 'password',
+      username: 'username',
+    },
+  });
 
 export const appErrorFactory = Factory.Sync.makeFactory<IAppError>({
   error: new Error('error'),
@@ -395,12 +381,11 @@ export const netdebugResultFactory = Factory.Sync.makeFactory<INetdebugResult>({
   status: 'CLOSED',
 });
 
-export const netdebugViewStateInitialState = Factory.Sync.makeFactory<
-  INetdebugViewState
->({
-  isFetching: false,
-  netdebugStatus: netdebugResultFactory.build(),
-});
+export const netdebugViewStateInitialState =
+  Factory.Sync.makeFactory<INetdebugViewState>({
+    isFetching: false,
+    netdebugStatus: netdebugResultFactory.build(),
+  });
 
 export const websealStateFactory = Factory.Sync.makeFactory<IWebsealState>({
   acl: aclFactory.build(),
@@ -410,12 +395,11 @@ export const websealStateFactory = Factory.Sync.makeFactory<IWebsealState>({
   junctions: ['{"totalRequests":"10"}', '{"totalRequests":"12"}'],
 });
 
-export const websealReduxStateFactory = Factory.Sync.makeFactory<
-  IWebsealReduxState
->({
-  isFetchingWebsealStates: false,
-  websealStates: [],
-});
+export const websealReduxStateFactory =
+  Factory.Sync.makeFactory<IWebsealReduxState>({
+    isFetchingWebsealStates: false,
+    websealStates: [],
+  });
 
 export const userSettingsFactory = Factory.Sync.makeFactory<IUserSettings>({
   applicationDeploymentFilters: [applicationDeploymentFilterFactory.build()],
@@ -427,39 +411,38 @@ export const iconLinkDataFactory = Factory.Sync.makeFactory<IIconLinkData>({
   href: 'http://test.no',
 });
 
-export const applicationDeploymentFactory = Factory.Sync.makeFactory<
-  IApplicationDeploymentData
->({
-  affiliation: {
-    name: 'aurora',
-  },
-  environment: 'dev',
-  id: Factory.each((i) => `${i}`),
-  imageRepository: {
-    guiUrl: 'http://localhost',
-    repository: 'no.skatteetaten.aurora.mokey',
-    isFullyQualified: true,
-  },
-  name: 'mokey',
-  namespace: {
-    name: 'aurora-dev',
-    permission: {
-      paas: {
-        admin: true,
-        view: true,
+export const applicationDeploymentFactory =
+  Factory.Sync.makeFactory<IApplicationDeploymentData>({
+    affiliation: {
+      name: 'aurora',
+    },
+    environment: 'dev',
+    id: Factory.each((i) => `${i}`),
+    imageRepository: {
+      guiUrl: 'http://localhost',
+      repository: 'no.skatteetaten.aurora.mokey',
+      isFullyQualified: true,
+    },
+    name: 'mokey',
+    namespace: {
+      name: 'aurora-dev',
+      permission: {
+        paas: {
+          admin: true,
+          view: true,
+        },
       },
     },
-  },
-  status: {
-    code: StatusCode.HEALTHY,
-    reasons: [],
-    reports: [],
-  },
-  time: '2019-11-06T12:54:00.707621Z',
-  version: {
-    deployTag: {
-      name: 'latest',
-      type: ImageTagType.LATEST,
+    status: {
+      code: StatusCode.HEALTHY,
+      reasons: [],
+      reports: [],
     },
-  },
-});
+    time: '2019-11-06T12:54:00.707621Z',
+    version: {
+      deployTag: {
+        name: 'latest',
+        type: ImageTagType.LATEST,
+      },
+    },
+  });
