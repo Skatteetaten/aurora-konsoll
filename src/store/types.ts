@@ -16,6 +16,7 @@ import { IApiClients } from 'models/AuroraApi';
 import { UserSettingsAction } from './state/userSettings/actions';
 import { ApplicationsAction } from './state/applicationDeployments/actions';
 import { StartupAction } from './state/startup/actions';
+import { DnsAction } from './state/dns/actions';
 
 export type RootState = StateType<typeof rootReducer>;
 
@@ -28,7 +29,8 @@ export type RootAction =
   | WebsealAction
   | ErrorsAction
   | UserSettingsAction
-  | NetdebugViewAction;
+  | NetdebugViewAction
+  | DnsAction;
 
 export interface IExtraArguments {
   clients: IApiClients;

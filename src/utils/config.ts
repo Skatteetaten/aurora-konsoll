@@ -3,6 +3,7 @@ export interface IConfiguration {
   CLIENT_ID: string;
   DBH_ENABLED: boolean;
   SKAP_ENABLED: boolean;
+  GAVEL_ENABLED: boolean;
   APPLICATION_NAME: string;
 }
 
