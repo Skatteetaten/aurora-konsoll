@@ -1,7 +1,7 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import styled from 'styled-components';
 import TextField from '@skatteetaten/frontend-components/TextField';
-import { TextFieldEvent } from '../../../types/react';
+import { TextFieldEvent } from 'types/react';
 import {
   IRestorableDatabaseSchemas,
   IDatabaseSchemaData,
@@ -9,7 +9,7 @@ import {
   ITestJDBCResponse,
   IChangeCooldownDatabaseSchemasResponse,
   IDatabaseSchema,
-} from '../../../models/schemas';
+} from 'models/schemas';
 import { EnterModeThenConfirm } from './EnterModeThenConfirm';
 import {
   DatabaseSchemaTable,

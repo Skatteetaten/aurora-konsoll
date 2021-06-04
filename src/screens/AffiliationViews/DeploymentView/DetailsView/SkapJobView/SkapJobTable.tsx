@@ -28,6 +28,8 @@ const SkapJobTable = ({ websealJobs, bigipJobs }: ISkapJobTableProps) => {
         <>
           <h2>WebSEAL jobber</h2>
           <Table
+            caption={''}
+            hideCaption={true}
             style={{ background: 'white' }}
             data={websealJobs}
             columns={[
@@ -84,6 +86,8 @@ const SkapJobTable = ({ websealJobs, bigipJobs }: ISkapJobTableProps) => {
         <>
           <h2>BIG-IP jobber</h2>
           <Table
+            caption={''}
+            hideCaption={true}
             style={{ background: 'white' }}
             data={bigipJobs}
             columns={[

@@ -1,12 +1,12 @@
 import DetailsList from '@skatteetaten/frontend-components/DetailsList';
 import Icon from '@skatteetaten/frontend-components/Icon';
-import palette from '@skatteetaten/frontend-components/utils/palette';
 import * as React from 'react';
 
 import Collapse from 'components/Collapse';
 import { StatusCode, toStatusColor } from 'models/Status';
 import { IStatusCheck } from 'services/auroraApiClients/applicationDeploymentClient/query';
 import styled from 'styled-components';
+import { skeColor } from '@skatteetaten/frontend-components';
 
 interface IStatusCheckReportProps {
   reports: IStatusCheck[];
@@ -41,7 +41,6 @@ function getIconStatusStyle(
   level: StatusCode,
   fontSize: string = '28px'
 ): React.CSSProperties {
-  const { skeColor } = palette;
   const color: string = hasFailed ? toStatusColor(level).base : skeColor.green;
   return {
     color,

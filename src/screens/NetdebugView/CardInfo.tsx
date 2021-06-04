@@ -1,12 +1,12 @@
 import * as React from 'react';
 import styled from 'styled-components';
 
-import palette from '@skatteetaten/frontend-components/utils/palette';
 import Button from '@skatteetaten/frontend-components/Button';
 
 import { INetdebugResult } from 'services/auroraApiClients';
 
 import Indicator, { IndicatorColor } from './Indicator';
+import { skeColor } from '@skatteetaten/frontend-components';
 
 interface ICardProps {
   netdebugStatus: string;
@@ -58,8 +58,6 @@ const CardInfo = ({
     </div>
   </div>
 );
-
-const { skeColor } = palette;
 
 export default styled(CardInfo)`
   background: ${skeColor.neutralGrey};

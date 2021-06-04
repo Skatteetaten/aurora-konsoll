@@ -2,13 +2,11 @@ import * as React from 'react';
 
 import Icon from '@skatteetaten/frontend-components/Icon';
 import TextField from '@skatteetaten/frontend-components/TextField';
-import palette from '@skatteetaten/frontend-components/utils/palette';
 import LoadingButton from 'components/LoadingButton';
 import { IJdbcUser, ITestJDBCResponse } from 'models/schemas';
 import styled from 'styled-components';
 import { TextFieldEvent } from 'types/react';
-
-const { skeColor } = palette;
+import { skeColor } from '@skatteetaten/frontend-components';
 
 enum JdcbTestState {
   NOT_STARTED,
@@ -192,7 +190,7 @@ export default styled(JdbcConnection)`
     align-items: center;
     height: 30px;
   }
-  .ms-Callout-main {
-    width: 380px;
+  .ms-Callout-container {
+    width: fit-content;
   }
 `;

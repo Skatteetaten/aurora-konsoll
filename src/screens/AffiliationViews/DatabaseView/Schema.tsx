@@ -28,10 +28,7 @@ import {
 } from './DatabaseSchemaTable';
 import DatabaseSchemaUpdateDialog from './DatabaseSchemaUpdateDialog';
 import Spinner from '@skatteetaten/frontend-components/Spinner';
-import {
-  ScrollablePane,
-  SpinnerSize,
-} from 'office-ui-fabric-react/lib-commonjs';
+import { ScrollablePane, SpinnerSize } from '@fluentui/react';
 import LoadingButton from 'components/LoadingButton';
 
 export const renderDetailsListWithSchemaInfo = (schemas: IDatabaseSchema[]) => (

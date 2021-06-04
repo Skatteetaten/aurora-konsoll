@@ -107,7 +107,7 @@ export const VersionTable = ({
 
   return (
     <TableWrapper>
-      <Table data={data} columns={columns} />
+      <Table data={data} columns={columns} caption={''} hideCaption={true} />
     </TableWrapper>
   );
 };
@@ -142,6 +142,10 @@ const TableWrapper = styled.div`
         }
       }
     }
+  }
+
+  div.cellContent {
+    padding: 0px 12px;
   }
 
   td button {

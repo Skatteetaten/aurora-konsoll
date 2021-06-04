@@ -1,6 +1,5 @@
 import * as React from 'react';
 import { useEffect, useRef, useState } from 'react';
-import palette from '@skatteetaten/frontend-components/utils/palette';
 import styled from 'styled-components';
 import {
   IDatabaseApplicationDeployment,
@@ -19,8 +18,7 @@ import Button from '@skatteetaten/frontend-components/Button';
 import ActionButton from '@skatteetaten/frontend-components/ActionButton';
 import SkeLink from '../../../components/SkeLink';
 import DatabaseSchemaService from '../../../services/DatabaseSchemaService';
-
-const { skeColor } = palette;
+import { skeColor } from '@skatteetaten/frontend-components';
 
 interface IDatabaseSchemaUpdateDialogProps {
   schema?: IDatabaseSchema;

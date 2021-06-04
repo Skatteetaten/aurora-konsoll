@@ -16,8 +16,8 @@ import FooterText from './FooterText';
 import SelectionButtons from './SelectionButtons';
 import { connect } from 'react-redux';
 import { addErrors } from 'screens/ErrorHandler/state/actions';
-import { RadioButtonGroupProps } from '@skatteetaten/frontend-components/RadioButtonGroup';
 import { TextFieldEvent } from 'types/react';
+import { RadioButtonGroupProps } from '@skatteetaten/frontend-components';
 
 export enum SelectionType {
   Applications,
@@ -522,6 +522,9 @@ const styledFilter = styled(Filter)`
   }
   .styled-edit {
     margin-right: 40px;
+  }
+  .styled-radio-buttons {
+    white-space: nowrap;
   }
   .apps-and-envs {
     max-height: 500px;

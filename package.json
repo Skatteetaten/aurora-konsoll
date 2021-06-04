@@ -14,7 +14,7 @@
   "dependencies": {
     "@reduxjs/toolkit": "1.5.1",
     "@skatteetaten/aurora-management-interface": "1.0.2",
-    "@skatteetaten/frontend-components": "3.4.2",
+    "@skatteetaten/frontend-components": "4.1.0",
     "cors": "2.8.5",
     "express": "4.17.1",
     "graphql": "15.0.0",
@@ -46,7 +46,7 @@
     "build:web": "GENERATE_SOURCEMAP=false react-scripts build",
     "build:api": "webpack --config webpack.api.config.js --mode production",
     "build:api:watch": "npm run build:api -- --watch --preserveWatchOutput",
-    "test": "react-scripts test",
+    "test": "NODE_OPTIONS=--max-old-space-size=2048 react-scripts test",
     "test:api": "jest api/*.ts",
     "eject": "react-scripts eject",
     "clean": "rimraf build build-api coverage pom *.tgz",
@@ -141,6 +141,9 @@
       "!src/**/*.d.ts",
       "!src/setupTests.ts",
       "!src/services/registerServiceWorker.ts"
+    ],
+    "transformIgnorePatterns": [
+      "node_modules/?!(@skatteetaten/frontend-components)"
     ]
   },
   "eslintConfig": {

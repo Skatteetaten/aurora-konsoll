@@ -1,8 +1,6 @@
-import palette from '@skatteetaten/frontend-components/utils/palette';
+import { skeColor } from '@skatteetaten/frontend-components';
 import { NavLink } from 'react-router-dom';
 import styled from 'styled-components';
-
-const { skeColor } = palette;
 
 const TabLink = styled(NavLink)`
   display: block;

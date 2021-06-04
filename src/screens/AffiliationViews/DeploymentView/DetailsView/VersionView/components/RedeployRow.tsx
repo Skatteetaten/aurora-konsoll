@@ -11,7 +11,7 @@ import {
 } from '../../models/VersionStatus';
 import { DeployButton } from './DeployButton';
 import { VersionInfo } from './VersionInfo';
-import { SpinnerSize } from 'office-ui-fabric-react/lib-commonjs';
+import { SpinnerSize } from '@fluentui/react';
 import DateWithTooltip from 'components/DateWithTooltip';
 
 interface IRedeployRowProps {

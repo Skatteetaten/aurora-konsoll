@@ -1,7 +1,4 @@
-import {
-  ColumnActionsMode,
-  IColumn,
-} from 'office-ui-fabric-react/lib-commonjs';
+import { ColumnActionsMode, IColumn } from '@fluentui/react';
 import { IPodsStatus, IPodResource } from 'models/Pod';
 import { STATUS_COLORS } from 'models/Status';
 import { IIconLinkData } from 'components/IconLink';

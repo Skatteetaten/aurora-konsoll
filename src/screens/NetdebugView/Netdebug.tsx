@@ -1,9 +1,8 @@
 import * as React from 'react';
 import styled from 'styled-components';
 
-import Button from '@skatteetaten/frontend-components/Button';
-import Spinner from '@skatteetaten/frontend-components/Spinner';
 import TextField from '@skatteetaten/frontend-components/TextField';
+import LoadingButton from 'components/LoadingButton';
 
 import CardInfo from './CardInfo';
 import Table from './Table';
@@ -147,14 +146,15 @@ class NetdebugBase extends React.Component<INetdebugProps, INetdebugState> {
                   errorMessage={portError}
                 />
               </div>
-              <Button
+              <LoadingButton
                 style={{ minWidth: '100px' }}
                 buttonStyle="primary"
                 onClick={this.onScanClicked}
                 disabled={!canScan}
+                loading={this.props.isFetching}
               >
-                {this.props.isFetching ? <Spinner /> : 'Scan'}
-              </Button>
+                Scan
+              </LoadingButton>
             </div>
             <div className="card-wrapper">
               {this.state.showCard && this.state.parsedData && (

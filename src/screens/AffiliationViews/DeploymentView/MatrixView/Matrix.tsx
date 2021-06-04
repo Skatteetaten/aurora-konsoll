@@ -3,7 +3,7 @@ import styled from 'styled-components';
 import Row, { IApplicationMap } from './components/Row';
 import { IApplicationDeployment } from 'models/ApplicationDeployment';
 import Spinner from '@skatteetaten/frontend-components/Spinner';
-import { SpinnerSize } from 'office-ui-fabric-react/lib-commonjs';
+import { SpinnerSize } from '@fluentui/react';
 
 interface IMatrixProps {
   showSemanticVersion: boolean;

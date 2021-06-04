@@ -11,7 +11,6 @@ import Icon from '@skatteetaten/frontend-components/Icon';
 import { getLocalDatetime } from 'utils/date';
 import IconLink from 'components/IconLink';
 import Callout from '@skatteetaten/frontend-components/Callout';
-import DetailsList from '@skatteetaten/frontend-components/DetailsList';
 import ActionButton from '@skatteetaten/frontend-components/ActionButton';
 import ManagementResponseDialogSelector from 'components/ManagementResponseDialog';
 
@@ -256,6 +255,12 @@ export default styled(PodsStatus)`
     .ms-Button-icon {
       margin: 0;
     }
+  }
+
+  .ms-Button.ms-Button--action {
+    padding: 0px;
+    min-height: 0px;
+    margin-top: -3px;
   }
 
   .ms-DetailsRow-cell:nth-child(2),
