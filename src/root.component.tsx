@@ -11,6 +11,7 @@ import {
   ApplicationDeploymentClient,
   CertificateClient,
   DatabaseClient,
+  DnsClient,
   ImageRepositoryClient,
   NetdebugClient,
   UserSettingsClient,
@@ -46,6 +47,7 @@ const Root = (props: any) => {
     databaseClient: new DatabaseClient(goboClient),
     websealClient: new WebsealClient(goboClient),
     certificateClient: new CertificateClient(goboClient),
+    dnsClient: new DnsClient(goboClient),
   };
 
   const store = createStoreWithApi(clients);
@@ -57,6 +59,7 @@ const Root = (props: any) => {
         <App
           tokenStore={tokenStore}
           displayDatabaseView={config.DBH_ENABLED}
+          displayDnsView={config.GAVEL_ENABLED}
           displaySkapViews={config.SKAP_ENABLED}
         />
       </BrowserRouter>

@@ -4,10 +4,10 @@ import styled from 'styled-components';
 import {
   NavigationTile,
   NavigationContent,
-  Palette,
 } from '@skatteetaten/frontend-components';
 import { Step } from 'models/schemas';
 import { ButtonLink } from 'components/ButtonLink';
+import { skeColor } from '@skatteetaten/frontend-components';
 
 interface ITypeProps {
   setStep: (step: Step) => void;
@@ -51,7 +51,7 @@ export default styled(Type)`
   }
 
   button:hover {
-    background-color: ${Palette.skeColor.lightBlue};
+    background-color: ${skeColor.lightBlue};
   }
 
   .styled-tile {

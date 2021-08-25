@@ -1,25 +1,24 @@
-export const normalizeRawDeploymentSpec = (node: any) => (
-  acc: any,
-  key: string
-): IDeploymentSpec => {
-  const currentNode = node[key];
-  const children = Object.keys(currentNode).filter(
-    (cKey) => ['sources', 'source', 'value'].indexOf(cKey) === -1
-  );
+export const normalizeRawDeploymentSpec =
+  (node: any) =>
+  (acc: any, key: string): IDeploymentSpec => {
+    const currentNode = node[key];
+    const children = Object.keys(currentNode).filter(
+      (cKey) => ['sources', 'source', 'value'].indexOf(cKey) === -1
+    );
 
-  const nextValue =
-    children.length > 0
-      ? children.reduce(
-          normalizeRawDeploymentSpec(currentNode),
-          {} as IDeploymentSpec
-        )
-      : currentNode.value;
+    const nextValue =
+      children.length > 0
+        ? children.reduce(
+            normalizeRawDeploymentSpec(currentNode),
+            {} as IDeploymentSpec
+          )
+        : currentNode.value;
 
-  return {
-    ...acc,
-    [key]: nextValue,
+    return {
+      ...acc,
+      [key]: nextValue,
+    };
   };
-};
 
 export interface IDeploymentSpec {
   affiliation: string;

@@ -68,9 +68,8 @@ const DatabaseSchemaUpdateDialog = ({
     application: '',
     affiliation: '',
   };
-  const [updatedSchemaValues, setUpdatedSchemaValues] = useState<
-    IUpdatedSchemaValues
-  >(initialUpdatedSchemaValues);
+  const [updatedSchemaValues, setUpdatedSchemaValues] =
+    useState<IUpdatedSchemaValues>(initialUpdatedSchemaValues);
   const databaseService = new DatabaseSchemaService();
 
   function usePrevious(value) {
@@ -81,15 +80,13 @@ const DatabaseSchemaUpdateDialog = ({
     return ref.current;
   }
 
-  const handleLabelChange = (field: string) => (
-    event: TextFieldEvent,
-    newValue?: string
-  ) => {
-    setUpdatedSchemaValues((prevState) => ({
-      ...prevState,
-      [field]: newValue,
-    }));
-  };
+  const handleLabelChange =
+    (field: string) => (event: TextFieldEvent, newValue?: string) => {
+      setUpdatedSchemaValues((prevState) => ({
+        ...prevState,
+        [field]: newValue,
+      }));
+    };
 
   const renderConfirmationOpenButton = (open: () => void) => (
     <ActionButton

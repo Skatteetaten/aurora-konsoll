@@ -7,10 +7,7 @@ import { ImageTagType } from 'models/ImageTagType';
 import { getVersionTypeSelectorOptions } from './utils/options';
 import { onRenderOption } from './components/VersionTypeOption';
 import { VersionTypeSelectorState } from './VersionTypeSelector.state';
-import {
-  IComboBox,
-  IComboBoxOption,
-} from 'office-ui-fabric-react/lib-commonjs';
+import { IComboBox, IComboBoxOption } from '@fluentui/react';
 
 interface IVersionTypeSelectorProps {
   onSelect: (type: ImageTagType) => void;

@@ -30,25 +30,21 @@ const External = ({
   databaseSchemaService,
   setJdbcUserInput,
 }: IExternalProps) => {
-  const handleLabelChange = (field: string) => (
-    event: TextFieldEvent,
-    newValue?: string
-  ) => {
-    setDatabaseSchemaInput({
-      ...databaseSchemaInput,
-      [field]: newValue,
-    });
-  };
+  const handleLabelChange =
+    (field: string) => (event: TextFieldEvent, newValue?: string) => {
+      setDatabaseSchemaInput({
+        ...databaseSchemaInput,
+        [field]: newValue,
+      });
+    };
 
-  const handleJdbcChange = (field: string) => (
-    event: TextFieldEvent,
-    newValue?: string
-  ) => {
-    setJdbcUserInput({
-      ...databaseSchemaInput.jdbcUser,
-      [field]: newValue,
-    } as IJdbcUser);
-  };
+  const handleJdbcChange =
+    (field: string) => (event: TextFieldEvent, newValue?: string) => {
+      setJdbcUserInput({
+        ...databaseSchemaInput.jdbcUser,
+        [field]: newValue,
+      } as IJdbcUser);
+    };
 
   let jdbcUser: IJdbcUser;
   if (databaseSchemaInput.jdbcUser) {
@@ -61,12 +57,8 @@ const External = ({
     };
   }
 
-  const {
-    environment,
-    application,
-    discriminator,
-    description,
-  } = databaseSchemaInput;
+  const { environment, application, discriminator, description } =
+    databaseSchemaInput;
 
   return (
     <Grid>

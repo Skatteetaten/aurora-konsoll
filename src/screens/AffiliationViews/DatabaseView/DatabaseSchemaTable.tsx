@@ -1,14 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import SortableDetailsList from 'components/SortableDetailsList';
-import {
-  CheckboxVisibility,
-  IColumn,
-  Selection,
-} from 'office-ui-fabric-react/lib-commonjs';
+import { Selection, CheckboxVisibility, IColumn } from '@fluentui/react';
 
 import { IDatabaseSchemaData } from 'models/schemas';
 import { getLocalDate } from 'utils/date';
-
 interface IDatabaseSchemaTableProps {
   filter: string;
   schemas: IDatabaseSchemaData[];
@@ -30,24 +25,23 @@ export const DatabaseSchemaTable = ({
   isRestoreTable,
   selectedSchemas,
 }: IDatabaseSchemaTableProps) => {
-  const filterDatabaseSchemaView = (filter: string) => (
-    view: IDatabaseSchemaView
-  ) =>
-    view.createdBy.includes(filter) ||
-    view.application.toLowerCase().includes(filter) ||
-    view.environment.toLowerCase().includes(filter) ||
-    view.discriminator.toLowerCase().includes(filter) ||
-    view.createdDate.includes(filter) ||
-    (!view.lastUsedDate || view.lastUsedDate === null
-      ? false
-      : view.lastUsedDate.includes(filter)) ||
-    view.sizeInMb.toString().includes(filter) ||
-    view.type.toLowerCase().includes(filter) ||
-    view.jdbcUrl.includes(filter) ||
-    view.id.includes(filter) ||
-    view.engine.toLowerCase().includes(filter) ||
-    (view.setToCooldownAt?.includes(filter) ?? false) ||
-    (view.deleteAfter?.includes(filter) ?? false);
+  const filterDatabaseSchemaView =
+    (filter: string) => (view: IDatabaseSchemaView) =>
+      view.createdBy.includes(filter) ||
+      view.application.toLowerCase().includes(filter) ||
+      view.environment.toLowerCase().includes(filter) ||
+      view.discriminator.toLowerCase().includes(filter) ||
+      view.createdDate.includes(filter) ||
+      (!view.lastUsedDate || view.lastUsedDate === null
+        ? false
+        : view.lastUsedDate.includes(filter)) ||
+      view.sizeInMb.toString().includes(filter) ||
+      view.type.toLowerCase().includes(filter) ||
+      view.jdbcUrl.includes(filter) ||
+      view.id.includes(filter) ||
+      view.engine.toLowerCase().includes(filter) ||
+      (view.setToCooldownAt?.includes(filter) ?? false) ||
+      (view.deleteAfter?.includes(filter) ?? false);
   const [viewItems, setViewItems] = useState<IDatabaseSchemaView[]>([]);
 
   useEffect(() => {

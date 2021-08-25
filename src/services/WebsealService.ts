@@ -1,4 +1,4 @@
-import { IColumn } from 'office-ui-fabric-react/lib-commonjs';
+import { IColumn } from '@fluentui/react';
 
 const websealTableColumns: IColumn[] = [
   {

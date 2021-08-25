@@ -1,12 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 
-import {
-  Icon,
-  Callout,
-  DetailsList,
-  ActionButton,
-} from '@skatteetaten/frontend-components';
+import { Icon, Callout, ActionButton } from '@skatteetaten/frontend-components';
 import { IPodResource, IPodsStatus } from 'models/Pod';
 import SortableDetailsList from 'components/SortableDetailsList';
 import PodsStatusService, {
@@ -123,11 +118,8 @@ class PodsStatus extends React.Component<IPodsStatusProps, IPodsStatusState> {
   };
 
   public applicationDeploymentPods = (): IPodsStatus[] => {
-    const {
-      isCalloutVisibleList,
-      podResources,
-      menuButtonElements,
-    } = this.state;
+    const { isCalloutVisibleList, podResources, menuButtonElements } =
+      this.state;
 
     const onIndexChange = (index: number) => () => {
       if (isCalloutVisibleList[index]) {
@@ -163,8 +155,9 @@ class PodsStatus extends React.Component<IPodsStatusProps, IPodsStatusState> {
                   fontSize: '25px',
                   cursor: 'pointer',
                   float: 'none',
-                  color: this.PodsStatusService.getStatusColorAndIconForPod(pod)
-                    .color,
+                  color:
+                    this.PodsStatusService.getStatusColorAndIconForPod(pod)
+                      .color,
                 }}
               />
             </span>
@@ -259,6 +252,12 @@ export default styled(PodsStatus)`
     .ms-Button-icon {
       margin: 0;
     }
+  }
+
+  .ms-Button.ms-Button--action {
+    padding: 0px;
+    min-height: 0px;
+    margin-top: -3px;
   }
 
   .ms-DetailsRow-cell:nth-child(2),

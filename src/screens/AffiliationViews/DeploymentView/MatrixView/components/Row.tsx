@@ -15,12 +15,7 @@ interface IRowProps {
   showSemanticVersion: boolean;
 }
 
-const Row = ({
-  name,
-  environments,
-  apps,
-  showSemanticVersion: showExactVersion,
-}: IRowProps) => {
+const Row = ({ name, environments, apps, showSemanticVersion }: IRowProps) => {
   const match = useRouteMatch();
   if (!match) {
     return null;
@@ -51,18 +46,22 @@ const Row = ({
 
     const releaseToHint = deployment.version.releaseTo ? '*' : '';
 
-    const deployTag = deployment.version.deployTag.name;
-    const semanticVersion =
-      showExactVersion && getExactVersion(deployment.version.auroraVersion);
+    const exactVersion = getExactVersion(deployment.version.auroraVersion);
+
+    const deployTag = deployment.version.releaseTo
+      ? exactVersion
+      : deployment.version.deployTag.name;
+
+    const semanticVersion = showSemanticVersion && exactVersion;
 
     const isSameVersion =
-      semanticVersion && deployTag.localeCompare(semanticVersion) === 0;
+      semanticVersion && deployTag?.localeCompare(semanticVersion) === 0;
     return (
       <Status key={key} code={deployment.status.code} title={tooltip}>
         <Link to={`${match.url}/${deployment.id}/info`}>
           <span>
             {`${releaseToHint}${deployTag}`}
-            {!isSameVersion && (
+            {!isSameVersion && !deployment.version.releaseTo && (
               <>
                 <br />
                 {semanticVersion}

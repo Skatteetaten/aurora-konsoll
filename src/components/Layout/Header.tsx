@@ -10,6 +10,8 @@ import Logo from '@skatteetaten/frontend-components/TopBanner/assets/ske-logo.sv
 import { IUserAndAffiliations } from 'models/ApplicationDeployment';
 import { ButtonLink } from 'components/ButtonLink';
 
+const { skeColor } = Palette;
+
 interface IHeaderProps {
   title: string;
   currentUser: IUserAndAffiliations;
@@ -57,7 +59,7 @@ const Header = ({ title, currentUser, className, children }: IHeaderProps) => {
 };
 
 const HomeLink = styled(Link)`
-  color: ${Palette.skeColor.black};
+  color: ${skeColor.black};
   text-decoration: none;
 `;
 
@@ -136,7 +138,7 @@ export default styled(Header)`
     }
 
     button:hover {
-      background-color: ${Palette.skeColor.whiteGrey};
+      background-color: ${skeColor.whiteGrey};
     }
   }
 `;

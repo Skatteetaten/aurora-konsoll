@@ -23,15 +23,13 @@ const New = ({
     databaseSchemaInput.instanceName ?? 'oracle'
   );
 
-  const handleLabelChange = (field: string) => (
-    event: TextFieldEvent,
-    newValue?: string
-  ) => {
-    setDatabaseSchemaInput({
-      ...databaseSchemaInput,
-      [field]: newValue,
-    });
-  };
+  const handleLabelChange =
+    (field: string) => (event: TextFieldEvent, newValue?: string) => {
+      setDatabaseSchemaInput({
+        ...databaseSchemaInput,
+        [field]: newValue,
+      });
+    };
 
   const onInstanceChanged = (
     e: FormEvent<HTMLElement | HTMLInputElement> | undefined,
@@ -47,12 +45,8 @@ const New = ({
     }
   };
 
-  const {
-    environment,
-    application,
-    discriminator,
-    description,
-  } = databaseSchemaInput;
+  const { environment, application, discriminator, description } =
+    databaseSchemaInput;
 
   interface IInstanceRadioButton {
     key: string;
@@ -71,19 +65,18 @@ const New = ({
       instanceName: null,
     };
 
-    const databaseInstances:
-      | IInstanceRadioButton[]
-      | undefined = instances.databaseInstances?.map((it) => ({
-      key: it.instanceName,
-      text: `Postgres (${it.instanceName})`,
-      description: `${it.host}:${it.port} labels=[${it.labels
-        .map((it) => {
-          return `{${it.key}:${it.value}}`;
-        })
-        .join(', ')}]`,
-      engine: it.engine,
-      instanceName: it.instanceName,
-    }));
+    const databaseInstances: IInstanceRadioButton[] | undefined =
+      instances.databaseInstances?.map((it) => ({
+        key: it.instanceName,
+        text: `Postgres (${it.instanceName})`,
+        description: `${it.host}:${it.port} labels=[${it.labels
+          .map((it) => {
+            return `{${it.key}:${it.value}}`;
+          })
+          .join(', ')}]`,
+        engine: it.engine,
+        instanceName: it.instanceName,
+      }));
 
     if (databaseInstances) {
       databaseInstances.unshift(oracleInstance);

@@ -1,7 +1,4 @@
-import {
-  ColumnActionsMode,
-  IColumn,
-} from 'office-ui-fabric-react/lib-commonjs';
+import { ColumnActionsMode, IColumn } from '@fluentui/react';
 import { IPodsStatus, IPodResource } from 'models/Pod';
 import { STATUS_COLORS } from 'models/Status';
 import { IIconLinkData } from 'components/IconLink';
@@ -76,9 +73,10 @@ export default class PodsStatusService {
     return podLink ? podLink.url : '#';
   }
 
-  public getStatusColorAndIconForPod({
-    managementResponses,
-  }: IPodResource): { icon: string; color: string } {
+  public getStatusColorAndIconForPod({ managementResponses }: IPodResource): {
+    icon: string;
+    color: string;
+  } {
     const textResponse = managementResponses?.health?.textResponse;
     const [, response] = tryParseJSON<{ status?: string }>(textResponse);
     switch (response?.status) {

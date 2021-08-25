@@ -5,16 +5,11 @@ import {
   DetailsList,
   DetailsListProps,
 } from '@skatteetaten/frontend-components';
+import { CheckboxVisibility, IColumn, SelectionMode } from '@fluentui/react';
 import { SortDirection } from 'models/SortDirection';
 import { createDate, dateValidation } from 'utils/date';
 
 import { inspect } from 'util';
-import {
-  CheckboxVisibility,
-  IColumn,
-  SelectionMode,
-} from 'office-ui-fabric-react/lib-commonjs';
-
 export let selectedIndices: number[] = [];
 
 export interface ISortableDetailsListProps extends DetailsListProps {
@@ -56,9 +51,8 @@ const SortableDetailsList: React.FC<ISortableDetailsListProps> = ({
   //@ts-ignore
   const sortDirections = createDefaultSortDirections(columns);
 
-  const [columnSortDirections, setColumnSortDirections] = useState<
-    SortDirection[]
-  >(sortDirections);
+  const [columnSortDirections, setColumnSortDirections] =
+    useState<SortDirection[]>(sortDirections);
   const previousColumnSortDirectionsRef = useRef<SortDirection[]>();
   useEffect(() => {
     previousColumnSortDirectionsRef.current = columnSortDirections;

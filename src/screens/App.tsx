@@ -28,11 +28,13 @@ interface IAppProps {
   tokenStore: TokenStore;
   displayDatabaseView: boolean;
   displaySkapViews: boolean;
+  displayDnsView: boolean;
 }
 
 export const App: React.FC<IAppProps> = ({
   displayDatabaseView,
   displaySkapViews,
+  displayDnsView,
   tokenStore,
 }) => {
   const [affiliation, setAffiliation] = useState<string | undefined>(undefined);
@@ -78,6 +80,7 @@ export const App: React.FC<IAppProps> = ({
           onAffiliationChange={onAffiliationChangeFromSelector}
           displayDatabaseView={displayDatabaseView}
           displaySkapViews={displaySkapViews}
+          displayDnsView={displayDnsView}
         >
           <Route path="/secret" component={SecretTokenNavigation} />
           <Route path="/accept-token">

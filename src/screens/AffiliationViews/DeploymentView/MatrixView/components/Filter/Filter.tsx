@@ -79,12 +79,13 @@ export class Filter extends React.Component<IFilterProps, IFilterState> {
     const { selectedFilterKey, environments, applications } = this.state;
 
     if (!selectedFilterKey) {
-      const enabledFilter = this.filterService.findFilterByApplicationsAndEnvironments(
-        allFilters,
-        affiliation,
-        applications,
-        environments
-      );
+      const enabledFilter =
+        this.filterService.findFilterByApplicationsAndEnvironments(
+          allFilters,
+          affiliation,
+          applications,
+          environments
+        );
       if (enabledFilter) {
         this.setState({
           selectedFilterKey: enabledFilter.name,
@@ -210,13 +211,8 @@ export class Filter extends React.Component<IFilterProps, IFilterState> {
   };
 
   public footerApplyButton = (close: () => void) => {
-    const {
-      allFilters,
-      affiliation,
-      className,
-      updateFilter,
-      addErrors,
-    } = this.props;
+    const { allFilters, affiliation, className, updateFilter, addErrors } =
+      this.props;
     const {
       selectedFilterKey,
       mode,
@@ -393,9 +389,8 @@ export class Filter extends React.Component<IFilterProps, IFilterState> {
     const { className, allFilters, affiliation, allDeployments } = this.props;
     const { applications, environments, selectedFilterKey, mode } = this.state;
 
-    const selectionNames = this.filterService.createUniqueSelectionNames(
-      allDeployments
-    );
+    const selectionNames =
+      this.filterService.createUniqueSelectionNames(allDeployments);
 
     const renderOpenButton = (open: () => void) => (
       <ActionButton
@@ -525,6 +520,9 @@ const styledFilter = styled(Filter)`
   .styled-edit {
     margin-right: 40px;
   }
+  .styled-radio-buttons {
+    white-space: nowrap;
+  }
   .apps-and-envs {
     max-height: 500px;
     min-width: 250px;
@@ -560,5 +558,5 @@ const styledFilter = styled(Filter)`
 export default styledFilter;
 
 export const styledFilterConnected = connect(null, {
-  addErrors: (errors: any[]) => addErrors(errors),
+  addErrors: (errors: any[]) => addErrors({ errors }),
 })(styledFilter);

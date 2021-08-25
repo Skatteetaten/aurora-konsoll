@@ -5,6 +5,8 @@ import { Palette } from '@skatteetaten/frontend-components';
 import { getLocalDatetime } from 'utils/date';
 import { DateTime } from 'luxon';
 
+const { skeColor } = Palette;
+
 interface DateWithTooltipProps {
   date: string;
   className?: string;
@@ -43,8 +45,8 @@ display: inline-block;
   visibility: hidden;
   width: max-content;
   opacity: 0;
-  background-color: ${Palette.skeColor.blackAlt};
-  color: ${Palette.skeColor.white};
+  background-color: ${skeColor.blackAlt};
+  color: ${skeColor.white};
   padding: 8px;
   z-index: 1
   display: none;

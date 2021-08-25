@@ -85,6 +85,14 @@ export function fetchApplicationDeploymentWithDetails(
   );
 }
 
+export function setApplicationDeploymentId(
+  applicationDeploymentId: string | undefined
+): AsyncAction {
+  return (dispatch) => {
+    dispatch(actions.setApplicationDeploymentId(applicationDeploymentId));
+  };
+}
+
 export function resetApplicationDeploymentState(): AsyncAction {
   return (dispatch) => {
     dispatch(actions.resetApplicationDeploymentState());

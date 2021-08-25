@@ -80,9 +80,7 @@ export class DatabaseClient {
     });
   }
 
-  public async deleteSchemas(
-    ids: string[]
-  ): Promise<
+  public async deleteSchemas(ids: string[]): Promise<
     | IDataAndErrors<{
         deleteDatabaseSchemas: IChangeCooldownDatabaseSchemasResponse;
       }>
@@ -122,9 +120,7 @@ export class DatabaseClient {
     });
   }
 
-  public async testJdbcConnectionForId(
-    id: string
-  ): Promise<
+  public async testJdbcConnectionForId(id: string): Promise<
     | IDataAndErrors<{
         testJdbcConnectionForId: {
           hasSucceeded: boolean;

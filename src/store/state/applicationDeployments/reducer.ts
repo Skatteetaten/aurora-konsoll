@@ -1,7 +1,7 @@
-import { handleAction, reduceReducers } from 'redux-ts-utils';
 import { actions } from './actions';
 import { ApplicationsConnection } from 'models/immer/ApplicationsConnection';
 import { ApplicationDeployment } from 'models/immer/ApplicationDeployment';
+import { createReducer } from '@reduxjs/toolkit';
 
 interface IApplicationsState {
   isFetching: boolean;
@@ -14,6 +14,7 @@ interface IApplicationsState {
     requestApplications: Error[];
     requestApplicationDeployment: Error[];
   };
+  applicationDeploymentId?: string;
 }
 
 const initialState: IApplicationsState = {
@@ -28,83 +29,86 @@ const initialState: IApplicationsState = {
   },
 };
 
-export const applicationsReducer = reduceReducers<IApplicationsState>(
-  [
-    handleAction(actions.deleteApplicationDeploymentRequest, (state) => {
-      state.isRefreshingForAffiliation = true;
+export const applicationsReducer = createReducer(initialState, (builder) => {
+  builder.addCase(actions.deleteApplicationDeploymentRequest, (state) => {
+    state.isRefreshingForAffiliation = true;
+    state.isFetching = true;
+  });
+  builder.addCase(actions.refreshAllDeploymentsForAffiliation, (state) => {
+    state.isRefreshingForAffiliation = true;
+    state.isFetching = true;
+  });
+  builder.addCase(actions.setApplicationDeploymentId, (state, { payload }) => {
+    state.applicationDeploymentId = payload;
+  });
+  builder.addCase(actions.refreshApplicationDeployment, (state) => {
+    state.isRefreshing = true;
+  });
+  builder.addCase(actions.resetApplicationDeploymentState, (state) => {
+    state.applicationDeployment = undefined;
+  });
+  builder.addCase(actions.deployRequest, (state) => {
+    state.isDeploying = true;
+  });
+  builder.addCase(
+    actions.fetchApplicationDeploymentWithDetails.request,
+    (state) => {
       state.isFetching = true;
-    }),
-    handleAction(actions.refreshAllDeploymentsForAffiliation, (state) => {
-      state.isRefreshingForAffiliation = true;
-      state.isFetching = true;
-    }),
-    handleAction(actions.refreshApplicationDeployment, (state) => {
-      state.isRefreshing = true;
-    }),
-    handleAction(actions.resetApplicationDeploymentState, (state) => {
-      state.applicationDeployment = undefined;
-    }),
-    handleAction(actions.deployRequest, (state) => {
-      state.isDeploying = true;
-    }),
-    handleAction(
-      actions.fetchApplicationDeploymentWithDetails.request,
-      (state) => {
-        state.isFetching = true;
-      }
-    ),
-    handleAction(
-      actions.fetchApplicationDeploymentWithDetails.success,
-      (state, { payload }) => {
-        state.isDeploying = false;
-        state.isFetching = false;
-        state.isRefreshing = false;
-        if (payload.data) {
-          const newDeployment = new ApplicationDeployment(payload.data);
-          state.applicationDeployment = newDeployment;
-          state.applicationsConnection.updateApplicationDeployment(
-            newDeployment
-          );
-        }
-        if (payload.errors) {
-          state.errors.requestApplicationDeployment.push(...payload.errors);
-        }
-      }
-    ),
-    handleAction(
-      actions.fetchApplicationDeploymentWithDetails.failure,
-      (state, { payload }) => {
-        state.isDeploying = false;
-        state.isFetching = false;
-        state.isRefreshing = false;
-        state.errors.requestApplicationDeployment.push(payload);
-      }
-    ),
+    }
+  );
+  builder.addCase(
+    actions.fetchApplicationDeploymentWithDetails.success,
+    (state, { payload }) => {
+      state.isDeploying = false;
+      state.isFetching = false;
+      state.isRefreshing = false;
 
-    handleAction(actions.fetchApplicationDeployments.request, (state) => {
-      state.isFetching = true;
-    }),
-    handleAction(
-      actions.fetchApplicationDeployments.success,
-      (state, { payload }) => {
-        state.isFetching = false;
-        state.isRefreshingForAffiliation = false;
-        if (payload.data) {
-          state.applicationsConnection.update(payload.data);
-        }
-        if (payload.errors) {
-          state.errors.requestApplications.push(...payload.errors);
-        }
+      const isApplicationDeploymentIdFromPayloadSameAsCurrent =
+        payload.data &&
+        state.applicationDeploymentId &&
+        state.applicationDeploymentId === payload.data.applicationDeployment.id;
+
+      if (payload.data && isApplicationDeploymentIdFromPayloadSameAsCurrent) {
+        const newDeployment = new ApplicationDeployment(payload.data);
+        state.applicationDeployment = newDeployment;
+        state.applicationsConnection.updateApplicationDeployment(newDeployment);
       }
-    ),
-    handleAction(
-      actions.fetchApplicationDeployments.failure,
-      (state, { payload }) => {
-        state.isFetching = false;
-        state.isRefreshingForAffiliation = false;
-        state.errors.requestApplications.push(payload);
+      if (payload.errors) {
+        state.errors.requestApplicationDeployment.push(...payload.errors);
       }
-    ),
-  ],
-  initialState
-);
+    }
+  );
+  builder.addCase(
+    actions.fetchApplicationDeploymentWithDetails.failure,
+    (state, { payload }) => {
+      state.isDeploying = false;
+      state.isFetching = false;
+      state.isRefreshing = false;
+      state.errors.requestApplicationDeployment.push(payload);
+    }
+  );
+  builder.addCase(actions.fetchApplicationDeployments.request, (state) => {
+    state.isFetching = true;
+  });
+  builder.addCase(
+    actions.fetchApplicationDeployments.success,
+    (state, { payload }) => {
+      state.isFetching = false;
+      state.isRefreshingForAffiliation = false;
+      if (payload.data) {
+        state.applicationsConnection.update(payload.data);
+      }
+      if (payload.errors) {
+        state.errors.requestApplications.push(...payload.errors);
+      }
+    }
+  );
+  builder.addCase(
+    actions.fetchApplicationDeployments.failure,
+    (state, { payload }) => {
+      state.isFetching = false;
+      state.isRefreshingForAffiliation = false;
+      state.errors.requestApplications.push(payload);
+    }
+  );
+});

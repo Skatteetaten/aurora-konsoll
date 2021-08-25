@@ -65,8 +65,8 @@ beforeAll(() => {
   });
 });
 
-afterAll(() => {
-  server.close();
+afterAll((done) => {
+  server.close(done);
 });
 
 afterEach(() => {

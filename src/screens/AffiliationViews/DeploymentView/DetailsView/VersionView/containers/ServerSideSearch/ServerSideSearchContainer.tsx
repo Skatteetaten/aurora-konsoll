@@ -2,7 +2,7 @@ import React, { useEffect, KeyboardEvent, useRef, useState } from 'react';
 import { TextField, Palette } from '@skatteetaten/frontend-components';
 import LoadingButton from 'components/LoadingButton';
 
-import { ITextField } from 'office-ui-fabric-react/lib-commonjs';
+import { ITextField } from '@fluentui/react';
 import { ImageTagType } from 'models/ImageTagType';
 import {
   fetchVersions,

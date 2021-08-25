@@ -1,5 +1,5 @@
 import { addCurrentErrors } from 'screens/ErrorHandler/state/actions';
-import { createAction } from 'redux-ts-utils';
+import { createAction } from '@reduxjs/toolkit';
 import { INetdebugResult, IScanStatus } from 'services/auroraApiClients';
 import {
   IScanQuery,
@@ -23,23 +23,21 @@ const errorMessage = {
   status: 'Noe gikk galt',
 };
 
-export const findNetdebugStatus: Thunk = (host: string, port: string) => async (
-  dispatch,
-  getState,
-  { clients }
-) => {
-  dispatch(fetchNetdebugStatusRequest(true));
-  const result = await clients.netdebugClient.findNetdebugStatus(host, port);
-  dispatch(addCurrentErrors(result));
-  if (!result) {
-    dispatch(fetchNetdebugStatusResponse(errorMessage));
-  } else {
-    if (result.data) {
-      dispatch(fetchNetdebugStatusResponse(showNetdebugStatus(result.data)));
+export const findNetdebugStatus: Thunk =
+  (host: string, port: string) =>
+  async (dispatch, getState, { clients }) => {
+    dispatch(fetchNetdebugStatusRequest(true));
+    const result = await clients.netdebugClient.findNetdebugStatus(host, port);
+    dispatch(addCurrentErrors(result));
+    if (!result) {
+      dispatch(fetchNetdebugStatusResponse(errorMessage));
+    } else {
+      if (result.data) {
+        dispatch(fetchNetdebugStatusResponse(showNetdebugStatus(result.data)));
+      }
     }
-  }
-  dispatch(fetchNetdebugStatusRequest(false));
-};
+    dispatch(fetchNetdebugStatusRequest(false));
+  };
 
 const normalizeScanStatus = (scanStatus?: IScanStatusQuery): IScanStatus[] => {
   if (!scanStatus) {
@@ -69,7 +67,9 @@ const showNetdebugStatus = (item: IScanQuery): INetdebugResult => {
   }
 };
 
-export default {
+const actions = {
   fetchNetdebugStatusRequest,
   fetchNetdebugStatusResponse,
 };
+
+export default actions;

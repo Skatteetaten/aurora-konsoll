@@ -30,10 +30,7 @@ import {
   IDatabaseSchemaView,
 } from './DatabaseSchemaTable';
 import DatabaseSchemaUpdateDialog from './DatabaseSchemaUpdateDialog';
-import {
-  ScrollablePane,
-  SpinnerSize,
-} from 'office-ui-fabric-react/lib-commonjs';
+import { ScrollablePane, SpinnerSize } from '@fluentui/react';
 import LoadingButton from 'components/LoadingButton';
 
 export const renderDetailsListWithSchemaInfo = (schemas: IDatabaseSchema[]) => (
@@ -122,25 +119,20 @@ const Schema: React.FC<ISchemaProps> = ({
   isFetchingNext,
 }) => {
   const [filter, setFilter] = useState('');
-  const [selectedSchema, setSelectedSchema] = useState<
-    IDatabaseSchema | undefined
-  >(undefined);
+  const [selectedSchema, setSelectedSchema] =
+    useState<IDatabaseSchema | undefined>(undefined);
   const [databaseSchemasData, setDatabaseSchemasData] = useState<
     IDatabaseSchemaData[]
   >([]);
   const [selectedSchemas, setSelectedSchemas] = useState<IDatabaseSchema[]>([]);
-  const [selectedDetailsListItems, setSelectedDetailsListItems] = useState<
-    IDatabaseSchemaView[] | undefined
-  >(undefined);
-  const [schemaToCopy, setSchemaToCopy] = useState<IDatabaseSchema | undefined>(
-    undefined
-  );
+  const [selectedDetailsListItems, setSelectedDetailsListItems] =
+    useState<IDatabaseSchemaView[] | undefined>(undefined);
+  const [schemaToCopy, setSchemaToCopy] =
+    useState<IDatabaseSchema | undefined>(undefined);
   const [deleteMode, setDeleteMode] = useState(false);
   const [hasDeletionInformation, setHasDeletionInformation] = useState(false);
-  const [
-    confirmDeletionDialogVisible,
-    setConfirmDeletionDialogVisible,
-  ] = useState(false);
+  const [confirmDeletionDialogVisible, setConfirmDeletionDialogVisible] =
+    useState(false);
   const [shouldResetSort, setShouldResetSort] = useState(false);
 
   useEffect(() => {

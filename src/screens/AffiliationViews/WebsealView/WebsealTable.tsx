@@ -10,10 +10,7 @@ import {
 import LoadingButton from 'components/LoadingButton';
 import SortableDetailsList from 'components/SortableDetailsList';
 import { IWebsealState } from 'models/Webseal';
-import {
-  IObjectWithKey,
-  SpinnerSize,
-} from 'office-ui-fabric-react/lib-commonjs';
+import { IObjectWithKey, SpinnerSize } from '@fluentui/react';
 import WebsealService, {
   filterWebsealView,
   IWebsealTableColumns,

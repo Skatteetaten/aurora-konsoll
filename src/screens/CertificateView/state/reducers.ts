@@ -1,5 +1,5 @@
 import { ICertificateResult } from 'models/certificates';
-import { handleAction, reduceReducers } from 'redux-ts-utils';
+import { createReducer } from '@reduxjs/toolkit';
 import { ActionType } from 'typesafe-actions';
 import actions, {
   fetchCertificatesRequest,
@@ -13,14 +13,12 @@ export interface ICertificateState {
   readonly certificates: ICertificateResult;
 }
 
-const initialState = (): ICertificateState => {
-  return {
-    certificates: {
-      certificates: [],
-      totalCount: 0,
-    },
-    isFetchingCertificates: false,
-  };
+const initialState: ICertificateState = {
+  certificates: {
+    certificates: [],
+    totalCount: 0,
+  },
+  isFetchingCertificates: false,
 };
 
 function updateStateWithPayload(name: string) {
@@ -29,16 +27,13 @@ function updateStateWithPayload(name: string) {
   };
 }
 
-export const certificateReducer = reduceReducers<ICertificateState>(
-  [
-    handleAction(
-      fetchCertificatesRequest,
-      updateStateWithPayload('isFetchingCertificates')
-    ),
-    handleAction(
-      fetchCertificatesResponse,
-      updateStateWithPayload('certificates')
-    ),
-  ],
-  initialState()
-);
+export const certificateReducer = createReducer(initialState, (builder) => {
+  builder.addCase(
+    fetchCertificatesRequest,
+    updateStateWithPayload('isFetchingCertificates')
+  );
+  builder.addCase(
+    fetchCertificatesResponse,
+    updateStateWithPayload('certificates')
+  );
+});

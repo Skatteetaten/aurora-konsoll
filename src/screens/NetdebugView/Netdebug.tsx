@@ -1,7 +1,8 @@
 import * as React from 'react';
 import styled from 'styled-components';
 
-import { Button, Spinner, TextField } from '@skatteetaten/frontend-components';
+import { TextField } from '@skatteetaten/frontend-components';
+import LoadingButton from 'components/LoadingButton';
 
 import CardInfo from './CardInfo';
 import Table from './Table';
@@ -10,7 +11,8 @@ import { INetdebugResult } from 'services/auroraApiClients';
 import { TextFieldEvent } from 'types/react';
 
 const hostnameValidator = /(^|\s)([\w-]+(\.[\w-]+)+\.?(:\d+)?(\/\S*)?)/gi;
-const portValidator = /^(6553[0-5]|655[0-2]\d|65[0-4]\d\d|6[0-4]\d{3}|[1-5]\d{4}|[1-9]\d{0,3}|0)$/gi;
+const portValidator =
+  /^(6553[0-5]|655[0-2]\d|65[0-4]\d\d|6[0-4]\d{3}|[1-5]\d{4}|[1-9]\d{0,3}|0)$/gi;
 
 interface INetdebugState {
   hostnameValue: string;
@@ -145,14 +147,15 @@ class NetdebugBase extends React.Component<INetdebugProps, INetdebugState> {
                   errorMessage={portError}
                 />
               </div>
-              <Button
+              <LoadingButton
                 style={{ minWidth: '100px' }}
                 buttonStyle="primary"
                 onClick={this.onScanClicked}
                 disabled={!canScan}
+                loading={this.props.isFetching}
               >
-                {this.props.isFetching ? <Spinner /> : 'Scan'}
-              </Button>
+                Scan
+              </LoadingButton>
             </div>
             <div className="card-wrapper">
               {this.state.showCard && this.state.parsedData && (

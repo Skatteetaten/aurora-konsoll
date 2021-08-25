@@ -5,7 +5,7 @@ import {
   DetailsList,
   Spinner,
 } from '@skatteetaten/frontend-components';
-import { TextFieldEvent } from '../../../types/react';
+import { TextFieldEvent } from 'types/react';
 import {
   IRestorableDatabaseSchemas,
   IDatabaseSchemaData,
@@ -13,7 +13,7 @@ import {
   ITestJDBCResponse,
   IChangeCooldownDatabaseSchemasResponse,
   IDatabaseSchema,
-} from '../../../models/schemas';
+} from 'models/schemas';
 import { EnterModeThenConfirm } from './EnterModeThenConfirm';
 import {
   DatabaseSchemaTable,
@@ -22,7 +22,7 @@ import {
 import DatabaseSchemaUpdateDialog from './DatabaseSchemaUpdateDialog';
 import LoadingButton from 'components/LoadingButton';
 import ConfirmChangeCooldownDialog from './ConfirmChangeCooldownDialog';
-import { SpinnerSize } from 'office-ui-fabric-react';
+import { SpinnerSize } from '@fluentui/react';
 
 export interface IRestorableSchemaProps {
   className?: string;
@@ -56,26 +56,21 @@ export const RestorableSchema: React.FC<IRestorableSchemaProps> = ({
   onTestJdbcConnectionForId,
 }) => {
   const [filter, setFilter] = useState('');
-  const [selectedSchema, setSelectedSchema] = useState<
-    IDatabaseSchemaData | undefined
-  >(undefined);
+  const [selectedSchema, setSelectedSchema] =
+    useState<IDatabaseSchemaData | undefined>(undefined);
   const [selectedSchemas, setSelectedSchemas] = useState<IDatabaseSchemaData[]>(
     []
   );
 
-  const [selectedDetailsListItems, setSelectedDetailsListItems] = useState<
-    IDatabaseSchemaView[] | undefined
-  >(undefined);
+  const [selectedDetailsListItems, setSelectedDetailsListItems] =
+    useState<IDatabaseSchemaView[] | undefined>(undefined);
   const [restoreMode, setRestoreMode] = useState(false);
 
   const [shouldResetSort, setShouldResetSort] = useState(false);
-  const [
-    confirmRestorationDialogVisible,
-    setConfirmRestorationDialogVisible,
-  ] = useState(false);
-  const [hasRestorationInformation, setHasRestorationInformation] = useState(
-    false
-  );
+  const [confirmRestorationDialogVisible, setConfirmRestorationDialogVisible] =
+    useState(false);
+  const [hasRestorationInformation, setHasRestorationInformation] =
+    useState(false);
 
   const selection = useMemo(
     () =>

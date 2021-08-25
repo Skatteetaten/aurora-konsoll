@@ -69,7 +69,7 @@ const StatusCheckReport = ({ reports, reasons }: IStatusCheckReportProps) => {
   const renderDeployList = (list: IStatusCheck[]) => (
     <DetailsList
       columns={columns}
-      items={list
+      items={[...list]
         .sort((a, b) => a.name.localeCompare(b.name))
         .map((it) => ({
           ...it,

@@ -74,7 +74,7 @@ const Labels = ({
 );
 
 export default styled(Labels)`
-  .ms-Callout-main {
-    width: 247px;
+  .ms-Callout-container {
+    width: fit-content;
   }
 `;

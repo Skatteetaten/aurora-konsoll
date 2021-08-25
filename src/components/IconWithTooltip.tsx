@@ -3,6 +3,8 @@ import styled from 'styled-components';
 
 import { Icon, Palette } from '@skatteetaten/frontend-components';
 
+const { skeColor } = Palette;
+
 interface IIconWithTooltip {
   content: string;
   className?: string;
@@ -45,8 +47,8 @@ export default styled(IconWithTooltip)`
     visibility: hidden;
     width: max-content;
     opacity: 0;
-    background-color: ${Palette.skeColor.blackAlt};
-    color: ${Palette.skeColor.white};
+    background-color: ${skeColor.blackAlt};
+    color: ${skeColor.white};
     padding: 8px;
     z-index: 1;
     top: 110%;

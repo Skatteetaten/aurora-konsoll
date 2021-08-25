@@ -3,6 +3,8 @@ import styled from 'styled-components';
 
 import { Palette } from '@skatteetaten/frontend-components';
 
+const { skeColor } = Palette;
+
 interface IDropdownMenuProps {
   className?: string;
   renderTitle: JSX.Element;
@@ -42,8 +44,8 @@ export default styled(DropdownMenu)`
     display: none;
     position: absolute;
     width: 100%;
-    background-color: ${Palette.skeColor.neutralGrey};
-    box-shadow: 0px 3px 3px 0px ${Palette.skeColor.lightGrey};
+    background-color: ${skeColor.neutralGrey};
+    box-shadow: 0px 3px 3px 0px ${skeColor.lightGrey};
     z-index: 15;
   }
 
@@ -55,7 +57,7 @@ export default styled(DropdownMenu)`
   }
 
   .dropdown-menu-content a:hover {
-    background-color: ${Palette.skeColor.whiteGrey};
+    background-color: ${skeColor.whiteGrey};
   }
 
   .dropdown-menu:hover .dropdown-menu-content {
@@ -63,7 +65,7 @@ export default styled(DropdownMenu)`
   }
 
   .dropdown-menu:hover .dropdown-title {
-    background-color: ${Palette.skeColor.whiteGrey};
-    box-shadow: 0px 0px 3px 0px ${Palette.skeColor.lightGrey};
+    background-color: ${skeColor.whiteGrey};
+    box-shadow: 0px 0px 3px 0px ${skeColor.lightGrey};
   }
 `;
