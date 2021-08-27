@@ -46,22 +46,18 @@ const Row = ({ name, environments, apps, showSemanticVersion }: IRowProps) => {
 
     const releaseToHint = deployment.version.releaseTo ? '*' : '';
 
-    const exactVersion = getExactVersion(deployment.version.auroraVersion);
-
-    const deployTag = deployment.version.releaseTo
-      ? exactVersion
-      : deployment.version.deployTag.name;
-
-    const semanticVersion = showSemanticVersion && exactVersion;
+    const deployTag = deployment.version.deployTag.name;
+    const semanticVersion =
+      showSemanticVersion && getExactVersion(deployment.version.auroraVersion);
 
     const isSameVersion =
-      semanticVersion && deployTag?.localeCompare(semanticVersion) === 0;
+      semanticVersion && deployTag.localeCompare(semanticVersion) === 0;
     return (
       <Status key={key} code={deployment.status.code} title={tooltip}>
         <Link to={`${match.url}/${deployment.id}/info`}>
           <span>
             {`${releaseToHint}${deployTag}`}
-            {!isSameVersion && !deployment.version.releaseTo && (
+            {!isSameVersion && (
               <>
                 <br />
                 {semanticVersion}
