@@ -59,8 +59,6 @@ describe('Row', () => {
     );
 
     const status = wrapper.find(Status);
-    const span = wrapper.find('span');
-    expect(span.text()).toContain('*1.2.3');
     expect(status.props().title).toContain('prod');
   });
 
@@ -72,7 +70,7 @@ describe('Row', () => {
             <Row
               name="app"
               environments={['test', 'dev']}
-              apps={createApplicationMap()}
+              apps={createApplicationMap('prod')}
               showSemanticVersion={true}
             />
           </tbody>
