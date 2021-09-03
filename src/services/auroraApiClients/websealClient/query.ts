@@ -12,7 +12,7 @@ export interface IWebsealStateEdge {
 
 export const WEBSEAL_STATES_QUERY = gql`
   query getWebsealStates($affiliation: String!) {
-    affiliations(name: $affiliation) {
+    affiliations(names: [$affiliation]) {
       edges {
         node {
           websealStates {
