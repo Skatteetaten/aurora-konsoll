@@ -38,7 +38,7 @@ export class DeploymentView extends React.Component<
     },
     allFilters: [],
     filterPathUrl: '',
-    showSemanticVersion: false,
+    showSemanticVersion: true,
     quickFilter: '',
   };
 
