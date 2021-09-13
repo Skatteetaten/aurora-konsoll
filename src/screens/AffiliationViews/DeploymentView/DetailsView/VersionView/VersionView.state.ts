@@ -5,10 +5,12 @@ import { VersionStatus } from '../models/VersionStatus';
 import { fetchVersion } from 'store/state/versions/action.creators';
 import { ImageTagsConnection } from 'models/immer/ImageTagsConnection';
 import { IImageTag } from 'services/auroraApiClients/imageRepositoryClient/query';
+import { AuroraConfigFileResource } from 'services/auroraApiClients/applicationDeploymentClient/query';
 
 interface IVersionViewProps {
   versionStatus: VersionStatus;
   deployment: IApplicationDeployment;
+  auroraConfigFiles: AuroraConfigFileResource[];
   deploymentSpecVersion?: string;
 }
 
