@@ -6,6 +6,9 @@ import {
   REFRESH_APPLICATION_DEPLOYMENTS_MUTATION,
   DELETE_APPLICATION_DEPLOYMENT_MUTATION,
   DeployResponse,
+  UpdateAuroraConfigFileInput,
+  AuroraConfigFileValidationResponse,
+  UPDATE_AURORA_CONFIG_FILE,
 } from './mutation';
 import {
   APPLICATION_DEPLOYMENT_DETAILS_QUERY,
@@ -23,6 +26,37 @@ export class ApplicationDeploymentClient {
 
   constructor(client: GoboClient) {
     this.client = client;
+  }
+
+  public async updateAuroraConfigRedeployAndRefreshDeployment(
+    updateAuroraConfigFileInput: UpdateAuroraConfigFileInput,
+    applicationDeploymentId: string
+  ) {
+    const updateFileResult = await this.updateAuroraConfigFile(
+      updateAuroraConfigFileInput
+    );
+
+    if (updateFileResult.data?.updateAuroraConfigFile.success) {
+      const redeployResult = await this.redeployWithCurrentVersion(
+        applicationDeploymentId
+      );
+      if (redeployResult.data?.redeployWithVersion?.applicationDeploymentId) {
+        await this.refreshApplicationDeployment(applicationDeploymentId);
+        return await this.fetchApplicationDeploymentWithDetails(
+          applicationDeploymentId
+        );
+      } else {
+        return {
+          name: redeployResult.name,
+          errors: redeployResult.errors,
+        };
+      }
+    } else {
+      return {
+        name: updateFileResult.name,
+        errors: updateFileResult.errors,
+      };
+    }
   }
 
   public async redeployWithVersionAndRefreshDeployment(
@@ -212,6 +246,27 @@ export class ApplicationDeploymentClient {
         input: {
           namespace,
           name,
+        },
+      },
+    });
+  }
+
+  public async updateAuroraConfigFile({
+    auroraConfigName,
+    auroraConfigReference,
+    fileName,
+    contents,
+    existingHash,
+  }: UpdateAuroraConfigFileInput) {
+    return await this.client.mutate<AuroraConfigFileValidationResponse>({
+      mutation: UPDATE_AURORA_CONFIG_FILE,
+      variables: {
+        input: {
+          auroraConfigName,
+          auroraConfigReference,
+          fileName,
+          contents,
+          existingHash,
         },
       },
     });
