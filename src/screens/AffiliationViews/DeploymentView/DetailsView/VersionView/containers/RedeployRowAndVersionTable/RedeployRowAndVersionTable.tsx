@@ -76,11 +76,6 @@ export const RedeployRowAndVersionTable: React.FC<Props> = ({
       );
       setVersionBeingDeploy(version);
     }
-
-    // if (hasAccessToDeploy) {
-    //   deploy(applicationId, version);
-    //   setVersionBeingDeploy(version);
-    // }
   };
 
   useEffect(() => {
