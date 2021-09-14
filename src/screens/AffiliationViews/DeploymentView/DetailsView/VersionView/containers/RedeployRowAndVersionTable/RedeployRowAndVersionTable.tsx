@@ -64,15 +64,6 @@ export const RedeployRowAndVersionTable: React.FC<Props> = ({
       version
     );
 
-    console.log(changedFile);
-
-    console.log({
-      auroraConfigName: affiliation,
-      contents: changedFile,
-      existingHash: applicationFile.contentHash,
-      fileName: applicationFile.name,
-    });
-
     if (changedFile && hasAccessToDeploy) {
       deploy(
         {
