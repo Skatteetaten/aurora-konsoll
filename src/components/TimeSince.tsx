@@ -93,11 +93,7 @@ export default styled(TimeSince)`
   .tooltip {
     position: relative;
     display: inline-block;
-<<<<<<< HEAD
-    border-bottom: 1px dotted ${Palette.skeColor.black};
-=======
     border-bottom: 1px dotted ${skeColor.black};
->>>>>>> master
     margin-right: 10px;
     cursor: default;
     z-index: 100;
@@ -107,13 +103,8 @@ export default styled(TimeSince)`
     visibility: hidden;
     opacity: 0;
     width: 120px;
-<<<<<<< HEAD
-    background-color: ${Palette.skeColor.blackAlt};
-    color: ${Palette.skeColor.white};
-=======
     background-color: ${skeColor.blackAlt};
     color: ${skeColor.white};
->>>>>>> master
     text-align: center;
     border-radius: 6px;
     padding: 5px 0;
@@ -132,12 +123,7 @@ export default styled(TimeSince)`
     margin-left: -6px;
     border-width: 6px;
     border-style: solid;
-<<<<<<< HEAD
-    border-color: transparent transparent ${Palette.skeColor.blackAlt}
-      transparent;
-=======
     border-color: transparent transparent ${skeColor.blackAlt} transparent;
->>>>>>> master
   }
 
   .tooltip:hover .tooltip-text {
