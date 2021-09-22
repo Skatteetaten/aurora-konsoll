@@ -5,12 +5,13 @@ import { IManagementEndpointResponse } from 'models/Pod';
 import styled from 'styled-components';
 import { prettifyJSON } from 'utils/string';
 import { StyledPre } from 'components/StyledPre';
-import { getTheme } from '@uifabric/styling';
 import {
-  PaletteProps,
   MessageBar,
   Icon,
+  Palette,
 } from '@skatteetaten/frontend-components';
+
+const { skeColor } = Palette;
 
 interface IErrorResponseDialogProps {
   response: IManagementEndpointResponse;
@@ -27,7 +28,6 @@ const ErrorResponseDialog = ({
   title,
   icon,
 }: IErrorResponseDialogProps) => {
-  const palette = getTheme().palette as PaletteProps;
   const renderOpenErrorButton = (open: () => void) => (
     <Icon
       onClick={open}
@@ -36,7 +36,7 @@ const ErrorResponseDialog = ({
       style={{
         fontSize: '25px',
         cursor: 'pointer',
-        color: `${palette.skeColor.error}`,
+        color: `${skeColor.error}`,
         float: 'none',
         marginLeft: '4px',
       }}
