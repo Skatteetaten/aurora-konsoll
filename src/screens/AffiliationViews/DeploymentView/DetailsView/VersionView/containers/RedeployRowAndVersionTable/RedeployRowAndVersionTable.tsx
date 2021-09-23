@@ -19,6 +19,7 @@ export const RedeployRowAndVersionTable: React.FC<Props> = ({
   deployedVersion,
   versionType,
   deploy,
+  addCurrentErrors,
   isDeploying,
   releaseTo,
   isFetchingConfiguredVersionTag,
@@ -40,12 +41,21 @@ export const RedeployRowAndVersionTable: React.FC<Props> = ({
         null,
         2
       );
-    } else if (fileName.endsWith('yaml')) {
+    }
+    try {
       const parsedApplicationFile = YAML.parseDocument(fileContent);
       parsedApplicationFile.set('version', version);
       return parsedApplicationFile.toString();
-    } else {
-      console.log('filetype used for application file is not supported');
+    } catch {
+      addCurrentErrors({
+        errors: [
+          new Error(
+            `Could not parse the content of the application file. Make sure the file is of type yaml or json and does not contain syntax errors`
+          ),
+        ],
+        name: 'Parsing error',
+      });
+      return;
     }
   }
 
@@ -54,7 +64,10 @@ export const RedeployRowAndVersionTable: React.FC<Props> = ({
       auroraConfigFiles.find((it) => it.type === 'APP');
 
     if (!applicationFile) {
-      console.log('Application should have appfile');
+      addCurrentErrors({
+        errors: [new Error(`An Application must have an application file`)],
+        name: 'Missing application file',
+      });
       return;
     }
 

@@ -4,6 +4,7 @@ import { IImageTag } from 'services/auroraApiClients/imageRepositoryClient/query
 import { deploy } from 'store/state/applicationDeployments/action.creators';
 import { ReduxProps, RootState } from 'store/types';
 import { AuroraConfigFileResource } from 'services/auroraApiClients/applicationDeploymentClient/query';
+import { addCurrentErrors } from 'screens/ErrorHandler/state/actions';
 
 export interface IRedeployRowAndVersionTableProps {
   versionType: ImageTagType;
@@ -18,6 +19,7 @@ export interface IRedeployRowAndVersionTableProps {
 
 export const mapDispatchToProps = {
   deploy,
+  addCurrentErrors,
 };
 
 export const mapStateToProps = ({ applications, versions }: RootState) => {
