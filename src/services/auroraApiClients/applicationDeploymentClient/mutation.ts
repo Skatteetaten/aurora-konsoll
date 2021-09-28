@@ -7,6 +7,12 @@ export interface DeployResponse {
   } | null;
 }
 
+export interface DeployCurrentResponse {
+  redeployWithCurrentVersion: {
+    applicationDeploymentId: string;
+  } | null;
+}
+
 export interface UpdateAuroraConfigFileInput {
   auroraConfigName: string;
   auroraConfigReference?: string;

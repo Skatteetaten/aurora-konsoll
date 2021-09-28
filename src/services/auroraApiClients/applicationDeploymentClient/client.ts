@@ -9,6 +9,7 @@ import {
   UpdateAuroraConfigFileInput,
   AuroraConfigFileValidationResponse,
   UPDATE_AURORA_CONFIG_FILE,
+  DeployCurrentResponse,
 } from './mutation';
 import {
   APPLICATION_DEPLOYMENT_DETAILS_QUERY,
@@ -40,7 +41,9 @@ export class ApplicationDeploymentClient {
       const redeployResult = await this.redeployWithCurrentVersion(
         applicationDeploymentId
       );
-      if (redeployResult.data?.redeployWithVersion?.applicationDeploymentId) {
+      if (
+        redeployResult.data?.redeployWithCurrentVersion?.applicationDeploymentId
+      ) {
         await this.refreshApplicationDeployment(applicationDeploymentId);
         return await this.fetchApplicationDeploymentWithDetails(
           applicationDeploymentId
@@ -148,8 +151,8 @@ export class ApplicationDeploymentClient {
 
   public async redeployWithCurrentVersion(
     applicationDeploymentId: string
-  ): Promise<IDataAndErrors<DeployResponse>> {
-    return await this.client.mutate<DeployResponse>({
+  ): Promise<IDataAndErrors<DeployCurrentResponse>> {
+    return await this.client.mutate<DeployCurrentResponse>({
       mutation: REDEPLOY_WITH_CURRENT_VERSION_MUTATION,
       variables: {
         input: {
