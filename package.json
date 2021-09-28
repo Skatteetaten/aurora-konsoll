@@ -34,7 +34,8 @@
     "typesafe-actions": "5.1.0",
     "uuid": "8.3.2",
     "winston": "3.3.3",
-    "winston-daily-rotate-file": "4.5.5"
+    "winston-daily-rotate-file": "4.5.5",
+    "yaml": "1.10.2"
   },
   "scripts": {
     "start": "npm-run-all -lp build:api:watch start:api start:web",

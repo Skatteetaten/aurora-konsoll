@@ -1,4 +1,5 @@
 import {
+  AuroraConfigFileResource,
   IApplicationDeploymentWithDetailsData,
   IImageRepository,
   IPermission,
@@ -36,6 +37,7 @@ export class ApplicationDeployment implements IApplicationDeployment {
   public message?: string;
   public details: IApplicationDeploymentDetails;
   public route?: IRoute;
+  public files: AuroraConfigFileResource[];
 
   constructor(data: IApplicationDeploymentWithDetailsData) {
     const app = data.applicationDeployment;
@@ -62,6 +64,7 @@ export class ApplicationDeployment implements IApplicationDeployment {
       updatedBy: details.updatedBy,
     };
     this.route = app.route;
+    this.files = app.files;
   }
 
   private toDeploymentSpec(current?: any): IDeploymentSpec | undefined {
