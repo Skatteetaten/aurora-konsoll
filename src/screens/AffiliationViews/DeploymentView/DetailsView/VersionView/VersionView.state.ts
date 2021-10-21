@@ -12,6 +12,7 @@ interface IVersionViewProps {
   deployment: IApplicationDeployment;
   auroraConfigFiles: AuroraConfigFileResource[];
   deploymentSpecVersion?: string;
+  auroraConfigReference?: string;
 }
 
 export const mapDispatchToProps = {

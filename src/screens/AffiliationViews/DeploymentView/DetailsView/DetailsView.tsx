@@ -150,6 +150,7 @@ export const DetailsView: React.FC<IDetailsViewProps> = ({
                 }
                 deployment={deployment}
                 auroraConfigFiles={deployment.files}
+                auroraConfigReference={deployment.auroraConfigReference}
               />
             )}
           </Route>
