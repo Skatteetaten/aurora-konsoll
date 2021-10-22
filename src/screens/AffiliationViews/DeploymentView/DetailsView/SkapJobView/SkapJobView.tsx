@@ -86,7 +86,10 @@ const SkapJobView = ({ route }: ISkapJobViewProps) => {
   });
 
   return (
-    <SkapJobTable websealJobs={websealJobsData} bigipJobs={bigipJobsData} />
+    <SkapJobTable
+      websealJobs={websealJobsData.sort((a, b) => Number(b.id) - Number(a.id))}
+      bigipJobs={bigipJobsData.sort((a, b) => Number(b.id) - Number(a.id))}
+    />
   );
 };
 
