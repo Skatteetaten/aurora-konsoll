@@ -22,7 +22,7 @@ interface ISkapJobTableProps {
 }
 
 const SkapJobTable = ({ websealJobs, bigipJobs }: ISkapJobTableProps) => {
-  const sortDate = (a: string, b: string) => b.localeCompare(a);
+  const sortDate = (a: string, b: string) => a.localeCompare(b);
   return (
     <TableWrapper>
       {websealJobs.length > 0 && (
