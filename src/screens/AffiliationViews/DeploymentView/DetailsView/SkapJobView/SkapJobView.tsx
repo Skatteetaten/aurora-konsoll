@@ -26,70 +26,69 @@ const SkapJobView = ({ route }: ISkapJobViewProps) => {
     return <h2>Ingen WebSEAL/BIG-IP jobber for denne applikasjonen</h2>;
   }
 
-  const websealJobsData = route.websealJobs.map((it) => {
-    return {
+  const websealJobsData = route.websealJobs
+    .map((it) => ({
       roles: JSON.stringify(it.roles),
       updatedFormatted: getLocalDatetime(it.updated),
       statusWithIcon: <StatusIcon status={it.status} />,
       ...it,
-    };
-  });
+    }))
+    .sort((a, b) => Number(b.id) - Number(a.id));
 
-  const bigipJobsData = route.bigipJobs.map((it: any) => {
-    const options: IComboBoxOption[] = [];
-    let index: number = 0;
+  const bigipJobsData = route.bigipJobs
+    .map((it: any) => {
+      const options: IComboBoxOption[] = [];
+      let index: number = 0;
 
-    const createOption = (value: string | string[], title: string) => {
-      if (value && !Array.isArray(value)) {
-        options.push({
-          key: index,
-          text: `${title}: ${value}`,
-          disabled: true,
-        });
-        index++;
-      }
-      if (Array.isArray(value) && value.length > 0) {
-        options.push({
-          key: index,
-          text: `${title}: [${value}]`,
-          disabled: true,
-        });
-        index++;
-      }
-    };
+      const createOption = (value: string | string[], title: string) => {
+        if (value && !Array.isArray(value)) {
+          options.push({
+            key: index,
+            text: `${title}: ${value}`,
+            disabled: true,
+          });
+          index++;
+        }
+        if (Array.isArray(value) && value.length > 0) {
+          options.push({
+            key: index,
+            text: `${title}: [${value}]`,
+            disabled: true,
+          });
+          index++;
+        }
+      };
 
-    createOption(it.apiPaths, 'Api paths');
-    createOption(it.oauthScopes, 'Oauth scopes');
-    createOption(it.serviceName, 'Tjenestenavn');
-    createOption(it.asmPolicy, 'ASM policy');
-    createOption(it.name, 'Navn');
+      createOption(it.apiPaths, 'Api paths');
+      createOption(it.oauthScopes, 'Oauth scopes');
+      createOption(it.serviceName, 'Tjenestenavn');
+      createOption(it.asmPolicy, 'ASM policy');
+      createOption(it.name, 'Navn');
 
-    return {
-      apiPaths: JSON.stringify(it.apiPaths),
-      oauthScopes: JSON.stringify(it.oauthScopes),
-      updatedFormatted: getLocalDatetime(it.updated),
-      statusWithIcon: <StatusIcon status={it.status} />,
-      konfigurasjon: (
-        <div style={{ width: '180px', cursor: 'pointer' }}>
-          <ComboBox
-            placeholder={options.length > 0 ? 'Vis konfigurasjon' : 'Ingen'}
-            options={options}
-            allowFreeform={false}
-            ariaLabel="Eksempel ComboBox"
-            useComboBoxAsMenuWidth={false}
-            disabled={options.length === 0}
-          />
-        </div>
-      ),
-      ...it,
-    };
-  });
+      return {
+        apiPaths: JSON.stringify(it.apiPaths),
+        oauthScopes: JSON.stringify(it.oauthScopes),
+        updatedFormatted: getLocalDatetime(it.updated),
+        statusWithIcon: <StatusIcon status={it.status} />,
+        konfigurasjon: (
+          <div style={{ width: '180px', cursor: 'pointer' }}>
+            <ComboBox
+              placeholder={options.length > 0 ? 'Vis konfigurasjon' : 'Ingen'}
+              options={options}
+              allowFreeform={false}
+              ariaLabel="Eksempel ComboBox"
+              useComboBoxAsMenuWidth={false}
+              disabled={options.length === 0}
+            />
+          </div>
+        ),
+        ...it,
+      };
+    })
+    .sort((a, b) => Number(b.id) - Number(a.id));
 
   return (
-    <SkapJobTable
-      websealJobs={websealJobsData.sort((a, b) => Number(b.id) - Number(a.id))}
-      bigipJobs={bigipJobsData.sort((a, b) => Number(b.id) - Number(a.id))}
-    />
+    <SkapJobTable websealJobs={websealJobsData} bigipJobs={bigipJobsData} />
   );
 };
 
