@@ -67,7 +67,8 @@ export class ApplicationDeployment implements IApplicationDeployment {
     this.route = app.route;
     this.files = app.files;
     this.auroraConfigReference =
-      details.applicationDeploymentCommand?.auroraConfig.gitReference;
+      details.applicationDeploymentCommand?.auroraConfig.gitReference ??
+      'master';
   }
 
   private toDeploymentSpec(current?: any): IDeploymentSpec | undefined {
