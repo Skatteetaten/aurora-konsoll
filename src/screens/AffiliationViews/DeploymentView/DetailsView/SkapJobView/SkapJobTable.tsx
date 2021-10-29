@@ -22,6 +22,7 @@ interface ISkapJobTableProps {
 }
 
 const SkapJobTable = ({ websealJobs, bigipJobs }: ISkapJobTableProps) => {
+  const sortDate = (a: string, b: string) => a.localeCompare(b);
   return (
     <TableWrapper>
       {websealJobs.length > 0 && (
@@ -72,6 +73,7 @@ const SkapJobTable = ({ websealJobs, bigipJobs }: ISkapJobTableProps) => {
                 name: 'Sist oppdatert',
                 fieldName: 'updatedFormatted',
                 sortable: true,
+                sortingFunction: sortDate,
               },
               {
                 name: 'Feilmelding',
@@ -130,6 +132,7 @@ const SkapJobTable = ({ websealJobs, bigipJobs }: ISkapJobTableProps) => {
                 name: 'Sist oppdatert',
                 fieldName: 'updatedFormatted',
                 sortable: true,
+                sortingFunction: sortDate,
               },
 
               {
