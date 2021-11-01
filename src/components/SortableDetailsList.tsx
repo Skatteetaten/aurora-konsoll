@@ -48,7 +48,7 @@ const SortableDetailsList: React.FC<ISortableDetailsListProps> = ({
 }) => {
   const [selectedColumnIndex, setSelectedColumnIndex] = useState(-1);
   const [currentViewItems, setCurrentViewItems] = useState<any[]>([]);
-  //@ts-ignore
+
   const sortDirections = createDefaultSortDirections(columns);
 
   const [columnSortDirections, setColumnSortDirections] =
@@ -146,7 +146,6 @@ const SortableDetailsList: React.FC<ISortableDetailsListProps> = ({
         currentCol.isSortedDescending = false;
       }
     }
-    // @ts-ignore
     return columns;
   };
 

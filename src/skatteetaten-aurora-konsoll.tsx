@@ -8,7 +8,6 @@ const lifecycles = singleSpaReact({
   React,
   ReactDOM,
   rootComponent: Root,
-  // @ts-ignore
   errorBoundary(err, info, props) {
     return <div>This renders when a catastrophic error occurs</div>;
   },

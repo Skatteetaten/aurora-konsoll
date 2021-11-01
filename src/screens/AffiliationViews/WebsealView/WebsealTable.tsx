@@ -133,7 +133,6 @@ class Webseal extends React.Component<IWebsealTableProps, IWebsealTableState> {
       <div className="webseal-grid">
         <div className="table-wrapper">
           <SortableDetailsList
-            // @ts-ignore
             columns={WebsealService.DEFAULT_COLUMNS}
             items={filteredColumns}
             selection={this.selection}

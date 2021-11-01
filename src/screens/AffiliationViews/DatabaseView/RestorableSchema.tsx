@@ -214,7 +214,6 @@ export const RestorableSchema: React.FC<IRestorableSchemaProps> = ({
         <DatabaseSchemaTable
           filter={filter}
           schemas={items.restorableDatabaseSchemas || []}
-          //@ts-ignore
           selection={selection}
           multiSelect={restoreMode}
           onResetSort={onResetSort}

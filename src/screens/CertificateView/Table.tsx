@@ -15,7 +15,6 @@ interface ITableProps {
 const Table = ({ viewItems, filter }: ITableProps) => {
   return (
     <SortableDetailsList
-      // @ts-ignore
       columns={CertificateService.DEFAULT_COLUMNS}
       items={viewItems}
       isHeaderVisible={true}

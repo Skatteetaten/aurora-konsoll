@@ -44,10 +44,8 @@ class WebsealDialog extends React.Component<
     }
     return (
       <StyledPre>
-        {/* // @ts-ignore */}
         <DetailsList
           isHeaderVisible={false}
-          // @ts-ignore
           columns={WebsealService.JUNCTION_COLUMNS(this.onRenderFirstColumn())}
           items={this.websealService.addProperties(items)}
         />

@@ -41,7 +41,6 @@ export const VersionTypeSelector = ({
           <ComboBox
             options={getVersionTypeSelectorOptions(totalCountMap)}
             selectedKey={versionType}
-            // @ts-ignore
             onChange={onTagTypeChanged}
             label="Velg versjontype"
             onRenderOption={onRenderOption}

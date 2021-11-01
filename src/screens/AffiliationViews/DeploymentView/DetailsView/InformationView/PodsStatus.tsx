@@ -225,7 +225,6 @@ class PodsStatus extends React.Component<IPodsStatusProps, IPodsStatusState> {
             filter=""
             items={this.applicationDeploymentPods()}
             filterView={filterPodsStatus}
-            // @ts-ignore
             columns={PodsStatusService.DEFAULT_COLUMNS}
             isHeaderVisible={true}
             isRefreshing={isUpdating}

@@ -51,7 +51,6 @@ export const DatabaseSchemaTable = ({
   return (
     <div className="styledTable">
       <SortableDetailsList
-        //@ts-ignore
         columns={isRestoreTable ? restoreColumns : columns}
         filterView={filterDatabaseSchemaView}
         filter={filter}
