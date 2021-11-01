@@ -1,6 +1,7 @@
 import { actions } from './actions';
 import { doAsyncActions } from 'utils/redux/action-utils';
 import { AsyncAction } from 'store/types';
+import { UpdateAuroraConfigFileInput } from 'services/auroraApiClients/applicationDeploymentClient/mutation';
 
 export function deleteAndRefreshApplications(
   affiliation: string,
@@ -18,6 +19,23 @@ export function deleteAndRefreshApplications(
         affiliation,
         namespace,
         name
+      )
+  );
+}
+export function deploy(
+  updateAuroraConfigFileInput: UpdateAuroraConfigFileInput,
+  applicationDeploymentId: string
+) {
+  return doAsyncActions(
+    {
+      request: actions.deployRequest,
+      success: actions.fetchApplicationDeploymentWithDetails.success,
+      failure: actions.fetchApplicationDeploymentWithDetails.failure,
+    },
+    (clients) =>
+      clients.applicationDeploymentClient.updateAuroraConfigRedeployAndRefreshDeployment(
+        updateAuroraConfigFileInput,
+        applicationDeploymentId
       )
   );
 }
@@ -55,21 +73,6 @@ export function fetchApplicationDeployments(affiliations: string[]) {
     clients.applicationDeploymentClient.findAllApplicationDeployments(
       affiliations
     )
-  );
-}
-
-export function deploy(applicationDeploymentId: string, version: string) {
-  return doAsyncActions(
-    {
-      request: actions.deployRequest,
-      success: actions.fetchApplicationDeploymentWithDetails.success,
-      failure: actions.fetchApplicationDeploymentWithDetails.failure,
-    },
-    ({ applicationDeploymentClient }) =>
-      applicationDeploymentClient.redeployWithVersionAndRefreshDeployment(
-        applicationDeploymentId,
-        version
-      )
   );
 }
 

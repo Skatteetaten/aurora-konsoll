@@ -269,10 +269,31 @@ export const USER_AFFILIATIONS_QUERY = gql`
   }
 `;
 
+enum AuroraConfigFileType {
+  DEFAULT = 'DEFAULT',
+  GLOBAL = 'GLOBAL',
+  GLOBAL_OVERRIDE = 'GLOBAL_OVERRIDE',
+  BASE = 'BASE',
+  BASE_OVERRIDE = 'BASE_OVERRIDE',
+  INCLUDE_ENV = 'INCLUDE_ENV',
+  ENV = 'ENV',
+  ENV_OVERRIDE = 'ENV_OVERRIDE',
+  APP = 'APP',
+  APP_OVERRIDE = 'APP_OVERRIDE',
+}
+
+export interface AuroraConfigFileResource {
+  name: string;
+  contents: string;
+  type: AuroraConfigFileType;
+  contentHash: string;
+}
+
 export interface IApplicationDeploymentWithDetails
   extends IApplicationDeploymentData {
   details: IApplicationDeploymentDetails;
   route?: IRoute;
+  files: AuroraConfigFileResource[];
 }
 
 export interface IApplicationDeploymentWithDetailsData {
@@ -395,6 +416,12 @@ export const APPLICATION_DEPLOYMENT_WITH_DETAILS_QUERY = gql`
           serviceName
           name
         }
+      }
+      files {
+        name
+        contents
+        contentHash
+        type
       }
     }
   }

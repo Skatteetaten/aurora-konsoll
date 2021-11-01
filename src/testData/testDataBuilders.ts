@@ -159,6 +159,7 @@ export const deploymentFactory =
           bigipJobs: [],
           websealJobs: [],
         },
+        files: [],
       },
     })
   );
