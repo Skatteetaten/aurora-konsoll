@@ -286,7 +286,6 @@ const Schema: React.FC<ISchemaProps> = ({
                 filter={filter}
                 schemas={databaseSchemasData}
                 multiSelect={deleteMode}
-                //@ts-ignore
                 selection={selection}
                 onResetSort={onResetSort}
                 shouldResetSort={shouldResetSort}

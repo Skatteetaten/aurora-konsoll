@@ -102,7 +102,6 @@ const SortableDetailsList: React.FC<ISortableDetailsListProps> = ({
       if (columns) {
         columns.forEach((col) => (col.isSorted = false));
       }
-      //@ts-ignore
       const directions = createDefaultSortDirections(columns);
 
       setColumnSortDirections(directions);
@@ -161,7 +160,6 @@ const SortableDetailsList: React.FC<ISortableDetailsListProps> = ({
     }
 
     const name = column.fieldName! as keyof any;
-    //@ts-ignore
     const newSortDirections = createDefaultSortDirections(columns);
     const prevSortDirection = columnSortDirections[column.key];
 
@@ -205,7 +203,6 @@ const SortableDetailsList: React.FC<ISortableDetailsListProps> = ({
     });
   return (
     <DetailsList
-      //@ts-ignore
       columns={createColumns(
         selectedColumnIndex,
         columnSortDirections[selectedColumnIndex]
