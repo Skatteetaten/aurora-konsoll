@@ -19,6 +19,7 @@ export const VersionView = ({
   configuredVersionTag,
   fetchVersion,
   auroraConfigFiles,
+  auroraConfigReference,
 }: VersionViewProps) => {
   const { id, version, imageRepository } = deployment;
 
@@ -81,6 +82,7 @@ export const VersionView = ({
         releaseTo={deployment.version.releaseTo}
         auroraConfigFiles={auroraConfigFiles}
         affiliation={deployment.affiliation}
+        auroraConfigReference={auroraConfigReference}
       />
       <FetchMoreVersionsContainer
         searchText={searchText}

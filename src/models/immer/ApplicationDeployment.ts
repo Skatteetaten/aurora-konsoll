@@ -38,6 +38,7 @@ export class ApplicationDeployment implements IApplicationDeployment {
   public details: IApplicationDeploymentDetails;
   public route?: IRoute;
   public files: AuroraConfigFileResource[];
+  public auroraConfigReference?: string;
 
   constructor(data: IApplicationDeploymentWithDetailsData) {
     const app = data.applicationDeployment;
@@ -65,6 +66,9 @@ export class ApplicationDeployment implements IApplicationDeployment {
     };
     this.route = app.route;
     this.files = app.files;
+    this.auroraConfigReference =
+      details.applicationDeploymentCommand?.auroraConfig.gitReference ??
+      'master';
   }
 
   private toDeploymentSpec(current?: any): IDeploymentSpec | undefined {

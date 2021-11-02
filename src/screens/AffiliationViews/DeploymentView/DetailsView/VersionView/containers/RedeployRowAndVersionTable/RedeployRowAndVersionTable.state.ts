@@ -15,6 +15,7 @@ export interface IRedeployRowAndVersionTableProps {
   releaseTo?: string;
   auroraConfigFiles: AuroraConfigFileResource[];
   affiliation: string;
+  auroraConfigReference?: string;
 }
 
 export const mapDispatchToProps = {

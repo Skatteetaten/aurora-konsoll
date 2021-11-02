@@ -25,6 +25,7 @@ export const RedeployRowAndVersionTable: React.FC<Props> = ({
   isFetchingConfiguredVersionTag,
   auroraConfigFiles,
   affiliation,
+  auroraConfigReference,
 }) => {
   const [versionBeingDeploy, setVersionBeingDeploy] =
     useState<string | undefined>();
@@ -81,6 +82,7 @@ export const RedeployRowAndVersionTable: React.FC<Props> = ({
       deploy(
         {
           auroraConfigName: affiliation,
+          auroraConfigReference: auroraConfigReference,
           contents: changedFile,
           existingHash: applicationFile.contentHash,
           fileName: applicationFile.name,
