@@ -60,12 +60,16 @@ export const ActionBar: React.FC<IActionBarProps> = ({
   const prevAffiliation = usePrevious(affiliation);
 
   useEffect(() => {
-    if (affiliation !== prevAffiliation) {
-      setQuickFilterEnabled(false);
-    } else if (textFieldRef.current && quickFilterEnabled) {
+    if (textFieldRef.current && quickFilterEnabled) {
       textFieldRef.current.focus();
     }
-  }, [affiliation, prevAffiliation, quickFilterEnabled]);
+  });
+
+  useEffect(() => {
+    if (affiliation !== prevAffiliation) {
+      setQuickFilterEnabled(false);
+    }
+  }, [affiliation, prevAffiliation]);
 
   const filterChange = (ev: TextFieldEvent, filter?: string) => {
     if (filter !== undefined) {
