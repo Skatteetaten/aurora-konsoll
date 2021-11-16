@@ -21,6 +21,7 @@ import Labels from './Labels';
 import ConfirmationDialog from 'components/ConfirmationDialog';
 import SkeLink from '../../../components/SkeLink';
 import DatabaseSchemaService from '../../../services/DatabaseSchemaService';
+import { usePrevious } from 'utils/usePrevious';
 
 const { skeColor } = Palette;
 
@@ -71,14 +72,6 @@ const DatabaseSchemaUpdateDialog = ({
   const [updatedSchemaValues, setUpdatedSchemaValues] =
     useState<IUpdatedSchemaValues>(initialUpdatedSchemaValues);
   const databaseService = new DatabaseSchemaService();
-
-  function usePrevious(value) {
-    const ref = useRef();
-    useEffect(() => {
-      ref.current = value;
-    });
-    return ref.current;
-  }
 
   const handleLabelChange =
     (field: string) => (event: TextFieldEvent, newValue?: string) => {
