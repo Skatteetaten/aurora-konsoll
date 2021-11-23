@@ -1,12 +1,12 @@
-import React from 'react';
+import React, { FC } from 'react';
 import { BrowserRouter } from 'react-router-dom';
 
 import { Provider } from 'react-redux';
 
-import { IApiClients } from 'models/AuroraApi';
-import { IConfiguration } from 'utils/config';
+import { IApiClients } from 'web/models/AuroraApi';
+import { IConfiguration, isConfiguration } from 'web/utils/config';
 
-import { App } from 'screens/App';
+import { App } from 'web/screens/App';
 import {
   ApplicationDeploymentClient,
   CertificateClient,
@@ -16,25 +16,32 @@ import {
   NetdebugClient,
   UserSettingsClient,
   WebsealClient,
-} from 'services/auroraApiClients';
-import GoboClient from 'services/GoboClient';
-import createStoreWithApi from 'store';
-import { requestCurrentUser } from 'store/state/startup/action.creators';
+} from 'web/services/auroraApiClients';
+import GoboClient from 'web/services/GoboClient';
+import createStoreWithApi from 'web/store';
+import { requestCurrentUser } from 'web/store/state/startup/action.creators';
 import './index.css';
-import { TokenStore } from 'services/TokenStore';
+import { TokenStore } from 'web/services/TokenStore';
 
-const Root = (props: any) => {
+type Props = {
+  tokenStore: TokenStore;
+  konsollConfig: IConfiguration | Error;
+};
+
+const Root: FC<Props> = (props) => {
   const tokenStore: TokenStore = props.tokenStore;
   const configOrError = props.konsollConfig;
-  if ((configOrError as Error).message) {
-    throw new Error((configOrError as Error).message);
+
+  if (!isConfiguration(configOrError)) {
+    throw new Error(configOrError.message);
   }
-  const config = configOrError as IConfiguration;
+
+  const config = configOrError;
   const token = tokenStore.getToken();
   const goboClient = new GoboClient({
     url: '/api/graphql',
     headers: {
-      Authorization: token ? token : '',
+      Authorization: token ?? '',
       KlientID: config.APPLICATION_NAME,
     },
   });
@@ -61,6 +68,7 @@ const Root = (props: any) => {
           displayDatabaseView={config.DBH_ENABLED}
           displayDnsView={config.GAVEL_ENABLED}
           displaySkapViews={config.SKAP_ENABLED}
+          displayStorytellerView={config.STORYTELLER_ENABLED}
         />
       </BrowserRouter>
     </Provider>

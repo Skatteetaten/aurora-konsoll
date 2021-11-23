@@ -1,28 +1,28 @@
 // https://developer.mozilla.org/en-US/docs/Web/HTTP/Browser_detection_using_the_user_agent#Which_part_of_the_user_agent_contains_the_information_you_are_looking_for
 var supported = {
   Chrome: {
-    minVersion: 54
+    minVersion: 54,
   },
   Firefox: {
-    minVersion: 58
-  }
+    minVersion: 58,
+  },
 };
 
 function getBrowserVersion(browserName, userAgent) {
   var userAgentSplit = userAgent.split(' ');
 
   var browserVersion = userAgentSplit
-    .filter(function(v) {
+    .filter(function (v) {
       return v.search(browserName) >= 0;
     })
-    .map(function(b) {
+    .map(function (b) {
       var browserAndVersion = b.split('/');
       if (browserAndVersion.length === 2) {
         return parseInt(browserAndVersion[1], undefined);
       }
       return null;
     })
-    .filter(val => val);
+    .filter((val) => val);
 
   if (browserVersion.length > 0) {
     return browserVersion[0];
@@ -31,10 +31,10 @@ function getBrowserVersion(browserName, userAgent) {
 }
 
 var browsers = Object.keys(supported)
-  .filter(function(browserName) {
+  .filter(function (browserName) {
     return window.navigator.userAgent.search(browserName) >= 0;
   })
-  .map(function(browserName) {
+  .map(function (browserName) {
     var currentVersion = getBrowserVersion(
       browserName,
       window.navigator.userAgent
@@ -44,7 +44,7 @@ var browsers = Object.keys(supported)
       currentVersion: currentVersion,
       isSupported: currentVersion > minSupportedVersion,
       minSupportedVersion: minSupportedVersion,
-      name: browserName
+      name: browserName,
     };
   });
 
