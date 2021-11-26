@@ -12,7 +12,7 @@ For local development using react-scripts.
 2. `npm start`.
 3. Click the http://localhost:3000 printed in the terminal.
 
-### Loca development with Single SPA
+### Local development with Single SPA
 
 For local development with single spa.
 
