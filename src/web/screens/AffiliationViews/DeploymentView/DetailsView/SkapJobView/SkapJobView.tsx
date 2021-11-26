@@ -28,10 +28,9 @@ const SkapJobView = ({ route }: ISkapJobViewProps) => {
 
   const websealJobsData = route.websealJobs
     .map((it) => ({
-      roles: JSON.stringify(it.roles),
+      ...it,
       updatedFormatted: getLocalDatetime(it.updated),
       statusWithIcon: <StatusIcon status={it.status} />,
-      ...it,
     }))
     .sort((a, b) => Number(b.id) - Number(a.id));
 

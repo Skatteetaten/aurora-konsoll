@@ -26,8 +26,9 @@ export const RedeployRowAndVersionTable: React.FC<Props> = ({
   auroraConfigFiles,
   affiliation,
 }) => {
-  const [versionBeingDeploy, setVersionBeingDeploy] =
-    useState<string | undefined>();
+  const [versionBeingDeploy, setVersionBeingDeploy] = useState<
+    string | undefined
+  >();
 
   function changeVersionInFile(
     fileName: string,

@@ -38,7 +38,7 @@ export function doAsyncActions<P>(
         });
       }
       dispatch(success(result));
-    } catch (e) {
+    } catch (e: any) {
       dispatch(failure(e));
     }
   };

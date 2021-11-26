@@ -9,14 +9,6 @@ import { fetchConfiguration, isConfiguration } from 'web/utils/config';
 import Root from './root.component';
 
 async function init() {
-  const urlParams = new URLSearchParams(window.location.hash.replace('#', '?'));
-  const accessToken = urlParams.get('access_token');
-  const expiresInSeconds = Number(urlParams.get('expires_in'));
-
-  if (accessToken) {
-    tokenStore.updateToken(accessToken as string, expiresInSeconds);
-  }
-
   const configOrError = await fetchConfiguration();
   if (!isConfiguration(configOrError)) {
     throw new Error('Could not fetch configuration');

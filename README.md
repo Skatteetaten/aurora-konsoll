@@ -4,17 +4,20 @@
 
 1. `npm ci`
 
-2. Add a local file `.env.local` and add configuration to it. If this file is not added, default configuration will be used.
+### Local development
 
-   ```
-     INTEGRATIONS_GOBO_URL=http://gobo // Url to your gobo instance or remove to use default
-     INTEGRATIONS_DBH_URL=http://dbh // Will enable database screen
-     INTEGRATIONS_SKAP_URL=http://skap // Will enable certificate and Webseal screen
-   ```
+For local development using react-scripts.
 
-   This file will be sourced during npm start. Don't commit this file.
+1. Log in to OpenShift.
+2. `npm start`.
+3. Click the http://localhost:3000 printed in the terminal.
 
-3. `npm start`
+### Loca development with Single SPA
+
+For local development with single spa.
+
+1. `npm run start:spa`
+2. Start aurora-konsoll-spa with `npm start`
 
 ## IntelliJ Setup
 
