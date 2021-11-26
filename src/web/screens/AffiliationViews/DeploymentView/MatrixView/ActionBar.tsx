@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import styled from 'styled-components';
 import { CheckBox, TextField } from '@skatteetaten/frontend-components';
 
@@ -10,6 +10,8 @@ import { IFilter } from 'web/services/DeploymentFilterService';
 import { IApplicationDeployment } from 'web/models/ApplicationDeployment';
 import { IApplicationDeploymentFilters } from 'web/models/UserSettings';
 import { TextFieldEvent } from 'web/types/react';
+import { ITextField } from '@fluentui/react';
+import { usePrevious } from 'utils/usePrevious';
 
 interface IActionBarProps {
   time: string;
@@ -51,6 +53,24 @@ export const ActionBar: React.FC<IActionBarProps> = ({
   setSortBySizeAndAlphabetical,
   sortBySizeAndAlphabetical,
 }) => {
+  const textFieldRef = useRef<ITextField | null>();
+
+  const [quickFilterEnabled, setQuickFilterEnabled] = useState<boolean>(false);
+
+  const prevAffiliation = usePrevious(affiliation);
+
+  useEffect(() => {
+    if (textFieldRef.current && quickFilterEnabled) {
+      textFieldRef.current.focus();
+    }
+  });
+
+  useEffect(() => {
+    if (affiliation !== prevAffiliation) {
+      setQuickFilterEnabled(false);
+    }
+  }, [affiliation, prevAffiliation]);
+
   const filterChange = (ev: TextFieldEvent, filter?: string) => {
     if (filter !== undefined) {
       updateQuickFilter(filter);
@@ -74,6 +94,8 @@ export const ActionBar: React.FC<IActionBarProps> = ({
             placeholder="Filtrer applikasjoner"
             onChange={filterChange}
             value={quickFilter}
+            onClick={() => setQuickFilterEnabled(true)}
+            componentRef={(ref) => (textFieldRef.current = ref)}
           />
         </div>
         <CheckBox

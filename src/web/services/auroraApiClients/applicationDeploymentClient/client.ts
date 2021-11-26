@@ -1,11 +1,9 @@
 import GoboClient, { IDataAndErrors } from 'web/services/GoboClient';
 import {
   REDEPLOY_WITH_CURRENT_VERSION_MUTATION,
-  REDEPLOY_WITH_VERSION_MUTATION,
   REFRESH_APPLICATION_DEPLOYMENT_MUTATION,
   REFRESH_APPLICATION_DEPLOYMENTS_MUTATION,
   DELETE_APPLICATION_DEPLOYMENT_MUTATION,
-  DeployResponse,
   UpdateAuroraConfigFileInput,
   AuroraConfigFileValidationResponse,
   UPDATE_AURORA_CONFIG_FILE,
@@ -62,27 +60,6 @@ export class ApplicationDeploymentClient {
     }
   }
 
-  public async redeployWithVersionAndRefreshDeployment(
-    applicationDeploymentId: string,
-    version: string
-  ): Promise<IDataAndErrors<IApplicationDeploymentWithDetailsData>> {
-    const redeployResult = await this.redeployWithVersion(
-      applicationDeploymentId,
-      version
-    );
-    if (redeployResult.data?.redeployWithVersion?.applicationDeploymentId) {
-      await this.refreshApplicationDeployment(applicationDeploymentId);
-      return await this.fetchApplicationDeploymentWithDetails(
-        applicationDeploymentId
-      );
-    } else {
-      return {
-        name: redeployResult.name,
-        errors: redeployResult.errors,
-      };
-    }
-  }
-
   public async deleteAndRefreshApplications(
     affiliation: string,
     namespace: string,
@@ -130,21 +107,6 @@ export class ApplicationDeploymentClient {
       query: APPLICATION_DEPLOYMENT_WITH_DETAILS_QUERY,
       variables: {
         id: applicationDeploymentId,
-      },
-    });
-  }
-
-  public async redeployWithVersion(
-    applicationDeploymentId: string,
-    version: string
-  ): Promise<IDataAndErrors<DeployResponse>> {
-    return await this.client.mutate<DeployResponse>({
-      mutation: REDEPLOY_WITH_VERSION_MUTATION,
-      variables: {
-        input: {
-          applicationDeploymentId,
-          version,
-        },
       },
     });
   }

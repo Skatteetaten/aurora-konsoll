@@ -1,12 +1,6 @@
 import gql from 'graphql-tag';
 import { AuroraConfigFileResource } from './query';
 
-export interface DeployResponse {
-  redeployWithVersion: {
-    applicationDeploymentId: string;
-  } | null;
-}
-
 export interface DeployCurrentResponse {
   redeployWithCurrentVersion: {
     applicationDeploymentId: string;
@@ -28,14 +22,6 @@ export interface AuroraConfigFileValidationResponse {
     file?: AuroraConfigFileResource;
   };
 }
-
-export const REDEPLOY_WITH_VERSION_MUTATION = gql`
-  mutation redeployWithVersion($input: ApplicationDeploymentVersionInput!) {
-    redeployWithVersion(input: $input) {
-      applicationDeploymentId
-    }
-  }
-`;
 
 export const REDEPLOY_WITH_CURRENT_VERSION_MUTATION = gql`
   mutation redeployWithCurrentVersion($input: ApplicationDeploymentIdInput!) {
