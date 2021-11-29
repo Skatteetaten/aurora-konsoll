@@ -2,7 +2,7 @@ import each from 'jest-each';
 import {
   websealReduxStateFactory,
   websealStateFactory,
-} from 'testData/testDataBuilders';
+} from 'web/testData/testDataBuilders';
 import {
   fetchWebsealStatesRequest,
   fetchWebsealStatesResponse,

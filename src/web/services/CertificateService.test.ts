@@ -1,7 +1,7 @@
 import {
   certificateResultFactory,
   certificateViewFactory,
-} from 'testData/testDataBuilders';
+} from 'web/testData/testDataBuilders';
 import CertificateService from './CertificateService';
 
 describe('CertificateService', () => {

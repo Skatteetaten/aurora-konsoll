@@ -1,7 +1,7 @@
 import { mount } from 'enzyme';
 import * as React from 'react';
 
-import { deploymentFactory } from 'testData/testDataBuilders';
+import { deploymentFactory } from 'web/testData/testDataBuilders';
 import Row, { IApplicationMap } from './Row';
 import Status from './Status';
 import { MemoryRouter } from 'react-router';

@@ -6,7 +6,7 @@ import { DetailsList } from '@skatteetaten/frontend-components';
 
 import { mount } from 'enzyme';
 
-import { deploymentFactory } from 'testData/testDataBuilders';
+import { deploymentFactory } from 'web/testData/testDataBuilders';
 
 import InformationView from './InformationView';
 import { IPodsStatus } from 'web/models/Pod';

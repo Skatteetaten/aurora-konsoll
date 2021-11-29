@@ -2,7 +2,7 @@ import each from 'jest-each';
 import {
   certificateInitialFactory,
   certificateResultFactory,
-} from 'testData/testDataBuilders';
+} from 'web/testData/testDataBuilders';
 import { fetchCertificatesRequest, fetchCertificatesResponse } from './actions';
 import { certificateReducer } from './reducers';
 

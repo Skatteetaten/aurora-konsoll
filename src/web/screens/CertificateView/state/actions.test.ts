@@ -1,4 +1,4 @@
-import { certificateResultFactory } from 'testData/testDataBuilders';
+import { certificateResultFactory } from 'web/testData/testDataBuilders';
 import { fetchCertificatesRequest, fetchCertificatesResponse } from './actions';
 
 describe('certificate actions', () => {

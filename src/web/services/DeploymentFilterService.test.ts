@@ -2,7 +2,7 @@ import {
   applicationDeploymentFilterFactory,
   deploymentFactory,
   filterFactory,
-} from 'testData/testDataBuilders';
+} from 'web/testData/testDataBuilders';
 
 import { IApplicationDeployment } from '../models/ApplicationDeployment';
 import DeploymentFilterService, { IFilter } from './DeploymentFilterService';

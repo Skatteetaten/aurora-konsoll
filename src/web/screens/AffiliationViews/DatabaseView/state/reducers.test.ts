@@ -4,7 +4,7 @@ import {
   databaseSchemasFactory,
   deleteDatabaseSchemasResponseFactory,
   schemasFactory,
-} from 'testData/testDataBuilders';
+} from 'web/testData/testDataBuilders';
 import {
   createDatabaseSchemaResponse,
   deleteSchemaResponse,

@@ -1,4 +1,4 @@
-import { podFactory } from 'testData/testDataBuilders';
+import { podFactory } from 'web/testData/testDataBuilders';
 
 import { InfoContentValues } from './InfoContentValues';
 

@@ -2,7 +2,7 @@ import each from 'jest-each';
 import {
   netdebugResultFactory,
   netdebugViewStateInitialState,
-} from 'testData/testDataBuilders';
+} from 'web/testData/testDataBuilders';
 import {
   fetchNetdebugStatusResponse,
   fetchNetdebugStatusRequest,

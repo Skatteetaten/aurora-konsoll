@@ -4,7 +4,7 @@ import { SelectionType } from 'web/screens/AffiliationViews/DeploymentView/Matri
 import {
   applicationDeploymentFilterFactory,
   deploymentFactory,
-} from 'testData/testDataBuilders';
+} from 'web/testData/testDataBuilders';
 
 describe('FilterService', () => {
   const filterService = new FilterService();

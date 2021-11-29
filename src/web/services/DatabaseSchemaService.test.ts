@@ -4,7 +4,7 @@ import {
   databaseSchemaInputFactory,
   databaseSchemaInputWithCreatedByFactory,
   jdbcUserFactory,
-} from 'testData/testDataBuilders';
+} from 'web/testData/testDataBuilders';
 import DatabaseSchemaService from './DatabaseSchemaService';
 
 describe('DatabaseSchemaService', () => {

@@ -1,4 +1,4 @@
-import { websealStateFactory } from 'testData/testDataBuilders';
+import { websealStateFactory } from 'web/testData/testDataBuilders';
 import {
   fetchWebsealStatesRequest,
   fetchWebsealStatesResponse,

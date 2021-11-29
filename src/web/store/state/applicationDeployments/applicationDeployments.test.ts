@@ -1,6 +1,6 @@
 import { GraphQLSeverMock } from 'web/utils//GraphQLMock';
 import { createTestStore } from 'web/utils//redux/test-utils';
-import { applicationDeploymentFactory } from 'testData/testDataBuilders';
+import { applicationDeploymentFactory } from 'web/testData/testDataBuilders';
 
 import { actions } from './actions';
 import {

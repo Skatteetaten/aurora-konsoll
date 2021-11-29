@@ -1,5 +1,5 @@
 import PodsStatusService from './PodsStatusService';
-import { iconLinkDataFactory, podFactory } from 'testData/testDataBuilders';
+import { iconLinkDataFactory, podFactory } from 'web/testData/testDataBuilders';
 import { STATUS_COLORS } from 'web/models/Status';
 
 describe('PodsStatusService', () => {
