@@ -8,7 +8,7 @@ import DeploymentFilterService, {
 import { ApplicationDeploymentSelectorContainer } from './DetailsView/ApplicationDeploymentSelector';
 import { MatrixView } from './MatrixView/MatrixView';
 import { DeploymentViewContainerState } from './DeploymentViewContainer';
-import { isEqualObjects } from 'web/utils//string';
+import { isEqualObjects } from 'web/utils/string';
 
 interface IDeploymentViewProps {
   affiliation: string;

@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 
-import { IErrors, IAppError } from 'web/models//errors';
+import { IErrors, IAppError } from 'web/models/errors';
 import ErrorPopup from './ErrorPopup';
 
 interface IErrorBoundaryProps {

@@ -1,5 +1,5 @@
 import { actions } from './actions';
-import { doAsyncActions } from 'web/utils//redux/action-utils';
+import { doAsyncActions } from 'web/utils/redux/action-utils';
 import { AsyncAction } from 'web/store/types';
 import { UpdateAuroraConfigFileInput } from 'web/services/auroraApiClients/applicationDeploymentClient/mutation';
 

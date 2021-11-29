@@ -2,7 +2,7 @@ import { ColumnActionsMode, IColumn } from '@fluentui/react';
 import { IPodsStatus, IPodResource } from 'web/models/Pod';
 import { STATUS_COLORS } from 'web/models/Status';
 import { IIconLinkData } from 'web/components/IconLink';
-import { tryParseJSON } from 'web/utils//string';
+import { tryParseJSON } from 'web/utils/string';
 
 const podsStatusColumns: IColumn[] = [
   {

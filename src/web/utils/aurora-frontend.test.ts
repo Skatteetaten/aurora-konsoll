@@ -1,4 +1,4 @@
-import { toDropdownOptions } from 'web/utils//aurora-frontend';
+import { toDropdownOptions } from 'web/utils/aurora-frontend';
 
 describe('aurora-frontend', () => {
   it('removes duplicates and sorts dropdown options from names', () => {

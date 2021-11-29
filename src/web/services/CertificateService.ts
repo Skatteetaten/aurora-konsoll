@@ -1,5 +1,5 @@
 import { ICertificateResult, ICertificateView } from 'web/models/certificates';
-import { getLocalDate } from 'web/utils//date';
+import { getLocalDate } from 'web/utils/date';
 import { IColumn } from '@fluentui/react';
 
 const certificateColumns: IColumn[] = [

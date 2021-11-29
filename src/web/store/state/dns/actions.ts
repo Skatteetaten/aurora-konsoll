@@ -1,7 +1,7 @@
 import { ActionType } from 'typesafe-actions';
 
 import { IDataAndErrors } from 'web/services/GoboClient';
-import { createAsyncActions } from 'web/utils//redux/action-utils';
+import { createAsyncActions } from 'web/utils/redux/action-utils';
 import { CnameInfosQuery } from 'web/services/auroraApiClients/dnsClient/query';
 
 const action = (action: string) => `dns/${action}`;

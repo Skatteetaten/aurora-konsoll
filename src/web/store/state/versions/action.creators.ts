@@ -2,7 +2,7 @@ import { AsyncAction } from 'web/store/types';
 import { ImageTagType } from 'web/models/ImageTagType';
 
 import { actions } from './actions';
-import { doAsyncActions } from 'web/utils//redux/action-utils';
+import { doAsyncActions } from 'web/utils/redux/action-utils';
 
 export function fetchInitVersions(repository: string) {
   return doAsyncActions(actions.fetchInitVersions, (clients) => {

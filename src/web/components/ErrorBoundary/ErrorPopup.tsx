@@ -6,7 +6,7 @@ import {
   ActionButton,
   MessageBar,
 } from '@skatteetaten/frontend-components';
-import { IAppError } from 'web/models//errors';
+import { IAppError } from 'web/models/errors';
 import { Link } from 'react-router-dom';
 
 interface StackProperties {

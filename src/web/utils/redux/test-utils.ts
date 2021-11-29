@@ -16,7 +16,7 @@ import {
   AsyncAction,
 } from 'web/store/types';
 import { rootReducer } from 'web/store/rootReducer';
-import { getApiClientsMock, GraphQLSeverMock } from 'web/utils//GraphQLMock';
+import { getApiClientsMock, GraphQLSeverMock } from 'web/utils/GraphQLMock';
 
 const resetStoreStateAction: Action = {
   type: 'RESET_STORE_STATE',

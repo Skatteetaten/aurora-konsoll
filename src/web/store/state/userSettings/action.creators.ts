@@ -1,6 +1,6 @@
 import { actions } from './actions';
 import { IUserSettings } from 'web/models/UserSettings';
-import { doAsyncActions } from 'web/utils//redux/action-utils';
+import { doAsyncActions } from 'web/utils/redux/action-utils';
 
 export function getUserSettings() {
   return doAsyncActions(actions.fetchUserSettings, (clients) =>

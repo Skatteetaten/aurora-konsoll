@@ -12,7 +12,7 @@ import { VersionsAction } from './state/versions/actions';
 
 import { rootReducer } from './rootReducer';
 import { ResolveThunks } from 'react-redux';
-import { IApiClients } from 'web/models//AuroraApi';
+import { IApiClients } from 'web/models/AuroraApi';
 import { UserSettingsAction } from './state/userSettings/actions';
 import { ApplicationsAction } from './state/applicationDeployments/actions';
 import { StartupAction } from './state/startup/actions';

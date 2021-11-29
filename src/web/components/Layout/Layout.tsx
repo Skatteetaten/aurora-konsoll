@@ -4,9 +4,9 @@ import { connect } from 'react-redux';
 
 import { Dropdown } from '@skatteetaten/frontend-components';
 
-import { toDropdownOptions } from 'web/utils//aurora-frontend';
+import { toDropdownOptions } from 'web/utils/aurora-frontend';
 
-import { IUserAndAffiliations } from 'web/models//ApplicationDeployment';
+import { IUserAndAffiliations } from 'web/models/ApplicationDeployment';
 import { RootState } from 'web/store/types';
 import styled from 'styled-components';
 import Header from './Header';

@@ -3,7 +3,7 @@ import { IRoute } from 'web/services/auroraApiClients/applicationDeploymentClien
 
 import { ComboBox } from '@skatteetaten/frontend-components';
 
-import { getLocalDatetime } from 'web/utils//date';
+import { getLocalDatetime } from 'web/utils/date';
 import StatusIcon from './StatusIcon';
 import SkapJobTable from './SkapJobTable';
 import { IComboBoxOption } from '@fluentui/react';

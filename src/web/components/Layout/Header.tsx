@@ -6,7 +6,7 @@ import separatorImg from '@skatteetaten/frontend-components/TopBanner/assets/sep
 import Logo from '@skatteetaten/frontend-components/TopBanner/assets/ske-logo.svg';
 
 import Dropdown from 'web/components/DropdownMenu';
-import { IUserAndAffiliations } from 'web/models//ApplicationDeployment';
+import { IUserAndAffiliations } from 'web/models/ApplicationDeployment';
 import { ButtonLink } from 'web/components/ButtonLink';
 
 const { skeColor } = Palette;

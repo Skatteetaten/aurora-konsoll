@@ -8,7 +8,7 @@ import PodsStatusService, {
   filterPodsStatus,
 } from 'web/services/PodsStatusService';
 import { IApplicationDeploymentDetails } from 'web/models/ApplicationDeployment';
-import { getLocalDatetime } from 'web/utils//date';
+import { getLocalDatetime } from 'web/utils/date';
 import IconLink from 'web/components/IconLink';
 import ManagementResponseDialogSelector from 'web/components/ManagementResponseDialog';
 

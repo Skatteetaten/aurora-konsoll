@@ -3,7 +3,7 @@ import * as React from 'react';
 import InfoContent from 'web/components/InfoContent';
 import { IApplicationDeploymentDetails } from 'web/models/ApplicationDeployment';
 import { InfoContentValues } from 'web/models/InfoContentValues';
-import { getLocalDatetime } from 'web/utils//date';
+import { getLocalDatetime } from 'web/utils/date';
 
 interface IGitAndBuildInformationProps {
   deploymentDetails?: IApplicationDeploymentDetails;
