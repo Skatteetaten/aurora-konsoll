@@ -38,7 +38,7 @@ app.use(
   })
 );
 
-app.get('/api/config', (req, res) => {
+app.get('/api/konsoll/config', (req, res) => {
   return res.send({
     APPLICATION_NAME,
     DBH_ENABLED,

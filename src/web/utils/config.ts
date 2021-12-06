@@ -8,7 +8,7 @@ export interface IConfiguration {
 
 export async function fetchConfiguration(): Promise<IConfiguration | Error> {
   try {
-    const data = await fetch('/api/config');
+    const data = await fetch('/api/konsoll/config');
     return await data.json();
   } catch (error: any) {
     (window as any).e = error;

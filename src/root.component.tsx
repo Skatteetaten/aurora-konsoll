@@ -1,10 +1,14 @@
-import React, { FC } from 'react';
+import React, { FC, useState, useEffect } from 'react';
 import { BrowserRouter } from 'react-router-dom';
 
 import { Provider } from 'react-redux';
 
 import { IApiClients } from 'web/models/AuroraApi';
-import { IConfiguration, isConfiguration } from 'web/utils/config';
+import {
+  fetchConfiguration,
+  IConfiguration,
+  isConfiguration,
+} from 'web/utils/config';
 
 import { App } from 'web/screens/App';
 import {
@@ -25,18 +29,27 @@ import { TokenStore } from 'web/services/TokenStore';
 
 type Props = {
   tokenStore: TokenStore;
-  konsollConfig: IConfiguration | Error;
 };
 
-const Root: FC<Props> = (props) => {
-  const tokenStore: TokenStore = props.tokenStore;
-  const configOrError = props.konsollConfig;
+const Root: FC<Props> = ({ tokenStore }) => {
+  const [config, setConfig] = useState<IConfiguration>();
 
-  if (!isConfiguration(configOrError)) {
-    throw new Error(configOrError.message);
+  useEffect(() => {
+    (async () => {
+      const configOrError = await fetchConfiguration();
+      if (!isConfiguration(configOrError)) {
+        throw new Error('Could not fetch configuration');
+      }
+
+      setConfig(configOrError);
+    })();
+  }, []);
+
+  // TODO: Error handling
+  if (!config) {
+    return <div />;
   }
 
-  const config = configOrError;
   const token = tokenStore.getToken();
   const goboClient = new GoboClient({
     url: '/api/graphql',
