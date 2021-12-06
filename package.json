@@ -38,7 +38,6 @@
     "react-router-dom": "5.3.0",
     "react-select": "4.3.1",
     "redux-thunk": "2.4.0",
-    "redux-ts-utils": "4.0.0",
     "single-spa-react": "4.6.0",
     "styled-components": "5.3.3",
     "systemjs-webpack-interop": "2.3.7",
