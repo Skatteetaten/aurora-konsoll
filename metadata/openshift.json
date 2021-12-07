@@ -16,7 +16,7 @@
       }
     },
     "nodejs": {
-      "main": "build-api/server.js"
+      "main": "build-node/api/server.js"
     }
   }
 }
