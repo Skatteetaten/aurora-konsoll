@@ -3,7 +3,6 @@ const path = require('path');
 module.exports = config => {
   config.output.libraryTarget = 'system';
   config.entry = './src/skatteetaten-aurora-konsoll.tsx';
-  config.externals = ['react', 'react-dom', '@skatteetaten/frontend-components'];
   config.optimization.runtimeChunk = false;
   config.optimization.splitChunks = {
     cacheGroups: {
