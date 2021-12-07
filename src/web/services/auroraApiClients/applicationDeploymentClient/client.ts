@@ -18,7 +18,9 @@ import {
   USER_AFFILIATIONS_QUERY,
   IApplicationDeploymentWithDetailsData,
   APPLICATION_DEPLOYMENT_WITH_DETAILS_QUERY,
+  AuroraConfigFileResource,
 } from './query';
+import { changeVersionInFile } from './utils';
 
 export class ApplicationDeploymentClient {
   private client: GoboClient;
@@ -28,12 +30,58 @@ export class ApplicationDeploymentClient {
   }
 
   public async updateAuroraConfigRedeployAndRefreshDeployment(
-    updateAuroraConfigFileInput: UpdateAuroraConfigFileInput,
-    applicationDeploymentId: string
+    applicationDeploymentId: string,
+    affiliation: string,
+    version: string
   ) {
-    const updateFileResult = await this.updateAuroraConfigFile(
-      updateAuroraConfigFileInput
+    const applicationDeployment =
+      await this.refreshAndFetchApplicationDeployment(applicationDeploymentId);
+
+    const auroraConfigFiles =
+      applicationDeployment.data?.applicationDeployment.files;
+
+    if (auroraConfigFiles === undefined) {
+      return {
+        errors: [
+          new Error(`Could not find aurora config files for application`),
+        ],
+        name: 'Missing Aurora config files for application',
+      };
+    }
+
+    const applicationFile: AuroraConfigFileResource | undefined =
+      auroraConfigFiles.find((it) => it.type === 'APP');
+
+    if (!applicationFile) {
+      return {
+        errors: [new Error(`An application must have an application file`)],
+        name: 'Missing application file',
+      };
+    }
+
+    const changedFile = changeVersionInFile(
+      applicationFile.name,
+      applicationFile.contents,
+      version
     );
+
+    if (!changedFile) {
+      return {
+        errors: [
+          new Error(
+            `Could not parse the content of the application file. Make sure the file is of type yaml or json and does not contain syntax errors`
+          ),
+        ],
+        name: 'Parsing error',
+      };
+    }
+
+    const updateFileResult = await this.updateAuroraConfigFile({
+      auroraConfigName: affiliation,
+      contents: changedFile,
+      existingHash: applicationFile.contentHash,
+      fileName: applicationFile.name,
+    });
 
     if (updateFileResult.data?.updateAuroraConfigFile.success) {
       const redeployResult = await this.redeployWithCurrentVersion(
@@ -42,8 +90,7 @@ export class ApplicationDeploymentClient {
       if (
         redeployResult.data?.redeployWithCurrentVersion?.applicationDeploymentId
       ) {
-        await this.refreshApplicationDeployment(applicationDeploymentId);
-        return await this.fetchApplicationDeploymentWithDetails(
+        return await this.refreshAndFetchApplicationDeployment(
           applicationDeploymentId
         );
       } else {

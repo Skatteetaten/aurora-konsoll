@@ -1,7 +1,6 @@
 import { actions } from './actions';
 import { doAsyncActions } from 'web/utils/redux/action-utils';
 import { AsyncAction } from 'web/store/types';
-import { UpdateAuroraConfigFileInput } from 'web/services/auroraApiClients/applicationDeploymentClient/mutation';
 
 export function deleteAndRefreshApplications(
   affiliation: string,
@@ -23,8 +22,9 @@ export function deleteAndRefreshApplications(
   );
 }
 export function deploy(
-  updateAuroraConfigFileInput: UpdateAuroraConfigFileInput,
-  applicationDeploymentId: string
+  version: string,
+  applicationDeploymentId: string,
+  affiliation: string
 ) {
   return doAsyncActions(
     {
@@ -34,8 +34,9 @@ export function deploy(
     },
     (clients) =>
       clients.applicationDeploymentClient.updateAuroraConfigRedeployAndRefreshDeployment(
-        updateAuroraConfigFileInput,
-        applicationDeploymentId
+        applicationDeploymentId,
+        affiliation,
+        version
       )
   );
 }
