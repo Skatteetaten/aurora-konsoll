@@ -48,9 +48,20 @@ function getVersionViewUnavailableMessage(
       'info'
     );
   }
-  if (!deployment.imageRepository?.isFullyQualified) {
+
+  if (
+    deployment.imageRepository &&
+    !deployment.imageRepository.isFullyQualified
+  ) {
     return serviceUnavailableBecause(
       'Applikasjonen har en Docker Image referanse som ikke går mot det interne Docker Registry, og versjoner kan dermed ikke hentes',
+      'warning'
+    );
+  }
+
+  if (!deployment.imageRepository) {
+    return serviceUnavailableBecause(
+      'Applikasjonen mangler image referanse. Dette kan bla. oppstå dersom applikasjonen er deployet med "type: development" og det er endret til "type: deploy" i applikasjonsfila. Løsningen er å deploye applikasjonen med ao slik at den får en image referanse.',
       'warning'
     );
   }
