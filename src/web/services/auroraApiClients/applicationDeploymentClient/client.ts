@@ -76,8 +76,13 @@ export class ApplicationDeploymentClient {
       };
     }
 
+    const auroraConfigReference =
+      applicationDeployment.data?.applicationDeployment.details
+        .applicationDeploymentCommand?.auroraConfig.gitReference ?? 'master';
+
     const updateFileResult = await this.updateAuroraConfigFile({
       auroraConfigName: affiliation,
+      auroraConfigReference,
       contents: changedFile,
       existingHash: applicationFile.contentHash,
       fileName: applicationFile.name,
