@@ -11,7 +11,7 @@ import { IApplicationDeployment } from 'web/models/ApplicationDeployment';
 import { IApplicationDeploymentFilters } from 'web/models/UserSettings';
 import { TextFieldEvent } from 'web/types/react';
 import { ITextField } from '@fluentui/react';
-import { usePrevious } from 'utils/usePrevious';
+import { usePrevious } from 'web/utils/usePrevious';
 
 interface IActionBarProps {
   time: string;

@@ -21,7 +21,7 @@ import Labels from './Labels';
 import ConfirmationDialog from 'web/components/ConfirmationDialog';
 import SkeLink from '../../../components/SkeLink';
 import DatabaseSchemaService from '../../../services/DatabaseSchemaService';
-import { usePrevious } from 'utils/usePrevious';
+import { usePrevious } from 'web/utils/usePrevious';
 
 const { skeColor } = Palette;
 
