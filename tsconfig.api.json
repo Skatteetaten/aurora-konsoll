@@ -2,22 +2,9 @@
   "extends": "./tsconfig.json",
   "compilerOptions": {
     "module": "CommonJS",
-    "outDir": "build-api",
-    "rootDir": "./api",
-    "noEmit": false
+    "outDir": "build-node",
+    "sourceMap": true,
+    "noEmit": false,
   },
-  "include": ["api"],
-  "exclude": [
-    "src",
-    "node_modules",
-    "build",
-    "build-api",
-    "scripts",
-    "coverage",
-    "acceptance-tests",
-    "webpack",
-    "jest",
-    "src/setupTests.ts",
-    "api/*.test.ts"
-  ]
+  "include": ["src/api", "src/setupDevelopment.ts"]
 }
