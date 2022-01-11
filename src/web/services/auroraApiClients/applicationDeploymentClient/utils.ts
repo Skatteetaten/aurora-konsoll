@@ -25,7 +25,7 @@ export function changeVersionInFile(
 function attemptFallbackMethod(fileContent: string, version: string) {
   try {
     let emptyYamlWithVersion = fileContent + `\nversion: ${version}`;
-    if (emptyYamlWithVersion.endsWith('\n')) {
+    if (fileContent.endsWith('\n')) {
       emptyYamlWithVersion = fileContent + `version: ${version}`;
     }
     return parseYaml(emptyYamlWithVersion, version);
