@@ -12,12 +12,30 @@ export function changeVersionInFile(
       null,
       2
     );
+  } else if (fileName.endsWith('yaml')) {
+    try {
+      return parseYaml(fileContent, version);
+    } catch {
+      return attemptFallbackMethod(fileContent, version);
+    }
   }
+  return undefined;
+}
+
+function attemptFallbackMethod(fileContent: string, version: string) {
   try {
-    const parsedApplicationFile = YAML.parseDocument(fileContent);
-    parsedApplicationFile.set('version', version);
-    return parsedApplicationFile.toString();
+    let emptyYamlWithVersion = fileContent + `\nversion: ${version}`;
+    if (emptyYamlWithVersion.endsWith('\n')) {
+      emptyYamlWithVersion = fileContent + `version: ${version}`;
+    }
+    return parseYaml(emptyYamlWithVersion, version);
   } catch {
     return undefined;
   }
+}
+
+function parseYaml(fileContent: string, version: string) {
+  const parsedApplicationFile = YAML.parseDocument(fileContent);
+  parsedApplicationFile.set('version', version);
+  return parsedApplicationFile.toString();
 }
