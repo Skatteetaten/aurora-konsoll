@@ -16,26 +16,14 @@ export function changeVersionInFile(
     try {
       return parseYaml(fileContent, version);
     } catch {
-      return attemptFallbackMethod(fileContent, version);
+      return undefined;
     }
   }
   return undefined;
 }
 
-function attemptFallbackMethod(fileContent: string, version: string) {
-  try {
-    let emptyYamlWithVersion = fileContent + `\nversion: ${version}`;
-    if (fileContent.endsWith('\n')) {
-      emptyYamlWithVersion = fileContent + `version: ${version}`;
-    }
-    return parseYaml(emptyYamlWithVersion, version);
-  } catch {
-    return undefined;
-  }
-}
-
 function parseYaml(fileContent: string, version: string) {
-  const parsedApplicationFile = YAML.parseDocument(fileContent);
-  parsedApplicationFile.set('version', version);
-  return parsedApplicationFile.toString();
+  const parsedApplicationFile = YAML.parse(fileContent) ?? {};
+  parsedApplicationFile.version = version;
+  return YAML.stringify(parsedApplicationFile);
 }
