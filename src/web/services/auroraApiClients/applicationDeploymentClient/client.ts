@@ -65,13 +65,9 @@ export class ApplicationDeploymentClient {
       version
     );
 
-    if (!changedFile) {
+    if (changedFile instanceof Error) {
       return {
-        errors: [
-          new Error(
-            `Could not parse the content of the application file. Make sure the file is of type yaml or json and does not contain syntax errors`
-          ),
-        ],
+        errors: [changedFile],
         name: 'Parsing error',
       };
     }
