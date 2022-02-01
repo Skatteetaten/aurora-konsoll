@@ -30,6 +30,18 @@ describe('utils', () => {
     expect(changedFile).toContain('version: test-snapshot');
   });
 
+  it('should not fold line with over 80 line width', () => {
+    const changedFile = changeVersionInFile(
+      'env/app.yaml',
+      '---\nbaseFile: "testtesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttest"\n',
+      'test-snapshot'
+    );
+
+    expect(changedFile).toContain(
+      'baseFile: "testtesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttest"'
+    );
+  });
+
   it('yaml file with only dashes should return yaml with version property', () => {
     const changedFile = changeVersionInFile('env/app.yaml', '---\n', '1');
 
