@@ -5,9 +5,11 @@ import { IManagementEndpointResponse } from 'web/models/Pod';
 import styled from 'styled-components';
 import { prettifyJSON } from 'web/utils/string';
 import { StyledPre } from 'web/components/StyledPre';
-import { MessageBar, Icon, Palette } from '@skatteetaten/frontend-components';
+import { Icon } from '@skatteetaten/frontend-components/Icon';
+import { MessageBar } from '@skatteetaten/frontend-components/MessageBar';
+import { SkeBasis } from '@skatteetaten/frontend-components/SkeBasis';
 
-const { skeColor } = Palette;
+const { skeColor } = SkeBasis.PALETTE;
 
 interface IErrorResponseDialogProps {
   response: IManagementEndpointResponse;

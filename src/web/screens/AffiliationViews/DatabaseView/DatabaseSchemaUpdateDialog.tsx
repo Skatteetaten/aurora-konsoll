@@ -7,13 +7,13 @@ import {
   ITestJDBCResponse,
   IUpdateDatabaseSchemaInputWithCreatedBy,
 } from 'web/models/schemas';
-import {
-  Dialog,
-  Grid,
-  Palette,
-  Button,
-  ActionButton,
-} from '@skatteetaten/frontend-components';
+
+import { Dialog } from '@skatteetaten/frontend-components/Dialog';
+import { Grid } from '@skatteetaten/frontend-components/Grid';
+import { Button } from '@skatteetaten/frontend-components/Button';
+import { ActionButton } from '@skatteetaten/frontend-components/ActionButton';
+import { SkeBasis } from '@skatteetaten/frontend-components/SkeBasis';
+
 import { getLocalDatetime } from 'web/utils/date';
 import JdbcConnection from './JdbcConnection';
 import { TextFieldEvent } from 'web/types/react';
@@ -23,7 +23,7 @@ import SkeLink from '../../../components/SkeLink';
 import DatabaseSchemaService from '../../../services/DatabaseSchemaService';
 import { usePrevious } from 'web/utils/usePrevious';
 
-const { skeColor } = Palette;
+const { skeColor } = SkeBasis.PALETTE;
 
 interface IDatabaseSchemaUpdateDialogProps {
   schema?: IDatabaseSchema;
@@ -245,7 +245,7 @@ const DatabaseSchemaUpdateDialog = ({
 
               {!isRestoreDialog && createNewCopy && (
                 <Button
-                  buttonStyle="primaryRoundedFilled"
+                  buttonStyle="primary"
                   style={{ width: '162px', marginRight: '10px' }}
                   icon="Copy"
                   onClick={() => {
@@ -257,7 +257,7 @@ const DatabaseSchemaUpdateDialog = ({
                 </Button>
               )}
               <Button
-                buttonStyle="primaryRoundedFilled"
+                buttonStyle="primary"
                 style={{ width: '120px', marginRight: '10px' }}
                 icon="Clear"
                 onClick={clearSelectedSchema}
@@ -267,7 +267,7 @@ const DatabaseSchemaUpdateDialog = ({
 
               {!isRestoreDialog && (
                 <Button
-                  buttonStyle="primaryRoundedFilled"
+                  buttonStyle="primary"
                   style={{ width: '120px' }}
                   icon="Check"
                   onClick={updateLabels}

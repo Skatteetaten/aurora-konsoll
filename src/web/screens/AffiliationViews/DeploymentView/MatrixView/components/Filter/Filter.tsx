@@ -6,11 +6,9 @@ import ReactSelect from 'web/components/Select';
 
 import { IApplicationDeployment } from 'web/models/ApplicationDeployment';
 
-import {
-  ActionButton,
-  CheckBox,
-  RadioButtonGroupProps,
-} from '@skatteetaten/frontend-components';
+import { ActionButton } from '@skatteetaten/frontend-components/ActionButton';
+import { CheckBox } from '@skatteetaten/frontend-components/CheckBox';
+import { RadioButtonGroupProps } from '@skatteetaten/frontend-components/RadioButtonGroup/RadioButtonGroup.types';
 import { IApplicationDeploymentFilters } from 'web/models/UserSettings';
 import { IFilter } from 'web/services/DeploymentFilterService';
 import FilterService from 'web/services/FilterService';

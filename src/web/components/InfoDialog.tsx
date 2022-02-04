@@ -1,11 +1,9 @@
 import React from 'react';
 
-import {
-  Button,
-  ActionButton,
-  ButtonProps,
-  Dialog,
-} from '@skatteetaten/frontend-components';
+import { Button } from '@skatteetaten/frontend-components/Button';
+import { ActionButton } from '@skatteetaten/frontend-components/ActionButton';
+import { ButtonProps } from '@skatteetaten/frontend-components/Button/Button.types';
+import { Dialog } from '@skatteetaten/frontend-components/Dialog';
 import styled from 'styled-components';
 
 const DialogSubText = styled<React.FC<{ className?: string }>>(
@@ -80,7 +78,7 @@ class InfoDialog extends React.Component<InfoDialogProps, InfoDialogState> {
       title,
       subText,
       buttonText,
-      buttonStyle = 'secondary',
+      buttonStyle = 'secondarySimple',
     } = this.props;
     const open = this.toggleDialog(true);
     return (

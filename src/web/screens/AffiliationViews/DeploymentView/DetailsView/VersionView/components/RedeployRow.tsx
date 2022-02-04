@@ -1,7 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 
-import { Spinner } from '@skatteetaten/frontend-components';
+import { Spinner } from '@skatteetaten/frontend-components/Spinner';
 
 import { IImageTag } from 'web/services/auroraApiClients/imageRepositoryClient/query';
 import { WrongVersionCallout } from './WrongVersionCallout';
@@ -101,7 +101,7 @@ const Wrapper = styled.div`
   align-items: center;
   margin-bottom: 12px;
   background: rgb(249, 237, 226);
-  padding: 8px 7px;
+  padding: 14px 7px;
 
   button {
     margin-right: 5px;

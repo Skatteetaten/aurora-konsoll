@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { Callout } from '@skatteetaten/frontend-components';
+import { Callout } from '@skatteetaten/frontend-components/Callout';
 import CalloutButton from 'web/components/CalloutButton';
 
 export const FetchVersionsInformation = () => (
@@ -12,7 +12,6 @@ export const FetchVersionsInformation = () => (
     }}
     buttonProps={{
       icon: 'info',
-      buttonStyle: 'secondary',
     }}
     title="Vis info"
     content={

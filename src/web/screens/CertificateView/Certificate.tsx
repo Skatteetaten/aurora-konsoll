@@ -1,7 +1,8 @@
 import * as React from 'react';
 import styled from 'styled-components';
 
-import { TextField, Spinner } from '@skatteetaten/frontend-components';
+import { TextField } from '@skatteetaten/frontend-components/TextField';
+import { Spinner } from '@skatteetaten/frontend-components/Spinner';
 
 import LoadingButton from 'web/components/LoadingButton';
 import { ICertificateResult, ICertificateView } from 'web/models/certificates';

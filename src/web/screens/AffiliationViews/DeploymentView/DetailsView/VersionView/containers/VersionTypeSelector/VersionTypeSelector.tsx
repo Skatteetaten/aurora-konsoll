@@ -1,6 +1,6 @@
 import React, { FormEvent } from 'react';
 import styled from 'styled-components';
-import { ComboBox } from '@skatteetaten/frontend-components';
+import { ComboBox } from '@skatteetaten/frontend-components/ComboBox';
 
 import { ImageTagType } from 'web/models/ImageTagType';
 

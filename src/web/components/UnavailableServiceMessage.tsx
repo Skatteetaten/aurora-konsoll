@@ -1,6 +1,6 @@
 import * as React from 'react';
 
-import { MessageBar } from '@skatteetaten/frontend-components';
+import { MessageBar } from '@skatteetaten/frontend-components/MessageBar';
 
 import { IUnavailableServiceMessage } from 'web/models/UnavailableServiceMessage';
 

@@ -1,7 +1,8 @@
 import React from 'react';
 import styled from 'styled-components';
 
-import { Button, ActionButton } from '@skatteetaten/frontend-components';
+import { Button } from '@skatteetaten/frontend-components/Button';
+import { ActionButton } from '@skatteetaten/frontend-components/ActionButton';
 import { ActiveDeploymentInformation } from './ActiveDeploymentInformation';
 import { DeploymentSpecInformation } from './DeploymentSpecInformation';
 import { GitAndBuildInformation } from './GitAndBuildInformation';
@@ -47,7 +48,7 @@ const InformationView = ({
   const renderConfirmationOpenButton = (open: () => void) => (
     <Button
       icon="Delete"
-      buttonStyle="primaryRoundedFilled"
+      buttonStyle="primary"
       onClick={open}
       disabled={!deployment.permission.paas.admin}
     >

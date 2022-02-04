@@ -1,7 +1,9 @@
 import * as React from 'react';
 import styled from 'styled-components';
 
-import { Grid, Card, CardColor } from '@skatteetaten/frontend-components';
+import { Grid } from '@skatteetaten/frontend-components/Grid';
+import { Card } from '@skatteetaten/frontend-components/Card';
+import { CardColor } from '@skatteetaten/frontend-components/Card/Card.types';
 import { ICreateDatabaseSchemaResponse } from 'web/models/schemas';
 
 interface ISummaryProps {

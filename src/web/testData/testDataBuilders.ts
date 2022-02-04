@@ -16,10 +16,10 @@ import {
   ICreateDatabaseSchemaResponse,
   IDatabaseSchema,
   IDatabaseSchemaInput,
-  IDatabaseSchemas,
   IChangeCooldownDatabaseSchemasResponse,
   IJdbcUser,
   IUpdateDatabaseSchemaInputWithCreatedBy,
+  IDatabaseSchemasWithPageInfo,
 } from 'web/models/schemas';
 import { StatusCode } from 'web/models/Status';
 import {
@@ -319,8 +319,13 @@ export const certificateInitialFactory =
   });
 
 export const databaseSchemasFactory =
-  Factory.Sync.makeFactory<IDatabaseSchemas>({
+  Factory.Sync.makeFactory<IDatabaseSchemasWithPageInfo>({
     databaseSchemas: [databaseSchemaFactory.build()],
+    pageInfo: {
+      endCursor: '',
+      hasNextPage: false,
+    },
+    totalCount: 0,
   });
 
 export const deleteDatabaseSchemasResponseFactory =

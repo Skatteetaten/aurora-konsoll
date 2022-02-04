@@ -1,6 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import styled from 'styled-components';
-import { CheckBox, TextField } from '@skatteetaten/frontend-components';
+import { CheckBox } from '@skatteetaten/frontend-components/CheckBox';
+import { TextField } from '@skatteetaten/frontend-components/TextField';
 
 import LoadingButton from 'web/components/LoadingButton';
 import TimeSince from 'web/components/TimeSince';

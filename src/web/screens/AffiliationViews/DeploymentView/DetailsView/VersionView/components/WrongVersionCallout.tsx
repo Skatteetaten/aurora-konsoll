@@ -1,5 +1,6 @@
 import React, { useState, useRef, FC } from 'react';
-import { Callout, IconButton } from '@skatteetaten/frontend-components';
+import { Callout } from '@skatteetaten/frontend-components/Callout';
+import { IconButton } from '@skatteetaten/frontend-components/IconButton';
 
 export const WrongVersionCallout: FC = ({ children }) => {
   const [open, setOpen] = useState(false);

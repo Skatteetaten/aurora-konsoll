@@ -1,9 +1,10 @@
 import * as React from 'react';
 
-import { Icon, Palette } from '@skatteetaten/frontend-components';
+import { Icon } from '@skatteetaten/frontend-components/Icon';
+import { SkeBasis } from '@skatteetaten/frontend-components/SkeBasis';
 import styled, { css } from 'styled-components';
 
-const { skeColor } = Palette;
+const { skeColor } = SkeBasis.PALETTE;
 
 type IsActiveFunc = (data: IIconLinkData) => boolean;
 

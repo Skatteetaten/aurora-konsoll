@@ -1,5 +1,5 @@
 import React from 'react';
-import { Callout } from '@skatteetaten/frontend-components';
+import { Callout } from '@skatteetaten/frontend-components/Callout';
 
 import CalloutButton from 'web/components/CalloutButton';
 
@@ -7,6 +7,7 @@ export const VersionTableInformation = () => (
   <CalloutButton
     style={{
       marginBottom: '6px',
+      maxWidth: '600px',
     }}
     calloutProps={{
       color: Callout.INFO,
@@ -15,7 +16,6 @@ export const VersionTableInformation = () => (
     }}
     buttonProps={{
       icon: 'info',
-      buttonStyle: 'secondary',
     }}
     title="Finner du ikke versjoner du leter etter?"
     content={
@@ -30,6 +30,7 @@ export const VersionTableInformation = () => (
           derfor ikke mulig å tilby en korrekt versjonsliste hvor nyeste
           versjoner alltid kommer først.
         </p>
+        <br />
         <p>
           Dersom du ikke finner versjonen kan du forsøke å søke eller trykke på
           "Hent flere versjoner". Det kan være du må trykke flere ganger før

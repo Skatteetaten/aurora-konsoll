@@ -1,7 +1,8 @@
 import * as React from 'react';
 import styled from 'styled-components';
 
-import { Button, Palette } from '@skatteetaten/frontend-components';
+import { Button } from '@skatteetaten/frontend-components/Button';
+import { SkeBasis } from '@skatteetaten/frontend-components/SkeBasis';
 
 import { INetdebugResult } from 'web/services/auroraApiClients';
 
@@ -58,7 +59,7 @@ const CardInfo = ({
   </div>
 );
 
-const { skeColor } = Palette;
+const { skeColor } = SkeBasis.PALETTE;
 
 export default styled(CardInfo)`
   background: ${skeColor.neutralGrey};

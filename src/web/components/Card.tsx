@@ -1,8 +1,8 @@
 import styled from 'styled-components';
 
-import { Palette } from '@skatteetaten/frontend-components';
+import { SkeBasis } from '@skatteetaten/frontend-components/SkeBasis';
 
-const { skeColor } = Palette;
+const { skeColor } = SkeBasis.PALETTE;
 
 const Card = styled.div`
   flex: 1;

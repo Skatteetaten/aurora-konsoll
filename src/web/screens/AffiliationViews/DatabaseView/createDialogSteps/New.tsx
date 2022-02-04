@@ -7,7 +7,8 @@ import {
 } from 'web/models/schemas';
 import Labels from '../Labels';
 import { TextFieldEvent } from 'web/types/react';
-import { Grid, RadioButtonGroup } from '@skatteetaten/frontend-components';
+import { Grid } from '@skatteetaten/frontend-components/Grid';
+import { RadioButtonGroup } from '@skatteetaten/frontend-components/RadioButtonGroup';
 
 export interface INewProps {
   databaseSchemaInput: ICreateDatabaseSchemaInput;

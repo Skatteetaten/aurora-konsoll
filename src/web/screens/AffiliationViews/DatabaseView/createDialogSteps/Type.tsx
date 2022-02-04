@@ -1,13 +1,13 @@
 import * as React from 'react';
 import styled from 'styled-components';
 
-import {
-  NavigationTile,
-  NavigationContent,
-} from '@skatteetaten/frontend-components';
+import { NavigationTile } from '@skatteetaten/frontend-components/NavigationTile';
+import NavigationContent from '@skatteetaten/frontend-components/NavigationTile/NavigationContent';
 import { Step } from 'web/models/schemas';
 import { ButtonLink } from 'web/components/ButtonLink';
-import { skeColor } from '@skatteetaten/frontend-components';
+import { SkeBasis } from '@skatteetaten/frontend-components/SkeBasis';
+
+const { skeColor } = SkeBasis.PALETTE;
 
 interface ITypeProps {
   setStep: (step: Step) => void;
