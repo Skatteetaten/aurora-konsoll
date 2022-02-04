@@ -6,6 +6,7 @@ import { toStatusColor } from 'web/models/Status';
 
 import styled from 'styled-components';
 import StatusCheckReport from './StatusCheckReport';
+import ActionButton from '@skatteetaten/frontend-components/ActionButton';
 
 interface IStatusCheckReportCardProps {
   className?: string;
@@ -21,6 +22,17 @@ const StatusCheckReportCard = ({
     (c) => !reports.find((r) => r.name === c.name)
   );
   const reasonsToShow = specialChecks.length > 0 ? specialChecks : reasons;
+
+  const renderOpenButton = (open: () => void) => (
+    <ActionButton
+      onClick={open}
+      iconSize={ActionButton.LARGE}
+      className="open-button"
+    >
+      Helsesjekkrapport
+    </ActionButton>
+  );
+
   return (
     <div className={className}>
       <div className="status-card">
@@ -43,7 +55,10 @@ const StatusCheckReportCard = ({
             </ul>
           </>
         )) || <p>Alle sjekker er OK.</p>}
-        <InfoDialog title="Helsesjekkrapport">
+        <InfoDialog
+          title="Helsesjekkrapport"
+          renderOpenDialogButton={renderOpenButton}
+        >
           <StatusCheckReport
             reports={deployment.status.reports}
             reasons={deployment.status.reasons}
@@ -55,6 +70,12 @@ const StatusCheckReportCard = ({
 };
 
 export default styled(StatusCheckReportCard)`
+  .open-button {
+    padding: 15px !important;
+    justify-content: center;
+    display: flex;
+  }
+
   .status-card {
     min-width: 300px;
     display: flex;
