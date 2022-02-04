@@ -11,7 +11,7 @@ def overrides = [
     iqOrganizationName: "Team AOS",
     iqEmbedded: true,
     iqBreakOnUnstable: true,
-    nodeVersion: "12",
+    nodeVersion: "16",
     versionStrategy: [
         [ branch: 'master', versionHint: '1']
     ]
