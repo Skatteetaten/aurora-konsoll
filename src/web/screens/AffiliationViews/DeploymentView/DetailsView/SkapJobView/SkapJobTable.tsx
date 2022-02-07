@@ -1,5 +1,5 @@
 import React from 'react';
-import { Table } from '@skatteetaten/frontend-components';
+import { Table } from '@skatteetaten/frontend-components/Table';
 import styled from 'styled-components';
 import {
   IBigipJob,
@@ -17,8 +17,8 @@ interface IBigipJobTable extends IBigipJob {
 }
 
 interface ISkapJobTableProps {
-  websealJobs: IWebsealJobTable[];
-  bigipJobs: IBigipJobTable[];
+  websealJobs: any[];
+  bigipJobs: any[];
 }
 
 const SkapJobTable = ({ websealJobs, bigipJobs }: ISkapJobTableProps) => {

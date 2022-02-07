@@ -1,7 +1,7 @@
 import React from 'react';
 import { IRoute } from 'web/services/auroraApiClients/applicationDeploymentClient/query';
 
-import { ComboBox } from '@skatteetaten/frontend-components';
+import { ComboBox } from '@skatteetaten/frontend-components/ComboBox';
 
 import { getLocalDatetime } from 'web/utils/date';
 import StatusIcon from './StatusIcon';
@@ -26,7 +26,7 @@ const SkapJobView = ({ route }: ISkapJobViewProps) => {
     return <h2>Ingen WebSEAL/BIG-IP jobber for denne applikasjonen</h2>;
   }
 
-  const websealJobsData = route.websealJobs
+  const websealJobsData: any[] = route.websealJobs
     .map((it) => ({
       ...it,
       updatedFormatted: getLocalDatetime(it.updated),
@@ -34,7 +34,7 @@ const SkapJobView = ({ route }: ISkapJobViewProps) => {
     }))
     .sort((a, b) => Number(b.id) - Number(a.id));
 
-  const bigipJobsData = route.bigipJobs
+  const bigipJobsData: any[] = route.bigipJobs
     .map((it: any) => {
       const options: IComboBoxOption[] = [];
       let index: number = 0;

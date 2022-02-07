@@ -1,11 +1,11 @@
 import * as React from 'react';
-import { Table } from '@skatteetaten/frontend-components';
 import styled from 'styled-components';
 import { ImageTagType } from 'web/models/ImageTagType';
 import { IVersionTableProps, VersionTableState } from './VersionTable.state';
 import { DeployButton } from '../../components/DeployButton';
 import { VersionInfo } from '../../components/VersionInfo';
 import DateWithTooltip from 'web/components/DateWithTooltip';
+import { Table } from '@skatteetaten/frontend-components/Table';
 
 const columns = [
   {
@@ -69,7 +69,7 @@ export const VersionTable = ({
       ? configuredVersionTag.name
       : currentVersion.name;
 
-  const data = imageTagsConnection
+  const data: any[] = imageTagsConnection
     .getVersions()
     .filter((it) => it.name !== versionToFilter)
     .map((it) => {
@@ -144,8 +144,8 @@ const TableWrapper = styled.div`
     }
   }
 
-  div.cellContent {
-    padding: 0px 12px;
+  div.cellContentLarge {
+    padding: 6px 12px;
   }
 
   td button {
