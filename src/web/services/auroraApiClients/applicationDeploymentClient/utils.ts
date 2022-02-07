@@ -29,6 +29,7 @@ export function changeVersionInFile(
 const isEmptyYaml = (content: string) => content.trim() === '---';
 
 function parseYaml(fileContent: string, version: string) {
+  YAML.scalarOptions.str.fold.lineWidth = 0;
   if (isEmptyYaml(fileContent)) {
     const emptyYaml = new YAML.Document({});
     emptyYaml.directivesEndMarker = true;
