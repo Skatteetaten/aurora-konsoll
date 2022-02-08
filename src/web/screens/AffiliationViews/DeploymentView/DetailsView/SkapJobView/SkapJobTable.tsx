@@ -17,8 +17,8 @@ interface IBigipJobTable extends IBigipJob {
 }
 
 interface ISkapJobTableProps {
-  websealJobs: any[];
-  bigipJobs: any[];
+  websealJobs: IWebsealJobTable[];
+  bigipJobs: IBigipJobTable[];
 }
 
 const SkapJobTable = ({ websealJobs, bigipJobs }: ISkapJobTableProps) => {
@@ -32,7 +32,7 @@ const SkapJobTable = ({ websealJobs, bigipJobs }: ISkapJobTableProps) => {
             caption={''}
             hideCaption={true}
             style={{ background: 'white' }}
-            data={websealJobs}
+            data={websealJobs as any}
             columns={[
               {
                 name: 'Status',
@@ -91,7 +91,7 @@ const SkapJobTable = ({ websealJobs, bigipJobs }: ISkapJobTableProps) => {
             caption={''}
             hideCaption={true}
             style={{ background: 'white' }}
-            data={bigipJobs}
+            data={bigipJobs as any}
             columns={[
               {
                 name: 'Status',

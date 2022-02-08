@@ -9,7 +9,7 @@ interface props {
 }
 
 const DnsTable = ({ cnameInfos }: props) => {
-  const cnameInfosData: any[] =
+  const cnameInfosData =
     cnameInfos?.map((it) => {
       return { ...it, cname: it.entry.cname, ttl: it.entry.ttl };
     }) ?? [];
@@ -22,7 +22,7 @@ const DnsTable = ({ cnameInfos }: props) => {
     <TableWrapper>
       <Table
         style={{ background: 'white' }}
-        data={cnameInfosData}
+        data={cnameInfosData as any}
         caption={''}
         hideCaption={true}
         columns={[

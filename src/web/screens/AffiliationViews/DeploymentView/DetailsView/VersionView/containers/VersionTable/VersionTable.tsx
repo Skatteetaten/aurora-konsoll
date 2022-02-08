@@ -69,7 +69,7 @@ export const VersionTable = ({
       ? configuredVersionTag.name
       : currentVersion.name;
 
-  const data: any[] = imageTagsConnection
+  const data = imageTagsConnection
     .getVersions()
     .filter((it) => it.name !== versionToFilter)
     .map((it) => {
@@ -107,7 +107,12 @@ export const VersionTable = ({
 
   return (
     <TableWrapper>
-      <Table data={data} columns={columns} caption={''} hideCaption={true} />
+      <Table
+        data={data as any}
+        columns={columns}
+        caption={''}
+        hideCaption={true}
+      />
     </TableWrapper>
   );
 };

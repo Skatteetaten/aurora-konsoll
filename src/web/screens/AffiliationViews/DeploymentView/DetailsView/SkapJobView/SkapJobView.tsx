@@ -26,7 +26,7 @@ const SkapJobView = ({ route }: ISkapJobViewProps) => {
     return <h2>Ingen WebSEAL/BIG-IP jobber for denne applikasjonen</h2>;
   }
 
-  const websealJobsData: any[] = route.websealJobs
+  const websealJobsData = route.websealJobs
     .map((it) => ({
       ...it,
       updatedFormatted: getLocalDatetime(it.updated),
@@ -34,7 +34,7 @@ const SkapJobView = ({ route }: ISkapJobViewProps) => {
     }))
     .sort((a, b) => Number(b.id) - Number(a.id));
 
-  const bigipJobsData: any[] = route.bigipJobs
+  const bigipJobsData = route.bigipJobs
     .map((it: any) => {
       const options: IComboBoxOption[] = [];
       let index: number = 0;
