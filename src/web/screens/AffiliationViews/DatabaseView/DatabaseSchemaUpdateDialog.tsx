@@ -85,7 +85,7 @@ const DatabaseSchemaUpdateDialog = ({
     <ActionButton
       onClick={open}
       iconSize={ActionButton.LARGE}
-      icon="LockOutlineOpen"
+      icon={isRestoreDialog ? 'LockOutlineOpen' : 'Delete'}
       color="black"
       style={{ float: 'left' }}
     >
