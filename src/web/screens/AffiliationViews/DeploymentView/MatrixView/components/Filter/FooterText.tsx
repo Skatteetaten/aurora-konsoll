@@ -21,7 +21,6 @@ const StyledFooterText = styled(FooterText)`
   color: ${skeColor.lightGrey};
   font-size: 16px;
   position: relative;
-  top: 8px;
 `;
 
 export default StyledFooterText;
