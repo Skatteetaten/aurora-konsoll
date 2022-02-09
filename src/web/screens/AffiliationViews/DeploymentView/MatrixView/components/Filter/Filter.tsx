@@ -550,6 +550,20 @@ const styledFilter = styled(Filter)`
       bottom: 3px;
     }
   }
+
+  /*
+  Designsystem fixes
+  
+  RadioButtonGroup
+ */
+  .ms-ChoiceField-field {
+    display: flex !important;
+    margin-top: 0 !important;
+  }
+
+  label.ms-ChoiceField--icon span.ms-ChoiceFieldLabel {
+    padding-left: 0 !important;
+  }
 `;
 
 export default styledFilter;
