@@ -1,11 +1,11 @@
 import React from 'react';
 import styled from 'styled-components';
 
-import { Palette } from '@skatteetaten/frontend-components';
+import { SkeBasis } from '@skatteetaten/frontend-components/SkeBasis';
 import { getLocalDatetime } from 'web/utils/date';
 import { DateTime } from 'luxon';
 
-const { skeColor } = Palette;
+const { skeColor } = SkeBasis.PALETTE;
 
 interface DateWithTooltipProps {
   date: string;

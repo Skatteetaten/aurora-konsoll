@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { ActionButton } from '@skatteetaten/frontend-components';
+import { ActionButton } from '@skatteetaten/frontend-components/ActionButton';
 
 import { IManagementEndpointResponse } from 'web/models/Pod';
 import { getTimestamp } from 'web/utils/date';

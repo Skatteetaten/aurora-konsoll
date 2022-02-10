@@ -1,11 +1,9 @@
 import React, { useEffect, useMemo, useState } from 'react';
 
 import styled from 'styled-components';
-import {
-  TextField,
-  DetailsList,
-  Spinner,
-} from '@skatteetaten/frontend-components';
+import { TextField } from '@skatteetaten/frontend-components/TextField';
+import { DetailsList } from '@skatteetaten/frontend-components/DetailsList';
+import { Spinner } from '@skatteetaten/frontend-components/Spinner';
 
 import { IUserAndAffiliations } from 'web/models/ApplicationDeployment';
 import {

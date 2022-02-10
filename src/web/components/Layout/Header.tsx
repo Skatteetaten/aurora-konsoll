@@ -1,15 +1,17 @@
 import * as React from 'react';
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
-import { Icon, Image, Palette } from '@skatteetaten/frontend-components';
-import separatorImg from '@skatteetaten/frontend-components/TopBanner/assets/separator.png';
-import Logo from '@skatteetaten/frontend-components/TopBanner/assets/ske-logo.svg';
+import { SkeBasis } from '@skatteetaten/frontend-components/SkeBasis';
+import { Icon } from '@skatteetaten/frontend-components/Icon';
+import { Image } from '@skatteetaten/frontend-components/Image';
+import separatorImg from '@skatteetaten/frontend-components/TopBanner/assets/separatorSKE.svg';
+import Logo from '@skatteetaten/frontend-components/TopBanner/assets/logoSKE.svg';
 
 import Dropdown from 'web/components/DropdownMenu';
 import { IUserAndAffiliations } from 'web/models/ApplicationDeployment';
 import { ButtonLink } from 'web/components/ButtonLink';
 
-const { skeColor } = Palette;
+const { skeColor } = SkeBasis.PALETTE;
 
 interface IHeaderProps {
   title: string;

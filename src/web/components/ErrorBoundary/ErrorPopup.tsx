@@ -1,11 +1,9 @@
 import * as React from 'react';
 import styled from 'styled-components';
 
-import {
-  Button,
-  ActionButton,
-  MessageBar,
-} from '@skatteetaten/frontend-components';
+import { Button } from '@skatteetaten/frontend-components/Button';
+import { ActionButton } from '@skatteetaten/frontend-components/ActionButton';
+import { MessageBar } from '@skatteetaten/frontend-components/MessageBar';
 import { IAppError } from 'web/models/errors';
 import { Link } from 'react-router-dom';
 

@@ -1,7 +1,8 @@
 import * as React from 'react';
 import styled from 'styled-components';
 
-import { Button, Palette } from '@skatteetaten/frontend-components';
+import ActionButton from '@skatteetaten/frontend-components/ActionButton';
+import { SkeBasis } from '@skatteetaten/frontend-components/SkeBasis';
 
 import { INetdebugResult } from 'web/services/auroraApiClients';
 
@@ -50,15 +51,15 @@ const CardInfo = ({
       <article>
         {netdebugStatus === 'OPEN' && <>Kan nåes fra alle noder.</>}
         <br />
-        <Button buttonStyle="secondary" onClick={displayTableOnClicked}>
+        <ActionButton onClick={displayTableOnClicked}>
           Klikk her for mer informasjon
-        </Button>
+        </ActionButton>
       </article>
     </div>
   </div>
 );
 
-const { skeColor } = Palette;
+const { skeColor } = SkeBasis.PALETTE;
 
 export default styled(CardInfo)`
   background: ${skeColor.neutralGrey};

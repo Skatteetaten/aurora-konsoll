@@ -1,5 +1,5 @@
 import React from 'react';
-import { MessageBar } from '@skatteetaten/frontend-components';
+import { MessageBar } from '@skatteetaten/frontend-components/MessageBar';
 import { IImageTag } from 'web/services/auroraApiClients/imageRepositoryClient/query';
 import { ExternalLink } from 'web/components/ExternalLink';
 

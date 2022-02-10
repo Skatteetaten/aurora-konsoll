@@ -1,6 +1,7 @@
 import React, { useState, useRef } from 'react';
 
-import { Callout, Button } from '@skatteetaten/frontend-components';
+import { Callout } from '@skatteetaten/frontend-components/Callout';
+import ActionButton from '@skatteetaten/frontend-components/ActionButton';
 
 interface ICalloutProps extends React.ComponentProps<'div'> {
   title: string;
@@ -31,9 +32,9 @@ function CalloutButton({
   return (
     <div {...restProps}>
       <span ref={menuButtonElement}>
-        <Button onClick={onShowMenuClicked} {...buttonProps}>
+        <ActionButton onClick={onShowMenuClicked} {...buttonProps}>
           {title}
-        </Button>
+        </ActionButton>
       </span>
       {isCalloutVisible && (
         <Callout

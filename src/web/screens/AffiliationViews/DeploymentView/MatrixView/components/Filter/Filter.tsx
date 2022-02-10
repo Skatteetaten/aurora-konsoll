@@ -6,11 +6,9 @@ import ReactSelect from 'web/components/Select';
 
 import { IApplicationDeployment } from 'web/models/ApplicationDeployment';
 
-import {
-  ActionButton,
-  CheckBox,
-  RadioButtonGroupProps,
-} from '@skatteetaten/frontend-components';
+import { ActionButton } from '@skatteetaten/frontend-components/ActionButton';
+import { CheckBox } from '@skatteetaten/frontend-components/CheckBox';
+import { RadioButtonGroupProps } from '@skatteetaten/frontend-components/RadioButtonGroup/RadioButtonGroup.types';
 import { IApplicationDeploymentFilters } from 'web/models/UserSettings';
 import { IFilter } from 'web/services/DeploymentFilterService';
 import FilterService from 'web/services/FilterService';
@@ -291,8 +289,9 @@ export class Filter extends React.Component<IFilterProps, IFilterState> {
           {isCreateMode
             ? renderCheckbox(!currentFilterName, isDefaultCheckedForCreate)
             : renderCheckbox(!selectedFilterKey, !!isCurrentFilterDefault)}
+          <ActionButton onClick={applyNewFilter}>Sett filter</ActionButton>
+          <ActionButton onClick={close}>Lukk</ActionButton>
         </div>
-        <ActionButton onClick={applyNewFilter}>Sett filter</ActionButton>
       </span>
     );
   };
@@ -424,6 +423,7 @@ export class Filter extends React.Component<IFilterProps, IFilterState> {
       <>
         <InfoDialog
           title=""
+          hideCloseButton
           renderFooterButtons={this.footerApplyButton}
           renderOpenDialogButton={renderOpenButton}
         >
@@ -433,8 +433,7 @@ export class Filter extends React.Component<IFilterProps, IFilterState> {
                 <FilterModeSelect
                   setMode={setMode}
                   setCurrentFilterName={this.setCurrentFilterName}
-                  // TODO: Fix type
-                  filterOptions={filterOptions as any}
+                  filterOptions={filterOptions}
                   selectedFilterKey={selectedFilterKey}
                   deleteFilter={this.deleteFilter}
                   mode={mode}
@@ -490,8 +489,7 @@ export class Filter extends React.Component<IFilterProps, IFilterState> {
         </InfoDialog>
         <div className={className}>
           <ReactSelect
-            // TODO: Fix type
-            options={filterOptions as any}
+            options={filterOptions}
             placeholder={'Velg filter'}
             selectedKey={selectedFilterKey}
             handleChange={this.handleFilterChange}
@@ -539,19 +537,32 @@ const styledFilter = styled(Filter)`
   }
   .styled-footer-buttons {
     display: inline-flex;
-    padding-right: 10px;
-    position: relative;
-    top: 5px;
+    align-items: center;
+    height: 24px;
 
     /* 
-      TODO: Fix in Designsystem
-      After ugrading to Designsystem 1.6.0 the checkmark icon were placed too far down.
-      This makes the icon centred again.
-    */
+    TODO: Fix in Designsystem
+    After ugrading to Designsystem 1.6.0 the checkmark icon were placed too far down.
+    This makes the icon centred again.
+  */
     i {
       position: relative;
       bottom: 3px;
     }
+  }
+
+  /*
+  Designsystem fixes
+  
+  RadioButtonGroup
+ */
+  .ms-ChoiceField-field {
+    display: flex !important;
+    margin-top: 0 !important;
+  }
+
+  label.ms-ChoiceField--icon span.ms-ChoiceFieldLabel {
+    padding-left: 0 !important;
   }
 `;
 

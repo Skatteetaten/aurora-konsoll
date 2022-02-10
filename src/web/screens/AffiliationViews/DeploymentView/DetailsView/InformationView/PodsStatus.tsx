@@ -1,7 +1,9 @@
 import React from 'react';
 import styled from 'styled-components';
 
-import { Icon, Callout, ActionButton } from '@skatteetaten/frontend-components';
+import { Icon } from '@skatteetaten/frontend-components/Icon';
+import { Callout } from '@skatteetaten/frontend-components/Callout';
+import { ActionButton } from '@skatteetaten/frontend-components/ActionButton';
 import { IPodResource, IPodsStatus } from 'web/models/Pod';
 import SortableDetailsList from 'web/components/SortableDetailsList';
 import PodsStatusService, {

@@ -9,7 +9,7 @@ import {
 } from 'react-router-dom';
 import styled from 'styled-components';
 
-import { SkeBasis } from '@skatteetaten/frontend-components';
+import { SkeBasis } from '@skatteetaten/frontend-components/SkeBasis';
 
 import { TokenStore } from 'web/services/TokenStore';
 

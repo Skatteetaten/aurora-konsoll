@@ -1,7 +1,7 @@
 import * as React from 'react';
 import styled from 'styled-components';
 
-import { TextField } from '@skatteetaten/frontend-components';
+import { TextField } from '@skatteetaten/frontend-components/TextField';
 import LoadingButton from 'web/components/LoadingButton';
 
 import CardInfo from './CardInfo';

@@ -1,6 +1,6 @@
 import * as React from 'react';
 
-import { ActionButton } from '@skatteetaten/frontend-components';
+import { ActionButton } from '@skatteetaten/frontend-components/ActionButton';
 import LoadingButton from 'web/components/LoadingButton';
 import TimeSince from 'web/components/TimeSince';
 import styled from 'styled-components';
@@ -27,7 +27,7 @@ const DetailsActionBar = ({
       className="back-button"
       buttonStyle="primary"
       color="black"
-      icon="Back"
+      icon="ArrowBack"
       onClick={goToDeploymentsPage}
     >
       Tilbake

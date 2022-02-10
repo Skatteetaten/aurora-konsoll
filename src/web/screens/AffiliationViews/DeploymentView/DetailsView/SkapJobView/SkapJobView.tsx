@@ -1,7 +1,7 @@
 import React from 'react';
 import { IRoute } from 'web/services/auroraApiClients/applicationDeploymentClient/query';
 
-import { ComboBox } from '@skatteetaten/frontend-components';
+import { ComboBox } from '@skatteetaten/frontend-components/ComboBox';
 
 import { getLocalDatetime } from 'web/utils/date';
 import StatusIcon from './StatusIcon';

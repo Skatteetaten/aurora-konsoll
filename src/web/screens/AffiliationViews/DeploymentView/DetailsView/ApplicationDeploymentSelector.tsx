@@ -10,7 +10,7 @@ import {
   resetApplicationDeploymentState,
   setApplicationDeploymentId,
 } from 'web/store/state/applicationDeployments/action.creators';
-import { Spinner } from '@skatteetaten/frontend-components';
+import { Spinner } from '@skatteetaten/frontend-components/Spinner';
 import { SpinnerSize } from '@fluentui/react';
 
 export type ApplicationDeploymentMatchParams = {

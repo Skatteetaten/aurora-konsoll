@@ -16,6 +16,9 @@ module.exports = {
   },
   resolve: {
     extensions: ['.ts', '.js', '!.test.ts'],
+    fallback: {
+      util: require.resolve('util/'),
+    },
   },
   output: {
     filename: 'server.js',

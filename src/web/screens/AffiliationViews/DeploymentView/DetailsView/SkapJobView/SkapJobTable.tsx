@@ -1,5 +1,5 @@
 import React from 'react';
-import { Table } from '@skatteetaten/frontend-components';
+import { Table } from '@skatteetaten/frontend-components/Table';
 import styled from 'styled-components';
 import {
   IBigipJob,
@@ -32,7 +32,7 @@ const SkapJobTable = ({ websealJobs, bigipJobs }: ISkapJobTableProps) => {
             caption={''}
             hideCaption={true}
             style={{ background: 'white' }}
-            data={websealJobs}
+            data={websealJobs as any}
             columns={[
               {
                 name: 'Status',
@@ -91,7 +91,7 @@ const SkapJobTable = ({ websealJobs, bigipJobs }: ISkapJobTableProps) => {
             caption={''}
             hideCaption={true}
             style={{ background: 'white' }}
-            data={bigipJobs}
+            data={bigipJobs as any}
             columns={[
               {
                 name: 'Status',

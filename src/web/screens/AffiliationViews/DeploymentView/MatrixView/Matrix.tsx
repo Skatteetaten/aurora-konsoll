@@ -2,7 +2,7 @@ import React, { useEffect, FC, useState } from 'react';
 import styled from 'styled-components';
 import Row, { IApplicationMap } from './components/Row';
 import { IApplicationDeployment } from 'web/models/ApplicationDeployment';
-import { Spinner } from '@skatteetaten/frontend-components';
+import { Spinner } from '@skatteetaten/frontend-components/Spinner';
 import { SpinnerSize } from '@fluentui/react';
 
 interface IMatrixProps {

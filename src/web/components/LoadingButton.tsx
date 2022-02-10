@@ -1,6 +1,7 @@
 import * as React from 'react';
 
-import { Button, Spinner } from '@skatteetaten/frontend-components';
+import { Button } from '@skatteetaten/frontend-components/Button';
+import { Spinner } from '@skatteetaten/frontend-components/Spinner';
 import { SpinnerSize } from '@fluentui/react';
 
 interface ILoadingButtonProps {
@@ -16,7 +17,7 @@ const LoadingButton = ({
   ...props
 }: ILoadingButtonProps) => (
   <Button
-    buttonStyle="primaryRoundedFilled"
+    buttonStyle="primary"
     icon={loading ? undefined : icon}
     disabled={loading}
     {...props}

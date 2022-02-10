@@ -1,7 +1,7 @@
 import * as React from 'react';
 import styled from 'styled-components';
 
-import { Icon } from '@skatteetaten/frontend-components';
+import { Icon } from '@skatteetaten/frontend-components/Icon';
 
 interface IMenuCollapseButtonProps {
   className?: string;
@@ -16,7 +16,7 @@ const MenuCollapseButton = ({
 }: IMenuCollapseButtonProps) => (
   <li className={className} onClick={onClick}>
     <Icon
-      iconName={isExpanded ? 'NavigateBefore' : 'NavigateNext'}
+      iconName={isExpanded ? 'ArrowBack' : 'ArrowForward'}
       style={{ fontSize: `24px` }}
     />
   </li>

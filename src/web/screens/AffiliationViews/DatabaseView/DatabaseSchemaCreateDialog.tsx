@@ -1,11 +1,9 @@
 import * as React from 'react';
 import styled from 'styled-components';
 
-import {
-  Button,
-  ActionButton,
-  Dialog,
-} from '@skatteetaten/frontend-components';
+import { Button } from '@skatteetaten/frontend-components/Button';
+import { ActionButton } from '@skatteetaten/frontend-components/ActionButton';
+import { Dialog } from '@skatteetaten/frontend-components/Dialog';
 import LoadingButton from 'web/components/LoadingButton';
 import { IUserAndAffiliations } from 'web/models/ApplicationDeployment';
 import {
@@ -237,11 +235,7 @@ class DatabaseSchemaCreateDialog extends React.Component<
 
     return (
       <>
-        <Button
-          buttonStyle="primaryRoundedFilled"
-          icon="AddOutline"
-          onClick={open}
-        >
+        <Button buttonStyle="primary" icon="AddOutline" onClick={open}>
           Nytt skjema
         </Button>
         <LoadingButton
@@ -299,7 +293,7 @@ class DatabaseSchemaCreateDialog extends React.Component<
                 </ActionButton>
                 <Button
                   onClick={back}
-                  buttonStyle="primaryRoundedFilled"
+                  buttonStyle="primary"
                   style={{ width: '120px', marginRight: '10px' }}
                   icon="ArrowBack"
                 >
@@ -311,7 +305,7 @@ class DatabaseSchemaCreateDialog extends React.Component<
               <>
                 <Button
                   onClick={back}
-                  buttonStyle="primaryRoundedFilled"
+                  buttonStyle="primary"
                   style={{ width: '162px', marginRight: '10px' }}
                   icon="Copy"
                   title="Lag nytt databaseskjema med eksisterende verdier"
@@ -320,7 +314,7 @@ class DatabaseSchemaCreateDialog extends React.Component<
                 </Button>
                 <Button
                   onClick={closeAndFetch}
-                  buttonStyle="primaryRoundedFilled"
+                  buttonStyle="primary"
                   style={{ width: '120px' }}
                   icon="Completed"
                 >
@@ -331,7 +325,6 @@ class DatabaseSchemaCreateDialog extends React.Component<
             {isNew && (
               <LoadingButton
                 onClick={this.createDatabaseSchema}
-                buttonStyle="primaryRoundedFilled"
                 style={{ width: '120px' }}
                 icon="Check"
                 loading={isLoading}
@@ -347,7 +340,6 @@ class DatabaseSchemaCreateDialog extends React.Component<
             {isExternal && (
               <LoadingButton
                 onClick={this.createDatabaseSchema}
-                buttonStyle="primaryRoundedFilled"
                 style={{ width: '120px' }}
                 icon="Check"
                 loading={isLoading}

@@ -2,7 +2,7 @@ import * as React from 'react';
 
 import Tooltip from 'web/components/IconWithTooltip';
 import InfoContent from 'web/components/InfoContent';
-import { DetailsList } from '@skatteetaten/frontend-components';
+import { DetailsList } from '@skatteetaten/frontend-components/DetailsList';
 
 import { mount } from 'enzyme';
 

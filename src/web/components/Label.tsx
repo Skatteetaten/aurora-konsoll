@@ -1,6 +1,6 @@
 import * as React from 'react';
 
-import { Icon } from '@skatteetaten/frontend-components';
+import { Icon } from '@skatteetaten/frontend-components/Icon';
 import styled from 'styled-components';
 
 export interface ILabelProps<T> {

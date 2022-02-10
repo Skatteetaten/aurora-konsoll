@@ -1,15 +1,14 @@
 import * as React from 'react';
 import { useEffect, useRef, useState } from 'react';
 
-import {
-  DetailsList,
-  DetailsListProps,
-} from '@skatteetaten/frontend-components';
+import { DetailsList } from '@skatteetaten/frontend-components/DetailsList';
+import { DetailsListProps } from '@skatteetaten/frontend-components/DetailsList/DetailsList.types';
 import { CheckboxVisibility, IColumn, SelectionMode } from '@fluentui/react';
 import { SortDirection } from 'web/models/SortDirection';
 import { createDate, dateValidation } from 'web/utils/date';
 
 import { inspect } from 'util';
+
 export let selectedIndices: number[] = [];
 
 export interface ISortableDetailsListProps extends DetailsListProps {

@@ -1,12 +1,10 @@
 import * as React from 'react';
 import styled from 'styled-components';
 
-import {
-  Card,
-  CardColor,
-  Grid,
-  Spinner,
-} from '@skatteetaten/frontend-components';
+import { Card } from '@skatteetaten/frontend-components/Card';
+import { CardColor } from '@skatteetaten/frontend-components/Card/Card.types';
+import { Grid } from '@skatteetaten/frontend-components/Grid';
+import { Spinner } from '@skatteetaten/frontend-components/Spinner';
 import {
   IDatabaseSchemas,
   IChangeCooldownDatabaseSchemasResponse,

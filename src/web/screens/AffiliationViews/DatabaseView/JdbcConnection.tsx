@@ -1,12 +1,14 @@
 import * as React from 'react';
 
-import { Icon, TextField, Palette } from '@skatteetaten/frontend-components';
+import { Icon } from '@skatteetaten/frontend-components/Icon';
+import { TextField } from '@skatteetaten/frontend-components/TextField';
 import LoadingButton from 'web/components/LoadingButton';
 import { IJdbcUser, ITestJDBCResponse } from 'web/models/schemas';
 import styled from 'styled-components';
 import { TextFieldEvent } from 'web/types/react';
+import { SkeBasis } from '@skatteetaten/frontend-components/SkeBasis';
 
-const { skeColor } = Palette;
+const { skeColor } = SkeBasis.PALETTE;
 
 enum JdcbTestState {
   NOT_STARTED,
@@ -128,7 +130,7 @@ class JdbcConnection extends React.Component<
         <div className="styled-jdbc">
           <LoadingButton
             onClick={this.handleTestJdbcConnection}
-            buttonStyle="primary"
+            buttonStyle="primaryCornered"
             style={{ width: '100%' }}
             loading={jdcbTestState === JdcbTestState.LOADING}
             disabled={canNotTest}

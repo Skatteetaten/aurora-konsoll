@@ -1,9 +1,9 @@
 import * as React from 'react';
 import styled from 'styled-components';
 
-import { Palette } from '@skatteetaten/frontend-components';
+import { SkeBasis } from '@skatteetaten/frontend-components/SkeBasis';
 
-const { skeColor } = Palette;
+const { skeColor } = SkeBasis.PALETTE;
 
 interface IFooterTextProps {
   filter?: string;
@@ -21,7 +21,6 @@ const StyledFooterText = styled(FooterText)`
   color: ${skeColor.lightGrey};
   font-size: 16px;
   position: relative;
-  top: 8px;
 `;
 
 export default StyledFooterText;

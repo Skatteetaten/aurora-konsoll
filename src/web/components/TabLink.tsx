@@ -1,8 +1,8 @@
-import { Palette } from '@skatteetaten/frontend-components';
+import { SkeBasis } from '@skatteetaten/frontend-components/SkeBasis';
 import { NavLink } from 'react-router-dom';
 import styled from 'styled-components';
 
-const { skeColor } = Palette;
+const { skeColor } = SkeBasis.PALETTE;
 
 const TabLink = styled(NavLink)`
   display: block;
@@ -15,7 +15,7 @@ const TabLink = styled(NavLink)`
   border-collapse: collapse;
   color: black;
   &:hover {
-    border-bottom: 3px solid ${skeColor.mediumBlue};
+    border-bottom: 3px solid ${skeColor.blue50};
   }
 `;
 
