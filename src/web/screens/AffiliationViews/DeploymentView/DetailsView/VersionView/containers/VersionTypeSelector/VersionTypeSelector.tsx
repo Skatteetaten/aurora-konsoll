@@ -6,29 +6,28 @@ import { ImageTagType } from 'web/models/ImageTagType';
 
 import { getVersionTypeSelectorOptions } from './utils/options';
 import { onRenderOption } from './components/VersionTypeOption';
-import { VersionTypeSelectorState } from './VersionTypeSelector.state';
 import { IComboBox, IComboBoxOption } from '@fluentui/react';
+import {TotalCountMap} from "./VersionTypeSelector.types";
 
 interface IVersionTypeSelectorProps {
   onSelect: (type: ImageTagType) => void;
   versionType: ImageTagType;
   className?: string;
+  totalCountMap: TotalCountMap
 }
 
-type Props = IVersionTypeSelectorProps & VersionTypeSelectorState;
+type Props = IVersionTypeSelectorProps;
 
 export const VersionTypeSelector = ({
   totalCountMap,
   onSelect,
   versionType,
-  className,
-  clearStateForType,
+  className
 }: Props) => {
   const onTagTypeChanged = (
     event: FormEvent<IComboBox>,
     option?: IComboBoxOption
   ) => {
-    clearStateForType(ImageTagType.SEARCH);
     if (option) {
       onSelect(option.key as ImageTagType);
     }
@@ -42,7 +41,7 @@ export const VersionTypeSelector = ({
             options={getVersionTypeSelectorOptions(totalCountMap)}
             selectedKey={versionType}
             onChange={onTagTypeChanged}
-            label="Velg versjontype"
+            label="Velg versjonstype"
             onRenderOption={onRenderOption}
           />
         </div>

@@ -1,31 +1,31 @@
-import { immerable } from 'immer';
-import { uniqBy } from 'lodash';
+import {immerable} from 'immer';
+import _ from 'lodash';
 
 import {
-  IImageTagsConnection,
-  IImageTagEdge,
   IImageTag,
-  IPageInfo,
+  IImageTagEdge,
+  IImageTagsConnection
 } from 'web/services/auroraApiClients/imageRepositoryClient/query';
-import { ImageTagType } from 'web/models/ImageTagType';
+import {ImageTagType} from "../ImageTagType";
+import {
+  TotalCountMap
+} from "../../screens/AffiliationViews/DeploymentView/DetailsView/VersionView/containers/VersionTypeSelector/VersionTypeSelector.types";
+
+interface IImageTagsByType {
+  [type: string]: IImageTag[]
+}
 
 export class ImageTagsConnection {
   [immerable] = true;
 
   private edges: IImageTagEdge[];
   private totalCount: number;
-  private pageInfo: IPageInfo;
-  private type: ImageTagType;
+  private groupedByType: IImageTagsByType;
 
-  constructor(type: ImageTagType, data: IImageTagsConnection) {
-    this.type = type;
+  constructor(data: IImageTagsConnection) {
     this.edges = data.edges;
     this.totalCount = data.totalCount;
-    this.pageInfo = data.pageInfo;
-  }
-
-  public getType(): ImageTagType {
-    return this.type;
+    this.groupedByType = _.groupBy(this.getVersions(), node => node.type)
   }
 
   public findVersionIndex(name: string): number {
@@ -41,37 +41,40 @@ export class ImageTagsConnection {
   }
 
   public getVersions(): IImageTag[] {
-    return this.edges
-      .map((edge) => edge.node)
-      .sort((t1, t2) => {
-        const t1LastModified = (t1.image && t1.image.buildTime) || 0;
-        const t2LastModified = (t2.image && t2.image.buildTime) || 0;
-
-        const date1 = new Date(t1LastModified).getTime();
-        const date2 = new Date(t2LastModified).getTime();
-        return date2 - date1;
-      });
+    return this.sortImageTagsByDate(this.edges.map(edge => edge.node));
   }
 
-  public getCursor(): string {
-    return this.pageInfo.endCursor;
+  public getVersionsOfType(type: ImageTagType): IImageTag[] {
+    const group = this.groupedByType[type.toString()];
+    if (group && group.length > 0) return group;
+    else return [];
   }
 
-  public hasNextPage(): boolean {
-    return this.pageInfo.hasNextPage;
+  public search(text: String): IImageTag[] {
+    const texts = text.split(" ").map(t => t.trim().toLowerCase());
+    return this
+        .getVersions()
+        .filter(imageTag => texts.every(t => imageTag.name.toLowerCase().includes(t)));
   }
 
-  public addVersions(next: IImageTagEdge[]): void {
-    const edges = [...this.edges, ...next];
-    const nodes = edges.map((edge) => edge.node);
-    this.edges = uniqBy(nodes, 'name').map((node) => ({ node }));
-  }
-
-  public setPageInfo(pageInfo: IPageInfo): void {
-    this.pageInfo = pageInfo;
+  public getCountMap(): TotalCountMap {
+    return Object.keys(ImageTagType).reduce(
+        (map, type) => ({...map, [type]: this.getVersionsOfType(ImageTagType[type]).length}),
+        {}
+    );
   }
 
   public setTotalCount(total: number): void {
     this.totalCount = total;
+  }
+
+  private sortImageTagsByDate(imageTags: IImageTag[]): IImageTag[] {
+    return imageTags.sort((t1, t2) => {
+      const t1LastModified = (t1.image && t1.image.buildTime) || 0;
+      const t2LastModified = (t2.image && t2.image.buildTime) || 0;
+      const date1 = new Date(t1LastModified).getTime();
+      const date2 = new Date(t2LastModified).getTime();
+      return date2 - date1;
+    });
   }
 }

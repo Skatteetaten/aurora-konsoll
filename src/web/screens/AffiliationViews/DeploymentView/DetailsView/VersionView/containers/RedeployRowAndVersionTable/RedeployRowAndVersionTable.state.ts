@@ -1,6 +1,6 @@
 import { ImageTagType } from 'web/models/ImageTagType';
 import { VersionStatus } from '../../../models/VersionStatus';
-import { IImageTag } from 'web/services/auroraApiClients/imageRepositoryClient/query';
+import {IImageTag} from 'web/services/auroraApiClients/imageRepositoryClient/query';
 import { deploy } from 'web/store/state/applicationDeployments/action.creators';
 import { ReduxProps, RootState } from 'web/store/types';
 import { AuroraConfigFileResource } from 'web/services/auroraApiClients/applicationDeploymentClient/query';
@@ -14,11 +14,11 @@ export interface IRedeployRowAndVersionTableProps {
   releaseTo?: string;
   auroraConfigFiles: AuroraConfigFileResource[];
   affiliation: string;
+  imageTags: IImageTag[];
+  searchText: string;
 }
 
-export const mapDispatchToProps = {
-  deploy,
-};
+export const mapDispatchToProps = {deploy};
 
 export const mapStateToProps = ({ applications, versions }: RootState) => {
   const { isDeploying } = applications;
@@ -26,7 +26,7 @@ export const mapStateToProps = ({ applications, versions }: RootState) => {
   return {
     isDeploying,
     configuredVersionTag,
-    isFetchingConfiguredVersionTag,
+    isFetchingConfiguredVersionTag
   };
 };
 

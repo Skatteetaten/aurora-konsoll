@@ -5,7 +5,7 @@ import styled from 'styled-components';
 import Card from 'web/components/Card';
 import TabLink, { TabLinkWrapper } from 'web/components/TabLink';
 import UnavailableServiceMessage from 'web/components/UnavailableServiceMessage';
-import { InitVersionsContainer } from 'web/containers/InitVersionsContainer';
+import { VersionsContainer } from 'web/containers/VersionsContainer';
 import {
   IUnavailableServiceMessage,
   unavailableServiceMessageCreator,
@@ -94,7 +94,7 @@ export const DetailsView: React.FC<IDetailsViewProps> = ({
   deployment,
   isRefreshing,
   deleteAndRefreshApplications,
-  refreshApplicationDeployment,
+  refreshApplicationDeployment
 }) => {
   const match = useRouteMatch<ApplicationDeploymentMatchParams>();
   const history = useHistory();
@@ -112,7 +112,7 @@ export const DetailsView: React.FC<IDetailsViewProps> = ({
 
   return (
     <DetailsViewGrid>
-      <InitVersionsContainer
+      <VersionsContainer
         hasPermission={deployment.permission.paas.admin}
         imageRepository={deployment.imageRepository}
       />
@@ -121,9 +121,7 @@ export const DetailsView: React.FC<IDetailsViewProps> = ({
         isRefreshing={isRefreshing}
         updatedTime={deployment.time}
         goToDeploymentsPage={goToDeploymentsPage}
-        refreshApplicationDeployment={() =>
-          refreshApplicationDeployment(deployment.id, affiliation)
-        }
+        refreshApplicationDeployment={() => refreshApplicationDeployment(deployment.id, affiliation)}
       />
       <TabLinkWrapper>
         <TabLink to={`${match.url}/info`}>Sammendrag</TabLink>

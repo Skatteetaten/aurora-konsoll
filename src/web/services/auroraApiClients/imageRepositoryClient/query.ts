@@ -13,17 +13,11 @@ export interface ITagQuery {
   }>;
 }
 
-export interface IPageInfo {
-  endCursor: string;
-  hasNextPage: boolean;
-}
-
 export interface IImageTagEdge {
   node: IImageTag;
 }
 
 export interface IImageTagsConnection {
-  pageInfo: IPageInfo;
   totalCount: number;
   edges: IImageTagEdge[];
 }
@@ -39,17 +33,9 @@ export interface IImageTag {
 export const TAGS_QUERY = gql`
   query getTags(
     $repositories: [String!]!
-    $cursor: String
-    $types: [ImageTagType!]
-    $first: Int!
-    $filter: String
   ) {
     imageRepositories(repositories: $repositories) {
-      tags(types: $types, first: $first, after: $cursor, filter: $filter) {
-        pageInfo {
-          endCursor
-          hasNextPage
-        }
+      tags {
         totalCount
         edges {
           node {
