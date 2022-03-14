@@ -14,7 +14,7 @@ interface ISearchProps {
 
 export const Search = ({
   setTypeToSearch,
-  handleSetSearchText
+  handleSetSearchText,
 }: ISearchProps) => {
   const textFieldRef = useRef<ITextField | null>();
   const [isSearchButtonDisabled, setSearchButtonDisabled] = useState(true);

@@ -1,7 +1,10 @@
-import React, {useEffect, useState} from 'react';
-import {RedeployRow} from '../../components/RedeployRow';
-import {IRedeployRowAndVersionTableProps, IRedeployRowAndVersionTableState} from './RedeployRowAndVersionTable.state';
-import {VersionTable} from "../VersionTable/VersionTable";
+import React, { useEffect, useState } from 'react';
+import { RedeployRow } from '../../components/RedeployRow';
+import {
+  IRedeployRowAndVersionTableProps,
+  IRedeployRowAndVersionTableState,
+} from './RedeployRowAndVersionTable.state';
+import { VersionTable } from '../VersionTable/VersionTable';
 
 type Props = IRedeployRowAndVersionTableProps &
   IRedeployRowAndVersionTableState;
@@ -19,10 +22,11 @@ export const RedeployRowAndVersionTable: React.FC<Props> = ({
   isFetchingConfiguredVersionTag,
   affiliation,
   imageTags,
-  searchText
+  searchText,
 }) => {
-
-  const [versionBeingDeployed, setVersionBeingDeployed] = useState<string | undefined>();
+  const [versionBeingDeployed, setVersionBeingDeployed] = useState<
+    string | undefined
+  >();
 
   const onConfirmDeploy = (version: string) => {
     if (hasAccessToDeploy) {
@@ -50,15 +54,15 @@ export const RedeployRowAndVersionTable: React.FC<Props> = ({
         releaseTo={releaseTo}
       />
       <VersionTable
-          versionType={versionType}
-          versionBeingDeployed={versionBeingDeployed}
-          onConfirmDeploy={onConfirmDeploy}
-          hasAccessToDeploy={hasAccessToDeploy}
-          currentVersion={deployedVersion}
-          configuredVersionTag={configuredVersionTag}
-          releaseTo={releaseTo}
-          imageTags={imageTags}
-          searchText={searchText}
+        versionType={versionType}
+        versionBeingDeployed={versionBeingDeployed}
+        onConfirmDeploy={onConfirmDeploy}
+        hasAccessToDeploy={hasAccessToDeploy}
+        currentVersion={deployedVersion}
+        configuredVersionTag={configuredVersionTag}
+        releaseTo={releaseTo}
+        imageTags={imageTags}
+        searchText={searchText}
       />
     </>
   );

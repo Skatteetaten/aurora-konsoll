@@ -4,16 +4,14 @@ import { actions } from './actions';
 import { doAsyncActions } from 'web/utils/redux/action-utils';
 
 export function fetchVersions(repository: string) {
-  return doAsyncActions(
-      actions.fetchVersions,
-      (clients) => clients.imageRepositoryClient.fetchVersions(repository)
+  return doAsyncActions(actions.fetchVersions, (clients) =>
+    clients.imageRepositoryClient.fetchVersions(repository)
   );
 }
 
 export function fetchVersion(repository: string, tagName: string) {
-  return doAsyncActions(
-      actions.fetchVersion,
-      (clients) => clients.imageRepositoryClient.fetchTag(repository, tagName)
+  return doAsyncActions(actions.fetchVersion, (clients) =>
+    clients.imageRepositoryClient.fetchTag(repository, tagName)
   );
 }
 

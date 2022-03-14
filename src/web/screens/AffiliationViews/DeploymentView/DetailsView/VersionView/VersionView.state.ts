@@ -13,7 +13,7 @@ interface IVersionViewProps {
   deploymentSpecVersion?: string;
 }
 
-export const mapDispatchToProps = {fetchVersion};
+export const mapDispatchToProps = { fetchVersion };
 
 interface IState {
   imageTagsConnection: ImageTagsConnection;
@@ -27,14 +27,14 @@ export const mapStateToProps = ({ versions }: RootState): IState => {
   if (!configuredVersionTag) {
     return {
       imageTagsConnection: versions.imageTags,
-      isFetching
+      isFetching,
     };
   }
 
   return {
     imageTagsConnection: versions.imageTags,
     isFetching,
-    configuredVersionTag
+    configuredVersionTag,
   };
 };
 

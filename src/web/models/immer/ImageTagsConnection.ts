@@ -1,18 +1,16 @@
-import {immerable} from 'immer';
+import { immerable } from 'immer';
 import _ from 'lodash';
 
 import {
   IImageTag,
   IImageTagEdge,
-  IImageTagsConnection
+  IImageTagsConnection,
 } from 'web/services/auroraApiClients/imageRepositoryClient/query';
-import {ImageTagType} from "../ImageTagType";
-import {
-  TotalCountMap
-} from "../../screens/AffiliationViews/DeploymentView/DetailsView/VersionView/containers/VersionTypeSelector/VersionTypeSelector.types";
+import { ImageTagType } from '../ImageTagType';
+import { TotalCountMap } from '../../screens/AffiliationViews/DeploymentView/DetailsView/VersionView/containers/VersionTypeSelector/VersionTypeSelector.types';
 
 interface IImageTagsByType {
-  [type: string]: IImageTag[]
+  [type: string]: IImageTag[];
 }
 
 export class ImageTagsConnection {
@@ -25,7 +23,7 @@ export class ImageTagsConnection {
   constructor(data: IImageTagsConnection) {
     this.edges = data.edges;
     this.totalCount = data.totalCount;
-    this.groupedByType = _.groupBy(this.getVersions(), node => node.type)
+    this.groupedByType = _.groupBy(this.getVersions(), (node) => node.type);
   }
 
   public findVersionIndex(name: string): number {
@@ -41,7 +39,7 @@ export class ImageTagsConnection {
   }
 
   public getVersions(): IImageTag[] {
-    return this.sortImageTagsByDate(this.edges.map(edge => edge.node));
+    return this.sortImageTagsByDate(this.edges.map((edge) => edge.node));
   }
 
   public getVersionsOfType(type: ImageTagType): IImageTag[] {
@@ -51,16 +49,19 @@ export class ImageTagsConnection {
   }
 
   public search(text: String): IImageTag[] {
-    const texts = text.split(" ").map(t => t.trim().toLowerCase());
-    return this
-        .getVersions()
-        .filter(imageTag => texts.every(t => imageTag.name.toLowerCase().includes(t)));
+    const texts = text.split(' ').map((t) => t.trim().toLowerCase());
+    return this.getVersions().filter((imageTag) =>
+      texts.every((t) => imageTag.name.toLowerCase().includes(t))
+    );
   }
 
   public getCountMap(): TotalCountMap {
     return Object.keys(ImageTagType).reduce(
-        (map, type) => ({...map, [type]: this.getVersionsOfType(ImageTagType[type]).length}),
-        {}
+      (map, type) => ({
+        ...map,
+        [type]: this.getVersionsOfType(ImageTagType[type]).length,
+      }),
+      {}
     );
   }
 

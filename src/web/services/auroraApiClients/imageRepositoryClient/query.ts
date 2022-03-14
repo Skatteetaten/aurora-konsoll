@@ -31,9 +31,7 @@ export interface IImageTag {
 }
 
 export const TAGS_QUERY = gql`
-  query getTags(
-    $repositories: [String!]!
-  ) {
+  query getTags($repositories: [String!]!) {
     imageRepositories(repositories: $repositories) {
       tags {
         totalCount

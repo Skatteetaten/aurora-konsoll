@@ -10,7 +10,7 @@ import {
 
 export const defaultImageTagsConnection: IImageTagsConnection = {
   edges: [],
-  totalCount: 0
+  totalCount: 0,
 };
 
 export interface IVersionsState {
@@ -23,22 +23,22 @@ export interface IVersionsState {
 const initialState: IVersionsState = {
   isFetching: false,
   isFetchingConfiguredVersionTag: false,
-  imageTags: new ImageTagsConnection(defaultImageTagsConnection)
+  imageTags: new ImageTagsConnection(defaultImageTagsConnection),
 };
 
 export const versionsReducer = createReducer(initialState, (builder) => {
+  builder.addCase(actions.fetchVersions.request, (state) => {
+    state.isFetching = true;
+  });
 
-  builder.addCase(actions.fetchVersions.request, (state) => {state.isFetching = true;});
-
-  builder.addCase(
-    actions.fetchVersions.success,
-    (state, { payload }) => {
-      state.isFetching = false;
-      if (payload.data && payload.data.imageRepositories.length > 0) {
-        state.imageTags = new ImageTagsConnection(payload.data.imageRepositories[0].tags);
-      }
+  builder.addCase(actions.fetchVersions.success, (state, { payload }) => {
+    state.isFetching = false;
+    if (payload.data && payload.data.imageRepositories.length > 0) {
+      state.imageTags = new ImageTagsConnection(
+        payload.data.imageRepositories[0].tags
+      );
     }
-  );
+  });
 
   builder.addCase(actions.fetchVersions.failure, (state) => {
     state.isFetching = false;

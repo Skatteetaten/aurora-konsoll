@@ -5,8 +5,8 @@ import { DeployButton } from '../../components/DeployButton';
 import { VersionInfo } from '../../components/VersionInfo';
 import DateWithTooltip from 'web/components/DateWithTooltip';
 import { Table } from '@skatteetaten/frontend-components/Table';
-import {IImageTag} from "../../../../../../../services/auroraApiClients/imageRepositoryClient/query";
-import {skeColor} from "@skatteetaten/frontend-components/utils";
+import { IImageTag } from '../../../../../../../services/auroraApiClients/imageRepositoryClient/query';
+import { skeColor } from '@skatteetaten/frontend-components/utils';
 
 const columns = [
   {
@@ -75,9 +75,8 @@ export const VersionTable = ({
   releaseTo,
   imageTags,
   versionType,
-  searchText
+  searchText,
 }: IVersionTableProps) => {
-
   const versionToFilter: string =
     releaseTo && configuredVersionTag
       ? configuredVersionTag.name
@@ -90,7 +89,9 @@ export const VersionTable = ({
       name: it.name,
       lastModified: it.image ? (
         <DateWithTooltip date={it.image.buildTime} position="left" />
-      ) : '',
+      ) : (
+        ''
+      ),
       deploy: (
         <DeployButton
           isLoading={versionBeingDeployed === it.name}
@@ -111,13 +112,16 @@ export const VersionTable = ({
             <p>Til:</p> {it.name}
           </VersionInfo>
         </DeployButton>
-      )
+      ),
     }));
 
   const Description = () => {
-    const {length} = imageTags;
-    const prefix = length > 0 ? `Viser ${length}` : "Fant ingen";
-    const er = length === 1 ? "" : "er";
+    const { length } = imageTags;
+    const prefix = length > 0 ? `Viser ${length}` : 'Fant ingen';
+    const er = length === 1 ? '' : 'er';
+
+    // prettier-ignore
+    // Prettier vil legge inn unødvendig mange linjeskift her. Denne trenger ikke å ta så mye plass.
     switch (versionType) {
       case ImageTagType.AURORA_VERSION: return <>{prefix} Aurora-versjon{er}.</>;
       case ImageTagType.AURORA_SNAPSHOT_VERSION: return <>{prefix} unike <i>snapshot</i>-versjon{er}.</>;
@@ -129,17 +133,21 @@ export const VersionTable = ({
       case ImageTagType.COMMIT_HASH: return <>{prefix} <i>commit hash</i>-versjon{er}.</>;
       default: return <>{prefix} resultat{er} av søk etter "{searchText}".</>;
     }
-  }
+  };
 
   return (
     <TableWrapper>
-      <SearchInfo><Description/></SearchInfo>
-      {imageTags.length > 0 && <Table
-        data={data as any}
-        columns={columns}
-        caption={''}
-        hideCaption={true}
-      />}
+      <SearchInfo>
+        <Description />
+      </SearchInfo>
+      {imageTags.length > 0 && (
+        <Table
+          data={data as any}
+          columns={columns}
+          caption={''}
+          hideCaption={true}
+        />
+      )}
     </TableWrapper>
   );
 };
@@ -192,7 +200,7 @@ const TableWrapper = styled.div`
   .ms-List-cell {
     cursor: pointer;
   }
-  
+
   > div:last-child {
     overflow-x: visible;
   }

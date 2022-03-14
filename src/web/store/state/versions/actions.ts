@@ -9,7 +9,9 @@ import { IDataAndErrors } from 'web/services/GoboClient';
 
 const action = (action: string) => `versions/${action}`;
 
-const fetchVersions = createAsyncActions<IDataAndErrors<ITagsQuery>>(action('FETCH_VERSIONS'));
+const fetchVersions = createAsyncActions<IDataAndErrors<ITagsQuery>>(
+  action('FETCH_VERSIONS')
+);
 
 const fetchVersion = createAsyncActions<IDataAndErrors<ITagQuery>>(
   action('FETCH_VERSION')
@@ -20,7 +22,7 @@ const resetState = createAction<void>(action('RESET'));
 export const actions = {
   fetchVersions,
   resetState,
-  fetchVersion
+  fetchVersion,
 };
 
 export type VersionsAction = ActionType<typeof actions>;

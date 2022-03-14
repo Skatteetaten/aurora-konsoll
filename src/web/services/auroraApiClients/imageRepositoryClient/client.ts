@@ -26,19 +26,22 @@ export class ImageRepositoryClient {
     });
   }
 
-  public async findTags(repository: string): Promise<IDataAndErrors<ITagsQuery>> {
-
+  public async findTags(
+    repository: string
+  ): Promise<IDataAndErrors<ITagsQuery>> {
     let variables: IImageTagsVariables = {
-      repositories: [repository]
+      repositories: [repository],
     };
 
     return await this.client.query<ITagsQuery>({
       query: TAGS_QUERY,
-      variables
+      variables,
     });
   }
 
-  public async fetchVersions(repository: string): Promise<IDataAndErrors<ITagsQuery>> {
-    return this.findTags(repository)
+  public async fetchVersions(
+    repository: string
+  ): Promise<IDataAndErrors<ITagsQuery>> {
+    return this.findTags(repository);
   }
 }

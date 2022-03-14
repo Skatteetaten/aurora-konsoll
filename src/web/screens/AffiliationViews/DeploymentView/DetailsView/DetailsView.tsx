@@ -94,7 +94,7 @@ export const DetailsView: React.FC<IDetailsViewProps> = ({
   deployment,
   isRefreshing,
   deleteAndRefreshApplications,
-  refreshApplicationDeployment
+  refreshApplicationDeployment,
 }) => {
   const match = useRouteMatch<ApplicationDeploymentMatchParams>();
   const history = useHistory();
@@ -121,7 +121,9 @@ export const DetailsView: React.FC<IDetailsViewProps> = ({
         isRefreshing={isRefreshing}
         updatedTime={deployment.time}
         goToDeploymentsPage={goToDeploymentsPage}
-        refreshApplicationDeployment={() => refreshApplicationDeployment(deployment.id, affiliation)}
+        refreshApplicationDeployment={() =>
+          refreshApplicationDeployment(deployment.id, affiliation)
+        }
       />
       <TabLinkWrapper>
         <TabLink to={`${match.url}/info`}>Sammendrag</TabLink>

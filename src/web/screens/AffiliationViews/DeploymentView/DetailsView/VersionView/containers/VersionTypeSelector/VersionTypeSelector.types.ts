@@ -1,1 +1,1 @@
-export type TotalCountMap = {[type: string]: number};
+export type TotalCountMap = { [type: string]: number };

@@ -1,15 +1,13 @@
-import React, {useEffect, useMemo, useState} from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import styled from 'styled-components';
 
-import {ImageTagType} from 'web/models/ImageTagType';
-import {Search} from './containers/Search/Search';
-import {PermissionToUpgradeInformation} from './components/PermissionToUpgradeInformation';
-import {VersionViewProps} from './VersionView.state';
-import {
-  RedeployRowAndVersionTableContainer
-} from './containers/RedeployRowAndVersionTable/RedeployRowAndVersionTableContainer';
-import {VersionTypeSelector} from "./containers/VersionTypeSelector/VersionTypeSelector";
-import {Spinner} from "@skatteetaten/frontend-components/Spinner";
+import { ImageTagType } from 'web/models/ImageTagType';
+import { Search } from './containers/Search/Search';
+import { PermissionToUpgradeInformation } from './components/PermissionToUpgradeInformation';
+import { VersionViewProps } from './VersionView.state';
+import { RedeployRowAndVersionTableContainer } from './containers/RedeployRowAndVersionTable/RedeployRowAndVersionTableContainer';
+import { VersionTypeSelector } from './containers/VersionTypeSelector/VersionTypeSelector';
+import { Spinner } from '@skatteetaten/frontend-components/Spinner';
 
 export const VersionView = ({
   versionStatus,
@@ -19,18 +17,18 @@ export const VersionView = ({
   configuredVersionTag,
   fetchVersion,
   auroraConfigFiles,
-  isFetching
+  isFetching,
 }: VersionViewProps) => {
-
   const { id, version, imageRepository } = deployment;
 
-  const [searchText, setSearchText] = useState<string>("");
+  const [searchText, setSearchText] = useState<string>('');
   const [versionType, setVersionType] = useState(ImageTagType.MAJOR);
 
   const imageTags = useMemo(
-    () => versionType === ImageTagType.SEARCH
-      ? imageTagsConnection.search(searchText)
-      : imageTagsConnection.getVersionsOfType(versionType),
+    () =>
+      versionType === ImageTagType.SEARCH
+        ? imageTagsConnection.search(searchText)
+        : imageTagsConnection.getVersionsOfType(versionType),
     [versionType, searchText, imageTagsConnection]
   );
 
@@ -47,7 +45,7 @@ export const VersionView = ({
 
   useEffect(() => setVersionType(initVersionType), [initVersionType]);
 
-  if (isFetching) return <Spinner/>;
+  if (isFetching) return <Spinner />;
 
   if (!imageRepository) {
     // TODO: Bedre feilmelding
