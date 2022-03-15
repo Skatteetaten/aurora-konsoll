@@ -119,12 +119,13 @@ export const VersionTable = ({
     const { length } = imageTags;
     const prefix = length > 0 ? `Viser ${length}` : 'Fant ingen';
     const er = length === 1 ? '' : 'er';
+    const e = length === 1 ? '' : 'e';
 
     // prettier-ignore
     // Prettier vil legge inn unødvendig mange linjeskift her. Denne trenger ikke å ta så mye plass.
     switch (versionType) {
       case ImageTagType.AURORA_VERSION: return <>{prefix} Aurora-versjon{er}.</>;
-      case ImageTagType.AURORA_SNAPSHOT_VERSION: return <>{prefix} unike <i>snapshot</i>-versjon{er}.</>;
+      case ImageTagType.AURORA_SNAPSHOT_VERSION: return <>{prefix} unik{e} <i>snapshot</i>-versjon{er}.</>;
       case ImageTagType.BUGFIX: return <>{prefix} <i>bugfix</i>-versjon{er}.</>;
       case ImageTagType.LATEST: return <>{prefix} <i>latest</i>-versjon{er}.</>;
       case ImageTagType.MAJOR: return <>{prefix} <i>major</i>-versjon{er}.</>;
@@ -208,5 +209,6 @@ const TableWrapper = styled.div`
 
 const SearchInfo = styled.div`
   background-color: ${skeColor.lightBlue};
+  color: ${skeColor.blue100};
   padding: 12px;
 `;
