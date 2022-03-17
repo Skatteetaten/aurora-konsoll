@@ -15,6 +15,7 @@ export const defaultImageTagsConnection: IImageTagsConnection = {
 
 export interface IVersionsState {
   isFetching: boolean;
+  isRefreshing: boolean;
   isFetchingConfiguredVersionTag: boolean;
   imageTags: ImageTagsConnection;
   configuredVersionTag?: IImageTag;
@@ -22,6 +23,7 @@ export interface IVersionsState {
 
 const initialState: IVersionsState = {
   isFetching: false,
+  isRefreshing: false,
   isFetchingConfiguredVersionTag: false,
   imageTags: new ImageTagsConnection(defaultImageTagsConnection),
 };
@@ -63,4 +65,24 @@ export const versionsReducer = createReducer(initialState, (builder) => {
   builder.addCase(actions.fetchVersion.failure, (state) => {
     state.isFetchingConfiguredVersionTag = false;
   });
+
+  builder.addCase(
+      actions.refreshVersions.request,
+      state => { state.isRefreshing = true }
+  );
+
+  builder.addCase(
+      actions.refreshVersions.success,
+      (state, {payload}) => {
+        state.isRefreshing = false;
+        if (payload.data && payload.data.imageRepositories.length > 0) {
+          state.imageTags = new ImageTagsConnection(payload.data.imageRepositories[0].tags);
+        }
+      }
+  );
+
+  builder.addCase(
+      actions.refreshVersions.failure,
+      state => { state.isRefreshing = false }
+  );
 });

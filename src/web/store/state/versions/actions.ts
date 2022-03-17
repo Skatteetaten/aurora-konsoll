@@ -13,6 +13,8 @@ const fetchVersions = createAsyncActions<IDataAndErrors<ITagsQuery>>(
   action('FETCH_VERSIONS')
 );
 
+const refreshVersions = createAsyncActions<IDataAndErrors<ITagsQuery>>(action('REFRESH_VERSIONS'));
+
 const fetchVersion = createAsyncActions<IDataAndErrors<ITagQuery>>(
   action('FETCH_VERSION')
 );
@@ -21,6 +23,7 @@ const resetState = createAction<void>(action('RESET'));
 
 export const actions = {
   fetchVersions,
+  refreshVersions,
   resetState,
   fetchVersion,
 };

@@ -9,6 +9,13 @@ export function fetchVersions(repository: string) {
   );
 }
 
+export function refreshVersions(repository: string) {
+  return doAsyncActions(
+      actions.refreshVersions,
+      clients => clients.imageRepositoryClient.fetchVersions(repository)
+  );
+}
+
 export function fetchVersion(repository: string, tagName: string) {
   return doAsyncActions(actions.fetchVersion, (clients) =>
     clients.imageRepositoryClient.fetchTag(repository, tagName)

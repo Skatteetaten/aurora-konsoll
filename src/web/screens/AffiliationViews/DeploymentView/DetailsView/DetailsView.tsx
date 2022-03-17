@@ -33,6 +33,7 @@ interface IDetailsViewProps {
   ) => Promise<void>;
   isRefreshing: boolean;
   affiliation: string;
+  refreshVersions: (repository: string) => Promise<void>
 }
 
 function getVersionViewUnavailableMessage(
@@ -95,6 +96,7 @@ export const DetailsView: React.FC<IDetailsViewProps> = ({
   isRefreshing,
   deleteAndRefreshApplications,
   refreshApplicationDeployment,
+  refreshVersions
 }) => {
   const match = useRouteMatch<ApplicationDeploymentMatchParams>();
   const history = useHistory();
@@ -121,9 +123,11 @@ export const DetailsView: React.FC<IDetailsViewProps> = ({
         isRefreshing={isRefreshing}
         updatedTime={deployment.time}
         goToDeploymentsPage={goToDeploymentsPage}
-        refreshApplicationDeployment={() =>
-          refreshApplicationDeployment(deployment.id, affiliation)
-        }
+        refreshApplicationDeployment={() => {
+          refreshApplicationDeployment(deployment.id, affiliation);
+          const repository = deployment.imageRepository?.repository;
+          repository && refreshVersions(repository);
+        }}
       />
       <TabLinkWrapper>
         <TabLink to={`${match.url}/info`}>Sammendrag</TabLink>
