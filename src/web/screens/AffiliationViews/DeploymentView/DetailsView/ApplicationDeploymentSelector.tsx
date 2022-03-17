@@ -12,7 +12,7 @@ import {
 } from 'web/store/state/applicationDeployments/action.creators';
 import { Spinner } from '@skatteetaten/frontend-components/Spinner';
 import { SpinnerSize } from '@fluentui/react';
-import {refreshVersions} from "../../../../store/state/versions/action.creators";
+import { refreshVersions } from '../../../../store/state/versions/action.creators';
 
 export type ApplicationDeploymentMatchParams = {
   affiliation: string;
@@ -38,7 +38,7 @@ const ApplicationDeploymentSelector = ({
   isFetching,
   resetApplicationDeploymentState,
   setApplicationDeploymentId,
-  refreshVersions
+  refreshVersions,
 }: Props) => {
   const match = useRouteMatch<ApplicationDeploymentMatchParams>();
 
@@ -92,11 +92,15 @@ const mapDispatchToProps = {
   fetchApplicationDeploymentWithDetails,
   resetApplicationDeploymentState,
   setApplicationDeploymentId,
-  refreshVersions
+  refreshVersions,
 };
 
 const mapStateToProps = ({ applications, versions }: RootState) => {
-  const { applicationDeployment, isFetching, isRefreshing: appsRefreshing } = applications;
+  const {
+    applicationDeployment,
+    isFetching,
+    isRefreshing: appsRefreshing,
+  } = applications;
   const versionsRefreshing = versions.isRefreshing;
   return {
     isRefreshing: appsRefreshing || versionsRefreshing,

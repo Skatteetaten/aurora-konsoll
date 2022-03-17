@@ -13,7 +13,9 @@ const fetchVersions = createAsyncActions<IDataAndErrors<ITagsQuery>>(
   action('FETCH_VERSIONS')
 );
 
-const refreshVersions = createAsyncActions<IDataAndErrors<ITagsQuery>>(action('REFRESH_VERSIONS'));
+const refreshVersions = createAsyncActions<IDataAndErrors<ITagsQuery>>(
+  action('REFRESH_VERSIONS')
+);
 
 const fetchVersion = createAsyncActions<IDataAndErrors<ITagQuery>>(
   action('FETCH_VERSION')

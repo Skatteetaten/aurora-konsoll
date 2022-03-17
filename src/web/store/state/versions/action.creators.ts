@@ -10,9 +10,8 @@ export function fetchVersions(repository: string) {
 }
 
 export function refreshVersions(repository: string) {
-  return doAsyncActions(
-      actions.refreshVersions,
-      clients => clients.imageRepositoryClient.fetchVersions(repository)
+  return doAsyncActions(actions.refreshVersions, (clients) =>
+    clients.imageRepositoryClient.fetchVersions(repository)
   );
 }
 

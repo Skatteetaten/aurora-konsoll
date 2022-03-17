@@ -66,23 +66,20 @@ export const versionsReducer = createReducer(initialState, (builder) => {
     state.isFetchingConfiguredVersionTag = false;
   });
 
-  builder.addCase(
-      actions.refreshVersions.request,
-      state => { state.isRefreshing = true }
-  );
+  builder.addCase(actions.refreshVersions.request, (state) => {
+    state.isRefreshing = true;
+  });
 
-  builder.addCase(
-      actions.refreshVersions.success,
-      (state, {payload}) => {
-        state.isRefreshing = false;
-        if (payload.data && payload.data.imageRepositories.length > 0) {
-          state.imageTags = new ImageTagsConnection(payload.data.imageRepositories[0].tags);
-        }
-      }
-  );
+  builder.addCase(actions.refreshVersions.success, (state, { payload }) => {
+    state.isRefreshing = false;
+    if (payload.data && payload.data.imageRepositories.length > 0) {
+      state.imageTags = new ImageTagsConnection(
+        payload.data.imageRepositories[0].tags
+      );
+    }
+  });
 
-  builder.addCase(
-      actions.refreshVersions.failure,
-      state => { state.isRefreshing = false }
-  );
+  builder.addCase(actions.refreshVersions.failure, (state) => {
+    state.isRefreshing = false;
+  });
 });

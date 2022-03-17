@@ -33,7 +33,7 @@ interface IDetailsViewProps {
   ) => Promise<void>;
   isRefreshing: boolean;
   affiliation: string;
-  refreshVersions: (repository: string) => Promise<void>
+  refreshVersions: (repository: string) => Promise<void>;
 }
 
 function getVersionViewUnavailableMessage(
@@ -96,7 +96,7 @@ export const DetailsView: React.FC<IDetailsViewProps> = ({
   isRefreshing,
   deleteAndRefreshApplications,
   refreshApplicationDeployment,
-  refreshVersions
+  refreshVersions,
 }) => {
   const match = useRouteMatch<ApplicationDeploymentMatchParams>();
   const history = useHistory();
