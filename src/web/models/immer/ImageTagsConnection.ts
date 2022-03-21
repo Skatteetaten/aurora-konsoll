@@ -7,7 +7,10 @@ import {
   IImageTagsConnection,
 } from 'web/services/auroraApiClients/imageRepositoryClient/query';
 import { ImageTagType } from '../ImageTagType';
-import { TotalCountMap } from '../../screens/AffiliationViews/DeploymentView/DetailsView/VersionView/containers/VersionTypeSelector/VersionTypeSelector.types';
+import {
+  TotalCountMap
+} from '../../screens/AffiliationViews/DeploymentView/DetailsView/VersionView/containers/VersionTypeSelector/VersionTypeSelector.types';
+import { imageTagSort } from "../../utils/sortFunctions";
 
 interface IImageTagsByType {
   [type: string]: IImageTag[];
@@ -39,12 +42,12 @@ export class ImageTagsConnection {
   }
 
   public getVersions(): IImageTag[] {
-    return this.sortImageTagsByDate(this.edges.map((edge) => edge.node));
+    return this.edges.map((edge) => edge.node);
   }
 
   public getVersionsOfType(type: ImageTagType): IImageTag[] {
     const group = this.groupedByType[type.toString()];
-    if (group && group.length > 0) return group;
+    if (group && group.length > 0) return [...group].sort(imageTagSort(type));
     else return [];
   }
 
@@ -52,7 +55,7 @@ export class ImageTagsConnection {
     const texts = text.split(' ').map((t) => t.trim().toLowerCase());
     return this.getVersions().filter((imageTag) =>
       texts.every((t) => imageTag.name.toLowerCase().includes(t))
-    );
+    ).sort(imageTagSort(ImageTagType.SEARCH, texts));
   }
 
   public getCountMap(): TotalCountMap {
@@ -67,15 +70,5 @@ export class ImageTagsConnection {
 
   public setTotalCount(total: number): void {
     this.totalCount = total;
-  }
-
-  private sortImageTagsByDate(imageTags: IImageTag[]): IImageTag[] {
-    return imageTags.sort((t1, t2) => {
-      const t1LastModified = (t1.image && t1.image.buildTime) || 0;
-      const t2LastModified = (t2.image && t2.image.buildTime) || 0;
-      const date1 = new Date(t1LastModified).getTime();
-      const date2 = new Date(t2LastModified).getTime();
-      return date2 - date1;
-    });
   }
 }
