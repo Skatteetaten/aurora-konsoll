@@ -28,7 +28,7 @@ export const Search = ({
   const searchOnEnterPress = (
     e: KeyboardEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
-    if (e.key === 'Enter') {
+    if (e.key === 'Enter' && !isSearchButtonDisabled) {
       searchOnClick();
     }
   };
@@ -46,7 +46,7 @@ export const Search = ({
           componentRef={(ref) => (textFieldRef.current = ref)}
           placeholder="Søk etter versjon"
           onKeyUp={() =>
-            !textFieldRef.current?.value
+            !textFieldRef.current?.value?.trim()
               ? setSearchButtonDisabled(true)
               : setSearchButtonDisabled(false)
           }

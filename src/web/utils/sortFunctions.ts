@@ -32,11 +32,8 @@ export const extractTimeAndSort = (a: string, b: string) => {
   const aMatch = aMatches[0],
     bMatch = bMatches[0];
 
-  const aTime = +(aMatch.substr(0, 8) + aMatch.substr(9, 6)),
-    bTime = +(bMatch.substr(0, 8) + bMatch.substr(9, 6));
-
-  if (aTime === bTime) return +bMatch.substr(16) - +aMatch.substr(16);
-  else return bTime - aTime;
+  if (aMatch === bMatch) return 0;
+  else return bMatch > aMatch ? 1 : -1;
 };
 
 export const dateSort = (a: Date, b: Date) => b.getTime() - a.getTime();
@@ -74,14 +71,14 @@ export const searchTextSort =
       return numberOfMatchingChars / text.length;
     };
 
-    // Sorterer tekst etter andelen som inngår i søketreff
+    // Sorterer tekstene etter andelen av tekst som inngår i søketreff
     const aRelativeMatch = calculateMatchingChars(searchValuesLc, aLc),
       bRelativeMatch = calculateMatchingChars(searchValuesLc, bLc);
     if (aRelativeMatch !== bRelativeMatch) {
       return aRelativeMatch > bRelativeMatch ? -1 : 1;
     }
 
-    // Andelene er like. Prøver igjen med skille mellom store og små bokstaver.
+    // Andelene er like. Prøver med skille mellom store og små bokstaver.
     const aRelativeMatchCs = calculateMatchingChars(searchValues, a),
       bRelativeMatchCs = calculateMatchingChars(searchValues, b);
     if (aRelativeMatchCs !== bRelativeMatchCs) {

@@ -123,8 +123,7 @@ export const VersionTable = ({
   const Description = () => {
     const { length } = imageTags;
     const prefix = length > 0 ? `Viser ${length}` : 'Fant ingen';
-    const er = length === 1 ? '' : 'er';
-    const e = length === 1 ? '' : 'e';
+    const [er, e] = length === 1 ? ['', ''] : ['er', 'e'];
 
     // prettier-ignore
     // Prettier vil legge inn unødvendig mange linjeskift her. Denne trenger ikke å ta så mye plass.
