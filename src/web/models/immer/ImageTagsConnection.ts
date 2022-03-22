@@ -7,10 +7,8 @@ import {
   IImageTagsConnection,
 } from 'web/services/auroraApiClients/imageRepositoryClient/query';
 import { ImageTagType } from '../ImageTagType';
-import {
-  TotalCountMap
-} from '../../screens/AffiliationViews/DeploymentView/DetailsView/VersionView/containers/VersionTypeSelector/VersionTypeSelector.types';
-import { imageTagSort } from "../../utils/sortFunctions";
+import { TotalCountMap } from '../../screens/AffiliationViews/DeploymentView/DetailsView/VersionView/containers/VersionTypeSelector/VersionTypeSelector.types';
+import { imageTagSort } from '../../utils/sortFunctions';
 
 interface IImageTagsByType {
   [type: string]: IImageTag[];
@@ -53,9 +51,11 @@ export class ImageTagsConnection {
 
   public search(text: String): IImageTag[] {
     const texts = text.split(' ').map((t) => t.trim().toLowerCase());
-    return this.getVersions().filter((imageTag) =>
-      texts.every((t) => imageTag.name.toLowerCase().includes(t))
-    ).sort(imageTagSort(ImageTagType.SEARCH, texts));
+    return this.getVersions()
+      .filter((imageTag) =>
+        texts.every((t) => imageTag.name.toLowerCase().includes(t))
+      )
+      .sort(imageTagSort(ImageTagType.SEARCH, texts));
   }
 
   public getCountMap(): TotalCountMap {

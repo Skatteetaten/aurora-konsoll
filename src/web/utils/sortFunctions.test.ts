@@ -1,148 +1,181 @@
-import {dateSort, extractTimeAndSort, imageTagSort, searchTextSort, semanticVersionSort} from './sortFunctions';
-import {IImageTag} from '../services/auroraApiClients/imageRepositoryClient/query';
-import {ImageTagType} from '../models/ImageTagType';
+import {
+  dateSort,
+  extractTimeAndSort,
+  imageTagSort,
+  searchTextSort,
+  semanticVersionSort,
+} from './sortFunctions';
+import { IImageTag } from '../services/auroraApiClients/imageRepositoryClient/query';
+import { ImageTagType } from '../models/ImageTagType';
 
 describe('Sort functions', () => {
-
-    describe('semanticVersionSort', () => {
-
-        it('Returns expected value', () => {
-            expect(semanticVersionSort('1', '2')).toBe(1);
-            expect(semanticVersionSort('2', '1')).toBe(-1);
-            expect(semanticVersionSort('2.2', '2.3')).toBe(1);
-            expect(semanticVersionSort('2.3', '2.2')).toBe(-1);
-            expect(semanticVersionSort('2.3.3', '2.3.4')).toBe(1);
-            expect(semanticVersionSort('2.3.4', '2.3.3')).toBe(-1);
-            expect(semanticVersionSort('2', '2.3')).toBe(-1);
-            expect(semanticVersionSort('2.3', '2')).toBe(1);
-        });
-
-        it('Works correctly as argument in Array.sort()', () => {
-           expect(['2.3', '2', '5.0.1', '5.0.2', '5.0.0', '1'].sort(semanticVersionSort))
-               .toStrictEqual(['5.0.2', '5.0.1', '5.0.0', '2', '2.3', '1']);
-        });
+  describe('semanticVersionSort', () => {
+    it('Returns expected value', () => {
+      expect(semanticVersionSort('1', '2')).toBe(1);
+      expect(semanticVersionSort('2', '1')).toBe(-1);
+      expect(semanticVersionSort('2.2', '2.3')).toBe(1);
+      expect(semanticVersionSort('2.3', '2.2')).toBe(-1);
+      expect(semanticVersionSort('2.3.3', '2.3.4')).toBe(1);
+      expect(semanticVersionSort('2.3.4', '2.3.3')).toBe(-1);
+      expect(semanticVersionSort('2', '2.3')).toBe(-1);
+      expect(semanticVersionSort('2.3', '2')).toBe(1);
     });
 
-    describe('extractTimeAndSort', () => {
+    it('Works correctly as argument in Array.sort()', () => {
+      expect(
+        ['2.3', '2', '5.0.1', '5.0.2', '5.0.0', '1'].sort(semanticVersionSort)
+      ).toStrictEqual(['5.0.2', '5.0.1', '5.0.0', '2', '2.3', '1']);
+    });
+  });
 
-        it('Returns expected value', () => {
+  describe('extractTimeAndSort', () => {
+    it('Returns expected value', () => {
+      expect(
+        extractTimeAndSort(
+          'blablabla-20211021.140715-3-bla.bla.bla',
+          'blablabla-20211021.091649-2-bla.bla.bla'
+        )
+      ).toBeLessThan(0);
 
-            expect(extractTimeAndSort(
-                'blablabla-20211021.140715-3-bla.bla.bla',
-                'blablabla-20211021.091649-2-bla.bla.bla'
-            )).toBeLessThan(0);
+      expect(
+        extractTimeAndSort(
+          'blablabla-20211021.140715-3-bla.bla.bla',
+          'blablabla-20211021.140715-2-bla.bla.bla'
+        )
+      ).toBeLessThan(0);
 
-            expect(extractTimeAndSort(
-                'blablabla-20211021.140715-3-bla.bla.bla',
-                'blablabla-20211021.140715-2-bla.bla.bla'
-            )).toBeLessThan(0);
+      expect(
+        extractTimeAndSort(
+          'blablabla-20211021.140715-3-bla.bla.bla',
+          'blablabla'
+        )
+      ).toBeLessThan(0);
 
-            expect(extractTimeAndSort(
-                'blablabla-20211021.140715-3-bla.bla.bla',
-                'blablabla'
-            )).toBeLessThan(0);
+      expect(
+        extractTimeAndSort(
+          'blablabla-20211021.091649-2-bla.bla.bla',
+          'blablabla-20211021.140715-3-bla.bla.bla'
+        )
+      ).toBeGreaterThan(0);
 
-            expect(extractTimeAndSort(
-                'blablabla-20211021.091649-2-bla.bla.bla',
-                'blablabla-20211021.140715-3-bla.bla.bla'
-            )).toBeGreaterThan(0);
+      expect(
+        extractTimeAndSort(
+          'blablabla-20211021.140715-2-bla.bla.bla',
+          'blablabla-20211021.140715-3-bla.bla.bla'
+        )
+      ).toBeGreaterThan(0);
 
-            expect(extractTimeAndSort(
-                'blablabla-20211021.140715-2-bla.bla.bla',
-                'blablabla-20211021.140715-3-bla.bla.bla'
-            )).toBeGreaterThan(0);
+      expect(
+        extractTimeAndSort(
+          'blablabla',
+          'blablabla-20211021.140715-3-bla.bla.bla'
+        )
+      ).toBeGreaterThan(0);
 
-            expect(extractTimeAndSort(
-                'blablabla',
-                'blablabla-20211021.140715-3-bla.bla.bla'
-            )).toBeGreaterThan(0);
-
-            expect(extractTimeAndSort(
-                'blablabla-20211021.140715-3-bla.bla.bla',
-                'blablabla-20211021.140715-3-bla.bla.bla'
-            )).toEqual(0);
-        });
-
-        it('Works correctly as argument in Array.sort()', () => {
-            expect([
-                'blablabla-20211021.140715-2-bla.bla.bla',
-                'blablabla-20211021.140715-3-bla.bla.bla',
-                'blablabla',
-                'blablabla-20211021.091649-2-bla.bla.bla'
-            ].sort(extractTimeAndSort)).toStrictEqual([
-                'blablabla-20211021.140715-3-bla.bla.bla',
-                'blablabla-20211021.140715-2-bla.bla.bla',
-                'blablabla-20211021.091649-2-bla.bla.bla',
-                'blablabla'
-            ]);
-        });
+      expect(
+        extractTimeAndSort(
+          'blablabla-20211021.140715-3-bla.bla.bla',
+          'blablabla-20211021.140715-3-bla.bla.bla'
+        )
+      ).toEqual(0);
     });
 
-    describe('sortByDate', () => {
+    it('Works correctly as argument in Array.sort()', () => {
+      expect(
+        [
+          'blablabla-20211021.140715-2-bla.bla.bla',
+          'blablabla-20211021.140715-3-bla.bla.bla',
+          'blablabla',
+          'blablabla-20211021.091649-2-bla.bla.bla',
+        ].sort(extractTimeAndSort)
+      ).toStrictEqual([
+        'blablabla-20211021.140715-3-bla.bla.bla',
+        'blablabla-20211021.140715-2-bla.bla.bla',
+        'blablabla-20211021.091649-2-bla.bla.bla',
+        'blablabla',
+      ]);
+    });
+  });
 
-        it('Returns expected value', () => {
+  describe('sortByDate', () => {
+    it('Returns expected value', () => {
+      expect(
+        dateSort(
+          new Date(2022, 2, 22, 20, 22, 2),
+          new Date(2011, 2, 11, 20, 11, 2)
+        )
+      ).toBeLessThan(0);
 
-            expect(dateSort(
-                new Date(2022, 2, 22, 20, 22, 2),
-                new Date(2011, 2, 11, 20, 11, 2)
-            )).toBeLessThan(0);
-
-            expect(dateSort(
-                new Date(2011, 2, 11, 20, 11, 2),
-                new Date(2022, 2, 22, 20, 22, 2)
-            )).toBeGreaterThan(0);
-        });
-
-        it('Works correctly as argument in Array.sort()', () => {
-
-            const date1 = new Date(2022, 2, 22, 20, 22, 2),
-                  date2 = new Date(2022, 2, 11, 20, 22, 2),
-                  date3 = new Date(2011, 2, 22, 20, 11, 2),
-                  date4 = new Date(2011, 2, 11, 20, 11, 2);
-
-            expect([date2, date4, date1, date3].sort(dateSort))
-                .toStrictEqual([date1, date2, date3, date4]);
-        });
+      expect(
+        dateSort(
+          new Date(2011, 2, 11, 20, 11, 2),
+          new Date(2022, 2, 22, 20, 22, 2)
+        )
+      ).toBeGreaterThan(0);
     });
 
-    describe('searchTextSort', () => {
+    it('Works correctly as argument in Array.sort()', () => {
+      const date1 = new Date(2022, 2, 22, 20, 22, 2),
+        date2 = new Date(2022, 2, 11, 20, 22, 2),
+        date3 = new Date(2011, 2, 22, 20, 11, 2),
+        date4 = new Date(2011, 2, 11, 20, 11, 2);
 
-        const list = ['to', 'Treff'],
-              textWithTwoMatches = 'Her er det bare to treff',
-              textWithEarlyMatch = 'to tidlige treff i tekst',
-              textWithManyMatches = 'Mer enn to treff treff treff treff',
-              textWithUpperCaseMatch = 'Her er det bare to Treff';
+      expect([date2, date4, date1, date3].sort(dateSort)).toStrictEqual([
+        date1,
+        date2,
+        date3,
+        date4,
+      ]);
+    });
+  });
 
-        it('Returns expected value', () => {
-            expect(searchTextSort(list)(textWithTwoMatches, textWithManyMatches)).toBeGreaterThan(0);
-            expect(searchTextSort(list)(textWithManyMatches, textWithTwoMatches)).toBeLessThan(0);
-            expect(searchTextSort(list)(textWithTwoMatches, textWithUpperCaseMatch)).toBeGreaterThan(0);
-            expect(searchTextSort(list)(textWithUpperCaseMatch, textWithTwoMatches)).toBeLessThan(0);
-            expect(searchTextSort(list)(textWithTwoMatches, textWithEarlyMatch)).toBeGreaterThan(0);
-            expect(searchTextSort(list)(textWithEarlyMatch, textWithTwoMatches)).toBeLessThan(0);
-        });
+  describe('searchTextSort', () => {
+    const list = ['to', 'Treff'],
+      textWithTwoMatches = 'Her er det bare to treff',
+      textWithEarlyMatch = 'to tidlige treff i tekst',
+      textWithManyMatches = 'Mer enn to treff treff treff treff',
+      textWithUpperCaseMatch = 'Her er det bare to Treff';
 
-        it('Works correctly as argument in Array.sort()', () => {
-            expect(
-                [
-                    textWithTwoMatches,
-                    textWithEarlyMatch,
-                    textWithManyMatches,
-                    textWithUpperCaseMatch
-                ].sort(searchTextSort(list))
-            ).toStrictEqual(
-                [
-                    textWithManyMatches,
-                    textWithUpperCaseMatch,
-                    textWithEarlyMatch,
-                    textWithTwoMatches
-                ]
-            );
-        })
+    it('Returns expected value', () => {
+      expect(
+        searchTextSort(list)(textWithTwoMatches, textWithManyMatches)
+      ).toBeGreaterThan(0);
+      expect(
+        searchTextSort(list)(textWithManyMatches, textWithTwoMatches)
+      ).toBeLessThan(0);
+      expect(
+        searchTextSort(list)(textWithTwoMatches, textWithUpperCaseMatch)
+      ).toBeGreaterThan(0);
+      expect(
+        searchTextSort(list)(textWithUpperCaseMatch, textWithTwoMatches)
+      ).toBeLessThan(0);
+      expect(
+        searchTextSort(list)(textWithTwoMatches, textWithEarlyMatch)
+      ).toBeGreaterThan(0);
+      expect(
+        searchTextSort(list)(textWithEarlyMatch, textWithTwoMatches)
+      ).toBeLessThan(0);
     });
 
-    // prettier-ignore
-    describe('imageTagSort', () => {
+    it('Works correctly as argument in Array.sort()', () => {
+      expect(
+        [
+          textWithTwoMatches,
+          textWithEarlyMatch,
+          textWithManyMatches,
+          textWithUpperCaseMatch,
+        ].sort(searchTextSort(list))
+      ).toStrictEqual([
+        textWithManyMatches,
+        textWithUpperCaseMatch,
+        textWithEarlyMatch,
+        textWithTwoMatches,
+      ]);
+    });
+  });
+
+  // prettier-ignore
+  describe('imageTagSort', () => {
 
         const majorWithDate1: IImageTag = { name: '6', type: ImageTagType.MAJOR, image: { buildTime: '2022-02-22T20:22:02.000000000Z' } },
               majorWithDate2: IImageTag = { name: '5', type: ImageTagType.MAJOR, image: { buildTime: '2022-02-11T20:22:02.000000000Z' } },
