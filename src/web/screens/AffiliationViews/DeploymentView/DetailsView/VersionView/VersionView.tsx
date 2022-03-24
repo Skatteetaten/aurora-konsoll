@@ -10,6 +10,7 @@ import { PermissionToUpgradeInformation } from './components/PermissionToUpgrade
 import { FetchMoreVersionsContainer } from './containers/FetchMoreVersions/FetchMoreVersionsContainer';
 import { VersionViewProps } from './VersionView.state';
 import { RedeployRowAndVersionTableContainer } from './containers/RedeployRowAndVersionTable/RedeployRowAndVersionTableContainer';
+import { InvalidRefInformation } from './components/MissingGitBranchInformation';
 
 export const VersionView = ({
   versionStatus,
@@ -18,7 +19,8 @@ export const VersionView = ({
   deploymentSpecVersion,
   configuredVersionTag,
   fetchVersion,
-  auroraConfigFiles,
+  deploymentErrors,
+  gitReference,
 }: VersionViewProps) => {
   const { id, version, imageRepository } = deployment;
 
@@ -54,11 +56,20 @@ export const VersionView = ({
     }
   };
 
-  const hasAccessToDeploy = deployment.permission.paas.admin;
+  const invalidRef =
+    !!deploymentErrors &&
+    deploymentErrors.some((it) =>
+      it.message.includes('No git reference with refName')
+    );
+
+  const userIsAdmin = deployment.permission.paas.admin;
+
+  const hasAccessToDeploy = userIsAdmin && !invalidRef;
 
   return (
     <Wrapper>
-      {!hasAccessToDeploy && <PermissionToUpgradeInformation />}
+      {invalidRef && <InvalidRefInformation refName={gitReference} />}
+      {!userIsAdmin && <PermissionToUpgradeInformation />}
       <ActionBar>
         <VersionTypeSelectorContainer
           versionType={versionType}
@@ -79,7 +90,6 @@ export const VersionView = ({
         versionStatus={versionStatus}
         versionType={versionType}
         releaseTo={deployment.version.releaseTo}
-        auroraConfigFiles={auroraConfigFiles}
         affiliation={deployment.affiliation}
       />
       <FetchMoreVersionsContainer
