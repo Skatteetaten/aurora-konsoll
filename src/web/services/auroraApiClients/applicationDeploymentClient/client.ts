@@ -19,6 +19,8 @@ import {
   IApplicationDeploymentWithDetailsData,
   APPLICATION_DEPLOYMENT_WITH_DETAILS_QUERY,
   AuroraConfigFileResource,
+  APPLICATION_DEPLOYMENT_FILES,
+  IApplicationDeploymentWithFiles,
 } from './query';
 import { changeVersionInFile } from './utils';
 
@@ -34,8 +36,9 @@ export class ApplicationDeploymentClient {
     affiliation: string,
     version: string
   ) {
-    const applicationDeployment =
-      await this.refreshAndFetchApplicationDeployment(applicationDeploymentId);
+    const applicationDeployment = await this.refreshAndFetchAuroraConfigFiles(
+      applicationDeploymentId
+    );
 
     const auroraConfigFiles =
       applicationDeployment.data?.applicationDeployment.files;
@@ -153,6 +156,33 @@ export class ApplicationDeploymentClient {
   ): Promise<IDataAndErrors<IApplicationDeploymentWithDetailsData>> {
     return await this.client.query<IApplicationDeploymentWithDetailsData>({
       query: APPLICATION_DEPLOYMENT_WITH_DETAILS_QUERY,
+      variables: {
+        id: applicationDeploymentId,
+      },
+    });
+  }
+
+  public async refreshAndFetchAuroraConfigFiles(
+    applicationDeploymentId: string
+  ): Promise<IDataAndErrors<IApplicationDeploymentWithFiles>> {
+    const refreshResult = await this.refreshApplicationDeployment(
+      applicationDeploymentId
+    );
+    if (refreshResult.data && refreshResult.data.refreshApplicationDeployment) {
+      return await this.fetchAuroraConfigFiles(applicationDeploymentId);
+    } else {
+      return {
+        name: refreshResult.name,
+        errors: refreshResult.errors,
+      };
+    }
+  }
+
+  public async fetchAuroraConfigFiles(
+    applicationDeploymentId: string
+  ): Promise<IDataAndErrors<IApplicationDeploymentWithFiles>> {
+    return await this.client.query<IApplicationDeploymentWithFiles>({
+      query: APPLICATION_DEPLOYMENT_FILES,
       variables: {
         id: applicationDeploymentId,
       },

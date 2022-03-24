@@ -298,12 +298,44 @@ export interface IApplicationDeploymentWithDetails
   extends IApplicationDeploymentData {
   details: IApplicationDeploymentDetails;
   route?: IRoute;
-  files: AuroraConfigFileResource[];
 }
 
 export interface IApplicationDeploymentWithDetailsData {
   applicationDeployment: IApplicationDeploymentWithDetails;
 }
+
+export interface IApplicationDeploymentWithFiles {
+  applicationDeployment: {
+    files: AuroraConfigFileResource[];
+    details: {
+      applicationDeploymentCommand?: {
+        auroraConfig: {
+          gitReference: string;
+        };
+      };
+    };
+  };
+}
+
+export const APPLICATION_DEPLOYMENT_FILES = gql`
+  query getDeployment($id: String!) {
+    applicationDeployment(id: $id) {
+      files {
+        name
+        contents
+        contentHash
+        type
+      }
+      details {
+        applicationDeploymentCommand {
+          auroraConfig {
+            gitReference
+          }
+        }
+      }
+    }
+  }
+`;
 
 export const APPLICATION_DEPLOYMENT_WITH_DETAILS_QUERY = gql`
   query getDeployment($id: String!) {
@@ -426,12 +458,6 @@ export const APPLICATION_DEPLOYMENT_WITH_DETAILS_QUERY = gql`
           serviceName
           name
         }
-      }
-      files {
-        name
-        contents
-        contentHash
-        type
       }
     }
   }
