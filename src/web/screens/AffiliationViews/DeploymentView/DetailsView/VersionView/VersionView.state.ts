@@ -5,12 +5,11 @@ import { VersionStatus } from '../models/VersionStatus';
 import { fetchVersion } from 'web/store/state/versions/action.creators';
 import { ImageTagsConnection } from 'web/models/immer/ImageTagsConnection';
 import { IImageTag } from 'web/services/auroraApiClients/imageRepositoryClient/query';
-import { AuroraConfigFileResource } from 'web/services/auroraApiClients/applicationDeploymentClient/query';
 
 interface IVersionViewProps {
   versionStatus: VersionStatus;
   deployment: IApplicationDeployment;
-  auroraConfigFiles: AuroraConfigFileResource[];
+  gitReference?: string;
   deploymentSpecVersion?: string;
 }
 
@@ -21,14 +20,20 @@ export const mapDispatchToProps = {
 interface IState {
   imageTagsConnection: ImageTagsConnection;
   configuredVersionTag?: IImageTag;
+  deploymentErrors?: Error[];
 }
 
-export const mapStateToProps = ({ versions }: RootState): IState => {
+export const mapStateToProps = ({
+  versions,
+  applications,
+}: RootState): IState => {
   const { types, configuredVersionTag } = versions;
+  const { requestApplicationDeployment } = applications.errors;
 
   if (!configuredVersionTag) {
     return {
       imageTagsConnection: types[ImageTagType.MAJOR],
+      deploymentErrors: requestApplicationDeployment,
     };
   }
 
