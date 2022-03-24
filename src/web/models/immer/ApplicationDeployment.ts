@@ -1,5 +1,4 @@
 import {
-  AuroraConfigFileResource,
   IApplicationDeploymentWithDetailsData,
   IImageRepository,
   IPermission,
@@ -37,7 +36,6 @@ export class ApplicationDeployment implements IApplicationDeployment {
   public message?: string;
   public details: IApplicationDeploymentDetails;
   public route?: IRoute;
-  public files: AuroraConfigFileResource[];
 
   constructor(data: IApplicationDeploymentWithDetailsData) {
     const app = data.applicationDeployment;
@@ -62,9 +60,9 @@ export class ApplicationDeployment implements IApplicationDeployment {
       pods: details.podResources,
       serviceLinks: details.serviceLinks,
       updatedBy: details.updatedBy,
+      applicationDeploymentCommand: details.applicationDeploymentCommand,
     };
     this.route = app.route;
-    this.files = app.files;
   }
 
   private toDeploymentSpec(current?: any): IDeploymentSpec | undefined {
