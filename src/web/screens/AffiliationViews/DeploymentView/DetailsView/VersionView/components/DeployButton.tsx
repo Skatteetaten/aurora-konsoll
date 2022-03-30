@@ -28,7 +28,6 @@ export const DeployButton: React.FC<IDeployButtonProps> = ({
   disabled,
   hasAccessToDeploy,
   releaseTo,
-  currentVersion,
   children,
 }) => {
   const [hidden, setHidden] = useState(true);
@@ -58,7 +57,7 @@ export const DeployButton: React.FC<IDeployButtonProps> = ({
             kan vi oppgradere den manuelt for deg.
           </MessageBar>
         )}
-        {releaseTo && <ReleaseToInformation currentVersion={currentVersion} />}
+        {releaseTo && <ReleaseToInformation releaseTo={releaseTo} />}
         {children}
         <Dialog.Footer>
           <ActionButton
