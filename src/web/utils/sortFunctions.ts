@@ -100,7 +100,10 @@ export const versionSort =
     }
 
     if (a.version?.buildTime && b.version?.buildTime)
-      return dateSort(new Date(a.version.buildTime), new Date(b.version.buildTime));
+      return dateSort(
+        new Date(a.version.buildTime),
+        new Date(b.version.buildTime)
+      );
     if (a.version?.buildTime) return -1;
     if (b.version?.buildTime) return 1;
 
