@@ -1,5 +1,5 @@
 import { ImageTagType } from '../models/ImageTagType';
-import { IImageTag } from '../services/auroraApiClients/imageRepositoryClient/query';
+import { IVersion } from '../services/auroraApiClients/imageRepositoryClient/query';
 
 export const semanticVersionSort = (a: string, b: string) => {
   const aSplit = a.split('.');
@@ -91,18 +91,18 @@ export const searchTextSort =
     return aFirst - bFirst;
   };
 
-export const imageTagSort =
+export const versionSort =
   (type: ImageTagType, searchTexts?: string[]) =>
-  (a: IImageTag, b: IImageTag) => {
+  (a: IVersion, b: IVersion) => {
     if (type === ImageTagType.SEARCH && searchTexts) {
       const searchTextSortResult = searchTextSort(searchTexts)(a.name, b.name);
       if (searchTextSortResult !== 0) return searchTextSortResult;
     }
 
-    if (a.image?.buildTime && b.image?.buildTime)
-      return dateSort(new Date(a.image.buildTime), new Date(b.image.buildTime));
-    if (a.image?.buildTime) return -1;
-    if (b.image?.buildTime) return 1;
+    if (a.version?.buildTime && b.version?.buildTime)
+      return dateSort(new Date(a.version.buildTime), new Date(b.version.buildTime));
+    if (a.version?.buildTime) return -1;
+    if (b.version?.buildTime) return 1;
 
     switch (type === ImageTagType.SEARCH && a.type === b.type ? a.type : type) {
       case ImageTagType.MAJOR:

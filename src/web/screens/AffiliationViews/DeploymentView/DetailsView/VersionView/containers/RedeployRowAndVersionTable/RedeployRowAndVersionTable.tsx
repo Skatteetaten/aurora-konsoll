@@ -21,7 +21,7 @@ export const RedeployRowAndVersionTable: React.FC<Props> = ({
   releaseTo,
   isFetchingConfiguredVersionTag,
   affiliation,
-  imageTags,
+  versions,
   searchText,
 }) => {
   const [versionBeingDeployed, setVersionBeingDeployed] = useState<
@@ -61,7 +61,7 @@ export const RedeployRowAndVersionTable: React.FC<Props> = ({
         currentVersion={deployedVersion}
         configuredVersionTag={configuredVersionTag}
         releaseTo={releaseTo}
-        imageTags={imageTags}
+        versions={versions}
         searchText={searchText}
       />
     </>

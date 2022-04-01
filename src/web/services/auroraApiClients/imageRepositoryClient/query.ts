@@ -3,7 +3,7 @@ import { ImageTagType } from 'web/models/ImageTagType';
 
 export interface ITagsQuery {
   imageRepositories: Array<{
-    tags: IImageTagsConnection;
+    versions: IVersionsConnection;
   }>;
 }
 
@@ -13,14 +13,7 @@ export interface ITagQuery {
   }>;
 }
 
-export interface IImageTagEdge {
-  node: IImageTag;
-}
-
-export interface IImageTagsConnection {
-  totalCount: number;
-  edges: IImageTagEdge[];
-}
+export type IVersionsConnection = IVersion[];
 
 export interface IImageTag {
   name: string;
@@ -30,19 +23,22 @@ export interface IImageTag {
   };
 }
 
-export const TAGS_QUERY = gql`
-  query getTags($repositories: [String!]!) {
+export interface IVersion {
+  name: string;
+  type: ImageTagType;
+  version?: {
+    buildTime: string;
+  };
+}
+
+export const VERSIONS_QUERY = gql`
+  query getVersions($repositories: [String!]!) {
     imageRepositories(repositories: $repositories) {
-      tags {
-        totalCount
-        edges {
-          node {
-            name
-            type
-            image {
-              buildTime
-            }
-          }
+      versions {
+        name
+        type
+        version {
+          buildTime
         }
       }
     }

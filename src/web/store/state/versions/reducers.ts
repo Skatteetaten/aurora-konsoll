@@ -4,14 +4,11 @@ import { ImageTagsConnection } from 'web/models/immer/ImageTagsConnection';
 
 import { actions } from './actions';
 import {
-  IImageTagsConnection,
+  IVersionsConnection,
   IImageTag,
 } from 'web/services/auroraApiClients/imageRepositoryClient/query';
 
-export const defaultImageTagsConnection: IImageTagsConnection = {
-  edges: [],
-  totalCount: 0,
-};
+export const defaultImageTagsConnection: IVersionsConnection = [];
 
 export interface IVersionsState {
   isFetching: boolean;
@@ -37,7 +34,7 @@ export const versionsReducer = createReducer(initialState, (builder) => {
     state.isFetching = false;
     if (payload.data && payload.data.imageRepositories.length > 0) {
       state.imageTags = new ImageTagsConnection(
-        payload.data.imageRepositories[0].tags
+        payload.data.imageRepositories[0].versions
       );
     }
   });
@@ -74,7 +71,7 @@ export const versionsReducer = createReducer(initialState, (builder) => {
     state.isRefreshing = false;
     if (payload.data && payload.data.imageRepositories.length > 0) {
       state.imageTags = new ImageTagsConnection(
-        payload.data.imageRepositories[0].tags
+        payload.data.imageRepositories[0].versions
       );
     }
   });

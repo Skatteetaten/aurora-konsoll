@@ -1,7 +1,7 @@
 import { ImageRepositoryClient } from 'web/services/auroraApiClients/imageRepositoryClient/client';
 import { goboClientMock, GraphQLSeverMock } from 'web/utils/GraphQLMock';
 
-import * as getTags from './__responses__/imageRepositoryClient/getTags.json';
+import * as getVersions from './__responses__/imageRepositoryClient/getVersions.json';
 
 const serverMock = new GraphQLSeverMock();
 const clientMock = goboClientMock(serverMock.graphQLUrl);
@@ -11,19 +11,19 @@ afterAll((done) => {
   serverMock.close(done);
 });
 
-describe('findTags', () => {
+describe('findVersions', () => {
   it('should fetch tags from GraphQL server and normalize data', async () => {
-    serverMock.putResponse('getTags', getTags);
+    serverMock.putResponse('getVersions', getVersions);
 
-    const result = await imageRepositoryClient.findTags('test');
+    const result = await imageRepositoryClient.findVersions('test');
     expect(result).toMatchSnapshot();
   });
 
   it('should throw an error when no repositories are found', async () => {
-    serverMock.putResponse('getTags', { data: { imageRepositories: [] } });
+    serverMock.putResponse('getVersions', { data: { imageRepositories: [] } });
 
     try {
-      await imageRepositoryClient.findTags('mock-repo');
+      await imageRepositoryClient.findVersions('mock-repo');
     } catch (error) {
       expect((error as Error).message).toEqual(
         'Could not find tags for repository mock-repo'

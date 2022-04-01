@@ -5,7 +5,10 @@ import { DeployButton } from '../../components/DeployButton';
 import { VersionInfo } from '../../components/VersionInfo';
 import DateWithTooltip from 'web/components/DateWithTooltip';
 import { Table } from '@skatteetaten/frontend-components/Table';
-import { IImageTag } from '../../../../../../../services/auroraApiClients/imageRepositoryClient/query';
+import {
+  IImageTag,
+  IVersion,
+} from '../../../../../../../services/auroraApiClients/imageRepositoryClient/query';
 import { skeColor } from '@skatteetaten/frontend-components/utils';
 
 const columns = [
@@ -62,7 +65,7 @@ export interface IVersionTableProps {
   versionBeingDeployed?: string;
   configuredVersionTag?: IImageTag;
   releaseTo?: string;
-  imageTags: IImageTag[];
+  versions: IVersion[];
   searchText: string;
 }
 
@@ -73,7 +76,7 @@ export const VersionTable = ({
   onConfirmDeploy,
   configuredVersionTag,
   releaseTo,
-  imageTags,
+  versions,
   versionType,
   searchText,
 }: IVersionTableProps) => {
@@ -82,7 +85,7 @@ export const VersionTable = ({
       ? configuredVersionTag.name
       : currentVersion.name;
 
-  const data = imageTags
+  const data = versions
     .filter((it) => it.name !== versionToFilter)
     .map((it) => ({
       type: getOptionName(it.type),
@@ -92,8 +95,8 @@ export const VersionTable = ({
         ) : (
           it.name
         ),
-      lastModified: it.image ? (
-        <DateWithTooltip date={it.image.buildTime} position="left" />
+      lastModified: it.version ? (
+        <DateWithTooltip date={it.version.buildTime} position="left" />
       ) : (
         ''
       ),
@@ -104,7 +107,7 @@ export const VersionTable = ({
           buttonText="Deploy"
           dialogTitle="Vil du endre versjonen?"
           hasAccessToDeploy={hasAccessToDeploy}
-          isOldVersion={!it.image}
+          isOldVersion={!it.version}
           onConfirmDeploy={() => onConfirmDeploy(it.name)}
           releaseTo={releaseTo}
           currentVersion={currentVersion}
@@ -121,7 +124,7 @@ export const VersionTable = ({
     }));
 
   const Description = () => {
-    const { length } = imageTags;
+    const { length } = versions;
     const prefix = length > 0 ? `Viser ${length}` : 'Fant ingen';
     const [er, e] = length === 1 ? ['', ''] : ['er', 'e'];
 
@@ -145,7 +148,7 @@ export const VersionTable = ({
       <SearchInfo>
         <Description />
       </SearchInfo>
-      {imageTags.length > 0 && (
+      {versions.length > 0 && (
         <Table
           data={data as any}
           columns={columns}

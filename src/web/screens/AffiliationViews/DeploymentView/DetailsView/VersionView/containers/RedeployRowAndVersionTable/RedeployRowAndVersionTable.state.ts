@@ -1,6 +1,9 @@
 import { ImageTagType } from 'web/models/ImageTagType';
 import { VersionStatus } from '../../../models/VersionStatus';
-import { IImageTag } from 'web/services/auroraApiClients/imageRepositoryClient/query';
+import {
+  IImageTag,
+  IVersion,
+} from 'web/services/auroraApiClients/imageRepositoryClient/query';
 import { deploy } from 'web/store/state/applicationDeployments/action.creators';
 import { ReduxProps, RootState } from 'web/store/types';
 import { AuroraConfigFileResource } from 'web/services/auroraApiClients/applicationDeploymentClient/query';
@@ -14,7 +17,7 @@ export interface IRedeployRowAndVersionTableProps {
   releaseTo?: string;
   auroraConfigFiles: AuroraConfigFileResource[];
   affiliation: string;
-  imageTags: IImageTag[];
+  versions: IVersion[];
   searchText: string;
 }
 

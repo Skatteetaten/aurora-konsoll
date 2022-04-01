@@ -24,7 +24,7 @@ export const VersionView = ({
   const [searchText, setSearchText] = useState<string>('');
   const [versionType, setVersionType] = useState(ImageTagType.MAJOR);
 
-  const imageTags = useMemo(
+  const versions = useMemo(
     () =>
       versionType === ImageTagType.SEARCH
         ? imageTagsConnection.search(searchText)
@@ -77,7 +77,7 @@ export const VersionView = ({
         releaseTo={deployment.version.releaseTo}
         auroraConfigFiles={auroraConfigFiles}
         affiliation={deployment.affiliation}
-        imageTags={imageTags}
+        versions={versions}
         searchText={searchText}
       />
     </Wrapper>

@@ -1,36 +1,30 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`findTags should fetch tags from GraphQL server and normalize data 1`] = `
+exports[`findVersions should fetch tags from GraphQL server and normalize data 1`] = `
 Object {
   "data": Object {
     "imageRepositories": Array [
       Object {
-        "tags": Object {
-          "edges": Array [
-            Object {
-              "node": Object {
-                "lastModified": "2018-09-07T07:12:30.345885623Z",
-                "name": "2",
-                "type": "MAJOR",
-              },
+        "versions": Array [
+          Object {
+            "node": Object {
+              "lastModified": "2018-09-07T07:12:30.345885623Z",
+              "name": "2",
+              "type": "MAJOR",
             },
-            Object {
-              "node": Object {
-                "lastModified": "2018-01-25T09:39:51.280498289Z",
-                "name": "1",
-                "type": "MAJOR",
-              },
-            },
-          ],
-          "pageInfo": Object {
-            "endCursor": "MQ==",
-            "hasNextPage": false,
           },
-        },
+          Object {
+            "node": Object {
+              "lastModified": "2018-01-25T09:39:51.280498289Z",
+              "name": "1",
+              "type": "MAJOR",
+            },
+          },
+        ],
       },
     ],
   },
   "errors": undefined,
-  "name": "getTags",
+  "name": "getVersions",
 }
 `;

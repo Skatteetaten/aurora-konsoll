@@ -2,28 +2,25 @@ import { immerable } from 'immer';
 import _ from 'lodash';
 
 import {
-  IImageTag,
-  IImageTagEdge,
-  IImageTagsConnection,
+  IVersion,
+  IVersionsConnection,
 } from 'web/services/auroraApiClients/imageRepositoryClient/query';
 import { ImageTagType } from '../ImageTagType';
 import { TotalCountMap } from '../../screens/AffiliationViews/DeploymentView/DetailsView/VersionView/containers/VersionTypeSelector/VersionTypeSelector.types';
-import { imageTagSort } from '../../utils/sortFunctions';
+import { versionSort } from '../../utils/sortFunctions';
 
 interface IImageTagsByType {
-  [type: string]: IImageTag[];
+  [type: string]: IVersion[];
 }
 
 export class ImageTagsConnection {
   [immerable] = true;
 
-  private edges: IImageTagEdge[];
-  private totalCount: number;
-  private groupedByType: IImageTagsByType;
+  private readonly versions: IVersion[];
+  private readonly groupedByType: IImageTagsByType;
 
-  constructor(data: IImageTagsConnection) {
-    this.edges = data.edges;
-    this.totalCount = data.totalCount;
+  constructor(data: IVersionsConnection) {
+    this.versions = data;
     this.groupedByType = _.groupBy(this.getVersions(), (node) => node.type);
   }
 
@@ -31,31 +28,23 @@ export class ImageTagsConnection {
     return this.getVersions().findIndex((version) => version.name === name);
   }
 
-  public totalVersionsCount(): number {
-    return this.totalCount;
+  public getVersions(): IVersion[] {
+    return this.versions;
   }
 
-  public currentVersionsSize(): number {
-    return this.edges.length;
-  }
-
-  public getVersions(): IImageTag[] {
-    return this.edges.map((edge) => edge.node);
-  }
-
-  public getVersionsOfType(type: ImageTagType): IImageTag[] {
+  public getVersionsOfType(type: ImageTagType): IVersion[] {
     const group = this.groupedByType[type.toString()];
-    if (group && group.length > 0) return [...group].sort(imageTagSort(type));
+    if (group && group.length > 0) return [...group].sort(versionSort(type));
     else return [];
   }
 
-  public search(text: String): IImageTag[] {
+  public search(text: String): IVersion[] {
     const texts = text.split(' ').map((t) => t.trim().toLowerCase());
     return this.getVersions()
       .filter((imageTag) =>
         texts.every((t) => imageTag.name.toLowerCase().includes(t))
       )
-      .sort(imageTagSort(ImageTagType.SEARCH, texts));
+      .sort(versionSort(ImageTagType.SEARCH, texts));
   }
 
   public getCountMap(): TotalCountMap {
@@ -66,9 +55,5 @@ export class ImageTagsConnection {
       }),
       {}
     );
-  }
-
-  public setTotalCount(total: number): void {
-    this.totalCount = total;
   }
 }

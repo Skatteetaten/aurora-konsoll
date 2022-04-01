@@ -1,5 +1,5 @@
 import GoboClient, { IDataAndErrors } from 'web/services/GoboClient';
-import { ITagsQuery, TAGS_QUERY, ITagQuery, TAG_QUERY } from './query';
+import { ITagsQuery, VERSIONS_QUERY, ITagQuery, TAG_QUERY } from './query';
 
 interface IImageTagsVariables {
   repositories: string[];
@@ -26,7 +26,7 @@ export class ImageRepositoryClient {
     });
   }
 
-  public async findTags(
+  public async findVersions(
     repository: string
   ): Promise<IDataAndErrors<ITagsQuery>> {
     let variables: IImageTagsVariables = {
@@ -34,7 +34,7 @@ export class ImageRepositoryClient {
     };
 
     return await this.client.query<ITagsQuery>({
-      query: TAGS_QUERY,
+      query: VERSIONS_QUERY,
       variables,
     });
   }
@@ -42,6 +42,6 @@ export class ImageRepositoryClient {
   public async fetchVersions(
     repository: string
   ): Promise<IDataAndErrors<ITagsQuery>> {
-    return this.findTags(repository);
+    return this.findVersions(repository);
   }
 }
