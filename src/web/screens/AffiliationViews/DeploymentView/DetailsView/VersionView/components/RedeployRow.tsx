@@ -82,7 +82,6 @@ export const RedeployRow = ({
         disabled={versionBeingDeployed !== undefined}
         buttonText="Redeploy"
         dialogTitle="Vil du gjøre en redeploy?"
-        isOldVersion={!configuredVersionTag.image}
         hasAccessToDeploy={hasAccessToDeploy}
         currentVersion={currentVersion}
         onConfirmDeploy={() => onConfirmDeploy(configuredVersionTag.name)}

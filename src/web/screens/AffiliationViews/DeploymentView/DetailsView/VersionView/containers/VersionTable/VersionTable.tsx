@@ -107,7 +107,6 @@ export const VersionTable = ({
           buttonText="Deploy"
           dialogTitle="Vil du endre versjonen?"
           hasAccessToDeploy={hasAccessToDeploy}
-          isOldVersion={!it.version}
           onConfirmDeploy={() => onConfirmDeploy(it.name)}
           releaseTo={releaseTo}
           currentVersion={currentVersion}
