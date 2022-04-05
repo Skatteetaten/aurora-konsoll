@@ -25,7 +25,6 @@ export const DeployButton: React.FC<IDeployButtonProps> = ({
   disabled,
   hasAccessToDeploy,
   releaseTo,
-  currentVersion,
   children,
 }) => {
   const [hidden, setHidden] = useState(true);
@@ -48,7 +47,7 @@ export const DeployButton: React.FC<IDeployButtonProps> = ({
         minWidth="500px"
         maxWidth="800px"
       >
-        {releaseTo && <ReleaseToInformation currentVersion={currentVersion} />}
+        {releaseTo && <ReleaseToInformation releaseTo={releaseTo} />}
         {children}
         <Dialog.Footer>
           <ActionButton
