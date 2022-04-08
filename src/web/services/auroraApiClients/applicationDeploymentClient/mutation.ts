@@ -23,10 +23,31 @@ export interface AuroraConfigFileValidationResponse {
   };
 }
 
-export const REDEPLOY_WITH_CURRENT_VERSION_MUTATION = gql`
-  mutation redeployWithCurrentVersion($input: ApplicationDeploymentIdInput!) {
-    redeployWithCurrentVersion(input: $input) {
-      applicationDeploymentId
+interface ApplicationDeploymentRef {
+  application: string;
+  environment: string;
+}
+
+export interface DeployInput {
+  applicationDeployment: ApplicationDeploymentRef[];
+  auroraConfigName: string;
+  auroraConfigReference: string;
+}
+
+export interface DeployResult {
+  deploy: {
+    applicationDeployments: { applicationDeploymentId: string }[];
+    success: boolean;
+  };
+}
+
+export const DEPLOY_MUTATION = gql`
+  mutation deploy($input: DeployApplicationDeploymentInput!) {
+    deploy(input: $input) {
+      applicationDeployments {
+        applicationDeploymentId
+      }
+      success
     }
   }
 `;
