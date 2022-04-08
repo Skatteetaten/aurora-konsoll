@@ -304,34 +304,37 @@ export interface IApplicationDeploymentWithDetailsData {
   applicationDeployment: IApplicationDeploymentWithDetails;
 }
 
-export interface IApplicationDeploymentWithFiles {
-  applicationDeployment: {
-    files: AuroraConfigFileResource[];
-    details: {
-      applicationDeploymentCommand?: {
-        auroraConfig: {
-          gitReference: string;
-        };
-      };
-    };
+export interface AuroraConfigResponse {
+  auroraConfig: {
+    applicationFiles: ApplicationFiles[];
   };
 }
 
-export const APPLICATION_DEPLOYMENT_FILES = gql`
-  query getDeployment($id: String!) {
-    applicationDeployment(id: $id) {
-      files {
-        name
-        contents
-        contentHash
-        type
-      }
-      details {
-        applicationDeploymentCommand {
-          auroraConfig {
-            gitReference
-          }
+interface ApplicationFiles {
+  files: AuroraConfigFileResource[];
+  application: string;
+  environment: string;
+}
+
+export const APPLICATION_FILES_QUERY = gql`
+  query getApplicationFiles(
+    $auroraConfig: String!
+    $applicationDeploymentRefInput: ApplicationDeploymentRefInput!
+    $refName: String
+  ) {
+    auroraConfig(name: $auroraConfig, refInput: $refName) {
+      applicationFiles(
+        applicationDeploymentRefs: [$applicationDeploymentRefInput]
+        types: [APP]
+      ) {
+        files {
+          name
+          contents
+          type
+          contentHash
         }
+        environment
+        application
       }
     }
   }
