@@ -6,8 +6,11 @@ import { ActionButton } from '@skatteetaten/frontend-components/ActionButton';
 import { Spinner } from '@skatteetaten/frontend-components/Spinner';
 import { IImageTag } from 'web/services/auroraApiClients/imageRepositoryClient/query';
 import { ReleaseToInformation } from './ReleaseToInformation';
+import TextField from '@skatteetaten/frontend-components/TextField';
+import styled from 'styled-components';
 
 export interface IDeployButtonProps {
+  className?: string;
   isLoading: boolean;
   isOldVersion: boolean;
   disabled: boolean;
@@ -16,10 +19,13 @@ export interface IDeployButtonProps {
   buttonText: string;
   releaseTo?: string;
   currentVersion: IImageTag;
-  onConfirmDeploy: () => void;
+  gitReference?: string;
+  isBranchDeleted: boolean;
+  onConfirmDeploy: (refName?: string) => void;
 }
 
-export const DeployButton: React.FC<IDeployButtonProps> = ({
+const DeployButton: React.FC<IDeployButtonProps> = ({
+  className,
   isLoading,
   onConfirmDeploy,
   dialogTitle,
@@ -30,9 +36,17 @@ export const DeployButton: React.FC<IDeployButtonProps> = ({
   releaseTo,
   currentVersion,
   children,
+  gitReference,
+  isBranchDeleted,
 }) => {
   const [hidden, setHidden] = useState(true);
-  const close = () => setHidden(true);
+  const [isDisabledTextField, setDisabledTextField] = useState(true);
+  const [refName, setRefName] = React.useState(gitReference);
+  const close = () => {
+    setHidden(true);
+    setRefName(gitReference);
+    setDisabledTextField(true);
+  };
   const open = () => setHidden(false);
   return (
     <>
@@ -51,19 +65,51 @@ export const DeployButton: React.FC<IDeployButtonProps> = ({
         minWidth="500px"
         maxWidth="800px"
       >
-        {isOldVersion && (
-          <MessageBar style={{ maxWidth: '600px' }}>
-            Dette ser ut til å være en eldre versjon som har et metadata format
-            vi ikke støtter. Trenger du denne versjonen ta kontakt med Aurora så
-            kan vi oppgradere den manuelt for deg.
-          </MessageBar>
-        )}
-        {releaseTo && <ReleaseToInformation currentVersion={currentVersion} />}
-        {children}
+        <div className={className}>
+          {isOldVersion && (
+            <MessageBar className="message-bar-width">
+              Dette ser ut til å være en eldre versjon som har et metadata
+              format vi ikke støtter. Trenger du denne versjonen ta kontakt med
+              Aurora så kan vi oppgradere den manuelt for deg.
+            </MessageBar>
+          )}
+          {isBranchDeleted && (
+            <MessageBar
+              type={MessageBar.Type.warning}
+              className="message-bar-width"
+            >
+              Applikasjonen har blitt deployet med en branch som er slettet.
+              Løsning: Deploy applikasjonen med en annen branch som eksisterer,
+              eller gjennopprett slettet branch.
+            </MessageBar>
+          )}
+          {releaseTo && (
+            <ReleaseToInformation currentVersion={currentVersion} />
+          )}
+          <div className="branch-text-field">
+            <div className="branch-text-field-label">
+              <p>Deployer med Aurora Config branch</p>{' '}
+              <ActionButton
+                icon="Edit"
+                onClick={() => setDisabledTextField(!isDisabledTextField)}
+              >
+                Rediger
+              </ActionButton>
+            </div>
+            <TextField
+              boldText
+              disabled={isDisabledTextField}
+              errorMessage={refName === '' ? 'branch må være satt' : undefined}
+              value={refName}
+              onChange={(e, value) => setRefName(value)}
+            />
+          </div>
+          {children}
+        </div>
         <Dialog.Footer>
           <ActionButton
             onClick={() => {
-              onConfirmDeploy();
+              onConfirmDeploy(refName);
               close();
             }}
           >
@@ -75,3 +121,20 @@ export const DeployButton: React.FC<IDeployButtonProps> = ({
     </>
   );
 };
+
+export default styled(DeployButton)`
+  .branch-text-field {
+    padding-bottom: 15px;
+    margin-top: -10px;
+  }
+
+  .branch-text-field-label {
+    display: flex;
+    align-items: center;
+    margin-bottom: -6px;
+  }
+
+  message-bar-width {
+    max-width: 600px;
+  }
+`;
