@@ -4,13 +4,12 @@ import styled from 'styled-components';
 import { ImageTagType } from 'web/models/ImageTagType';
 
 import { VersionTypeSelectorContainer } from './containers/VersionTypeSelector/VersionTypeSelectorContainer';
-import { VersionTableInformation } from './components/VersionTableInformation';
 import { ServerSideSearchContainer } from './containers/ServerSideSearch/ServerSideSearchContainer';
 import { PermissionToUpgradeInformation } from './components/PermissionToUpgradeInformation';
 import { FetchMoreVersionsContainer } from './containers/FetchMoreVersions/FetchMoreVersionsContainer';
 import { VersionViewProps } from './VersionView.state';
 import { RedeployRowAndVersionTableContainer } from './containers/RedeployRowAndVersionTable/RedeployRowAndVersionTableContainer';
-import { InvalidRefInformation } from './components/MissingGitBranchInformation';
+import { BranchInformation } from './components/MissingGitBranchInformation';
 
 export const VersionView = ({
   versionStatus,
@@ -56,20 +55,17 @@ export const VersionView = ({
     }
   };
 
-  const invalidRef =
+  const isBranchDeleted =
     !!deploymentErrors &&
     deploymentErrors.some((it) =>
       it.message.includes('No git reference with refName')
     );
 
-  const userIsAdmin = deployment.permission.paas.admin;
-
-  const hasAccessToDeploy = userIsAdmin && !invalidRef;
+  const hasAccessToDeploy = deployment.permission.paas.admin;
 
   return (
     <Wrapper>
-      {invalidRef && <InvalidRefInformation refName={gitReference} />}
-      {!userIsAdmin && <PermissionToUpgradeInformation />}
+      {!hasAccessToDeploy && <PermissionToUpgradeInformation />}
       <ActionBar>
         <VersionTypeSelectorContainer
           versionType={versionType}
@@ -82,7 +78,10 @@ export const VersionView = ({
           selectedVersionType={versionType}
         />
       </ActionBar>
-      <VersionTableInformation />
+      <BranchInformation
+        gitReference={gitReference}
+        isBranchDeleted={isBranchDeleted}
+      />
       <RedeployRowAndVersionTableContainer
         applicationId={id}
         deployedVersion={version.deployTag}
@@ -91,6 +90,10 @@ export const VersionView = ({
         versionType={versionType}
         releaseTo={deployment.version.releaseTo}
         affiliation={deployment.affiliation}
+        environment={deployment.environment}
+        applicationName={deployment.name}
+        gitReference={gitReference}
+        isBranchDeleted={isBranchDeleted}
       />
       <FetchMoreVersionsContainer
         searchText={searchText}
