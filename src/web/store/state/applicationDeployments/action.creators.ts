@@ -24,7 +24,10 @@ export function deleteAndRefreshApplications(
 export function deploy(
   version: string,
   applicationDeploymentId: string,
-  affiliation: string
+  affiliation: string,
+  application: string,
+  environment: string,
+  refName: string
 ) {
   return doAsyncActions(
     {
@@ -33,10 +36,13 @@ export function deploy(
       failure: actions.fetchApplicationDeploymentWithDetails.failure,
     },
     (clients) =>
-      clients.applicationDeploymentClient.updateAuroraConfigRedeployAndRefreshDeployment(
+      clients.applicationDeploymentClient.updateAppFileRedeployAndRefreshDeployment(
         applicationDeploymentId,
+        version,
         affiliation,
-        version
+        application,
+        environment,
+        refName
       )
   );
 }
