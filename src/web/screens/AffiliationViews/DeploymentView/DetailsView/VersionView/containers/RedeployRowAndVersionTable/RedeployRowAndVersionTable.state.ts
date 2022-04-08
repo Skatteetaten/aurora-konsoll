@@ -12,6 +12,10 @@ export interface IRedeployRowAndVersionTableProps {
   deployedVersion: IImageTag;
   releaseTo?: string;
   affiliation: string;
+  environment: string;
+  applicationName: string;
+  gitReference?: string;
+  isBranchDeleted: boolean;
 }
 
 export const mapDispatchToProps = {

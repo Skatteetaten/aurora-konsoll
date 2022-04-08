@@ -2,7 +2,7 @@ import * as React from 'react';
 import styled from 'styled-components';
 import { ImageTagType } from 'web/models/ImageTagType';
 import { IVersionTableProps, VersionTableState } from './VersionTable.state';
-import { DeployButton } from '../../components/DeployButton';
+import DeployButton from '../../components/DeployButton';
 import { VersionInfo } from '../../components/VersionInfo';
 import DateWithTooltip from 'web/components/DateWithTooltip';
 import { Table } from '@skatteetaten/frontend-components/Table';
@@ -63,6 +63,8 @@ export const VersionTable = ({
   onConfirmDeploy,
   configuredVersionTag,
   releaseTo,
+  gitReference,
+  isBranchDeleted,
 }: Props) => {
   const versionToFilter: string =
     releaseTo && configuredVersionTag
@@ -89,9 +91,13 @@ export const VersionTable = ({
             dialogTitle="Vil du endre versjonen?"
             hasAccessToDeploy={hasAccessToDeploy}
             isOldVersion={!it.image}
-            onConfirmDeploy={() => onConfirmDeploy(it.name)}
+            onConfirmDeploy={(refName?: string) =>
+              onConfirmDeploy(it.name, refName)
+            }
             releaseTo={releaseTo}
             currentVersion={currentVersion}
+            gitReference={gitReference}
+            isBranchDeleted={isBranchDeleted}
           >
             <VersionInfo>
               <p>Fra:</p>{' '}

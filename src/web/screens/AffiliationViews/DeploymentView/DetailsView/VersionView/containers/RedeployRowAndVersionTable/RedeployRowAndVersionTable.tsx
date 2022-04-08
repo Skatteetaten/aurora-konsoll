@@ -21,14 +21,25 @@ export const RedeployRowAndVersionTable: React.FC<Props> = ({
   releaseTo,
   isFetchingConfiguredVersionTag,
   affiliation,
+  environment,
+  applicationName,
+  gitReference,
+  isBranchDeleted,
 }) => {
   const [versionBeingDeploy, setVersionBeingDeploy] = useState<
     string | undefined
   >();
 
-  const onConfirmDeploy = (version: string) => {
+  const onConfirmDeploy = (version: string, refName?: string) => {
     if (hasAccessToDeploy) {
-      deploy(version, applicationId, affiliation);
+      deploy(
+        version,
+        applicationId,
+        affiliation,
+        applicationName,
+        environment,
+        refName ?? 'master'
+      );
       setVersionBeingDeploy(version);
     }
   };
@@ -50,6 +61,8 @@ export const RedeployRowAndVersionTable: React.FC<Props> = ({
         onConfirmDeploy={onConfirmDeploy}
         currentVersion={deployedVersion}
         releaseTo={releaseTo}
+        gitReference={gitReference}
+        isBranchDeleted={isBranchDeleted}
       />
       <VersionTableContainer
         versionType={versionType}
@@ -59,6 +72,8 @@ export const RedeployRowAndVersionTable: React.FC<Props> = ({
         currentVersion={deployedVersion}
         configuredVersionTag={configuredVersionTag}
         releaseTo={releaseTo}
+        gitReference={gitReference}
+        isBranchDeleted={isBranchDeleted}
       />
     </>
   );
