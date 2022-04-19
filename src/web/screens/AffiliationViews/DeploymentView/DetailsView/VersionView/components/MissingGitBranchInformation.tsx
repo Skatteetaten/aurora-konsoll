@@ -10,10 +10,10 @@ export const BranchInformation: React.FC<{
     <CalloutButton
       calloutProps={{
         color: isBranchDeleted ? Callout.ERROR : Callout.INFO,
-        gapSpace: 8,
-        beakWidth: 2,
-        calloutWidth: '400px',
-        directionalHint: Callout.POS_BOTTOM_CENTER,
+        gapSpace: 1,
+        beakWidth: 13,
+        calloutWidth: '600px',
+        directionalHint: Callout.POS_BOTTOM_LEFT,
       }}
       buttonProps={{
         icon: isBranchDeleted ? 'warning' : 'info',
