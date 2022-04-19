@@ -1,5 +1,22 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
+exports[`deploy should deploy application to GraphQL server 1`] = `
+Object {
+  "data": Object {
+    "deploy": Object {
+      "applicationDeployments": Array [
+        Object {
+          "applicationDeploymentId": "123",
+        },
+      ],
+      "success": true,
+    },
+  },
+  "errors": undefined,
+  "name": "deploy",
+}
+`;
+
 exports[`findAllApplicationDeployments should fetch user and affiliations from GraphQL server and normalize data 1`] = `
 Object {
   "data": Object {
@@ -73,15 +90,5 @@ Object {
   },
   "errors": undefined,
   "name": "getUserAndAffiliations",
-}
-`;
-
-exports[`redeployWithCurrentVersion should redeploy with current version to GraphQL server 1`] = `
-Object {
-  "data": Object {
-    "redeployWithCurrentVersion": true,
-  },
-  "errors": undefined,
-  "name": "redeployWithCurrentVersion",
 }
 `;
