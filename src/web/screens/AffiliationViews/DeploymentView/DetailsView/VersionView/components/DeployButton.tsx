@@ -40,12 +40,10 @@ const DeployButton: React.FC<IDeployButtonProps> = ({
   isBranchDeleted,
 }) => {
   const [hidden, setHidden] = useState(true);
-  const [isDisabledTextField, setDisabledTextField] = useState(true);
   const [refName, setRefName] = React.useState(gitReference);
   const close = () => {
     setHidden(true);
     setRefName(gitReference);
-    setDisabledTextField(true);
   };
   const open = () => setHidden(false);
   return (
@@ -89,16 +87,9 @@ const DeployButton: React.FC<IDeployButtonProps> = ({
           <div className="branch-text-field">
             <div className="branch-text-field-label">
               <p>Deployer med Aurora Config branch</p>{' '}
-              <ActionButton
-                icon="Edit"
-                onClick={() => setDisabledTextField(!isDisabledTextField)}
-              >
-                Rediger
-              </ActionButton>
             </div>
             <TextField
               boldText
-              disabled={isDisabledTextField}
               errorMessage={refName === '' ? 'branch må være satt' : undefined}
               value={refName}
               onChange={(e, value) => setRefName(value)}
