@@ -379,6 +379,9 @@ export const APPLICATION_DEPLOYMENT_WITH_DETAILS_QUERY = gql`
         deployTag {
           name
           type
+          image {
+            buildTime
+          }
         }
         releaseTo
       }
