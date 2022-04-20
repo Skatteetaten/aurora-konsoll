@@ -47,7 +47,16 @@ export const RedeployRow = ({
     );
   }
 
-  if (!configuredVersionTag) {
+  let isConfiguredVersion = true;
+
+  let deployableVersion: IImageTag | undefined = configuredVersionTag;
+
+  if (isBranchDeleted && !configuredVersionTag) {
+    deployableVersion = currentVersion;
+    isConfiguredVersion = false;
+  }
+
+  if (deployableVersion === undefined) {
     return (
       <Wrapper>
         <p>
@@ -58,9 +67,13 @@ export const RedeployRow = ({
     );
   }
 
-  const isLoading =
-    versionBeingDeployed ===
-    (configuredVersionTag && configuredVersionTag.name);
+  const handleOnConfirmDeploy = (version: string) => (refName?: string) => {
+    onConfirmDeploy(version, refName);
+  };
+
+  const isLoading = versionBeingDeployed === deployableVersion.name;
+
+  const versionType = isConfiguredVersion ? 'Konfigurert' : 'Deployet';
 
   return (
     <Wrapper>
@@ -71,33 +84,34 @@ export const RedeployRow = ({
         </WrongVersionCallout>
       )}
       <span>
-        Konfigurert versjon: <strong>{configuredVersionTag.name}</strong>{' '}
-        (bygget{' '}
-        {configuredVersionTag.image && (
-          <DateWithTooltip
-            date={configuredVersionTag.image.buildTime}
-            position="bottom"
-          />
+        {versionType} versjon: <strong>{deployableVersion.name}</strong>
+        {deployableVersion.image && (
+          <>
+            {' '}
+            (bygget{' '}
+            <DateWithTooltip
+              date={deployableVersion.image.buildTime}
+              position="bottom"
+            />
+            )
+          </>
         )}
-        )
       </span>
       <DeployButton
         isLoading={isLoading}
         disabled={versionBeingDeployed !== undefined}
         buttonText="Redeploy"
         dialogTitle="Vil du gjøre en redeploy?"
-        isOldVersion={!configuredVersionTag.image}
+        isOldVersion={!deployableVersion.image}
         hasAccessToDeploy={hasAccessToDeploy}
         currentVersion={currentVersion}
-        onConfirmDeploy={(refName?: string) =>
-          onConfirmDeploy(configuredVersionTag.name, refName)
-        }
+        onConfirmDeploy={handleOnConfirmDeploy(deployableVersion.name)}
         releaseTo={releaseTo}
         gitReference={gitReference}
         isBranchDeleted={isBranchDeleted}
       >
         <VersionInfo>
-          <p>Versjon:</p> {configuredVersionTag.name}
+          <p>Versjon:</p> {deployableVersion.name}
         </VersionInfo>
       </DeployButton>
     </Wrapper>
