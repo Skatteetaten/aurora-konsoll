@@ -1,15 +1,14 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import styled from 'styled-components';
 
 import { ImageTagType } from 'web/models/ImageTagType';
-
-import { VersionTypeSelectorContainer } from './containers/VersionTypeSelector/VersionTypeSelectorContainer';
-import { ServerSideSearchContainer } from './containers/ServerSideSearch/ServerSideSearchContainer';
+import { Search } from './containers/Search/Search';
 import { PermissionToUpgradeInformation } from './components/PermissionToUpgradeInformation';
-import { FetchMoreVersionsContainer } from './containers/FetchMoreVersions/FetchMoreVersionsContainer';
 import { VersionViewProps } from './VersionView.state';
 import { RedeployRowAndVersionTableContainer } from './containers/RedeployRowAndVersionTable/RedeployRowAndVersionTableContainer';
 import { BranchInformation } from './components/MissingGitBranchInformation';
+import { VersionTypeSelector } from './containers/VersionTypeSelector/VersionTypeSelector';
+import { Spinner } from '@skatteetaten/frontend-components/Spinner';
 
 export const VersionView = ({
   versionStatus,
@@ -20,17 +19,24 @@ export const VersionView = ({
   fetchVersion,
   gitReference,
   isBranchDeleted,
+  isFetching,
 }: VersionViewProps) => {
   const { id, version, imageRepository } = deployment;
 
-  const [searchText, setSearchText] = useState<string | undefined>();
-  const [versionType, setVersionType] = useState(imageTagsConnection.getType());
+  const [searchText, setSearchText] = useState<string>('');
+  const [versionType, setVersionType] = useState(ImageTagType.MAJOR);
+
+  const versions = useMemo(
+    () =>
+      versionType === ImageTagType.SEARCH
+        ? imageTagsConnection.search(searchText)
+        : imageTagsConnection.getVersionsOfType(versionType),
+    [versionType, searchText, imageTagsConnection]
+  );
 
   useEffect(() => {
-    if (imageRepository) {
-      if (deploymentSpecVersion) {
-        fetchVersion(imageRepository.repository, deploymentSpecVersion);
-      }
+    if (imageRepository && deploymentSpecVersion) {
+      fetchVersion(imageRepository.repository, deploymentSpecVersion);
     }
   }, [deploymentSpecVersion, fetchVersion, imageRepository]);
 
@@ -39,21 +45,14 @@ export const VersionView = ({
       ? configuredVersionTag.type
       : version.deployTag.type;
 
-  useEffect(() => {
-    setVersionType(initVersionType);
-  }, [initVersionType]);
+  useEffect(() => setVersionType(initVersionType), [initVersionType]);
+
+  if (isFetching) return <Spinner />;
 
   if (!imageRepository) {
     // TODO: Bedre feilmelding
     return <p>Mangler repository</p>;
   }
-
-  const onSelectType = (type: ImageTagType) => {
-    setVersionType(type);
-    if (type !== ImageTagType.SEARCH) {
-      setSearchText(undefined);
-    }
-  };
 
   const hasAccessToDeploy = deployment.permission.paas.admin;
 
@@ -61,15 +60,14 @@ export const VersionView = ({
     <Wrapper>
       {!hasAccessToDeploy && <PermissionToUpgradeInformation />}
       <ActionBar>
-        <VersionTypeSelectorContainer
+        <VersionTypeSelector
+          totalCountMap={imageTagsConnection.getCountMap()}
           versionType={versionType}
-          onSelect={onSelectType}
+          onSelect={setVersionType}
         />
-        <ServerSideSearchContainer
-          handleSelectVersionType={setVersionType}
+        <Search
+          setTypeToSearch={() => setVersionType(ImageTagType.SEARCH)}
           handleSetSearchText={setSearchText}
-          repository={imageRepository.repository}
-          selectedVersionType={versionType}
         />
       </ActionBar>
       <BranchInformation
@@ -88,15 +86,13 @@ export const VersionView = ({
         applicationName={deployment.name}
         gitReference={gitReference}
         isBranchDeleted={isBranchDeleted}
-      />
-      <FetchMoreVersionsContainer
+        versions={versions}
         searchText={searchText}
-        repository={imageRepository.repository}
-        versionType={versionType}
       />
     </Wrapper>
   );
 };
+
 const Wrapper = styled.div`
   display: flex;
   flex-direction: column;

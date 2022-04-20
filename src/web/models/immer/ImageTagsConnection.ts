@@ -1,77 +1,59 @@
 import { immerable } from 'immer';
-import { uniqBy } from 'lodash';
+import _ from 'lodash';
 
 import {
-  IImageTagsConnection,
-  IImageTagEdge,
-  IImageTag,
-  IPageInfo,
+  IVersion,
+  IVersionsConnection,
 } from 'web/services/auroraApiClients/imageRepositoryClient/query';
-import { ImageTagType } from 'web/models/ImageTagType';
+import { ImageTagType } from '../ImageTagType';
+import { TotalCountMap } from '../../screens/AffiliationViews/DeploymentView/DetailsView/VersionView/containers/VersionTypeSelector/VersionTypeSelector.types';
+import { versionSort } from '../../utils/sortFunctions';
+
+interface IImageTagsByType {
+  [type: string]: IVersion[];
+}
 
 export class ImageTagsConnection {
   [immerable] = true;
 
-  private edges: IImageTagEdge[];
-  private totalCount: number;
-  private pageInfo: IPageInfo;
-  private type: ImageTagType;
+  private readonly versions: IVersion[];
+  private readonly groupedByType: IImageTagsByType;
 
-  constructor(type: ImageTagType, data: IImageTagsConnection) {
-    this.type = type;
-    this.edges = data.edges;
-    this.totalCount = data.totalCount;
-    this.pageInfo = data.pageInfo;
-  }
-
-  public getType(): ImageTagType {
-    return this.type;
+  constructor(data: IVersionsConnection) {
+    this.versions = data;
+    this.groupedByType = _.groupBy(this.getVersions(), (node) => node.type);
   }
 
   public findVersionIndex(name: string): number {
     return this.getVersions().findIndex((version) => version.name === name);
   }
 
-  public totalVersionsCount(): number {
-    return this.totalCount;
+  public getVersions(): IVersion[] {
+    return this.versions;
   }
 
-  public currentVersionsSize(): number {
-    return this.edges.length;
+  public getVersionsOfType(type: ImageTagType): IVersion[] {
+    const group = this.groupedByType[type.toString()];
+    if (group && group.length > 0) return [...group].sort(versionSort(type));
+    else return [];
   }
 
-  public getVersions(): IImageTag[] {
-    return this.edges
-      .map((edge) => edge.node)
-      .sort((t1, t2) => {
-        const t1LastModified = (t1.image && t1.image.buildTime) || 0;
-        const t2LastModified = (t2.image && t2.image.buildTime) || 0;
-
-        const date1 = new Date(t1LastModified).getTime();
-        const date2 = new Date(t2LastModified).getTime();
-        return date2 - date1;
-      });
+  public search(text: String): IVersion[] {
+    const texts = text.split(' ').map((t) => t.trim().toLowerCase());
+    return this.getVersions()
+      .filter((imageTag) =>
+        texts.every((t) => imageTag.name.toLowerCase().includes(t))
+      )
+      .sort(versionSort(ImageTagType.SEARCH, texts));
   }
 
-  public getCursor(): string {
-    return this.pageInfo.endCursor;
-  }
-
-  public hasNextPage(): boolean {
-    return this.pageInfo.hasNextPage;
-  }
-
-  public addVersions(next: IImageTagEdge[]): void {
-    const edges = [...this.edges, ...next];
-    const nodes = edges.map((edge) => edge.node);
-    this.edges = uniqBy(nodes, 'name').map((node) => ({ node }));
-  }
-
-  public setPageInfo(pageInfo: IPageInfo): void {
-    this.pageInfo = pageInfo;
-  }
-
-  public setTotalCount(total: number): void {
-    this.totalCount = total;
+  public getCountMap(): TotalCountMap {
+    return Object.keys(ImageTagType).reduce(
+      (map, type) => ({
+        ...map,
+        [type]: this.getVersionsOfType(ImageTagType[type]).length,
+      }),
+      {}
+    );
   }
 }

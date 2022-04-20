@@ -1,14 +1,14 @@
 import React, { useEffect } from 'react';
 import {
   resetState,
-  fetchInitVersions,
+  fetchVersions,
 } from 'web/store/state/versions/action.creators';
 import { connect, ResolveThunks } from 'react-redux';
 import { IImageRepository } from 'web/services/auroraApiClients/applicationDeploymentClient/query';
 
 const mapDispatchToProps = {
   resetState,
-  fetchInitVersions,
+  fetchVersions,
 };
 
 interface InitVersionsProps {
@@ -18,9 +18,9 @@ interface InitVersionsProps {
 
 type Props = ResolveThunks<typeof mapDispatchToProps> & InitVersionsProps;
 
-const InitVersions = ({
+const Versions = ({
   imageRepository,
-  fetchInitVersions,
+  fetchVersions,
   resetState,
   hasPermission,
 }: Props) => {
@@ -30,16 +30,16 @@ const InitVersions = ({
       return;
     }
     resetState();
-    fetchInitVersions(repository);
+    fetchVersions(repository);
     return () => {
       resetState();
     };
-  }, [hasPermission, repository, resetState, fetchInitVersions]);
+  }, [hasPermission, repository, resetState, fetchVersions]);
 
   return <React.Fragment />;
 };
 
-export const InitVersionsContainer = connect(
+export const VersionsContainer = connect(
   undefined,
   mapDispatchToProps
-)(InitVersions);
+)(Versions);

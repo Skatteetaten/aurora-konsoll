@@ -1,13 +1,12 @@
 import React from 'react';
 import { MessageBar } from '@skatteetaten/frontend-components/MessageBar';
-import { IImageTag } from 'web/services/auroraApiClients/imageRepositoryClient/query';
 import { ExternalLink } from 'web/components/ExternalLink';
 
 const auroraConfigDocumentation =
   'https://skatteetaten.github.io/aurora/documentation/aurora-config/#configuration-for-deployment-types-deploy-and-development';
 
-export const ReleaseToInformation: React.FC<{ currentVersion: IImageTag }> = ({
-  currentVersion,
+export const ReleaseToInformation: React.FC<{ releaseTo: string }> = ({
+  releaseTo,
 }) => (
   <MessageBar style={{ maxWidth: '600px' }}>
     <ExternalLink
@@ -18,7 +17,7 @@ export const ReleaseToInformation: React.FC<{ currentVersion: IImageTag }> = ({
     >
       releaseTo
     </ExternalLink>{' '}
-    er konfigurert i denne applikasjonen. <strong>{currentVersion.name}</strong>{' '}
-    vil bli oppdatert.
+    er konfigurert i denne applikasjonen. <strong>{releaseTo}</strong> vil bli
+    oppdatert.
   </MessageBar>
 );

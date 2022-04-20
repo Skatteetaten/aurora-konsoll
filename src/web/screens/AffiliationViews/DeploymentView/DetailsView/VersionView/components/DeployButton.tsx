@@ -1,18 +1,17 @@
 import React, { useState } from 'react';
 
 import { Dialog } from '@skatteetaten/frontend-components/Dialog';
-import { MessageBar } from '@skatteetaten/frontend-components/MessageBar';
 import { ActionButton } from '@skatteetaten/frontend-components/ActionButton';
 import { Spinner } from '@skatteetaten/frontend-components/Spinner';
 import { IImageTag } from 'web/services/auroraApiClients/imageRepositoryClient/query';
 import { ReleaseToInformation } from './ReleaseToInformation';
 import TextField from '@skatteetaten/frontend-components/TextField';
 import styled from 'styled-components';
+import MessageBar from '@skatteetaten/frontend-components/MessageBar';
 
 export interface IDeployButtonProps {
   className?: string;
   isLoading: boolean;
-  isOldVersion: boolean;
   disabled: boolean;
   hasAccessToDeploy: boolean;
   dialogTitle: string;
@@ -29,12 +28,10 @@ const DeployButton: React.FC<IDeployButtonProps> = ({
   isLoading,
   onConfirmDeploy,
   dialogTitle,
-  isOldVersion,
   buttonText,
   disabled,
   hasAccessToDeploy,
   releaseTo,
-  currentVersion,
   children,
   gitReference,
   isBranchDeleted,
@@ -64,13 +61,6 @@ const DeployButton: React.FC<IDeployButtonProps> = ({
         maxWidth="800px"
       >
         <div className={className}>
-          {isOldVersion && (
-            <MessageBar className="message-bar-width">
-              Dette ser ut til å være en eldre versjon som har et metadata
-              format vi ikke støtter. Trenger du denne versjonen ta kontakt med
-              Aurora så kan vi oppgradere den manuelt for deg.
-            </MessageBar>
-          )}
           {isBranchDeleted && (
             <MessageBar
               type={MessageBar.Type.warning}
@@ -81,9 +71,7 @@ const DeployButton: React.FC<IDeployButtonProps> = ({
               eller gjennopprett slettet branch.
             </MessageBar>
           )}
-          {releaseTo && (
-            <ReleaseToInformation currentVersion={currentVersion} />
-          )}
+          {releaseTo && <ReleaseToInformation releaseTo={releaseTo} />}
           <div className="branch-text-field">
             <div className="branch-text-field-label">
               <p>Deployer med Aurora Config branch</p>{' '}
