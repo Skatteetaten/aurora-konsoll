@@ -18,8 +18,8 @@ export const VersionView = ({
   deploymentSpecVersion,
   configuredVersionTag,
   fetchVersion,
-  deploymentErrors,
   gitReference,
+  isBranchDeleted,
 }: VersionViewProps) => {
   const { id, version, imageRepository } = deployment;
 
@@ -54,12 +54,6 @@ export const VersionView = ({
       setSearchText(undefined);
     }
   };
-
-  const isBranchDeleted =
-    !!deploymentErrors &&
-    deploymentErrors.some((it) =>
-      it.message.includes('No git reference with refName')
-    );
 
   const hasAccessToDeploy = deployment.permission.paas.admin;
 

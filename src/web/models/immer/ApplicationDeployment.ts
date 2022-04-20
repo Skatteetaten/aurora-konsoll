@@ -36,8 +36,12 @@ export class ApplicationDeployment implements IApplicationDeployment {
   public message?: string;
   public details: IApplicationDeploymentDetails;
   public route?: IRoute;
+  public isBranchDeleted: boolean;
 
-  constructor(data: IApplicationDeploymentWithDetailsData) {
+  constructor(
+    data: IApplicationDeploymentWithDetailsData,
+    isBranchDeleted: boolean
+  ) {
     const app = data.applicationDeployment;
     const details = app.details;
 
@@ -63,6 +67,7 @@ export class ApplicationDeployment implements IApplicationDeployment {
       applicationDeploymentCommand: details.applicationDeploymentCommand,
     };
     this.route = app.route;
+    this.isBranchDeleted = isBranchDeleted;
   }
 
   private toDeploymentSpec(current?: any): IDeploymentSpec | undefined {

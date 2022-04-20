@@ -68,8 +68,17 @@ export const applicationsReducer = createReducer(initialState, (builder) => {
         state.applicationDeploymentId &&
         state.applicationDeploymentId === payload.data.applicationDeployment.id;
 
+      const branchDeleted =
+        !!payload.errors &&
+        payload.errors.some((it) =>
+          it.message.includes('No git reference with refName')
+        );
+
       if (payload.data && isApplicationDeploymentIdFromPayloadSameAsCurrent) {
-        const newDeployment = new ApplicationDeployment(payload.data);
+        const newDeployment = new ApplicationDeployment(
+          payload.data,
+          branchDeleted
+        );
         state.applicationDeployment = newDeployment;
         state.applicationsConnection.updateApplicationDeployment(newDeployment);
       }

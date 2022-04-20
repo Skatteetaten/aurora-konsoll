@@ -11,6 +11,7 @@ interface IVersionViewProps {
   deployment: IApplicationDeployment;
   gitReference?: string;
   deploymentSpecVersion?: string;
+  isBranchDeleted: boolean;
 }
 
 export const mapDispatchToProps = {
@@ -20,20 +21,14 @@ export const mapDispatchToProps = {
 interface IState {
   imageTagsConnection: ImageTagsConnection;
   configuredVersionTag?: IImageTag;
-  deploymentErrors?: Error[];
 }
 
-export const mapStateToProps = ({
-  versions,
-  applications,
-}: RootState): IState => {
+export const mapStateToProps = ({ versions }: RootState): IState => {
   const { types, configuredVersionTag } = versions;
-  const { requestApplicationDeployment } = applications.errors;
 
   if (!configuredVersionTag) {
     return {
       imageTagsConnection: types[ImageTagType.MAJOR],
-      deploymentErrors: requestApplicationDeployment,
     };
   }
 

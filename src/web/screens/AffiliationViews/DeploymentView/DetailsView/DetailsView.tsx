@@ -159,6 +159,7 @@ export const DetailsView: React.FC<IDetailsViewProps> = ({
                   deployment.details.deploymentSpec &&
                   deployment.details.deploymentSpec.version
                 }
+                isBranchDeleted={deployment.isBranchDeleted}
                 deployment={deployment}
                 gitReference={
                   deployment.details.applicationDeploymentCommand?.auroraConfig
