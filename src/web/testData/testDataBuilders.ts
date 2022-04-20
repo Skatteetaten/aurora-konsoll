@@ -113,54 +113,57 @@ export const podFactory = Factory.Sync.makeFactory<IPodResource>({
 
 export const deploymentFactory =
   Factory.Sync.makeFactory<ApplicationDeployment>(
-    new ApplicationDeployment({
-      applicationDeployment: {
-        id: 'c10010e594f229649437240f24f231343d62f8fa',
-        affiliation: {
-          name: 'paas',
-        },
-        environment: 'martin-dev',
-        name: 'martin-test-applikasjon',
-        namespace: {
-          name: 'paas-martin-dev',
-          permission: {
-            paas: {
-              admin: false,
-              view: true,
+    new ApplicationDeployment(
+      {
+        applicationDeployment: {
+          id: 'c10010e594f229649437240f24f231343d62f8fa',
+          affiliation: {
+            name: 'paas',
+          },
+          environment: 'martin-dev',
+          name: 'martin-test-applikasjon',
+          namespace: {
+            name: 'paas-martin-dev',
+            permission: {
+              paas: {
+                admin: false,
+                view: true,
+              },
             },
           },
-        },
-        imageRepository: {
-          repository: 'localhost/"martin-test-applikasjon',
-          isFullyQualified: true,
-        },
-        status: {
-          code: StatusCode.OBSERVE,
-          reasons: [],
-          reports: [],
-        },
-        time: '2018-12-07T11:48:34.230Z',
-        version: {
-          auroraVersion: '2.0.14-b1.17.0-flange-8.181.1',
-          deployTag: {
-            name: 'latest',
-            type: ImageTagType.AURORA_VERSION,
+          imageRepository: {
+            repository: 'localhost/"martin-test-applikasjon',
+            isFullyQualified: true,
           },
-          releaseTo: undefined,
-        },
-        details: {
-          buildTime: '2019-08-13T14:06:23.825Z',
-          podResources: [podFactory.build()],
-          updatedBy: 'linus',
-          serviceLinks: [],
-          deploymentSpecs: {},
-        },
-        route: {
-          bigipJobs: [],
-          websealJobs: [],
+          status: {
+            code: StatusCode.OBSERVE,
+            reasons: [],
+            reports: [],
+          },
+          time: '2018-12-07T11:48:34.230Z',
+          version: {
+            auroraVersion: '2.0.14-b1.17.0-flange-8.181.1',
+            deployTag: {
+              name: 'latest',
+              type: ImageTagType.AURORA_VERSION,
+            },
+            releaseTo: undefined,
+          },
+          details: {
+            buildTime: '2019-08-13T14:06:23.825Z',
+            podResources: [podFactory.build()],
+            updatedBy: 'linus',
+            serviceLinks: [],
+            deploymentSpecs: {},
+          },
+          route: {
+            bigipJobs: [],
+            websealJobs: [],
+          },
         },
       },
-    })
+      false
+    )
   );
 
 export const deploymentDetailsFactory =
