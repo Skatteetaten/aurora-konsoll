@@ -1,5 +1,5 @@
 import { ImageTagType } from 'web/models/ImageTagType';
-import { TotalCountMap } from '../VersionTypeSelector.types';
+import { TotalCountMap } from '../../../../../../../../models/VersionTypeSelector.types';
 
 export interface IImageTagTypeOption {
   key: ImageTagType;

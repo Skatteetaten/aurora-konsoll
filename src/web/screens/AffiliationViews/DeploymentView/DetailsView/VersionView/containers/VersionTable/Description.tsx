@@ -1,4 +1,4 @@
-import { ImageTagType } from '../../../../../../../models/ImageTagType';
+import { ImageTagType } from 'web/models/ImageTagType';
 import * as React from 'react';
 
 const Description = (props: {
