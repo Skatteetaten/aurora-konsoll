@@ -32,9 +32,13 @@ export interface IApplicationDeploymentStatus {
   reports: IStatusCheck[];
 }
 
-interface IApplicationDeploymentCommand {
+export interface IApplicationDeploymentCommand {
   auroraConfig: {
     gitReference: string;
+  };
+  applicationDeploymentRef: {
+    application: string;
+    environment: string;
   };
 }
 
@@ -45,7 +49,7 @@ export interface IApplicationDeploymentDetails {
   deploymentSpec?: IDeploymentSpec;
   pods: IPodResource[];
   serviceLinks: ILink[];
-  applicationDeploymentCommand?: IApplicationDeploymentCommand;
+  applicationDeploymentCommand: IApplicationDeploymentCommand;
 }
 
 export interface IGitInfo {

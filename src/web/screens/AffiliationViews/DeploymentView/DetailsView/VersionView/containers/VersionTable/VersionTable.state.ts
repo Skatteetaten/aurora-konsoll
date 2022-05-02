@@ -3,14 +3,14 @@ import { IImageTag } from 'web/services/auroraApiClients/imageRepositoryClient/q
 import { ReduxProps, RootState } from 'web/store/types';
 
 export interface IVersionTableProps {
-  onConfirmDeploy: (version: string, refname?: string) => void;
+  onConfirmDeploy: (version: string, refname: string) => void;
   hasAccessToDeploy: boolean;
   versionType: ImageTagType;
   currentVersion: IImageTag;
   versionBeingDeployed?: string;
   configuredVersionTag?: IImageTag;
   releaseTo?: string;
-  gitReference?: string;
+  gitReference: string;
   isBranchDeleted: boolean;
 }
 

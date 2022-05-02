@@ -91,7 +91,7 @@ export const VersionTable = ({
             dialogTitle="Vil du endre versjonen?"
             hasAccessToDeploy={hasAccessToDeploy}
             isOldVersion={!it.image}
-            onConfirmDeploy={(refName?: string) =>
+            onConfirmDeploy={(refName: string) =>
               onConfirmDeploy(it.name, refName)
             }
             releaseTo={releaseTo}
