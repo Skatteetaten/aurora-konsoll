@@ -155,6 +155,13 @@ export const deploymentFactory =
             updatedBy: 'linus',
             serviceLinks: [],
             deploymentSpecs: {},
+            applicationDeploymentCommand: {
+              auroraConfig: { gitReference: 'master' },
+              applicationDeploymentRef: {
+                application: 'martin-test-applikasjon',
+                environment: 'paas-martin-dev',
+              },
+            },
           },
           route: {
             bigipJobs: [],
@@ -172,6 +179,10 @@ export const deploymentDetailsFactory =
     deploymentSpec: deploymentSpecFactory.build(),
     pods: podFactory.buildList(3),
     serviceLinks: [],
+    applicationDeploymentCommand: {
+      auroraConfig: { gitReference: 'master' },
+      applicationDeploymentRef: { application: 'app', environment: 'env' },
+    },
   });
 
 export const applicationDeploymentFilterFactory =
