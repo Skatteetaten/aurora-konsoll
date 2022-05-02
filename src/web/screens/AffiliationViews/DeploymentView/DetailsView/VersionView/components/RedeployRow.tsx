@@ -22,9 +22,9 @@ interface IRedeployRowProps {
   versionBeingDeployed?: string;
   currentVersion: IImageTag;
   releaseTo?: string;
-  gitReference?: string;
+  gitReference: string;
   isBranchDeleted: boolean;
-  onConfirmDeploy: (version: string, refName?: string) => void;
+  onConfirmDeploy: (version: string, refName: string) => void;
 }
 
 export const RedeployRow = ({
@@ -67,7 +67,7 @@ export const RedeployRow = ({
     );
   }
 
-  const handleOnConfirmDeploy = (version: string) => (refName?: string) => {
+  const handleOnConfirmDeploy = (version: string) => (refName: string) => {
     onConfirmDeploy(version, refName);
   };
 

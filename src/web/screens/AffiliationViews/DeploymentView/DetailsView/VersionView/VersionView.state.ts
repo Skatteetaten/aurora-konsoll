@@ -1,4 +1,7 @@
-import { IApplicationDeployment } from 'web/models/ApplicationDeployment';
+import {
+  IApplicationDeployment,
+  IApplicationDeploymentCommand,
+} from 'web/models/ApplicationDeployment';
 import { RootState, ReduxProps } from 'web/store/types';
 import { VersionStatus } from '../models/VersionStatus';
 import { fetchVersion } from 'web/store/state/versions/action.creators';
@@ -8,7 +11,7 @@ import { IImageTag } from 'web/services/auroraApiClients/imageRepositoryClient/q
 interface IVersionViewProps {
   versionStatus: VersionStatus;
   deployment: IApplicationDeployment;
-  gitReference?: string;
+  applicationDeploymentCommand: IApplicationDeploymentCommand;
   deploymentSpecVersion?: string;
   isBranchDeleted: boolean;
 }

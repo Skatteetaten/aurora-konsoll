@@ -3,7 +3,7 @@ import Callout from '@skatteetaten/frontend-components/Callout';
 import CalloutButton from 'web/components/CalloutButton';
 
 export const BranchInformation: React.FC<{
-  gitReference: string | undefined;
+  gitReference: string;
   isBranchDeleted: boolean;
 }> = ({ gitReference, isBranchDeleted }) => {
   return (

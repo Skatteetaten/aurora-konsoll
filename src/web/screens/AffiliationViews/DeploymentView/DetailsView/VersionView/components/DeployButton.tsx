@@ -18,9 +18,9 @@ export interface IDeployButtonProps {
   buttonText: string;
   releaseTo?: string;
   currentVersion: IImageTag;
-  gitReference?: string;
+  gitReference: string;
   isBranchDeleted: boolean;
-  onConfirmDeploy: (refName?: string) => void;
+  onConfirmDeploy: (refName: string) => void;
 }
 
 const DeployButton: React.FC<IDeployButtonProps> = ({
@@ -37,7 +37,9 @@ const DeployButton: React.FC<IDeployButtonProps> = ({
   isBranchDeleted,
 }) => {
   const [hidden, setHidden] = useState(true);
-  const [refName, setRefName] = React.useState(gitReference);
+  const [refName, setRefName] = React.useState<string | undefined>(
+    gitReference
+  );
   const close = () => {
     setHidden(true);
     setRefName(gitReference);
@@ -88,9 +90,12 @@ const DeployButton: React.FC<IDeployButtonProps> = ({
         <Dialog.Footer>
           <ActionButton
             onClick={() => {
-              onConfirmDeploy(refName);
-              close();
+              if (refName) {
+                onConfirmDeploy(refName);
+                close();
+              }
             }}
+            disabled={!refName}
           >
             Utfør
           </ActionButton>

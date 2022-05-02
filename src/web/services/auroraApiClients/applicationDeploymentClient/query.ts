@@ -177,7 +177,11 @@ export interface IApplicationDeploymentDetails {
       jsonRepresentation: string;
     };
   };
-  applicationDeploymentCommand?: {
+  applicationDeploymentCommand: {
+    applicationDeploymentRef: {
+      application: string;
+      environment: string;
+    };
     auroraConfig: {
       gitReference: string;
     };
@@ -395,6 +399,10 @@ export const APPLICATION_DEPLOYMENT_WITH_DETAILS_QUERY = gql`
           commitTime
         }
         applicationDeploymentCommand {
+          applicationDeploymentRef {
+            application
+            environment
+          }
           auroraConfig {
             gitReference
           }

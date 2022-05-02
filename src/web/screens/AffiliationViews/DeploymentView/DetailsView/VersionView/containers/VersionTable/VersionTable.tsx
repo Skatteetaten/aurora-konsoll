@@ -60,7 +60,7 @@ function getOptionName(type: ImageTagType): string {
 }
 
 export interface IVersionTableProps {
-  onConfirmDeploy: (version: string, refname?: string) => void;
+  onConfirmDeploy: (version: string, refname: string) => void;
   hasAccessToDeploy: boolean;
   versionType: ImageTagType;
   currentVersion: IImageTag;
@@ -69,7 +69,7 @@ export interface IVersionTableProps {
   releaseTo?: string;
   versions: IVersion[];
   searchText: string;
-  gitReference?: string;
+  gitReference: string;
   isBranchDeleted: boolean;
 }
 
@@ -113,7 +113,7 @@ export const VersionTable = ({
           buttonText="Deploy"
           dialogTitle="Vil du endre versjonen?"
           hasAccessToDeploy={hasAccessToDeploy}
-          onConfirmDeploy={(refName?: string) =>
+          onConfirmDeploy={(refName: string) =>
             onConfirmDeploy(it.name, refName)
           }
           releaseTo={releaseTo}

@@ -17,9 +17,9 @@ export const VersionView = ({
   deploymentSpecVersion,
   configuredVersionTag,
   fetchVersion,
-  gitReference,
   isBranchDeleted,
   isFetching,
+  applicationDeploymentCommand,
 }: VersionViewProps) => {
   const { id, version, imageRepository } = deployment;
 
@@ -71,7 +71,7 @@ export const VersionView = ({
         />
       </ActionBar>
       <BranchInformation
-        gitReference={gitReference}
+        gitReference={applicationDeploymentCommand.auroraConfig.gitReference}
         isBranchDeleted={isBranchDeleted}
       />
       <RedeployRowAndVersionTableContainer
@@ -84,7 +84,7 @@ export const VersionView = ({
         affiliation={deployment.affiliation}
         environment={deployment.environment}
         applicationName={deployment.name}
-        gitReference={gitReference}
+        applicationDeploymentCommand={applicationDeploymentCommand}
         isBranchDeleted={isBranchDeleted}
         versions={versions}
         searchText={searchText}
