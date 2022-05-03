@@ -84,8 +84,6 @@ export const VersionView = ({
         versionType={versionType}
         releaseTo={deployment.version.releaseTo}
         affiliation={deployment.affiliation}
-        environment={deployment.environment}
-        applicationName={deployment.name}
         applicationDeploymentCommand={applicationDeploymentCommand}
         isBranchDeleted={isBranchDeleted}
       />

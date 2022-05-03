@@ -13,8 +13,6 @@ export interface IRedeployRowAndVersionTableProps {
   deployedVersion: IImageTag;
   releaseTo?: string;
   affiliation: string;
-  environment: string;
-  applicationName: string;
   isBranchDeleted: boolean;
   applicationDeploymentCommand: IApplicationDeploymentCommand;
 }
