@@ -38,7 +38,7 @@ export interface StorageGridQuery<T extends Tenant | ObjectAreas> {
 }
 
 export const STORAGEGRID_TENANT_QUERY = gql`
-  query tenant($affiliation: String!) {
+  query getTenant($affiliation: String!) {
     affiliations(names: [$affiliation]) {
       edges {
         node {
@@ -54,7 +54,7 @@ export const STORAGEGRID_TENANT_QUERY = gql`
 `;
 
 export const STORAGEGRID_AREAS_QUERY = gql`
-  query areas($affiliation: String!) {
+  query getAreas($affiliation: String!) {
     affiliations(names: [$affiliation]) {
       edges {
         node {
