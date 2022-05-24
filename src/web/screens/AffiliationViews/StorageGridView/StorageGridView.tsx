@@ -58,7 +58,7 @@ const StorageGridView = ({ activeAreas, getAreas, isFetchingAreas }: Props) => {
         </ActionBarButtonsContainer>
       </ActionBarContainer>
       <StorageGridTable
-        filter={filter}
+        currentFilter={filter}
         selection={selection}
         storageGridAreas={activeAreas}
       />
