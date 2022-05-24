@@ -30,6 +30,7 @@ const StorageGridTable = ({ filter, storageGridAreas, selection }: Props) => {
 
   const filterObjectAreas =
     (filter: string) => (sgoa: StorageGridObjectAreasTableData) =>
+      sgoa.namespace.toLowerCase().includes(filter) ||
       sgoa.bucketName.toLowerCase().includes(filter) ||
       sgoa.creationTimestamp.toLowerCase().includes(filter) ||
       sgoa.name.toLowerCase().includes(filter);
