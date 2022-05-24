@@ -7,7 +7,7 @@ Object {
       "edges": Array [
         Object {
           "node": Object {
-            "storagegrid": Object {
+            "storageGrid": Object {
               "objectAreas": Object {
                 "active": Array [
                   Object {
@@ -41,7 +41,7 @@ Object {
       "edges": Array [
         Object {
           "node": Object {
-            "storagegrid": Object {
+            "storageGrid": Object {
               "tenant": Object {
                 "isRegistered": true,
               },
