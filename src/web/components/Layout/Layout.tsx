@@ -27,7 +27,6 @@ interface ILayoutProps {
   displaySkapViews: boolean;
   displayDnsView: boolean;
   displayStorageGridView: boolean;
-  storageGridInformationUrl: string;
   displayStorytellerView: boolean;
   currentUser?: IUserAndAffiliations;
 }

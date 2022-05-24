@@ -88,7 +88,6 @@ export const App: React.FC<IAppProps> = ({
           displaySkapViews={displaySkapViews}
           displayDnsView={displayDnsView}
           displayStorageGridView={displayStorageGridView}
-          storageGridInformationUrl={storageGridInformationUrl}
           displayStorytellerView={displayStorytellerView}
         >
           <Route path="/secret" component={SecretTokenNavigation} />
