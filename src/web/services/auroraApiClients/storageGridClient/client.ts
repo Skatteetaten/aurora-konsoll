@@ -26,12 +26,12 @@ export class StorageGridClient {
     const tenant = await this.getTenant(affiliation);
 
     const isTenantRegistered =
-      tenant.data?.affiliations.edges[0].node.storagegrid.tenant.isRegistered;
+      tenant.data?.affiliations.edges[0].node.storageGrid.tenant.isRegistered;
 
     if (isTenantRegistered === true) {
       const areas = await this.getAreas(affiliation);
       const activeAreas =
-        areas.data?.affiliations.edges[0].node.storagegrid.objectAreas.active;
+        areas.data?.affiliations.edges[0].node.storageGrid.objectAreas.active;
 
       return {
         name: areas.name,

@@ -40,7 +40,7 @@ export const storageGridReducer = createReducer(initialState, (builder) => {
     state.isFetchingAreas = false;
     if (payload.data && state.areasAndTenant) {
       state.areasAndTenant.activeAreas =
-        payload.data.affiliations.edges[0].node.storagegrid.objectAreas.active;
+        payload.data.affiliations.edges[0].node.storageGrid.objectAreas.active;
     }
     if (payload.errors) {
       state.errors.push(...payload.errors);
