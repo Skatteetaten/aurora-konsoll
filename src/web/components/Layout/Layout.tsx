@@ -26,6 +26,8 @@ interface ILayoutProps {
   displayDatabaseView: boolean;
   displaySkapViews: boolean;
   displayDnsView: boolean;
+  displayStorageGridView: boolean;
+  storageGridInformationUrl: string;
   displayStorytellerView: boolean;
   currentUser?: IUserAndAffiliations;
 }
@@ -47,6 +49,7 @@ const Layout = ({
   displayDatabaseView,
   displaySkapViews,
   displayDnsView,
+  displayStorageGridView,
   displayStorytellerView,
   currentUser = defaultUser,
 }: ILayoutProps) => {
@@ -84,6 +87,12 @@ const Layout = ({
     to: `/a/${affiliation || '_'}/dns`,
   };
 
+  const storageGridMenuLink: IMenuNavLinkData = {
+    iconName: 'File',
+    name: 'StorageGrid',
+    to: `/a/${affiliation || '_'}/storageGrid`,
+  };
+
   const menuLinks: IMenuNavLinkData[] = [
     {
       iconName: 'Menu',
@@ -105,6 +114,10 @@ const Layout = ({
 
   if (displayDatabaseView) {
     menuLinks.push(databaseMenuLink);
+  }
+
+  if (displayStorageGridView) {
+    menuLinks.push(storageGridMenuLink);
   }
 
   if (displaySkapViews) {

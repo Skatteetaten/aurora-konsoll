@@ -2,6 +2,8 @@ export interface IConfiguration {
   DBH_ENABLED: boolean;
   SKAP_ENABLED: boolean;
   GAVEL_ENABLED: boolean;
+  STORAGEGRID_ENABLED: boolean;
+  STORAGEGRID_INFORMATION_URL: string;
   STORYTELLER_ENABLED: boolean;
   APPLICATION_NAME: string;
 }

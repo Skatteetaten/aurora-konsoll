@@ -29,6 +29,8 @@ interface IAppProps {
   displayDatabaseView: boolean;
   displaySkapViews: boolean;
   displayDnsView: boolean;
+  displayStorageGridView: boolean;
+  storageGridInformationUrl: string;
   displayStorytellerView: boolean;
 }
 
@@ -36,6 +38,8 @@ export const App: React.FC<IAppProps> = ({
   displayDatabaseView,
   displaySkapViews,
   displayDnsView,
+  displayStorageGridView,
+  storageGridInformationUrl,
   displayStorytellerView,
   tokenStore,
 }) => {
@@ -83,6 +87,8 @@ export const App: React.FC<IAppProps> = ({
           displayDatabaseView={displayDatabaseView}
           displaySkapViews={displaySkapViews}
           displayDnsView={displayDnsView}
+          displayStorageGridView={displayStorageGridView}
+          storageGridInformationUrl={storageGridInformationUrl}
           displayStorytellerView={displayStorytellerView}
         >
           <Route path="/secret" component={SecretTokenNavigation} />
@@ -102,6 +108,7 @@ export const App: React.FC<IAppProps> = ({
               <Route path="/a/:affiliation">
                 <AffiliationViewValidatorConnected
                   affiliation={affiliation}
+                  storageGridInformationUrl={storageGridInformationUrl}
                   onAffiliationValidated={onSelectedAffiliationValidated}
                 />
               </Route>

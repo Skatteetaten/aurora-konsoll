@@ -10,6 +10,8 @@ import {
   DBH_ENABLED,
   GAVEL_ENABLED,
   SKAP_ENABLED,
+  STORAGEGRID_ENABLED,
+  STORAGEGRID_INFORMATION_URL,
   STORYTELLER_ENABLED,
 } from './config';
 import { managementInterfaceServer } from './ManagementInterface';
@@ -44,6 +46,8 @@ app.get('/api/konsoll/config', (req, res) => {
     DBH_ENABLED,
     SKAP_ENABLED,
     GAVEL_ENABLED,
+    STORAGEGRID_ENABLED,
+    STORAGEGRID_INFORMATION_URL,
     STORYTELLER_ENABLED,
   });
 });
