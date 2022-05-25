@@ -85,6 +85,7 @@ const Root: FC<Props> = ({ tokenStore }) => {
           displaySkapViews={config.SKAP_ENABLED}
           displayStorageGridView={config.STORAGEGRID_ENABLED}
           storageGridInformationUrl={config.STORAGEGRID_INFORMATION_URL}
+          openshiftCluster={config.OPENSHIFT_CLUSTER}
           displayStorytellerView={config.STORYTELLER_ENABLED}
         />
       </BrowserRouter>

@@ -12,6 +12,7 @@ import { StorageGridViewRoutesContainer } from './StorageGridView/StorageGridVie
 interface IAffiliationViewValidatorProps {
   affiliation?: string;
   storageGridInformationUrl?: string;
+  openshiftCluster?: string;
   onAffiliationValidated: (affiliation: string) => void;
 }
 
@@ -20,6 +21,7 @@ type Props = IAffiliationViewValidatorProps & AffiliationViewValidatorState;
 export const AffiliationViewValidator: React.FC<Props> = ({
   affiliation,
   storageGridInformationUrl,
+  openshiftCluster,
   currentUser,
   onAffiliationValidated,
 }) => {
@@ -84,6 +86,7 @@ export const AffiliationViewValidator: React.FC<Props> = ({
       <Route path="/a/:affiliation/storageGrid">
         <StorageGridViewRoutesContainer
           affiliation={affiliation}
+          openshiftCluster={openshiftCluster}
           storageGridInformationUrl={storageGridInformationUrl}
         />
       </Route>

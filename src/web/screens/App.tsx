@@ -26,11 +26,12 @@ import { StorytellerView } from './StorytellerView/StorytellerView';
 
 interface IAppProps {
   tokenStore: TokenStore;
+  openshiftCluster?: string;
   displayDatabaseView: boolean;
   displaySkapViews: boolean;
   displayDnsView: boolean;
   displayStorageGridView: boolean;
-  storageGridInformationUrl: string;
+  storageGridInformationUrl?: string;
   displayStorytellerView: boolean;
 }
 
@@ -42,6 +43,7 @@ export const App: React.FC<IAppProps> = ({
   storageGridInformationUrl,
   displayStorytellerView,
   tokenStore,
+  openshiftCluster,
 }) => {
   const [affiliation, setAffiliation] = useState<string | undefined>(undefined);
   const [isMenuExpanded, setMenuExpanded] = useState(true);
@@ -109,6 +111,7 @@ export const App: React.FC<IAppProps> = ({
                   affiliation={affiliation}
                   storageGridInformationUrl={storageGridInformationUrl}
                   onAffiliationValidated={onSelectedAffiliationValidated}
+                  openshiftCluster={openshiftCluster}
                 />
               </Route>
               <Route

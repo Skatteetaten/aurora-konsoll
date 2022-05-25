@@ -3,7 +3,8 @@ export interface IConfiguration {
   SKAP_ENABLED: boolean;
   GAVEL_ENABLED: boolean;
   STORAGEGRID_ENABLED: boolean;
-  STORAGEGRID_INFORMATION_URL: string;
+  STORAGEGRID_INFORMATION_URL?: string;
+  OPENSHIFT_CLUSTER?: string;
   STORYTELLER_ENABLED: boolean;
   APPLICATION_NAME: string;
 }

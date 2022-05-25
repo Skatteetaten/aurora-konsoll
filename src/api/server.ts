@@ -7,6 +7,7 @@ import {
   MANAGEMENT_PORT,
   GOBO_URL,
   APPLICATION_NAME,
+  OPENSHIFT_CLUSTER,
   DBH_ENABLED,
   GAVEL_ENABLED,
   SKAP_ENABLED,
@@ -42,6 +43,7 @@ app.use(
 
 app.get('/api/konsoll/config', (req, res) => {
   return res.send({
+    OPENSHIFT_CLUSTER,
     APPLICATION_NAME,
     DBH_ENABLED,
     SKAP_ENABLED,

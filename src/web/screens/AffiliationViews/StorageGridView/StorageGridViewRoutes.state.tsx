@@ -8,6 +8,7 @@ import { AreasAndTenant } from 'web/services/auroraApiClients';
 interface Props {
   affiliation: string;
   storageGridInformationUrl?: string;
+  openshiftCluster?: string;
 }
 
 export const mapDispatchToProps = {
