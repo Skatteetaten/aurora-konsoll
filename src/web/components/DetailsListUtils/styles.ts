@@ -24,6 +24,10 @@ export const ActionBarButtonsContainer = styled.div`
 
 // wraps around the DetailsList
 export const TableContainer = styled.div`
+  .ms-DetailsRow {
+    cursor: pointer;
+  }
+
   position: relative;
   flex: 1;
   display: flex;
