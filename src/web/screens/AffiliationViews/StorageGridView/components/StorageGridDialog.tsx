@@ -1,10 +1,13 @@
 import ActionButton from '@skatteetaten/frontend-components/ActionButton';
 import Dialog from '@skatteetaten/frontend-components/Dialog';
 import Grid from '@skatteetaten/frontend-components/Grid';
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Selection, IObjectWithKey } from '@fluentui/react';
 import MessageBar from '@skatteetaten/frontend-components/MessageBar';
-import { BoldParagraph } from 'web/components/DetailsListUtils/styles';
+import {
+  BoldParagraph,
+  MessageBarContent,
+} from 'web/components/DetailsListUtils/styles';
 
 interface Props {
   selected: object[] | undefined;
@@ -17,7 +20,7 @@ export interface StorageGridObjectAreasTableData {
   bucketName: string;
   namespace: string;
   creationTimestamp: string;
-  statusSuccess: JSX.Element;
+  statusSuccess: string;
   statusMessage: string;
   statusReason: string;
 }
@@ -38,8 +41,16 @@ const StorageGridDialog = ({ selected, selection, className }: Props) => {
     selection.setAllSelected(false);
   };
 
+  const success = data?.statusSuccess === 'true';
+
   return (
-    <Dialog title="Område" hidden={hidden} minWidth="1000px" maxWidth="90%">
+    <Dialog
+      title="Område"
+      hidden={hidden}
+      minWidth="1000px"
+      maxWidth="90%"
+      onDismiss={close}
+    >
       <div className={className}>
         <Grid>
           <Grid.Row>
@@ -58,8 +69,18 @@ const StorageGridDialog = ({ selected, selection, className }: Props) => {
           </Grid.Row>
         </Grid>
         <hr />
-        <MessageBar type={MessageBar.Type.success} size="large">
-          {data?.statusMessage}
+        <h3>Statusinformasjon</h3>
+        <MessageBar
+          type={success ? MessageBar.Type.success : MessageBar.Type.error}
+          style={{ maxWidth: 'fit-content' }}
+        >
+          <MessageBarContent>
+            <b>Årsak: </b>
+            {data?.statusReason}
+            <br />
+            <b>Melding: </b>
+            {data?.statusMessage}
+          </MessageBarContent>
         </MessageBar>
       </div>
       <Dialog.Footer>

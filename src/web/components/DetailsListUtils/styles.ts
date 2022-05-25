@@ -37,3 +37,8 @@ export const TableContainer = styled.div`
 export const BoldParagraph = styled.p`
   font-weight: bold;
 `;
+
+export const MessageBarContent = styled.div`
+  overflow: auto;
+  max-height: 200px;
+`;
