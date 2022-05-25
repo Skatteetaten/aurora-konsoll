@@ -2,12 +2,13 @@ import React from 'react';
 import { Icon } from '@skatteetaten/frontend-components/Icon';
 
 interface IStatusIconProps {
-  status: boolean;
+  success: boolean;
+  reason: string;
 }
 
-const StatusIcon = ({ status }: IStatusIconProps) => {
+const StatusIcon = ({ success, reason }: IStatusIconProps) => {
   const getIconAndColorForIcon = (): { icon: string; color: string } => {
-    switch (status) {
+    switch (success) {
       case true:
         return {
           icon: 'Completed',
@@ -22,11 +23,14 @@ const StatusIcon = ({ status }: IStatusIconProps) => {
   };
 
   return (
-    <Icon
-      iconName={getIconAndColorForIcon().icon}
-      title={String(status)}
-      style={{ fontSize: '20px', color: getIconAndColorForIcon().color }}
-    />
+    <div style={{ display: 'flex' }}>
+      <Icon
+        iconName={getIconAndColorForIcon().icon}
+        title="status"
+        style={{ fontSize: '20px', color: getIconAndColorForIcon().color }}
+      />
+      {!success && reason}
+    </div>
   );
 };
 

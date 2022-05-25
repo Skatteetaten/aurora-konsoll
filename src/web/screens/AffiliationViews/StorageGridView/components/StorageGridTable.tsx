@@ -5,7 +5,6 @@ import DetailsList from '@skatteetaten/frontend-components/DetailsList';
 import { initColumns } from '../utils/columns';
 import { Selection, IObjectWithKey } from '@fluentui/react';
 import { getLocalDate } from 'web/utils/date';
-import StatusIcon from '../utils/StatusIcon';
 import { StorageGridObjectArea } from 'web/services/auroraApiClients/storageGridClient/query';
 import { StorageGridObjectAreasTableData } from './StorageGridDialog';
 
@@ -31,13 +30,13 @@ const StorageGridTable = ({
       sgoa.name.toLowerCase().includes(filter);
 
   useEffect(() => {
-    if (storageGridAreas) {
+    if (storageGridAreas && storageGridAreas.length > 0) {
       setItems(
-        storageGridAreas?.map((it) => {
+        storageGridAreas.map((it) => {
           return {
             ...it,
             creationTimestamp: getLocalDate(it.creationTimestamp),
-            statusSuccess: StatusIcon({ status: it.status.success }),
+            statusSuccess: String(it.status.success),
             statusMessage: it.status.message,
             statusReason: it.status.reason,
           };

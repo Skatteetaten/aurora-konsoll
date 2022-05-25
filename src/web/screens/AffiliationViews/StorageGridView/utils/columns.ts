@@ -1,9 +1,10 @@
 import { IColumn } from '@skatteetaten/frontend-components/DetailsList/DetailsList.types';
 import {
   sort,
-  sortIcon,
   sortDate,
 } from 'web/components/DetailsListUtils/column/sortUtils';
+import { StorageGridObjectArea } from 'web/services/auroraApiClients/storageGridClient/query';
+import StatusIcon from './StatusIcon';
 
 export const initColumns: IColumn[] = [
   {
@@ -49,6 +50,8 @@ export const initColumns: IColumn[] = [
     maxWidth: 200,
     minWidth: 200,
     name: 'Status',
-    sortItems: sortIcon,
+    sortItems: sort,
+    onRender: (it: StorageGridObjectArea) =>
+      StatusIcon({ success: it.status.success, reason: it.status.reason }),
   },
 ];
