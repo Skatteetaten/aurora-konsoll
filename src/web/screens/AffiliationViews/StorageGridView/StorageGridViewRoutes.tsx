@@ -38,7 +38,7 @@ export const StorageGridViewRoutes: React.FC<StorageGridViewRoutesProps> = ({
         <Route exact path={`${match.url}`}>
           <MessageBar size="large">
             Tenant er ikke registert for tilhørighet <b>{affiliation}</b> i
-            kluster <b>{openshiftCluster}</b>. Se:
+            cluster <b>{openshiftCluster}</b>. Se:
             <Link
               text="Registrere StorageGrid S3 Tenant"
               path={storageGridInformationUrl}
