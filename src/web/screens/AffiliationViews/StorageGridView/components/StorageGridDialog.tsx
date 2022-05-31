@@ -75,7 +75,7 @@ const StorageGridDialog = ({ selected, selection, className }: Props) => {
           style={{ maxWidth: 'fit-content' }}
         >
           <MessageBarContent>
-            <b>Årsak: </b>
+            <b>Hendelse: </b>
             {data?.statusReason}
             <br />
             <b>Melding: </b>
