@@ -1,4 +1,5 @@
 import GoboClient, { IDataAndErrors } from 'web/services/GoboClient';
+import { REFRESH_APPLICATION_DEPLOYMENTS_MUTATION } from './mutation';
 import {
   ObjectAreas,
   StorageGridObjectArea,
@@ -53,6 +54,23 @@ export class StorageGridClient {
     };
   }
 
+  public async refreshAndGetAreas(
+    affiliation: string
+  ): Promise<IDataAndErrors<StorageGridQuery<ObjectAreas>>> {
+    const refreshResponse = await this.refreshAffiliations([affiliation]);
+    if (
+      refreshResponse.data &&
+      refreshResponse.data.refreshApplicationDeployments
+    ) {
+      return await this.getAreas(affiliation);
+    } else {
+      return {
+        name: refreshResponse.name,
+        errors: refreshResponse.errors,
+      };
+    }
+  }
+
   public async getAreas(
     affiliation: string
   ): Promise<IDataAndErrors<StorageGridQuery<ObjectAreas>>> {
@@ -68,6 +86,21 @@ export class StorageGridClient {
     return await this.client.query<StorageGridQuery<Tenant>>({
       query: STORAGEGRID_TENANT_QUERY,
       variables: { affiliation },
+    });
+  }
+
+  public async refreshAffiliations(
+    affiliations: string[]
+  ): Promise<IDataAndErrors<{ refreshApplicationDeployments: boolean }>> {
+    return await this.client.mutate<{
+      refreshApplicationDeployments: boolean;
+    }>({
+      mutation: REFRESH_APPLICATION_DEPLOYMENTS_MUTATION,
+      variables: {
+        input: {
+          affiliations,
+        },
+      },
     });
   }
 }

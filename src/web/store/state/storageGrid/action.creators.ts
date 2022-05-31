@@ -9,6 +9,6 @@ export function getAreasAndTenant(affiliation: string) {
 
 export function getAreas(affiliation: string) {
   return doAsyncActions(actions.fetchAreas, (clients) => {
-    return clients.storageGridClient.getAreas(affiliation);
+    return clients.storageGridClient.refreshAndGetAreas(affiliation);
   });
 }
