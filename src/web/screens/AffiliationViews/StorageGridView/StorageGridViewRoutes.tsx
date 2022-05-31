@@ -40,7 +40,7 @@ export const StorageGridViewRoutes: React.FC<StorageGridViewRoutesProps> = ({
             Tenant er ikke registert for tilhørighet <b>{affiliation}</b> i
             cluster <b>{openshiftCluster}</b>. Se:
             <Link
-              text="Registrere StorageGrid S3 Tenant"
+              text="Bruk av objektlagring (StorageGrid/S3) på Aurora plattformen"
               path={storageGridInformationUrl}
             />
             .
