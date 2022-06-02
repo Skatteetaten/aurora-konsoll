@@ -7,6 +7,7 @@ import {
   UserSettingsClient,
   WebsealClient,
   DnsClient,
+  StorageGridClient,
 } from 'web/services/auroraApiClients';
 export interface IApiClients {
   applicationDeploymentClient: ApplicationDeploymentClient;
@@ -17,4 +18,5 @@ export interface IApiClients {
   websealClient: WebsealClient;
   certificateClient: CertificateClient;
   dnsClient: DnsClient;
+  storageGridClient: StorageGridClient;
 }

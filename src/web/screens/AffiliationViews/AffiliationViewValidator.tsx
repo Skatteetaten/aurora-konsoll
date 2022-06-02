@@ -7,9 +7,12 @@ import WebsealViewController from './WebsealView/WebsealViewController';
 import { AffiliationViewValidatorState } from './AffiliationViewValidatorConnected';
 import { DeploymentViewContainer } from './DeploymentView/DeploymentViewContainer';
 import { DnsViewContainer } from './DnsView/DnsViewContainer';
+import { StorageGridViewRoutesContainer } from './StorageGridView/StorageGridViewRoutesContainer';
 
 interface IAffiliationViewValidatorProps {
   affiliation?: string;
+  storageGridInformationUrl?: string;
+  openshiftCluster?: string;
   onAffiliationValidated: (affiliation: string) => void;
 }
 
@@ -17,6 +20,8 @@ type Props = IAffiliationViewValidatorProps & AffiliationViewValidatorState;
 
 export const AffiliationViewValidator: React.FC<Props> = ({
   affiliation,
+  storageGridInformationUrl,
+  openshiftCluster,
   currentUser,
   onAffiliationValidated,
 }) => {
@@ -77,6 +82,13 @@ export const AffiliationViewValidator: React.FC<Props> = ({
       </Route>
       <Route path="/a/:affiliation/dns">
         <DnsViewContainer affiliation={affiliation} />
+      </Route>
+      <Route path="/a/:affiliation/storageGrid">
+        <StorageGridViewRoutesContainer
+          affiliation={affiliation}
+          openshiftCluster={openshiftCluster}
+          storageGridInformationUrl={storageGridInformationUrl}
+        />
       </Route>
     </Switch>
   );
