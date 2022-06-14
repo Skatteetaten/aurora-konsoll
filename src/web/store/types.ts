@@ -17,6 +17,7 @@ import { UserSettingsAction } from './state/userSettings/actions';
 import { ApplicationsAction } from './state/applicationDeployments/actions';
 import { StartupAction } from './state/startup/actions';
 import { DnsAction } from './state/dns/actions';
+import { StorageGridAction } from './state/storageGrid/actions';
 
 export type RootState = StateType<typeof rootReducer>;
 
@@ -30,7 +31,8 @@ export type RootAction =
   | ErrorsAction
   | UserSettingsAction
   | NetdebugViewAction
-  | DnsAction;
+  | DnsAction
+  | StorageGridAction;
 
 export interface IExtraArguments {
   clients: IApiClients;

@@ -1,0 +1,17 @@
+{
+    "data": {
+        "affiliations": {
+            "edges": [
+                {
+                    "node": {
+                        "storageGrid": {
+                            "tenant": {
+                                "isRegistered": true
+                            }
+                        }
+                    }
+                }
+            ]
+        }
+    }
+}

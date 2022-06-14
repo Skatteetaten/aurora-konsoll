@@ -6,3 +6,4 @@ export * from './databaseClient/client';
 export * from './websealClient/client';
 export * from './certificateClient/client';
 export * from './dnsClient/client';
+export * from './storageGridClient/client';

@@ -18,6 +18,7 @@ import {
   DnsClient,
   ImageRepositoryClient,
   NetdebugClient,
+  StorageGridClient,
   UserSettingsClient,
   WebsealClient,
 } from 'web/services/auroraApiClients';
@@ -68,6 +69,7 @@ const Root: FC<Props> = ({ tokenStore }) => {
     websealClient: new WebsealClient(goboClient),
     certificateClient: new CertificateClient(goboClient),
     dnsClient: new DnsClient(goboClient),
+    storageGridClient: new StorageGridClient(goboClient),
   };
 
   const store = createStoreWithApi(clients);
@@ -81,6 +83,9 @@ const Root: FC<Props> = ({ tokenStore }) => {
           displayDatabaseView={config.DBH_ENABLED}
           displayDnsView={config.GAVEL_ENABLED}
           displaySkapViews={config.SKAP_ENABLED}
+          displayStorageGridView={config.STORAGEGRID_ENABLED}
+          storageGridInformationUrl={config.STORAGEGRID_INFORMATION_URL}
+          openshiftCluster={config.OPENSHIFT_CLUSTER}
           displayStorytellerView={config.STORYTELLER_ENABLED}
         />
       </BrowserRouter>
