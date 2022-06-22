@@ -1,6 +1,5 @@
 import { IApplicationDeployment } from 'web/models/ApplicationDeployment';
 import { RootState, ReduxProps } from 'web/store/types';
-import { ImageTagType } from 'web/models/ImageTagType';
 import { VersionStatus } from '../models/VersionStatus';
 import { fetchVersion } from 'web/store/state/versions/action.creators';
 import { ImageTagsConnection } from 'web/models/immer/ImageTagsConnection';
@@ -14,26 +13,27 @@ interface IVersionViewProps {
   deploymentSpecVersion?: string;
 }
 
-export const mapDispatchToProps = {
-  fetchVersion,
-};
+export const mapDispatchToProps = { fetchVersion };
 
 interface IState {
   imageTagsConnection: ImageTagsConnection;
+  isFetching: boolean;
   configuredVersionTag?: IImageTag;
 }
 
 export const mapStateToProps = ({ versions }: RootState): IState => {
-  const { types, configuredVersionTag } = versions;
+  const { configuredVersionTag, isFetching } = versions;
 
   if (!configuredVersionTag) {
     return {
-      imageTagsConnection: types[ImageTagType.MAJOR],
+      imageTagsConnection: versions.imageTags,
+      isFetching,
     };
   }
 
   return {
-    imageTagsConnection: versions.types[configuredVersionTag.type],
+    imageTagsConnection: versions.imageTags,
+    isFetching,
     configuredVersionTag,
   };
 };

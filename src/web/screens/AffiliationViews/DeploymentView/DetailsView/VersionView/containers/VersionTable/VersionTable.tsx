@@ -1,17 +1,23 @@
 import * as React from 'react';
 import styled from 'styled-components';
 import { ImageTagType } from 'web/models/ImageTagType';
-import { IVersionTableProps, VersionTableState } from './VersionTable.state';
 import { DeployButton } from '../../components/DeployButton';
 import { VersionInfo } from '../../components/VersionInfo';
 import DateWithTooltip from 'web/components/DateWithTooltip';
 import { Table } from '@skatteetaten/frontend-components/Table';
+import {
+  IImageTag,
+  IVersion,
+} from '../../../../../../../services/auroraApiClients/imageRepositoryClient/query';
+import { skeColor } from '@skatteetaten/frontend-components/utils';
+import HighlightedValues from './HighlightedValues';
+import Description from './Description';
 
 const columns = [
   {
     fieldName: 'type',
     key: 'type',
-    name: 'Versjontype',
+    name: 'Versjonstype',
   },
   {
     fieldName: 'name',
@@ -33,9 +39,9 @@ const columns = [
 function getOptionName(type: ImageTagType): string {
   switch (type) {
     case ImageTagType.AURORA_VERSION:
-      return 'Aurora Version';
+      return 'Aurora-versjon';
     case ImageTagType.AURORA_SNAPSHOT_VERSION:
-      return 'Unik snapshot version';
+      return 'Unik snapshot-versjon';
     case ImageTagType.BUGFIX:
       return 'Bugfix';
     case ImageTagType.LATEST:
@@ -53,66 +59,88 @@ function getOptionName(type: ImageTagType): string {
   }
 }
 
-type Props = IVersionTableProps & VersionTableState;
+export interface IVersionTableProps {
+  onConfirmDeploy: (version: string) => void;
+  hasAccessToDeploy: boolean;
+  versionType: ImageTagType;
+  currentVersion: IImageTag;
+  versionBeingDeployed?: string;
+  configuredVersionTag?: IImageTag;
+  releaseTo?: string;
+  versions: IVersion[];
+  searchText: string;
+}
 
 export const VersionTable = ({
   currentVersion,
-  imageTagsConnection,
   hasAccessToDeploy,
   versionBeingDeployed,
   onConfirmDeploy,
   configuredVersionTag,
   releaseTo,
-}: Props) => {
+  versions,
+  versionType,
+  searchText,
+}: IVersionTableProps) => {
   const versionToFilter: string =
     releaseTo && configuredVersionTag
       ? configuredVersionTag.name
       : currentVersion.name;
 
-  const data = imageTagsConnection
-    .getVersions()
+  const data = versions
     .filter((it) => it.name !== versionToFilter)
-    .map((it) => {
-      return {
-        type: getOptionName(it.type),
-        name: it.name,
-        lastModified: it.image ? (
-          <DateWithTooltip date={it.image.buildTime} position="left" />
+    .map((it) => ({
+      type: getOptionName(it.type),
+      name:
+        versionType === ImageTagType.SEARCH ? (
+          <HighlightedValues searchText={searchText} text={it.name} />
         ) : (
-          ''
+          it.name
         ),
-        deploy: (
-          <DeployButton
-            isLoading={versionBeingDeployed === it.name}
-            disabled={versionBeingDeployed !== undefined}
-            buttonText="Deploy"
-            dialogTitle="Vil du endre versjonen?"
-            hasAccessToDeploy={hasAccessToDeploy}
-            isOldVersion={!it.image}
-            onConfirmDeploy={() => onConfirmDeploy(it.name)}
-            releaseTo={releaseTo}
-            currentVersion={currentVersion}
-          >
-            <VersionInfo>
-              <p>Fra:</p>{' '}
-              {!releaseTo ? currentVersion.name : configuredVersionTag?.name}
-            </VersionInfo>
-            <VersionInfo>
-              <p>Til:</p> {it.name}
-            </VersionInfo>
-          </DeployButton>
-        ),
-      };
-    });
+      lastModified: it.version ? (
+        <DateWithTooltip date={it.version.buildTime} position="left" />
+      ) : (
+        ''
+      ),
+      deploy: (
+        <DeployButton
+          isLoading={versionBeingDeployed === it.name}
+          disabled={versionBeingDeployed !== undefined}
+          buttonText="Deploy"
+          dialogTitle="Vil du endre versjonen?"
+          hasAccessToDeploy={hasAccessToDeploy}
+          onConfirmDeploy={() => onConfirmDeploy(it.name)}
+          releaseTo={releaseTo}
+          currentVersion={currentVersion}
+        >
+          <VersionInfo>
+            <p>Fra:</p>{' '}
+            {!releaseTo ? currentVersion.name : configuredVersionTag?.name}
+          </VersionInfo>
+          <VersionInfo>
+            <p>Til:</p> {it.name}
+          </VersionInfo>
+        </DeployButton>
+      ),
+    }));
 
   return (
     <TableWrapper>
-      <Table
-        data={data as any}
-        columns={columns}
-        caption={''}
-        hideCaption={true}
-      />
+      <SearchInfo>
+        <Description
+          versionType={versionType}
+          numberOfVersions={versions.length}
+          searchText={searchText}
+        />
+      </SearchInfo>
+      {versions.length > 0 && (
+        <Table
+          data={data as any}
+          columns={columns}
+          caption={''}
+          hideCaption={true}
+        />
+      )}
     </TableWrapper>
   );
 };
@@ -165,4 +193,14 @@ const TableWrapper = styled.div`
   .ms-List-cell {
     cursor: pointer;
   }
+
+  > div:last-child {
+    overflow-x: visible;
+  }
+`;
+
+const SearchInfo = styled.div`
+  background-color: ${skeColor.lightBlue};
+  color: ${skeColor.blue100};
+  padding: 12px;
 `;
