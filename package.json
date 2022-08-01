@@ -22,7 +22,7 @@
   "dependencies": {
     "@reduxjs/toolkit": "1.7.1",
     "@skatteetaten/aurora-management-interface": "1.0.6",
-    "@skatteetaten/frontend-components": "5.0.4",
+    "@skatteetaten/frontend-components": "5.0.6",
     "cors": "2.8.5",
     "express": "4.17.1",
     "graphql": "16.0.1",
