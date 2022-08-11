@@ -12,7 +12,7 @@
     "metadata",
     "git-properties.json"
   ],
-  "bundledDependencies": [
+  "bundledependencies": [
     "@skatteetaten/aurora-management-interface",
     "http-proxy-middleware",
     "express",
