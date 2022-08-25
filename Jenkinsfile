@@ -10,7 +10,7 @@ def overrides = [
     npmInstallCommand: 'ci',
     iqOrganizationName: "Team AOS",
     iqEmbedded: true,
-    iqBreakOnUnstable: true,
+    iqBreakOnUnstable: false,
     nodeVersion: "16",
     versionStrategy: [
         [ branch: 'master', versionHint: '2']
