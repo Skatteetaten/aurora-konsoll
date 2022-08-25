@@ -3,6 +3,7 @@ import styled from 'styled-components';
 import { ComboBox } from '@skatteetaten/frontend-components/ComboBox';
 
 import { ImageTagType } from 'web/models/ImageTagType';
+import { TotalCountMap } from 'web/models/VersionTypeSelector.types';
 
 import { getVersionTypeSelectorOptions } from './utils/options';
 import { onRenderOption } from './components/VersionTypeOption';

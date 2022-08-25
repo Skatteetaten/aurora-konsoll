@@ -6,7 +6,7 @@ import {
   IVersionsConnection,
 } from 'web/services/auroraApiClients/imageRepositoryClient/query';
 import { ImageTagType } from '../ImageTagType';
-import { TotalCountMap } from '../../screens/AffiliationViews/DeploymentView/DetailsView/VersionView/containers/VersionTypeSelector/VersionTypeSelector.types';
+import { TotalCountMap } from '../VersionTypeSelector.types';
 import { versionSort } from '../../utils/sortFunctions';
 
 interface IImageTagsByType {

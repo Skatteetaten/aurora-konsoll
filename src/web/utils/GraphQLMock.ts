@@ -9,6 +9,7 @@ import {
   DatabaseClient,
   ImageRepositoryClient,
   NetdebugClient,
+  StorageGridClient,
   UserSettingsClient,
   WebsealClient,
 } from 'web/services/auroraApiClients';
@@ -97,5 +98,6 @@ export function getApiClientsMock(serverMock: GraphQLSeverMock): IApiClients {
     userSettingsClient: new UserSettingsClient(clientMock),
     websealClient: new WebsealClient(clientMock),
     dnsClient: new DnsClient(clientMock),
+    storageGridClient: new StorageGridClient(clientMock),
   };
 }

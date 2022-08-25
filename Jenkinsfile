@@ -13,7 +13,7 @@ def overrides = [
     iqBreakOnUnstable: true,
     nodeVersion: "16",
     versionStrategy: [
-        [ branch: 'master', versionHint: '1']
+        [ branch: 'master', versionHint: '2']
     ]
 ]
 

@@ -1,0 +1,29 @@
+{
+    "data": {
+        "affiliations": {
+            "edges": [
+                {
+                    "node": {
+                        "storageGrid": {
+                            "objectAreas": {
+                                "active": [
+                                    {
+                                        "name": "test",
+                                        "namespace": "paas-test",
+                                        "bucketName": "bucket",
+                                        "creationTimestamp": "2020-01-22T17:30:42Z",
+                                        "status": {
+                                            "message": "Failed",
+                                            "reason": "Unknown",
+                                            "success": false
+                                        }
+                                    }
+                                ]
+                            }
+                        }
+                    }
+                }
+            ]
+        }
+    }
+}
