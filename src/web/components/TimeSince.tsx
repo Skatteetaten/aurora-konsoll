@@ -78,8 +78,8 @@ class TimeSince extends React.PureComponent<ITimeSinceProps, ITimeSinceState> {
       <div className={className}>
         <div className="tooltip">
           {isSecond
-            ? `Sist oppdatert for:  ${secondsAgo} sek siden`
-            : `Sist oppdatert for:  ${minutesAgo} min siden`}
+            ? `Sist oppdatert for ${secondsAgo} sek siden`
+            : `Sist oppdatert for ${minutesAgo} min siden`}
           <span className="tooltip-text">
             {time && time.toLocaleTimeString('nb-NO')}
           </span>

@@ -1,6 +1,9 @@
 import { ImageTagType } from 'web/models/ImageTagType';
 import { VersionStatus } from '../../../models/VersionStatus';
-import { IImageTag } from 'web/services/auroraApiClients/imageRepositoryClient/query';
+import {
+  IImageTag,
+  IVersion,
+} from 'web/services/auroraApiClients/imageRepositoryClient/query';
 import { deploy } from 'web/store/state/applicationDeployments/action.creators';
 import { ReduxProps, RootState } from 'web/store/types';
 import { IApplicationDeploymentCommand } from 'web/models/ApplicationDeployment';
@@ -14,12 +17,12 @@ export interface IRedeployRowAndVersionTableProps {
   releaseTo?: string;
   affiliation: string;
   isBranchDeleted: boolean;
+  versions: IVersion[];
+  searchText: string;
   applicationDeploymentCommand: IApplicationDeploymentCommand;
 }
 
-export const mapDispatchToProps = {
-  deploy,
-};
+export const mapDispatchToProps = { deploy };
 
 export const mapStateToProps = ({ applications, versions }: RootState) => {
   const { isDeploying } = applications;

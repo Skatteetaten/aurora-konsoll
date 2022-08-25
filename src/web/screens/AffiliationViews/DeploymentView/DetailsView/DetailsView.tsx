@@ -5,7 +5,7 @@ import styled from 'styled-components';
 import Card from 'web/components/Card';
 import TabLink, { TabLinkWrapper } from 'web/components/TabLink';
 import UnavailableServiceMessage from 'web/components/UnavailableServiceMessage';
-import { InitVersionsContainer } from 'web/containers/InitVersionsContainer';
+import { VersionsContainer } from 'web/containers/VersionsContainer';
 import {
   IUnavailableServiceMessage,
   unavailableServiceMessageCreator,
@@ -33,6 +33,7 @@ interface IDetailsViewProps {
   ) => Promise<void>;
   isRefreshing: boolean;
   affiliation: string;
+  refreshVersions: (repository: string) => Promise<void>;
 }
 
 function getVersionViewUnavailableMessage(
@@ -95,6 +96,7 @@ export const DetailsView: React.FC<IDetailsViewProps> = ({
   isRefreshing,
   deleteAndRefreshApplications,
   refreshApplicationDeployment,
+  refreshVersions,
 }) => {
   const match = useRouteMatch<ApplicationDeploymentMatchParams>();
   const history = useHistory();
@@ -112,7 +114,7 @@ export const DetailsView: React.FC<IDetailsViewProps> = ({
 
   return (
     <DetailsViewGrid>
-      <InitVersionsContainer
+      <VersionsContainer
         hasPermission={deployment.permission.paas.admin}
         imageRepository={deployment.imageRepository}
       />
@@ -121,9 +123,11 @@ export const DetailsView: React.FC<IDetailsViewProps> = ({
         isRefreshing={isRefreshing}
         updatedTime={deployment.time}
         goToDeploymentsPage={goToDeploymentsPage}
-        refreshApplicationDeployment={() =>
-          refreshApplicationDeployment(deployment.id, affiliation)
-        }
+        refreshApplicationDeployment={() => {
+          refreshApplicationDeployment(deployment.id, affiliation);
+          const repository = deployment.imageRepository?.repository;
+          repository && refreshVersions(repository);
+        }}
       />
       <TabLinkWrapper>
         <TabLink to={`${match.url}/info`}>Sammendrag</TabLink>
