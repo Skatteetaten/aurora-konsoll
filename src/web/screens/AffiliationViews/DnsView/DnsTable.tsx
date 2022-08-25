@@ -2,7 +2,6 @@ import Table from '@skatteetaten/frontend-components/Table';
 import React from 'react';
 import { CnameInfo } from 'web/services/auroraApiClients/dnsClient/query';
 import styled from 'styled-components';
-import { CnameInfoData } from 'web/models/Dns';
 
 interface props {
   cnameInfos?: CnameInfo[];

@@ -1,4 +1,4 @@
-import React, { FormEvent } from 'react';
+import React from 'react';
 import styled from 'styled-components';
 import { ComboBox } from '@skatteetaten/frontend-components/ComboBox';
 
@@ -8,7 +8,6 @@ import { TotalCountMap } from 'web/models/VersionTypeSelector.types';
 import { getVersionTypeSelectorOptions } from './utils/options';
 import { onRenderOption } from './components/VersionTypeOption';
 import { IComboBox, IComboBoxOption } from '@fluentui/react';
-import { TotalCountMap } from './VersionTypeSelector.types';
 
 interface IVersionTypeSelectorProps {
   onSelect: (type: ImageTagType) => void;
@@ -26,7 +25,7 @@ export const VersionTypeSelector = ({
   className,
 }: Props) => {
   const onTagTypeChanged = (
-    event: FormEvent<IComboBox>,
+    event: React.FormEvent<IComboBox>,
     option?: IComboBoxOption
   ) => {
     if (option) {
