@@ -68,9 +68,9 @@ const DeployButton: React.FC<IDeployButtonProps> = ({
               type={MessageBar.Type.warning}
               className="message-bar-width"
             >
-              Applikasjonen har blitt deployet med en branch som er slettet.
-              Løsning: Deploy applikasjonen med en annen branch som eksisterer,
-              eller gjennopprett slettet branch.
+              Applikasjonen har blitt deployet med en Aurora Config branch som
+              er slettet. Løsning: Deploy applikasjonen med en annen Aurora
+              Config branch som eksisterer, eller gjennopprett slettet branch.
             </MessageBar>
           )}
           {releaseTo && <ReleaseToInformation releaseTo={releaseTo} />}
