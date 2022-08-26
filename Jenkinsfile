@@ -2,7 +2,7 @@
 def jenkinsfile
 
 def overrides = [
-    scriptVersion  : 'feature/SITJ-2211-BOMsForIQ',
+    scriptVersion  : 'feature/SITJ-2431',
     pipelineScript: 'https://git.aurora.skead.no/scm/ao/aurora-pipeline-scripts.git',
     credentialsId: "github",
     jiraFiksetIKomponentversjon: true,
