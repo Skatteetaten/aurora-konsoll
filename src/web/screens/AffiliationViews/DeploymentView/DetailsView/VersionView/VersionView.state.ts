@@ -1,16 +1,19 @@
-import { IApplicationDeployment } from 'web/models/ApplicationDeployment';
+import {
+  IApplicationDeployment,
+  IApplicationDeploymentCommand,
+} from 'web/models/ApplicationDeployment';
 import { RootState, ReduxProps } from 'web/store/types';
 import { VersionStatus } from '../models/VersionStatus';
 import { fetchVersion } from 'web/store/state/versions/action.creators';
 import { ImageTagsConnection } from 'web/models/immer/ImageTagsConnection';
 import { IImageTag } from 'web/services/auroraApiClients/imageRepositoryClient/query';
-import { AuroraConfigFileResource } from 'web/services/auroraApiClients/applicationDeploymentClient/query';
 
 interface IVersionViewProps {
   versionStatus: VersionStatus;
   deployment: IApplicationDeployment;
-  auroraConfigFiles: AuroraConfigFileResource[];
+  applicationDeploymentCommand: IApplicationDeploymentCommand;
   deploymentSpecVersion?: string;
+  isBranchDeleted: boolean;
 }
 
 export const mapDispatchToProps = { fetchVersion };

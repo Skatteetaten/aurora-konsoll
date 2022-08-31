@@ -1,4 +1,4 @@
-import React, { FormEvent } from 'react';
+import React from 'react';
 import styled from 'styled-components';
 import { ComboBox } from '@skatteetaten/frontend-components/ComboBox';
 
@@ -25,7 +25,7 @@ export const VersionTypeSelector = ({
   className,
 }: Props) => {
   const onTagTypeChanged = (
-    event: FormEvent<IComboBox>,
+    event: React.FormEvent<IComboBox>,
     option?: IComboBoxOption
   ) => {
     if (option) {

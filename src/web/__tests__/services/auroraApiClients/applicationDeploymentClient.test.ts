@@ -36,17 +36,22 @@ describe('findAllApplicationDeployments', () => {
   });
 });
 
-describe('redeployWithCurrentVersion', () => {
-  it('should redeploy with current version to GraphQL server', async () => {
-    serverMock.putResponse('redeployWithCurrentVersion', {
+describe('deploy', () => {
+  it('should deploy application to GraphQL server', async () => {
+    serverMock.putResponse('deploy', {
       data: {
-        redeployWithCurrentVersion: true,
+        deploy: {
+          applicationDeployments: [{ applicationDeploymentId: '123' }],
+          success: true,
+        },
       },
     });
 
-    const result = await applicationDeploymentClient.redeployWithCurrentVersion(
-      'c45410e594f22s964534543454ss'
-    );
+    const result = await applicationDeploymentClient.deploy({
+      applicationDeployment: [{ application: 'app', environment: 'env' }],
+      auroraConfigName: 'demo',
+      auroraConfigReference: 'master',
+    });
     expect(result).toBeTruthy();
     expect(result).toMatchSnapshot();
   });

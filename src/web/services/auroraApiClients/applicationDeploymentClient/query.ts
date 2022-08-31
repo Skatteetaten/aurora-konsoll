@@ -177,7 +177,11 @@ export interface IApplicationDeploymentDetails {
       jsonRepresentation: string;
     };
   };
-  applicationDeploymentCommand?: {
+  applicationDeploymentCommand: {
+    applicationDeploymentRef: {
+      application: string;
+      environment: string;
+    };
     auroraConfig: {
       gitReference: string;
     };
@@ -298,12 +302,47 @@ export interface IApplicationDeploymentWithDetails
   extends IApplicationDeploymentData {
   details: IApplicationDeploymentDetails;
   route?: IRoute;
-  files: AuroraConfigFileResource[];
 }
 
 export interface IApplicationDeploymentWithDetailsData {
   applicationDeployment: IApplicationDeploymentWithDetails;
 }
+
+export interface AuroraConfigResponse {
+  auroraConfig: {
+    applicationFiles: ApplicationFiles[];
+  };
+}
+
+interface ApplicationFiles {
+  files: AuroraConfigFileResource[];
+  application: string;
+  environment: string;
+}
+
+export const APPLICATION_FILES_QUERY = gql`
+  query getApplicationFiles(
+    $auroraConfig: String!
+    $applicationDeploymentRefInput: ApplicationDeploymentRefInput!
+    $refName: String
+  ) {
+    auroraConfig(name: $auroraConfig, refInput: $refName) {
+      applicationFiles(
+        applicationDeploymentRefs: [$applicationDeploymentRefInput]
+        types: [APP]
+      ) {
+        files {
+          name
+          contents
+          type
+          contentHash
+        }
+        environment
+        application
+      }
+    }
+  }
+`;
 
 export const APPLICATION_DEPLOYMENT_WITH_DETAILS_QUERY = gql`
   query getDeployment($id: String!) {
@@ -344,6 +383,9 @@ export const APPLICATION_DEPLOYMENT_WITH_DETAILS_QUERY = gql`
         deployTag {
           name
           type
+          image {
+            buildTime
+          }
         }
         releaseTo
       }
@@ -357,6 +399,10 @@ export const APPLICATION_DEPLOYMENT_WITH_DETAILS_QUERY = gql`
           commitTime
         }
         applicationDeploymentCommand {
+          applicationDeploymentRef {
+            application
+            environment
+          }
           auroraConfig {
             gitReference
           }
@@ -426,12 +472,6 @@ export const APPLICATION_DEPLOYMENT_WITH_DETAILS_QUERY = gql`
           serviceName
           name
         }
-      }
-      files {
-        name
-        contents
-        contentHash
-        type
       }
     }
   }

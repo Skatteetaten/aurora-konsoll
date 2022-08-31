@@ -5,8 +5,12 @@ import { ActionButton } from '@skatteetaten/frontend-components/ActionButton';
 import { Spinner } from '@skatteetaten/frontend-components/Spinner';
 import { IImageTag } from 'web/services/auroraApiClients/imageRepositoryClient/query';
 import { ReleaseToInformation } from './ReleaseToInformation';
+import TextField from '@skatteetaten/frontend-components/TextField';
+import styled from 'styled-components';
+import MessageBar from '@skatteetaten/frontend-components/MessageBar';
 
 export interface IDeployButtonProps {
+  className?: string;
   isLoading: boolean;
   disabled: boolean;
   hasAccessToDeploy: boolean;
@@ -14,10 +18,13 @@ export interface IDeployButtonProps {
   buttonText: string;
   releaseTo?: string;
   currentVersion: IImageTag;
-  onConfirmDeploy: () => void;
+  gitReference: string;
+  isBranchDeleted: boolean;
+  onConfirmDeploy: (refName: string) => void;
 }
 
-export const DeployButton: React.FC<IDeployButtonProps> = ({
+const DeployButton: React.FC<IDeployButtonProps> = ({
+  className,
   isLoading,
   onConfirmDeploy,
   dialogTitle,
@@ -26,9 +33,17 @@ export const DeployButton: React.FC<IDeployButtonProps> = ({
   hasAccessToDeploy,
   releaseTo,
   children,
+  gitReference,
+  isBranchDeleted,
 }) => {
   const [hidden, setHidden] = useState(true);
-  const close = () => setHidden(true);
+  const [refName, setRefName] = React.useState<string | undefined>(
+    gitReference
+  );
+  const close = () => {
+    setHidden(true);
+    setRefName(gitReference);
+  };
   const open = () => setHidden(false);
   return (
     <>
@@ -47,14 +62,40 @@ export const DeployButton: React.FC<IDeployButtonProps> = ({
         minWidth="500px"
         maxWidth="800px"
       >
-        {releaseTo && <ReleaseToInformation releaseTo={releaseTo} />}
-        {children}
+        <div className={className}>
+          {isBranchDeleted && (
+            <MessageBar
+              type={MessageBar.Type.warning}
+              className="message-bar-width"
+            >
+              Applikasjonen har blitt deployet med en Aurora Config branch som
+              er slettet. Løsning: Deploy applikasjonen med en annen Aurora
+              Config branch som eksisterer, eller gjennopprett slettet branch.
+            </MessageBar>
+          )}
+          {releaseTo && <ReleaseToInformation releaseTo={releaseTo} />}
+          <div className="branch-text-field">
+            <div className="branch-text-field-label">
+              <p>Deployer med Aurora Config branch</p>{' '}
+            </div>
+            <TextField
+              boldText
+              errorMessage={refName === '' ? 'branch må være satt' : undefined}
+              value={refName}
+              onChange={(e, value) => setRefName(value)}
+            />
+          </div>
+          {children}
+        </div>
         <Dialog.Footer>
           <ActionButton
             onClick={() => {
-              onConfirmDeploy();
-              close();
+              if (refName) {
+                onConfirmDeploy(refName);
+                close();
+              }
             }}
+            disabled={!refName}
           >
             Utfør
           </ActionButton>
@@ -64,3 +105,20 @@ export const DeployButton: React.FC<IDeployButtonProps> = ({
     </>
   );
 };
+
+export default styled(DeployButton)`
+  .branch-text-field {
+    padding-bottom: 15px;
+    margin-top: -10px;
+  }
+
+  .branch-text-field-label {
+    display: flex;
+    align-items: center;
+    margin-bottom: -6px;
+  }
+
+  message-bar-width {
+    max-width: 600px;
+  }
+`;

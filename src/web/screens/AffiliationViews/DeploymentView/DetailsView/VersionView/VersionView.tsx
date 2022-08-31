@@ -6,6 +6,7 @@ import { Search } from './containers/Search/Search';
 import { PermissionToUpgradeInformation } from './components/PermissionToUpgradeInformation';
 import { VersionViewProps } from './VersionView.state';
 import { RedeployRowAndVersionTableContainer } from './containers/RedeployRowAndVersionTable/RedeployRowAndVersionTableContainer';
+import { BranchInformation } from './components/MissingGitBranchInformation';
 import { VersionTypeSelector } from './containers/VersionTypeSelector/VersionTypeSelector';
 import { Spinner } from '@skatteetaten/frontend-components/Spinner';
 
@@ -16,8 +17,9 @@ export const VersionView = ({
   deploymentSpecVersion,
   configuredVersionTag,
   fetchVersion,
-  auroraConfigFiles,
+  isBranchDeleted,
   isFetching,
+  applicationDeploymentCommand,
 }: VersionViewProps) => {
   const { id, version, imageRepository } = deployment;
 
@@ -68,6 +70,10 @@ export const VersionView = ({
           handleSetSearchText={setSearchText}
         />
       </ActionBar>
+      <BranchInformation
+        gitReference={applicationDeploymentCommand.auroraConfig.gitReference}
+        isBranchDeleted={isBranchDeleted}
+      />
       <RedeployRowAndVersionTableContainer
         applicationId={id}
         deployedVersion={version.deployTag}
@@ -75,8 +81,9 @@ export const VersionView = ({
         versionStatus={versionStatus}
         versionType={versionType}
         releaseTo={deployment.version.releaseTo}
-        auroraConfigFiles={auroraConfigFiles}
         affiliation={deployment.affiliation}
+        applicationDeploymentCommand={applicationDeploymentCommand}
+        isBranchDeleted={isBranchDeleted}
         versions={versions}
         searchText={searchText}
       />

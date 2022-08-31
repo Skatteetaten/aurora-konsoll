@@ -1,13 +1,14 @@
 import GoboClient, { IDataAndErrors } from 'web/services/GoboClient';
 import {
-  REDEPLOY_WITH_CURRENT_VERSION_MUTATION,
   REFRESH_APPLICATION_DEPLOYMENT_MUTATION,
   REFRESH_APPLICATION_DEPLOYMENTS_MUTATION,
   DELETE_APPLICATION_DEPLOYMENT_MUTATION,
   UpdateAuroraConfigFileInput,
   AuroraConfigFileValidationResponse,
   UPDATE_AURORA_CONFIG_FILE,
-  DeployCurrentResponse,
+  DEPLOY_MUTATION,
+  DeployInput,
+  DeployResult,
 } from './mutation';
 import {
   APPLICATION_DEPLOYMENT_DETAILS_QUERY,
@@ -18,7 +19,8 @@ import {
   USER_AFFILIATIONS_QUERY,
   IApplicationDeploymentWithDetailsData,
   APPLICATION_DEPLOYMENT_WITH_DETAILS_QUERY,
-  AuroraConfigFileResource,
+  APPLICATION_FILES_QUERY,
+  AuroraConfigResponse,
 } from './query';
 import { changeVersionInFile } from './utils';
 
@@ -29,32 +31,30 @@ export class ApplicationDeploymentClient {
     this.client = client;
   }
 
-  public async updateAuroraConfigRedeployAndRefreshDeployment(
+  public async updateAppFileRedeployAndRefreshDeployment(
     applicationDeploymentId: string,
+    version: string,
     affiliation: string,
-    version: string
+    application: string,
+    environment: string,
+    refName: string
   ) {
-    const applicationDeployment =
-      await this.refreshAndFetchApplicationDeployment(applicationDeploymentId);
+    const applicationFiles = await this.refreshAndFetchApplicationFile(
+      applicationDeploymentId,
+      affiliation,
+      application,
+      environment,
+      refName
+    );
 
-    const auroraConfigFiles =
-      applicationDeployment.data?.applicationDeployment.files;
+    const applicationFile =
+      applicationFiles.data?.auroraConfig.applicationFiles[0].files[0];
 
-    if (auroraConfigFiles === undefined) {
+    if (applicationFile === undefined || applicationFile.type !== 'APP') {
       return {
         errors: [
-          new Error(`Could not find aurora config files for application`),
+          new Error(`Could not find application file in branch=${refName}`),
         ],
-        name: 'Missing Aurora config files for application',
-      };
-    }
-
-    const applicationFile: AuroraConfigFileResource | undefined =
-      auroraConfigFiles.find((it) => it.type === 'APP');
-
-    if (!applicationFile) {
-      return {
-        errors: [new Error(`An application must have an application file`)],
         name: 'Missing application file',
       };
     }
@@ -72,25 +72,23 @@ export class ApplicationDeploymentClient {
       };
     }
 
-    const auroraConfigReference =
-      applicationDeployment.data?.applicationDeployment.details
-        .applicationDeploymentCommand?.auroraConfig.gitReference ?? 'master';
-
     const updateFileResult = await this.updateAuroraConfigFile({
       auroraConfigName: affiliation,
-      auroraConfigReference,
+      auroraConfigReference: refName,
       contents: changedFile,
       existingHash: applicationFile.contentHash,
       fileName: applicationFile.name,
     });
 
     if (updateFileResult.data?.updateAuroraConfigFile.success) {
-      const redeployResult = await this.redeployWithCurrentVersion(
-        applicationDeploymentId
-      );
-      if (
-        redeployResult.data?.redeployWithCurrentVersion?.applicationDeploymentId
-      ) {
+      const redeployResult = await this.deploy({
+        applicationDeployment: [
+          { application: application, environment: environment },
+        ],
+        auroraConfigName: affiliation,
+        auroraConfigReference: refName,
+      });
+      if (redeployResult.data?.deploy.success) {
         return await this.refreshAndFetchApplicationDeployment(
           applicationDeploymentId
         );
@@ -159,14 +157,63 @@ export class ApplicationDeploymentClient {
     });
   }
 
-  public async redeployWithCurrentVersion(
-    applicationDeploymentId: string
-  ): Promise<IDataAndErrors<DeployCurrentResponse>> {
-    return await this.client.mutate<DeployCurrentResponse>({
-      mutation: REDEPLOY_WITH_CURRENT_VERSION_MUTATION,
+  public async refreshAndFetchApplicationFile(
+    applicationDeploymentId: string,
+    affiliation: string,
+    application: string,
+    environment: string,
+    refName: string
+  ): Promise<IDataAndErrors<AuroraConfigResponse>> {
+    const refreshResult = await this.refreshApplicationDeployment(
+      applicationDeploymentId
+    );
+    if (refreshResult.data && refreshResult.data.refreshApplicationDeployment) {
+      return await this.fetchApplicationFiles(
+        affiliation,
+        {
+          application: application,
+          environment: environment,
+        },
+        refName
+      );
+    } else {
+      return {
+        name: refreshResult.name,
+        errors: refreshResult.errors,
+      };
+    }
+  }
+
+  public async fetchApplicationFiles(
+    auroraConfig: string,
+    applicationDeploymentRefInput: {
+      application: string;
+      environment: string;
+    },
+    refName?: string
+  ): Promise<IDataAndErrors<AuroraConfigResponse>> {
+    return await this.client.query<AuroraConfigResponse>({
+      query: APPLICATION_FILES_QUERY,
+      variables: {
+        auroraConfig,
+        applicationDeploymentRefInput,
+        refName,
+      },
+    });
+  }
+
+  public async deploy({
+    applicationDeployment,
+    auroraConfigName,
+    auroraConfigReference,
+  }: DeployInput): Promise<IDataAndErrors<DeployResult>> {
+    return await this.client.mutate<DeployResult>({
+      mutation: DEPLOY_MUTATION,
       variables: {
         input: {
-          applicationDeploymentId,
+          applicationDeployment,
+          auroraConfigName,
+          auroraConfigReference,
         },
       },
     });

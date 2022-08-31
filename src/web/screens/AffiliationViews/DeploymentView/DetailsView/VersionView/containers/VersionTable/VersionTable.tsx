@@ -1,7 +1,7 @@
 import * as React from 'react';
 import styled from 'styled-components';
 import { ImageTagType } from 'web/models/ImageTagType';
-import { DeployButton } from '../../components/DeployButton';
+import DeployButton from '../../components/DeployButton';
 import { VersionInfo } from '../../components/VersionInfo';
 import DateWithTooltip from 'web/components/DateWithTooltip';
 import { Table } from '@skatteetaten/frontend-components/Table';
@@ -60,7 +60,7 @@ function getOptionName(type: ImageTagType): string {
 }
 
 export interface IVersionTableProps {
-  onConfirmDeploy: (version: string) => void;
+  onConfirmDeploy: (version: string, refname: string) => void;
   hasAccessToDeploy: boolean;
   versionType: ImageTagType;
   currentVersion: IImageTag;
@@ -69,6 +69,8 @@ export interface IVersionTableProps {
   releaseTo?: string;
   versions: IVersion[];
   searchText: string;
+  gitReference: string;
+  isBranchDeleted: boolean;
 }
 
 export const VersionTable = ({
@@ -78,6 +80,8 @@ export const VersionTable = ({
   onConfirmDeploy,
   configuredVersionTag,
   releaseTo,
+  gitReference,
+  isBranchDeleted,
   versions,
   versionType,
   searchText,
@@ -109,9 +113,13 @@ export const VersionTable = ({
           buttonText="Deploy"
           dialogTitle="Vil du endre versjonen?"
           hasAccessToDeploy={hasAccessToDeploy}
-          onConfirmDeploy={() => onConfirmDeploy(it.name)}
+          onConfirmDeploy={(refName: string) =>
+            onConfirmDeploy(it.name, refName)
+          }
           releaseTo={releaseTo}
           currentVersion={currentVersion}
+          gitReference={gitReference}
+          isBranchDeleted={isBranchDeleted}
         >
           <VersionInfo>
             <p>Fra:</p>{' '}
