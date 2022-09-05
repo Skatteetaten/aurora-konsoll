@@ -1,34 +1,42 @@
-import LoadingButton from 'web/components/LoadingButton';
-import React, { useEffect } from 'react';
-import DnsTable from './DnsTable';
+import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
+
+import LoadingButton from 'web/components/LoadingButton';
+import DnsTable from './Table/DnsTable';
+import { Azure, OnPrem } from 'web/services/auroraApiClients/dnsClient/query';
 import Spinner from '@skatteetaten/frontend-components/Spinner';
-import { CnameInfo } from 'web/services/auroraApiClients/dnsClient/query';
+import TextField from '@skatteetaten/frontend-components/TextField';
+
+export type cnameTypes =
+  | { items: OnPrem[]; type: 'onPrem' }
+  | { items: Azure[]; type: 'azure' };
 
 interface props {
   affiliation: string;
   className?: string;
   isFetching: boolean;
-  cnameInfos?: CnameInfo[];
   onFetch: (affiliation: string) => void;
+  cnames: cnameTypes;
 }
 
 const DnsView = ({
   affiliation,
   className,
+  cnames,
   onFetch,
-  cnameInfos,
   isFetching,
 }: props) => {
-  useEffect(() => {
-    onFetch(affiliation);
-  }, [affiliation, onFetch]);
-
+  const [filter, setFilter] = useState('');
   return (
     <div className={className}>
       <div className="body-wrapper">
         <div className="action-bar">
-          <h2>DNS entries for {affiliation}</h2>
+          <TextField
+            placeholder="Søk etter CName"
+            onChange={(_, val) => setFilter(val || '')}
+            value={filter}
+            style={{ width: '300px' }}
+          />
           <LoadingButton
             style={{ minWidth: '141px' }}
             icon="Update"
@@ -41,7 +49,7 @@ const DnsView = ({
         {isFetching ? (
           <Spinner size={Spinner.Size.large} />
         ) : (
-          <DnsTable cnameInfos={cnameInfos} />
+          <DnsTable cnames={cnames} filter={filter} />
         )}
       </div>
     </div>

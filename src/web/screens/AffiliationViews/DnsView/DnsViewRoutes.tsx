@@ -1,0 +1,51 @@
+import React, { useEffect } from 'react';
+
+import { Redirect, Route, Switch, useRouteMatch } from 'react-router';
+import TabLink, { TabLinkWrapper } from '../../../components/TabLink';
+import DnsView from './DnsView';
+import { DnsViewRoutesProps } from './DnsViewRoutes.state';
+
+export const DnsViewRoutes: React.FC<DnsViewRoutesProps> = ({
+  affiliation,
+  azure,
+  fetchCname,
+  isFetching,
+  onPrem,
+}) => {
+  useEffect(() => {
+    fetchCname(affiliation);
+  }, [affiliation, fetchCname]);
+
+  const match = useRouteMatch();
+  if (!match) {
+    return null;
+  }
+
+  return (
+    <div style={{ display: 'flex', flexDirection: 'column', height: '100%' }}>
+      <TabLinkWrapper>
+        <TabLink to={`${match.url}/onprem`}>DNS entries (On Premise)</TabLink>
+        <TabLink to={`${match.url}/azure`}>DNS entries (Azure)</TabLink>
+      </TabLinkWrapper>
+      <Switch>
+        <Redirect exact from={match.url} to={`${match.url}/onprem`} />
+        <Route exact path={`${match.url}/onprem`}>
+          <DnsView
+            affiliation={affiliation}
+            isFetching={isFetching}
+            onFetch={fetchCname}
+            cnames={{ items: onPrem || [], type: 'onPrem' }}
+          />
+        </Route>
+        <Route exact path={`${match.url}/azure`}>
+          <DnsView
+            affiliation={affiliation}
+            isFetching={isFetching}
+            onFetch={fetchCname}
+            cnames={{ items: azure || [], type: 'azure' }}
+          />
+        </Route>
+      </Switch>
+    </div>
+  );
+};
