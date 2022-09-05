@@ -1,10 +1,27 @@
 import gql from 'graphql-tag';
 
-export interface CnameInfosQuery {
-  cnameInfo?: CnameInfo[];
+export interface CnameQuery {
+  affiliations: {
+    edges: {
+      node: {
+        cname: {
+          azure: Azure[];
+          onPrem: OnPrem[];
+        };
+      };
+    }[];
+  };
 }
 
-export interface CnameInfo {
+export interface Azure {
+  canonicalName: string;
+  clusterId: string;
+  namespace: string;
+  ownerObjectName: string;
+  ttlInSeconds: number;
+}
+
+export interface OnPrem {
   status: string;
   clusterId: string;
   appName: string;
@@ -18,19 +35,35 @@ export interface CnameInfo {
   };
 }
 
-export const CNAME_INFO_QUERY = gql`
-  query getCnameInfo($affiliation: String!) {
-    cnameInfo(affiliations: [$affiliation]) {
-      appName
-      clusterId
-      message
-      namespace
-      routeName
-      status
-      entry {
-        cname
-        host
-        ttl
+export const CNAME_QUERY = gql`
+  query getCname($affiliation: String!) {
+    affiliations(names: [$affiliation]) {
+      edges {
+        node {
+          name
+          cname {
+            azure {
+              canonicalName
+              clusterId
+              ttlInSeconds
+              namespace
+              ownerObjectName
+            }
+            onPrem {
+              appName
+              clusterId
+              message
+              namespace
+              routeName
+              status
+              entry {
+                cname
+                host
+                ttl
+              }
+            }
+          }
+        }
       }
     }
   }
