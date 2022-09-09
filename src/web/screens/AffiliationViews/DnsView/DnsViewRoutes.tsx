@@ -8,13 +8,13 @@ import { DnsViewRoutesProps } from './DnsViewRoutes.state';
 export const DnsViewRoutes: React.FC<DnsViewRoutesProps> = ({
   affiliation,
   azure,
-  fetchCname,
+  fetchCnames,
   isFetching,
   onPrem,
 }) => {
   useEffect(() => {
-    fetchCname(affiliation);
-  }, [affiliation, fetchCname]);
+    fetchCnames(affiliation);
+  }, [affiliation, fetchCnames]);
 
   const match = useRouteMatch();
   if (!match) {
@@ -33,7 +33,7 @@ export const DnsViewRoutes: React.FC<DnsViewRoutesProps> = ({
           <DnsView
             affiliation={affiliation}
             isFetching={isFetching}
-            onFetch={fetchCname}
+            onFetch={fetchCnames}
             cnames={{ items: onPrem || [], type: 'onPrem' }}
           />
         </Route>
@@ -41,7 +41,7 @@ export const DnsViewRoutes: React.FC<DnsViewRoutesProps> = ({
           <DnsView
             affiliation={affiliation}
             isFetching={isFetching}
-            onFetch={fetchCname}
+            onFetch={fetchCnames}
             cnames={{ items: azure || [], type: 'azure' }}
           />
         </Route>

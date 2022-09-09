@@ -1,6 +1,6 @@
 import { RootState, ReduxProps } from 'web/store/types';
 
-import { fetchCname } from 'web/store/state/dns/action.creators';
+import { fetchCnames } from 'web/store/state/dns/action.creators';
 import { Azure, OnPrem } from 'web/services/auroraApiClients/dnsClient/query';
 
 interface Props {
@@ -8,7 +8,7 @@ interface Props {
 }
 
 export const mapDispatchToProps = {
-  fetchCname,
+  fetchCnames,
 };
 
 interface State {

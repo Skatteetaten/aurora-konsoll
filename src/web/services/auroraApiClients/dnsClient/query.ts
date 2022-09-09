@@ -36,7 +36,7 @@ export interface OnPrem {
 }
 
 export const CNAME_QUERY = gql`
-  query getCname($affiliation: String!) {
+  query getCnames($affiliation: String!) {
     affiliations(names: [$affiliation]) {
       edges {
         node {

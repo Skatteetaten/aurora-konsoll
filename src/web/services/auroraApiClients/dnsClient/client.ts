@@ -8,7 +8,7 @@ export class DnsClient {
     this.client = client;
   }
 
-  public async fetchCname(
+  public async fetchCnames(
     affiliation: string
   ): Promise<IDataAndErrors<CnameQuery>> {
     return await this.client.query<CnameQuery>({
