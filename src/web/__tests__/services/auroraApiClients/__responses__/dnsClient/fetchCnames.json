@@ -1,0 +1,31 @@
+{
+    "data": {
+        "affiliations": {
+            "edges": [
+                {
+                    "node": {
+                        "name": "test-name",
+                        "cname": {
+                            "azure": [],
+                            "onPrem": [
+                                {
+                                    "appName": "test-name",
+                                    "clusterId": "test",
+                                    "message": "",
+                                    "namespace": "test-dev",
+                                    "routeName": "test-routename",
+                                    "status": "SUCCESS",
+                                    "entry": {
+                                        "cname": "localhost",
+                                        "host": "localhost",
+                                        "ttl": 500
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                }
+            ]
+        }
+    }
+}
