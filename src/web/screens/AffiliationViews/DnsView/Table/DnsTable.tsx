@@ -109,7 +109,7 @@ const TableWrapper = styled.div`
     }
   }
   .ms-List-cell {
-    cursor: pointer;
+    cursor: default !important;
   }
 `;
 
