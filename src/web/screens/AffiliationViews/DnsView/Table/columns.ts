@@ -32,7 +32,7 @@ export const azureColumns: IColumn[] = [
     isMultiline: true,
   },
   {
-    name: 'Eierobjekt',
+    name: 'Applikasjon',
     fieldName: 'ownerObjectName',
     isResizable: true,
     key: '3',
