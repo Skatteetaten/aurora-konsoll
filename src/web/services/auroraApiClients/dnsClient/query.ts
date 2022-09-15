@@ -14,6 +14,7 @@ export interface CnameQuery {
 }
 
 export interface Azure {
+  name: string;
   canonicalName: string;
   clusterId: string;
   namespace: string;
@@ -43,6 +44,7 @@ export const CNAME_QUERY = gql`
           name
           cname {
             azure {
+              name
               canonicalName
               clusterId
               ttlInSeconds
