@@ -3,7 +3,7 @@ import { sort } from 'web/components/DetailsListUtils/column/sortUtils';
 
 export const azureColumns: IColumn[] = [
   {
-    name: 'Name',
+    name: 'Rute',
     fieldName: 'name',
     isResizable: true,
     key: '0',
@@ -13,20 +13,10 @@ export const azureColumns: IColumn[] = [
     isMultiline: true,
   },
   {
-    name: 'CName',
-    fieldName: 'canonicalName',
-    isResizable: true,
-    key: '1',
-    maxWidth: 200,
-    minWidth: 200,
-    sortItems: sort,
-    isMultiline: true,
-  },
-  {
     name: 'TTL',
     fieldName: 'ttlInSeconds',
     isResizable: true,
-    key: '2',
+    key: '1',
     maxWidth: 50,
     minWidth: 50,
     sortItems: sort,
@@ -35,7 +25,7 @@ export const azureColumns: IColumn[] = [
     name: 'Namespace',
     fieldName: 'namespace',
     isResizable: true,
-    key: '3',
+    key: '2',
     maxWidth: 200,
     minWidth: 200,
     sortItems: sort,
@@ -45,7 +35,7 @@ export const azureColumns: IColumn[] = [
     name: 'Applikasjon',
     fieldName: 'ownerObjectName',
     isResizable: true,
-    key: '4',
+    key: '3',
     maxWidth: 200,
     minWidth: 200,
     sortItems: sort,
