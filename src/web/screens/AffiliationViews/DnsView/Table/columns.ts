@@ -3,12 +3,12 @@ import { sort } from 'web/components/DetailsListUtils/column/sortUtils';
 
 export const azureColumns: IColumn[] = [
   {
-    name: 'CName',
-    fieldName: 'canonicalName',
+    name: 'Rute',
+    fieldName: 'name',
     isResizable: true,
     key: '0',
-    maxWidth: 200,
-    minWidth: 200,
+    maxWidth: 420,
+    minWidth: 420,
     sortItems: sort,
     isMultiline: true,
   },

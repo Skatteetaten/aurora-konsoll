@@ -59,6 +59,7 @@ const DnsTable = ({ cnames, filter }: Props) => {
       };
     } else {
       return (cname: Azure) =>
+        cname.name.toLowerCase().includes(filter) ||
         cname.namespace.toLowerCase().includes(filter) ||
         cname.canonicalName.toLowerCase().includes(filter) ||
         cname.clusterId.toLowerCase().includes(filter) ||
