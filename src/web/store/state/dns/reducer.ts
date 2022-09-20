@@ -4,15 +4,15 @@ import { createReducer } from '@reduxjs/toolkit';
 
 interface IDnsState {
   isFetching: boolean;
-  azure: Azure[];
-  onPrem: OnPrem[];
+  azure?: Azure[];
+  onPrem?: OnPrem[];
   errors: Error[];
 }
 
 const initialState: IDnsState = {
   isFetching: false,
-  azure: [],
-  onPrem: [],
+  azure: undefined,
+  onPrem: undefined,
   errors: [],
 };
 

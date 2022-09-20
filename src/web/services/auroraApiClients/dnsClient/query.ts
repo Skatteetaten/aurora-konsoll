@@ -5,8 +5,8 @@ export interface CnameQuery {
     edges: {
       node: {
         cname: {
-          azure: Azure[];
-          onPrem: OnPrem[];
+          azure?: Azure[];
+          onPrem?: OnPrem[];
         };
       };
     }[];
