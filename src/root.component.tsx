@@ -81,7 +81,7 @@ const Root: FC<Props> = ({ tokenStore }) => {
         <App
           tokenStore={tokenStore}
           displayDatabaseView={config.DBH_ENABLED}
-          displayDnsView={config.GAVEL_ENABLED}
+          displayDnsView={config.DNS_ENABLED}
           displaySkapViews={config.SKAP_ENABLED}
           displayStorageGridView={config.STORAGEGRID_ENABLED}
           storageGridInformationUrl={config.STORAGEGRID_INFORMATION_URL}
