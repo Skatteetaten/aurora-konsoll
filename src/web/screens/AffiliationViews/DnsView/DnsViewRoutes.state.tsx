@@ -1,7 +1,7 @@
 import { RootState, ReduxProps } from 'web/store/types';
 
 import { fetchCnames } from 'web/store/state/dns/action.creators';
-import { Azure, OnPrem } from 'web/services/auroraApiClients/dnsClient/query';
+import { AzureData, OnPremData } from 'web/store/state/dns/reducer';
 
 interface Props {
   affiliation: string;
@@ -13,8 +13,8 @@ export const mapDispatchToProps = {
 
 interface State {
   isFetching: boolean;
-  azure?: Azure[];
-  onPrem?: OnPrem[];
+  azure?: AzureData[];
+  onPrem?: OnPremData[];
 }
 
 export const mapStateToProps = ({ dns }: RootState): State => {

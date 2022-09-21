@@ -1,38 +1,48 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import styled from 'styled-components';
 
 import LoadingButton from 'web/components/LoadingButton';
 import DnsTable from './Table/DnsTable';
-import { Azure, OnPrem } from 'web/services/auroraApiClients/dnsClient/query';
 import Spinner from '@skatteetaten/frontend-components/Spinner';
 import TextField from '@skatteetaten/frontend-components/TextField';
-
-export type cnameTypes =
-  | { items: OnPrem[]; type: 'onPrem' }
-  | { items: Azure[]; type: 'azure' };
+import { IntegrationDisabledInformation } from './components/IntegrationDisabledInformation';
+import { AzureData, OnPremData } from 'web/store/state/dns/reducer';
 
 interface props {
   affiliation: string;
   className?: string;
   isFetching: boolean;
   onFetch: (affiliation: string) => void;
-  cnames: cnameTypes;
+  items?: AzureData[] | OnPremData[];
+  type: 'onPrem' | 'azure';
 }
 
 const DnsView = ({
   affiliation,
   className,
-  cnames,
+  items,
+  type,
   onFetch,
   isFetching,
 }: props) => {
   const [filter, setFilter] = useState('');
+
+  const renderContent = () => {
+    if (isFetching) {
+      return <Spinner size={Spinner.Size.large} />;
+    } else if (items) {
+      return <DnsTable items={items} type={type} filter={filter} />;
+    } else {
+      return <IntegrationDisabledInformation type={type} />;
+    }
+  };
+
   return (
     <div className={className}>
       <div className="body-wrapper">
         <div className="action-bar">
           <TextField
-            placeholder="Søk etter CName"
+            placeholder="Søk etter DNS entries"
             onChange={(_, val) => setFilter(val || '')}
             value={filter}
             style={{ width: '300px' }}
@@ -46,11 +56,7 @@ const DnsView = ({
             Oppdater
           </LoadingButton>
         </div>
-        {isFetching ? (
-          <Spinner size={Spinner.Size.large} />
-        ) : (
-          <DnsTable cnames={cnames} filter={filter} />
-        )}
+        {renderContent()}
       </div>
     </div>
   );

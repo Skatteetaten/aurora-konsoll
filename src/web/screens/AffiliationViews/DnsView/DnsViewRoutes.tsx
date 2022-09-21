@@ -4,7 +4,6 @@ import { Redirect, Route, Switch, useRouteMatch } from 'react-router';
 import TabLink, { TabLinkWrapper } from '../../../components/TabLink';
 import DnsView from './DnsView';
 import { DnsViewRoutesProps } from './DnsViewRoutes.state';
-import IntegrationDisabledInformation from './IntegrationDisabledInformation';
 
 export const DnsViewRoutes: React.FC<DnsViewRoutesProps> = ({
   affiliation,
@@ -35,20 +34,18 @@ export const DnsViewRoutes: React.FC<DnsViewRoutesProps> = ({
             affiliation={affiliation}
             isFetching={isFetching}
             onFetch={fetchCnames}
-            cnames={{ items: onPrem || [], type: 'onPrem' }}
+            items={onPrem}
+            type="onPrem"
           />
         </Route>
         <Route exact path={`${match.url}/azure`}>
-          {azure ? (
-            <DnsView
-              affiliation={affiliation}
-              isFetching={isFetching}
-              onFetch={fetchCnames}
-              cnames={{ items: azure, type: 'azure' }}
-            />
-          ) : (
-            <IntegrationDisabledInformation />
-          )}
+          <DnsView
+            affiliation={affiliation}
+            isFetching={isFetching}
+            onFetch={fetchCnames}
+            items={azure}
+            type="azure"
+          />
         </Route>
       </Switch>
     </div>
