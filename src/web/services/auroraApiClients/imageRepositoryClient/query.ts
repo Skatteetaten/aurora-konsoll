@@ -9,7 +9,7 @@ export interface ITagsQuery {
 
 export interface ITagQuery {
   imageRepositories: Array<{
-    tag: IImageTag[];
+    tag: (IImageTag | null)[];
   }>;
 }
 
