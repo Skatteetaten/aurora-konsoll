@@ -61,4 +61,42 @@ describe('versions', () => {
       expect(state.versions.configuredVersionTag).toEqual(version);
     });
   });
+
+  it('should set configuredVersionTag to undefined when tag is an empty list', async () => {
+    const mockTagQuery: { data: ITagQuery } = {
+      data: {
+        imageRepositories: [
+          {
+            tag: [],
+          },
+        ],
+      },
+    };
+
+    server.putResponse('getTag', mockTagQuery);
+
+    await dispatch(fetchVersion('test', '1'));
+
+    nextAction(actions.fetchVersion.request);
+    nextAction(actions.fetchVersion.success, (state) => {
+      expect(state.versions.configuredVersionTag).toBeUndefined();
+    });
+  });
+
+  it('should set configuredVersionTag to undefined when imagerepositories is an empty list', async () => {
+    const mockTagQuery: { data: ITagQuery } = {
+      data: {
+        imageRepositories: [],
+      },
+    };
+
+    server.putResponse('getTag', mockTagQuery);
+
+    await dispatch(fetchVersion('test', '1'));
+
+    nextAction(actions.fetchVersion.request);
+    nextAction(actions.fetchVersion.success, (state) => {
+      expect(state.versions.configuredVersionTag).toBeUndefined();
+    });
+  });
 });
