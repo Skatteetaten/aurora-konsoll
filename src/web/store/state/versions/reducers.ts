@@ -54,8 +54,9 @@ export const versionsReducer = createReducer(initialState, (builder) => {
 
   builder.addCase(actions.fetchVersion.success, (state, { payload }) => {
     state.isFetchingConfiguredVersionTag = false;
-    if ((payload.data?.imageRepositories?.length ?? 0) > 0) {
-      state.configuredVersionTag = payload.data?.imageRepositories[0].tag[0];
+    const version = payload.data?.imageRepositories?.[0]?.tag?.[0];
+    if (version) {
+      state.configuredVersionTag = version;
     }
   });
 

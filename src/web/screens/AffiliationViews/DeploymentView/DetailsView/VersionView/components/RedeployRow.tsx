@@ -60,8 +60,9 @@ export const RedeployRow = ({
     return (
       <Wrapper>
         <p>
-          Finner ikke konfigurert versjon. Finnes konfigurasjonsfilen for
-          applikasjonen i AuroraConfig?
+          Finner ikke konfigurert versjon. Finnes versjonen i container registry
+          (Nexus)? Hvis ja; finnes konfigurasjonsfilen for applikasjonen i
+          AuroraConfig?
         </p>
       </Wrapper>
     );
