@@ -54,13 +54,9 @@ export const versionsReducer = createReducer(initialState, (builder) => {
 
   builder.addCase(actions.fetchVersion.success, (state, { payload }) => {
     state.isFetchingConfiguredVersionTag = false;
-    if (
-      payload.data &&
-      (payload.data.imageRepositories?.length ?? 0) > 0 &&
-      (payload.data.imageRepositories[0].tag.length ?? 0) > 0 &&
-      isIImageTagArray(payload.data.imageRepositories[0].tag)
-    ) {
-      state.configuredVersionTag = payload.data.imageRepositories[0].tag[0];
+    const version = payload.data?.imageRepositories?.[0]?.tag?.[0];
+    if (version) {
+      state.configuredVersionTag = version;
     }
   });
 
@@ -85,10 +81,3 @@ export const versionsReducer = createReducer(initialState, (builder) => {
     state.isRefreshing = false;
   });
 });
-
-const isIImageTagArray = (list: (IImageTag | null)[]): list is IImageTag[] => {
-  return (
-    Array.isArray(list) &&
-    list.every((item) => item?.name !== undefined && item?.type !== undefined)
-  );
-};
