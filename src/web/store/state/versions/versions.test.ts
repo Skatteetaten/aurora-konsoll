@@ -1,13 +1,13 @@
 import { GraphQLSeverMock } from 'web/utils/GraphQLMock';
 import { createTestStore } from 'web/utils/redux/test-utils';
-
-import { actions } from './actions';
-import { fetchVersion } from './action.creators';
+import { ImageTagType } from 'web/models/ImageTagType';
 import {
   ITagQuery,
   IImageTag,
 } from 'web/services/auroraApiClients/imageRepositoryClient/query';
-import { ImageTagType } from '../../../models/ImageTagType';
+
+import { actions } from './actions';
+import { fetchVersion } from './action.creators';
 
 const server = new GraphQLSeverMock();
 
