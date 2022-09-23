@@ -93,9 +93,25 @@ export class ApplicationDeploymentClient {
           applicationDeploymentId
         );
       } else {
+        let errors: Error[] = redeployResult.errors ?? [];
+
+        const message =
+          redeployResult.data?.deploy.applicationDeployments[0].message;
+
+        if (message) {
+          const err = new Error();
+
+          Object.assign(err, {
+            message: 'Deployment feilet',
+            extensions: { message },
+          });
+
+          errors = [...errors, err];
+        }
+
         return {
           name: redeployResult.name,
-          errors: redeployResult.errors,
+          errors: errors,
         };
       }
     } else {
