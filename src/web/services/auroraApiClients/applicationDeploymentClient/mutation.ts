@@ -36,7 +36,10 @@ export interface DeployInput {
 
 export interface DeployResult {
   deploy: {
-    applicationDeployments: { applicationDeploymentId: string }[];
+    applicationDeployments: {
+      applicationDeploymentId: string;
+      message?: string;
+    }[];
     success: boolean;
   };
 }
@@ -46,6 +49,7 @@ export const DEPLOY_MUTATION = gql`
     deploy(input: $input) {
       applicationDeployments {
         applicationDeploymentId
+        message
       }
       success
     }
