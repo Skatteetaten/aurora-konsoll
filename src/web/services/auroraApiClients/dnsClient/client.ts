@@ -1,5 +1,5 @@
 import GoboClient, { IDataAndErrors } from 'web/services/GoboClient';
-import { CnameInfosQuery, CNAME_INFO_QUERY } from './query';
+import { CnameQuery, CNAME_QUERY } from './query';
 
 export class DnsClient {
   private client: GoboClient;
@@ -8,11 +8,11 @@ export class DnsClient {
     this.client = client;
   }
 
-  public async fetchCnameInfos(
+  public async fetchCnames(
     affiliation: string
-  ): Promise<IDataAndErrors<CnameInfosQuery>> {
-    return await this.client.query<CnameInfosQuery>({
-      query: CNAME_INFO_QUERY,
+  ): Promise<IDataAndErrors<CnameQuery>> {
+    return await this.client.query<CnameQuery>({
+      query: CNAME_QUERY,
       variables: {
         affiliation,
       },

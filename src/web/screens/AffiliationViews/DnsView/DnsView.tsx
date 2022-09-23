@@ -1,34 +1,52 @@
-import LoadingButton from 'web/components/LoadingButton';
-import React, { useEffect } from 'react';
-import DnsTable from './DnsTable';
+import React, { useState } from 'react';
 import styled from 'styled-components';
+
+import LoadingButton from 'web/components/LoadingButton';
+import DnsTable from './Table/DnsTable';
 import Spinner from '@skatteetaten/frontend-components/Spinner';
-import { CnameInfo } from 'web/services/auroraApiClients/dnsClient/query';
+import TextField from '@skatteetaten/frontend-components/TextField';
+import { IntegrationDisabledInformation } from './components/IntegrationDisabledInformation';
+import { AzureData, OnPremData } from 'web/store/state/dns/reducer';
 
 interface props {
   affiliation: string;
   className?: string;
   isFetching: boolean;
-  cnameInfos?: CnameInfo[];
   onFetch: (affiliation: string) => void;
+  items?: AzureData[] | OnPremData[];
+  type: 'onPrem' | 'azure';
 }
 
 const DnsView = ({
   affiliation,
   className,
+  items,
+  type,
   onFetch,
-  cnameInfos,
   isFetching,
 }: props) => {
-  useEffect(() => {
-    onFetch(affiliation);
-  }, [affiliation, onFetch]);
+  const [filter, setFilter] = useState('');
+
+  const renderContent = () => {
+    if (isFetching) {
+      return <Spinner size={Spinner.Size.large} />;
+    } else if (items) {
+      return <DnsTable items={items} type={type} filter={filter} />;
+    } else {
+      return <IntegrationDisabledInformation type={type} />;
+    }
+  };
 
   return (
     <div className={className}>
       <div className="body-wrapper">
         <div className="action-bar">
-          <h2>DNS entries for {affiliation}</h2>
+          <TextField
+            placeholder="Søk etter DNS entries"
+            onChange={(_, val) => setFilter(val || '')}
+            value={filter}
+            style={{ width: '300px' }}
+          />
           <LoadingButton
             style={{ minWidth: '141px' }}
             icon="Update"
@@ -38,11 +56,7 @@ const DnsView = ({
             Oppdater
           </LoadingButton>
         </div>
-        {isFetching ? (
-          <Spinner size={Spinner.Size.large} />
-        ) : (
-          <DnsTable cnameInfos={cnameInfos} />
-        )}
+        {renderContent()}
       </div>
     </div>
   );

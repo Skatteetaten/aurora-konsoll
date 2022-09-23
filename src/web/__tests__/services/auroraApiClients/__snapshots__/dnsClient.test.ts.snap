@@ -1,0 +1,37 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`fetchCnames should fetch cnames from GraphQL server 1`] = `
+Object {
+  "data": Object {
+    "affiliations": Object {
+      "edges": Array [
+        Object {
+          "node": Object {
+            "cname": Object {
+              "azure": Array [],
+              "onPrem": Array [
+                Object {
+                  "appName": "test-name",
+                  "clusterId": "test",
+                  "entry": Object {
+                    "cname": "localhost",
+                    "host": "localhost",
+                    "ttl": 500,
+                  },
+                  "message": "",
+                  "namespace": "test-dev",
+                  "routeName": "test-routename",
+                  "status": "SUCCESS",
+                },
+              ],
+            },
+            "name": "test-name",
+          },
+        },
+      ],
+    },
+  },
+  "errors": undefined,
+  "name": "getCnames",
+}
+`;
