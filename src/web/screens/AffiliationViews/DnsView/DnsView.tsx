@@ -31,7 +31,7 @@ const DnsView = ({
     if (isFetching) {
       return <Spinner size={Spinner.Size.large} />;
     } else if (items) {
-      return <DnsTable cnames={{ items, type }} filter={filter} />;
+      return <DnsTable items={items} type={type} filter={filter} />;
     } else {
       return <IntegrationDisabledInformation type={type} />;
     }

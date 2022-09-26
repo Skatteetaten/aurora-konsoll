@@ -7,30 +7,28 @@ import { azureColumns, onpremColumns } from './columns';
 import { AzureData, OnPremData } from 'web/store/state/dns/reducer';
 
 interface Props {
-  cnames: {
-    items: AzureData[] | OnPremData[];
-    type: 'onPrem' | 'azure';
-  };
+  items: AzureData[] | OnPremData[];
+  type: 'onPrem' | 'azure';
   filter: string;
 }
 
-const DnsTable = ({ cnames, filter }: Props) => {
+const DnsTable = ({ items, type, filter }: Props) => {
   const [columns, setColumns] = useState<IColumn[]>([]);
   const [cnameData, setCnameData] = useState<AzureData[] | OnPremData[]>([]);
-  const [type, setType] = useState<'onPrem' | 'azure'>();
+  const [typeData, setTypeData] = useState<'onPrem' | 'azure'>();
 
   useEffect(() => {
-    if (cnames.type === 'onPrem') {
+    if (typeData === 'onPrem') {
       setColumns(onpremColumns);
     } else {
       setColumns(azureColumns);
     }
-    setType(cnames.type);
-    setCnameData(cnames.items);
-  }, [cnames, type]);
+    setTypeData(type);
+    setCnameData(items);
+  }, [items, type, typeData]);
 
   const filterCNames = (filter: string) => {
-    if (type === 'onPrem') {
+    if (typeData === 'onPrem') {
       return (cname: OnPremData) =>
         cname.appName.toLowerCase().includes(filter) ||
         cname.clusterId.toLowerCase().includes(filter) ||
