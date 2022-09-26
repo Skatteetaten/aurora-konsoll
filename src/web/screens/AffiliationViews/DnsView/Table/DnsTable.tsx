@@ -14,18 +14,21 @@ interface Props {
 
 const DnsTable = ({ items, type, filter }: Props) => {
   const [columns, setColumns] = useState<IColumn[]>([]);
-  const [cnameData, setCnameData] = useState<AzureData[] | OnPremData[]>(items);
+  const [cnameData, setCnameData] = useState<AzureData[] | OnPremData[]>([]);
+  const [typeData, setTypeData] = useState<'onPrem' | 'azure'>();
 
   useEffect(() => {
-    if (type === 'onPrem') {
+    if (typeData === 'onPrem') {
       setColumns(onpremColumns);
     } else {
       setColumns(azureColumns);
     }
-  }, [items, type]);
+    setTypeData(type);
+    setCnameData(items);
+  }, [items, type, typeData]);
 
   const filterCNames = (filter: string) => {
-    if (type === 'onPrem') {
+    if (typeData === 'onPrem') {
       return (cname: OnPremData) =>
         cname.appName.toLowerCase().includes(filter) ||
         cname.clusterId.toLowerCase().includes(filter) ||
