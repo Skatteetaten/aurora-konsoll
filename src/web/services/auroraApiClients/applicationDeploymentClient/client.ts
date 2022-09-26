@@ -1,3 +1,4 @@
+import { GraphQLError } from 'graphql';
 import GoboClient, { IDataAndErrors } from 'web/services/GoboClient';
 import {
   REFRESH_APPLICATION_DEPLOYMENT_MUTATION,
@@ -95,16 +96,20 @@ export class ApplicationDeploymentClient {
       } else {
         let errors: Error[] = redeployResult.errors ?? [];
 
-        const message =
+        const errorMessage =
           redeployResult.data?.deploy.applicationDeployments[0].message;
 
-        if (message) {
-          const err = new Error();
-
-          Object.assign(err, {
-            message: 'Deployment feilet',
-            extensions: { message },
-          });
+        if (errorMessage) {
+          // The errorhandler expects additional properties to be in the GraphQLError object "extensions".
+          const err = new GraphQLError(
+            'Deployment feilet',
+            undefined,
+            undefined,
+            undefined,
+            undefined,
+            undefined,
+            { errorMessage }
+          );
 
           errors = [...errors, err];
         }
