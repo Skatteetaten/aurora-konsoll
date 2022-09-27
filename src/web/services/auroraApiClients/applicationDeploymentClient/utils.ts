@@ -1,15 +1,16 @@
+import { GraphQLError } from 'graphql';
 import YAML from 'yaml';
 
 export function changeVersionInFile(
   fileName: string,
   fileContent: string,
   version: string
-): string | Error {
+): string | GraphQLError {
   if (fileName.endsWith('json')) {
     try {
       return parseJson(fileContent, version);
     } catch {
-      return new Error(
+      return new GraphQLError(
         `Could not parse json in file=${fileName} Please check that the file contains valid json`
       );
     }
@@ -17,12 +18,12 @@ export function changeVersionInFile(
     try {
       return parseYaml(fileContent, version);
     } catch {
-      return new Error(
+      return new GraphQLError(
         `Could not parse yaml in file=${fileName} Please check that the file contains valid yaml`
       );
     }
   }
-  return new Error(
+  return new GraphQLError(
     `Not supported file type used in file=${fileName} Please check that the file is either yaml or json`
   );
 }

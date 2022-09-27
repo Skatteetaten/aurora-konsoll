@@ -1,4 +1,4 @@
-import { OperationDefinitionNode } from 'graphql';
+import { GraphQLError, OperationDefinitionNode } from 'graphql';
 import { DefinitionNode, DocumentNode, print } from 'graphql/language';
 
 import { v4 as uuid } from 'uuid';
@@ -10,7 +10,7 @@ interface IVariables {
 export interface IDataAndErrors<T> {
   name: string;
   data?: T;
-  errors?: Error[];
+  errors?: GraphQLError[];
 }
 
 interface IGoboClientOptions {
