@@ -182,6 +182,7 @@ export default styled(ErrorPopup)`
     th {
       text-transform: capitalize;
       white-space: nowrap;
+      vertical-align: text-top;
     }
   }
 `;

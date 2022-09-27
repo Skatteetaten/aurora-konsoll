@@ -1,3 +1,4 @@
+import { GraphQLError } from 'graphql';
 import GoboClient, { IDataAndErrors } from 'web/services/GoboClient';
 import {
   REFRESH_APPLICATION_DEPLOYMENT_MUTATION,
@@ -53,7 +54,9 @@ export class ApplicationDeploymentClient {
     if (applicationFile === undefined || applicationFile.type !== 'APP') {
       return {
         errors: [
-          new Error(`Could not find application file in branch=${refName}`),
+          new GraphQLError(
+            `Could not find application file in branch=${refName}`
+          ),
         ],
         name: 'Missing application file',
       };
@@ -65,7 +68,7 @@ export class ApplicationDeploymentClient {
       version
     );
 
-    if (changedFile instanceof Error) {
+    if (changedFile instanceof GraphQLError) {
       return {
         errors: [changedFile],
         name: 'Parsing error',
@@ -93,9 +96,29 @@ export class ApplicationDeploymentClient {
           applicationDeploymentId
         );
       } else {
+        let errors: GraphQLError[] = redeployResult.errors ?? [];
+
+        const errorMessage =
+          redeployResult.data?.deploy.applicationDeployments[0].message;
+
+        if (errorMessage) {
+          // The errorhandler expects additional properties to be in the GraphQLError object "extensions".
+          const err = new GraphQLError(
+            'Deployment feilet',
+            undefined,
+            undefined,
+            undefined,
+            undefined,
+            undefined,
+            { errorMessage }
+          );
+
+          errors = [...errors, err];
+        }
+
         return {
           name: redeployResult.name,
-          errors: redeployResult.errors,
+          errors: errors,
         };
       }
     } else {
